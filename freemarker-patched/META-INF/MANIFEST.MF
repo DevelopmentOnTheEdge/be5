@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Description: Freemarker with DOTE-specific patches
+Bundle-SymbolicName: com.developmentontheedge.freemarker-patched
+Built-By: lan
+Tool: Bnd-2.1.0.20130426-122213
+Originally-Created-By: Apache Maven Bundle Plugin
+Export-Package: freemarker.core,
+ freemarker.cache,
+ freemarker.debug,
+ freemarker.log,
+ freemarker.template,
+ freemarker.template.utility
+Bundle-Name: Patched Freemarker
+Bundle-Version: 2.3.0.20p2
