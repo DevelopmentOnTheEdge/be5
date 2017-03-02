@@ -1,0 +1,24 @@
+package com.developmentontheedge.dbms;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public interface DbmsConnector
+{
+    public DbmsType getType();
+
+    public String getConnectString();
+
+    public int executeUpdate( String query ) throws SQLException;
+
+    public ResultSet executeQuery( String sql ) throws SQLException;
+
+    public String executeInsert( String sql ) throws SQLException;
+
+    public void close( ResultSet rs );
+
+    public Connection getConnection() throws SQLException;
+
+    public void releaseConnection( Connection conn ) throws SQLException;
+}
