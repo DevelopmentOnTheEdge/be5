@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite name="count">
+
+ <test name="count-basic">
+  <parser>
+   <query><![CDATA[select * from persons]]></query>
+   <applyCount/>
+   <format dbms="mysql"><![CDATA[SELECT COUNT(*) AS "CNT" FROM persons]]></format>
+  </parser>
+ </test>
+ <test name="count-multicolumns">
+  <parser>
+   <query><![CDATA[select p.a, p.b from persons p where p.c > 10 order by p.d]]></query>
+   <applyCount/>
+   <format dbms="postgres"><![CDATA[SELECT COUNT(*) AS "CNT" FROM persons p WHERE p.c > 10]]></format>
+  </parser>
+ </test>
+</testSuite>

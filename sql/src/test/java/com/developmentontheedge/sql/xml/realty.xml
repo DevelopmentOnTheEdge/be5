@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite name="realty">
+ <description>Тестирование реальных запросов из модуля realty</description>
+
+ <test name="extendedPropAttributes">
+  <parser>
+   <query><![CDATA[SELECT
+        epa.ID AS "ID;<hidden/>",
+        epa.plumbingSize AS "plumbingSize",
+        epa.sewerageSize AS "sewerageSize",
+        epa.heatingSize AS "heatingSize",
+        epa.bathroomSize AS "bathroomSize",
+        epa.gasSize AS "gasSize",
+        epa.hotWaterSize AS "hotWaterSize",
+        epa.electricCookersSize AS "electricCookersSize",
+        epa.plumbingGasHeatingSize AS "plumbingGasHeatingSize"
+        FROM extendedPropAttributes epa
+        WHERE epa.propertyID = <parameter:propertyID refColumn="properties.ID"/>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT
+        epa.ID AS "ID;<hidden/>",
+        epa.plumbingSize AS "plumbingSize",
+        epa.sewerageSize AS "sewerageSize",
+        epa.heatingSize AS "heatingSize",
+        epa.bathroomSize AS "bathroomSize",
+        epa.gasSize AS "gasSize",
+        epa.hotWaterSize AS "hotWaterSize",
+        epa.electricCookersSize AS "electricCookersSize",
+        epa.plumbingGasHeatingSize AS "plumbingGasHeatingSize"
+        FROM extendedPropAttributes epa
+        WHERE epa.propertyID = <parameter:propertyID refColumn="properties.ID"/>]]></format>
+  </parser>
+ </test>
+ <test name="buildingNoByKladrStreetCode">
+  <parser>
+   <query><![CDATA[SELECT
+   b.ID AS "Code",
+   CASE
+    WHEN b.buildingNo IS NULL THEN ''
+    WHEN b.wing IS NULL AND b.letters IS NULL THEN b.buildingNo
+    WHEN b.wing IS NULL AND b.letters IS NOT NULL THEN 
+         ( b.buildingNo || CASE WHEN
+           b.letters LIKE '1%' OR
+           b.letters LIKE '2%' OR
+           b.letters LIKE '3%' OR
+           b.letters LIKE '4%' OR
+           b.letters LIKE '5%' OR
+           b.letters LIKE '6%' OR
+           b.letters LIKE '7%' OR
+           b.letters LIKE '8%' OR
+           b.letters LIKE '9%' THEN ( '/' || b.letters ) ELSE b.letters END
+         )
+    WHEN b.wing IS NOT NULL AND b.letters IS NULL 
+        THEN ( b.buildingNo || ' корп. ' || b.wing )
+    WHEN b.wing IS NOT NULL AND b.letters IS NOT NULL
+        THEN ( b.buildingNo || CASE WHEN
+               b.letters LIKE '1%' OR
+               b.letters LIKE '2%' OR
+               b.letters LIKE '3%' OR
+               b.letters LIKE '4%' OR
+               b.letters LIKE '5%' OR
+               b.letters LIKE '6%' OR
+               b.letters LIKE '7%' OR
+               b.letters LIKE '8%' OR
+               b.letters LIKE '9%' THEN ( '/' || b.letters ) ELSE b.letters END
+             || ' корп. ' || b.wing )
+    WHEN b.wing IS NOT NULL
+         THEN ( b.buildingNo || ' корп. ' || b.wing )
+    ELSE b.buildingNo
+   END AS "Name",
+   b.buildingNo AS "sortCol"
+FROM buildings b
+WHERE b.kladrStreetCode IS NULL
+ORDER BY sortCol, b.wing]]>
+   </query>
+   <format dbms="oracle"><![CDATA[SELECT
+   b.ID AS "Code",
+   CASE
+    WHEN b.buildingNo IS NULL THEN ''
+    WHEN b.wing IS NULL AND b.letters IS NULL THEN b.buildingNo
+    WHEN b.wing IS NULL AND b.letters IS NOT NULL THEN 
+         ( b.buildingNo || CASE WHEN
+           b.letters LIKE '1%' OR
+           b.letters LIKE '2%' OR
+           b.letters LIKE '3%' OR
+           b.letters LIKE '4%' OR
+           b.letters LIKE '5%' OR
+           b.letters LIKE '6%' OR
+           b.letters LIKE '7%' OR
+           b.letters LIKE '8%' OR
+           b.letters LIKE '9%' THEN ( '/' || b.letters ) ELSE b.letters END
+         )
+    WHEN b.wing IS NOT NULL AND b.letters IS NULL 
+        THEN ( b.buildingNo || ' корп. ' || b.wing )
+    WHEN b.wing IS NOT NULL AND b.letters IS NOT NULL
+        THEN ( b.buildingNo || CASE WHEN
+               b.letters LIKE '1%' OR
+               b.letters LIKE '2%' OR
+               b.letters LIKE '3%' OR
+               b.letters LIKE '4%' OR
+               b.letters LIKE '5%' OR
+               b.letters LIKE '6%' OR
+               b.letters LIKE '7%' OR
+               b.letters LIKE '8%' OR
+               b.letters LIKE '9%' THEN ( '/' || b.letters ) ELSE b.letters END
+             || ' корп. ' || b.wing )
+    WHEN b.wing IS NOT NULL
+         THEN ( b.buildingNo || ' корп. ' || b.wing )
+    ELSE b.buildingNo
+   END AS "Name",
+   b.buildingNo AS "sortCol"
+FROM buildings b
+WHERE b.kladrStreetCode IS NULL
+ORDER BY sortCol, b.wing]]></format>
+  </parser>
+ </test>
+</testSuite>

@@ -1,0 +1,2190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<testSuite name="be">
+ <description>Простые тесты BE-специфичных возможностей</description>
+
+ <test name="apply-if-parameters">
+  <parser>
+   <query><![CDATA[SELECT
+   a.ID AS "___myid"
+   <if expr="apartmentNo==12 && (param!=13 OR anotherParam==23 )">
+       ,a.propertyid AS "___propertyid"
+       ,a.propertyid2 AS "___propertyid2"
+   </if>
+   <if expr="param!=13">
+       ,a.propertyid3 AS "___propertyid3"
+   </if>
+   <if expr="apartmentNo==12">
+       
+   </if>
+   <if expr="param!=13">
+   <then>
+       ,a.propertyid4 AS "___propertyid4"
+   </then>
+   <else>
+       ,a.propertyid5 AS "___propertyid5"
+   </else>
+   </if>
+   <if parameter="apartmentNo" value="12">
+       ,a.propertyid6 AS "___propertyid6"
+   </if>
+  ,'<nosort/>;<truncate length="25"/>;<link using="___propertyid" table="properties" columns="ID"/>' AS ";Propertyid"
+  ,a.accountnum AS "Accountnum"
+  ,'<blankNulls />' AS ";Accountnum"
+FROM households a]]></query>
+   <applyContext>
+    <parameter name="apartmentNo" value="12" />
+    <parameter name="param" value="13" />
+    <parameter name="anotherParam" value="23" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT
+   a.ID AS "___myid", a.propertyid AS "___propertyid"
+       , a.propertyid2 AS "___propertyid2"
+   
+       , a.propertyid5 AS "___propertyid5"
+   , a.propertyid6 AS "___propertyid6"
+   
+  , '<nosort/>;<truncate length="25"/>;<link using="___propertyid" table="properties" columns="ID"/>' AS ";Propertyid"
+  , a.accountnum AS "Accountnum"
+  , '<blankNulls />' AS ";Accountnum"
+FROM households a]]></format>
+  </parser>
+ </test>
+ <test name="apply-unless-parameters">
+  <parser>
+   <query><![CDATA[SELECT
+   a.ID AS "___myid"
+   <unless expr="apartmentNo==12 OR param!=13">
+       ,a.propertyid AS "___propertyid"
+       ,a.propertyid2 AS "___propertyid2"
+   </unless>
+   <unless expr="param!=13">
+       ,a.propertyid3 AS "___propertyid3"
+       ,a.propertyid4 AS "___propertyid4"
+   </unless>
+   <unless parameter="apartmentNo">
+       ,a.propertyid5 AS "___propertyid5"
+   </unless>
+    <unless parameter="anotherParam">
+       
+   </unless>
+   <unless parameter="anotherParam">
+       ,a.propertyid6 AS "___propertyid6"
+   </unless>
+  ,'<nosort/>;<truncate length="25"/>;<link using="___propertyid" table="properties" columns="ID"/>' AS ";Propertyid"
+  ,a.accountnum AS "Accountnum"
+  ,'<blankNulls />' AS ";Accountnum"
+FROM households a]]></query>
+   <applyContext>
+    <parameter name="apartmentNo" value="12" />
+    <parameter name="param" value="13" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT
+   a.ID AS "___myid"
+       , a.propertyid3 AS "___propertyid3"
+       , a.propertyid4 AS "___propertyid4"
+   
+       , a.propertyid6 AS "___propertyid6"
+   
+  , '<nosort/>;<truncate length="25"/>;<link using="___propertyid" table="properties" columns="ID"/>' AS ";Propertyid"
+  , a.accountnum AS "Accountnum"
+  , '<blankNulls />' AS ";Accountnum"
+FROM households a]]></format>
+  </parser>
+ </test>
+ <test name="apply-parameter-tag">
+  <parser>
+   <query><![CDATA[SELECT
+   * FROM table t WHERE t.field < <parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>]]></query>
+   <applyContext>
+    <parameter name="aaa" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT
+   * FROM table t WHERE t.field < REPLACEpost]]></format>
+  </parser>
+ </test>
+ <test name="apply-tclone-id">
+  <parser>
+   <query><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></format>
+   <applyContext>
+    <parameter name="_tcloneid_" value="5" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks5]]></format>
+  </parser>
+ </test>
+ <test name="apply-tclone-id-def">
+  <parser>
+   <query><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks<parameter:_tcloneid_ default=""/>]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code", URI AS "Name" FROM bookmarks]]></format>
+  </parser>
+ </test>
+ <test name="apply-parameter-safestr">
+  <parser>
+   <query><![CDATA[SELECT * FROM table t WHERE t.field < <parameter:aaa default="50" safestr="yes"/>]]></query>
+   <applyContext>
+    <parameter name="aaa" value="a'b'c" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table t WHERE t.field < 'a''b''c']]></format>
+  </parser>
+ </test>
+ <test name="apply-username">
+  <parser>
+   <query><![CDATA[SELECT ur.role_name, ur.role_name FROM user_roles ur WHERE ur.user_name = @@username@@ ORDER BY 1]]></query>
+   <applyContext>
+    <userName name="Guest" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT ur.role_name, ur.role_name FROM user_roles ur WHERE ur.user_name = 'Guest' ORDER BY 1]]></format>
+  </parser>
+ </test>
+ <test name="subquery-no-parameters">
+  <parser>
+   <query><![CDATA[SELECT
+    c2t.territoryID AS "___territoryID"
+    ,'<sql>SELECT name FROM territories WHERE ID = '<var:___territoryID/>'</sql>' AS "Location"
+FROM companies2territories c2t]]></query>
+   <format dbms="oracle"><![CDATA[SELECT
+    c2t.territoryID AS "___territoryID"
+    , '<sql> SELECT name FROM territories WHERE ID = '<var:___territoryID />'</sql>' AS "Location"
+FROM companies2territories c2t]]></format>
+  </parser>
+ </test>
+ <test name="subquery-external">
+  <parser>
+   <query><![CDATA[SELECT
+    c2t.territoryID AS "___territoryID"
+    ,'<sql outColumns="COUNT" queryName="Calc current" varSubst="paymentBatchId=___pbid,payCompany=___bankID"></sql>' AS "current_count"
+FROM companies2territories c2t]]></query>
+   <format dbms="oracle"><![CDATA[SELECT
+    c2t.territoryID AS "___territoryID"
+    , '<sql outColumns="COUNT" queryName="Calc current" varSubst="paymentBatchId=___pbid,payCompany=___bankID"></sql>' AS "current_count"
+FROM companies2territories c2t]]></format>
+  </parser>
+ </test>
+ <test name="session">
+  <parser>
+   <query><![CDATA[SELECT
+DISTINCT( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
+FROM mfcSeatsTimeSlots msts
+   INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
+WHERE ms.mfcCompanyID = <session:user-companyID/>]]></query>
+   <applyContext>
+    <sessionVar name="user-companyID" value="123" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
+FROM mfcSeatsTimeSlots msts
+   INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
+WHERE ms.mfcCompanyID = 123]]></format>
+  </parser>
+ </test>
+ <test name="session-default">
+  <parser>
+   <query><![CDATA[SELECT
+DISTINCT( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
+FROM mfcSeatsTimeSlots msts
+   INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
+WHERE ms.mfcCompanyID = <session:user-companyID default="0"/>]]></query>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
+FROM mfcSeatsTimeSlots msts
+   INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
+WHERE ms.mfcCompanyID = 0]]></format>
+  </parser>
+ </test>
+ <test name="session-single-quoted">
+  <parser>
+   <query><![CDATA[SELECT u.ID, u.utility
+FROM utilities u, utilities2providers up 
+WHERE up.utilityID = u.ID AND up.companyID = <session:user-companyID refColumn='companies.ID' />]]></query>
+   <applyContext>
+    <sessionVar name="user-companyID" value="123" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT u.ID, u.utility
+FROM utilities u, utilities2providers up 
+WHERE up.utilityID = u.ID AND up.companyID = 123]]></format>
+  </parser>
+ </test>
+ <test name="parameter-multiple">
+  <parser>
+   <query><![CDATA[SELECT name FROM table WHERE id IN <parameter:recordID multiple="true"/>]]></query>
+   <applyContext>
+    <parameter name="recordID" value="123" />
+    <parameter name="recordID" value="456" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT name FROM table WHERE id IN (123, 456)]]></format>
+  </parser>
+ </test>
+ <test name="sql-auto">
+  <!-- TODO: support applying context -->
+  <parser>
+   <query><![CDATA[<sql auto="true" /> ORDER BY modificationDate___ DESC]]></query>
+   <format dbms="oracle"><![CDATA[<sql auto="true" /> ORDER BY modificationDate___ DESC]]></format>
+  </parser>
+ </test>
+ <test name="be-if-union">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+<if parameter="foo">
+UNION SELECT * FROM table2
+</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+<if parameter="foo">
+UNION SELECT * FROM table2
+</if>]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT * FROM table]]></format>
+  </parser>
+ </test>
+ <test name="be-if-select-union">
+  <parser>
+   <query><![CDATA[<if parameter="foo">
+SELECT * FROM table
+UNION</if>
+SELECT * FROM table2]]></query>
+   <format dbms="oracle"><![CDATA[<if parameter="foo">
+SELECT * FROM table
+UNION</if>
+SELECT * FROM table2]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[
+SELECT * FROM table2]]></format>
+  </parser>
+ </test>
+ <test name="be-if-select-union2">
+  <parser>
+   <query><![CDATA[<if parameter="withCreateNew">
+                SELECT
+                    'createNewDoc' AS "ID",
+                    'Создать новый' AS "docName"
+                 
+
+                UNION ALL
+            </if>
+
+            SELECT
+              d.ID AS "ID",
+              dt.name AS "docName"
+            FROM documents d
+            INNER JOIN docTypes dt
+              ON dt.code = d.typeID
+            WHERE d.entity = 'families'
+              AND d.entityID = <parameter:familyID refColumn="families.ID"/>
+              AND d.typeID = <parameter:docType refColumn="docTypes.code"/>
+              AND 
+      ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
+
+/* <parameter:withCreateNew/> */]]></query>
+   <format dbms="oracle"><![CDATA[<if parameter="withCreateNew">
+                SELECT
+                    'createNewDoc' AS "ID",
+                    'Создать новый' AS "docName" FROM DUAL
+                 
+
+                UNION ALL
+            </if>
+
+            SELECT
+              d.ID AS "ID",
+              dt.name AS "docName"
+            FROM documents d
+            INNER JOIN docTypes dt
+              ON dt.code = d.typeID
+            WHERE d.entity = 'families'
+              AND d.entityID = <parameter:familyID refColumn="families.ID"/>
+              AND d.typeID = <parameter:docType refColumn="docTypes.code"/>
+              AND 
+      ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
+
+/* <parameter:withCreateNew/> */]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[
+
+            SELECT
+              d.ID AS "ID",
+              dt.name AS "docName"
+            FROM documents d
+            INNER JOIN docTypes dt
+              ON dt.code = d.typeID
+            WHERE d.entity = 'families'
+              AND d.entityID = ''
+              AND d.typeID = ''
+              AND
+      ( d.activeFrom <= ''  AND d.activeTo > ''  )
+
+/* <parameter:withCreateNew/> */]]></format>
+  </parser>
+ </test>
+
+ <test name="be-if-select-union-with-param">
+  <parser>
+   <query><![CDATA[<if parameter="withCreateNew">
+                SELECT
+                    'createNewDoc' AS "ID",
+                    'Создать новый' AS "docName"
+
+
+                UNION ALL
+            </if>
+
+            SELECT
+              d.ID AS "ID",
+              dt.name AS "docName"
+            FROM documents d
+            INNER JOIN docTypes dt
+              ON dt.code = d.typeID
+            WHERE d.entity = 'families'
+              AND d.entityID = <parameter:familyID refColumn="families.ID"/>
+              AND d.typeID = <parameter:docType refColumn="docTypes.code"/>
+              AND 
+      ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
+
+]]></query>
+   <applyContext>
+    <parameter name="withCreateNew" value="bar" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[
+                SELECT
+                    'createNewDoc' AS "ID",
+                    'Создать новый' AS "docName" FROM DUAL
+
+
+                UNION ALL
+
+            SELECT
+              d.ID AS "ID",
+              dt.name AS "docName"
+            FROM documents d
+            INNER JOIN docTypes dt
+              ON dt.code = d.typeID
+            WHERE d.entity = 'families'
+              AND d.entityID = ''
+              AND d.typeID = ''
+              AND
+      ( d.activeFrom <= ''  AND d.activeTo > ''  )
+
+]]></format>
+  </parser>
+ </test>
+ <test name="be-if-where">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+<if parameter="foo">
+WHERE x < 2
+</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+<if parameter="foo">
+WHERE x < 2
+</if>]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT * FROM table]]></format>
+  </parser>
+ </test>
+ <test name="be-if-else-where">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+<if parameter="foo">
+<then>
+  WHERE x < 2
+</then>
+<else>
+  WHERE x > 2
+</else>
+</if>]]></query>
+   <applyContext>
+    <parameter name="foo" value="bar" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+  WHERE x < 2
+]]></format>
+  </parser>
+ </test>
+ <test name="be-if-else-where2">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+<if parameter="foo">
+<then>
+  WHERE x < 2
+</then>
+<else>
+  WHERE x > 2
+</else>
+</if>]]></query>
+   <applyContext>
+    <parameter name="bar" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+  WHERE x > 2
+]]></format>
+  </parser>
+ </test>
+ <test name="be-if-and">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE 1 = 1
+<if parameter="foo">
+AND x < 2
+</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE 1 = 1
+<if parameter="foo">
+AND x < 2
+</if>]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE 1 = 1]]></format>
+  </parser>
+ </test>
+ <test name="be-if-or">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE 1 = 1
+<if parameter="foo">
+OR x < 2
+</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE 1 = 1
+<if parameter="foo">
+OR x < 2
+</if>]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE 1 = 1]]></format>
+  </parser>
+ </test>
+ <test name="be-if-else-and">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE x > 2
+<if parameter="foo">
+<then>
+  AND y > 1
+</then>
+<else>
+  AND y < 1
+</else>
+</if>]]></query>
+   <applyContext>
+    <parameter name="foo" value="bar" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE x > 2 AND y > 1
+]]></format>
+  </parser>
+ </test>
+ <test name="be-if-else-and2">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE x > 2
+<if parameter="foo">
+<then>
+  AND y > 1
+</then>
+<else>
+  AND y < 1
+</else>
+</if>]]></query>
+   <applyContext>
+    <parameter name="bar" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE x > 2 AND y < 1
+]]></format>
+  </parser>
+ </test>
+ <test name="be-if-else-value">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="true"/> AS DATE)</then><else>NOW()</else></if>]]></query>
+   <applyContext>
+    <parameter name="date" value="2015-11-11" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE x > TO_DATE('2015-11-11', 'YYYY-MM-DD')]]></format>
+  </parser>
+ </test>
+ <test name="be-if-else-value2">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="true"/> AS DATE)</then><else>NOW()</else></if>]]></query>
+   <applyContext>
+    <parameter name="datee" value="2015-11-11" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE x > SYSDATE]]></format>
+  </parser>
+ </test>
+ <test name="be-if-unless-chain">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE x > <if parameter="date">CAST(<parameter:date safestr="true"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
+   <applyContext>
+    <parameter name="date" value="2015-11-11" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE x > TO_DATE('2015-11-11', 'YYYY-MM-DD')]]></format>
+  </parser>
+ </test>
+ <test name="be-if-unless-chain2">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+   WHERE x > <if parameter="date">CAST(<parameter:date safestr="true"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
+   <applyContext>
+    <parameter name="datee" value="2015-11-11" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM table
+   WHERE x > SYSDATE]]></format>
+  </parser>
+ </test>
+
+ <test name="be-if-unless-chain-where">
+  <parser>
+   <query><![CDATA[SELECT
+ CODE,
+ name
+FROM
+ kladr
+<if session="user-region">
+ WHERE parent = '<session:user-region/>000000000'
+</if>
+<unless session="user-region">
+ WHERE parent = '54000000000'
+ AND klevel = '2'
+</unless>
+ ORDER BY name]]></query>
+   <format dbms="oracle"><![CDATA[SELECT
+ CODE,
+ name
+FROM
+ kladr
+<if session="user-region">
+ WHERE parent = '<session:user-region />000000000'
+</if>
+<unless session="user-region">
+ WHERE parent = '54000000000'
+ AND klevel = '2'
+</unless>
+ ORDER BY name]]></format>
+   <applyContext />
+   <format dbms="oracle"><![CDATA[SELECT
+ CODE,
+ name
+FROM
+ kladr
+ WHERE parent = '54000000000'
+ AND klevel = '2'
+
+ ORDER BY name]]></format>
+  </parser>
+ </test>
+ <test name="be-where-and-if1">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+WHERE 0=0
+<if parameter="foo1">AND x < 1</if>
+<if parameter="foo2">AND x < 2</if>
+<if parameter="foo3">AND x < 3</if>
+<if parameter="foo4">AND x < 4</if>]]></query>
+   <applyContext>
+    <parameter name="foo2" value="bar" />
+    <parameter name="foo3" value="bar" />
+    <parameter name="foo4" value="bar" />
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table
+WHERE 0 = 0 AND x < 2 AND x < 3 AND x < 4]]></format>
+  </parser>
+ </test>
+ <test name="be-where-and-if2">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+WHERE 1=1
+<if parameter="foo1">AND x < 1</if>
+<if parameter="foo2">AND x < 2</if>]]></query>
+   <applyContext>
+    <parameter name="foo1" value="bar1" />
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table
+WHERE 1 = 1 AND x < 1]]></format>
+  </parser>
+ </test>
+ <test name="if-session">
+  <parser>
+   <query><![CDATA[SELECT
+ CODE,
+ name
+FROM
+ kladr
+<if session="user-region">
+ WHERE parent = '<session:user-region/>000000000'
+</if>
+<unless session="user-region">
+ WHERE parent = '54000000000'
+ AND klevel = '2'
+</unless>
+ ORDER BY name]]></query>
+   <applyContext>
+    <sessionVar name="user-region" value="54" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT
+ CODE,
+ name
+FROM
+ kladr
+WHERE parent = '54000000000'
+
+ ORDER BY name]]></format>
+  </parser>
+ </test>
+ <test name="if-after-on">
+  <parser>
+   <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
+   <if parameter='x'>WHERE a=b</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
+   <if parameter="x"> WHERE a = b</if>]]></format>
+  </parser>
+ </test>
+ <test name="if-order">
+  <parser>
+   <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
+   <if parameter='x'>ORDER BY a DESC</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
+   <if parameter="x"> ORDER BY a DESC</if>]]></format>
+  </parser>
+ </test>
+ <test name="if-join">
+  <parser>
+   <query><![CDATA[SELECT a FROM t <if parameter='x'>JOIN b ON b.ID=t.ID JOIN c ON c.ID=t.ID</if>
+   ORDER BY a DESC]]></query>
+   <format dbms="oracle"><![CDATA[SELECT a FROM t <if parameter="x"> INNER JOIN b ON b.ID = t.ID INNER JOIN c ON c.ID = t.ID</if>
+   ORDER BY a DESC]]></format>
+  </parser>
+ </test>
+ <test name="if-case">
+  <parser>
+   <query><![CDATA[SELECT CASE WHEN a > 5 THEN 1 <if parameter='x'>WHEN a > <parameter:x/> THEN 2 WHEN a < <parameter:x/> THEN 4</if> ELSE 3 END FROM table]]></query>
+   <format dbms="oracle"><![CDATA[SELECT CASE WHEN a > 5 THEN 1 <if parameter="x"> WHEN a > <parameter:x /> THEN 2 WHEN a < <parameter:x /> THEN 4</if> ELSE 3 END FROM table]]></format>
+   <applyContext>
+    <parameter name="x" value="3" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT CASE WHEN a > 5 THEN 1 WHEN a > 3 THEN 2 WHEN a < 3 THEN 4 ELSE 3 END FROM table]]></format>
+  </parser>
+ </test>
+ <test name="if-where-order">
+  <parser>
+   <query><![CDATA[SELECT a FROM t JOIN b ON b.ID=t.ID
+   <if parameter='x'>WHERE a=b</if>
+   <if parameter='x'>ORDER BY a DESC</if>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT a FROM t INNER JOIN b ON b.ID = t.ID
+   <if parameter="x"> WHERE a = b</if>
+   <if parameter="x"> ORDER BY a DESC</if>]]></format>
+  </parser>
+ </test>
+ <test name="if-non-quoted">
+  <parser>
+   <query><![CDATA[SELECT
+  p2.id AS "IID"
+FROM persons p1, zagsImportsData p2
+WHERE p2.importId = <parameter:importID refColumn="import.ID"/>
+  AND 
+  ( p1.lastname IS NULL AND p2.lastname IS NULL    OR p1."___searchLastName" = p2.lastName )
+  AND ( p1.middlename IS NULL AND p2.middlname IS NULL OR p1."___searchMiddleName" = p2.middlName )
+  AND ( p1.firstName IS NULL AND p2.firstName IS NULL  OR p1."___searchFirstName" = p2.firstName )
+  AND ( p1.birthday IS NULL AND p2.birthday IS NULL    OR p1.birthday = p2.birthday )
+
+  <if parameter=pIDs>
+    AND p2.id IN <parameter:pIDs safestr="no"/>
+  </if>
+GROUP BY p2.id
+HAVING COUNT(p2.iD) > 1]]></query>
+   <format dbms="oracle"><![CDATA[SELECT
+  p2.id AS "IID"
+FROM persons p1, zagsImportsData p2
+WHERE p2.importId = <parameter:importID refColumn="import.ID"/>
+  AND 
+  ( p1.lastname IS NULL AND p2.lastname IS NULL    OR p1."___searchLastName" = p2.lastName )
+  AND ( p1.middlename IS NULL AND p2.middlname IS NULL OR p1."___searchMiddleName" = p2.middlName )
+  AND ( p1.firstName IS NULL AND p2.firstName IS NULL  OR p1."___searchFirstName" = p2.firstName )
+  AND ( p1.birthday IS NULL AND p2.birthday IS NULL    OR p1.birthday = p2.birthday )
+
+  <if parameter="pIDs">
+    AND p2.id IN <parameter:pIDs safestr="no"/>
+  </if>
+GROUP BY p2.id
+HAVING COUNT(p2.iD) > 1]]></format>
+  </parser>
+ </test>
+
+ <test name="parameter-in-tableName1">
+  <parser>
+   <query><![CDATA[SELECT ID AS "Code" FROM <parameter:_tcloneid_/>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM <parameter:_tcloneid_ />]]></format>
+   <applyContext>
+    <parameter name="_tcloneid_" value="bookmarks" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM 'bookmarks']]></format>
+  </parser>
+ </test>
+ <!-- <test name="parameter-in-tableName2"> <parser> <query><![CDATA[SELECT 
+  ID AS "Code" FROM a<parameter:_tcloneid_/>b]]></query> <format dbms="oracle"><![CDATA[SELECT 
+  ID AS "Code" FROM a<parameter:_tcloneid_ />b]]></format> <applyContext> <parameter 
+  name="_tcloneid_" value="bookmarks"/> </applyContext> <format dbms="oracle"><![CDATA[SELECT 
+  ID AS "Code" FROM abookmarksb]]></format> </parser> </test> -->
+
+ <test name="parameter-in-string">
+  <parser>
+   <query><![CDATA[SELECT '<parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>2' FROM table t]]></query>
+   <applyContext>
+    <parameter name="aaa" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT 'REPLACEpost2' FROM table t]]></format>
+  </parser>
+ </test>
+
+ <test name="session-in-string">
+  <parser>
+   <query><![CDATA[SELECT '<session:user-companyID refColumn='companies.ID' />' FROM table t]]></query>
+   <applyContext>
+    <sessionVar name="user-companyID" value="123" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT '123' FROM table t]]></format>
+  </parser>
+ </test>
+
+ <test name="parameter-safestr-in-string">
+  <parser>
+   <query><![CDATA[SELECT 'str<parameter:aaa default="50" safestr="yes"/>' FROM table t]]></query>
+   <applyContext>
+    <parameter name="aaa" value="a'b'c" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT 'stra''b''c' FROM table t]]></format>
+  </parser>
+ </test>
+
+ <test name="sql-exec">
+  <parser>
+   <query><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
+WHERE ( <sql exec="pre" beautifier="com.beanexplorer.web.html.HtmlLineGlueBeautifier"> SELECT COUNT(*)
+FROM user_roles WHERE user_name = @@username@@ AND role_name IN 
+@@current-role-list@@ AND role_name IN ( 'NursingDistribution' ) </sql> > 0 )]]></query>
+   <format dbms="oracle"><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
+WHERE ( <sql exec="pre" beautifier="com.beanexplorer.web.html.HtmlLineGlueBeautifier"> SELECT COUNT(*)
+FROM user_roles WHERE user_name = @@username@@ AND role_name IN 
+@@current-role-list@@ AND role_name IN ( 'NursingDistribution' ) </sql> > 0 )]]></format>
+   <applyContext>
+    <userName name="Username" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT CODE, name FROM nursingHomeTypes nht
+WHERE ( ( SELECT COUNT(*)
+FROM user_roles WHERE user_name = 'Username' AND role_name IN 
+('Guest') AND role_name IN ( 'NursingDistribution' ) )> 0 )]]></format>
+  </parser>
+ </test>
+
+ <test name="sql-exec-in-value-list">
+  <parser>
+   <query><![CDATA[SELECT DISTINCT t.ID, t.name, t.okatoCode
+FROM territories t
+  INNER JOIN companies2welfareGroups c2wg ON c2wg.territoryID=t.ID
+WHERE 1 = 1
+<if parameter="customerType">
+     AND c2wg.welfareGroup IN (<sql exec="pre" distinct="yes" limit="10000" beautifier="com.beanexplorer.web.html.SqlInClauseQuotedBeautifier">
+SELECT wt.welfareGroupCode FROM welfareTypes wt WHERE wt.customerType = '<parameter:customerType />'
+</sql>) 
+</if>]]></query>
+   <applyContext>
+    <parameter name="customerType" value="customerType" />
+   </applyContext>
+   <format dbms="mysql"><![CDATA[SELECT DISTINCT t.ID, t.name, t.okatoCode
+FROM territories t
+  INNER JOIN companies2welfareGroups c2wg ON c2wg.territoryID = t.ID
+WHERE 1 = 1 AND c2wg.welfareGroup IN ((
+SELECT DISTINCT wt.welfareGroupCode FROM welfareTypes wt WHERE wt.customerType = 'customerType' LIMIT 10000
+))]]></format>
+  </parser>
+ </test>
+
+ <test name="sql-exec-limit-distinct-union">
+  <parser>
+   <query><![CDATA[SELECT DISTINCT gur.status
+FROM governmentUtilityRequests gur
+WHERE gur.status IN (
+      <sql exec="pre" distinct="yes" limit="10000" beautifier="com.beanexplorer.web.html.SqlInClauseQuotedBeautifier">
+         SELECT DISTINCT fromStatus FROM statusTransitions
+         WHERE entity = 'governmentUtilityRequests' AND role_name IN @@current-role-list@@ AND fromStatus IS NOT NULL
+           UNION DISTINCT
+         SELECT DISTINCT toStatus FROM statusTransitions
+         WHERE entity = 'governmentUtilityRequests' AND role_name IN @@current-role-list@@ AND toStatus IS NOT NULL
+           UNION DISTINCT
+         SELECT DISTINCT 'some-dummy-value'  
+      </sql> 
+ )
+    AND gur.status IN ( '03', '04' )]]></query>
+   <applyContext />
+   <format dbms="mysql"><![CDATA[SELECT DISTINCT gur.status
+FROM governmentUtilityRequests gur
+WHERE gur.status IN (
+      (
+         SELECT * FROM (SELECT DISTINCT fromStatus FROM statusTransitions
+         WHERE entity = 'governmentUtilityRequests' AND role_name IN ('Guest') AND fromStatus IS NOT NULL
+           UNION DISTINCT
+         SELECT DISTINCT toStatus FROM statusTransitions
+         WHERE entity = 'governmentUtilityRequests' AND role_name IN ('Guest') AND toStatus IS NOT NULL
+           UNION DISTINCT
+         SELECT DISTINCT 'some-dummy-value' FROM DUAL  
+      ) tmp LIMIT 10000))
+    AND gur.status IN ( '03', '04' )]]></format>
+  </parser>
+ </test>
+
+ <test name="dictionary">
+  <parser>
+   <query><![CDATA[SELECT DISTINCT wt.CODE AS "Code", COALESCE( wt.shortName, wt.name ) AS "Name"
+FROM  welfareTypes wt
+INNER JOIN <parameter:rulesTable default="applicationRules" /> ar ON ar.welfareType=wt.CODE
+INNER JOIN socialRules2attributes sr2a ON sr2a.ownerID = ar."___ownerID"
+    AND sr2a.attributeID = <attributes:ID publicID="PRIVILEGECATEGORY" />]]></query>
+   <format dbms="postgres"><![CDATA[SELECT DISTINCT wt.CODE AS "Code", COALESCE( wt.shortName, wt.name ) AS "Name"
+FROM  welfareTypes wt
+INNER JOIN <parameter:rulesTable default="applicationRules"/> ar ON ar.welfareType = wt.CODE
+INNER JOIN socialRules2attributes sr2a ON sr2a.ownerID = ar."___ownerID"
+    AND sr2a.attributeID = <attributes:ID publicID="PRIVILEGECATEGORY"/>]]></format>
+  </parser>
+ </test>
+
+ <test name="macro">
+  <parser>
+   <query><![CDATA[MACRO CARD_LINK_COMMON(arg1=default, arg2=value)
+  '<!--' || CAST((arg2) AS CHAR) || '-->' || '<a href="...">' || arg1 || '</a>'
+END
+
+SELECT t.ID AS "Code", CARD_LINK_COMMON(a, b), CARD_LINK_COMMON() FROM table t]]></query>
+   <format dbms="oracle"><![CDATA[MACRO CARD_LINK_COMMON (arg1 = default, arg2 = value)
+  '<!--' || TO_CHAR((arg2))|| '-->' || '<a href="...">' || arg1 || '</a>'
+END
+
+SELECT t.ID AS "Code", '<!--'|| TO_CHAR(( b))||'-->'||'<a href="...">'|| a ||'</a>', '<!--'|| TO_CHAR((value))||'-->'||'<a href="...">'|| default ||'</a>' FROM table t]]></format>
+  </parser>
+ </test>
+
+ <test name="timestamp">
+  <parser>
+   <query><![CDATA[SELECT @@timestamp@@ FROM DUAL]]></query>
+   <format dbms="oracle"><![CDATA[SELECT @@timestamp@@ FROM DUAL]]></format>
+  </parser>
+ </test>
+
+ <test name="macro-nested">
+  <parser>
+   <query><![CDATA[MACRO A(x) x || x END
+   SELECT A(A(x)) FROM test]]></query>
+   <format dbms="oracle"><![CDATA[MACRO A (x) x || x END
+   SELECT x || x || x || x FROM test]]></format>
+   <format dbms="sqlserver"><![CDATA[MACRO A (x) x + x END
+   SELECT x + x + x + x FROM test]]></format>
+  </parser>
+ </test>
+
+ <test name="macro-parameter-tag">
+  <parser>
+   <query><![CDATA[MACRO A(x)
+   x || <parameter:aaa default="50" postfix="post" changeCase="upper" regex="[0-9]+" replacement="replace" safestr="no"/>
+   END
+   
+   SELECT
+   * FROM table t WHERE t.field < A(x)]]></query>
+   <applyContext>
+    <parameter name="aaa" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[MACRO A (x)
+   x || REPLACEpost
+   END
+   
+   SELECT
+   * FROM table t WHERE t.field < x || REPLACEpost]]></format>
+  </parser>
+ </test>
+
+ <test name="username-in-string">
+  <parser>
+   <query><![CDATA[SELECT ur.role_name FROM user_roles ur WHERE ur.user_name = '@@username@@']]></query>
+   <applyContext>
+    <userName name="Guest" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT ur.role_name FROM user_roles ur WHERE ur.user_name = ''Guest'']]></format>
+  </parser>
+ </test>
+
+ <test name="var-in-field">
+  <parser>
+   <query><![CDATA[SELECT
+    p.ID
+FROM persons p
+INNER JOIN familyMembers fm ON fm.personID = p.ID
+INNER JOIN familyRelations frf ON frf.toID = fm.ID AND frf.relationType = <familyRelationTypes:code name="Опекун/Попечитель"/>
+INNER JOIN familyMembers pfmf ON pfmf.ID = frf.fromID
+INNER JOIN persons po ON po.ID = pfmf.personID
+WHERE po.<var:field/> = <var:fieldValue/>]]></query>
+   <format dbms="oracle"><![CDATA[SELECT
+    p.ID
+FROM persons p
+INNER JOIN familyMembers fm ON fm.personID = p.ID
+INNER JOIN familyRelations frf ON frf.toID = fm.ID AND frf.relationType = <familyRelationTypes:code name="Опекун/Попечитель"/>
+INNER JOIN familyMembers pfmf ON pfmf.ID = frf.fromID
+INNER JOIN persons po ON po.ID = pfmf.personID
+WHERE po.<var:field /> = <var:fieldValue />]]></format>
+  </parser>
+ </test>
+
+ <test name="huge_opeka">
+  <parser>
+   <query><![CDATA[SELECT
+    guard."___ownerID" AS "___guardID",
+    CASE WHEN guard.ID IS NOT NULL THEN ( 
+  guard.lastName || ' ' || guard.firstName || ' ' || 
+    CASE WHEN guard.middleName IS NOT NULL THEN guard.middleName ELSE '' END
+                                ) ELSE NULL END AS "Опекун",
+    '<link table="wardInspections" using="___guardID" columns="guardianID" />' AS ";Опекун",
+    wr.activeFrom AS "Назначен с",
+    
+   ( '<!-' || '-' || CAST (CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END AS VARCHAR) || '-' || '->' || 
+     '<a href="" onClick="javascript:window.open(''jsform?initFormScript=initPersonForm&entity=persons&_tcloneid_=<parameter:_tcloneid_ default=""/>&entityID=' || CAST (p.ID AS VARCHAR) || ''', ' || 
+     ' ''popup' || COALESCE( CAST (p.ID AS VARCHAR),''       ) || ''', ''location=0,menubar=0,toolbar=0,status=1,scrollbars=1,resizable=1'' ' || 
+     '); return false;">' || 
+     CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END || '</a>'                       )
+ AS "Опекаемый",
+    MAX(wi.activeFrom) AS "activeFrom",
+    MAX(wi.nextCheckDate) AS "nextCheckDate",
+    '<blankNulls/>' AS ";nextCheckDate"
+FROM wardInspections wi
+INNER JOIN companies c ON c.ID = wi.companyID
+INNER JOIN persons p ON p.ID = wi.personID
+INNER JOIN wardRegistration wr ON wr.personID = p.ID
+INNER JOIN persons guard ON guard."___ownerID" = wr.guardianID
+WHERE (c.ID = <session:user-companyID refColumn="companies.ID" /> OR c.mainCompanyID = <session:user-companyID refColumn="companies.ID" />)
+GROUP BY guard."___ownerID", CASE WHEN guard.ID IS NOT NULL THEN ( 
+  guard.lastName || ' ' || guard.firstName || ' ' || 
+    CASE WHEN guard.middleName IS NOT NULL THEN guard.middleName ELSE '' END
+                                ) ELSE NULL END, wr.activeFrom, 
+   ( '<!-' || '-' || CAST (CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END AS VARCHAR) || '-' || '->' || 
+     '<a href="" onClick="javascript:window.open(''jsform?initFormScript=initPersonForm&entity=persons&_tcloneid_=<parameter:_tcloneid_ default=""/>&entityID=' || CAST (p.ID AS VARCHAR) || ''', ' || 
+     ' ''popup' || COALESCE( CAST (p.ID AS VARCHAR),''       ) || ''', ''location=0,menubar=0,toolbar=0,status=1,scrollbars=1,resizable=1'' ' || 
+     '); return false;">' || 
+     CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END || '</a>'                       )
+ 
+HAVING 1 = 1
+<if parameter="status">
+    AND ( ( (CAST(wr.activeFrom AS DATE)  + (1) * '1 MONTH'::INTERVAL) > CURRENT_TIMESTAMP AND (CAST(MAX(wi.activeFrom) AS DATE)  + (1) * '1 MONTH'::INTERVAL) < CURRENT_TIMESTAMP ) OR
+          ( (CAST(wr.activeFrom AS DATE)  + (12) * '1 MONTH'::INTERVAL) > CURRENT_TIMESTAMP AND (CAST(MAX(wi.activeFrom) AS DATE)  + (3) * '1 MONTH'::INTERVAL) < CURRENT_TIMESTAMP ) OR
+          ( wr.activeFrom < (CAST(CURRENT_TIMESTAMP AS DATE)  + (-12 ) * '1 MONTH'::INTERVAL) AND (CAST(MAX(wi.activeFrom) AS DATE)  + (12) * '1 MONTH'::INTERVAL) < CURRENT_TIMESTAMP ) )
+</if>
+<if parameter="month">
+    AND CAST(EXTRACT(MONTH FROM  MAX(wi.nextCheckDate)) AS INT) = '<parameter:month />'
+</if>
+ORDER BY wr.activeFrom DESC
+/* <parameter:status /> <parameter:month /> */]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+    guard."___ownerID" AS "___guardID",
+    CASE WHEN guard.ID IS NOT NULL THEN ( 
+  guard.lastName || ' ' || guard.firstName || ' ' || 
+    CASE WHEN guard.middleName IS NOT NULL THEN guard.middleName ELSE '' END
+                                ) ELSE NULL END AS "Опекун",
+    '<link table="wardInspections" using="___guardID" columns="guardianID" />' AS ";Опекун",
+    wr.activeFrom AS "Назначен с",
+    
+   ( '<!-' || '-' || CAST(CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END AS VARCHAR) || '-' || '->' || 
+     '<a href="" onClick="javascript:window.open(''jsform?initFormScript=initPersonForm&entity=persons&_tcloneid_=<parameter:_tcloneid_ default=""/>&entityID=' || CAST(p.ID AS VARCHAR) || ''', ' || 
+     ' ''popup' || COALESCE( CAST(p.ID AS VARCHAR), ''       ) || ''', ''location=0,menubar=0,toolbar=0,status=1,scrollbars=1,resizable=1'' ' || 
+     '); return false;">' || 
+     CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END || '</a>'                       )
+ AS "Опекаемый",
+    MAX(wi.activeFrom) AS "activeFrom",
+    MAX(wi.nextCheckDate) AS "nextCheckDate",
+    '<blankNulls/>' AS ";nextCheckDate"
+FROM wardInspections wi
+INNER JOIN companies c ON c.ID = wi.companyID
+INNER JOIN persons p ON p.ID = wi.personID
+INNER JOIN wardRegistration wr ON wr.personID = p.ID
+INNER JOIN persons guard ON guard."___ownerID" = wr.guardianID
+WHERE (c.ID = <session:user-companyID refColumn="companies.ID"/> OR c.mainCompanyID = <session:user-companyID refColumn="companies.ID"/>)
+GROUP BY guard."___ownerID", CASE WHEN guard.ID IS NOT NULL THEN ( 
+  guard.lastName || ' ' || guard.firstName || ' ' || 
+    CASE WHEN guard.middleName IS NOT NULL THEN guard.middleName ELSE '' END
+                                ) ELSE NULL END, wr.activeFrom, 
+   ( '<!-' || '-' || CAST(CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END AS VARCHAR) || '-' || '->' || 
+     '<a href="" onClick="javascript:window.open(''jsform?initFormScript=initPersonForm&entity=persons&_tcloneid_=<parameter:_tcloneid_ default=""/>&entityID=' || CAST(p.ID AS VARCHAR) || ''', ' || 
+     ' ''popup' || COALESCE( CAST(p.ID AS VARCHAR), ''       ) || ''', ''location=0,menubar=0,toolbar=0,status=1,scrollbars=1,resizable=1'' ' || 
+     '); return false;">' || 
+     CASE WHEN p.ID IS NOT NULL THEN ( 
+  p.lastName || ' ' || p.firstName || ' ' || 
+    CASE WHEN p.middleName IS NOT NULL THEN p.middleName ELSE '' END
+                                ) ELSE NULL END || '</a>'                       )
+ 
+HAVING 1 = 1
+<if parameter="status">
+    AND ( ( (TO_DATE(wr.activeFrom, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(1))> CURRENT_TIMESTAMP AND (TO_DATE(MAX(wi.activeFrom), 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(1))< CURRENT_TIMESTAMP ) OR
+          ( (TO_DATE(wr.activeFrom, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(12))> CURRENT_TIMESTAMP AND (TO_DATE(MAX(wi.activeFrom), 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(3))< CURRENT_TIMESTAMP ) OR
+          ( wr.activeFrom < (TO_DATE(CURRENT_TIMESTAMP, 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(- 12 )) AND (TO_DATE(MAX(wi.activeFrom), 'YYYY-MM-DD')+ INTERVAL '1 MONTH'*(12))< CURRENT_TIMESTAMP ) )
+</if>
+<if parameter="month">
+    AND CAST(EXTRACT(MONTH FROM  MAX(wi.nextCheckDate)) AS INT) = '<parameter:month />'
+</if>
+ORDER BY wr.activeFrom DESC
+/* <parameter:status /> <parameter:month /> */]]></format>
+  </parser>
+ </test>
+
+ <test name="huge_demographic">
+  <parser>
+   <query><![CDATA[SELECT
+   COUNT(DISTINCT p.ID) AS "personsCount",
+   (
+  (SELECT COALESCE( SUM(x."payAmount"),0 ) FROM ( SELECT
+    inc.payAmount AS "payAmount"
+FROM persons<parameter:_tcloneid_ default=""/> p
+  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID/> AS BIGINT )
+    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category),'-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
+      INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
+      INNER JOIN (
+        SELECT
+          pay.activeFrom,
+          a.personID,
+          COALESCE( pay.payAmountDebit,0 ) AS payAmount,
+          wt.welfareGroupCode
+        FROM assignments<parameter:_tcloneid_ default=""/> a
+          INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
+          INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
+            INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
+        WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+            AND pay.eventType IN ('14','26','68','15','16')
+      ) inc ON inc.activeFrom >= DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')) + (-1 * wgip.incomeMonthCount) * '1 MONTH'::INTERVAL
+                       AND inc.activeFrom < DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+                       AND inc.personID = p.ID
+                       AND inc.welfareGroupCode = i2wgc.income
+WHERE wgip.socialAidFormCode = (
+    SELECT MAX(wgip_1.socialAidFormCode)
+    FROM welfareGroupIncomesPeriods wgip_1
+    WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+) AND p.ID IN (
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>'
+        AND se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+
+    UNION ALL
+
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>'
+        AND se.activeTo IS NULL
+)
+ ) x)
++
+  (SELECT COALESCE( SUM(x."income"),0 ) FROM ( SELECT
+    COALESCE( i.amount,0 ) AS "income"
+FROM persons<parameter:_tcloneid_ default=""/> p
+    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID/> AS BIGINT )
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>' AND se.personID = p.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD') OR se.activeTo IS NULL )
+    LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
+    LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
+    LEFT JOIN docTypes dt ON dt.CODE = d.typeID
+    LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
+        AND i.personID = p.ID
+        AND i.monthDate < DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+    INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
+    INNER JOIN territories t ON t.ID = c2t.territoryID
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+ <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category),'-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
+          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+    AND wgip.socialAidFormCode = (
+        SELECT MAX(wgip_1.socialAidFormCode)
+        FROM welfareGroupIncomesPeriods wgip_1
+        WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+    )
+    AND ( i.ID IS NULL OR i.monthDate >= (
+                SELECT MAX(inc.monthDate) + (-1 * wgip.incomeMonthCount) * '1 MONTH'::INTERVAL
+                FROM documents<parameter:_tcloneid_ default=""/> doc
+                INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
+                INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID/>' AND soce.ID = se2doc.socialEventID
+                INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
+                WHERE doc.typeID = d.typeID
+                    AND soce.personID = se.personID
+                    AND inc.monthDate < DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+            )
+    )
+GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
+ ) x)
+)
+     AS "totalFamilyIncome",
+   wgip.incomeMonthCount AS "incomeMonthCount",
+(
+  (SELECT COALESCE( SUM(x."payAmount"),0 ) FROM ( SELECT
+    inc.payAmount AS "payAmount"
+FROM persons<parameter:_tcloneid_ default=""/> p
+  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID/> AS BIGINT )
+    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category),'-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
+      INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
+      INNER JOIN (
+        SELECT
+          pay.activeFrom,
+          a.personID,
+          COALESCE( pay.payAmountDebit,0 ) AS payAmount,
+          wt.welfareGroupCode
+        FROM assignments<parameter:_tcloneid_ default=""/> a
+          INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
+          INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
+            INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
+        WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+            AND pay.eventType IN ('14','26','68','15','16')
+      ) inc ON inc.activeFrom >= DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')) + (-1 * wgip.incomeMonthCount) * '1 MONTH'::INTERVAL
+                       AND inc.activeFrom < DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+                       AND inc.personID = p.ID
+                       AND inc.welfareGroupCode = i2wgc.income
+WHERE wgip.socialAidFormCode = (
+    SELECT MAX(wgip_1.socialAidFormCode)
+    FROM welfareGroupIncomesPeriods wgip_1
+    WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+) AND p.ID IN (
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>'
+        AND se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+
+    UNION ALL
+
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>'
+        AND se.activeTo IS NULL
+)
+ ) x)
++
+  (SELECT COALESCE( SUM(x."income"),0 ) FROM ( SELECT
+    COALESCE( i.amount,0 ) AS "income"
+FROM persons<parameter:_tcloneid_ default=""/> p
+    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID/> AS BIGINT )
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>' AND se.personID = p.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD') OR se.activeTo IS NULL )
+    LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
+    LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
+    LEFT JOIN docTypes dt ON dt.CODE = d.typeID
+    LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
+        AND i.personID = p.ID
+        AND i.monthDate < DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+    INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
+    INNER JOIN territories t ON t.ID = c2t.territoryID
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p.birthday)) AS INTEGER)
+ <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category),'-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
+          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+    AND wgip.socialAidFormCode = (
+        SELECT MAX(wgip_1.socialAidFormCode)
+        FROM welfareGroupIncomesPeriods wgip_1
+        WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+    )
+    AND ( i.ID IS NULL OR i.monthDate >= (
+                SELECT MAX(inc.monthDate) + (-1 * wgip.incomeMonthCount) * '1 MONTH'::INTERVAL
+                FROM documents<parameter:_tcloneid_ default=""/> doc
+                INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
+                INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID/>' AND soce.ID = se2doc.socialEventID
+                INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
+                WHERE doc.typeID = d.typeID
+                    AND soce.personID = se.personID
+                    AND inc.monthDate < DATE_TRUNC('MONTH',TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+            )
+    )
+GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
+ ) x)
+)
+      / COUNT(DISTINCT p.ID) / wgip.incomeMonthCount AS "monthFamilyIncome",
+   '<currency round="2"/>' AS ";monthFamilyIncome",
+(SELECT SUM(y.amount) FROM (
+   SELECT MIN(pt.amount) AS amount
+    FROM persons<parameter:_tcloneid_ default=""/> p1
+    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> inner_gur ON inner_gur.ID = CAST( <parameter:gurID/> AS BIGINT )
+      INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID/>' AND se.personID = p1.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD') OR se.activeTo IS NULL )
+      INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p1.birthday)) AS INTEGER)
+ >= CASE WHEN p1.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+                                     AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'),p1.birthday)) AS INTEGER)
+ <= CASE WHEN p1.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+                                     AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category),'-1' ) FROM privCategories pc WHERE pc.personID = p1.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+        INNER JOIN povertyThresholds pt ON pt.demographicGroup = dg.CODE AND       (
+          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD'))
+      )
+
+          INNER JOIN territories t ON pt.provinceID = t.provinceID
+            INNER JOIN companies2territories c2t ON t.ID = c2t.territoryID AND c2t.companyID = inner_gur.companyID
+    WHERE p1.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+    AND EXISTS(
+        SELECT 1 FROM welfareGroupIncomesPeriods inner_wgip
+        WHERE inner_wgip.welfareGroupCode = inner_gur.welfareGroup
+            AND       (
+          inner_wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND inner_wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+            AND dg.CODE = inner_wgip.demographicGroupCode
+    )
+    GROUP BY p1.ID
+  ) y
+)
+      / COUNT(DISTINCT p.ID) AS "familyPovertyThresholds",
+   '<currency round="2"/>' AS ";familyPovertyThresholds"
+FROM persons<parameter:_tcloneid_ default=""/> p
+  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = <parameter:gurID refColumn="governmentUtilityRequests.ID"/>
+    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >=  TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD') OR se.activeTo IS NULL )
+    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>','YYYY-MM-DD')
+      )
+
+        INNER JOIN assignmentRules2socialAidForms ar2saf ON ar2saf.assignmentRuleID = gur.livingSituationCode AND ar2saf.socialAidFormCode = wgip.socialAidFormCode
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+GROUP BY wgip.incomeMonthCount, gur.ID, wg.name, gur."___ownerID", gur.companyID, gur.welfareGroup
+/* gurID:      '<parameter:gurID />'
+   calcDate:   '<parameter:calcDate />'
+   personIDs:  '<parameter:personIDs />'
+   _tcloneid_: '<parameter:_tcloneid_ />' */]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+   COUNT(DISTINCT p.ID) AS "personsCount",
+   (
+  (SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
+    inc.payAmount AS "payAmount"
+FROM persons<parameter:_tcloneid_ default=""/> p
+  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
+      INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
+      INNER JOIN (
+        SELECT
+          pay.activeFrom,
+          a.personID,
+          COALESCE( pay.payAmountDebit, 0 ) AS payAmount,
+          wt.welfareGroupCode
+        FROM assignments<parameter:_tcloneid_ default=""/> a
+          INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
+          INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
+            INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
+        WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+            AND pay.eventType IN ('14', '26', '68', '15', '16')
+      ) inc ON inc.activeFrom >= (DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+                       AND inc.activeFrom < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+                       AND inc.personID = p.ID
+                       AND inc.welfareGroupCode = i2wgc.income
+WHERE wgip.socialAidFormCode = (
+    SELECT MAX(wgip_1.socialAidFormCode)
+    FROM welfareGroupIncomesPeriods wgip_1
+    WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+) AND p.ID IN (
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+        AND se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+
+    UNION ALL
+
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+        AND se.activeTo IS NULL
+)
+ ) x)
++
+  (SELECT COALESCE( SUM(x."income"), 0 ) FROM ( SELECT
+    COALESCE( i.amount, 0 ) AS "income"
+FROM persons<parameter:_tcloneid_ default=""/> p
+    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
+    LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
+    LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
+    LEFT JOIN docTypes dt ON dt.CODE = d.typeID
+    LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
+        AND i.personID = p.ID
+        AND i.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+    INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
+    INNER JOIN territories t ON t.ID = c2t.territoryID
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+ <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
+          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+    AND wgip.socialAidFormCode = (
+        SELECT MAX(wgip_1.socialAidFormCode)
+        FROM welfareGroupIncomesPeriods wgip_1
+        WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+    )
+    AND ( i.ID IS NULL OR i.monthDate >= (
+                SELECT (MAX(inc.monthDate)+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+                FROM documents<parameter:_tcloneid_ default=""/> doc
+                INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
+                INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND soce.ID = se2doc.socialEventID
+                INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
+                WHERE doc.typeID = d.typeID
+                    AND soce.personID = se.personID
+                    AND inc.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+            )
+    )
+GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
+ ) x)
+)
+     AS "totalFamilyIncome",
+   wgip.incomeMonthCount AS "incomeMonthCount",
+(
+  (SELECT COALESCE( SUM(x."payAmount"), 0 ) FROM ( SELECT
+    inc.payAmount AS "payAmount"
+FROM persons<parameter:_tcloneid_ default=""/> p
+  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+<= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN incomes2WGCalculate i2wgc ON i2wgc.welfareGroup = gur.welfareGroup AND i2wgc.incomeType = 'МСП'
+      INNER JOIN welfareGroups wg_other ON wg_other.CODE = i2wgc.income
+      INNER JOIN (
+        SELECT
+          pay.activeFrom,
+          a.personID,
+          COALESCE( pay.payAmountDebit, 0 ) AS payAmount,
+          wt.welfareGroupCode
+        FROM assignments<parameter:_tcloneid_ default=""/> a
+          INNER JOIN payments<parameter:_tcloneid_ default=""/> pay ON a.ID = pay.assignmentID
+          INNER JOIN assignmentRules ar ON ar.ID = a.assignmentRuleID
+            INNER JOIN welfareTypes wt ON ar.welfareType = wt.CODE
+        WHERE a.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+            AND pay.eventType IN ('14', '26', '68', '15', '16')
+      ) inc ON inc.activeFrom >= (DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+                       AND inc.activeFrom < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+                       AND inc.personID = p.ID
+                       AND inc.welfareGroupCode = i2wgc.income
+WHERE wgip.socialAidFormCode = (
+    SELECT MAX(wgip_1.socialAidFormCode)
+    FROM welfareGroupIncomesPeriods wgip_1
+    WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+) AND p.ID IN (
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+        AND se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+
+    UNION ALL
+
+    SELECT se.personID FROM socialEvents<parameter:_tcloneid_ default=""/> se
+    WHERE se.personID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+        AND se.referenceID = 'governmentUtilityRequests.<parameter:gurID />'
+        AND se.activeTo IS NULL
+)
+ ) x)
++
+  (SELECT COALESCE( SUM(x."income"), 0 ) FROM ( SELECT
+    COALESCE( i.amount, 0 ) AS "income"
+FROM persons<parameter:_tcloneid_ default=""/> p
+    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
+    LEFT JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2d ON se2d.socialEventID = se.ID
+    LEFT JOIN documents<parameter:_tcloneid_ default=""/> d ON d.ID = se2d.documentID
+    LEFT JOIN docTypes dt ON dt.CODE = d.typeID
+    LEFT JOIN incomes<parameter:_tcloneid_ default=""/> i ON i.documentID = se2d.documentID
+        AND i.personID = p.ID
+        AND i.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+    INNER JOIN companies2territories c2t ON c2t.companyID = gur.companyID
+    INNER JOIN territories t ON t.ID = c2t.territoryID
+    INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+ >= CASE WHEN p.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+        AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p.birthday)) AS INTEGER)
+ <= CASE WHEN p.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+        AND dg.CODE = wgip.demographicGroupCode
+        AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+    INNER JOIN povertyThresholds pt ON pt.provinceID = t.provinceID AND pt.demographicGroup = dg.CODE AND       (
+          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+    AND wgip.socialAidFormCode = (
+        SELECT MAX(wgip_1.socialAidFormCode)
+        FROM welfareGroupIncomesPeriods wgip_1
+        WHERE wgip_1.welfareGroupCode = gur.welfareGroup AND       (
+          wgip_1.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip_1.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+    )
+    AND ( i.ID IS NULL OR i.monthDate >= (
+                SELECT (MAX(inc.monthDate)+ INTERVAL '1 MONTH'*(- 1 * wgip.incomeMonthCount))
+                FROM documents<parameter:_tcloneid_ default=""/> doc
+                INNER JOIN socialEvents2documents<parameter:_tcloneid_ default=""/> se2doc ON se2doc.documentID = doc.ID
+                INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> soce ON soce.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND soce.ID = se2doc.socialEventID
+                INNER JOIN incomes<parameter:_tcloneid_ default=""/> inc ON inc.documentID = se2doc.documentID
+                WHERE doc.typeID = d.typeID
+                    AND soce.personID = se.personID
+                    AND inc.monthDate < DATE_TRUNC('MONTH', TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+            )
+    )
+GROUP BY i.amount, i.monthDate, dt.name, dt.class, wgip.incomeMonthCount, gur.ID, p.ID, p.lastName, p.firstName, p.middleName, dg.name
+ ) x)
+)
+      / COUNT(DISTINCT p.ID) / wgip.incomeMonthCount AS "monthFamilyIncome",
+   '<currency round="2"/>' AS ";monthFamilyIncome",
+(SELECT SUM(y.amount) FROM (
+   SELECT MIN(pt.amount) AS amount
+    FROM persons<parameter:_tcloneid_ default=""/> p1
+    INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> inner_gur ON inner_gur.ID = CAST( <parameter:gurID /> AS BIGINT)
+      INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p1.ID AND ( se.activeTo >= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
+      INNER JOIN demographicGroups dg ON         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p1.birthday)) AS INTEGER)
+ >= CASE WHEN p1.sex = 'male' THEN dg.maleAgeFrom ELSE dg.femaleAgeFrom END
+                                     AND         CAST(EXTRACT(YEAR FROM AGE(TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'), p1.birthday)) AS INTEGER)
+ <= CASE WHEN p1.sex = 'male' THEN dg.maleAgeTo ELSE dg.femaleAgeTo END
+                                     AND dg.categoryCode = ( SELECT COALESCE( MAX(pc.category), '-1' ) FROM privCategories pc WHERE pc.personID = p1.ID AND       (
+          (pc.activeFrom IS NULL OR pc.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pc.activeTo IS NULL OR pc.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+ AND pc.category IN ( SELECT categoryCode FROM demographicGroups ) )
+        INNER JOIN povertyThresholds pt ON pt.demographicGroup = dg.CODE AND       (
+          (pt.activeFrom IS NULL OR pt.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      AND (pt.activeTo IS NULL OR pt.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD'))
+      )
+
+          INNER JOIN territories t ON pt.provinceID = t.provinceID
+            INNER JOIN companies2territories c2t ON t.ID = c2t.territoryID AND c2t.companyID = inner_gur.companyID
+    WHERE p1.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+    AND EXISTS (
+        SELECT 1 FROM welfareGroupIncomesPeriods inner_wgip
+        WHERE inner_wgip.welfareGroupCode = inner_gur.welfareGroup
+            AND       (
+          inner_wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND inner_wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+            AND dg.CODE = inner_wgip.demographicGroupCode
+    )
+    GROUP BY p1.ID
+  ) y
+)
+      / COUNT(DISTINCT p.ID) AS "familyPovertyThresholds",
+   '<currency round="2"/>' AS ";familyPovertyThresholds"
+FROM persons<parameter:_tcloneid_ default=""/> p
+  INNER JOIN governmentUtilityRequests<parameter:_tcloneid_ default=""/> gur ON gur.ID = <parameter:gurID refColumn="governmentUtilityRequests.ID"/>
+    INNER JOIN socialEvents<parameter:_tcloneid_ default=""/> se ON se.referenceID = 'governmentUtilityRequests.<parameter:gurID />' AND se.personID = p.ID AND ( se.activeTo >=  TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD') OR se.activeTo IS NULL )
+    INNER JOIN welfareGroups wg ON wg.CODE = gur.welfareGroup
+    INNER JOIN welfareGroupIncomesPeriods wgip ON wgip.welfareGroupCode = gur.welfareGroup AND       (
+          wgip.activeFrom <= TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      AND wgip.activeTo > TO_DATE('<parameter:calcDate type="java.sql.Date"/>', 'YYYY-MM-DD')
+      )
+
+        INNER JOIN assignmentRules2socialAidForms ar2saf ON ar2saf.assignmentRuleID = gur.livingSituationCode AND ar2saf.socialAidFormCode = wgip.socialAidFormCode
+WHERE p.ID IN <parameter:personIDs multiple="true" refColumn="persons.ID"/>
+GROUP BY wgip.incomeMonthCount, gur.ID, wg.name, gur."___ownerID", gur.companyID, gur.welfareGroup
+/* gurID:      '<parameter:gurID />'
+   calcDate:   '<parameter:calcDate />'
+   personIDs:  '<parameter:personIDs />'
+   _tcloneid_: '<parameter:_tcloneid_ />' */]]></format>
+  </parser>
+ </test>
+
+ <test name="in-parameters-parens">
+  <parser>
+   <query><![CDATA[SELECT
+    ea.address, COALESCE( ( COALESCE( p.lastName,''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ),'<i>{{{Prefer not to say}}}</i>'        ) 
+FROM persons p, emailAddresses ea
+WHERE p.userName IN
+      ( SELECT whoInserted___ FROM problems WHERE ID IN ( <parameter:ID multiple="true" /> )
+           UNION
+        SELECT assignee FROM problemAssignments WHERE problemID IN ( <parameter:ID multiple="true" /> )
+      )
+     AND ea.ownerID = p."___ownerID"]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+    ea.address, COALESCE( ( COALESCE( p.lastName, ''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ), '<i>{{{Prefer not to say}}}</i>'        ) 
+FROM persons p, emailAddresses ea
+WHERE p.userName IN
+      ( SELECT whoInserted___ FROM problems WHERE ID IN ( <parameter:ID multiple="true"/> )
+           UNION
+        SELECT assignee FROM problemAssignments WHERE problemID IN ( <parameter:ID multiple="true"/> )
+      )
+     AND ea.ownerID = p."___ownerID"]]></format>
+     
+   <applyContext>
+    <parameter name="ID" value="12" />
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT
+    ea.address, COALESCE( ( COALESCE( p.lastName, ''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ), '<i>{{{Prefer not to say}}}</i>'        ) 
+FROM persons p, emailAddresses ea
+WHERE p.userName IN
+      ( SELECT whoInserted___ FROM problems WHERE ID IN ( 12)
+           UNION
+        SELECT assignee FROM problemAssignments WHERE problemID IN ( 12)
+      )
+     AND ea.ownerID = p."___ownerID"]]></format>
+  </parser>
+ </test>
+
+ <test name="var-in-table">
+  <parser>
+   <query><![CDATA[SELECT
+    cv.ID AS "ID;<hidden/>",
+    cv.classifierCODE, 
+    cv.value AS "value", 
+
+    e.primaryKeyColumn AS "PK;<hidden/>",
+    cl.dictionaryName AS "dict;<hidden/>",
+    CASE WHEN cl.dictionaryName IS NOT NULL THEN 
+        '<sql>SELECT name FROM <var:dict /> WHERE <var:PK /> = '<var:value />'</sql>'
+       ELSE '' END
+       AS "Наименование",
+    cv.activeFrom,
+    cv.activeTo AS "activeTo",
+    '<nullif value="31.12.2199" />' AS ";activeTo",
+    cv.isMain,
+    cv.comments,
+    CASE WHEN cv.activeTo < CURRENT_DATE THEN '1' ELSE '0' END AS "IS_EXPIRED;<hidden/>",
+    CASE WHEN cv.activeTo = cv.activeFrom THEN '1' ELSE '0' END AS "IS_CLOSED;<hidden/>"
+FROM classifierValues<parameter:_tcloneid_ default=""/> cv
+   INNER JOIN classifiers cl ON cl.CODE = cv.classifierCODE
+      LEFT JOIN entities e ON e.name = cl.dictionaryName]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+    cv.ID AS "ID;<hidden/>",
+    cv.classifierCODE, 
+    cv.value AS "value", 
+
+    e.primaryKeyColumn AS "PK;<hidden/>",
+    cl.dictionaryName AS "dict;<hidden/>",
+    CASE WHEN cl.dictionaryName IS NOT NULL THEN 
+        '<sql> SELECT name FROM <var:dict /> WHERE <var:PK /> = '<var:value />'</sql>'
+       ELSE '' END
+       AS "Наименование",
+    cv.activeFrom,
+    cv.activeTo AS "activeTo",
+    '<nullif value="31.12.2199" />' AS ";activeTo",
+    cv.isMain,
+    cv.comments,
+    CASE WHEN cv.activeTo < CURRENT_DATE THEN '1' ELSE '0' END AS "IS_EXPIRED;<hidden/>",
+    CASE WHEN cv.activeTo = cv.activeFrom THEN '1' ELSE '0' END AS "IS_CLOSED;<hidden/>"
+FROM classifierValues<parameter:_tcloneid_ default=""/> cv
+   INNER JOIN classifiers cl ON cl.CODE = cv.classifierCODE
+      LEFT JOIN entities e ON e.name = cl.dictionaryName]]></format>
+  </parser>
+ </test>
+
+ <test name="macro-without-query">
+  <parser>
+   <query><![CDATA[MACRO CARD_LINK_COMMON(arg1=default, arg2=value)
+  '<!--' || CAST((arg2) AS CHAR) || '-->' || '<a href="...">' || arg1 || '</a>'
+END]]></query>
+   <format dbms="oracle"><![CDATA[MACRO CARD_LINK_COMMON (arg1 = default, arg2 = value)
+  '<!--' || TO_CHAR((arg2))|| '-->' || '<a href="...">' || arg1 || '</a>'
+END]]></format>
+  </parser>
+ </test>
+
+ <test name="if-concat">
+  <parser>
+   <query><![CDATA[SELECT
+'<center><b>{{{' || COALESCE(q.section,q.entity) || '}}}</center></b>' AS "ENTITY" , '<grouping />' AS ";ENTITY",
+CASE
+  WHEN t.table_name IS NOT NULL OR q.table_name IS NULL THEN '<a href="' || q.redirectURL || COALESCE( q.extraUrl, '' ) <if parameter="regionCode">|| '&regionCode=<parameter:regionCode/>'</if> || '">' || COALESCE(lm.message,'{{{' || q.name || '}}}') || '</a>'
+  ELSE COALESCE(lm.message,'{{{' || q.name || '}}}') END AS "LIST",
+q.status AS "STATUS",
+count AS "COUNT",
+q.startTime AS "START",
+q.endTime AS "END"
+FROM reportListsAutomation q
+LEFT JOIN ( SELECT c.relname FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'public' ) AS t(table_name) ON t.table_name = LOWER(q.table_name)
+LEFT JOIN localizedMessages lm ON lm.entity = q.entity AND lm.topic = 'viewName' AND lm.messageKey = q.name
+WHERE 1 = 1
+
+ORDER BY q.section, q.entity, q.name]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+'<center><b>{{{' || COALESCE(q.section, q.entity) || '}}}</center></b>' AS "ENTITY" , '<grouping />' AS ";ENTITY",
+CASE
+  WHEN t.table_name IS NOT NULL OR q.table_name IS NULL THEN '<a href="' || q.redirectURL || COALESCE( q.extraUrl, '' ) <if parameter="regionCode">||'&regionCode=<parameter:regionCode />'</if> || '">' || COALESCE(lm.message, '{{{' || q.name || '}}}') || '</a>'
+  ELSE COALESCE(lm.message, '{{{' || q.name || '}}}') END AS "LIST",
+q.status AS "STATUS",
+count AS "COUNT",
+q.startTime AS "START",
+q.endTime AS "END"
+FROM reportListsAutomation q
+LEFT JOIN ( SELECT c.relname FROM pg_catalog.pg_class c INNER JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'public' ) AS t (table_name) ON t.table_name = LOWER(q.table_name)
+LEFT JOIN localizedMessages lm ON lm.entity = q.entity AND lm.topic = 'viewName' AND lm.messageKey = q.name
+WHERE 1 = 1
+
+ORDER BY q.section, q.entity, q.name]]></format>
+  </parser>
+ </test>
+
+ <test name="if-in-string">
+  <parser>
+   <query><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter='_cat_'>&_cat_=<parameter:_cat_/></if>">{{{Edit}}}</a>']]></query>
+   <format dbms="oracle"><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter="_cat_">&_cat_=<parameter:_cat_ /></if>">{{{Edit}}}</a>' FROM DUAL]]></format>
+   <applyContext>
+    <parameter name="_cat_" value="val" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&&_cat_='val'">{{{Edit}}}</a>' FROM DUAL]]></format>
+  </parser>
+ </test>
+
+ <test name="tag-end-in-literal">
+  <parser>
+   <query><![CDATA[SELECT '/>']]></query>
+   <format dbms="postgres"><![CDATA[SELECT '/>']]></format>
+  </parser>
+ </test>
+
+ <test name="in-list-several-dictionaries">
+  <parser>
+   <query><![CDATA[SELECT
+   p.ID AS "personID",
+ COALESCE( ( COALESCE( p.lastName,''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ),'<i>{{{Prefer not to say}}}</i>'        ) AS "Name"
+FROM persons p
+WHERE p.insuranceNo IS NULL
+  AND p.userName IS NULL
+  AND NOT EXISTS(
+   SELECT 1 FROM smevPublicServiceRequests req
+   WHERE req.personID = p.ID AND req.serviceID = '1' )
+  AND ( p.importID != <import:ID fileName="Тестовые данные" default="-1" /> OR p.importID IS NULL )
+ORDER BY CASE WHEN
+    CAST(EXTRACT(YEAR FROM AGE(NOW(),p.birthday)) AS INTEGER) < 18 AND
+    NOT EXISTS ( SELECT 1 FROM pensionSurcharges ps WHERE ps.personID = p.ID ) AND
+    ( EXISTS( SELECT 1 FROM privCategories pc WHERE pc.personID = p.ID AND pc.category IN ( '6000', '099' ) )
+      OR
+      NOT EXISTS
+        (
+           SELECT 1 FROM familyMembers fm, familyMembers fmcheck, familyRelations frel
+           WHERE fm.personID = p.ID AND fm.familyID = fmcheck.familyID AND fmcheck.personID != fm.personID AND
+                 fm.ID = frel.toID AND fmcheck.ID = frel.fromID AND fmcheck.absenseType IS NULL AND
+                 frel.relationType IN ( <familyRelationTypes:CODE name="Отец" />,
+                                        <familyRelationTypes:CODE name="Отчим" />,
+                                        <familyRelationTypes:CODE name="Приемный отец" /> )
+        )
+    )
+   THEN 1 ELSE 2 END]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+   p.ID AS "personID",
+ COALESCE( ( COALESCE( p.lastName, ''        ) || ' ' || p.firstName || CASE WHEN  p.middleName IS NULL THEN  '' ELSE  ( ' ' || p.middleName                                   ) END ), '<i>{{{Prefer not to say}}}</i>'        ) AS "Name"
+FROM persons p
+WHERE p.insuranceNo IS NULL
+  AND p.userName IS NULL
+  AND NOT EXISTS (
+   SELECT 1 FROM smevPublicServiceRequests req
+   WHERE req.personID = p.ID AND req.serviceID = '1' )
+  AND ( p.importID <> <import:ID fileName="Тестовые данные" default="-1"/> OR p.importID IS NULL )
+ORDER BY CASE WHEN
+    CAST(EXTRACT(YEAR FROM AGE(CURRENT_TIMESTAMP, p.birthday)) AS INTEGER) < 18 AND
+    NOT EXISTS ( SELECT 1 FROM pensionSurcharges ps WHERE ps.personID = p.ID ) AND
+    ( EXISTS ( SELECT 1 FROM privCategories pc WHERE pc.personID = p.ID AND pc.category IN ( '6000', '099' ) )
+      OR
+      NOT EXISTS
+        (
+           SELECT 1 FROM familyMembers fm, familyMembers fmcheck, familyRelations frel
+           WHERE fm.personID = p.ID AND fm.familyID = fmcheck.familyID AND fmcheck.personID <> fm.personID AND
+                 fm.ID = frel.toID AND fmcheck.ID = frel.fromID AND fmcheck.absenseType IS NULL AND
+                 frel.relationType IN ( <familyRelationTypes:CODE name="Отец"/>,
+                                        <familyRelationTypes:CODE name="Отчим"/>,
+                                        <familyRelationTypes:CODE name="Приемный отец"/> )
+        )
+    )
+   THEN 1 ELSE 2 END]]></format>
+  </parser>
+ </test>
+ 
+ <test name="dbms_transform">
+  <parser>
+   <query><![CDATA[DBMS_TRANSFORM LEVENSHTEIN(arg1, arg2)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'oracle' THEN EDIT_DISTANCE(arg1, arg2)
+         WHEN 'mysql' THEN a * a
+    END
+
+SELECT LEVENSHTEIN(a, b) FROM table t]]></query>
+   <format dbms="oracle"><![CDATA[DBMS_TRANSFORM LEVENSHTEIN (arg1, arg2)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'oracle' THEN EDIT_DISTANCE(arg1, arg2)
+         WHEN 'mysql' THEN a * a
+    END
+
+SELECT EDIT_DISTANCE(a, b) FROM table t]]></format>
+   <format dbms="mysql"><![CDATA[DBMS_TRANSFORM LEVENSHTEIN (arg1, arg2)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'oracle' THEN EDIT_DISTANCE(arg1, arg2)
+         WHEN 'mysql' THEN a * a
+    END
+
+SELECT a * a FROM table t]]></format>
+  </parser>
+ </test>
+ 
+ <test name="dbms_transform2">
+  <parser>
+   <query><![CDATA[DBMS_TRANSFORM LLPAD(str, size, fill)
+    CASE WHEN 'postgres', 'oracle', 'mysql', 'db2' THEN AS IS
+         WHEN 'sqlserver' THEN RRIGHT(REPLICATE( fill, size ) + str, rsize)
+    END
+
+SELECT LLPAD('lpad', 8, '0') FROM table t]]></query>
+   <format dbms="sqlserver"><![CDATA[DBMS_TRANSFORM LLPAD (str, size, fill)
+    CASE WHEN 'postgres', 'oracle', 'mysql', 'db2' THEN AS IS
+         WHEN 'sqlserver' THEN RRIGHT(REPLICATE( fill, size ) + str, rsize)
+    END
+
+SELECT RRIGHT(REPLICATE( '0', 8)+'lpad', rsize) FROM table t]]></format>
+   <format dbms="mysql"><![CDATA[DBMS_TRANSFORM LLPAD (str, size, fill)
+    CASE WHEN 'postgres', 'oracle', 'mysql', 'db2' THEN AS IS
+         WHEN 'sqlserver' THEN RRIGHT(REPLICATE( fill, size ) + str, rsize)
+    END
+
+SELECT LLPAD('lpad', 8, '0') FROM table t]]></format>
+  </parser>
+ </test>
+ 
+ <test name="dbms_transform3">
+  <parser>
+   <query><![CDATA[DBMS_TRANSFORM A(x)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'sqlserver' THEN x + x
+    END
+    
+    DBMS_TRANSFORM C(x)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'sqlserver' THEN D(A(x))+2
+    END
+
+SELECT A(b), C(b) FROM table t]]></query>
+   <format dbms="postgres"><![CDATA[DBMS_TRANSFORM A (x)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'sqlserver' THEN x + x
+    END
+    
+    DBMS_TRANSFORM C (x)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'sqlserver' THEN D(A(x))+ 2
+    END
+
+SELECT A(b), C(b) FROM table t]]></format>
+   <format dbms="sqlserver"><![CDATA[DBMS_TRANSFORM A (x)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'sqlserver' THEN x + x
+    END
+    
+    DBMS_TRANSFORM C (x)
+    CASE WHEN 'postgres' THEN AS IS
+         WHEN 'sqlserver' THEN D(x + x)+ 2
+    END
+
+SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
+  </parser>
+ </test>
+ 
+ <test name="var-in-beSql">
+  <parser>
+   <query><![CDATA[SELECT CASE
+  WHEN d0.type='calc-sql' AND d0.calcExpression LIKE '%</sql>%' THEN NULL
+  WHEN d0.type='calc-sql' THEN '<sql limit="1"><var:___calc safestr="no"/></sql>' END]]></query>   
+   <format dbms="postgres"><![CDATA[SELECT CASE
+  WHEN d0.type ='calc-sql' AND d0.calcExpression LIKE '%</sql>%' THEN NULL
+  WHEN d0.type ='calc-sql' THEN '<sql limit="1"><var:___calc safestr="no"/></sql>' END]]></format>
+  </parser>
+ </test>
+ 
+ <test name="cyrillic-beIdentifier">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE t.ID = <var:ИД refColumn="socialAidContracts.ID"/>]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE t.ID = <var:ИД refColumn="socialAidContracts.ID"/>]]></format>
+  </parser>
+ </test>
+ 
+ <test name="if-groupBy">
+  <parser>
+   <query><![CDATA[SELECT * FROM table GROUP BY a <if parameter="param">, b, c</if>, d]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table GROUP BY a <if parameter="param">, b, c</if>, d]]></format>
+  </parser>
+ </test>
+ 
+ <test name="empty-else">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID||lastName||firstName||middleName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE (1 = 1
+      <if expr="personID||lastName||firstName||middleName">
+        <then> AND 2 = 2
+        </then>
+        <else></else>
+    </if> AND 3 = 3)]]></format>
+  </parser>
+ </test> 
+ 
+ <test name="if-in-else">
+  <parser>
+   <query><![CDATA[SELECT * from t where 1=1
+        <if expr="printParentBanks==yes">
+        <then>
+            AND pd.bankID IN
+            (
+              SELECT pboall.id
+              FROM paymentBankOffices pboall, paymentBankOffices pbobase
+              where  1=1
+               AND pbobase.id = <parameter:bankID refColumn="paymentBatches.bankID"/>
+               AND pboall.name LIKE SUBSTR(pbobase.name,0 ,LENGTH(pbobase.name)-5) || '%'
+             UNION ALL
+              SELECT <parameter:bankID refColumn="paymentBatches.bankID"/> AS "ID"  
+            )
+
+        </then>
+        <else>
+            <if parameter="bankID">
+                AND pbo.ID = '<parameter:bankID/>'
+            </if>
+        </else>
+    </if>]]></query>
+    <applyContext>
+    <parameter name="bankID" value="id" />
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT * FROM t WHERE 1 = 1 AND pbo.ID = 'id']]></format>
+  </parser>
+ </test>
+
+ <test name="unless-from">
+  <parser>
+   <query><![CDATA[select * <unless parameter="_tcloneid_">
+    FROM persons p
+</unless>]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * <unless parameter="_tcloneid_">
+    FROM persons p
+</unless>]]></format>
+  </parser>
+ </test> 
+ 
+ <test name="if-orderBy">
+  <parser>
+   <query><![CDATA[SELECT * FROM table ORDER BY a DESC, <if parameter="_tcloneid_">b</if>, c, d ASC]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table ORDER BY a DESC, <if parameter="_tcloneid_"> b</if>, c, d ASC]]></format>
+   <applyContext/>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table ORDER BY a DESC, c, d ASC]]></format>
+  </parser>
+ </test> 
+   
+ <test name="unless-from-2">
+  <parser>
+   <query><![CDATA[select a <unless parameter="_tcloneid_">
+    FROM persons p
+</unless>]]></query>
+   <format dbms="postgres"><![CDATA[SELECT a <unless parameter="_tcloneid_">
+    FROM persons p
+</unless>]]></format>
+  </parser>
+ </test> 
+ 
+ <test name="common-tag-parameter-list">
+  <parser>
+   <query><![CDATA[SELECT
+        fre.ID AS "#",
+        fre.fedRegExchangeID AS "packageID",
+        <if parameter="<parameter:foo default="50"/>">
+            c.shortName AS "companyName",
+        </if>
+        <if parameter="<companies:ID shortName="МСР НСО"/>">
+            c.shortName AS "companyName",
+        </if>
+         <if parameter="<session:user-region />">
+            c.shortName AS "companyName",
+        </if>
+        <if session="user-companyID" value='<var:fieldValue/>'>
+            c.shortName AS "companyName",
+        </if>]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+        fre.ID AS "#",
+        fre.fedRegExchangeID AS "packageID",
+        <if parameter="<parameter:foo default="50"/>">
+            c.shortName AS "companyName",
+        </if>
+        <if parameter="<companies:ID shortName="МСР НСО"/>">
+            c.shortName AS "companyName",
+        </if>
+         <if parameter="<session:user-region />">
+            c.shortName AS "companyName",
+        </if>
+        <if session="user-companyID" value="<var:fieldValue />">
+            c.shortName AS "companyName",
+        </if>]]></format>
+  </parser>
+ </test>  
+
+ <test name="apply-if-parameters-multiply">
+  <parser>
+   <query><![CDATA[SELECT
+     field AS "FIELD"
+     FROM table t
+     WHERE 1 = 1
+     <if parameter="status">
+        AND status IN <parameter:status multiple="true" />
+     </if>
+]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+     field AS "FIELD"
+     FROM table t
+     WHERE 1 = 1
+     <if parameter="status">
+        AND status IN <parameter:status multiple="true"/>
+     </if>]]></format>
+   <applyContext>
+    <parameter name="status" value="pending" />
+    <parameter name="status" value="scheduled" />
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT
+     field AS "FIELD"
+     FROM table t
+     WHERE 1 = 1 AND status IN ('pending', 'scheduled')]]></format>
+  </parser>
+ </test>
+
+ <test name="apply-if-parameters-multiply-no-param">
+  <parser>
+   <query><![CDATA[SELECT
+     field AS "FIELD"
+     FROM table t
+     WHERE 1 = 1
+     <if parameter="status">
+        AND status IN <parameter:status multiple="true" />
+     </if>
+]]></query>
+   <format dbms="postgres"><![CDATA[SELECT
+     field AS "FIELD"
+     FROM table t
+     WHERE 1 = 1
+     <if parameter="status">
+        AND status IN <parameter:status multiple="true"/>
+     </if>]]></format>
+   <applyContext>
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT
+     field AS "FIELD"
+     FROM table t
+     WHERE 1 = 1]]></format>
+  </parser>
+ </test>
+
+ <test name="if-GROUP-BY">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+        <if expr="viewType==mini"><then>
+          GROUP BY table.meterID
+        </then></if>]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table
+        <if expr="viewType==mini"><then>
+          GROUP BY table.meterID
+        </then></if>]]></format>
+  </parser>
+ </test>
+ <test name="if-ORDER-BY">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+        <if expr="viewType==mini"><then>
+          ORDER BY meterID
+        </then></if>]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table
+        <if expr="viewType==mini"><then>
+          ORDER BY meterID
+        </then></if>]]></format>
+  </parser>
+ </test>
+
+ <test name="ORDER-BY-parameter-dateOrder">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+         ORDER BY m.Name, mc.billingMonth <parameter:dateOrder />]]></query>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table
+         ORDER BY m.Name, mc.billingMonth <parameter:dateOrder />
+         ]]></format>
+  </parser>
+ </test>
+ <test name="ORDER-BY-parameter-dateOrder-apply">
+  <parser>
+   <query><![CDATA[SELECT * FROM table
+          ORDER BY m.Name, mc.billingMonth <parameter:dateOrder />
+         ]]></query>
+   <applyContext>
+    <parameter name="dateOrder" value="desc" />
+   </applyContext>
+   <format dbms="postgres"><![CDATA[SELECT * FROM table
+          ORDER BY m.Name, mc.billingMonth desc
+         ]]></format>
+  </parser>
+ </test>
+
+</testSuite>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+
+<testSuite name="functions_sql">
+
+  <test name="concat_1">
+    <parser>
+        <query><![CDATA[SELECT
+            concat(a, b, c) FROM t]]></query>
+
+        <format dbms="mysql"><![CDATA[SELECT
+            concat(a, b, c) FROM t]]></format>
+        <format dbms="db2,oracle,postgres,sqlserver"><![CDATA[SELECT
+            a || b || c FROM t]]></format>
+    </parser>
+  </test>
+
+  <test name="concat_2">
+    <parser>
+        <query><![CDATA[SELECT
+            concat(a,b,c) FROM t]]></query>
+
+        <format dbms="mysql"><![CDATA[SELECT
+            concat(a,b,c) FROM t]]></format>
+        <format dbms="db2,oracle,postgres,sqlserver"><![CDATA[SELECT
+            a || b || c FROM t]]></format>
+    </parser>
+  </test>
+
+  <test name="||">
+    <parser>
+        <query><![CDATA[SELECT
+            a || b || c FROM t]]></query>
+
+        <dump/>
+        <format dbms="mysql"><![CDATA[SELECT
+            concat(a, b, c) FROM t]]></format>
+        <format dbms="db2,oracle,postgres,sqlserver"><![CDATA[SELECT
+            a || b || c FROM t]]></format>
+    </parser>
+  </test>
+
+</testSuite>

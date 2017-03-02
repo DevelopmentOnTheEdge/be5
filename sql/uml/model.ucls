@@ -1,0 +1,1574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.14" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="com.developmentontheedge.sql.model.AbstractParser" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AbstractParser.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-311" y="-175"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.developmentontheedge.sql.model.AstFunNode" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFunNode.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="403" y="492"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="3" language="java" name="com.developmentontheedge.sql.model.Parser" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/Parser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-298" y="-646"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="4" language="java" name="com.developmentontheedge.sql.model.ParserContext" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/ParserContext.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="13" y="-413"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="5" language="java" name="com.developmentontheedge.sql.model.AstStart" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstStart.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1691" y="-602"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.developmentontheedge.sql.model.DefaultParserContext" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/DefaultParserContext.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="13" y="279"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="7" language="java" name="com.developmentontheedge.sql.model.Function" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/Function.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="382" y="-128"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="8" language="java" name="com.developmentontheedge.sql.model.Node" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/Node.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1148" y="-617"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="9" language="java" name="com.developmentontheedge.sql.model.PredefinedFunction" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/PredefinedFunction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="627" y="45"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.developmentontheedge.sql.model.SimpleNode" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/SimpleNode.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1420" y="-102"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.developmentontheedge.sql.model.UndeclaredFunction" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/UndeclaredFunction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="613" y="-188"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.developmentontheedge.sql.model.AstSelect" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstSelect.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1731" y="-218"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.developmentontheedge.sql.model.AstAllColumnRef" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstAllColumnRef.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1959" y="-342"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.developmentontheedge.sql.model.AstBeCondition" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeCondition.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2534" y="2435"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="com.developmentontheedge.sql.model.AstBeConditionChain" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeConditionChain.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2323" y="1724"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.developmentontheedge.sql.model.AstBeNode" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeNode.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1930" y="2092"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.developmentontheedge.sql.model.AstBeDbmsArgumentList" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeDbmsArgumentList.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="874" y="1612"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.developmentontheedge.sql.model.AstBeDbmsCase" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeDbmsCase.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="874" y="1713"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.developmentontheedge.sql.model.AstBeDbmsThen" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeDbmsThen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1065" y="1637"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.developmentontheedge.sql.model.AstBeDbmsTransform" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeDbmsTransform.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1807" y="82"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.developmentontheedge.sql.model.AstBeDbmsWhen" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeDbmsWhen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1065" y="1759"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.developmentontheedge.sql.model.AstBeDictionary" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeDictionary.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1659" y="2025"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.developmentontheedge.sql.model.AstBeElse" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeElse.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2180" y="1984"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="com.developmentontheedge.sql.model.AstBeIdentifier" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeIdentifier.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2101" y="1620"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="com.developmentontheedge.sql.model.AstBeIf" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeIf.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2516" y="2606"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="com.developmentontheedge.sql.model.AstBeListPlaceHolder" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeListPlaceHolder.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1900" y="1790"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="com.developmentontheedge.sql.model.AstBeMacro" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeMacro.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1419" y="2232"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="com.developmentontheedge.sql.model.AstBeMacroArgumentList" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeMacroArgumentList.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1550" y="1787"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="com.developmentontheedge.sql.model.AstBeParameterList" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeParameterList.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1696" y="1616"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="com.developmentontheedge.sql.model.AstBeParameterTag" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeParameterTag.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2084" y="2527"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="com.developmentontheedge.sql.model.AstBePlaceHolder" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBePlaceHolder.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1902" y="1647"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="com.developmentontheedge.sql.model.AstBeQuoted" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeQuoted.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2115" y="1766"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="com.developmentontheedge.sql.model.AstBeSessionTag" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeSessionTag.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1632" y="2222"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="com.developmentontheedge.sql.model.AstBeSql" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeSql.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2311" y="2468"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="35" language="java" name="com.developmentontheedge.sql.model.AstBeSqlAuto" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeSqlAuto.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2297" y="1607"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="36" language="java" name="com.developmentontheedge.sql.model.AstBeSqlSubQuery" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeSqlSubQuery.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1852" y="2497"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="37" language="java" name="com.developmentontheedge.sql.model.AstBeSqlVar" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeSqlVar.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1618" y="2470"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="38" language="java" name="com.developmentontheedge.sql.model.AstBeThen" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeThen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2372" y="2011"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="39" language="java" name="com.developmentontheedge.sql.model.AstBetweenPredicate" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBetweenPredicate.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2367" y="1852"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="40" language="java" name="com.developmentontheedge.sql.model.AstBeUnless" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBeUnless.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2703" y="2598"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="41" language="java" name="com.developmentontheedge.sql.model.AstBooleanExpression" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBooleanExpression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="222" y="917"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="42" language="java" name="com.developmentontheedge.sql.model.AstBooleanNot" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBooleanNot.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-32" y="891"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="43" language="java" name="com.developmentontheedge.sql.model.AstBooleanTerm" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstBooleanTerm.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="533" y="924"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="44" language="java" name="com.developmentontheedge.sql.model.AstCase" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstCase.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1198" y="686"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="45" language="java" name="com.developmentontheedge.sql.model.AstCaseElse" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstCaseElse.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1198" y="819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="46" language="java" name="com.developmentontheedge.sql.model.AstCast" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstCast.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2063" y="268"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="47" language="java" name="com.developmentontheedge.sql.model.AstColumnList" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstColumnList.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2169" y="-344"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="48" language="java" name="com.developmentontheedge.sql.model.AstComplexPredicate" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstComplexPredicate.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="808" y="738"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="49" language="java" name="com.developmentontheedge.sql.model.AstConcatExpression" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstConcatExpression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="203" y="1139"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="50" language="java" name="com.developmentontheedge.sql.model.AstConstant" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstConstant.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2078" y="586"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="51" language="java" name="com.developmentontheedge.sql.model.AstCount" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstCount.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="171" x="2328" y="785"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="52" language="java" name="com.developmentontheedge.sql.model.AstDateAdd" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstDateAdd.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2428" y="670"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="53" language="java" name="com.developmentontheedge.sql.model.AstDerivedColumn" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstDerivedColumn.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2422" y="-227"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="54" language="java" name="com.developmentontheedge.sql.model.AstExcept" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstExcept.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2268" y="191"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="55" language="java" name="com.developmentontheedge.sql.model.AstExistsPredicate" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstExistsPredicate.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="81" width="171" x="2267" y="369"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="56" language="java" name="com.developmentontheedge.sql.model.AstExtract" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstExtract.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1731" y="208"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="57" language="java" name="com.developmentontheedge.sql.model.AstFieldReference" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFieldReference.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2454" y="49"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="58" language="java" name="com.developmentontheedge.sql.model.AstFirstDayOf" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFirstDayOf.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2620" y="485"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="59" language="java" name="com.developmentontheedge.sql.model.AstFrameBetween" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFrameBetween.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="81" width="171" x="2040" y="884"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="60" language="java" name="com.developmentontheedge.sql.model.AstFrameBound" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFrameBound.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2126" y="1043"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="61" language="java" name="com.developmentontheedge.sql.model.AstFrameClause" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFrameClause.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2130" y="1169"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="62" language="java" name="com.developmentontheedge.sql.model.AstFrameStart" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFrameStart.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1939" y="937"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="63" language="java" name="com.developmentontheedge.sql.model.AstFrom" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstFrom.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1269" y="1989"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="64" language="java" name="com.developmentontheedge.sql.model.AstGroupBy" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstGroupBy.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1592" y="817"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="65" language="java" name="com.developmentontheedge.sql.model.AstGroupingElement" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstGroupingElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1593" y="938"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="66" language="java" name="com.developmentontheedge.sql.model.AstGroupingSet" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstGroupingSet.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1592" y="1054"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="67" language="java" name="com.developmentontheedge.sql.model.AstGroupingSetsSpecification" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstGroupingSetsSpecification.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1599" y="1157"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="68" language="java" name="com.developmentontheedge.sql.model.AstHaving" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstHaving.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1582" y="1265"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="69" language="java" name="com.developmentontheedge.sql.model.AstIdentifierConstant" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstIdentifierConstant.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="243" width="204" x="2347" y="999"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="70" language="java" name="com.developmentontheedge.sql.model.AstInPredicate" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstInPredicate.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2357" y="1352"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="71" language="java" name="com.developmentontheedge.sql.model.AstInterval" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstInterval.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2573" y="1347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="72" language="java" name="com.developmentontheedge.sql.model.AstInValueList" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstInValueList.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2066" y="1383"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="73" language="java" name="com.developmentontheedge.sql.model.AstJoin" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstJoin.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1165" y="1467"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="74" language="java" name="com.developmentontheedge.sql.model.AstJoinType" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstJoinType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="949" y="1468"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="75" language="java" name="com.developmentontheedge.sql.model.AstJoinSpecification" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstJoinSpecification.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="99" width="188" x="271" y="1633"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="76" language="java" name="com.developmentontheedge.sql.model.AstLimit" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstLimit.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="225" width="171" x="177" y="1765"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="77" language="java" name="com.developmentontheedge.sql.model.AstNamedColumnsJoin" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstNamedColumnsJoin.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="456" y="1814"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="78" language="java" name="com.developmentontheedge.sql.model.AstNestedQuery" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstNestedQuery.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="454" y="1926"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="79" language="java" name="com.developmentontheedge.sql.model.Squasheable" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/Squasheable.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="546" y="1149"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="80" language="java" name="com.developmentontheedge.sql.model.SqlQuery" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/SqlQuery.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="266" y="2098"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="81" language="java" name="com.developmentontheedge.sql.model.SetQuantifier" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/SetQuantifier.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2125" y="-145"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <enumeration id="82" language="java" name="com.developmentontheedge.sql.model.JoinType" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/JoinType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="954" y="1266"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="83" language="java" name="com.developmentontheedge.sql.model.ExprEvaluator" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/ExprEvaluator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-43" y="-631"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="84" language="java" name="com.developmentontheedge.sql.model.DbSpecificFunction" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/DbSpecificFunction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="772" y="351"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="85" language="java" name="com.developmentontheedge.sql.model.BeMacroFunction" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/BeMacroFunction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1124" y="2310"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="86" language="java" name="com.developmentontheedge.sql.model.AstWithListElement" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWithListElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="324" y="2520"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="87" language="java" name="com.developmentontheedge.sql.model.AstWithinGroup" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWithinGroup.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="260" y="2394"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="88" language="java" name="com.developmentontheedge.sql.model.AstWith" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWith.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="171" x="477" y="2309"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="89" language="java" name="com.developmentontheedge.sql.model.AstWindowSpecification" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWindowSpecification.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="99" width="215" x="-79" y="2333"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="90" language="java" name="com.developmentontheedge.sql.model.AstWindowFunction" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWindowFunction.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="-60" y="2528"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="91" language="java" name="com.developmentontheedge.sql.model.AstWhere" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWhere.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="171" x="-195" y="2185"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="92" language="java" name="com.developmentontheedge.sql.model.AstWhen" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstWhen.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="194" x="565" y="2422"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="93" language="java" name="com.developmentontheedge.sql.model.AstValues" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstValues.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="171" x="493" y="2182"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="94" language="java" name="com.developmentontheedge.sql.model.AstUnion" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstUnion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2060" y="50"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="95" language="java" name="com.developmentontheedge.sql.model.AstTableRef" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstTableRef.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2096" y="-584"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="96" language="java" name="com.developmentontheedge.sql.model.AstTableName" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstTableName.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2342" y="-692"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="97" language="java" name="com.developmentontheedge.sql.model.AstStringPart" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstStringPart.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="184" x="2688" y="-810"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="98" language="java" name="com.developmentontheedge.sql.model.AstStringConstant" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstStringConstant.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2786" y="-436"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="99" language="java" name="com.developmentontheedge.sql.model.AstSpecialConstant" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstSpecialConstant.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2826" y="96"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="100" language="java" name="com.developmentontheedge.sql.model.AstSelectList" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstSelectList.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="171" x="2757" y="194"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="101" language="java" name="com.developmentontheedge.sql.model.AstQuery" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstQuery.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2880" y="442"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="102" language="java" name="com.developmentontheedge.sql.model.AstPosition" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstPosition.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="203" x="2793" y="619"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="103" language="java" name="com.developmentontheedge.sql.model.AstPartitionByClause" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstPartitionByClause.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="81" width="171" x="2877" y="734"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="104" language="java" name="com.developmentontheedge.sql.model.AstParenthesis" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstParenthesis.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="171" x="2835" y="836"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="105" language="java" name="com.developmentontheedge.sql.model.AstOrderingElement" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstOrderingElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2908" y="1126"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="106" language="java" name="com.developmentontheedge.sql.model.AstOrderedSetAggregate" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstOrderedSetAggregate.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="99" width="297" x="2780" y="1253"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="107" language="java" name="com.developmentontheedge.sql.model.AstOrderBy" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstOrderBy.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2880" y="1426"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="108" language="java" name="com.developmentontheedge.sql.model.AstNumericConstant" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstNumericConstant.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2900" y="1636"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="109" language="java" name="com.developmentontheedge.sql.model.AstNullPredicate" project="sql" 
+    file="/sql/src/main/java/com/developmentontheedge/sql/model/AstNullPredicate.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2902" y="1922"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="110">    
+    <end type="SOURCE" refId="41"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="111">    
+    <end type="SOURCE" refId="99"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="112">    
+    <end type="SOURCE" refId="104"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="113">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="114">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="115" name="functionsMap">        
+        <position height="0" width="0" x="-762" y="-209"/>      
+      </attribute>      
+      <multiplicity id="116" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="-762" y="-209"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="117">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="118">    
+    <end type="SOURCE" refId="46"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="119">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="120">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="121">    
+    <end type="SOURCE" refId="92"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="122">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <association id="123">    
+    <end type="SOURCE" refId="85" navigable="false">      
+      <attribute id="124" name="macro"/>      
+      <multiplicity id="125" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="126">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="127">    
+    <end type="SOURCE" refId="74" navigable="false">      
+      <attribute id="128" name="type"/>      
+      <multiplicity id="129" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="82" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="130">    
+    <end type="SOURCE" refId="66"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="131">    
+    <end type="SOURCE" refId="43"/>    
+    <end type="TARGET" refId="79"/>  
+  </realization>  
+  <generalization id="132">    
+    <end type="SOURCE" refId="77"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="133">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="134">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="135">    
+    <end type="SOURCE" refId="73"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="136">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="137">    
+    <end type="SOURCE" refId="98"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="138">    
+    <end type="SOURCE" refId="60"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="139">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="140">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="141" name="context">        
+        <position height="0" width="0" x="-335" y="-808"/>      
+      </attribute>      
+      <multiplicity id="142" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-335" y="-808"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="143">    
+    <end type="SOURCE" refId="43"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="144">    
+    <end type="SOURCE" refId="78"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="145">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <generalization id="146">    
+    <end type="SOURCE" refId="102"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="147">    
+    <end type="SOURCE" refId="56"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="148">    
+    <end type="SOURCE" refId="44"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="149">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="150">    
+    <end type="SOURCE" refId="105"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="151">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="152">    
+    <end type="SOURCE" refId="41"/>    
+    <end type="TARGET" refId="79"/>  
+  </realization>  
+  <generalization id="153">    
+    <end type="SOURCE" refId="74"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="154">    
+    <end type="SOURCE" refId="106"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="155">    
+    <end type="SOURCE" refId="79"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <realization id="156">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <association id="157">    
+    <end type="SOURCE" refId="94" navigable="false">      
+      <attribute id="158" name="setQuantifier"/>      
+      <multiplicity id="159" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="81" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="160">    
+    <end type="SOURCE" refId="61"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="161">    
+    <end type="SOURCE" refId="49"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="162">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="163">    
+    <end type="SOURCE" refId="67"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="164">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="165">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="166">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="167">    
+    <end type="SOURCE" refId="52"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="168">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="8"/>  
+  </realization>  
+  <generalization id="169">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="170">    
+    <end type="SOURCE" refId="101"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="171">    
+    <end type="SOURCE" refId="85"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <generalization id="172">    
+    <end type="SOURCE" refId="40"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <generalization id="173">    
+    <end type="SOURCE" refId="87"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="174">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="175">    
+    <end type="SOURCE" refId="39"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="176">    
+    <end type="SOURCE" refId="50"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="177">    
+    <end type="SOURCE" refId="109"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="178">    
+    <end type="SOURCE" refId="37"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="179">    
+    <end type="SOURCE" refId="71"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="180">    
+    <end type="SOURCE" refId="36"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="181">    
+    <end type="SOURCE" refId="64"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="182">    
+    <end type="SOURCE" refId="84"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="183">    
+    <end type="SOURCE" refId="88"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="184">    
+    <end type="SOURCE" refId="48"/>    
+    <end type="TARGET" refId="79"/>  
+  </realization>  
+  <generalization id="185">    
+    <end type="SOURCE" refId="47"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="186">    
+    <end type="SOURCE" refId="91"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="187">    
+    <end type="SOURCE" refId="49"/>    
+    <end type="TARGET" refId="79"/>  
+  </realization>  
+  <generalization id="188">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="189">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="190">    
+    <end type="SOURCE" refId="86"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="191">    
+    <end type="SOURCE" refId="59"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="192">    
+    <end type="SOURCE" refId="103"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="193">    
+    <end type="SOURCE" refId="96"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="194">    
+    <end type="SOURCE" refId="89"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="195">    
+    <end type="SOURCE" refId="108"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="196">    
+    <end type="SOURCE" refId="94"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="197">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="198">    
+    <end type="SOURCE" refId="70"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="199">    
+    <end type="SOURCE" refId="72"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="200">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="201">    
+    <end type="SOURCE" refId="58"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="202">    
+    <end type="SOURCE" refId="69"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="203">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <association id="204">    
+    <end type="SOURCE" refId="84" navigable="false">      
+      <attribute id="205" name="dbmsTransform"/>      
+      <multiplicity id="206" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="207">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="208">    
+    <end type="SOURCE" refId="62"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="209">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="210">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="211">    
+    <end type="SOURCE" refId="48"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="212">    
+    <end type="SOURCE" refId="107"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="213">    
+    <end type="SOURCE" refId="68"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="214">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="215" name="function"/>      
+      <multiplicity id="216" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="84" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="217">    
+    <end type="SOURCE" refId="53"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="218">    
+    <end type="SOURCE" refId="76"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="219">    
+    <end type="SOURCE" refId="65"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <realization id="220">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <generalization id="221">    
+    <end type="SOURCE" refId="57"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="222">    
+    <end type="SOURCE" refId="38"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <association id="223">    
+    <end type="SOURCE" refId="54" navigable="false">      
+      <attribute id="224" name="setQuantifier"/>      
+      <multiplicity id="225" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="81" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="226">    
+    <end type="SOURCE" refId="51"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="227">    
+    <end type="SOURCE" refId="90"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="228">    
+    <end type="SOURCE" refId="75"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="229">    
+    <end type="SOURCE" refId="93"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="230">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="231" name="replacements"/>      
+      <multiplicity id="232" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="233">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="234" name="parent">        
+        <position height="0" width="0" x="-335" y="-808"/>      
+      </attribute>      
+      <multiplicity id="235" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-335" y="-808"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="236">    
+    <end type="SOURCE" refId="63"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="237">    
+    <end type="SOURCE" refId="45"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="238">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="239" name="setQuantifier"/>      
+      <multiplicity id="240" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="81" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="241">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="242">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="243">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="244" name="function">        
+        <position height="0" width="0" x="-762" y="-209"/>      
+      </attribute>      
+      <multiplicity id="245" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-762" y="-209"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="246">    
+    <end type="SOURCE" refId="55"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="247">    
+    <end type="SOURCE" refId="100"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="248">    
+    <end type="SOURCE" refId="97"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="249">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <generalization id="250">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

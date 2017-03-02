@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+
+ <artifactId>sql</artifactId>
+ <version>0.0.27-SNAPSHOT</version>
+ <packaging>jar</packaging>
+
+ <name>SQL parser-generator</name>
+ <description>Parse SQL (select statement only) and builds its AST. 
+ Then DBMS specific SQL select statement can be generated.</description>
+
+ <parent>
+  <groupId>com.developmentontheedge</groupId>
+  <artifactId>parent</artifactId>
+  <version>0.0.2</version>
+ </parent>
+
+ <dependencies>
+  <dependency>
+   <groupId>com.developmentontheedge</groupId>
+   <artifactId>dbms</artifactId>
+   <version>0.0.5</version>
+  </dependency>
+
+  <dependency>
+   <groupId>junit</groupId>
+   <artifactId>junit</artifactId>
+   <version>4.12</version>
+   <scope>test</scope>
+  </dependency>
+
+  <dependency>
+   <groupId>com.developmentontheedge</groupId>
+   <artifactId>xmltest</artifactId>
+   <version>0.0.2-SNAPSHOT</version>
+   <scope>test</scope>
+  </dependency>
+
+  <dependency>
+   <groupId>net.java.dev.javacc</groupId>
+   <artifactId>javacc</artifactId>
+   <version>6.1.2</version>
+   <type>jar</type>
+  </dependency>
+
+  <dependency>
+   <groupId>one.util</groupId>
+   <artifactId>streamex</artifactId>
+   <version>0.5.4</version>
+  </dependency>
+ </dependencies>
+
+
+ <build>
+  <plugins>
+   <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>javacc-maven-plugin</artifactId>
+    <version>2.6</version>
+    <executions>
+     <execution>
+      <goals>
+       <goal>jjtree-javacc</goal>
+      </goals>
+     </execution>
+    </executions>
+    <dependencies>
+     <dependency>
+      <groupId>net.java.dev.javacc</groupId>
+      <artifactId>javacc</artifactId>
+      <version>6.1.2</version>
+     </dependency>
+    </dependencies>
+   </plugin>
+
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.3</version>
+    <configuration>
+     <source>1.8</source>
+     <target>1.8</target>
+     <compilerArgs>
+      <arg>-Xlint:all</arg>
+     </compilerArgs>
+    </configuration>
+   </plugin>
+
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <version>2.10.3</version>
+    <executions>
+     <execution>
+      <id>attach-javadocs</id>
+      <goals>
+       <goal>jar</goal>
+      </goals>
+      <configuration>
+       <quiet>true</quiet>
+       <additionalparam>-Xdoclint:none</additionalparam>
+       <tags>
+         <tag>
+           <name>todo</name>
+           <placement>a</placement>
+           <head>TODO:</head>
+         </tag>
+         <tag>
+           <name>pending</name>
+           <placement>a</placement>
+           <head>PENDING:</head>
+         </tag>
+       </tags>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+
+  </plugins>
+ </build>
+</project>
