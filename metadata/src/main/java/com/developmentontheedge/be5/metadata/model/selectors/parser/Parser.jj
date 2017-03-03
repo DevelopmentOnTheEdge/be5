@@ -1,0 +1,188 @@
+options 
+{
+    STATIC = false;
+    DEBUG_PARSER = false;
+    UNICODE_INPUT = true;
+}
+PARSER_BEGIN(Parser)
+package com.developmentontheedge.be5.metadata.model.selectors.parser;
+
+import com.developmentontheedge.be5.metadata.model.selectors.*;
+import java.util.*;
+
+@SuppressWarnings( { "unchecked", "unused", "rawtypes", "null" } )
+public class Parser
+{
+}
+
+PARSER_END(Parser)
+
+<DEFAULT> TOKEN :
+{
+  < SPACE: ( " "|"\f"|"\n"|"\r"|"\t" )+ >
+| < #HEXDIGIT: ["0"-"9","a"-"f"] >
+| < #HEXNUMBER: <HEXDIGIT>(<HEXDIGIT>(<HEXDIGIT>(<HEXDIGIT>(<HEXDIGIT>(<HEXDIGIT>)?)?)?)?)? >
+| < #NONASCII: ["\u0080"-"\uFFFF"] >
+| < #UNISYMBOL: "\\" <HEXNUMBER> ( "\r\n" | [" ","\t","\r","\n","\f"] )? >
+| < #ESCAPE: <UNISYMBOL> | ( "\\" ~["\r","\n","\f","0"-"9","a"-"f"] ) >
+| < #IDENTSTART: ["_","a"-"z","A"-"Z"] | <NONASCII> | <ESCAPE> >
+| < #IDENTSYMBOL: ["_","a"-"z","A"-"Z","0"-"9","-"] | <NONASCII> | <ESCAPE> >
+| < #NEWLINE:  "\f" | "\n" | "\r\n" | "\r" >
+| < #STRING1: ( ~["\f","\n","\r","\\","\""] | "\\" <NEWLINE> | <ESCAPE> )* >
+| < #STRING2: ( ~["\f","\n","\r","\\","\'"] | "\\" <NEWLINE> | <ESCAPE> )* >
+| < IDENT: ("-")? <IDENTSTART> ( <IDENTSYMBOL> )* > { matchedToken.image = SelectorUtils.unescape(image.toString()); }
+| < STRING: ( "\"" <STRING1> "\"" ) | ( "\'" <STRING2> "\'" ) > { matchedToken.image = SelectorUtils.unescape(image.toString()); }
+| < OPERATOR: ("^=" | "$=" | "*=" | "=") > { matchedToken.image = image.substring(0, image.length()-1); }
+| < COMMA: ( <SPACE> )? "," >
+| < DOT: "." >
+| < HASH: "#" >
+| < RIGHT_PARENTHESIS: ")" >
+| < LEFT_BRACKET: "[" >
+| < RIGHT_BRACKET: "]" >
+| < NOT_START: ":not(" >
+| < MATCH_START: ":matches(" >
+}
+
+SelectorRule parse() :
+{
+    UnionSelectorRule rule;
+}
+{
+    rule = getUnionSelector()
+    <EOF>
+    {
+        return rule;
+    }
+}
+
+UnionSelectorRule getUnionSelector() :
+{
+    List rules = new ArrayList();
+    HierarchySelectorRule rule;
+}
+{
+    ( <SPACE> ) *
+    rule = getHierarchySelector()
+    ( <COMMA> ( <SPACE> )* { rules.add(rule); } rule = getHierarchySelector() )*
+    {
+        rules.add(rule);
+        return new UnionSelectorRule(rules);
+    }
+}
+
+HierarchySelectorRule getHierarchySelector() :
+{
+    List rules = new ArrayList();
+    ComplexSelectorRule rule;
+}
+{ 
+    rule = getComplexSelector()
+    ( ( <SPACE> )+ { rules.add(rule); } rule = getComplexSelector() )*
+    {
+        rules.add(rule);
+        return new HierarchySelectorRule(rules);
+    }
+}
+
+ComplexSelectorRule getComplexSelector() :
+{
+    List rules = new ArrayList();
+    SelectorRule rule;
+}
+{ 
+    rule = getSimpleSelector()
+    ( { rules.add(rule); } rule = getSimpleSelector() )*
+    {
+        rules.add(rule);
+        return new ComplexSelectorRule(rules);
+    }
+}
+
+SelectorRule getSimpleSelector() :
+{
+    SelectorRule rule;
+}
+{ 
+    ( rule = getClassSelector() | rule = getNameSelector() | rule = getTypeSelector() | 
+      rule = getNotSelector() | rule = getMatchesSelector() | rule = getAttributeSelector() )
+    {
+        return rule;
+    }
+}
+
+SelectorRule getClassSelector() :
+{
+    Token t;
+}
+{
+    t = <IDENT>
+    {
+        return new ElementClassRule(t.image);
+    }
+}
+
+SelectorRule getNameSelector() :
+{
+    Token t;
+}
+{
+    <HASH>
+    t = <IDENT>
+    {
+        return new AttributeRule("name", t.image);
+    }
+}
+
+SelectorRule getTypeSelector() :
+{
+    Token t;
+}
+{
+    <DOT>
+    t = <IDENT>
+    {
+        return new AttributeRule("type", t.image);
+    }
+}
+
+SelectorRule getAttributeSelector() :
+{
+    Token op, name, value;
+}
+{
+    <LEFT_BRACKET>
+    name = <IDENT>
+    op = <OPERATOR>
+    ( value = <IDENT> | value = <STRING> )
+    <RIGHT_BRACKET>
+    {
+        return new AttributeRule(name.image, value.image, op.image);
+    }
+}
+
+SelectorRule getNotSelector() :
+{
+    SelectorRule rule;
+}
+{
+    <NOT_START>
+    rule = getComplexSelector()
+    <RIGHT_PARENTHESIS>
+    {
+        return new NotRule(rule);
+    }
+}
+
+SelectorRule getMatchesSelector() :
+{
+    SelectorRule rule;
+}
+{
+    <MATCH_START>
+    rule = getUnionSelector()
+    <RIGHT_PARENTHESIS>
+    {
+        return new MatchesRule(rule);
+    }
+}
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<structure>
+   <tables/>
+   <views/>
+   <references>
+      <tableRef columnsFrom="user"
+                columnsTo="userName"
+                tableFrom="test"
+                tableTo="users"/>
+   </references>
+</structure>
