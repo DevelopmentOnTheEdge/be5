@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
@@ -250,7 +248,16 @@ public class Module extends BeVectorCollection<BeModelElement>
     
     public boolean hasExtra(String extra)
     {
-        return extras != null && ArrayUtils.contains( extras, extra );
+    	if( extras == null || extra == null )
+    		return false;
+
+    	for(int i=0; i < extras.length; i++) 
+    	{
+    		if( extra.equals(extras[i]) )
+    				return true;
+    	}
+    	
+    	return false;
     }
 
     @Override

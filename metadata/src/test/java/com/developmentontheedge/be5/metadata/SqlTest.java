@@ -93,48 +93,5 @@ public class SqlTest extends TestCase
             + "BEGIN :new.\"___searchCompanyName\" := TRIM( REGEXP_REPLACE( REGEXP_REPLACE( REPLACE( UPPER( :new.companyName ),'Ё','Е' ), '([^A-ZА-Я0-9]*)([A-ZА-Я0-9]+)', '\\2 ' ), '^([A-ZА-Я0-9 ]+)([^A-ZА-Я0-9]*)$', '\\1 ' ) ); END", multiSqlParser.nextStatement());
         assertNull(multiSqlParser.nextStatement());
     }
-    
-    public void testConnectionUrl()
-    {
-        ConnectionUrl url = new ConnectionUrl( "jdbc:db2://localhost:50000/housing:retrieveMessagesFromServerOnGetMessage=true;" );
-        assertEquals(Rdbms.DB2, url.getRdbms());
-        assertEquals("localhost", url.getHost());
-        assertEquals(50000, url.getPort());
-        assertEquals("housing", url.getDb());
-        assertEquals("true", url.getProperty( "retrieveMessagesFromServerOnGetMessage" ));
-        assertEquals(1, url.getPropertyNames().size());
-        assertEquals("jdbc:db2://localhost:50000/housing:retrieveMessagesFromServerOnGetMessage=true;", url.toString());
-        
-        url = new ConnectionUrl( "jdbc:mysql://localhost:3306/biostore_be4" );
-        assertEquals(Rdbms.MYSQL, url.getRdbms());
-        assertEquals("localhost", url.getHost());
-        assertEquals(3306, url.getPort());
-        assertEquals("biostore_be4", url.getDb());
-        assertTrue(url.getPropertyNames().isEmpty());
-        assertEquals("jdbc:mysql://localhost:3306/biostore_be4", url.toString());
-        
-        url = new ConnectionUrl( "jdbc:postgresql://localhost/condo" );
-        assertEquals(Rdbms.POSTGRESQL, url.getRdbms());
-        assertEquals("localhost", url.getHost());
-        assertEquals(5432, url.getPort());
-        assertEquals("condo", url.getDb());
-        assertTrue(url.getPropertyNames().isEmpty());
-        assertEquals("jdbc:postgresql://localhost:5432/condo", url.toString());
-        
-        url = new ConnectionUrl( "jdbc:oracle:thin:@newdev:1521:orcl" );
-        assertEquals(Rdbms.ORACLE, url.getRdbms());
-        assertEquals("newdev", url.getHost());
-        assertEquals(1521, url.getPort());
-        assertEquals(null, url.getDb());
-        assertEquals("orcl", url.getProperty( "SID" ));
-        assertEquals(1, url.getPropertyNames().size());
-        assertEquals("jdbc:oracle:thin:@newdev:1521:orcl", url.toString());
-        
-        url = new ConnectionUrl( "jdbc:sqlserver://winserv2012:1434;databaseName=test" );
-        assertEquals( Rdbms.SQLSERVER, url.getRdbms() );
-        assertEquals( "winserv2012", url.getHost() );
-        assertEquals( 1434, url.getPort() );
-        assertEquals( "test", url.getDb() );
-        assertEquals( "jdbc:sqlserver://winserv2012:1434;databaseName=test", url.toString() );
-    }
+   
 }

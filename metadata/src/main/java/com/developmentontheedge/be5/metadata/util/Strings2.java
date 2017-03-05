@@ -8,8 +8,6 @@ import java.util.Objects;
 
 import one.util.streamex.StreamEx;
 
-import org.apache.commons.lang.StringUtils;
-
 public class Strings2
 {
     public static final String[] EMPTY = new String[0];
@@ -31,7 +29,8 @@ public class Strings2
 
     public static void sortIgnoreCase( final List<String> strings )
     {
-        Collections.sort( strings, Comparator.comparing( String::toLowerCase ) );
+    	Comparator<String> c = Comparator.comparing( String::toLowerCase );
+    	Collections.sort( strings, c);
     }
     
     public static String nullOrEmptyDefault( final String string, final String defaultValue )
@@ -52,14 +51,6 @@ public class Strings2
     public static String emptyToNull( String string )
     {
         return isNullOrEmpty( string ) ? null : string;
-    }
-
-    public static String findMostSimilar( String string, Collection<String> strings )
-    {
-        Objects.requireNonNull( strings );
-        Objects.requireNonNull( string );
-        
-        return StreamEx.of( strings ).minBy( s -> StringUtils.getLevenshteinDistance( string, s ) ).get();
     }
 
     public static String joinTail( final String separator, final List<String> splitted )
