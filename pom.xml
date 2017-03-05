@@ -2,8 +2,9 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
    http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
+
  <groupId>com.developmentontheedge</groupId>
- <artifactId>parent</artifactId>
+ <artifactId>be5</artifactId>
  <version>0.0.2</version>
  <packaging>pom</packaging>
  <url>http://developmentontheedge.com/</url>

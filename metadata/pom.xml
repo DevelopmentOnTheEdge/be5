@@ -11,7 +11,7 @@
 
 	<parent>
 		<groupId>com.developmentontheedge</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>be5</artifactId>
 		<version>0.0.2</version>
 	</parent>
 
