@@ -16,7 +16,8 @@ import java.util.TreeSet;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.enterprise.Utils;
+import com.developmentontheedge.be5.metadata.Utils;
+
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
@@ -438,6 +439,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         SqlColumnType type = column.getType();
         if(typeManager.getTypeClause( oldType ).equals( typeManager.getTypeClause( type ) ))
             return true;
+        
         // Enlarging VARCHAR column
         if(oldType.getTypeName().equals( TYPE_VARCHAR ) && type.getTypeName().equals( TYPE_VARCHAR ))
         {
@@ -446,11 +448,13 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             return sql != null && !sql.hasResult( "sql.select.longer", typeManager.normalizeIdentifier( getEntityName() ),
                     typeManager.normalizeIdentifier( oldColumn.getName() ), type.getSize() );
         }
+        
         // Enlarging DECIMAL column
         if(oldType.getTypeName().equals( TYPE_DECIMAL ) && type.getTypeName().equals( TYPE_DECIMAL ))
         {
             if(type.getSize() >= oldType.getSize() && type.getPrecision() >= oldType.getPrecision() )
                 return true;
+        
         }
         // Adding new variants for ENUM column
         if((oldType.getTypeName().equals( TYPE_ENUM ) || oldType.getTypeName().equals( TYPE_BOOL ) || oldType.getTypeName().equals( TYPE_VARCHAR )) && 
@@ -462,6 +466,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             return sql != null && !sql.hasResult( "sql.select.not.in.range", typeManager.normalizeIdentifier( getEntityName() ),
                     typeManager.normalizeIdentifier( oldColumn.getName() ), Utils.toInClause( newValues ) );
         }
+        
         // Changing ENUM to varchar
         if((oldType.getTypeName().equals( TYPE_ENUM ) || oldType.getTypeName().equals( TYPE_BOOL ))
                 && type.getTypeName().equals( TYPE_VARCHAR ))
@@ -476,6 +481,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             return sql != null && !sql.hasResult( "sql.select.longer", typeManager.normalizeIdentifier( getEntityName() ),
                     typeManager.normalizeIdentifier( oldColumn.getName() ), type.getSize() );
         }
+        
         // Changing ENUM to char
         if ( oldType.getTypeName().equals( TYPE_ENUM ) && type.getTypeName().equals( TYPE_CHAR ) )
         {

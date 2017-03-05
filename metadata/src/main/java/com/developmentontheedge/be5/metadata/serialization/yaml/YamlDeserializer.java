@@ -24,7 +24,9 @@ import org.yaml.snakeyaml.error.MarkedYAMLException;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Node;
 
-import com.beanexplorer.enterprise.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.QueryType;
+
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfileType;
@@ -438,8 +440,7 @@ public class YamlDeserializer
             {
                 if ( !allowed.contains( name ) )
                 {
-                    String bestGuess = Strings2.findMostSimilar( name, allowed );
-                    String message = "Unknown child element found: " + name + ( bestGuess == null ? "" : " (did you mean '" + bestGuess + "'?)" );
+                    String message = "Unknown child element found: " + name + "possible values: " + allowed;
                     loadContext.addWarning( new ReadException( context, path, message ) );
                 }
             }
@@ -1051,13 +1052,13 @@ public class YamlDeserializer
 
             String text;
             
-            final String type = query.getType();
-            switch ( type )
+            switch ( query.getType() )
             {
-            case Query.QUERY_TYPE_STATIC:
+            case STATIC:
                 text = ( String ) queryElement.get( ATTR_QUERY_CODE );
                 break;
-            case Query.QUERY_TYPE_GROOVY:
+                
+            case GROOVY:
                 final String groovyFileName = ( String ) queryElement.get( "file" );
                 // try to read 'code' if there's no 'file'
                 if ( groovyFileName == null )
@@ -1071,7 +1072,8 @@ public class YamlDeserializer
                     query.setFileName( groovyFileName );
                 }
                 break;
-            case Query.QUERY_TYPE_JAVASCRIPT:
+                
+            case JAVASCRIPT:
                 final String jsFileName = ( String ) queryElement.get( "file" );
                 // try to read 'code' if there's no 'file'
                 if ( jsFileName == null )
@@ -1085,6 +1087,7 @@ public class YamlDeserializer
                     query.setFileName( jsFileName );
                 }
                 break;
+                
             default:
                 text = ( String ) queryElement.get( TAG_CODE );
                 break;

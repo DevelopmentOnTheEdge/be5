@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.QueryType;
 
 public class Fields
 {
@@ -49,7 +50,7 @@ public class Fields
         new Field( "name" ),
         new Field( "menuName", "" ),
         new Field( "titleName" ),
-        new Field( "type", Query.QUERY_TYPE_1D ),
+        new Field( "type", QueryType.D1 ),
         new Field( "notSupported" ),
         new Field( "newDataCheckQuery" ),
         new Field( "invisible", false ),

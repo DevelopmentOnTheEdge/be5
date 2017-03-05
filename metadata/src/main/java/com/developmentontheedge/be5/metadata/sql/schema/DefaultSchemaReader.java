@@ -6,17 +6,18 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.beanexplorer.enterprise.DatabaseConnector;
-import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.SqlExecutor;
+
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 
 public abstract class DefaultSchemaReader implements DbmsSchemaReader
 {
     @Override
-    public String getDefaultSchema( BeSqlExecutor sql ) throws ExtendedSqlException
+    public String getDefaultSchema( SqlExecutor sql ) throws ExtendedSqlException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         try
         {
             Connection connection = connector.getConnection();
@@ -36,9 +37,9 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
     }
 
     @Override
-    public Map<String, String> readTableNames( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
+    public Map<String, String> readTableNames( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Connection connection = connector.getConnection();
         ResultSet rs = null;
         Map<String, String> result = new HashMap<>();

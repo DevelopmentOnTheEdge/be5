@@ -10,11 +10,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.beanexplorer.enterprise.DatabaseConnector;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.SqlExecutor;
+
 import com.beanexplorer.enterprise.OperationSupport;
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.model.ColumnFunction;
-import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
@@ -25,13 +26,13 @@ public class Db2SchemaReader extends DefaultSchemaReader
     private static final Pattern GENERIC_COLUMN_PATTERN = Pattern.compile( "^AS \\(\\s*\'(\\w+)\\.\' \\|\\| RTRIM\\( CAST\\( (\\w+) AS CHAR\\( \\d+ \\) \\) \\) \\)$" );
 
     @Override
-    public String getDefaultSchema( BeSqlExecutor sql ) throws ExtendedSqlException
+    public String getDefaultSchema( SqlExecutor sql ) throws ExtendedSqlException
     {
         return super.getDefaultSchema( sql ).toUpperCase();
     }
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
+    public Map<String, List<SqlColumnInfo>> readColumns( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
     {
         DatabaseConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
@@ -85,9 +86,9 @@ public class Db2SchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
+    public Map<String, List<IndexInfo>> readIndices( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT i.tabname,i.indname,ic.colname,i.uniquerule "
             + "FROM syscat.indexes i "

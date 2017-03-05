@@ -11,16 +11,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.beanexplorer.enterprise.DatabaseConstants;
+import com.developmentontheedge.beans.annot.PropertyDescription;
+import com.developmentontheedge.beans.annot.PropertyName;
+import com.developmentontheedge.beans.model.ComponentFactory;
+
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.QueryType;
+
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.beans.annot.PropertyDescription;
-import com.developmentontheedge.beans.annot.PropertyName;
-import com.developmentontheedge.beans.model.ComponentFactory;
+
 
 @PropertyName("Query")
 public class Query extends EntityItem implements TemplateElement
@@ -28,40 +32,19 @@ public class Query extends EntityItem implements TemplateElement
     public static final String SPECIAL_LOST_RECORDS = "Lost records";
     public static final String SPECIAL_TABLE_DEFINITION = "Table definition";
     
-    public static final String QUERY_TYPE_1D = DatabaseConstants.QUERY_TYPE_1D;
-    public static final String QUERY_TYPE_1DUNKNOWN = DatabaseConstants.QUERY_TYPE_1D_UNKNOWN;
-    public static final String QUERY_TYPE_2D = DatabaseConstants.QUERY_TYPE_2D;
-    public static final String QUERY_TYPE_STATIC = DatabaseConstants.QUERY_TYPE_STATIC;
-    public static final String QUERY_TYPE_CUSTOM = DatabaseConstants.QUERY_TYPE_CUSTOM;
-    public static final String QUERY_TYPE_CONTAINER = "container"; /* DatabaseContants doesn't have this type */
-    public static final String QUERY_TYPE_JAVASCRIPT = DatabaseConstants.QUERY_TYPE_JAVASCRIPT;
-    public static final String QUERY_TYPE_GROOVY = "groovy";
-    
     private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet( new HashSet<>( Arrays.asList( "menuName",
             "titleName", "type", "notSupported", "newDataCheckQuery", "invisible", "secure", "slow", "cacheable", "replicated", "defaultView",
             "contextID", "categoryID", "templateQueryName", "shortDescription", "messageWhenEmpty", "parametrizingOperationName",
             "wellKnownName", "operationNames", "query", "roles", "icon", "querySettings" ) ) );
     
-    private static final String[] QUERY_TYPE = new String[]
-    {
-        QUERY_TYPE_1D,
-        QUERY_TYPE_1DUNKNOWN,
-        QUERY_TYPE_2D,
-        QUERY_TYPE_STATIC,
-        QUERY_TYPE_CUSTOM,
-        QUERY_TYPE_CONTAINER,
-        QUERY_TYPE_JAVASCRIPT,
-        QUERY_TYPE_GROOVY
-    };
-    
     public static String[] getQueryTypes()
     {
-        return QUERY_TYPE.clone();
+        return Arrays.stream(QueryType.values()).map(QueryType::getName ).toArray(String[]::new);
     }
     
     private String menuName = "";
     private String titleName;
-    private String type;
+    private QueryType type;
     private String query = " ";
     private String newDataCheckQuery;
     private boolean invisible = false;
@@ -139,38 +122,38 @@ public class Query extends EntityItem implements TemplateElement
 
     @PropertyName("Query type")
     @PropertyDescription("Query type")
-    public String getType()
+    public QueryType getType()
     {
-        return getValue( "type", type, QUERY_TYPE_1D );
+        return getValue( "type", type, QueryType.D1 );
     }
     
     public String getTypeForBeCore()
     {
-        final String type = getType();
-        if ( type.equals( QUERY_TYPE_CONTAINER ) )
-            return QUERY_TYPE_1DUNKNOWN;
-        return type;
+        if ( QueryType.CONTAINER ==  type )
+            return QueryType.D1_UNKNOWN.getName();
+            
+        return getType().getName();
     }
     
-    public void setType(String type)
+    public void setType(QueryType type)
     {
-        this.type = customizeProperty( "type", this.type, type );
+        this.type = customizeProperty("type", this.type, type );
         fireChanged();
     }
     
     public boolean isFileNameHidden()
     {
-        return !getType().equals( QUERY_TYPE_JAVASCRIPT );
+    	return getType() != QueryType.JAVASCRIPT;
     }
 
     public boolean isQueryHidden()
     {
-        return !getType().equals( QUERY_TYPE_STATIC );
+        return getType() != QueryType.STATIC;
     }
 
     public boolean isQueryClassHidden()
     {
-        return !getType().equals( QUERY_TYPE_CUSTOM );
+        return getType() != QueryType.CUSTOM;
     }
     
     @PropertyName("Query code (freemarker template)")
@@ -385,7 +368,7 @@ public class Query extends EntityItem implements TemplateElement
         {
             querySetting.getRoles().foldSystemGroup();
         }
-        ComponentFactory.recreateChildProperties( ComponentFactory.getModel( this ) );
+        ComponentFactory.recreateChildProperties( ComponentFactory.getModel(this, ComponentFactory.Policy.DEFAULT) );
         fireChanged();
     }
     
@@ -488,7 +471,7 @@ public class Query extends EntityItem implements TemplateElement
         List<ProjectElementException> result = super.getErrors();
         try
         {
-            ModelValidationUtils.checkValueInSet(this, "type", getType(), QUERY_TYPE);
+            ModelValidationUtils.checkValueInSet(this, "type", getType(), getQueryTypes());
         }
         catch( ProjectElementException e )
         {
@@ -597,7 +580,7 @@ public class Query extends EntityItem implements TemplateElement
 
     public boolean isSqlQuery()
     {
-        String type = getType();
-        return QUERY_TYPE_1D.equals( type ) || QUERY_TYPE_2D.equals( type ) || QUERY_TYPE_1DUNKNOWN.equals( type );
+    	QueryType type = getType();
+        return type == QueryType.D1 || type == QueryType.D1_UNKNOWN || type == QueryType.D2;
     }
 }

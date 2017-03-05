@@ -20,7 +20,9 @@ import java.util.regex.Pattern;
 
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.enterprise.DatabaseConnector;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.SqlExecutor;
+
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.freemarker.FreemarkerUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -134,7 +136,7 @@ public class SqlModelReader
         }
     }
     
-    private BeSqlExecutor sql;
+    private SqlExecutor sql;
     private Rdbms rdbms;
     private int mode;
     private final List<String> warnings = new ArrayList<>();
@@ -166,7 +168,7 @@ public class SqlModelReader
     private final Map<String, String>                columnNames = new HashMap<>(); 
     private String defSchema = null;
     
-    public SqlModelReader( DatabaseConnector connector )
+    public SqlModelReader( DbmsConnector connector )
     {
         this( connector, READ_ALL | USE_HEURISTICS );
     }
@@ -176,11 +178,11 @@ public class SqlModelReader
      *
      * @param connector Database connector.
      */
-    public SqlModelReader( DatabaseConnector connector, int mode )
+    public SqlModelReader( DbmsConnector connector, int mode )
     {
         try
         {
-            this.sql = new BeSqlExecutor( connector );
+            this.sql = new SqlExecutor( connector );
             this.rdbms = DatabaseUtils.getRdbms( connector );
             this.mode = mode;
         }
@@ -196,7 +198,7 @@ public class SqlModelReader
      *
      * @param connector Database connector.
      */
-    public SqlModelReader( BeSqlExecutor executor, int mode )
+    public SqlModelReader( SqlExecutor executor, int mode )
     {
         this.sql = executor;
         this.rdbms = DatabaseUtils.getRdbms( executor.getConnector() );

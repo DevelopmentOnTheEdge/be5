@@ -19,7 +19,6 @@ import com.developmentontheedge.be5.metadata.sql.schema.PostgresSchemaReader;
 import com.developmentontheedge.be5.metadata.sql.schema.SqlServerSchemaReader;
 import com.developmentontheedge.be5.metadata.sql.type.Db2TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.M4TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
@@ -58,7 +57,7 @@ public enum Rdbms
             new PostgresSchemaReader(), 
             "org.eclipse.datatools.enablement.postgresql.connectionProfile", 
             "DriverDefn.org.eclipse.datatools.enablement.postgresql.postgresqlDriverTemplate.PostgreSQL JDBC Driver", "91" ),
-    M4(new DbmsType("m4", 0 ), new M4MacroProcessorStrategy(), new M4TypeManager(), null, "", "", "" ),
+    
     BESQL(new DbmsType("besql", 0 ), new BeSQLMacroProcessorStrategy(), new PostgresTypeManager(), null, "", "", "" );
     
     private final DbmsType type;

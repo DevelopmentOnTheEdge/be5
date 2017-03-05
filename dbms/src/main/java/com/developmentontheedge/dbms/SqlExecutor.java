@@ -30,17 +30,17 @@ public class SqlExecutor
     protected String sectionName;
     private final Map<String, BulkInserter> inserters = new HashMap<>();
 
+    static URL getDefaultPropertiesFile()
+    {
+        return SqlExecutor.class.getResource( "basesql.properties" );
+    }
+
     public SqlExecutor(DbmsConnector connector, PrintStream log, URL propertiesURL) throws IOException
     {
         this.connector = connector;
         this.platform = connector.getType();
         this.log = log;
         this.properties = loadSQL( propertiesURL, loadSQL( getDefaultPropertiesFile(), null ) );
-    }
-
-    static URL getDefaultPropertiesFile()
-    {
-        return SqlExecutor.class.getResource( "basesql.properties" );
     }
 
     public SqlExecutor(DbmsConnector connector, URL propertiesURL) throws IOException
@@ -51,6 +51,11 @@ public class SqlExecutor
     public DbmsType getType()
     {
         return platform;
+    }
+
+    public DbmsConnector getConnector()
+    {
+        return connector;
     }
 
     public void close(ResultSet rs)

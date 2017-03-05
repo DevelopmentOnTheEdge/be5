@@ -2,7 +2,8 @@ package com.developmentontheedge.be5.metadata.model;
 
 import java.util.Arrays;
 
-import com.beanexplorer.enterprise.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithOriginModule;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;

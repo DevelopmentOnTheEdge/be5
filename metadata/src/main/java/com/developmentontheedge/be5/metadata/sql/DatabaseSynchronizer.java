@@ -26,7 +26,12 @@ import java.util.regex.Pattern;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.enterprise.DatabaseConnector;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.ExtendedSqlException;
+import com.developmentontheedge.dbms.SqlExecutor;
+
+import com.developmentontheedge.be5.metadata.freemarker.FreemarkerSqlHandler; 
+
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -67,7 +72,6 @@ import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.metadata.util.WriterLogger;
-import com.developmentontheedge.dbms.ExtendedSqlException;
 
 /**
  * Class to synchronize metadata model with DB.
@@ -76,7 +80,7 @@ public class DatabaseSynchronizer
 {
     private static final Pattern CLONE_ID = Pattern.compile( "(\\d+)$" );
     private static final String[] REF_OPERATIONS = { "Insert", "Edit", "Clone", "Filter", "lnsert" };
-    private final BeSqlExecutor sql;
+    private final SqlExecutor sql;
     private final Project project;
     private final String projectOrigin;
     private final ProcessController log;
@@ -93,6 +97,8 @@ public class DatabaseSynchronizer
     private final List<ProjectElementException> warnings = new ArrayList<>();
     private final Rdbms rdbms;
 
+    private static final String ORPHANS_MODULE_NAME = "beanexplorer_orphans";    
+    
     /**
      * Initializes the new database synchronizer with the given database
      * connector.
@@ -101,12 +107,12 @@ public class DatabaseSynchronizer
      *            Database connector.
      * @throws IOException
      */
-    public DatabaseSynchronizer( DatabaseConnector connector, Project project ) throws IOException
+    public DatabaseSynchronizer( DbmsConnector connector, Project project ) throws IOException
     {
-        this( new WriterLogger(), new BeSqlExecutor( connector ), project );
+        this( new WriterLogger(), new SqlExecutor( connector ), project );
     }
 
-    public DatabaseSynchronizer( ProcessController logger, BeSqlExecutor sql, Project project )
+    public DatabaseSynchronizer( ProcessController logger, SqlExecutor sql, Project project )
     {
         this.log = logger;
         this.sql = sql;
@@ -137,7 +143,7 @@ public class DatabaseSynchronizer
             sql.executeMultiple( ddlStatements );
             sql.startSection( null );
         }
-        oldProject.getModules().remove( SqlModelReader.ORPHANS_MODULE_NAME );
+        oldProject.getModules().remove( ORPHANS_MODULE_NAME );
         if ( mode == SyncMode.SECURITY || mode == SyncMode.META || mode == SyncMode.ALL )
         {
             syncSecurity( project, oldProject );
@@ -214,11 +220,12 @@ public class DatabaseSynchronizer
                 {
                     String normalizedName = entity.getName().toLowerCase();
                     oldSchemes.put( normalizedName, scheme );
-                    if ( !module.getName().equals( SqlModelReader.ORPHANS_MODULE_NAME ) )
+                    if ( !module.getName().equals( ORPHANS_MODULE_NAME ) )
                         allNames.add( normalizedName );
                 }
             }
         }
+
         StringBuilder sb = new StringBuilder();
         for ( String entityName : allNames )
         {
@@ -246,7 +253,7 @@ public class DatabaseSynchronizer
                 }
                 if (scheme.equals(oldScheme) || scheme.getDiffDdl(oldScheme, null).isEmpty())
                     continue;
-                if (oldScheme.getModule().getName().equals(SqlModelReader.ORPHANS_MODULE_NAME) &&
+                if (oldScheme.getModule().getName().equals(ORPHANS_MODULE_NAME) &&
                         oldScheme instanceof TableDef && scheme instanceof TableDef)
                     fixPrimaryKey((TableDef) oldScheme, (TableDef) scheme);
                 sb.append(dangerousOnly ? scheme.getDangerousDiffStatements(oldScheme, sql) : scheme.getDiffDdl(oldScheme, sql));
@@ -256,7 +263,8 @@ public class DatabaseSynchronizer
                 System.out.println("Skip table with schema: " + scheme.getEntityName());
             }
         }
-        Module orphans = oldProject.getModule( SqlModelReader.ORPHANS_MODULE_NAME );
+        
+        Module orphans = oldProject.getModule( "beanexplorer_orphans"); // SqlModelReader.ORPHANS_MODULE_NAME
         if ( includeClones && orphans != null )
         {
             for ( Entity entity : orphans.getEntities() )
@@ -374,7 +382,21 @@ public class DatabaseSynchronizer
 
     public void executeScript( FreemarkerScript script ) throws ProjectElementException, FreemarkerSqlException
     {
-        sql.executeScript( script, log );
+        if ( script == null || script.getSource().trim().isEmpty() )
+            return;
+        try
+        {
+            new FreemarkerSqlHandler( this, false, log ).execute( script );
+        }
+        catch ( ProjectElementException | FreemarkerSqlException e )
+        {
+            throw e;
+        }
+        catch ( Exception e )
+        {
+            throw new ProjectElementException( script, e );
+        }
+        
     }
 
     private void syncSecondPass() throws ExtendedSqlException
@@ -1154,7 +1176,7 @@ public class DatabaseSynchronizer
         }
         finally
         {
-            sql.getConnector().close( rs );
+            sql.close(rs);
         }
         sql.comment( count + " queries are read", false );
         rs = sql.executeNamedQuery( "sql.select.operations" );
@@ -1173,7 +1195,7 @@ public class DatabaseSynchronizer
         }
         finally
         {
-            sql.getConnector().close( rs );
+            sql.close(rs);
         }
         sql.comment( count + " operations are read", false );
     }

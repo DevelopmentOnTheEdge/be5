@@ -30,7 +30,9 @@ import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
-import com.beanexplorer.enterprise.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.QueryType;
+
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.exception.WriteException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
@@ -963,7 +965,7 @@ public class YamlSerializer
             {
                 if ( query.getType().equals( "static" ) )
                     content.put( ATTR_QUERY_CODE, query.getQuery() );
-                else if ( query.getType().equals( Query.QUERY_TYPE_JAVASCRIPT ) )
+                else if ( query.getType() == QueryType.JAVASCRIPT )
                 {
                     if ( query.getFileName().isEmpty() )
                         query.setFileName( query.getName() + ".js" );
@@ -1003,7 +1005,7 @@ public class YamlSerializer
                         }
                     }
                 }
-                else if ( query.getType().equals( Query.QUERY_TYPE_GROOVY ) )
+                else if ( query.getType() == QueryType.GROOVY )
                 {
                     if ( query.getFileName().isEmpty() )
                         query.setFileName( query.getName() + "groovy" );

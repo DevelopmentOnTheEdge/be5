@@ -11,10 +11,11 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.beanexplorer.enterprise.DatabaseConnector;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.SqlExecutor;
+
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.model.ColumnFunction;
-import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
@@ -30,9 +31,9 @@ public class OracleSchemaReader extends DefaultSchemaReader
     private static final Pattern GENERATED_TRIGGER_PATTERN = Pattern.compile( "^BEGIN :new\\.\"?(\\w+)\"? := '(\\w+)\\.' \\|\\| :new\\.(\\w+); END;" );
     
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
+    public Map<String, List<SqlColumnInfo>> readColumns( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT "
             + "c.table_name,"
@@ -214,9 +215,9 @@ public class OracleSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, String> readTableNames( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
+    public Map<String, String> readTableNames( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, String> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT "
             + "t.table_name FROM user_tables t JOIN entities e ON (UPPER(e.name)=t.table_name)");
@@ -250,9 +251,9 @@ public class OracleSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
+    public Map<String, List<IndexInfo>> readIndices( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT "
             + "i.table_name,i.index_name,ic.column_name,i.uniqueness "

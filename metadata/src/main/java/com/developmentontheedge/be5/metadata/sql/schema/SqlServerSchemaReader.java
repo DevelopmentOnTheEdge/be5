@@ -11,10 +11,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.beanexplorer.enterprise.DatabaseConnector;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.SqlExecutor;
+
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.model.ColumnFunction;
-import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
@@ -29,15 +30,15 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
     private static final Pattern GENERIC_REF_COLUMN_PATTERN = Pattern.compile("\\('(\\w+)\\.'\\+CONVERT\\([^,]+,\\[(\\w+)\\]\\)\\)");
     
     @Override
-    public String getDefaultSchema( BeSqlExecutor sql ) throws ExtendedSqlException
+    public String getDefaultSchema( SqlExecutor sql ) throws ExtendedSqlException
     {
         return sql.readString( "sql.selectSchema" );
     }
 
     @Override
-    public Map<String, List<IndexInfo>> readIndices( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
+    public Map<String, List<IndexInfo>> readIndices( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, List<IndexInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT st.name AS \"table_name\","
             + "si.name AS \"index_name\","
@@ -83,9 +84,9 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, List<SqlColumnInfo>> readColumns(BeSqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
+    public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException, ProcessInterruptedException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT "+
             "c.table_name, "+
@@ -176,9 +177,9 @@ public class SqlServerSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public Map<String, String> readTableNames( BeSqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
+    public Map<String, String> readTableNames( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, String> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT table_name,table_type FROM information_schema.tables t WHERE table_schema='"+defSchema+"' AND table_type IN ('BASE TABLE','VIEW')");
         try
