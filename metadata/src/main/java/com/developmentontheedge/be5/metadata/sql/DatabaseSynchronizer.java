@@ -109,7 +109,7 @@ public class DatabaseSynchronizer
      */
     public DatabaseSynchronizer( DbmsConnector connector, Project project ) throws IOException
     {
-        this( new WriterLogger(), new SqlExecutor( connector ), project );
+        this( new WriterLogger(), new SqlExecutor(connector, DatabaseSynchronizer.class.getResource( "sql.properties" )), project );
     }
 
     public DatabaseSynchronizer( ProcessController logger, SqlExecutor sql, Project project )
@@ -118,7 +118,7 @@ public class DatabaseSynchronizer
         this.sql = sql;
         this.project = project;
         this.projectOrigin = project.getProjectOrigin();
-        this.rdbms = DatabaseUtils.getRdbms( sql.getConnector() );
+        this.rdbms = Rdbms.getRdbms( sql.getConnector() );
     }
 
     /**
@@ -190,9 +190,24 @@ public class DatabaseSynchronizer
             sql.flushDelayedInserts();
             executeScript( project.getApplication().getFreemarkerScripts().optScript( FreemarkerCatalog.POST_LOCALE_STEP ) );
         }
-        DatabaseUtils.clearAllCache( sql );
+        
+        clearAllCache( sql );
     }
 
+    public static void clearAllCache(final SqlExecutor sql)
+    {
+        try
+        {
+            sql.startSection( "Clear all caches" );
+            setSystemSetting( sql, "system", "CACHES_TO_CLEAR", "all" );
+        }
+        catch ( ExtendedSqlException e )
+        {
+            // ignore
+        }
+    }
+
+    
     public String getDdlStatements( Project oldProject, boolean includeClones, boolean dangerousOnly ) throws ExtendedSqlException
     {
         Map<String, DdlElement> oldSchemes = new HashMap<>();
@@ -366,10 +381,16 @@ public class DatabaseSynchronizer
         sql.startSection( "System settings" );
         List<String> moduleNames = new ArrayList<>( project.getModules().getNameList() );
         moduleNames.remove( ModuleUtils.SYSTEM_MODULE );
-        DatabaseUtils.setSystemSetting( sql, "system", "MODULES", String.join( ",", moduleNames ) );
-        DatabaseUtils.setSystemSetting( sql, "system", "FEATURES", String.join( ",", project.getFeatures() ) );
+        setSystemSetting( sql, "system", "MODULES", String.join( ",", moduleNames ) );
+        setSystemSetting( sql, "system", "FEATURES", String.join( ",", project.getFeatures() ) );
     }
 
+    public static void setSystemSetting(final SqlExecutor sql, final String category, final String name, final String value) throws ExtendedSqlException
+    {
+        sql.exec( "sql.delete.system.setting", category, name );
+        sql.exec( "sql.insert.system.setting", category, name, value );
+    }
+    
     public List<ProjectElementException> getWarnings()
     {
         return warnings;
@@ -386,7 +407,7 @@ public class DatabaseSynchronizer
             return;
         try
         {
-            new FreemarkerSqlHandler( this, false, log ).execute( script );
+            new FreemarkerSqlHandler(sql, false, log).execute(script);
         }
         catch ( ProjectElementException | FreemarkerSqlException e )
         {
