@@ -10,6 +10,7 @@ public enum DbmsType
     ORACLE( "oracle", 1521 ),
     SQLSERVER( "sqlserver", 1433 ),
     POSTGRESQL( "postgres", 5432 ),
+    BESQL("besql", 0),
     MYSQL( "mysql", 3306 )
     {
         @Override

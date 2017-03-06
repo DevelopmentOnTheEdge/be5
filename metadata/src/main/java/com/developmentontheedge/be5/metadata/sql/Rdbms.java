@@ -23,6 +23,7 @@ import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.SqlServerTypeManager;
+import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.DbmsType;
 
 public enum Rdbms
@@ -58,7 +59,56 @@ public enum Rdbms
             "org.eclipse.datatools.enablement.postgresql.connectionProfile", 
             "DriverDefn.org.eclipse.datatools.enablement.postgresql.postgresqlDriverTemplate.PostgreSQL JDBC Driver", "91" ),
     
-    BESQL(new DbmsType("besql", 0 ), new BeSQLMacroProcessorStrategy(), new PostgresTypeManager(), null, "", "", "" );
+    BESQL(DbmsType.BESQL, 
+            new BeSQLMacroProcessorStrategy(), 
+            new PostgresTypeManager(), 
+            null, "", "", "" );
+    
+    public static Rdbms getRdbms(final String url)
+    {
+        String realUrl = url.startsWith( "jdbc:" )?url.substring( "jdbc:".length() ):url; 
+        if(realUrl.startsWith( "mysql:" ))
+        {
+            return Rdbms.MYSQL;
+        }
+        if(realUrl.startsWith( "db2:" ))
+        {
+            return Rdbms.DB2;
+        }
+        if(realUrl.startsWith( "oracle:" ))
+        {
+            return Rdbms.ORACLE;
+        }
+        if(realUrl.startsWith( "postgresql:" ))
+        {
+            return Rdbms.POSTGRESQL;
+        }
+        if(realUrl.startsWith( "sqlserver:" ) || realUrl.startsWith( "microsoft:sqlserver:" ) || realUrl.startsWith( "jtds:sqlserver:" ))
+        {
+            return Rdbms.SQLSERVER;
+        }
+        return null;
+    }
+
+    public static Rdbms getRdbms(DbmsConnector connector)
+    {
+        switch( connector.getType() )
+        {
+            case MYSQL:         return Rdbms.MYSQL; 
+            case DB2:           return Rdbms.DB2; 
+            case ORACLE:        return Rdbms.ORACLE; 
+            case POSTGRESQL:    return Rdbms.POSTGRESQL; 
+            case SQLSERVER:     return Rdbms.SQLSERVER; 
+            case BESQL:         return Rdbms.BESQL;
+        }
+
+        throw new IllegalStateException("Unsupported connector: " + connector.getConnectString());
+    }
+    
+  
+    ///////////////////////////////////////////////////////////////////
+    // RDBMS implementation
+    //
     
     private final DbmsType type;
     private final IMacroProcessorStrategy macroProcessor;

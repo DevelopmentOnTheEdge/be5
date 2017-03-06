@@ -7,13 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SqlExecutor;
 
-import com.beanexplorer.enterprise.OperationSupport;
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.model.ColumnFunction;
 import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
@@ -34,7 +35,7 @@ public class Db2SchemaReader extends DefaultSchemaReader
     @Override
     public Map<String, List<SqlColumnInfo>> readColumns( SqlExecutor sql, String defSchema, ProcessController controller ) throws SQLException, ProcessInterruptedException
     {
-        DatabaseConnector connector = sql.getConnector();
+        DbmsConnector connector = sql.getConnector();
         Map<String, List<SqlColumnInfo>> result = new HashMap<>();
         ResultSet rs = connector.executeQuery( "SELECT tabname,colname,typename,nulls,default,length,scale,identity,text FROM syscat.columns c "+
         (defSchema == null?"":"WHERE c.tabschema='"+defSchema+"' ")+" ORDER BY c.tabname,c.colno");
@@ -76,9 +77,9 @@ public class Db2SchemaReader extends DefaultSchemaReader
         }
         for(Entry<String, List<SqlColumnInfo>> table : result.entrySet())
         {
-            HashMap<String, String[]> enums = OperationSupport.loadEntityEnums( connector, table.getKey(), null );
+            HashMap<String, String[]> enums = loadEntityEnums(connector, table.getKey());
             for(SqlColumnInfo column : table.getValue())
-            {
+            { 
                 column.setEnumValues( enums.get( column.getName() ) );
             }
         }
@@ -127,4 +128,72 @@ public class Db2SchemaReader extends DefaultSchemaReader
         }
         return result;
     }
+    
+    //
+    public static HashMap loadEntityEnums(DbmsConnector connector, String entity) throws SQLException
+    {
+        HashMap enums = new HashMap();
+
+        // try to read DB2's constraints
+        // that are stored like sex IN ( 'male', 'female' )
+        String sql = "SELECT TEXT AS \"Constr\" ";
+        sql += "FROM SYSIBM.SYSCHECKS ";
+        sql += "WHERE TYPE = 'C' AND TBNAME = UPPER( '" + entity + "' ) ";
+
+        List<String> constraints = readAsListOfStrings(connector, sql);
+
+        for( String constr : constraints )
+        {
+            StringTokenizer st = new StringTokenizer( constr.trim() );
+            int nTok = st.countTokens();
+            if( nTok < 3 )
+                continue;
+
+            String colName = st.nextToken().toUpperCase();
+            String in = st.nextToken();
+            if( !"IN".equalsIgnoreCase( in ) )
+                continue;
+                
+            ArrayList<String> values = new ArrayList<String>();
+            try
+            {
+                do
+                {
+                    String val = st.nextToken( "(,')" );
+                    if( val != null && val.length() >0  )
+                    {
+                        values.add( val );
+                    }
+                }
+                while( st.hasMoreTokens() );
+            }
+            catch( NoSuchElementException ignore )
+            {}
+            
+            if( values.size() > 0 )
+                enums.put( colName, values.toArray( new String[0] ) );
+        }
+        
+        return enums;
+    }
+    
+    /**
+     * @TODO implement
+     */
+    public static List<String> readAsListOfStrings(DbmsConnector connector, String sql) throws SQLException
+    {
+        return null;
+
+        // TODO
+        /*
+        List vals = Utils.readAsList(connector, sql);
+        ArrayList<String> list = new ArrayList<String>( vals.size() );
+        for( Object value : vals )
+        {
+            list.add( String.valueOf( value ) );
+        }
+        return list;
+        */
+    }
+    
 }

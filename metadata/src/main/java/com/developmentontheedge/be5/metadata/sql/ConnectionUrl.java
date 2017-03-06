@@ -30,7 +30,7 @@ public class ConnectionUrl implements BeElementWithProperties
     
     public ConnectionUrl(String url)
     {
-        rdbms = DatabaseUtils.getRdbms( url );
+        rdbms = Rdbms.getRdbms( url );
         parse(url);
     }
     
