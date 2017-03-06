@@ -17,11 +17,11 @@ import java.util.function.Consumer;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.beans.DynamicProperty;
-import com.beanexplorer.beans.DynamicPropertySet;
-import com.beanexplorer.beans.DynamicPropertySetSupport;
-import com.developmentontheedge.be5.DatabaseConnector;
-import com.developmentontheedge.be5.RecordEx;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 
@@ -47,7 +47,7 @@ public class DpsStreamer
      */
     public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
     {
-        DatabaseConnector connector = databaseService.getDatabaseConnector();
+    	DbmsConnector connector = databaseService.getDatabaseConnector();
         
         ResultSet rs = null;
         try
@@ -156,7 +156,7 @@ public class DpsStreamer
             String name = getUniqName( names, parts[0] );
             Class<?> clazz = getTypeClass( metaData.getColumnType( i ) );
             DynamicProperty dp = new DynamicProperty( name, clazz );
-            if( name.startsWith( RecordEx.HIDDEN_COLUMN_PREFIX ) )
+            if( name.startsWith( DatabaseConstants.HIDDEN_COLUMN_PREFIX ) )
             {
                 dp.setHidden( true );
             }

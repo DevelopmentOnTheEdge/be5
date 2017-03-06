@@ -10,7 +10,8 @@ import com.developmentontheedge.be5.components.impl.DocumentResponse;
 import com.developmentontheedge.be5.components.impl.MoreRowsGenerator;
 import com.developmentontheedge.be5.components.impl.TableCounter;
 
-public class Document implements Component {
+public class Document implements Component 
+{
     
     public Document()
     {
@@ -44,7 +45,8 @@ public class Document implements Component {
         }
         catch (Be5Exception ex)
         {
-            if(ex.getCode().isInternal()) {
+            if(ex.getCode().isInternal()) 
+            {
                 serviceProvider.getLogger().error(ex);
             }
             res.sendError(ex);

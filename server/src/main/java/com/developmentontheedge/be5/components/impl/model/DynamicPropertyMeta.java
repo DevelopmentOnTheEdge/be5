@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components.impl.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.beanexplorer.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicProperty;
 
 public class DynamicPropertyMeta
 {
@@ -28,7 +28,8 @@ public class DynamicPropertyMeta
         if(oldTags instanceof Map)
         {
             ((Map<String, Map<String, String>>)oldTags).putAll(meta);
-        } else
+        } 
+        else
         {
             property.setAttribute(META_INFO_PROPERTY, new HashMap<>(meta));
         }

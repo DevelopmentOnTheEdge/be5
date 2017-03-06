@@ -24,11 +24,14 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.beans.DynamicProperty;
-import com.beanexplorer.beans.DynamicPropertySet;
-import com.beanexplorer.beans.DynamicPropertySetAsMap;
-import com.developmentontheedge.be5.DatabaseConnector;
-import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+
+import com.developmentontheedge.dbms.DbmsConnector;
+
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.ParamHelper;
 import com.developmentontheedge.be5.UserInfo;
 import com.developmentontheedge.be5.api.Request;
@@ -75,7 +78,7 @@ import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.developmentontheedge.sql.model.Token;
-import com.google.common.collect.ImmutableList;
+
 /**
  * A modern query executor that uses our new parser.
  */
@@ -288,7 +291,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private final Map<String, String> parametersMap;
-    private final DatabaseConnector connector;
+    private final DbmsConnector connector;
     private final UserInfoManager userInfoManager;
     private final HttpSession session;
     private final ContextApplier contextApplier;
@@ -308,7 +311,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
-        this.connector = serviceProvider.getDatabaseConnector();
+        this.connector = serviceProvider.getDbmsConnector();
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
         this.userInfoManager = UserInfoManager.get(req, serviceProvider);
         this.session = req.getRawSession();
@@ -394,7 +397,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         dql.log("With context", ast);
 
         // ID COLUMN
-        if( Query.QUERY_TYPE_1D.equals( query.getType() ) && query.getEntity().findTableDefinition() != null && !hasColumnWithLabel(ast, DatabaseConstants.ID_COLUMN_LABEL) )
+        if( query.getType() == QueryType.D1 && query.getEntity().findTableDefinition() != null && !hasColumnWithLabel(ast, DatabaseConstants.ID_COLUMN_LABEL) )
         {
             new ColumnAdder().addColumn( ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
                     DatabaseConstants.ID_COLUMN_LABEL );
@@ -622,7 +625,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         try
         {
             QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
-                    .getConstructor( UserInfo.class, ParamHelper.class, DatabaseConnector.class, long.class, long.class )
+                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
                     // TODO: create and pass ParamHelper
                     .newInstance( userInfoManager.getUserInfo(), new MapParamHelper(parametersMap), connector, offset, limit );
 

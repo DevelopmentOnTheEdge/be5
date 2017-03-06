@@ -1,17 +1,19 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import static com.google.common.base.Preconditions.*;
-
 import java.util.Objects;
 import java.util.Optional;
 
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
+/**
+ * 
+ * @pending preconditions
+ */
 public abstract class AbstractQueryExecutor implements QueryExecutor
 {
     
@@ -30,7 +32,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     @Override
     public final QueryExecutor offset(int offset)
     {
-        checkArgument( offset >= 0 );
+        //checkArgument( offset >= 0 );
         this.offset = offset;
         return this;
     }
@@ -38,7 +40,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     @Override
     public final QueryExecutor limit(int limit)
     {
-        checkArgument( limit >= 0 );
+        //checkArgument( limit >= 0 );
         this.limit = limit;
         return this;
     }
@@ -46,7 +48,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     @Override
     public final QueryExecutor sortOrder(int sortColumn, boolean desc)
     {
-        checkArgument( sortColumn >= -2 );
+        //checkArgument( sortColumn >= -2 );
         this.sortColumn = sortColumn;
         this.sortDesc = desc;
         return this;

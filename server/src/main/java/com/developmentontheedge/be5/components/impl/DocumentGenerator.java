@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.components.impl.QueryRouter.Runner;
 import com.developmentontheedge.be5.components.impl.model.Operations;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -84,7 +85,7 @@ public class DocumentGenerator implements Runner {
     {
         List<TableOperationPresentation> operations = collectOperations(query);
         //&& !Strings2.isNullOrEmpty( query.getEntity().getPrimaryKey() )
-        final boolean selectable = !operations.isEmpty() && Query.QUERY_TYPE_1D.equals(query.getType() );
+        final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
         int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
         
         if (limit == 0)

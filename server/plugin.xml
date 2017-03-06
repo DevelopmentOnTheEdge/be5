@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension-point id="component" name="Component" schema="schema/component.exsd"/>
+    <extension-point id="websocketcomponent" name="Web Socket Component" schema="schema/wscomponent.exsd"/>
+    <extension-point id="initializer" name="Activator" schema="schema/initializer.exsd"/>
+    <extension-point id="legacyServlet" name="legacyServlet" schema="schema/legacyServlet.exsd"/>
+    <extension-point id="service" name="Service" schema="schema/service.exsd"/>
+    
+    <extension
+         id="empty"
+         name="Empty Application"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="com.beanexplorer.enterprise.servlets.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="com.beanexplorer.be5.component">
+      <component
+            class="com.beanexplorer.enterprise.components.Categories"
+            id="categories"
+            name="Categories">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.Document"
+            id="document"
+            name="Document">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.LanguageSelector"
+            id="languageSelector"
+            name="Language Selector">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.Login"
+            id="login"
+            name="Login"
+            default="true">
+      </component>
+       <component
+            class="com.beanexplorer.enterprise.components.Logout"
+            id="logout"
+            name="Logout">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.Menu"
+            id="menu"
+            name="Menu">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.RoleSelector"
+            id="roleSelector"
+            name="Role Selector">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.Form"
+            id="form"
+            name="Form">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.StaticPageComponent"
+            id="static"
+            name="Static Page">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.LegacyServlet"
+            id="legacyServlet"
+            name="Legacy Servlet">
+      </component>
+      <component
+      		class="com.beanexplorer.enterprise.components.DownloadComponent"
+      		id="download"
+      		name="Download Component">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.tools.PoolStat"
+            id="pool"
+            name="Connection Pool">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.ApplicationInfoComponent"
+            id="appInfo"
+            name="Application Info">
+      </component>
+      <component
+            class="com.beanexplorer.enterprise.components.ScriptList"
+            id="scriptList"
+            name="Script List">
+      </component>
+   </extension>
+   <extension
+         point="com.beanexplorer.be5.service">
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.SqlServiceImpl"
+            interface="com.beanexplorer.enterprise.api.services.SqlService"
+            name="SQL Service">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.DatabaseServiceImpl"
+            interface="com.beanexplorer.enterprise.api.services.DatabaseService"
+            name="Database Service">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.CategoriesServiceImpl"
+            interface="com.beanexplorer.enterprise.api.services.CategoriesService"
+            name="Categories Service">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.ProjectProviderImpl"
+            interface="com.beanexplorer.enterprise.api.services.ProjectProvider"
+            name="Project Provider">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.MetaImpl"
+            interface="com.beanexplorer.enterprise.api.services.Meta"
+            name="Meta">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.ExecutorServiceImpl"
+            interface="com.beanexplorer.enterprise.api.services.ExecutorService"
+            name="Executor service">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.legacy.LegacyQueryRepository"
+            interface="com.beanexplorer.enterprise.legacy.LegacyQueryRepository"
+            name="Legacy Query Repository">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.legacy.LegacyUrlsService"
+            interface="com.beanexplorer.enterprise.legacy.LegacyUrlsService"
+            name="Legacy Queries Service">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.legacy.LegacyOperationsService"
+            interface="com.beanexplorer.enterprise.legacy.LegacyOperationsService"
+            name="Legacy Operations Service">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.experimental.v1.OperationHelper"
+            interface="com.beanexplorer.enterprise.api.experimental.v1.OperationHelper"
+            name="Experimental Operation Helper v1">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.SelectExecutor"
+            interface="com.beanexplorer.enterprise.api.services.impl.SelectExecutor"
+            name="Select Executor">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.components.impl.model.DpsStreamer"
+            interface="com.beanexplorer.enterprise.components.impl.model.DpsStreamer"
+            name="DPS Streamer">
+      </service>
+      <service
+            implementation="com.beanexplorer.enterprise.api.services.impl.ConsoleLogger"
+            interface="com.beanexplorer.enterprise.api.services.Logger"
+            name="Console Logger Service">
+      </service>
+      <service
+            id="legacyServlets"
+            implementation="com.beanexplorer.enterprise.components.LegacyServletProviderImpl"
+            interface="com.beanexplorer.enterprise.components.LegacyServletProvider"
+            name="Legacy Servlets">
+      </service>
+   </extension>
+   
+</plugin>

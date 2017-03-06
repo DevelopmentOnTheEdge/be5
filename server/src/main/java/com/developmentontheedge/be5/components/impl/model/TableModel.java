@@ -11,10 +11,11 @@ import java.util.stream.Collectors;
 
 import one.util.streamex.StreamEx;
 
-import com.beanexplorer.beans.DynamicProperty;
-import com.beanexplorer.beans.DynamicPropertySet;
-import com.beanexplorer.beans.DynamicPropertySetAsMap;
-import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -23,14 +24,15 @@ import com.developmentontheedge.be5.api.helpers.UserInfoManager;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
+/**
+ * // TODO localizer
+ */
 public class TableModel
 {
-
     public static class Builder
     {
-
         private final Query query;
-        private final TableLocalizer localizer;
+        private final Object localizer; // TODO
         private final QueryExecutor execution;
         private boolean selectable;
         private int limit = Integer.MAX_VALUE;
@@ -45,7 +47,7 @@ public class TableModel
             this.selectable = selectable;
             this.sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
             this.desc = "desc".equals(req.get("order[0][dir]"));
-            this.localizer = new TableLocalizer(query, UserInfoManager.get(req, serviceProvider).getUserInfo(), serviceProvider.getDatabaseConnector());
+            this.localizer = null; //TODO new TableLocalizer(query, UserInfoManager.get(req, serviceProvider).getUserInfo(), serviceProvider.getDatabaseConnector());
             this.execution = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
             this.execution.sortOrder(sortColumn, desc);
             this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
@@ -109,7 +111,7 @@ public class TableModel
 
         private boolean isNoResults(Exception e)
         {
-            // FIXME fugly hack
+            // FIXME ugly hack
             return e.getMessage() != null && e.getMessage().toLowerCase().contains( "no results" );
         }
 
@@ -292,19 +294,19 @@ public class TableModel
          * @param maxRows rows per page
          */
         private void collectColumnsAndRows(String entityName, String queryName, StreamEx<DynamicPropertySet> stream, boolean selectable, List<ColumnModel> columns,
-                List<RowModel> rows, TableLocalizer localizer, int maxRows)
+                List<RowModel> rows, Object localizer, int maxRows)
         {
             stream.forEach( properties -> {
                 if( columns.isEmpty() )
                 {
-                    columns.addAll( new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta, localizer).collectColumns() );
+                    columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta, localizer).collectColumns());
                 }
                 
                 rows.add( generateRow(entityName, queryName, selectable, properties, localizer, columns) );
             } );
         }
 
-        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties, TableLocalizer localizer, List<ColumnModel> columns) throws AssertionError
+        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties, Object localizer, List<ColumnModel> columns) throws AssertionError
         {
             PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta, localizer);
             List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells

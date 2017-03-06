@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.beanexplorer.beans.DynamicProperty;
-import com.beanexplorer.beans.DynamicPropertySet;
-import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.HttpParamHelper;
-import com.developmentontheedge.be5.RecordEx;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
@@ -17,8 +17,6 @@ import com.developmentontheedge.be5.util.MoreStrings;
 
 /**
  * Parses properties in terms of tables.
- * 
- * @author asko
  */
 class PropertiesToRowTransformer
 {
@@ -27,7 +25,7 @@ class PropertiesToRowTransformer
     private final String queryName;
     private final DynamicPropertySet properties;
     private final UserAwareMeta userAwareMeta;
-    private final TableLocalizer localizer;
+    private final Object localizer; // TODO
     private SimpleDateFormat dateFormatter = new SimpleDateFormat( "dd.MM.yyyy" );
     private SimpleDateFormat timestampFormatter = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
     
@@ -36,7 +34,7 @@ class PropertiesToRowTransformer
      * @param properties represent a row
      * @param localizer 
      */
-    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserAwareMeta userAwareMeta, TableLocalizer localizer)
+    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserAwareMeta userAwareMeta, Object localizer)
     {
         this.entityName = entityName;
         this.queryName = queryName;
@@ -116,9 +114,11 @@ class PropertiesToRowTransformer
         {
             String cellName = property.getName();
             String cellContent = toString(property);
+            // TODO
+            // cellContent = localizer.localize( cellContent );
             boolean hidden = shouldBeSkipped( cellName );
-            cells.add(new RawCellModel(cellName, localizer.localize( cellContent ),
-                    DynamicPropertyMeta.get(property), hidden));
+            
+            cells.add(new RawCellModel(cellName, cellContent, DynamicPropertyMeta.get(property), hidden));
         }
 
         return cells;
@@ -126,7 +126,7 @@ class PropertiesToRowTransformer
 
     private void appendProperty(DynamicProperty property, Map<String, StringBuilder> properties)
     {
-        String targetName = property.getName().substring( RecordEx.GLUE_COLUMN_PREFIX.length() );
+        String targetName = property.getName().substring( DatabaseConstants.GLUE_COLUMN_PREFIX.length() );
         StringBuilder mutableStr = properties.get( targetName );
 
         if( mutableStr == null )
@@ -165,8 +165,8 @@ class PropertiesToRowTransformer
 
     private boolean shouldBeSkipped(String propertyName)
     {
-        return MoreStrings.startsWithAny( propertyName, RecordEx.EXTRA_HEADER_COLUMN_PREFIX, RecordEx.HIDDEN_COLUMN_PREFIX,
-                RecordEx.GLUE_COLUMN_PREFIX );
+        return MoreStrings.startsWithAny( propertyName, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX, DatabaseConstants.HIDDEN_COLUMN_PREFIX,
+        		DatabaseConstants.GLUE_COLUMN_PREFIX );
     }
 
 }
