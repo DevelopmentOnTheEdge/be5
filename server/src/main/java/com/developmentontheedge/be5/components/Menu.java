@@ -1,0 +1,335 @@
+package com.developmentontheedge.be5.components;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.components.impl.model.Queries;
+import com.developmentontheedge.be5.legacy.LegacyUrlsService;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Operation;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.Action;
+import com.google.gson.annotations.SerializedName;
+
+public class Menu implements Component {
+
+    private static final String INSERT_OPERATION = "Insert";
+    
+    static class MenuResponse {
+        
+        final boolean loggedIn;
+        final List<RootNode> root;
+        
+        MenuResponse(boolean loggedIn, List<RootNode> root)
+        {
+            this.loggedIn = loggedIn;
+            this.root = root;
+        }
+        
+    }
+    
+    static class RootNode {
+        
+        final Id id;
+        final String title;
+        @SerializedName("default")
+        final boolean isDefault;
+        final Action action;
+        final List<QueryNode> children;
+        final List<OperationNode> operations;
+        
+        static RootNode action(Id id, String title, boolean isDefault, Action action, List<OperationNode> operations)
+        {
+            return new RootNode(id, title, isDefault, action, null, operations);
+        }
+        
+        static RootNode container(Id id, String title, List<QueryNode> children, List<OperationNode> operations)
+        {
+            return new RootNode(id, title, false, null, children, operations);
+        }
+        
+        private RootNode(Id id, String title, boolean isDefault, Action action, List<QueryNode> children, List<OperationNode> operations)
+        {
+            this.id = id;
+            this.title = title;
+            this.isDefault = isDefault;
+            this.action = action;
+            this.children = children;
+            this.operations = operations;
+        }
+        
+    }
+    
+    static class Id {
+        
+        final String entity;
+        final String query;
+        
+        public Id(String entity, String query)
+        {
+            this.entity = entity;
+            this.query = query;
+        }
+        
+    }
+    
+    static class QueryNode {
+
+        final Id id;
+        final String title;
+        final Action action;
+        @SerializedName("default")
+        final boolean isDefault;
+
+        public QueryNode(Id id, String title, Action action, boolean isDefault)
+        {
+            this.id = id;
+            this.title = title;
+            this.action = action;
+            this.isDefault = isDefault;
+        }
+        
+    }
+    
+    static class OperationNode {
+        
+        final OperationId id;
+        final String title;
+        final Action action;
+        
+        OperationNode(OperationId id, String title, Action action)
+        {
+            this.id = id;
+            this.title = title;
+            this.action = action;
+        }
+        
+    }
+    
+    static class OperationId {
+        
+        final String entity;
+        final String operation;
+        
+        OperationId(String entity, String operation) {
+            this.entity = entity;
+            this.operation = operation;
+        }
+        
+    }
+    
+    /**
+     * Used to sort queries.
+     * @author asko
+     */
+    static class OrderedQuery implements Comparable<OrderedQuery> {
+        
+        final Query query;
+        final String title;
+        
+        public OrderedQuery(Query query, String title) {
+            Objects.requireNonNull(query);
+            Objects.requireNonNull(title);
+            this.query = query;
+            this.title = title;
+        }
+        
+        @Override
+        public int compareTo(OrderedQuery other) {
+            Objects.requireNonNull(other);
+            return title.compareTo( other.title );
+        }
+        
+    }
+
+    public Menu() {
+        /* stateless */
+    }
+
+    /**
+     * Generated JSON sample:
+     * <pre>
+     * <code>
+     *   { "root": [
+     *     { "title": "Entity With All Records", "action": {"name":"ajax", "arg":"entity.query"} },
+     *     { "title": "Some Entity", children: [
+     *       { "title": "Query1", "action": {"name":"url", "arg":"https://www.google.com"} }
+     *     ] }
+     *   ] }
+     * </code>
+     * </pre>
+     */
+    @Override
+    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    {
+        switch (req.getRequestUri())
+        {
+        case "":
+            res.sendAsRawJson(generateSimpleMenu(req, serviceProvider));
+            return;
+        case "withIds":
+            res.sendAsRawJson(generateMenuWithIds(req, serviceProvider));
+            return;
+        default:
+            res.sendUnknownActionError();
+            return;
+        }
+    }
+
+    private MenuResponse generateMenuWithIds(Request req, ServiceProvider serviceProvider) {
+        return generateMenu(req, serviceProvider, true);
+    }
+
+    private MenuResponse generateSimpleMenu(Request req, ServiceProvider serviceProvider) {
+        return generateMenu(req, serviceProvider, false);
+    }
+
+    private MenuResponse generateMenu(Request req, ServiceProvider serviceProvider, boolean withIds) {
+        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+        
+        List<String> roles = userInfoManager.getCurrentRoles();
+        String language = userInfoManager.getLanguage();
+        boolean loggedIn = userInfoManager.isLoggedIn();
+        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, withIds);
+        
+        return new MenuResponse(loggedIn, entities);
+    }
+
+    /**
+     * Adds all permitted queries to the root array.
+     */
+    private List<RootNode> collectEntities(Meta meta, LegacyUrlsService legacyQueriesService, UserAwareMeta userAwareMeta, String language, List<String> roles, boolean withIds) {
+        List<RootNode> out = new ArrayList<>();
+        
+        for (Entity entity : meta.getOrderedEntities(language))
+        {
+            collectEntityContent(entity, language, meta, legacyQueriesService, userAwareMeta, roles, withIds, out);
+        }
+        
+        return out;
+    }
+
+    private void collectEntityContent(Entity entity, String language, Meta meta, LegacyUrlsService legacyQueriesService, UserAwareMeta userAwareMeta, List<String> roles, boolean withIds, List<RootNode> out) {
+        List<Query> permittedQueries = meta.getQueries(entity, roles);
+        
+        if (permittedQueries.isEmpty())
+        {
+            return;
+        }
+
+        String title = meta.getTitle(entity, language);
+        List<OperationNode> operations = generateEntityOperations(entity, meta, userAwareMeta, roles, withIds);
+        
+        if (operations.isEmpty())
+        {
+            operations = null;
+        }
+        
+        if (canBeMovedToRoot(permittedQueries, title, language, meta))
+        {
+            // Query in the root, contains an action.
+            Id id = null;
+            Action action = Queries.toAction(permittedQueries.get(0), legacyQueriesService);
+            boolean isDefault = permittedQueries.get(0).isDefaultView();
+            
+            if (withIds)
+            {
+                String queryTitle = getTitleOfRootQuery(permittedQueries, title, language, meta);
+                id = new Id(entity.getName(), queryTitle);
+            }
+            
+            out.add(RootNode.action(id, title, isDefault, action, operations));
+        }
+        else
+        {
+            // No query in the root, just inner queries.
+            List<QueryNode> children = generateEntityQueries(permittedQueries, legacyQueriesService, language, meta, withIds);
+            Id id = new Id(entity.getName(), null);
+            out.add(RootNode.container(id, title, children, operations));
+        }
+    }
+    
+    private List<QueryNode> generateEntityQueries(List<Query> permittedQueries, LegacyUrlsService legacyQueriesService, String language, Meta meta, boolean withIds) {
+        List<OrderedQuery> queries = new ArrayList<>();
+        
+        for (Query permittedQuery : permittedQueries)
+        {
+            queries.add(new OrderedQuery(permittedQuery, meta.getTitle(permittedQuery, language)));
+        }
+        
+        Collections.sort(queries);
+        
+        List<QueryNode> children = new ArrayList<>();
+        
+        for (OrderedQuery query : queries)
+        {
+            Query permittedQuery = query.query;
+            Id id = null;
+            
+            if (withIds)
+            {
+                id = new Id(permittedQuery.getEntity().getName(), permittedQuery.getName());
+            }
+            
+            children.add(new QueryNode(id, query.title, Queries.toAction(permittedQuery, legacyQueriesService), permittedQuery.isDefaultView()));
+        }
+        
+        return children;
+    }
+    
+    private List<OperationNode> generateEntityOperations(Entity entity, Meta meta, UserAwareMeta userAwareMeta, List<String> roles, boolean withIds) {
+        List<OperationNode> operations = new ArrayList<>();
+        Query allRecords = entity.getQueries().get(DatabaseConstants.ALL_RECORDS_VIEW);
+        String insertOperationName = INSERT_OPERATION;
+        
+        if (allRecords != null && allRecords.getOperationNames().getFinalValues().contains(insertOperationName))
+        {
+            Operation insertOperation = entity.getOperations().get(insertOperationName);
+            if (insertOperation != null && meta.isAvailableFor(insertOperation, roles))
+            {
+                String title = userAwareMeta.getLocalizedOperationTitle(entity.getName(), insertOperationName);
+                Action action = Queries.toAction(DatabaseConstants.ALL_RECORDS_VIEW, insertOperation);
+                OperationId id = withIds ? new OperationId(entity.getName(), insertOperationName) : null;
+                OperationNode operation = new OperationNode(id, title, action);
+                operations.add(operation);
+            }
+        }
+        
+        return operations;
+    }
+
+    /**
+     * If the entity contains only one query, that's named "All records" or as the entity itself.
+     */
+    private boolean canBeMovedToRoot(List<Query> queries, String entityTitle, String language, Meta meta) {
+        return getTitleOfRootQuery(queries, entityTitle, language, meta) != null;
+    }
+
+    private String getTitleOfRootQuery(List<Query> queries, String entityTitle, String language, Meta meta)
+    {
+        if (queries.size() != 1)
+            return null;
+        
+        Query query = queries.get(0);
+        
+        if (query.getName().equals(DatabaseConstants.ALL_RECORDS_VIEW))
+            return DatabaseConstants.ALL_RECORDS_VIEW;
+        
+        if (meta.getTitle(query, language).equals(entityTitle))
+            return entityTitle;
+        
+        return null;
+    }
+    
+}

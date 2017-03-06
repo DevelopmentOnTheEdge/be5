@@ -20,8 +20,8 @@ public class AutoTest extends TestCase
     {
         TestSuite suite = new TestSuite();
 
-        suite.addTestSuite( ReadModelFromXmlTest.class );
-        suite.addTestSuite( IconTest.class );
+//        suite.addTestSuite( ReadModelFromXmlTest.class );
+//        suite.addTestSuite( IconTest.class );
 
         return suite;
     }
