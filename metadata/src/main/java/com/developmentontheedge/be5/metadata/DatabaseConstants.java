@@ -5,6 +5,7 @@ package com.developmentontheedge.be5.metadata;
  */
 public interface DatabaseConstants 
 {
+    static final String ALL_RECORDS_VIEW = "All records";
     static final String SELECTION_VIEW = "*** Selection view ***";
 
     // used in com.developmentontheedge.be5.components.impl.model.TableModel

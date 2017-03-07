@@ -3,10 +3,10 @@ package com.developmentontheedge.be5.legacy;
 import javax.servlet.http.HttpServletRequest;
 
 import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.HttpOperation;
-import com.developmentontheedge.be5.UserInfo;
-import com.developmentontheedge.be5.Utils;
+import com.developmentontheedge.be5.legacy.UserInfo;
+import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.WebAppInitializer;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;

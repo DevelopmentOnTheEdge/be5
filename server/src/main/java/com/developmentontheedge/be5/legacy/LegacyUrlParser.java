@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.QueryLink;
 import com.developmentontheedge.be5.components.FrontendConstants;

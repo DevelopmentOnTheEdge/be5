@@ -7,9 +7,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
-import com.developmentontheedge.be5.UserInfo;
-import com.developmentontheedge.be5.Utils;
-import com.developmentontheedge.be5.Operation.SessionAdapter;
+import com.developmentontheedge.be5.legacy.UserInfo;
+import com.developmentontheedge.be5.metadata.Utils;
+//import com.developmentontheedge.be5.Operation.SessionAdapter;
 
 /**
  * UserInfo implementation which supports getLocale() call only
@@ -68,10 +68,10 @@ public class LocaleUserInfo extends UserInfo
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public SessionAdapter createSessionAdapter() {
-		throw new UnsupportedOperationException();
-	}
+//	@Override
+//	public SessionAdapter createSessionAdapter() {
+//		throw new UnsupportedOperationException();
+//	}
 
 	@Override
 	public Timestamp getLoggedInTime() {

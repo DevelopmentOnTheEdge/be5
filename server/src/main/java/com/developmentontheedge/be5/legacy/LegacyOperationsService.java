@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.legacy;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.developmentontheedge.be5.UserInfo;
 import com.developmentontheedge.be5.api.ServiceProvider;
 
 public class LegacyOperationsService
