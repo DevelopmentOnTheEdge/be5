@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.metadata;
 
-import com.developmentontheedge.be5.metadata.model.Query;
-
 public enum QueryType
 {
 	/**
