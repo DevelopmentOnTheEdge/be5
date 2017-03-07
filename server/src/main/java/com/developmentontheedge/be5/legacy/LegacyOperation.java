@@ -15,7 +15,7 @@ import com.beanexplorer.beans.DynamicPropertySetSupport;
 import com.beanexplorer.model.ComponentFactory;
 import com.beanexplorer.model.ComponentModel;
 import com.beanexplorer.util.SimpleCompositeMap;
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.DatabaseConstants;
 import com.developmentontheedge.be5.HttpOperation;
 import com.developmentontheedge.be5.Operation;
@@ -42,23 +42,23 @@ import com.google.common.collect.Iterables;
  */
 public class LegacyOperation {
     
-    private static class Be5DebuggerSupport extends DefaultDebuggerSupport {
-
-        private static final Be5DebuggerSupport INSTANCE = new Be5DebuggerSupport();
-        
-        public static Be5DebuggerSupport getInstance() {
-            return INSTANCE;
-        }
-        
-        private Be5DebuggerSupport() {
-        }
-        
-        @Override
-        public void initContext(Context context, DatabaseConnector connector) {
-            context.setApplicationClassLoader(new Be5ClassLoader());
-        }
-        
-    }
+//    private static class Be5DebuggerSupport extends DefaultDebuggerSupport {
+//
+//        private static final Be5DebuggerSupport INSTANCE = new Be5DebuggerSupport();
+//
+//        public static Be5DebuggerSupport getInstance() {
+//            return INSTANCE;
+//        }
+//
+//        private Be5DebuggerSupport() {
+//        }
+//
+//        @Override
+//        public void initContext(Context context, DatabaseConnector connector) {
+//            context.setApplicationClassLoader(new Be5ClassLoader());
+//        }
+//
+//    }
     
     private final static class SimpleCompositeMaps 
     {
@@ -110,7 +110,7 @@ public class LegacyOperation {
         if (operation instanceof JavaScriptOperation)
         {
             // allows to scripts to load classes from the application and modules 
-            JavaScriptOperation.setDebuggerSupport(Be5DebuggerSupport.getInstance());
+            //TODO JavaScriptOperation.setDebuggerSupport(Be5DebuggerSupport.getInstance());
         }
     }
     

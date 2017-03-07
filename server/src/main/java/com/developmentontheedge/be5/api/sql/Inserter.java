@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.sql.SQLException;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.util.SqlBuilder;
 import com.developmentontheedge.be5.util.SqlStatements;
 

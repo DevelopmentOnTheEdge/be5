@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.impl;
 
 import javax.servlet.ServletContext;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.Utils;
 import com.developmentontheedge.be5.api.InitializerContext;
 import com.developmentontheedge.be5.api.Request;

@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import one.util.streamex.StreamEx;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.google.common.base.Joiner;

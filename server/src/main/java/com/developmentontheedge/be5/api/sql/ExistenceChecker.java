@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.util.Generators;
 import com.developmentontheedge.be5.util.SqlBuilder;
 import com.developmentontheedge.be5.util.SqlStatements;

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components.impl;
 import java.io.StringWriter;
 import java.util.Map;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.LocalizingWriter;
 import com.developmentontheedge.be5.UserInfo;
 import com.developmentontheedge.be5.Utils;

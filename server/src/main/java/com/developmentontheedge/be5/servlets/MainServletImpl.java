@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 import com.developmentontheedge.be5.DaemonStarter;
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.RequestPreprocessor;
 import com.developmentontheedge.be5.UserInfo;
 import com.developmentontheedge.be5.Utils;

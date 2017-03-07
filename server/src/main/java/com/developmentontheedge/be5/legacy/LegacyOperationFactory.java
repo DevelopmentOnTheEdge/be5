@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.legacy;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.DatabaseConstants;
 import com.developmentontheedge.be5.HttpOperation;
 import com.developmentontheedge.be5.UserInfo;

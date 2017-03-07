@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 
 public interface DatabaseService
 {
@@ -8,6 +8,6 @@ public interface DatabaseService
     /**
      * Returns a connector for the project. 
      */
-    DbmsConnector getDatabaseConnector();
+    DatabaseConnector getDatabaseConnector();
     
 }

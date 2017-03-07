@@ -17,7 +17,7 @@
 
 	<dependencies>
 
-    	<dependency>
+		<dependency>
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>be5-metadata</artifactId>
 			<version>0.3.0</version>
@@ -35,7 +35,13 @@
 		    <version>1.1</version>
 		</dependency>
 
-		<dependency>
+    <dependency>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
+      <version>1.7R3</version>
+    </dependency>
+
+    <dependency>
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		    <version>2.5</version>
@@ -47,7 +53,13 @@
 			<version>3.0.1</version>
 		</dependency>
 
-		<!--dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>21.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>one.util</groupId>
 			<artifactId>streamex</artifactId>
 			<version>0.5.4</version>
@@ -75,7 +87,7 @@
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.11</version>
-		</dependency -->
+		</dependency>
 
 
 		<dependency>

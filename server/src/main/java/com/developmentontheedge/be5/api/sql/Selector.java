@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.api.services.impl.ConstantDatabaseService;
 import com.developmentontheedge.be5.api.services.impl.SelectExecutor;
 import com.developmentontheedge.be5.util.Generators;

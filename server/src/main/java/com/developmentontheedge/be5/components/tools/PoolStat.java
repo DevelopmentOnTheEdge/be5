@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components.tools;
 
 import com.developmentontheedge.be5.BoneCPDatabaseConnector;
 import com.developmentontheedge.be5.DBCPDatabaseConnector;
-import com.developmentontheedge.be5.DatabaseConnector;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.Utils;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;

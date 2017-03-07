@@ -11,22 +11,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.developmentontheedge.be5.CryptoUtils;
-import com.developmentontheedge.be5.DatabaseConnector;
-import com.developmentontheedge.be5.RoleUtils;
-import com.developmentontheedge.be5.SessionConstants;
-import com.developmentontheedge.be5.UserInfo;
-import com.developmentontheedge.be5.Utils;
+
+import com.developmentontheedge.be5.legacy.UserInfo;
+import com.developmentontheedge.be5.metadata.SessionConstants;
+import com.developmentontheedge.be5.metadata.Utils;
+import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
+
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.caches.UserRoleCache;
+
 import com.developmentontheedge.be5.legacy.LegacyOperation;
 import com.developmentontheedge.be5.legacy.LegacyOperationFactory;
 import com.developmentontheedge.be5.legacy.LegacyOperationsService;
-import com.developmentontheedge.be5.operations.Login;
+
+import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
+
 
 public class UserInfoManagerImpl implements UserInfoManager {
     
@@ -83,10 +85,14 @@ public class UserInfoManagerImpl implements UserInfoManager {
         	if(getUserInfo().isGuest()) {
         		return Collections.singletonList("Guest");
         	}
-            String selectRolesSql = "SELECT role_name FROM user_roles WHERE user_name = " + Utils.safestr(connector, getUserInfo().getUserName(), true);
-            String[] roles = (String[]) Utils.readAsArray(connector, selectRolesSql, new String[0]);
+            if(getUserInfo().isAdmin()) {
+                return Collections.singletonList(ROLE_ADMINISTRATOR);
+            }
+//TODO            String selectRolesSql = "SELECT role_name FROM user_roles WHERE user_name = " + Utils.safestr(connector, getUserInfo().getUserName(), true);
+//            String[] roles = (String[]) Utils.readAsArray(connector, selectRolesSql, new String[0]);
 
-            return Collections.unmodifiableList(Arrays.asList(roles));
+            //return Collections.unmodifiableList(Arrays.asList(roles));
+            return Collections.singletonList("Guest");
         }
         catch (Exception e)
         {
@@ -96,7 +102,7 @@ public class UserInfoManagerImpl implements UserInfoManager {
 
     @Override
     public void selectRoles(List<String> roles) throws Exception {
-        RoleUtils.assignRoles(connector, getUserInfo(), roles);
+        //TODO RoleUtils.assignRoles(connector, getUserInfo(), roles);
     }
     
     private HttpServletRequest getRequest() {
@@ -141,14 +147,15 @@ public class UserInfoManagerImpl implements UserInfoManager {
 
     private String runLegacyLoginOperation(LegacyOperation legacyOperation, String username, String password) throws SQLException
     {
-        Login loginOperation = (Login) legacyOperation.getRawOperation();
-        loginOperation.setKey(null);
-        String sessionId = req.getSessionId();
-        String remoteAddr = req.getRemoteAddr();
-        int result = loginOperation.login(connector, remoteAddr, username, password, null, sessionId);
-        
-        if (result == HttpServletResponse.SC_OK) 
-        	return loginOperation.getActualUser();
+        //TODO
+//        Login loginOperation = (Login) legacyOperation.getRawOperation();
+//        loginOperation.setKey(null);
+//        String sessionId = req.getSessionId();
+//        String remoteAddr = req.getRemoteAddr();
+//        int result = loginOperation.login(connector, remoteAddr, username, password, null, sessionId);
+//
+//        if (result == HttpServletResponse.SC_OK)
+//        	return loginOperation.getActualUser();
         
         return null;
     }
@@ -158,7 +165,7 @@ public class UserInfoManagerImpl implements UserInfoManager {
         UserInfo user = getUserInfo();
         
         // See WebAppInitializer.
-        CryptoUtils.setPasswordAndAlgorithm("myHomeKey", "PBEWithMD5AndDES");
+        //TODO CryptoUtils.setPasswordAndAlgorithm("myHomeKey", "PBEWithMD5AndDES");
         
         LegacyOperationFactory factory = serviceProvider.get(LegacyOperationsService.class).createFactory(user, getRequest());
         LegacyOperation legacyOperation = factory.create(meta.getOperation("users", "Login", getCurrentRoles()), req, null, Collections.<String>emptyList());
@@ -190,7 +197,8 @@ public class UserInfoManagerImpl implements UserInfoManager {
     private UserInfo getUserInfo(HttpServletRequest request) {
         try
         {
-            return Utils.getUserInfo(connector, request);
+            //TODO return Utils.getUserInfo(connector, request);
+            return null;
         }
         catch (Exception e)
         {
