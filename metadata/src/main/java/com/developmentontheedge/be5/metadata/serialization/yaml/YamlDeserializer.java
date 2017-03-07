@@ -186,6 +186,11 @@ public class YamlDeserializer
             {
                 return value;
             }
+
+            if( klass == QueryType.class)
+            {
+                return QueryType.fromString(value);
+            }
             
             return klass.getConstructor( String.class ).newInstance( value );
         }

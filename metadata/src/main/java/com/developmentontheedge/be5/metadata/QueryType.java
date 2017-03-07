@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.metadata;
 
-public enum QueryType 
+import com.developmentontheedge.be5.metadata.model.Query;
+
+public enum QueryType
 {
 	/**
 	 * 1D query returns results set where each row correspond to one record in corresponding database table.
@@ -57,6 +59,14 @@ public enum QueryType
     public String getName()
     {
         return name;
+    }
+
+    public static QueryType fromString(String name){
+        if("1D".equalsIgnoreCase(name))return QueryType.D1;
+        if("1D_unknown".equalsIgnoreCase(name))return QueryType.D1_UNKNOWN;
+        if("2D".equalsIgnoreCase(name))return QueryType.D2;
+
+        return valueOf(name.toUpperCase());
     }
 
 }
