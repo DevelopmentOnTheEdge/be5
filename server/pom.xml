@@ -1,0 +1,138 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>be5-server</artifactId>
+	<version>0.1.0</version>
+	<packaging>jar</packaging>
+
+	<name>be5 server</name>
+	<description>Core BE 5 server.</description>
+
+	<parent>
+		<groupId>com.developmentontheedge</groupId>
+		<artifactId>be5</artifactId>
+		<version>0.0.2</version>
+	</parent>
+
+	<dependencies>
+
+    	<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>be5-metadata</artifactId>
+			<version>0.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+    		<artifactId>javax.servlet-api</artifactId>
+    		<version>3.1.0</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		    <version>1.1</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>beans</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+		<!--dependency>
+			<groupId>one.util</groupId>
+			<artifactId>streamex</artifactId>
+			<version>0.5.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>dbms</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+    	<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>sql</artifactId>
+			<version>0.0.27</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>freemarker-patched</artifactId>
+			<version>2.3.20p3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.11</version>
+		</dependency -->
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+	
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<compilerArgs>
+						<arg>-Xlint:all</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<quiet>true</quiet>
+							<additionalparam>-Xdoclint:none</additionalparam>
+							<tags>
+								<tag>
+									<name>todo</name>
+									<placement>a</placement>
+									<head>TODO:</head>
+								</tag>
+								<tag>
+									<name>pending</name>
+									<placement>a</placement>
+									<head>PENDING:</head>
+								</tag>
+							</tags>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
