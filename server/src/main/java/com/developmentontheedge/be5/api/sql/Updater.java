@@ -1,16 +1,17 @@
 package com.developmentontheedge.be5.api.sql;
 
-import static com.google.common.base.Preconditions.*;
+import com.developmentontheedge.be5.util.Generators;
+import com.developmentontheedge.be5.util.SqlBuilder;
+import com.developmentontheedge.be5.util.SqlBuilder.Change;
+import com.developmentontheedge.be5.util.SqlBuilder.Condition;
+import com.developmentontheedge.be5.util.SqlStatements;
+import com.developmentontheedge.dbms.DbmsConnector;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.util.Generators;
-import com.developmentontheedge.be5.util.SqlBuilder;
-import com.developmentontheedge.be5.util.SqlStatements;
-import com.developmentontheedge.be5.util.SqlBuilder.Change;
-import com.developmentontheedge.be5.util.SqlBuilder.Condition;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Updater
 {
@@ -118,7 +119,7 @@ public class Updater
     /**
      * Creates an updater.
      */
-    public static Updater in(DatabaseConnector connector, String tableName)
+    public static Updater in(DbmsConnector connector, String tableName)
     {
         checkNotNull(connector);
         checkNotNull(tableName);
@@ -127,9 +128,9 @@ public class Updater
     }
     
     private final String tableName;
-    private final DatabaseConnector connector;
+    private final DbmsConnector connector;
 
-    private Updater(DatabaseConnector connector, String tableName)
+    private Updater(DbmsConnector connector, String tableName)
     {
         this.connector = connector;
         this.tableName = tableName;

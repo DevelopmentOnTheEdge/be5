@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.api.sql;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import com.developmentontheedge.be5.util.SqlBuilder;
+import com.developmentontheedge.be5.util.SqlStatements;
+import com.developmentontheedge.dbms.DbmsConnector;
 
 import java.sql.SQLException;
 
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.util.SqlBuilder;
-import com.developmentontheedge.be5.util.SqlStatements;
+import static com.google.common.base.Preconditions.*;
 
 public class Inserter
 {
@@ -47,17 +45,17 @@ public class Inserter
     /**
      * Creates an inserter.
      */
-    public static Inserter into(DatabaseConnector connector, String tableName)
+    public static Inserter into(DbmsConnector connector, String tableName)
     {
         checkNotNull(tableName);
         checkArgument(SqlStatements.isTableName(tableName));
         return new Inserter(connector, tableName);
     }
     
-    private final DatabaseConnector connector;
+    private final DbmsConnector connector;
     private final String tableName;
     
-    private Inserter(DatabaseConnector connector, String tableName)
+    private Inserter(DbmsConnector connector, String tableName)
     {
         this.connector = connector;
         this.tableName = tableName;

@@ -1,21 +1,20 @@
 package com.developmentontheedge.be5.components;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.developmentontheedge.be5.DatabaseConstants;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
-
 import one.util.streamex.StreamEx;
+
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LanguageSelector implements Component
 {

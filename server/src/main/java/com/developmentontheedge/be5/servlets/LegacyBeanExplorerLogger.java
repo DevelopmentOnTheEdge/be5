@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.servlets;
 
-//import com.beanexplorer.logging.Logger;
-//import com.beanexplorer.logging.LoggingHandle;
+//import com.developmentontheedge.logging.Logger;
+//import com.developmentontheedge.logging.LoggingHandle;
 
 public class LegacyBeanExplorerLogger // implements com.developmentontheedge.be5.api.services.Logger
 {

@@ -1,23 +1,10 @@
 package com.developmentontheedge.be5.metadata;
 
-import java.sql.SQLException;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.dbms.DbmsConnector; 
 
 /**
  * Temporary class for imported and unclassified constants from BeanExplorer EE.
@@ -124,5 +111,5 @@ public class Utils
         clause.append( ")" );
         return clause.toString();
     }
-    
+
 }

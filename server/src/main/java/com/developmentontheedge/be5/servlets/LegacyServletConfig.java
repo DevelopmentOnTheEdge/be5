@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.servlets;
 
-import java.util.Collections;
-import java.util.Enumeration;
+import com.developmentontheedge.be5.util.Delegator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-
-import com.developmentontheedge.be5.util.Delegator;
+import java.util.Collections;
+import java.util.Enumeration;
 
 public class LegacyServletConfig implements ServletConfig {
 	private final String name;
@@ -22,7 +21,7 @@ public class LegacyServletConfig implements ServletConfig {
 
 	@Override
 	public ServletContext getServletContext() {
-	    Object origServletContext = System.getProperties().get("com.beanexplorer.be5.servletContext");
+	    Object origServletContext = System.getProperties().get("com.developmentontheedge.be5.servletContext");
 	    return Delegator.on(origServletContext, ServletContext.class);
 	}
 

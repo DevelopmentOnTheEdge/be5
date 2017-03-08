@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.experimental.v1;
 
 import java.util.Optional;
 
-import com.beanexplorer.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 /**
  * Extract parameters of a operation from a dynamic property set.

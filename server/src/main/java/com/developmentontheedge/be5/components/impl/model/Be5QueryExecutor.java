@@ -1,83 +1,38 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpSession;
-
-import one.util.streamex.EntryStream;
-import one.util.streamex.MoreCollectors;
-import one.util.streamex.StreamEx;
-
-import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetAsMap;
-
-import com.developmentontheedge.dbms.DbmsConnector;
-
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.ParamHelper;
-import com.developmentontheedge.be5.UserInfo;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.experimental.Be5Query;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
 import com.developmentontheedge.be5.api.sql.Selector.ResultSetParser;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
-import com.developmentontheedge.be5.env.Classes;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
-import com.developmentontheedge.be5.query.QueryIterator;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.Unzipper;
-import com.developmentontheedge.sql.format.CategoryFilter;
-import com.developmentontheedge.sql.format.ColumnAdder;
-import com.developmentontheedge.sql.format.ColumnRef;
-import com.developmentontheedge.sql.format.Context;
-import com.developmentontheedge.sql.format.ContextApplier;
-import com.developmentontheedge.sql.format.Dbms;
-import com.developmentontheedge.sql.format.FilterApplier;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetAsMap;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.sql.format.*;
 import com.developmentontheedge.sql.format.Formatter;
-import com.developmentontheedge.sql.format.LimitsApplier;
-import com.developmentontheedge.sql.format.QueryContext;
-import com.developmentontheedge.sql.format.Simplifier;
-import com.developmentontheedge.sql.model.AstFrom;
-import com.developmentontheedge.sql.model.AstIdentifierConstant;
-import com.developmentontheedge.sql.model.AstTableRef;
-import com.developmentontheedge.sql.model.AstBeParameterTag;
-import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
-import com.developmentontheedge.sql.model.AstDerivedColumn;
-import com.developmentontheedge.sql.model.AstLimit;
-import com.developmentontheedge.sql.model.AstNestedQuery;
-import com.developmentontheedge.sql.model.AstNumericConstant;
-import com.developmentontheedge.sql.model.AstOrderBy;
-import com.developmentontheedge.sql.model.AstOrderingElement;
-import com.developmentontheedge.sql.model.AstQuery;
-import com.developmentontheedge.sql.model.AstSelect;
-import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.DefaultParserContext;
-import com.developmentontheedge.sql.model.ParserContext;
-import com.developmentontheedge.sql.model.SqlQuery;
-import com.developmentontheedge.sql.model.Token;
+import com.developmentontheedge.sql.model.*;
+import com.google.common.collect.ImmutableList;
+import one.util.streamex.EntryStream;
+import one.util.streamex.MoreCollectors;
+import one.util.streamex.StreamEx;
+
+import javax.servlet.http.HttpSession;
+import java.io.PrintStream;
+import java.sql.*;
+import java.util.*;
+import java.util.regex.Pattern;
+
+//import com.developmentontheedge.be5.query.QueryIterator;
 
 /**
  * A modern query executor that uses our new parser.
@@ -311,7 +266,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
-        this.connector = serviceProvider.getDbmsConnector();
+        this.connector = serviceProvider.getDatabaseConnector();
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
         this.userInfoManager = UserInfoManager.get(req, serviceProvider);
         this.session = req.getRawSession();
@@ -329,11 +284,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         switch (query.getType())
         {
-        case Query.QUERY_TYPE_CUSTOM:
-            return streamCustomQuery();
-        case Query.QUERY_TYPE_1D:
+//        case Query.QUERY_TYPE_CUSTOM:
+//            return streamCustomQuery();
+        case D1:
             return stream1DQuery();
-        case Query.QUERY_TYPE_1DUNKNOWN:
+        case D1_UNKNOWN:
             return stream1DUnknownQuery();
         default:
             // TODO: support other query types
@@ -344,7 +299,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public <T> List<T> execute(ResultSetParser<T> parser) throws Be5Exception
     {
-        if ( query.getType().equals(Query.QUERY_TYPE_1D) || query.getType().equals(Query.QUERY_TYPE_1DUNKNOWN ) )
+        if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN ) )
             return getResults(getFinalSql(), parser);
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
@@ -352,7 +307,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<String> getColumnNames() throws Be5Exception
     {
-        if ( query.getType().equals(Query.QUERY_TYPE_1D) || query.getType().equals(Query.QUERY_TYPE_1DUNKNOWN) )
+        if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN) )
             return getColumnNames(getFinalSql());
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
@@ -620,30 +575,30 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private StreamEx<DynamicPropertySet> streamCustomQuery()
-    {
-        try
-        {
-            QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
-                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
-                    // TODO: create and pass ParamHelper
-                    .newInstance( userInfoManager.getUserInfo(), new MapParamHelper(parametersMap), connector, offset, limit );
-
-            if (iterator instanceof Be5Query)
-            {
-                ((Be5Query) iterator).initialize(serviceProvider);
-            }
-
-            @SuppressWarnings("unchecked")
-            StreamEx<DynamicPropertySet> stream = StreamEx.of( iterator );
-            return stream;
-        }
-        catch( InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException | ProjectElementException e )
-        {
-            throw Be5Exception.internalInQuery( e, query );
-        }
-    }
+//    private StreamEx<DynamicPropertySet> streamCustomQuery()
+//    {
+//        try
+//        {
+//            QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
+//                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
+//                    // TODO: create and pass ParamHelper
+//                    .newInstance( userInfoManager.getUserInfo(), new MapParamHelper(parametersMap), connector, offset, limit );
+//
+//            if (iterator instanceof Be5Query)
+//            {
+//                ((Be5Query) iterator).initialize(serviceProvider);
+//            }
+//
+//            @SuppressWarnings("unchecked")
+//            StreamEx<DynamicPropertySet> stream = StreamEx.of( iterator );
+//            return stream;
+//        }
+//        catch( InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+//                | NoSuchMethodException | SecurityException | ProjectElementException e )
+//        {
+//            throw Be5Exception.internalInQuery( e, query );
+//        }
+//    }
 
     private StreamEx<DynamicPropertySet> stream(String finalSql)
     {

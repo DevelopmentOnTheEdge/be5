@@ -1,10 +1,8 @@
+package com.developmentontheedge.be5.api.helpers;
+
 /** $Id: UserInfo.java,v 1.20 2014/02/13 06:24:45 lan Exp $ */
 
-package com.developmentontheedge.be5.legacy;
-
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.metadata.Utils;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
@@ -13,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.StringTokenizer;
 
 public class UserInfo implements Serializable
 {
@@ -146,10 +144,10 @@ public class UserInfo implements Serializable
     public boolean isAdmin()
     {
         return getCurRoleList() != null &&
-            (
-                getCurRoleList().indexOf( "'" + RoleType.ROLE_ADMINISTRATOR + "'" ) >= 0 ||
-                getCurRoleList().indexOf( "'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'" ) >= 0
-            );
+                (
+                        getCurRoleList().indexOf( "'" + RoleType.ROLE_ADMINISTRATOR + "'" ) >= 0 ||
+                                getCurRoleList().indexOf( "'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'" ) >= 0
+                );
     }
 
     public boolean isGuest()
@@ -171,15 +169,15 @@ public class UserInfo implements Serializable
 
         public Locale getLocale()
         {
-            return Locale.US;
-//            try
-//            {
-//                return new Locale( Utils.getSystemSetting( Utils.getDefaultConnector(), "FORCED_LOCALE", "en_US" ) );
-//            }
-//            catch( Exception exc )
-//            {
-//                return Locale.US;
-//            }
+            try
+            {
+                //return new Locale( Utils.getSystemSetting( Utils.getDefaultConnector(), "FORCED_LOCALE", "en_US" ) );
+                return Locale.US;
+            }
+            catch( Exception exc )
+            {
+                return Locale.US;
+            }
         }
     };
 
@@ -215,15 +213,15 @@ public class UserInfo implements Serializable
 
         public Locale getLocale()
         {
-            return Locale.US;
-//            try
-//            {
-//                return new Locale( Utils.getSystemSetting( Utils.getDefaultConnector(), "FORCED_LOCALE", "en_US" ) );
-//            }
-//            catch( Exception exc )
-//            {
-//                return Locale.US;
-//            }
+            try
+            {
+                //return new Locale( Utils.getSystemSetting( Utils.getDefaultConnector(), "FORCED_LOCALE", "en_US" ) );
+                return new Locale( "en_US" );
+            }
+            catch( Exception exc )
+            {
+                return Locale.US;
+            }
         }
     };
 }

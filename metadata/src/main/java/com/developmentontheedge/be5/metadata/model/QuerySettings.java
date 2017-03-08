@@ -13,7 +13,7 @@ public class QuerySettings extends BeModelElementSupport
     private int maxRecordsInDynamicDropDown = 20;
     private Long colorSchemeID = null;
     private int autoRefresh = 0;
-    private String beautifier = "com.beanexplorer.web.html.HtmlTableBeautifier";
+    private String beautifier = "com.developmentontheedge.web.html.HtmlTableBeautifier";
     
     public QuerySettings(Query query)
     {

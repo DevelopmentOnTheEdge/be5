@@ -16,155 +16,155 @@
             thread="main"
             visible="true">
          <run
-               class="com.beanexplorer.enterprise.servlets.Application">
+               class="com.developmentontheedge.enterprise.servlets.Application">
          </run>
       </application>
    </extension>
    <extension
-         point="com.beanexplorer.be5.component">
+         point="com.developmentontheedge.be5.component">
       <component
-            class="com.beanexplorer.enterprise.components.Categories"
+            class="com.developmentontheedge.enterprise.components.Categories"
             id="categories"
             name="Categories">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.Document"
+            class="com.developmentontheedge.enterprise.components.Document"
             id="document"
             name="Document">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.LanguageSelector"
+            class="com.developmentontheedge.enterprise.components.LanguageSelector"
             id="languageSelector"
             name="Language Selector">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.Login"
+            class="com.developmentontheedge.enterprise.components.Login"
             id="login"
             name="Login"
             default="true">
       </component>
        <component
-            class="com.beanexplorer.enterprise.components.Logout"
+            class="com.developmentontheedge.enterprise.components.Logout"
             id="logout"
             name="Logout">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.Menu"
+            class="com.developmentontheedge.enterprise.components.Menu"
             id="menu"
             name="Menu">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.RoleSelector"
+            class="com.developmentontheedge.enterprise.components.RoleSelector"
             id="roleSelector"
             name="Role Selector">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.Form"
+            class="com.developmentontheedge.enterprise.components.Form"
             id="form"
             name="Form">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.StaticPageComponent"
+            class="com.developmentontheedge.enterprise.components.StaticPageComponent"
             id="static"
             name="Static Page">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.LegacyServlet"
+            class="com.developmentontheedge.enterprise.components.LegacyServlet"
             id="legacyServlet"
             name="Legacy Servlet">
       </component>
       <component
-      		class="com.beanexplorer.enterprise.components.DownloadComponent"
+      		class="com.developmentontheedge.enterprise.components.DownloadComponent"
       		id="download"
       		name="Download Component">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.tools.PoolStat"
+            class="com.developmentontheedge.enterprise.components.tools.PoolStat"
             id="pool"
             name="Connection Pool">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.ApplicationInfoComponent"
+            class="com.developmentontheedge.enterprise.components.ApplicationInfoComponent"
             id="appInfo"
             name="Application Info">
       </component>
       <component
-            class="com.beanexplorer.enterprise.components.ScriptList"
+            class="com.developmentontheedge.enterprise.components.ScriptList"
             id="scriptList"
             name="Script List">
       </component>
    </extension>
    <extension
-         point="com.beanexplorer.be5.service">
+         point="com.developmentontheedge.be5.service">
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.SqlServiceImpl"
-            interface="com.beanexplorer.enterprise.api.services.SqlService"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.SqlServiceImpl"
+            interface="com.developmentontheedge.enterprise.api.services.SqlService"
             name="SQL Service">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.DatabaseServiceImpl"
-            interface="com.beanexplorer.enterprise.api.services.DatabaseService"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.DatabaseServiceImpl"
+            interface="com.developmentontheedge.enterprise.api.services.DatabaseService"
             name="Database Service">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.CategoriesServiceImpl"
-            interface="com.beanexplorer.enterprise.api.services.CategoriesService"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.CategoriesServiceImpl"
+            interface="com.developmentontheedge.enterprise.api.services.CategoriesService"
             name="Categories Service">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.ProjectProviderImpl"
-            interface="com.beanexplorer.enterprise.api.services.ProjectProvider"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.ProjectProviderImpl"
+            interface="com.developmentontheedge.enterprise.api.services.ProjectProvider"
             name="Project Provider">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.MetaImpl"
-            interface="com.beanexplorer.enterprise.api.services.Meta"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.MetaImpl"
+            interface="com.developmentontheedge.enterprise.api.services.Meta"
             name="Meta">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.ExecutorServiceImpl"
-            interface="com.beanexplorer.enterprise.api.services.ExecutorService"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.ExecutorServiceImpl"
+            interface="com.developmentontheedge.enterprise.api.services.ExecutorService"
             name="Executor service">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.legacy.LegacyQueryRepository"
-            interface="com.beanexplorer.enterprise.legacy.LegacyQueryRepository"
+            implementation="com.developmentontheedge.enterprise.legacy.LegacyQueryRepository"
+            interface="com.developmentontheedge.enterprise.legacy.LegacyQueryRepository"
             name="Legacy Query Repository">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.legacy.LegacyUrlsService"
-            interface="com.beanexplorer.enterprise.legacy.LegacyUrlsService"
+            implementation="com.developmentontheedge.enterprise.legacy.LegacyUrlsService"
+            interface="com.developmentontheedge.enterprise.legacy.LegacyUrlsService"
             name="Legacy Queries Service">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.legacy.LegacyOperationsService"
-            interface="com.beanexplorer.enterprise.legacy.LegacyOperationsService"
+            implementation="com.developmentontheedge.enterprise.legacy.LegacyOperationsService"
+            interface="com.developmentontheedge.enterprise.legacy.LegacyOperationsService"
             name="Legacy Operations Service">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.experimental.v1.OperationHelper"
-            interface="com.beanexplorer.enterprise.api.experimental.v1.OperationHelper"
+            implementation="com.developmentontheedge.enterprise.api.experimental.v1.OperationHelper"
+            interface="com.developmentontheedge.enterprise.api.experimental.v1.OperationHelper"
             name="Experimental Operation Helper v1">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.SelectExecutor"
-            interface="com.beanexplorer.enterprise.api.services.impl.SelectExecutor"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.SelectExecutor"
+            interface="com.developmentontheedge.enterprise.api.services.impl.SelectExecutor"
             name="Select Executor">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.components.impl.model.DpsStreamer"
-            interface="com.beanexplorer.enterprise.components.impl.model.DpsStreamer"
+            implementation="com.developmentontheedge.enterprise.components.impl.model.DpsStreamer"
+            interface="com.developmentontheedge.enterprise.components.impl.model.DpsStreamer"
             name="DPS Streamer">
       </service>
       <service
-            implementation="com.beanexplorer.enterprise.api.services.impl.ConsoleLogger"
-            interface="com.beanexplorer.enterprise.api.services.Logger"
+            implementation="com.developmentontheedge.enterprise.api.services.impl.ConsoleLogger"
+            interface="com.developmentontheedge.enterprise.api.services.Logger"
             name="Console Logger Service">
       </service>
       <service
             id="legacyServlets"
-            implementation="com.beanexplorer.enterprise.components.LegacyServletProviderImpl"
-            interface="com.beanexplorer.enterprise.components.LegacyServletProvider"
+            implementation="com.developmentontheedge.enterprise.components.LegacyServletProviderImpl"
+            interface="com.developmentontheedge.enterprise.components.LegacyServletProvider"
             name="Legacy Servlets">
       </service>
    </extension>

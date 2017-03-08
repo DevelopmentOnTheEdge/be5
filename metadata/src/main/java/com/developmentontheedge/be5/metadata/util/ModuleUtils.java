@@ -243,7 +243,7 @@ public class ModuleUtils
         // In com.developmentontheedge.be5.metadata we cannot explicitly depend
         // on org.eclipse
         final Object bundle = Class.forName( "org.eclipse.core.runtime.Platform" ).getMethod( "getBundle", String.class )
-                .invoke( null, "com.beanexplorer.enterprise.eclipse" );
+                .invoke( null, "com.developmentontheedge.enterprise.eclipse" );
 
         if ( bundle == null )
         {

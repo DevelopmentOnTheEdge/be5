@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.components;
 
-import java.util.List;
-
-import com.developmentontheedge.be5.DatabaseConstants;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+
+import java.util.List;
 
 public class RoleSelector implements Component {
 
@@ -82,7 +82,7 @@ public class RoleSelector implements Component {
         }
         catch (Exception e)
         {
-            return new RoleSelectorResponse(ImmutableList.of(DatabaseConstants.ROLE_GUEST), ImmutableList.of(DatabaseConstants.ROLE_GUEST));
+            return new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST), ImmutableList.of(RoleType.ROLE_GUEST));
         }
     }
 

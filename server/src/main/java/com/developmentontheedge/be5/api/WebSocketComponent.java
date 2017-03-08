@@ -9,7 +9,7 @@ package com.developmentontheedge.be5.api;
  * <pre>
  * {@code
  * <plugin>
- *   <extension point="com.beanexplorer.be5.websocketcomponent">
+ *   <extension point="com.developmentontheedge.be5.websocketcomponent">
  *     <component class="ru.biosoft.biostore.docker.VNCProxy" id="vncproxy" name="VNC Proxy"/>
  *   </extension>
  * </plugin>

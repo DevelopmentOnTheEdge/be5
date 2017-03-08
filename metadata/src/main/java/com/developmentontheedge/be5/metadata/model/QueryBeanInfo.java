@@ -24,7 +24,7 @@ public class QueryBeanInfo extends BeanInfoEx
         addHidden("query", "isQueryHidden");
         addHidden(new PropertyDescriptorEx("queryClass", beanClass, "getQuery", "setQuery"), ClassSelector.class, "isQueryClassHidden");
         findPropertyDescriptor("queryClass").setDisplayName( "Query class" );
-        findPropertyDescriptor("queryClass").setShortDescription( "Must extend com.beanexplorer.enterprise.query.QueryIterator" );
+        findPropertyDescriptor("queryClass").setShortDescription( "Must extend com.developmentontheedge.enterprise.query.QueryIterator" );
         
         add(new PropertyDescriptorEx("queryCompiled", beanClass, "getQueryCompiled", null));
         findPropertyDescriptor("queryCompiled").setHidden(true);

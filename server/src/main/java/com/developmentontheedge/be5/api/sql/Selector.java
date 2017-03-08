@@ -1,24 +1,24 @@
 package com.developmentontheedge.be5.api.sql;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.developmentontheedge.be5.api.services.impl.ConstantDatabaseService;
+import com.developmentontheedge.be5.api.services.impl.SelectExecutor;
+import com.developmentontheedge.be5.util.Generators;
+import com.developmentontheedge.be5.util.SqlBuilder;
+import com.developmentontheedge.be5.util.SqlBuilder.Condition;
+import com.developmentontheedge.be5.util.SqlBuilder.FieldName;
+import com.developmentontheedge.be5.util.SqlBuilder.Value;
+import com.developmentontheedge.be5.util.SqlStatements;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.api.services.impl.ConstantDatabaseService;
-import com.developmentontheedge.be5.api.services.impl.SelectExecutor;
-import com.developmentontheedge.be5.util.Generators;
-import com.developmentontheedge.be5.util.SqlBuilder;
-import com.developmentontheedge.be5.util.SqlStatements;
-import com.developmentontheedge.be5.util.SqlBuilder.Condition;
-import com.developmentontheedge.be5.util.SqlBuilder.FieldName;
-import com.developmentontheedge.be5.util.SqlBuilder.Value;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Selector
 {
@@ -146,7 +146,7 @@ public class Selector
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
-    public static Selector from(DatabaseConnector connector, String tableName)
+    public static Selector from(DbmsConnector connector, String tableName)
     {
         checkNotNull(connector);
         checkNotNull(tableName);
@@ -154,7 +154,7 @@ public class Selector
         return new Selector(connector, ImmutableList.of(tableName));
     }
     
-    public static Selector from(DatabaseConnector connector, String tableName, String... tableNames)
+    public static Selector from(DbmsConnector connector, String tableName, String... tableNames)
     {
         checkNotNull(connector);
         checkNotNull(tableName);
@@ -164,10 +164,10 @@ public class Selector
         return new Selector(connector, ImmutableList.<String>builder().add(tableName).add(tableNames).build());
     }
     
-    private final DatabaseConnector connector;
+    private final DbmsConnector connector;
     private final List<String> tableNames;
     
-    private Selector(DatabaseConnector connector, List<String> tableNames)
+    private Selector(DbmsConnector connector, List<String> tableNames)
     {
         this.connector = connector;
         this.tableNames = tableNames;

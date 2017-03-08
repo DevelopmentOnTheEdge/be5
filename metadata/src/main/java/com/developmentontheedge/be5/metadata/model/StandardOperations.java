@@ -44,7 +44,7 @@ public class StandardOperations
     private static final String PARENT_RECORD = "ParentRecord";
     private static final String FILTER = "HttpSearchOperation";
     
-    private static final String PACKAGE = "com.beanexplorer.enterprise.operations";
+    private static final String PACKAGE = "com.developmentontheedge.enterprise.operations";
     private static final String[] NAMES = new String[] {
         INSERT,
         SILENT_INSERT,

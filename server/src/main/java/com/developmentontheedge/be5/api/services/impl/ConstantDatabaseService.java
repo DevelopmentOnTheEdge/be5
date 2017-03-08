@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.dbms.DbmsConnector;
 
 public class ConstantDatabaseService implements DatabaseService
 {
@@ -14,7 +14,7 @@ public class ConstantDatabaseService implements DatabaseService
     }
 
     @Override
-    public DbmsConnector getDatabaseConnector()
+    public DbmsConnector getDbmsConnector()
     {
         return connector;
     }

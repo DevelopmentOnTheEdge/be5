@@ -21,4 +21,19 @@ public interface DatabaseConstants
     // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer
     static final String ID_COLUMN_LABEL = HIDDEN_COLUMN_PREFIX + "ID";
 
+    //TODO create enum COL_ATTR
+    static final String COL_ATTR_NULLIF  = "nullif";
+    static final String COL_ATTR_LINK = "link";
+
+    static final String L10N_TOPIC_DISPLAY_NAME = "displayName";
+    static final String L10N_TOPIC_VIEW_NAME = "viewName";
+    static final String L10N_TOPIC_VIEW_MENU_NAME = "viewMenuName";
+    static final String L10N_TOPIC_VIEW_TITLE_NAME = "viewTitleName";
+    static final String L10N_TOPIC_OPERATION_NAME = "operationName";
+    static final String L10N_TOPIC_VIEW_SHORT_DESCRIPTION = "viewShortDescription";
+    static final String L10N_TOPIC_PAGE = "page";
+    static final String L10N_TOPIC_CODE = "code";
+    static final String L10N_TOPIC_SCHEME = "scheme";
+    static final String L10N_TOPIC_ATTRIBUTE = "attribute";
+    static final String L10N_TOPIC_INSERT = "Insert";
 }

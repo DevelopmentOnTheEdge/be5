@@ -1,22 +1,22 @@
 package com.developmentontheedge.be5.api.helpers.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-
-import com.developmentontheedge.be5.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.EntityLocalizations;
+import com.developmentontheedge.be5.metadata.model.EntityLocalizations.LocalizationRow;
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.EntityLocalizations.LocalizationRow;
 import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Table;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CompiledLocalizations {
     

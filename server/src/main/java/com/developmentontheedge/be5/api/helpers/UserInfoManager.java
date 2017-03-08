@@ -1,22 +1,21 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.impl.UserInfoManagerImpl;
-import com.developmentontheedge.be5.legacy.UserInfo;
+//import com.developmentontheedge.enterprise.UserInfo;
 import com.google.common.annotations.Beta;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Locale;
 
 @Beta
 public interface UserInfoManager {
     
     public static UserInfoManager get(Request req, ServiceProvider serviceProvider)
     {
-        return UserInfoManagerImpl.create(req, serviceProvider, serviceProvider.getDatabaseService().getDatabaseConnector(), serviceProvider.getMeta());
+        return UserInfoManagerImpl.create(req, serviceProvider, serviceProvider.getDatabaseService().getDbmsConnector(), serviceProvider.getMeta());
     }
     
     /**

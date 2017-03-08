@@ -1,20 +1,20 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Objects.requireNonNull;
-
-import java.util.List;
-
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ExistenceChecker;
+import com.developmentontheedge.be5.api.sql.ExistenceChecker.ExistenceCheckerEndpoint;
 import com.developmentontheedge.be5.api.sql.Inserter;
 import com.developmentontheedge.be5.api.sql.Selector;
-import com.developmentontheedge.be5.api.sql.Updater;
-import com.developmentontheedge.be5.api.sql.ExistenceChecker.ExistenceCheckerEndpoint;
 import com.developmentontheedge.be5.api.sql.Selector.ResultSetParser;
+import com.developmentontheedge.be5.api.sql.Updater;
 import com.developmentontheedge.be5.api.sql.Updater.UpdaterSelector;
+import com.developmentontheedge.dbms.DbmsConnector;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 public class SqlServiceImpl implements SqlService
 {
@@ -93,9 +93,9 @@ public class SqlServiceImpl implements SqlService
         return new SelectExecutor(databaseService).select(statement, parser);
     }
     
-    private DatabaseConnector getConnector()
+    private DbmsConnector getConnector()
     {
-        return databaseService.getDatabaseConnector();
+        return databaseService.getDbmsConnector();
     }
     
 }

@@ -5,6 +5,7 @@ package com.developmentontheedge.be5.legacy;
 //import com.developmentontheedge.be5.UserInfo;
 //import com.developmentontheedge.be5.Utils;
 
+import com.developmentontheedge.enterprise.UserInfo;
 /**
  * Doesn't allow to get session directly.
  * @see Utils.OperationUserInfo

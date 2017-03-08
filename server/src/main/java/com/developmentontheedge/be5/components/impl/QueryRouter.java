@@ -1,11 +1,5 @@
 package com.developmentontheedge.be5.components.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map;
-import java.util.Optional;
-
-import com.developmentontheedge.be5.DatabaseConstants;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -14,8 +8,14 @@ import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.Queries;
 import com.developmentontheedge.be5.legacy.LegacyUrlParser;
 import com.developmentontheedge.be5.legacy.LegacyUrlsService;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+
+import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class QueryRouter
 {
@@ -70,7 +70,7 @@ public class QueryRouter
     private void routeAndRun(Query query, Map<String, String> parametersMap, Runner runner) {
         switch (query.getType())
         {
-        case Query.QUERY_TYPE_STATIC:
+        case STATIC:
             if (Queries.isStaticPage(query))
             {
                 runner.onStatic(query);
@@ -87,7 +87,7 @@ public class QueryRouter
                 String targetEntityName = parser.getEntityName();
                 String targetQueryName = parser.getQueryName();
                 String targetOperationName = parser.getOperationName();
-                
+
                 if (targetOperationName != null)
                 {
                     boolean useQueryName = targetQueryName != null;
@@ -105,19 +105,19 @@ public class QueryRouter
                     runner.onTable(userAwareMeta.getQuery(targetEntityName, DatabaseConstants.ALL_RECORDS_VIEW), parser.getParameters());
                     return;
                 }
-                
+
                 runner.onError("Unsupported legacy request '" + query.getQuery() + "'.");
                 return;
             }
             runner.onError("Unsupported static request '" + query.getQuery() + "'.");
             return;
-        case Query.QUERY_TYPE_1D:
+        case D1:
         // TODO check whether these cases are correct
-        case Query.QUERY_TYPE_1DUNKNOWN:
-        case Query.QUERY_TYPE_2D:
-        case Query.QUERY_TYPE_CONTAINER:
-        case Query.QUERY_TYPE_CUSTOM:
-        case Query.QUERY_TYPE_JAVASCRIPT:
+        case D1_UNKNOWN:
+        case D2:
+        case CONTAINER:
+        case CUSTOM:
+        case JAVASCRIPT:
             if (meta.isParametrizedTable(query))
             {
                 runner.onParametrizedTable(query, parametersMap);

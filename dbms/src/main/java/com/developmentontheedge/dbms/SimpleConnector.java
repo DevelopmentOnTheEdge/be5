@@ -104,4 +104,84 @@ public class SimpleConnector implements DbmsConnector
     public void releaseConnection( Connection conn ) throws SQLException
     {
     }
+//TODO
+    @Override
+    public boolean isMySQL() {
+        return false;
+    }
+
+    @Override
+    public boolean isMySQL5() {
+        return false;
+    }
+
+    @Override
+    public boolean isMySQL41() {
+        return false;
+    }
+
+    @Override
+    public boolean isODBC() {
+        return false;
+    }
+
+    @Override
+    public boolean isSQLite() {
+        return false;
+    }
+
+    @Override
+    public boolean isOracle() {
+        return false;
+    }
+
+    @Override
+    public boolean isOracle8() {
+        return false;
+    }
+
+    @Override
+    public boolean isSQLServer() {
+        return false;
+    }
+
+    @Override
+    public boolean isSQLServer2005() {
+        return false;
+    }
+
+    @Override
+    public boolean isSQLServerJTDS() {
+        return false;
+    }
+
+    @Override
+    public boolean isDb2() {
+        return false;
+    }
+
+    @Override
+    public boolean isDb2NetDriver() {
+        return false;
+    }
+
+    @Override
+    public boolean isDb2AppDriver() {
+        return false;
+    }
+
+    @Override
+    public boolean isDb2v8() {
+        return false;
+    }
+
+    @Override
+    public boolean isDb2v9() {
+        return false;
+    }
+
+    @Override
+    public boolean isPostgreSQL() {
+        return false;
+    }
 }

@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.legacy;
 
+import com.developmentontheedge.be5.api.helpers.UserInfo;
+import com.developmentontheedge.be5.metadata.Utils;
+
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import javax.servlet.http.HttpSession;
-
-import com.developmentontheedge.be5.legacy.UserInfo;
-import com.developmentontheedge.be5.metadata.Utils;
 //import com.developmentontheedge.be5.Operation.SessionAdapter;
 
 /**
@@ -19,7 +18,7 @@ import com.developmentontheedge.be5.metadata.Utils;
  * @see Utils#readQueryMessages(com.beanexplorer.enterprise.QueryInfo, com.beanexplorer.enterprise.DatabaseConnector, UserInfo)
  * 
  */
-public class LocaleUserInfo extends UserInfo 
+public class LocaleUserInfo extends UserInfo
 {
     private static final long serialVersionUID = 1L;
 

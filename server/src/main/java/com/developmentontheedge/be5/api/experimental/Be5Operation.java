@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 /**
  * Implement this interface by your legacy operation to get the service provider.
  * 
- * @see com.beanexplorer.enterprise.Operation
+ * @see com.developmentontheedge.enterprise.Operation
  */
 public interface Be5Operation
 {

@@ -20,7 +20,7 @@ public class LegacyServletProviderImpl implements LegacyServletProvider
     {
         IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
         for (IConfigurationElement element : extensionRegistry
-                .getConfigurationElementsFor("com.beanexplorer.be5.legacyServlet"))
+                .getConfigurationElementsFor("com.developmentontheedge.be5.legacyServlet"))
         {
             try
             {

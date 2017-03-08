@@ -1,17 +1,10 @@
 package com.developmentontheedge.be5.api;
 
-import java.util.function.Consumer;
-
+import com.developmentontheedge.be5.api.services.*;
+import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.dbms.DbmsConnector;
 
-import com.developmentontheedge.be5.api.services.CategoriesService;
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.ExecutorService;
-import com.developmentontheedge.be5.api.services.Logger;
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.metadata.model.Project;
+import java.util.function.Consumer;
 
 /**
  * <p>The service provider is the general source of the business-logic objects, services.</p>
@@ -23,10 +16,10 @@ import com.developmentontheedge.be5.metadata.model.Project;
  * <pre>
  * {@code
  * <plugin>
- *   <extension point="com.beanexplorer.be5.service">
+ *   <extension point="com.developmentontheedge.be5.service">
  *     <service
- *       interface="com.beanexplorer.be5.auth.SocialLogin"
- *       implementation="com.beanexplorer.be5.auth.impl.SocialLoginImpl"
+ *       interface="com.developmentontheedge.be5.auth.SocialLogin"
+ *       implementation="com.developmentontheedge.be5.auth.impl.SocialLoginImpl"
  *       name="Social Login"
  *       id="socialLogin">
  *     </service>
@@ -94,7 +87,7 @@ public interface ServiceProvider
      */
     default DbmsConnector getDatabaseConnector()
     {
-        return getDatabaseService().getDatabaseConnector();
+        return getDatabaseService().getDbmsConnector();
     }
     
     /**

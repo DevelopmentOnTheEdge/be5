@@ -8,8 +8,8 @@ package com.developmentontheedge.be5.api;
  * <pre>
  * {@code
  * <plugin>
- *   <extension point="com.beanexplorer.be5.component">
- *     <component class="com.beanexplorer.be5.auth.components.SocialLoginComponent" id="socialLogin" name="Social Login" />
+ *   <extension point="com.developmentontheedge.be5.component">
+ *     <component class="com.developmentontheedge.be5.auth.components.SocialLoginComponent" id="socialLogin" name="Social Login" />
  *   </extension>
  * </plugin>
  * }

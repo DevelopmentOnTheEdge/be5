@@ -41,14 +41,14 @@ public class Classes
         String[] classNameParts = Iterables.toArray(Splitter.on('.').split(className), String.class);
         
         // module?
-        String moduleClassPrefix = "com.beanexplorer.business.";
-        String modulePrefix = "com.beanexplorer.module.";
+        String moduleClassPrefix = "com.developmentontheedge.business.";
+        String modulePrefix = "com.developmentontheedge.module.";
         if (classNameParts.length > 4 && className.startsWith(moduleClassPrefix))
         {
             String moduleName = modulePrefix + classNameParts[3];
             return ImmutableList.of(moduleName);
         }
-        if (classNameParts.length >= 4 && className.startsWith("com.beanexplorer."))
+        if (classNameParts.length >= 4 && className.startsWith("com.developmentontheedge."))
         {
     		return ImmutableList.of(modulePrefix + classNameParts[2],
     				"com.beanexplorer");

@@ -1,17 +1,15 @@
 package com.developmentontheedge.be5.api.impl;
 
-import java.util.Collections;
-import java.util.Map;
+import com.developmentontheedge.be5.api.WebSocketContext;
+import com.developmentontheedge.be5.api.helpers.UserInfo;
+import com.developmentontheedge.be5.metadata.SessionConstants;
+import com.developmentontheedge.be5.util.Delegator;
+import one.util.streamex.EntryStream;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
-
-import com.developmentontheedge.be5.SessionConstants;
-import com.developmentontheedge.be5.UserInfo;
-import com.developmentontheedge.be5.api.WebSocketContext;
-import com.developmentontheedge.be5.util.Delegator;
-
-import one.util.streamex.EntryStream;
+import java.util.Collections;
+import java.util.Map;
 
 public class WebSocketContextImpl implements WebSocketContext
 {
@@ -63,7 +61,7 @@ public class WebSocketContextImpl implements WebSocketContext
     {
         if(httpSession == null)
             return null;
-        UserInfo ui = ( UserInfo )httpSession.getAttribute( SessionConstants.USER_INFO );
+        UserInfo ui = (UserInfo)httpSession.getAttribute( SessionConstants.USER_INFO );
         return ui == null ? null : ui.getUserName();
     }
 }

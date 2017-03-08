@@ -1,11 +1,5 @@
 package com.developmentontheedge.be5.components;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
-import com.developmentontheedge.be5.DatabaseConstants;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
@@ -15,11 +9,17 @@ import com.developmentontheedge.be5.api.helpers.UserInfoManager;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.impl.model.Queries;
 import com.developmentontheedge.be5.legacy.LegacyUrlsService;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class Menu implements Component {
 

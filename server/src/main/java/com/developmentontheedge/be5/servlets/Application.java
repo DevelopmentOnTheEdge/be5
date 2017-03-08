@@ -11,8 +11,8 @@ import org.eclipse.equinox.app.IApplicationContext;
  */
 public class Application implements IApplication {
 
-    private static final String PLATFORM_CLASS = "com.beanexplorer.be5.platformClass";
-    private static final String EXIT = "com.beanexplorer.be5.exit";
+    private static final String PLATFORM_CLASS = "com.developmentontheedge.be5.platformClass";
+    private static final String EXIT = "com.developmentontheedge.be5.exit";
 
     @Override
     public Object start(IApplicationContext context) throws Exception {

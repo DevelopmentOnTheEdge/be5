@@ -47,7 +47,7 @@ public class DpsStreamer
      */
     public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
     {
-    	DbmsConnector connector = databaseService.getDatabaseConnector();
+    	DbmsConnector connector = databaseService.getDbmsConnector();
         
         ResultSet rs = null;
         try

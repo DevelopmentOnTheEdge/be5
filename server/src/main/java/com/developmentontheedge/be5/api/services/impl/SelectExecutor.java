@@ -53,7 +53,7 @@ public class SelectExecutor
     
     public void forEach(String statement, ResultSetConsumer consumer)
     {
-        DbmsConnector connector = databaseService.getDatabaseConnector();
+        DbmsConnector connector = databaseService.getDbmsConnector();
         
         try
         {

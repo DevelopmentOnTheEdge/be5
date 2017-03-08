@@ -9,7 +9,6 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.HttpParamHelper;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
@@ -52,7 +51,7 @@ class PropertiesToRowTransformer
 
         if( idObject != null )
         {
-            return HttpParamHelper.mapNameOut( String.valueOf( idObject ) );
+            return MapParamHelper.mapNameOut( String.valueOf( idObject ) );
         }
 
         return ""; // error

@@ -2,13 +2,14 @@ package com.developmentontheedge.be5.api.impl;
 
 import javax.servlet.ServletContext;
 
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.Utils;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.enterprise.DatabaseConnector;
 import com.developmentontheedge.be5.api.InitializerContext;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.env.ServletContexts;
+import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.servlets.ForwardingServletContext;
 
 /**
@@ -58,15 +59,16 @@ public class Be5 {
     
     /**
      * The singleton implementation, guarantees that the connector will be created only once and lazily
-     * (when the 'getDatabaseConnector()' will be called for the first time).
+     * (when the 'getDbmsConnector()' will be called for the first time).
      */
     private static class ConnectorHolder {
-        private static DatabaseConnector connector = createDatabaseConnector();
+        private static DbmsConnector connector = createDatabaseConnector();
 
-        private static DatabaseConnector createDatabaseConnector() {
+        private static DbmsConnector createDatabaseConnector() {
             ServletContext servletContext = ServletContexts.getServletContext();
             ServletContext supportingIdeServletContext = new SupportingIdeServletContext(servletContext);
-            DatabaseConnector connector = Utils.findConnector(supportingIdeServletContext, null);
+
+            DbmsConnector connector = null;//TODO Utils.findConnector(supportingIdeServletContext, null);
             
             return connector;
         }
@@ -80,7 +82,7 @@ public class Be5 {
      * @see ServiceProvider#getDatabaseService()
      */
     @Deprecated
-    public static DatabaseConnector getDatabaseConnector() {
+    public static DbmsConnector getDatabaseConnector() {
         return ConnectorHolder.connector;
     }
     

@@ -1,6 +1,12 @@
 package com.developmentontheedge.be5.util;
 
-import static com.google.common.base.Preconditions.*;
+import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import one.util.streamex.StreamEx;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -13,14 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import one.util.streamex.StreamEx;
-
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Builds SQL statements accourding to the selected RDBMS syntax.
@@ -149,10 +149,7 @@ public class SqlBuilder
     }
     
     /**
-     * 
-     * @see http://savage.net.au/SQL/sql-2003-2.bnf.html#derived%20column
-     * @see http://savage.net.au/SQL/sql-2003-2.bnf.html#as%20clause
-     * @see http://savage.net.au/SQL/sql-2003-2.bnf.html#column%20name
+     *
      * @author asko
      */
     private class DerivedColumn
@@ -363,9 +360,9 @@ public class SqlBuilder
     
     private final Rdbms rdbms;
     
-    public static SqlBuilder create(DatabaseConnector connector)
+    public static SqlBuilder create(DbmsConnector connector)
     {
-        return new SqlBuilder( DatabaseUtils.getRdbms( connector ) ); 
+        return new SqlBuilder( DatabaseUtils.getRdbms( connector ) );
     }
     
     private SqlBuilder(Rdbms rdbms)

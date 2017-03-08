@@ -47,7 +47,7 @@ public class TableModel
             this.selectable = selectable;
             this.sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
             this.desc = "desc".equals(req.get("order[0][dir]"));
-            this.localizer = null; //TODO new TableLocalizer(query, UserInfoManager.get(req, serviceProvider).getUserInfo(), serviceProvider.getDatabaseConnector());
+            this.localizer = null; //TODO new TableLocalizer(query, UserInfoManager.get(req, serviceProvider).getUserInfo(), serviceProvider.getDbmsConnector());
             this.execution = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
             this.execution.sortOrder(sortColumn, desc);
             this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);

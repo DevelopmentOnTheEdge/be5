@@ -4,7 +4,7 @@ import com.developmentontheedge.beans.annot.PropertyName;
 
 public class JavaScriptOperationExtender extends OperationExtender
 {
-    public static final String JAVASCRIPT_EXTENDER_CLASS_NAME = "com.beanexplorer.enterprise.operations.JavaScriptOperationExtenderSupport";
+    public static final String JAVASCRIPT_EXTENDER_CLASS_NAME = "com.developmentontheedge.enterprise.operations.JavaScriptOperationExtenderSupport";
 
     public JavaScriptOperationExtender(Operation owner, String module)
     {

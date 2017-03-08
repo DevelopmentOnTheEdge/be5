@@ -1,34 +1,29 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.ServletContext;
-
-import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Logger;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.caches.Cache;
-import com.developmentontheedge.be5.caches.CacheFactory;
 import com.developmentontheedge.be5.env.ServletContexts;
-import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
-import com.developmentontheedge.be5.metadata.sql.SqlModelReader;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
-import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils.BasePathProvider;
-import com.developmentontheedge.dbms.ExtendedSqlException;
+import com.developmentontheedge.be5.metadata.util.NullLogger;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.enterprise.caches.Cache;
+import com.developmentontheedge.enterprise.caches.CacheFactory;
+
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class ProjectProviderImpl implements ProjectProvider
 {

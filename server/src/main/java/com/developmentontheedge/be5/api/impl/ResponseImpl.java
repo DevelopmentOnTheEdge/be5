@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.beanexplorer.be5.xml.Jaxb;
+import com.developmentontheedge.be5.xml.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.google.gson.Gson;

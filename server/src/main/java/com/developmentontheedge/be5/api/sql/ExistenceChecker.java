@@ -1,17 +1,17 @@
 package com.developmentontheedge.be5.api.sql;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.developmentontheedge.be5.util.Generators;
+import com.developmentontheedge.be5.util.SqlBuilder;
+import com.developmentontheedge.be5.util.SqlBuilder.Condition;
+import com.developmentontheedge.be5.util.SqlStatements;
+import com.developmentontheedge.dbms.DbmsConnector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-import com.developmentontheedge.be5.util.Generators;
-import com.developmentontheedge.be5.util.SqlBuilder;
-import com.developmentontheedge.be5.util.SqlStatements;
-import com.developmentontheedge.be5.util.SqlBuilder.Condition;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ExistenceChecker
 {
@@ -80,7 +80,7 @@ public class ExistenceChecker
         
     }
     
-    public static ExistenceChecker in(DatabaseConnector connector, String tableName)
+    public static ExistenceChecker in(DbmsConnector connector, String tableName)
     {
         checkNotNull(connector);
         checkNotNull(tableName);
@@ -88,10 +88,10 @@ public class ExistenceChecker
         return new ExistenceChecker(connector, tableName);
     }
     
-    private final DatabaseConnector connector;
+    private final DbmsConnector connector;
     private final String tableName;
     
-    private ExistenceChecker(DatabaseConnector connector, String tableName)
+    private ExistenceChecker(DbmsConnector connector, String tableName)
     {
         this.connector = connector;
         this.tableName = tableName;

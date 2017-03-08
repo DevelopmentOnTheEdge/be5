@@ -1,38 +1,29 @@
 package com.developmentontheedge.be5.api.helpers.impl;
 
-import java.security.GeneralSecurityException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-
-import com.developmentontheedge.be5.legacy.UserInfo;
-import com.developmentontheedge.be5.metadata.SessionConstants;
-import com.developmentontheedge.be5.metadata.Utils;
-import com.developmentontheedge.be5.metadata.sql.DatabaseConnector;
-
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
 import com.developmentontheedge.be5.api.services.Meta;
-
 import com.developmentontheedge.be5.legacy.LegacyOperation;
-import com.developmentontheedge.be5.legacy.LegacyOperationFactory;
-import com.developmentontheedge.be5.legacy.LegacyOperationsService;
+import com.developmentontheedge.be5.metadata.SessionConstants;
+import com.developmentontheedge.dbms.DbmsConnector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.security.GeneralSecurityException;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
 
 
 public class UserInfoManagerImpl implements UserInfoManager {
     
-    public static UserInfoManagerImpl create(Request req, ServiceProvider serviceProvider, DatabaseConnector connector, Meta meta)
+    public static UserInfoManagerImpl create(Request req, ServiceProvider serviceProvider, DbmsConnector connector, Meta meta)
     {
         return new UserInfoManagerImpl(req, serviceProvider, connector, meta);
     }
@@ -45,11 +36,11 @@ public class UserInfoManagerImpl implements UserInfoManager {
      * that do some actions after calling {@link UserInfoManager#login(String, String)} or {@link UserInfoManager#logout()}.
      */
     private UserInfo user = null;
-    private final DatabaseConnector connector;
+    private final DbmsConnector connector;
     private final Meta meta;
     private final ServiceProvider serviceProvider;
     
-    public UserInfoManagerImpl(Request req, ServiceProvider serviceProvider, DatabaseConnector connector, Meta meta) {
+    public UserInfoManagerImpl(Request req, ServiceProvider serviceProvider, DbmsConnector connector, Meta meta) {
         this.req = req;
         this.serviceProvider = serviceProvider;
         this.rawRequest = req.getRawRequest();
@@ -167,10 +158,11 @@ public class UserInfoManagerImpl implements UserInfoManager {
         // See WebAppInitializer.
         //TODO CryptoUtils.setPasswordAndAlgorithm("myHomeKey", "PBEWithMD5AndDES");
         
-        LegacyOperationFactory factory = serviceProvider.get(LegacyOperationsService.class).createFactory(user, getRequest());
-        LegacyOperation legacyOperation = factory.create(meta.getOperation("users", "Login", getCurrentRoles()), req, null, Collections.<String>emptyList());
+//        LegacyOperationFactory factory = serviceProvider.get(LegacyOperationsService.class).createFactory(user, getRequest());
+//        LegacyOperation legacyOperation = factory.create(meta.getOperation("users", "Login", getCurrentRoles()), req, null, Collections.<String>emptyList());
         
-        return legacyOperation;
+//        return legacyOperation;
+        return null;
     }
     
     private void saveCurrentUser(String username) {
