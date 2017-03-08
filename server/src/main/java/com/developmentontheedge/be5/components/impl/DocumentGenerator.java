@@ -1,12 +1,5 @@
 package com.developmentontheedge.be5.components.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.developmentontheedge.be5.api.FrontendAction;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
@@ -20,13 +13,15 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.model.Action;
-import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
-import com.developmentontheedge.be5.util.Either;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DocumentGenerator implements Runner {
     
@@ -66,14 +61,14 @@ public class DocumentGenerator implements Runner {
     @Override
     public void onForm(String entityName, Optional<String> queryName, String operationName, Operation operation, Map<String, String> presetValues)
     {
-        DocumentResponse.of(res).send(getFormPresentation(entityName, queryName.orElse(""), operationName, operation, presetValues));
+        //TODO DocumentResponse.of(res).send(getFormPresentation(entityName, queryName.orElse(""), operationName, operation, presetValues));
     }
     
-    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
-            Operation operation, Map<String, String> presetValues)
-    {
-        return new FormGenerator(serviceProvider).generate(entityName, queryName, operationName, operation, presetValues, req);
-    }
+//    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
+//            Operation operation, Map<String, String> presetValues)
+//    {
+//        return new FormGenerator(serviceProvider).generate(entityName, queryName, operationName, operation, presetValues, req);
+//    }
 
     @Override
     public void onTable(Query query, Map<String, String> parametersMap)
@@ -117,14 +112,14 @@ public class DocumentGenerator implements Runner {
     @Override
     public void onParametrizedTable(Query query, Map<String, String> parametersMap)
     {
-        String entityName = query.getEntity().getName();
-        String operationName = query.getParametrizingOperationName();
-        Operation operation = query.getParametrizingOperation();
-        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parametersMap).getFirst();
-        TablePresentation tablePresentation = getTablePresentation(query, parametersMap);
-        FormTable formTable = new FormTable(formPresentation, tablePresentation);
-        
-        DocumentResponse.of(res).send(formTable);
+//        TODO String entityName = query.getEntity().getName();
+//        String operationName = query.getParametrizingOperationName();
+//        Operation operation = query.getParametrizingOperation();
+//        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parametersMap).getFirst();
+//        TablePresentation tablePresentation = getTablePresentation(query, parametersMap);
+//        FormTable formTable = new FormTable(formPresentation, tablePresentation);
+//
+//        DocumentResponse.of(res).send(formTable);
     }
     
     @Override
