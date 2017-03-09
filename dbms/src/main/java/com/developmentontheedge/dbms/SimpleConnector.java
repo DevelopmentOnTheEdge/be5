@@ -104,84 +104,134 @@ public class SimpleConnector implements DbmsConnector
     public void releaseConnection( Connection conn ) throws SQLException
     {
     }
-//TODO
+
+    protected boolean isDBMS( String ... urlPrefixes )
+    {
+        if ( connectionUrl == null )
+        {
+            return false;
+        }
+
+        for( String urlPrefix : urlPrefixes )
+        {
+            if( connectionUrl.startsWith( urlPrefix ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isODBC()
+    {
+        return isDBMS( "jdbc:odbc:" );
+    }
+
+    public boolean isJDBCDBF()
+    {
+        return isDBMS( "jdbc:dbf:" );
+    }
+
+    public boolean isSQLite()
+    {
+        return isDBMS( "jdbc:sqlite:" );
+    }
+
+    public boolean isMySQL()
+    {
+        return isDBMS( "jdbc:mysql:" );
+    }
+
     @Override
-    public boolean isMySQL() {
+    public boolean isMySQL5()
+    {
         return false;
     }
 
     @Override
-    public boolean isMySQL5() {
+    public boolean isMySQL41()
+    {
+        return false;
+    }
+
+    public boolean isFirebird()
+    {
+        return isDBMS( "jdbc:firebirdsql:" );
+    }
+
+    public boolean isOracle()
+    {
+        return isDBMS( "jdbc:oracle:" );
+    }
+
+    @Override
+    public boolean isOracle8()
+    {
+        return false;
+    }
+
+    public boolean isOracleViaUrlCheck()
+    {
+        return isDBMS( "jdbc:oracle:" );
+    }
+
+    public boolean isSQLServer()
+    {
+        return isDBMS( "jdbc:microsoft:sqlserver:", "jdbc:sqlserver:", "jdbc:jtds:sqlserver:" ) || "jdbc:sqljdbc://".equals( connectionUrl );
+    }
+
+    public boolean isSQLServer2005()
+    {
+        return isDBMS( "jdbc:sqlserver:", "jdbc:jtds:sqlserver:" ) || "jdbc:sqljdbc://".equals( connectionUrl );
+    }
+
+    public boolean isSQLServerJTDS()
+    {
+        return isDBMS( "jdbc:jtds:sqlserver:" );
+    }
+
+    protected boolean isSQLServerViaUrlCheck()
+    {
+        return isDBMS( "jdbc:microsoft:sqlserver:", "jdbc:sqlserver:", "jdbc:jtds:sqlserver:" ) || "jdbc:sqljdbc://".equals( connectionUrl );
+    }
+
+    public boolean isDb2()
+    {
+        return isDBMS( "jdbc:db2:" );
+    }
+
+    @Override
+    public boolean isDb2NetDriver()
+    {
         return false;
     }
 
     @Override
-    public boolean isMySQL41() {
+    public boolean isDb2AppDriver()
+    {
         return false;
     }
 
     @Override
-    public boolean isODBC() {
+    public boolean isDb2v8()
+    {
         return false;
     }
 
     @Override
-    public boolean isSQLite() {
+    public boolean isDb2v9()
+    {
         return false;
     }
 
-    @Override
-    public boolean isOracle() {
-        return false;
+    public boolean isPostgreSQL()
+    {
+        return isDBMS( "jdbc:postgresql:" );
     }
 
-    @Override
-    public boolean isOracle8() {
-        return false;
-    }
-
-    @Override
-    public boolean isSQLServer() {
-        return false;
-    }
-
-    @Override
-    public boolean isSQLServer2005() {
-        return false;
-    }
-
-    @Override
-    public boolean isSQLServerJTDS() {
-        return false;
-    }
-
-    @Override
-    public boolean isDb2() {
-        return false;
-    }
-
-    @Override
-    public boolean isDb2NetDriver() {
-        return false;
-    }
-
-    @Override
-    public boolean isDb2AppDriver() {
-        return false;
-    }
-
-    @Override
-    public boolean isDb2v8() {
-        return false;
-    }
-
-    @Override
-    public boolean isDb2v9() {
-        return false;
-    }
-
-    @Override
-    public boolean isPostgreSQL() {
-        return false;
+    public boolean isMSAccess()
+    {
+        return isDBMS( "jdbc:ucanaccess:" );
     }
 }
