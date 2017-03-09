@@ -80,12 +80,6 @@ public class ForwardingServletContext implements ServletContext {
         servletContext.declareRoles(arg0);
     }
 
-    @Override
-    public String getVirtualServerName()
-    {
-        return servletContext.getVirtualServerName();
-    }
-
     public Object getAttribute(String arg0) {
         return servletContext.getAttribute(arg0);
     }

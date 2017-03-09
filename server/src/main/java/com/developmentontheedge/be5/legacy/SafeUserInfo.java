@@ -5,12 +5,14 @@ package com.developmentontheedge.be5.legacy;
 //import com.developmentontheedge.be5.UserInfo;
 //import com.developmentontheedge.be5.Utils;
 
-import com.developmentontheedge.enterprise.UserInfo;
+import com.developmentontheedge.be5.api.helpers.UserInfo;
+
 /**
  * Doesn't allow to get session directly.
  * @see Utils.OperationUserInfo
  */
-class SafeUserInfo extends UserInfo {
+class SafeUserInfo extends UserInfo
+{
     
 //    private static final long serialVersionUID = 1L;
 //

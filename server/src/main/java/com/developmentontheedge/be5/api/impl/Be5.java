@@ -3,13 +3,11 @@ package com.developmentontheedge.be5.api.impl;
 import javax.servlet.ServletContext;
 
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.enterprise.DatabaseConnector;
 import com.developmentontheedge.be5.api.InitializerContext;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.env.ServletContexts;
-import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.servlets.ForwardingServletContext;
 
 /**
