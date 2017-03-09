@@ -20,15 +20,15 @@ public class LegacyServletProviderImpl implements LegacyServletProvider
     {
         IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
         for (IConfigurationElement element : extensionRegistry
-                .getConfigurationElementsFor("com.developmentontheedge.be5.legacyServlet"))
+                .getConfigurationElementsFor("com.developmentontheedge.enterprise.components.LegacyServlet"))
         {
             try
             {
-                legacyServlets.put(
-                        element.getAttribute("name"),
-                        Platform.getBundle(element.getContributor().getName())
-                                .loadClass(element.getAttribute("class")).asSubclass(HttpServlet.class)
-                                .newInstance());
+                Class<? extends HttpServlet> aClass = Platform.getBundle(element.getContributor().getName())
+                        .loadClass(element.getAttribute("class"))
+                        .asSubclass(HttpServlet.class);
+
+                legacyServlets.put(element.getAttribute("name"), aClass.newInstance());
             }
             catch (InvalidRegistryObjectException | InstantiationException | IllegalAccessException
                     | ClassNotFoundException e)
