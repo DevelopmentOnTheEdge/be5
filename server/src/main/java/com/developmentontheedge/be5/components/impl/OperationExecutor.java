@@ -16,7 +16,7 @@ public class OperationExecutor
 //
 //    public FrontendAction execute(Request req)
 //    {
-//        DatabaseConnector connector = servicesProvider.getDbmsConnector();
+//        DbmsConnector connector = servicesProvider.getDbmsConnector();
 //        String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
 //        String queryName = req.getNonEmpty(RestApiConstants.QUERY);
 //        String operationName = req.getNonEmpty(RestApiConstants.OPERATION);

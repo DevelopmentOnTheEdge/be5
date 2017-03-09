@@ -10,7 +10,7 @@ public class DatabaseServiceImpl implements DatabaseService
     @Override
     public DbmsConnector getDbmsConnector()
     {
-        return Be5.getDatabaseConnector();
+        return Be5.getDbmsConnector();
     }
 
 }

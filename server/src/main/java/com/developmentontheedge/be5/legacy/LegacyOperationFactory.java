@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.legacy;
 
-//import com.developmentontheedge.enterprise.DatabaseConnector;
+//import com.developmentontheedge.enterprise.DbmsConnector;
 //import com.developmentontheedge.enterprise.UserInfo;
 //import com.developmentontheedge.be5.metadata.DatabaseConstants;
 //import com.developmentontheedge.be5.HttpOperation;
@@ -23,7 +23,7 @@ package com.developmentontheedge.be5.legacy;
 public class LegacyOperationFactory {
     
 //    private final ServiceProvider serviceProvider;
-//    private final DatabaseConnector connector;
+//    private final DbmsConnector connector;
 //    private final UserInfo user;
 //	private final HttpServletRequest request;
 //

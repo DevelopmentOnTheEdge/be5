@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.components;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
 import java.lang.reflect.Method;
 
 import com.developmentontheedge.be5.api.Component;
@@ -10,6 +7,9 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * ApplicationInfoComponent returns ApplicationInfo(title, url) for current application (servlet context).

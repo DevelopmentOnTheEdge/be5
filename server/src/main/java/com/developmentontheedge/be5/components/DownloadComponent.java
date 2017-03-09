@@ -28,7 +28,7 @@ public class DownloadComponent implements Component
 //
 //        try
 //        {
-//            record = Utils.getRecordById(serviceProvider.getDatabaseConnector(), entity, "name", name, "", null);
+//            record = Utils.getRecordById(serviceProvider.getDbmsConnector(), entity, "name", name, "", null);
 //        }
 //        catch (NoRecord e1)
 //        {

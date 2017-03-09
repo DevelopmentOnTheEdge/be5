@@ -266,7 +266,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
-        this.connector = serviceProvider.getDatabaseConnector();
+        this.connector = serviceProvider.getDbmsConnector();
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
         this.userInfoManager = UserInfoManager.get(req, serviceProvider);
         this.session = req.getRawSession();

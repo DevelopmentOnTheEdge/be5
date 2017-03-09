@@ -85,7 +85,7 @@ public interface ServiceProvider
      * a connector from it right before execution of a query.
      * </p>
      */
-    default DbmsConnector getDatabaseConnector()
+    default DbmsConnector getDbmsConnector()
     {
         return getDatabaseService().getDbmsConnector();
     }

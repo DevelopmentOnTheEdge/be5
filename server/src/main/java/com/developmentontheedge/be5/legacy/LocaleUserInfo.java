@@ -14,8 +14,8 @@ import java.util.Locale;
  * UserInfo implementation which supports getLocale() call only
  * @author lan
  * TODO: change Legacy BE methods which accept UserInfo just to read Locale to accept Locale instead
- * @see Utils#readDictionaryLocalizations(String, com.beanexplorer.enterprise.DatabaseConnector, UserInfo) 
- * @see Utils#readQueryMessages(com.beanexplorer.enterprise.QueryInfo, com.beanexplorer.enterprise.DatabaseConnector, UserInfo)
+ * @see Utils#readDictionaryLocalizations(String, com.beanexplorer.enterprise.DbmsConnector, UserInfo)
+ * @see Utils#readQueryMessages(com.beanexplorer.enterprise.QueryInfo, com.beanexplorer.enterprise.DbmsConnector, UserInfo)
  * 
  */
 public class LocaleUserInfo extends UserInfo

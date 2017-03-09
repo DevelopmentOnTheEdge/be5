@@ -20,7 +20,7 @@ public class FormGenerator
 //     * <li>selectedRows?</li>
 //     * <li>values?</li>
 //     * </ul>
-//     * @param databaseConnector
+//     * @param DbmsConnector
 //     * @see Query#getParametrizingOperation()
 //     */
 //    public Either<FormPresentation, FrontendAction> generate(Request req)
@@ -84,7 +84,7 @@ public class FormGenerator
 //     */
 //    private Either<FormPresentation, FrontendAction> generate(Request req, String entityName, String queryName,
 //            String operationName, String selectedRowsString, Operation operation, Map<String, String> presetValues,
-//            DatabaseConnector connector)
+//            DbmsConnector connector)
 //    {
 //        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
 //        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);

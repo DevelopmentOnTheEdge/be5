@@ -14,8 +14,8 @@ import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils.BasePathProvider;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.enterprise.caches.Cache;
-import com.developmentontheedge.enterprise.caches.CacheFactory;
+import com.developmentontheedge.be5.metadata.caches.Cache;
+import com.developmentontheedge.be5.metadata.caches.CacheFactory;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;

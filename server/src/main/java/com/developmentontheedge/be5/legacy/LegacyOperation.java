@@ -13,7 +13,7 @@ package com.developmentontheedge.be5.legacy;
 //import com.beanexplorer.model.ComponentFactory;
 //import com.beanexplorer.model.ComponentModel;
 //import com.beanexplorer.util.SimpleCompositeMap;
-//import com.developmentontheedge.enterprise.DatabaseConnector;
+//import com.developmentontheedge.enterprise.DbmsConnector;
 //import com.developmentontheedge.be5.metadata.DatabaseConstants;
 //import com.developmentontheedge.be5.HttpOperation;
 //import com.developmentontheedge.be5.Operation;
@@ -51,7 +51,7 @@ public class LegacyOperation {
 //        }
 //
 //        @Override
-//        public void initContext(Context context, DatabaseConnector connector) {
+//        public void initContext(Context context, DbmsConnector connector) {
 //            context.setApplicationClassLoader(new Be5ClassLoader());
 //        }
 //
@@ -93,9 +93,9 @@ public class LegacyOperation {
 //    }
 //
 //    private final Operation operation;
-//    private final DatabaseConnector connector;
+//    private final DbmsConnector connector;
 //
-//    LegacyOperation(Operation operation, DatabaseConnector connector) {
+//    LegacyOperation(Operation operation, DbmsConnector connector) {
 //        this.operation = operation;
 //        this.connector = connector;
 //
@@ -262,9 +262,9 @@ public class LegacyOperation {
 //
 //    /**
 //     * THIS CODE IS A COPY! DELETE IT AS SOON AS POSSIBLE.
-//     * @see Utils#doInvokeOperation(Operation, DatabaseConnector, Writer)
+//     * @see Utils#doInvokeOperation(Operation, DbmsConnector, Writer)
 //     *
-//     * {@link Utils#doInvokeOperation(Operation, DatabaseConnector, Writer)}
+//     * {@link Utils#doInvokeOperation(Operation, DbmsConnector, Writer)}
 //     */
 //    private void invokeOperationWithExtenders(Operation operation, Writer out) throws Exception {
 //        OperationFragmentHelper.invokeExtenders("preInvoke", out, connector, operation, null, null);
