@@ -342,16 +342,5 @@ public class Utils
         return systemClassLoader;
     }
 
-    private static DbmsConnector defaultConnector;
-
-    public static void setDefaultConnector( DbmsConnector connector )
-    {
-        defaultConnector = connector;
-    }
-
-    public static DbmsConnector getDefaultConnector()
-    {
-        return defaultConnector;
-    }
 
 }

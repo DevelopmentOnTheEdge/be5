@@ -121,10 +121,10 @@ public class MainServletImpl
     {
         ServletConfig cfg = Delegator.on( config, ServletConfig.class );
         Utils.setClassLoader( new Be5ClassLoader() );
-        Utils.setDefaultConnector( Be5.getDbmsConnector() );
+//        Utils.setDefaultConnector( Be5.getDbmsConnector() );
 //        try
 //        {
-//            starter.init( new LegacyServletConfig( "DaemonStarter" ) );
+//TODO            starter.init( new LegacyServletConfig( "DaemonStarter" ) );
 //        }
 //        catch( ServletException e )
 //        {
@@ -136,7 +136,7 @@ public class MainServletImpl
 
     private void bindServices(ServletContext servletContext)
     {
-        for( IConfigurationElement element : getConfigurationElements( "com.beanexplorer.be5.service" ) )
+        for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.service" ) )
         {
             if( element.getName().equals( "service" ) )
             {
@@ -190,7 +190,7 @@ public class MainServletImpl
 
         InitializerContext context = new InitializerContextImpl( config );
 
-        for( IConfigurationElement element : getConfigurationElements( "com.beanexplorer.be5.initializer" ) )
+        for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.initializer" ) )
         {
             if( element.getName().equals( "initializer" ) )
             {
@@ -364,7 +364,7 @@ public class MainServletImpl
      */
     private Class<?> loadComponentClass(String componentId)
     {
-        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.beanexplorer.be5.component", "component" );
+        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.component", "component" );
 
         if( componentDeclaration == null )
             return null;
@@ -381,7 +381,7 @@ public class MainServletImpl
      */
     private Class<?> loadWebSocketComponentClass(String componentId)
     {
-        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.beanexplorer.be5.websocketcomponent", "component" );
+        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.websocketcomponent", "component" );
 
         if( componentDeclaration == null )
             return null;

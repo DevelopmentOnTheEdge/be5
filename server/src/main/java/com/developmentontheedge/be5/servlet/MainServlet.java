@@ -62,7 +62,7 @@ public class MainServlet extends HttpServlet {
 		/*
 		 * This property is required to load the project.
 		 */
-        System.getProperties().put("com.beanexplorer.be5.servletContext", config.getServletContext());
+        System.getProperties().put("com.developmentontheedge.be5.servletContext", config.getServletContext());
 		
         /*
          * Eclipse runtime options, see here:
@@ -78,7 +78,7 @@ public class MainServlet extends HttpServlet {
         }
         args.add(realPath);
 		args.add("-application");
-		args.add("com.beanexplorer.be5.empty");
+		args.add("com.developmentontheedge.be5.empty");
 		args.add("-noExit");
 		
 		/*
@@ -102,7 +102,7 @@ public class MainServlet extends HttpServlet {
         }.start();
         
         try {
-        	while(System.getProperties().get("com.beanexplorer.be5.platformClass") == null) {
+        	while(System.getProperties().get("com.developmentontheedge.be5.platformClass") == null) {
         		Thread.sleep(100);
         	}
         	WebSocketServlet.setMain(getMainServletImpl());
@@ -117,7 +117,7 @@ public class MainServlet extends HttpServlet {
 	 */
 	@Override
 	public void destroy() {
-		System.getProperties().put("com.beanexplorer.be5.exit", "true");
+		System.getProperties().put("com.developmentontheedge.be5.exit", "true");
 		try {
 			Reflection.on(getMainServletImpl()).call("destroy");
 		} catch (Exception e) {
@@ -158,9 +158,9 @@ public class MainServlet extends HttpServlet {
     private Object getMainServletImpl() throws Exception {
         if (mainServletImpl == null)
         {
-            Class<?> platformClass = (Class<?>) System.getProperties().get("com.beanexplorer.be5.platformClass");
-            Object bundle = Reflection.on(platformClass).call("getBundle", "com.beanexplorer.be5");
-            Class<?> mainServletImplClass = (Class<?>) Reflection.on(bundle).call("loadClass", "com.beanexplorer.enterprise.servlets.MainServletImpl");
+            Class<?> platformClass = (Class<?>) System.getProperties().get("com.developmentontheedge.be5.platformClass");
+            Object bundle = Reflection.on(platformClass).call("getBundle", "com.developmentontheedge.be5");
+            Class<?> mainServletImplClass = (Class<?>) Reflection.on(bundle).call("loadClass", "com.developmentontheedge.be5.servlets.MainServletImpl");
             mainServletImpl = mainServletImplClass.newInstance();
         }
         
