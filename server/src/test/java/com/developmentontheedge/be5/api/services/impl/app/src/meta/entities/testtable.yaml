@@ -1,0 +1,56 @@
+testtable:
+  type: table
+  displayName: testtable
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: VARCHAR(30)
+  queries:
+  - Test 1D unknown:
+      type: 1D_unknown
+      operations: [Insert, Edit, Delete]
+      roles: [Administrator]
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t
+  - Test 1D:
+      type: 1D
+      operations: [Insert, Edit, Delete, Add]
+      roles: [Administrator]
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t
+  operations:
+  - Send password:
+      code: com.beanexplorer.enterprise.operations.SendPassword
+  - Delete:
+      records: 2
+      roles: [Administrator]
+      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+  - Edit:
+      records: 2
+      roles: [Administrator]
+      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+  - Insert:
+      roles: [Administrator]
+      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+  - Add:
+      type: JavaScript/server
+      roles: [Administrator]
+      file: test.js

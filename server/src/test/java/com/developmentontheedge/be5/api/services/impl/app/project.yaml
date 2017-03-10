@@ -1,0 +1,6 @@
+condo_lk:
+  features: logging
+  l10n: ru
+  projectFileStructure: {}
+  application:
+  - testtable
