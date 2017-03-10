@@ -22,7 +22,7 @@ public class AppTest
     public static void setUpClass() throws Exception
     {
         project = Serialization.load(
-                Paths.get("src/test/java/com/developmentontheedge/be5/api/services/impl/app").toAbsolutePath(),
+                Paths.get("src/test/resources/app").toAbsolutePath(),
                 new LoadContext() );
     }
 
