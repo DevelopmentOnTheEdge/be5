@@ -18,5 +18,20 @@ public class ConstantDatabaseService implements DatabaseService
     {
         return connector;
     }
-    
+
+    @Override
+    public int getNumIdle() {
+        return 0;
+    }
+
+    @Override
+    public int getNumActive() {
+        return 0;
+    }
+
+    @Override
+    public String getConnectionsStatistics() {
+        return null;
+    }
+
 }

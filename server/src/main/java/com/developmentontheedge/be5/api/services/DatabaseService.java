@@ -9,5 +9,10 @@ public interface DatabaseService
      * Returns a connector for the project. 
      */
     DbmsConnector getDbmsConnector();
-    
+
+    int getNumIdle();
+
+    int getNumActive();
+
+    String getConnectionsStatistics();
 }
