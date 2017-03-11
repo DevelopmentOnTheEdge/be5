@@ -30,19 +30,20 @@ public class DatabaseServiceImpl implements DatabaseService
         try
         {
             BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
-
-            return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(),
-                    getConnection());
+            Connection connection = getConnection();
+            if(connection != null)
+            {
+                return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), connection);
+            }
         }
         catch (SQLException e)
         {
             log.log(Level.SEVERE, "Not create SimpleConnector", e);
-            return null;
         }
+        return null;
     }
 
     private Connection getConnection() {
-
 
         try {
             InitialContext ic = new InitialContext();
@@ -62,12 +63,12 @@ public class DatabaseServiceImpl implements DatabaseService
 
     public int getNumIdle()
     {
-        return ds.getNumIdle();
+        return ds != null ? ds.getNumIdle() : Integer.MAX_VALUE;
     }
 
     public int getNumActive()
     {
-        return ds.getNumActive();
+        return ds != null ? ds.getNumActive() : Integer.MAX_VALUE;
     }
 
     public String getConnectionsStatistics(){

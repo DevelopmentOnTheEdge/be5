@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.sql.RuntimeSqlException;
 import com.developmentontheedge.be5.api.sql.Selector.ResultSetConsumer;
 import com.developmentontheedge.be5.api.sql.Selector.ResultSetParser;
+import com.developmentontheedge.dbms.DbmsConnector;
 import com.google.common.collect.ImmutableList;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * A low-level SQL selection API.
@@ -74,6 +74,7 @@ public class SelectExecutor
             {
                 connector.close(rs);
             }
+            connector.releaseConnection(connector.getConnection());
         }
         catch (SQLException e)
         {

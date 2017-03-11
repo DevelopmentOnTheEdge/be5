@@ -62,6 +62,7 @@ public class AppTest
         assertEquals("1 test pass", strings.get(0));
 
         databaseService.getConnectionsStatistics();
+        conn.releaseConnection(conn.getConnection());
     }
 
 }
