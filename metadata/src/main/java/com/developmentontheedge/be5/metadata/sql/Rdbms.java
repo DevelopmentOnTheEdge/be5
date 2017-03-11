@@ -1,30 +1,13 @@
 package com.developmentontheedge.be5.metadata.sql;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.developmentontheedge.be5.metadata.sql.macro.BeSQLMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.Db2MacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.IMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.M4MacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.MySqlMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.OracleMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.PostgresMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.macro.SqlServerMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.schema.Db2SchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.DbmsSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.MySqlSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.OracleSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.PostgresSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.SqlServerSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.type.Db2TypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.SqlServerTypeManager;
+import com.developmentontheedge.be5.metadata.sql.macro.*;
+import com.developmentontheedge.be5.metadata.sql.schema.*;
+import com.developmentontheedge.be5.metadata.sql.type.*;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.DbmsType;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 public enum Rdbms
 {
@@ -58,11 +41,15 @@ public enum Rdbms
             new PostgresSchemaReader(), 
             "org.eclipse.datatools.enablement.postgresql.connectionProfile", 
             "DriverDefn.org.eclipse.datatools.enablement.postgresql.postgresqlDriverTemplate.PostgreSQL JDBC Driver", "91" ),
-    
-    BESQL(DbmsType.BESQL, 
-            new BeSQLMacroProcessorStrategy(), 
-            new PostgresTypeManager(), 
-            null, "", "", "" );
+    BESQL(DbmsType.BESQL,
+            new BeSQLMacroProcessorStrategy(),
+            new PostgresTypeManager(),
+            null, "", "", "" ),
+    H2(DbmsType.H2,
+            new PostgresMacroProcessorStrategy(),
+            new PostgresTypeManager(),
+            new PostgresSchemaReader(),
+            "", "org.h2.Driver", "" );
     
     public static Rdbms getRdbms(final String url)
     {
@@ -83,6 +70,10 @@ public enum Rdbms
         {
             return Rdbms.POSTGRESQL;
         }
+        if(realUrl.startsWith( "h2:" ))
+        {
+            return Rdbms.H2;
+        }
         if(realUrl.startsWith( "sqlserver:" ) || realUrl.startsWith( "microsoft:sqlserver:" ) || realUrl.startsWith( "jtds:sqlserver:" ))
         {
             return Rdbms.SQLSERVER;
@@ -100,6 +91,7 @@ public enum Rdbms
             case POSTGRESQL:    return Rdbms.POSTGRESQL; 
             case SQLSERVER:     return Rdbms.SQLSERVER; 
             case BESQL:         return Rdbms.BESQL;
+            case H2:            return Rdbms.H2;
         }
 
         throw new IllegalStateException("Unsupported connector: " + connector.getConnectString());
@@ -180,6 +172,8 @@ public enum Rdbms
         {
         case ORACLE:
             return "jdbc:oracle:thin:@"+host+":"+port+":"+(database == null ? properties.get( "SID" ) : database);
+        case H2:
+            return "jdbc:h2:" + host;
         case SQLSERVER:
             if("jtds".equals( properties.get( "driver" )))
             {

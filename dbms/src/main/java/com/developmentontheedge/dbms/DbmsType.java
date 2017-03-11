@@ -11,6 +11,7 @@ public enum DbmsType
     SQLSERVER( "sqlserver", 1433 ),
     POSTGRESQL( "postgres", 5432 ),
     BESQL("besql", 0),
+    H2("h2", 0),
     MYSQL( "mysql", 3306 )
     {
         @Override

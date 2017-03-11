@@ -225,9 +225,15 @@ public class SimpleConnector implements DbmsConnector
         return false;
     }
 
+    @Override
     public boolean isPostgreSQL()
     {
         return isDBMS( "jdbc:postgresql:" );
+    }
+
+    @Override
+    public boolean isH2() {
+        return isDBMS( "jdbc:h2:" );
     }
 
     public boolean isMSAccess()
