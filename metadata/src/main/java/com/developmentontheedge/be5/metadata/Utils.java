@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.metadata;
 
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.be5.metadata.caches.Cache;
-import com.developmentontheedge.be5.metadata.caches.SystemSettingsCache;
+//import com.developmentontheedge.be5.metadata.caches.Cache;
+//import com.developmentontheedge.be5.metadata.caches.SystemSettingsCache;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -296,9 +296,9 @@ public class Utils
     // to block on network call
     public static String getSystemSettingInSection(DbmsConnector connector, String section, String param, String defValue )
     {
-        Cache systemSettingsCache = SystemSettingsCache.getInstance();
+        // Cache systemSettingsCache = TODO SystemSettingsCache.getInstance();
         String key = section + "." + param;
-        String ret = ( String )systemSettingsCache.get( key );
+        String ret = null; // TODO ( String )systemSettingsCache.get( key );
         if( MISSING_SETTING_VALUE.equals( ret ) )
         {
             return defValue;
@@ -312,7 +312,7 @@ public class Utils
             String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = '" + param + "'" +
                     " AND section_name =" + safestr( connector, section, true );
             ret = null;//TODO = new JDBCRecordAdapterAsQuery( connector, sql ).getString();
-            systemSettingsCache.put( key, ret );
+            // TODO systemSettingsCache.put( key, ret );
             return ret;
         }
 //        catch( JDBCRecordAdapterAsQuery.NoRecord ignore )
@@ -325,7 +325,7 @@ public class Utils
             String details = " Section: " + section + ", setting_name: " + param;
             log.log(Level.SEVERE, "Could not read system setting from DB. " + details, e);
 
-            systemSettingsCache.put( key, MISSING_SETTING_VALUE );
+            //TODO systemSettingsCache.put( key, MISSING_SETTING_VALUE );
             return defValue;
         }
     }

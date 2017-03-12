@@ -3,8 +3,6 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.ServletContexts;
-import com.developmentontheedge.be5.metadata.caches.Cache;
-import com.developmentontheedge.be5.metadata.caches.CacheFactory;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -26,30 +24,22 @@ import java.util.logging.Logger;
 public class ProjectProviderImpl implements ProjectProvider
 {
     private Logger log = Logger.getLogger(ProjectProviderImpl.class.getName());
-    private final Cache projectCache = CacheFactory.getCacheInstance("metadata_be5");
     private volatile boolean dirty = false;
     private WatchDir watcher = null;
+    private Project project;
     
     @Override
-    public Project getProject()
+    synchronized public Project getProject()
     {
-    	Project project = (Project) projectCache.get("project");
     	if(dirty || project == null)
     	{
-    		synchronized(projectCache)
-    		{
-    			project = (Project) projectCache.get("project");
-    			if(dirty || project == null)
-    			{
-    			    long time = System.nanoTime();
-    				project = loadProject();
-                    constructBasicDataSource(project);
-                    log.info("Loading project took "+TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time )+" ms");
-    				projectCache.put("project", project);
-    			}
-    		}
+		    long time = System.nanoTime();
+			project = loadProject();
+            constructBasicDataSource(project);
+            log.info("Loading project took "+TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time )+" ms");
     	}
-        return project;
+
+    	return project;
     }
     
     public Path getPath(ServletContext ctx, String attributeName)
