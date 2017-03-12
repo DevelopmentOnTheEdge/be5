@@ -1,5 +1,9 @@
 package com.developmentontheedge.be5.mojo;
 
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugin.MojoExecutionException; 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,42 +20,42 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.tools.ant.BuildException;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
+import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.DdlElement;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.TableReference;
+import com.developmentontheedge.be5.metadata.model.base.BeElementWithProperties;
+import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.metadata.sql.ConnectionUrl;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
-import com.beanexplorer.enterprise.metadata.exception.ProjectElementException;
-import com.beanexplorer.enterprise.metadata.exception.ProjectLoadException;
-import com.beanexplorer.enterprise.metadata.exception.ProjectSaveException;
-import com.beanexplorer.enterprise.metadata.model.BeConnectionProfile;
-import com.beanexplorer.enterprise.metadata.model.DdlElement;
-import com.beanexplorer.enterprise.metadata.model.Entity;
-import com.beanexplorer.enterprise.metadata.model.Module;
-import com.beanexplorer.enterprise.metadata.model.Project;
-import com.beanexplorer.enterprise.metadata.model.Query;
-import com.beanexplorer.enterprise.metadata.model.TableReference;
-import com.beanexplorer.enterprise.metadata.model.base.BeElementWithProperties;
-import com.beanexplorer.enterprise.metadata.serialization.LoadContext;
-import com.beanexplorer.enterprise.metadata.serialization.Serialization;
-import com.beanexplorer.enterprise.metadata.sql.ConnectionUrl;
-import com.beanexplorer.enterprise.metadata.sql.Rdbms;
-import com.beanexplorer.enterprise.metadata.util.ModuleUtils;
-
-public class AppValidate extends BETask
+/**
+ * Usage example: 
+ * mvn be5:validate -DBE5_DEBUG=true
+ */
+@Mojo( name = "validate")
+public class AppValidate extends Be5Mojo
 {
     @Override
-    public void execute() throws BuildException
+    public void execute() throws MojoFailureException
     {
-        if(isProperty( "BE4_DEBUG" ))
-        {
-            debug = true;
-            ModuleUtils.setDebugStream( System.err );
-        }
-        if(projectPath == null)
-        {
-            throw new BuildException("Please specify projectPath attribute");
-        }
+//        initParameters();
+        
         logger.setOperationName( "Reading project from " + projectPath + "..." );
-        this.beanExplorerProject = loadProject( projectPath.toPath() );
-        applyProfile();
+//        this.beanExplorerProject = loadProject( projectPath.toPath() );
+//        applyProfile();
+
+getLog().info("Validate, debug=" + debug);
+        
+        /* TODO
         setRdbms();
         loadModules();
         validateProject();
@@ -65,9 +69,9 @@ public class AppValidate extends BETask
         if(propertiesFile != null)
         {
             storeProperties( propertiesFile );
-        }
+        }*/
     }
-
+/*
     private void checkProfileProtection()
     {
         if(beanExplorerProject.getConnectionProfile() != null &&
@@ -92,7 +96,7 @@ public class AppValidate extends BETask
                 setProperty( "BE4_UNLOCK_PROTECTED_PROFILE", "true" );
             } else 
             {
-                throw new BuildException( "Aborted" );
+                throw new MojoFailureException( "Aborted" );
             }
         }
     }
@@ -112,7 +116,7 @@ public class AppValidate extends BETask
         }
         catch ( ProjectLoadException e )
         {
-            throw new BuildException( e );
+            throw new MojoFailureException( e );
         }
         checkErrors( loadContext, "Modules have %d error(s)" );
     }
@@ -149,7 +153,7 @@ public class AppValidate extends BETask
             }
             if(count > 0)
             {
-                throw new BuildException( "Project has "+count+" errors" );
+                throw new MojoFailureException( "Project has "+count+" errors" );
             }
             logger.setOperationName( "Project is valid." );
             setProperty( "BE4_SKIP_VALIDATION", "true" );
@@ -195,7 +199,7 @@ public class AppValidate extends BETask
             }
             catch ( ProjectSaveException e )
             {
-                throw new BuildException( e );
+                throw new MojoFailureException( e );
             }
         }
     }
@@ -214,7 +218,7 @@ public class AppValidate extends BETask
         }
         catch ( IOException e )
         {
-            throw new BuildException( e );
+            throw new MojoFailureException( e );
         }
     }
 
@@ -226,12 +230,12 @@ public class AppValidate extends BETask
             Entity entity = beanExplorerProject.getEntity( entityName );
             if(entity == null)
             {
-                throw new BuildException( "Invalid entity: "+entityName );
+                throw new MojoFailureException( "Invalid entity: "+entityName );
             }
             DdlElement scheme = entity.getScheme();
             if(scheme == null)
             {
-                throw new BuildException( "Entity has no scheme: "+entityName );
+                throw new MojoFailureException( "Entity has no scheme: "+entityName );
             }
             System.err.println( scheme.getDdl().replaceAll( "\n", System.lineSeparator() ) );
         }
@@ -253,14 +257,14 @@ public class AppValidate extends BETask
         int pos = path.indexOf( '.' );
         if(pos <= 0)
         {
-            throw new BuildException( "Invalid path supplied: "+path );
+            throw new MojoFailureException( "Invalid path supplied: "+path );
         }
         String entityName = path.substring( 0, pos );
         String queryName = path.substring( pos+1 );
         Entity entity = beanExplorerProject.getEntity( entityName );
         if(entity == null)
         {
-            throw new BuildException("Invalid entity: "+entityName);
+            throw new MojoFailureException("Invalid entity: "+entityName);
         }
         Query query = entity.getQueries().get( queryName );
         if(query == null)
@@ -272,12 +276,12 @@ public class AppValidate extends BETask
             }
             catch ( UnsupportedEncodingException e )
             {
-                throw new BuildException(e);
+                throw new MojoFailureException(e);
             }
         }
         if(query == null)
         {
-            throw new BuildException("Invalid query: "+queryName);
+            throw new MojoFailureException("Invalid query: "+queryName);
         }
         System.err.println( query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator() ) );
     }
@@ -323,13 +327,13 @@ public class AppValidate extends BETask
                     setProperty( "SID", url.getProperty( "SID" ) );
                 setProperty( "DATABASE", url.getDb() );
             }
-            catch ( BuildException e )
+            catch ( MojoFailureException e )
             {
                 throw e;
             }
             catch ( RuntimeException e )
             {
-                throw new BuildException( e );
+                throw new MojoFailureException( e );
             }
             setProperty( "PROJECT_NAME", profile.getRealTomcatAppName() );
             setAntProperties( profile );
@@ -360,13 +364,13 @@ public class AppValidate extends BETask
             }
             return profile;
         }
-        catch ( BuildException e )
+        catch ( MojoFailureException e )
         {
             throw e;
         }
         catch ( RuntimeException | IOException e )
         {
-            throw new BuildException( e );
+            throw new MojoFailureException( e );
         }
     }
 
@@ -377,4 +381,5 @@ public class AppValidate extends BETask
             setProperty( property, element.getProperty( property ) );
         }
     }
+*/    
 }

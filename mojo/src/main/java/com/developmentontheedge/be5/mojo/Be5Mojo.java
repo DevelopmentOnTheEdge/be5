@@ -1,5 +1,10 @@
 package com.developmentontheedge.be5.mojo;
 
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
+
+///
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +19,6 @@ import org.apache.log4j.PropertyConfigurator;
 import org.yaml.snakeyaml.Yaml;
 
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.client.testframework.dbms.DBMSBase;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
@@ -34,79 +38,115 @@ import com.developmentontheedge.beans.model.ComponentModel;
 import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.dbms.MultiSqlParser;
 
-public abstract class BETask extends Task
+public abstract class Be5Mojo extends AbstractMojo
 {
-    protected Project beanExplorerProject; // Can be injected to avoid parsing
     protected ProcessController logger = new WriterLogger();
     protected Properties properties = new Properties();
-    protected File logDir;
-    protected boolean debug = false;
-    protected boolean useMeta;
-
-    /*
-     * The good solution is to evaluate this URL using the given/read project.
-     * But this evaluation depends on the DTP/Eclipse runtime so we can't use it
-     * from the Ant task.
-     */
-    protected String connectionUrl; // Ant input
-    protected File projectPath; // Ant input
-
-    // execute() input
     protected DbmsConnector connector;
-    protected boolean modules = false;
+    
+    ///////////////////////////////////////////////////////////////////
+    // Properties
+    //
+    @Parameter (property = "BE5_DEBUG")
+    protected boolean debug = false;
 
+    @Parameter (property = "BE5_LOG_DIR")
+    protected String logDirPath;
+    
+    protected Project beanExplorerProject; // Can be injected to avoid parsing
     public void setBeanExplorerProject( final Project project )
     {
         this.beanExplorerProject = project;
     }
-
     public Project getBeanExplorerProject()
     {
         return beanExplorerProject;
     }
 
+    protected File logDir;
+    public File getLogDir()
+    {
+        return logDir;
+    }
+    public void setLogDir( File logDir )
+    {
+        this.logDir = logDir;
+    }
+    
+    protected boolean useMeta;
+    public boolean isUseMeta()
+    {
+        return useMeta;
+    }
+    public void setUseMeta( boolean useMeta )
+    {
+        this.useMeta = useMeta;
+    }
+
+    protected String connectionUrl; // Ant input
     public String getConnectionUrl()
     {
         return connectionUrl;
     }
-
     public void setConnectionUrl( final String connectionUrl )
     {
         this.connectionUrl = connectionUrl;
     }
-
+    
+    protected File projectPath; // Ant input
     public File getProjectPath()
     {
         return projectPath;
     }
-
     public void setProjectPath( final File projectPath )
     {
         this.projectPath = projectPath;
     }
 
-    protected void initParameters()
+    protected boolean modules = false;
+    public boolean isModules()
     {
-        if(Boolean.parseBoolean( getProject().getProperty( "BE4_DEBUG" )))
+        return modules;
+    }
+    public void setModules( boolean modules )
+    {
+        this.modules = modules;
+    }
+   
+
+    ///////////////////////////////////////////////////////////////////    
+    
+    public void init() // throws MojoFailureException
+    {
+    	Properties properties = new Properties();
+
+    	// TODO replace to Maven logging
+    	properties.setProperty( "log4j.rootCategory", "INFO,stderr" );
+        properties.setProperty( "log4j.appender.stderr", "org.apache.log4j.ConsoleAppender" );
+        properties.setProperty( "log4j.appender.stderr.Threshold", "INFO" );
+        properties.setProperty( "log4j.appender.stderr.Target", "System.err" );
+        properties.setProperty( "log4j.appender.stderr.layout", "org.apache.log4j.PatternLayout" );
+        properties.setProperty( "log4j.appender.stderr.layout.ConversionPattern", "%-5p %d [%t][%F:%L] : %m%n" );
+        PropertyConfigurator.configure( properties );
+    }
+
+    protected void initParameters() throws MojoFailureException
+    {
+        if( debug == true )
         {
-            debug = true;
             ModuleUtils.setDebugStream( System.err );
         }
         
-        if( logDir == null )
+        if(logDirPath != null)
         {
-            String logDirPath = getProject().getProperty( "BE4_LOG_DIR" );
-            if(logDirPath != null)
-            {
-                logDir = new File(logDirPath);
-            }
+            logDir = new File(logDirPath);
         }
         
         if ( beanExplorerProject == null )
         {
             if ( projectPath == null )
             {
-                throw new BuildException( "Please specify projectPath attribute" );
+                throw new MojoFailureException( "Please specify projectPath attribute" );
             }
             logger.setOperationName( "Reading project from " + projectPath + "..." );
             final Path root = projectPath.toPath();
@@ -131,8 +171,10 @@ public abstract class BETask extends Task
             }
             if ( connectionUrl == null )
             {
-                throw new BuildException(
-                        "Please specify connection profile: either create "+beanExplorerProject.getProjectFileStructure().getSelectedProfileFile()+" file with profile name or use -DBE4_PROFILE=..." );
+                throw new MojoFailureException(
+                        "Please specify connection profile: either create "
+                      + beanExplorerProject.getProjectFileStructure().getSelectedProfileFile()
+                      + " file with profile name or use -DBE5_PROFILE=..." );
             }
             if ( user != null )
             {
@@ -147,68 +189,55 @@ public abstract class BETask extends Task
             logger.setOperationName("Using connection "+connectionUrl);
         }
 System.out.println("!!connect=" + connectionUrl);
-        this.connector = DBMSBase.createConnector( connectionUrl );
+
+		// TODO
+        //this.connector = DBMSBase.createConnector( connectionUrl );
         this.beanExplorerProject.setDatabaseSystem( DatabaseUtils.getRdbms( connector ) );
     }
 
-    protected Project loadProject( final Path root )
+    
+    protected Project loadProject(final Path root) throws MojoFailureException
     {
         final LoadContext loadContext = new LoadContext();
         Project prj;
         try
         {
-            prj = Serialization.load( root, loadContext );
+            prj = Serialization.load(root, loadContext);
         }
-        catch ( final ProjectLoadException e )
+        catch(final ProjectLoadException e)
         {
-            throw new BuildException( e );
+            throw new MojoFailureException("Can not load project", e);
         }
         checkErrors( loadContext, "Project has %d error(s)" );
         return prj;
     }
 
-    @Override
-    public void init() throws BuildException
+    protected void mergeModules() throws MojoFailureException
     {
-        super.init();
-        Properties properties = new Properties();
-        properties.setProperty( "log4j.rootCategory", "INFO,stderr" );
-        properties.setProperty( "log4j.appender.stderr", "org.apache.log4j.ConsoleAppender" );
-        properties.setProperty( "log4j.appender.stderr.Threshold", "INFO" );
-        properties.setProperty( "log4j.appender.stderr.Target", "System.err" );
-        properties.setProperty( "log4j.appender.stderr.layout", "org.apache.log4j.PatternLayout" );
-        properties.setProperty( "log4j.appender.stderr.layout.ConversionPattern", "%-5p %d [%t][%F:%L] : %m%n" );
-        PropertyConfigurator.configure( properties );
+        LoadContext loadContext = new LoadContext();
+        try
+        {
+            Project metaModule = useMeta ? ModuleUtils.loadMetaProject( loadContext )
+                : null;
+            ModuleUtils.mergeAllModules( beanExplorerProject, metaModule, logger, loadContext );
+        }
+        catch(ProjectLoadException e)
+        {
+            throw new MojoFailureException("Merge modules", e);
+        }
+        if(!loadContext.getWarnings().isEmpty())
+        {
+            for(ReadException exception : loadContext.getWarnings())
+            {
+                System.err.println( "Error: "+exception.getMessage() );
+            }
+            throw new MojoFailureException( "Modules have " + loadContext.getWarnings().size() + " error(s)" );
+        }
     }
 
-    public File getLogDir()
+    protected void applyProfile() throws MojoFailureException
     {
-        return logDir;
-    }
-
-    public void setLogDir( File logDir )
-    {
-        this.logDir = logDir;
-    }
-    
-    public boolean isUseMeta()
-    {
-        return useMeta;
-    }
-
-    public void setUseMeta( boolean useMeta )
-    {
-        this.useMeta = useMeta;
-    }
-    
-    protected boolean isProperty(String name)
-    {
-        String value = getProject().getProperty( name );
-        return Boolean.parseBoolean( value ) || "yes".equalsIgnoreCase( value );
-    }
-
-    protected void applyProfile()
-    {
+    	/* TODO
         String profileSerialized = getProject().getProperty( "BE4_PROFILE_SERIALIZED" );
         if(profileSerialized != null)
         {
@@ -226,7 +255,7 @@ System.out.println("!!connect=" + connectionUrl);
             }
             catch ( ReadException | ClassCastException e )
             {
-                throw new BuildException( e );
+                throw new MojoExecutionException("apply profile error: " + e);
             }
         }
         String profileName = getProject().getProperty( "BE4_PROFILE" );
@@ -235,9 +264,10 @@ System.out.println("!!connect=" + connectionUrl);
             beanExplorerProject.setConnectionProfileName( profileName );
             if(beanExplorerProject.getConnectionProfile() == null && !beanExplorerProject.isModuleProject())
             {
-                throw new BuildException( "Cannot find connection profile '"+profileName+"'" );
+                throw new MojoFailureException( "Cannot find connection profile '"+profileName+"'" );
             }
-        }
+        }*/
+    	
         BeConnectionProfile profile = beanExplorerProject.getConnectionProfile();
         if(profile != null)
         {
@@ -245,18 +275,19 @@ System.out.println("!!connect=" + connectionUrl);
         }
     }
 
-    private void setupProfile(BeConnectionProfile profile)
+    private void setupProfile(BeConnectionProfile profile) throws MojoFailureException
     {
+    	/* TODO
         String[] properties = profile.getPropertiesToRequest();
         if(properties == null)
             return;
-        ComponentModel model = ComponentFactory.getModel( profile );
+        ComponentModel model = ComponentFactory.getModel(profile, ComponentFactory.Policy.DEFAULT);
         for(String propertyName : properties)
         {
             Property property = model.findProperty( propertyName );
             if(property == null)
             {
-                throw new BuildException("Error in connection profile '"+profile.getName()+"': unknown property '"+propertyName+"'");
+                throw new MojoFailureException("Error in connection profile '"+profile.getName()+"': unknown property '"+propertyName+"'");
             }
             try
             {
@@ -276,7 +307,7 @@ System.out.println("!!connect=" + connectionUrl);
             }
             catch ( IOException | NumberFormatException | NoSuchMethodException e )
             {
-                throw new BuildException( e );
+                throw new MojoExecutionException("Connection profile error: ", e);
             }
         }
         profile.setPropertiesToRequest( null );
@@ -284,46 +315,81 @@ System.out.println("!!connect=" + connectionUrl);
         serializedProfiles.put( profile.getName(), YamlSerializer.serializeProfile( profile ) );
         String serialized = new Yaml().dump( serializedProfiles );
         setProperty( "BE4_PROFILE_SERIALIZED", serialized );
+        */
     }
 
-    protected void displayError( ProjectElementException error )
+    ///////////////////////////////////////////////////////////////////    
+    
+    protected void displayError(ProjectElementException error)
     {
         error.format( System.err );
     }
-    
-    public boolean isModules()
-    {
-        return modules;
-    }
 
-    public void setModules( boolean modules )
+    protected void checkErrors(final LoadContext loadContext, String messageTemplate) throws MojoFailureException
     {
-        this.modules = modules;
-    }
-
-    protected void mergeModules()
-    {
-        LoadContext loadContext = new LoadContext();
-        try
-        {
-            Project metaModule = useMeta ? ModuleUtils.loadMetaProject( loadContext )
-                : null;
-            ModuleUtils.mergeAllModules( beanExplorerProject, metaModule, logger, loadContext );
-        }
-        catch ( ProjectLoadException e )
-        {
-            throw new BuildException( e );
-        }
         if(!loadContext.getWarnings().isEmpty())
         {
             for(ReadException exception : loadContext.getWarnings())
             {
-                System.err.println( "Error: "+exception.getMessage() );
+                if(debug)
+                {
+                    exception.printStackTrace();
+                } else
+                {
+                    System.err.println( "Error: "+exception.getMessage() );
+                }
             }
-            throw new BuildException( "Modules have " + loadContext.getWarnings().size() + " error(s)" );
+            throw new MojoFailureException( messageTemplate.replace( "%d", String.valueOf( loadContext.getWarnings().size() ) ) );
         }
     }
+    
 
+    protected void dumpSql( String ddlString )
+    {
+        System.err.println( MultiSqlParser.normalize( beanExplorerProject.getDatabaseSystem().getType(), ddlString ) );
+    }
+
+    ///////////////////////////////////////////////////////////////////    
+
+    protected void setProperty(String name, String value)
+    {
+    	/* TODO
+        if(value != null)
+        {
+            value = getProject().replaceProperties( value );
+        }
+        if(debug)
+        {
+            String oldValue = getProject().getProperty( name );
+            if ( value == null )
+            {
+                System.err.println( "BE4 skips null value for property " + name );
+            }
+            else
+            {
+                if ( oldValue == null )
+                {
+                    System.err.println( "BE4 sets " + name + "=" + value.replace( "\n", System.lineSeparator() ) );
+                }
+                else if ( !oldValue.equals( value ) )
+                {
+                    System.err.println( "BE4 does not update existing property " + name );
+                    System.err.println( "\tExisting value: " + oldValue.replace( "\n", System.lineSeparator() ) );
+                    System.err.println( "\tRequested and ignored value: " + value.replace( "\n", System.lineSeparator() ) );
+                }
+            }
+        }
+        if(value == null)
+            return;
+        getProject().setNewProperty( name, value );
+        if(!name.startsWith( "BE4_" ) && !name.endsWith( "::extras" ) && value != null && properties.getProperty( name ) == null)
+        {
+            properties.setProperty( name, getProject().getProperty( name ) );
+        }
+        */
+    }
+
+   
     protected String readString( String prompt, String defaultValue, Object... values ) throws IOException
     {
         StringBuilder fullPrompt = new StringBuilder(prompt);
@@ -358,62 +424,4 @@ System.out.println("!!connect=" + connectionUrl);
         return result;
     }
 
-    protected void checkErrors( final LoadContext loadContext, String messageTemplate )
-    {
-        if(!loadContext.getWarnings().isEmpty())
-        {
-            for(ReadException exception : loadContext.getWarnings())
-            {
-                if(debug)
-                {
-                    exception.printStackTrace();
-                } else
-                {
-                    System.err.println( "Error: "+exception.getMessage() );
-                }
-            }
-            throw new BuildException( messageTemplate.replace( "%d", String.valueOf( loadContext.getWarnings().size() ) ) );
-        }
-    }
-    
-    protected void setProperty(String name, String value)
-    {
-        if(value != null)
-        {
-            value = getProject().replaceProperties( value );
-        }
-        if(debug)
-        {
-            String oldValue = getProject().getProperty( name );
-            if ( value == null )
-            {
-                System.err.println( "BE4 skips null value for property " + name );
-            }
-            else
-            {
-                if ( oldValue == null )
-                {
-                    System.err.println( "BE4 sets " + name + "=" + value.replace( "\n", System.lineSeparator() ) );
-                }
-                else if ( !oldValue.equals( value ) )
-                {
-                    System.err.println( "BE4 does not update existing property " + name );
-                    System.err.println( "\tExisting value: " + oldValue.replace( "\n", System.lineSeparator() ) );
-                    System.err.println( "\tRequested and ignored value: " + value.replace( "\n", System.lineSeparator() ) );
-                }
-            }
-        }
-        if(value == null)
-            return;
-        getProject().setNewProperty( name, value );
-        if(!name.startsWith( "BE4_" ) && !name.endsWith( "::extras" ) && value != null && properties.getProperty( name ) == null)
-        {
-            properties.setProperty( name, getProject().getProperty( name ) );
-        }
-    }
-
-    protected void dumpSql( String ddlString )
-    {
-        System.err.println( MultiSqlParser.normalize( beanExplorerProject.getDatabaseSystem().getType(), ddlString ) );
-    }
 }
