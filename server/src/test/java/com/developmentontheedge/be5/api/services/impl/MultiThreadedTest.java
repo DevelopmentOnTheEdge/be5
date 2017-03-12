@@ -10,6 +10,7 @@ import org.junit.Test;
 import javax.servlet.ServletContext;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
@@ -18,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 
 public class MultiThreadedTest
@@ -36,9 +38,10 @@ public class MultiThreadedTest
                 return Paths.get("");
             }
         };
+        assertNotNull(projectProvider);
         databaseService = new DatabaseServiceImpl(projectProvider);
         DbmsConnector conn = databaseService.getDbmsConnector();
-
+        assertNotNull(conn);
         conn.executeUpdate("DROP TABLE IF EXISTS Persons;" );
         conn.executeUpdate("CREATE TABLE Persons (\n" +
                 "    ID int NOT NULL AUTO_INCREMENT,\n" +
@@ -61,7 +64,15 @@ public class MultiThreadedTest
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertEquals(1,1);
+
+        DbmsConnector conn = databaseService.getDbmsConnector();
+        ResultSet rs = conn.executeQuery("select count(*) AS \"count\" from Persons;");
+        rs.next();
+        int count = Integer.parseInt(rs.getString("count"));
+        conn.close(rs);
+        conn.releaseConnection(conn.getConnection());
+
+        assertEquals(100, count);
     }
 
     public class Test2 implements Runnable{
@@ -82,12 +93,6 @@ public class MultiThreadedTest
                                 + rs.getString("name") + " " + rs.getString("password")
                 );
                 //System.out.println(strings.size() + " last: "+ strings.get(strings.size()-1));
-
-//                ResultSet rs = conn.executeQuery("select count(*) AS \"count\" from Persons;");
-//                rs.next();
-//                System.out.print(rs.getString("count") +" ");
-//                conn.close(rs);
-
                 conn.releaseConnection(conn.getConnection());
 
                 //System.out.println(databaseService.getConnectionsStatistics());

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SimpleConnector;
@@ -17,10 +18,10 @@ public class DatabaseServiceImpl implements DatabaseService
 {
     public static Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
-    private ProjectProviderImpl projectProvider;
+    private ProjectProvider projectProvider;
     private BasicDataSource ds = null;
 
-    public DatabaseServiceImpl(ProjectProviderImpl projectProvider){
+    public DatabaseServiceImpl(ProjectProvider projectProvider){
         this.projectProvider = projectProvider;
     }
 
@@ -47,7 +48,7 @@ public class DatabaseServiceImpl implements DatabaseService
 
         try {
             InitialContext ic = new InitialContext();
-            ds = (BasicDataSource) ic.lookup("jdbc/testBe5");
+            ds = (BasicDataSource) ic.lookup(ProjectProvider.dataSourceName);
         } catch (NamingException e) {
             e.printStackTrace();
         }
