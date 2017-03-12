@@ -83,16 +83,17 @@ public class ProjectProviderImpl implements ProjectProvider
 
         try {
             BeConnectionProfile profile = project.getConnectionProfile();
-            InitialContext ic = new InitialContext();
-            ic.createSubcontext("jdbc");
 
             // constructBasicDataSource
+            InitialContext ic = new InitialContext();
             BasicDataSource bds = new BasicDataSource();
+
             bds.setDriverClassName(profile.getDriverDefinition());
             bds.setUrl(profile.getConnectionUrl());
             bds.setUsername(profile.getUsername());
             bds.setPassword(profile.getPassword());
-            ic.rebind("jdbc/testBe5", bds);
+
+            ic.rebind(dataSourceName, bds);
         } catch (NamingException e) {
             e.printStackTrace();
         }
