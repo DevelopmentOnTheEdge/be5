@@ -134,14 +134,6 @@ public class CompiledLocalizations {
                 CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_VIEW_NAME, queryName));
     }
 
-    @Deprecated
-    public Optional<String> getColumnTitle(String language, String entityName, String columnName) {
-        checkNotNull(language);
-        checkNotNull(entityName);
-        checkNotNull(columnName);
-        return findLocalization(language, entityName,
-                CompiledEntityLocalizations.fnGetByTopicAndKey(L10N_TOPIC_COLUMN_NAME, columnName));
-    }
 
     public Optional<String> getColumnTitle(String language, String entityName, String queryName, String columnName) {
         checkNotNull(language);

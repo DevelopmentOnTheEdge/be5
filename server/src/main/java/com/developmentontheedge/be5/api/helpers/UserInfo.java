@@ -42,9 +42,9 @@ public class UserInfo implements Serializable
         this.curRoleList = curRoleList;
     }
 
-    public List getCurrentRoleList()
+    public List<String> getCurrentRoleList()
     {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
 
         if( getCurRoleList() != null )
         {
@@ -138,15 +138,15 @@ public class UserInfo implements Serializable
     public boolean isUserInRole( String role )
     {
         role = role.trim();
-        return getCurRoleList() != null && getCurRoleList().indexOf( "'" + role + "'" ) >= 0;
+        return getCurRoleList() != null && getCurRoleList().contains("'" + role + "'");
     }
 
     public boolean isAdmin()
     {
         return getCurRoleList() != null &&
                 (
-                        getCurRoleList().indexOf( "'" + RoleType.ROLE_ADMINISTRATOR + "'" ) >= 0 ||
-                                getCurRoleList().indexOf( "'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'" ) >= 0
+                        getCurRoleList().contains("'" + RoleType.ROLE_ADMINISTRATOR + "'") ||
+                                getCurRoleList().contains("'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'")
                 );
     }
 

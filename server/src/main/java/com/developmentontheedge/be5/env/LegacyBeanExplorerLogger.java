@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.servlets;
+package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.beans.logging.Logger;
 import com.developmentontheedge.beans.logging.LoggingHandle;

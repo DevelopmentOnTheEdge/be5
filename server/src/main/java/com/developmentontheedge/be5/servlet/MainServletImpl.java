@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.servlets;
+package com.developmentontheedge.be5.servlet;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.CloseReason;
@@ -21,6 +20,7 @@ import javax.websocket.Session;
 
 import com.developmentontheedge.be5.api.helpers.UserInfo;
 import com.developmentontheedge.be5.metadata.Utils;
+import com.developmentontheedge.be5.env.ConfigurationProvider;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
@@ -38,7 +38,6 @@ import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
-import com.developmentontheedge.be5.api.impl.Be5;
 import com.developmentontheedge.be5.api.impl.InitializerContextImpl;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;

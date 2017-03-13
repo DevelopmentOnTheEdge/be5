@@ -1,6 +1,6 @@
 /** $Id: RequestPreprocessor.java,v 1.2 2009/09/22 11:38:59 zha Exp $ */
 
-package com.developmentontheedge.be5.servlets;
+package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.helpers.UserInfo;
 import com.developmentontheedge.dbms.DbmsConnector;

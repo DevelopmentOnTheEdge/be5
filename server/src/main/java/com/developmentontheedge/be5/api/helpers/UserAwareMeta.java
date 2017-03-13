@@ -80,15 +80,9 @@ public interface UserAwareMeta
      * Throws an exception if there's no operation with this name.
      */
     Operation getOperation(boolean useQueryName, String entity, String queryName, String name);
-    
-    /**
-     * Returns a localized title of a column.
-     */
-    @Deprecated
-    Optional<String> getColumnTitle(String entityName, String columnName);
 
     /**
-     * Returns a localized title of a column - be4 format.
+     * Returns a localized title of a column.
      */
     Optional<String> getColumnTitle(String entityName, String queryName, String columnName);
 

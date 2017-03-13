@@ -127,12 +127,6 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public Optional<String> getColumnTitle(String entityName, String columnName)
-    {
-        return localizations.getColumnTitle(userInfo.getLanguage(), entityName, columnName);
-    }
-
-    @Override
     public Optional<String> getColumnTitle(String entityName, String queryName, String columnName)
     {
         return localizations.getColumnTitle(userInfo.getLanguage(), entityName, queryName, columnName);

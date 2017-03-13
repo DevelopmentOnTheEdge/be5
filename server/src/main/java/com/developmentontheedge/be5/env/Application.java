@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.servlets;
+package com.developmentontheedge.be5.env;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;

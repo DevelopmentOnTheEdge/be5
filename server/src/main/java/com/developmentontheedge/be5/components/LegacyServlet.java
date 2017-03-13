@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.experimental.Be5Servlet;
-import com.developmentontheedge.be5.servlets.LegacyServletConfig;
+import com.developmentontheedge.be5.env.LegacyServletConfig;
 
 public class LegacyServlet implements Component
 {

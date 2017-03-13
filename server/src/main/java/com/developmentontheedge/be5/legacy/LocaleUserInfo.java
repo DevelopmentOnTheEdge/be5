@@ -48,7 +48,7 @@ public class LocaleUserInfo extends UserInfo
 	}
 
 	@Override
-	public List<?> getCurrentRoleList() {
+	public List<String> getCurrentRoleList() {
 		throw new UnsupportedOperationException();
 	}
 

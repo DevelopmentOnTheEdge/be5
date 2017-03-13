@@ -20,7 +20,7 @@ import org.eclipse.equinox.launcher.Main;
 @WebServlet(description = "Routing requests", urlPatterns = { "/api/*" }, loadOnStartup = 1)
 public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Object mainServletImpl = null;
+	private MainServletImpl mainServletImpl = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -35,30 +35,7 @@ public class MainServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		
-		/*
-		 * Preconditions.
-		 */
-		String connectString = config.getServletContext().getInitParameter("connectString");
-		String dataSource = config.getServletContext().getInitParameter("dataSource");
-		if (connectString == null && dataSource == null)
-		{
-		    /*
-		     * Add a context parameter to the web.xml, e.g.:
-		     * <web-app ...>
-		     *   [...]
-		     * 
-		     *   <context-param>
-		     *     <param-name>connectString</param-name>
-		     *     <param-value>jdbc:postgresql://localhost:5432/condo;user=condo;password=condo</param-value>
-		     *   </context-param>
-		     *   
-		     *   [...]
-		     * </web-app>
-		     */
-		    throw new IllegalStateException("Either 'connectString' or 'dataSource' context parameter is required. Add it to the web.xml.");
-		}
-		
+
 		/*
 		 * This property is required to load the project.
 		 */
@@ -144,8 +121,8 @@ public class MainServlet extends HttpServlet {
     private void respond(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try
         {
-    	    Object mainServletImpl = getMainServletImpl();
-            Reflection.on(mainServletImpl).call("respond", request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
+            MainServletImpl mainServletImpl = getMainServletImpl();
+            mainServletImpl.respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
 	    }
         catch (Exception e)
         {
@@ -155,15 +132,11 @@ public class MainServlet extends HttpServlet {
         return;
     }
 
-    private Object getMainServletImpl() throws Exception {
+    private MainServletImpl getMainServletImpl() throws Exception {
         if (mainServletImpl == null)
         {
-            Class<?> platformClass = (Class<?>) System.getProperties().get("com.developmentontheedge.be5.platformClass");
-            Object bundle = Reflection.on(platformClass).call("getBundle", "com.developmentontheedge.be5");
-            Class<?> mainServletImplClass = (Class<?>) Reflection.on(bundle).call("loadClass", "com.developmentontheedge.be5.servlets.MainServletImpl");
-            mainServletImpl = mainServletImplClass.newInstance();
+			mainServletImpl = new MainServletImpl();
         }
-        
         return mainServletImpl;
     }
 

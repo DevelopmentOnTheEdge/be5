@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.servlets;
+package com.developmentontheedge.be5.servlet;
 
 import javax.servlet.ServletContext;
 

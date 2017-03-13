@@ -40,7 +40,7 @@ public class Delegator implements InvocationHandler {
         {
             return copy(target, klass);
         }
-        
+		@SuppressWarnings("unchecked")
         T proxy = (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[] { klass }, new Delegator(target));
         return proxy;
     }
