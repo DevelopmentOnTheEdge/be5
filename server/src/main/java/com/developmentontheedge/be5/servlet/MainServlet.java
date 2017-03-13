@@ -83,7 +83,7 @@ public class MainServlet extends HttpServlet {
         		Thread.sleep(100);
         	}
         	WebSocketServlet.setMain(getMainServletImpl());
-        	Reflection.on(getMainServletImpl()).call("init", config);
+            getMainServletImpl().init(config);
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get main servlet class", e);
 		}

@@ -133,7 +133,7 @@ public class MainServletImpl
         runInitializers( cfg );
     }
 
-    private void bindServices(ServletContext servletContext)
+    protected void bindServices(ServletContext servletContext)
     {
         for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.service" ) )
         {
@@ -142,7 +142,7 @@ public class MainServletImpl
                 bindService( element );
             }
         }
-        serviceProvider.bind(Logger.class, ServletLogger.class, s -> s.setContext(servletContext));
+        //TODO delete logger serviceProvider.bind(Logger.class, ServletLogger.class, s -> s.setContext(servletContext));
 
         serviceProvider.freeze();
 
