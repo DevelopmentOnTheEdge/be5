@@ -57,6 +57,10 @@ public class DatabaseUtils
         {
             return Rdbms.POSTGRESQL;
         }
+        else if ( connector.isH2() )
+        {
+            return Rdbms.H2;
+        }
         throw new IllegalStateException( "Unsupported connector: "+connector.getConnectString() );
     }
     

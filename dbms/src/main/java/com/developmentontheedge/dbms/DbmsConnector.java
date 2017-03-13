@@ -44,4 +44,6 @@ public interface DbmsConnector
     boolean isDb2v9();
 
     boolean isPostgreSQL();
+
+    boolean isH2();
 }

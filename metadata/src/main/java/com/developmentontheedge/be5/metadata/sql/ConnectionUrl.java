@@ -1,20 +1,14 @@
 package com.developmentontheedge.be5.metadata.sql;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithProperties;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.PropertiesDPS;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.net.URI;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConnectionUrl implements BeElementWithProperties
 {
@@ -117,6 +111,7 @@ public class ConnectionUrl implements BeElementWithProperties
             if(pos >= -1)
             {
                 int pos2 = specificPart.indexOf( ':', pos );
+                if(rdbms == Rdbms.H2 && pos2 == -1) pos2 = specificPart.length();
                 if(pos2 >= -1)
                 {
                     host = specificPart.substring( pos+1, pos2 );

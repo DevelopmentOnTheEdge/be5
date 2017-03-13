@@ -1,29 +1,20 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Types;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators.AbstractSpliterator;
-import java.util.TreeMap;
-import java.util.function.Consumer;
-
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
-
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
+
+import java.sql.Date;
+import java.sql.*;
+import java.util.*;
+import java.util.Spliterators.AbstractSpliterator;
+import java.util.function.Consumer;
 
 public class DpsStreamer
 {
@@ -76,11 +67,28 @@ public class DpsStreamer
                         throw new RuntimeException(t);
                     }
                 }
-            } ).onClose( () -> connector.close( finalRs ) );
+            } ).onClose(() ->
+            {
+                connector.close(finalRs);
+                try
+                {
+                    connector.releaseConnection(connector.getConnection());
+                } catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
         catch( Exception e )
         {
             connector.close( rs );
+            try
+            {
+                connector.releaseConnection(connector.getConnection());
+            } catch (SQLException e1)
+            {
+                e1.printStackTrace();
+            }
             throw new RuntimeException(e);
         }
     }
