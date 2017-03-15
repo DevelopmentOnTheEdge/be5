@@ -180,6 +180,9 @@ public class Menu implements Component {
         case "withIds":
             res.sendAsRawJson(generateMenuWithIds(req, serviceProvider));
             return;
+        case "defaultAction":
+            res.sendAsRawJson(getDefaultAction(req, serviceProvider));
+            return;
         default:
             res.sendUnknownActionError();
             return;
@@ -204,6 +207,47 @@ public class Menu implements Component {
         List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, withIds);
         
         return new MenuResponse(loggedIn, entities);
+    }
+
+    private Action getDefaultAction(Request req, ServiceProvider serviceProvider) {
+        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+
+        List<String> roles = userInfoManager.getCurrentRoles();
+        String language = userInfoManager.getLanguage();
+        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, false);
+
+        for (RootNode rootNode: entities)
+        {
+            if(rootNode.action != null)
+            {
+                if(rootNode.isDefault)return rootNode.action;
+            }
+            else if(rootNode.children != null)
+            {
+                for (QueryNode node: rootNode.children)
+                {
+                    if(node.isDefault)return node.action;
+                }
+            }
+        }
+
+        for (RootNode rootNode: entities)
+        {
+            if(rootNode.action != null)
+            {
+                return rootNode.action;
+            }
+            else if(rootNode.children != null)
+            {
+                for (QueryNode node: rootNode.children)
+                {
+                    return node.action;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
