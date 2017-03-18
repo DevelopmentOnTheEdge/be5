@@ -4,16 +4,11 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.ServletContexts;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
-import org.apache.commons.dbcp2.BasicDataSource;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,7 +30,6 @@ public class ProjectProviderImpl implements ProjectProvider
     	{
 		    long time = System.nanoTime();
 			project = loadProject();
-            constructBasicDataSource(project);
             log.info("Loading project took "+TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time )+" ms");
     	}
 
@@ -74,28 +68,6 @@ public class ProjectProviderImpl implements ProjectProvider
         finally
         {
             dirty = false;
-        }
-    }
-
-    private void constructBasicDataSource(Project project) {
-        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
-        System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
-
-        try {
-            BeConnectionProfile profile = project.getConnectionProfile();
-
-            // constructBasicDataSource
-            InitialContext ic = new InitialContext();
-            BasicDataSource bds = new BasicDataSource();
-
-            bds.setDriverClassName(profile.getDriverDefinition());
-            bds.setUrl(profile.getConnectionUrl());
-            bds.setUsername(profile.getUsername());
-            bds.setPassword(profile.getPassword());
-
-            ic.rebind(dataSourceName, bds);
-        } catch (NamingException e) {
-            e.printStackTrace();
         }
     }
 
