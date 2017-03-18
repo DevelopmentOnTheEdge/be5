@@ -1,20 +1,19 @@
 package com.developmentontheedge.be5.legacy;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.components.FrontendConstants;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.QueryStrings;
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.QueryLink;
-import com.developmentontheedge.be5.components.FrontendConstants;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.QueryStrings;
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 
 public class LegacyUrlParser {
     public static final String GO_BACK_URL = "#goback";
@@ -151,9 +150,9 @@ public class LegacyUrlParser {
         {
             int queryId = Integer.parseInt(mutableMap.remove("_q_"));
             queryNumber = Optional.of(queryId);
-            QueryLink queryLink = queryRepository.findOne(queryNumber.get()).orElseThrow(getExceptionSupplierForNotFoundQuery(queryId)).toQueryLink();
-            queryName = queryLink.getQueryName();
-            entityName = queryLink.getEntityName();
+            //TODO QueryLink queryLink = queryRepository.findOne(queryNumber.get()).orElseThrow(getExceptionSupplierForNotFoundQuery(queryId)).toQueryLink();
+//            queryName = queryLink.getQueryName();
+//            entityName = queryLink.getEntityName();
         }
         
         mutableMap.remove("_t_");

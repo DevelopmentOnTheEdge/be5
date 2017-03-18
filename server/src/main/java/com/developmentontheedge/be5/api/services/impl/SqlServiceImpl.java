@@ -2,100 +2,72 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.api.sql.ExistenceChecker;
-import com.developmentontheedge.be5.api.sql.ExistenceChecker.ExistenceCheckerEndpoint;
-import com.developmentontheedge.be5.api.sql.Inserter;
-import com.developmentontheedge.be5.api.sql.Selector;
-import com.developmentontheedge.be5.api.sql.Selector.ResultSetParser;
-import com.developmentontheedge.be5.api.sql.Updater;
-import com.developmentontheedge.be5.api.sql.Updater.UpdaterSelector;
-import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.sql.format.Context;
+import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.Formatter;
+import com.developmentontheedge.sql.model.DefaultParserContext;
+import com.developmentontheedge.sql.model.SqlQuery;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Objects.requireNonNull;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SqlServiceImpl implements SqlService
 {
-    
-    public class TableFacadeImpl implements TableFacade
+    private static Logger log = Logger.getLogger(SqlServiceImpl.class.getName());
+
+    private QueryRunner queryRunner;
+
+    public SqlServiceImpl(DatabaseService databaseService){
+        queryRunner = new QueryRunner(databaseService.getDataSource());
+    }
+
+    public <T> T select(String sql, ResultSetHandler<T> rsh, Object... params)
     {
-
-        private final String tableName;
-
-        public TableFacadeImpl(String tableName)
+        sql = format(sql);
+        try
         {
-            this.tableName = tableName;
+            return queryRunner.query(sql, rsh, params);
         }
-
-        @Override
-        public UpdaterSelector where(String fieldName, Object fieldValue)
+        catch (SQLException e)
         {
-            return Updater.in(SqlServiceImpl.this.getConnector(), tableName).where(fieldName, fieldValue);
+            log.log(Level.WARNING, e.getMessage());
+            e.printStackTrace();
+            return null;
         }
+    }
 
-        @Override
-        public ExistenceCheckerEndpoint with(String fieldName, Object fieldValue)
+    @Override
+    public <T> List<T> selectAll(String sql, ResultSetHandler<T> rsh, Object... params)
+    {
+        sql = format(sql);
+        try
         {
-            return ExistenceChecker.in(SqlServiceImpl.this.getConnector(), tableName).with(fieldName, fieldValue);
-        }
-        
-        @Override
-        public boolean existsWith(String fieldName, Object fieldValue)
-        {
-            return ExistenceChecker.in(SqlServiceImpl.this.getConnector(), tableName).existsWith(fieldName, fieldValue);
-        }
-        
-    }
-    
-    private final DatabaseService databaseService;
+            return queryRunner.query(sql, rs -> {
+                List<T> res = new ArrayList<>();
 
-    public SqlServiceImpl(DatabaseService databaseService)
-    {
-        this.databaseService = databaseService;
+                while (rs.next()){
+                    res.add(rsh.handle(rs));
+                }
+
+                return res;
+            }, params);
+        }
+        catch (SQLException e)
+        {
+            log.log(Level.WARNING, e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
-    
-    @Override
-    public Selector from(String tableName)
+
+    private String format(String sql)
     {
-        return Selector.from(getConnector(), tableName);
+        //TODO get Dbms from DatabaseServiceImpl
+        return new Formatter().format(SqlQuery.parse(sql), new Context(Dbms.MYSQL), new DefaultParserContext());
     }
-    
-    @Override
-    public Selector from(String tableName, String... tableNames)
-    {
-        return Selector.from(getConnector(), tableName, tableNames);
-    }
-    
-    @Override
-    public Inserter into(String tableName)
-    {
-        return Inserter.into(getConnector(), tableName);
-    }
-    
-    @Override
-    public TableFacade in(String tableName)
-    {
-        requireNonNull(tableName);
-        return new TableFacadeImpl(tableName);
-    }
-    
-    /**
-     * Run a query that was formed with <code>SqlBuilder</code> or by calling <code>query.getQueryCompiled().validate()</code>.
-     * In the second case the query must not contain any runtime placeholders or nested queries.
-     */
-    public <T> List<T> customSelect(String statement, ResultSetParser<T> parser)
-    {
-        checkNotNull(statement);
-        checkNotNull(parser);
-        
-        return new SelectExecutor(databaseService).select(statement, parser);
-    }
-    
-    private DbmsConnector getConnector()
-    {
-        return databaseService.getDbmsConnector();
-    }
-    
 }

@@ -1,9 +1,5 @@
 package com.developmentontheedge.be5.legacy;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Optional;
-
 import com.developmentontheedge.be5.api.services.SqlService;
 
 /**
@@ -21,14 +17,9 @@ public class LegacyQueryRepository
         this.db = db;
     }
     
-    public Optional<LegacyQuery> findOne(int id)
+    public LegacyQuery findOne(int id)
     {
-        return db.from(MetaTables.QUERIES).findOneWith(MetaTables.Queries.ID, id, this::parse);
+        return db.select("select * from queries WHERE ID = ?", LegacyQuery.rsh, id);
     }
-    
-    private LegacyQuery parse(ResultSet rs) throws SQLException
-    {
-        return new LegacyQuery(rs.getString(MetaTables.Queries.ENTITY_NAME), rs.getString(MetaTables.Queries.NAME));
-    }
-    
+
 }

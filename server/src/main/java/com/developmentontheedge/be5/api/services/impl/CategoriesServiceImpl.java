@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.util.Generators;
 import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+import java.util.Optional;
 
 public class CategoriesServiceImpl implements CategoriesService
 {
@@ -21,7 +21,7 @@ public class CategoriesServiceImpl implements CategoriesService
     @Override
     public List<Category> getCategoriesForest(String entity, boolean hideEmpty)
     {
-        List<MutableCategory> categories = db.from("categories").selectWith("entity", entity, MutableCategory::fromResultSet);
+        List<MutableCategory> categories = null;//TODO db.from("categories").selectWith("entity", entity, MutableCategory::fromResultSet);
         List<MutableCategory> forest = Generators.forest(categories,
             c -> c.id,
             c -> c.parentId == 0,
@@ -71,7 +71,7 @@ public class CategoriesServiceImpl implements CategoriesService
     
     private boolean hasAnyItem(MutableCategory category)
     {
-        return db.in("classifications").existsWith("categoryID", category.id);
+        return false;//TODO db.in("classifications").existsWith("categoryID", category.id);
     }
     
 }

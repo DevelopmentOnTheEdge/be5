@@ -125,6 +125,11 @@
 			<version>2.1.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-dbutils</groupId>
+			<artifactId>commons-dbutils</artifactId>
+			<version>1.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

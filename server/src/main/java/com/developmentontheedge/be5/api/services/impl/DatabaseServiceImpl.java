@@ -3,14 +3,14 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.SimpleConnector;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -18,37 +18,26 @@ import java.util.logging.Logger;
 
 public class DatabaseServiceImpl implements DatabaseService
 {
-    public static Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
+    private static Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
-    public final String dataSourceName = "Be5dc";
     private ProjectProvider projectProvider;
-    private BasicDataSource ds = null;
+    private BasicDataSource bds = null;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider){
         this.projectProvider = projectProvider;
-        constructBasicDataSource(projectProvider.getProject());
-    }
 
-    private void constructBasicDataSource(Project project) {
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
 
-        try {
-            BeConnectionProfile profile = project.getConnectionProfile();
+        BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
+        Rdbms rdbms = profile.getRdbms();
+        DbmsType type = rdbms.getType();
 
-            // constructBasicDataSource
-            InitialContext ic = new InitialContext();
-            BasicDataSource bds = new BasicDataSource();
-
-            bds.setDriverClassName(profile.getDriverDefinition());
-            bds.setUrl(profile.getConnectionUrl());
-            bds.setUsername(profile.getUsername());
-            bds.setPassword(profile.getPassword());
-
-            ic.rebind(dataSourceName, bds);
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
+        bds = new BasicDataSource();
+        bds.setDriverClassName(profile.getDriverDefinition());
+        bds.setUrl(profile.getConnectionUrl());
+        bds.setUsername(profile.getUsername());
+        bds.setPassword(profile.getPassword());
     }
 
     @Override
@@ -70,32 +59,31 @@ public class DatabaseServiceImpl implements DatabaseService
         return null;
     }
 
+    public DataSource getDataSource() {
+        return bds;
+    }
+
     private Connection getConnection() {
-
-        try {
-            InitialContext ic = new InitialContext();
-            ds = (BasicDataSource) ic.lookup(dataSourceName);
-        } catch (NamingException e) {
+        try
+        {
+            return bds.getConnection();
+        } catch (SQLException e)
+        {
             e.printStackTrace();
+            log.log(Level.SEVERE, e.getMessage());
+            return null;
         }
 
-        try {
-            return ds != null ? ds.getConnection() : null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public int getNumIdle()
     {
-        return ds != null ? ds.getNumIdle() : Integer.MAX_VALUE;
+        return bds != null ? bds.getNumIdle() : Integer.MAX_VALUE;
     }
 
     public int getNumActive()
     {
-        return ds != null ? ds.getNumActive() : Integer.MAX_VALUE;
+        return bds != null ? bds.getNumActive() : Integer.MAX_VALUE;
     }
 
     public String getConnectionsStatistics(){

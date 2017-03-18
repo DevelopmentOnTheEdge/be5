@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.api.services;
 
-import java.util.List;
-
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import one.util.streamex.StreamEx;
 
-import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.sql.Selector;
-import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * A way to run queries from the project model.
@@ -17,7 +17,12 @@ import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellMode
  */
 public interface QueryExecutor
 {
-    
+    @FunctionalInterface
+    interface ResultSetParser<T>
+    {
+        T parse(ResultSet rs) throws SQLException;
+    }
+
     /**
      * Sets a limit (changes state). Returns the query executor itself.
      */
@@ -46,7 +51,7 @@ public interface QueryExecutor
     /**
      * Executes the query.
      */
-    <T> List<T> execute(Selector.ResultSetParser<T> parser) throws Be5Exception;
+    <T> List<T> execute(ResultSetParser<T> parser) throws Be5Exception;
     
     /**
      * Executes the query. Supposes that the result value is the only column "value" in the only row.
@@ -69,5 +74,5 @@ public interface QueryExecutor
      * Returns a list of column names.
      */
     List<String> getColumnNames() throws Be5Exception;
-    
+
 }

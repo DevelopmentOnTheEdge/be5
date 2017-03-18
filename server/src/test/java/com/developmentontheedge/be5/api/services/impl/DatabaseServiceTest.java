@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public class AppTest
+public class DatabaseServiceTest
 {
     private static ProjectProviderImpl projectProvider;
     private static DatabaseService databaseService;
@@ -53,9 +53,9 @@ public class AppTest
         conn.executeInsert("INSERT INTO Persons (name, password)" +
                                                   "VALUES ('test','pass')");
 
-        List<String> strings = db.from("Persons").selectAll(
-            rs -> rs.getString("ID") + " "
-                    + rs.getString("name") + " " + rs.getString("password")
+        List<String> strings = db.selectAll("select * from Persons", rs ->
+            rs.getString("ID") + " "  + rs.getString("name") + " "
+                    + rs.getString("password")
         );
 
         assertNotNull(strings);

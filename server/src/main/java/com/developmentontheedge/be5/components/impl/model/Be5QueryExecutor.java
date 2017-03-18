@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
-import com.developmentontheedge.be5.api.sql.Selector.ResultSetParser;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;

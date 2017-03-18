@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -88,10 +87,10 @@ public class MultiThreadedTest
                 conn.executeInsert("INSERT INTO Persons (name, password)" +
                         "VALUES ('test" + random.nextInt()%10 + "','" + random.nextInt() + "')");
 
-                List<String> strings = db.from("Persons").selectAll(
-                        rs -> rs.getString("ID") + " "
-                                + rs.getString("name") + " " + rs.getString("password")
-                );
+//                List<String> strings = db.from("Persons").selectAll(
+//                        rs -> rs.getString("ID") + " "
+//                                + rs.getString("name") + " " + rs.getString("password")
+//                );
                 //System.out.println(strings.size() + " last: "+ strings.get(strings.size()-1));
                 conn.releaseConnection(conn.getConnection());
 
