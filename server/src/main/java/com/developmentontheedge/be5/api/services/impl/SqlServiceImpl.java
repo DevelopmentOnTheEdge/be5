@@ -13,7 +13,6 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SqlServiceImpl implements SqlService
@@ -26,6 +25,7 @@ public class SqlServiceImpl implements SqlService
         queryRunner = new QueryRunner(databaseService.getDataSource());
     }
 
+    @Override
     public <T> T select(String sql, ResultSetHandler<T> rsh, Object... params)
     {
         sql = format(sql);
@@ -35,9 +35,7 @@ public class SqlServiceImpl implements SqlService
         }
         catch (SQLException e)
         {
-            log.log(Level.WARNING, e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw propagate(e);
         }
     }
 
@@ -59,9 +57,31 @@ public class SqlServiceImpl implements SqlService
         }
         catch (SQLException e)
         {
-            log.log(Level.WARNING, e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw propagate(e);
+        }
+    }
+
+    @Override
+    public int update(String sql, Object... params) {
+        try
+        {
+            return queryRunner.update(sql, params);
+        }
+        catch (SQLException e)
+        {
+            throw propagate(e);
+        }
+    }
+
+    @Override
+    public <T> T insert(String sql, ResultSetHandler<T> rsh, Object... params) {
+        try
+        {
+            return queryRunner.insert(sql, rsh, params);
+        }
+        catch (SQLException e)
+        {
+            throw propagate(e);
         }
     }
 
@@ -69,5 +89,13 @@ public class SqlServiceImpl implements SqlService
     {
         //TODO get Dbms from DatabaseServiceImpl
         return new Formatter().format(SqlQuery.parse(sql), new Context(Dbms.MYSQL), new DefaultParserContext());
+    }
+
+    private RuntimeException propagate(Exception e) {
+        if (e instanceof RuntimeException) {
+            return (RuntimeException) e;
+        }
+
+        return new RuntimeException(e);
     }
 }
