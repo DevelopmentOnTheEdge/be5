@@ -60,7 +60,7 @@ public class SqlServiceTest
         );
 
         assertNotNull(strings);
-        assertEquals("1 test1 pass", strings.get(1));
+        assertEquals("1 test1 pass", strings.get(0));
         assertEquals("2 test2 pass", strings.get(1));
 
         databaseService.getConnectionsStatistics();
