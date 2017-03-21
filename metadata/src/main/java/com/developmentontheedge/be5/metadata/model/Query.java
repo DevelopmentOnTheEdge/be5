@@ -471,7 +471,7 @@ public class Query extends EntityItem implements TemplateElement
         List<ProjectElementException> result = super.getErrors();
         try
         {
-            ModelValidationUtils.checkValueInSet(this, "type", getType(), getQueryTypes());
+            ModelValidationUtils.checkValueInSet(this, "type", getType().getName(), getQueryTypes());
         }
         catch( ProjectElementException e )
         {

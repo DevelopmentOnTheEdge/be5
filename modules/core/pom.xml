@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.developmentontheedge.be5.modules</groupId>
+	<artifactId>core</artifactId>
+	<version>0.1.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+	<name>be5-modules-core</name>
+	<description>Core database module for be5 applications</description>
+
+	<!--parent>
+		<groupId>com.developmentontheedge</groupId>
+		<artifactId>be5</artifactId>
+		<version>0.0.2</version>
+	</parent-->
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-maven-plugin</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+	</dependencies>
+
+  <build>
+
+   
+    <plugins>
+
+      <plugin>
+        <groupId>com.developmentontheedge.be5</groupId>
+        <artifactId>be5-maven-plugin</artifactId>
+        <version>0.1.0</version>
+        <configuration>
+            <projectPath>./</projectPath>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

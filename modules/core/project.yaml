@@ -1,0 +1,28 @@
+core:
+  moduleProject: true
+  features: []
+  l10n: []
+  projectFileStructure: {}
+  modules: []
+  application:
+  - _system_
+  - categories
+  - classifications
+  - icons
+  - languages
+  - mimeTypes
+  - sequences
+  - systemSettings
+  - table_refs
+  scripts:
+  - Post-db
+  - Pre-db
+  - dict/languages
+  - dict/mimeTypes
+  - dict/provinces
+  - dict/systemSettings
+  - dictionaries
+  - procedures_oracle
+  - procedures_postgres
+  - procedures_sqlserver
+  includes: common

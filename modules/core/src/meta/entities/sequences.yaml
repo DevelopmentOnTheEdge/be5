@@ -1,0 +1,19 @@
+sequences:
+  type: metadata
+  displayName: Sequences
+  primaryKey: _dummy_
+  scheme:
+    columns:
+    - section:
+        type: VARCHAR(50)
+    - name:
+        type: VARCHAR(50)
+    - counter:
+        type: BIGINT
+    indices:
+    - IDX_SEQUENCES_SN:
+        unique: true
+        columns:
+        - section
+        - name
+  operations: []

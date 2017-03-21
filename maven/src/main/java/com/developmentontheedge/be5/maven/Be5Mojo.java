@@ -47,8 +47,28 @@ public abstract class Be5Mojo extends AbstractMojo
     ///////////////////////////////////////////////////////////////////
     // Properties
     //
+    @Parameter (property = "BE5_PROJECT_PATH", defaultValue = "./")
+    protected File projectPath; 
+/*    public File getProjectPath()
+    {
+        return projectPath;
+    }
+    public void setProjectPath( final File projectPath )
+    {
+        this.projectPath = projectPath;
+    }
+*/
+    @Parameter (property = "BE5_RDBMS")
+    protected String rdbmsName; 
+
+    @Parameter (property = "BE5_SKIP_VALIDATION")
+    protected boolean skipValidation = false;
+
+    @Parameter (property = "BE5_UNLOCK_PROTECTED_PROFILE")
+    protected boolean unlockProtectedProfile = false;
+    
     @Parameter (property = "BE5_DEBUG")
-    protected boolean debug = false;
+    protected boolean debug = true; //false;
 
     @Parameter (property = "BE5_LOG_DIR")
     protected String logDirPath;
@@ -92,16 +112,6 @@ public abstract class Be5Mojo extends AbstractMojo
     {
         this.connectionUrl = connectionUrl;
     }
-    
-    protected File projectPath; // Ant input
-    public File getProjectPath()
-    {
-        return projectPath;
-    }
-    public void setProjectPath( final File projectPath )
-    {
-        this.projectPath = projectPath;
-    }
 
     protected boolean modules = false;
     public boolean isModules()
@@ -141,23 +151,25 @@ public abstract class Be5Mojo extends AbstractMojo
         {
             logDir = new File(logDirPath);
         }
-        
+
+        getLog().info("BE5 - projectPath: " + projectPath);
+
         if ( beanExplorerProject == null )
         {
             if ( projectPath == null )
             {
                 throw new MojoFailureException( "Please specify projectPath attribute" );
             }
-            logger.setOperationName( "Reading project from " + projectPath + "..." );
+            logger.setOperationName( "Reading project from '" + projectPath + "'..." );
             final Path root = projectPath.toPath();
             this.beanExplorerProject = loadProject( root );
-            applyProfile();
+        	applyProfile();
         }
         if(debug)
         {
             beanExplorerProject.setDebugStream( System.err );
         }
-
+    	
         if ( connectionUrl == null )
         {
             String user = null;

@@ -47,36 +47,31 @@ public class AppValidate extends Be5Mojo
     @Override
     public void execute() throws MojoFailureException
     {
-//        initParameters();
-        
         logger.setOperationName( "Reading project from " + projectPath + "..." );
-//        this.beanExplorerProject = loadProject( projectPath.toPath() );
-//        applyProfile();
+        this.beanExplorerProject = loadProject( projectPath.toPath() );
+        applyProfile();
 
-getLog().info("Validate, debug=" + debug);
-        
-        /* TODO
         setRdbms();
         loadModules();
         validateProject();
-        checkQuery();
-        checkRoles();
-        checkDdl();
-        saveProject();
-        checkProfileProtection();
-        String propertiesFile = getProject().getProperty( "BE4_CREATE_PROFILE_PROPERTIES" );
-        setupAnt();
-        if(propertiesFile != null)
-        {
-            storeProperties( propertiesFile );
-        }*/
+//        checkQuery();
+//        checkRoles();
+//        checkDdl();
+//        saveProject();
+//        checkProfileProtection();
+//        String propertiesFile = getProject().getProperty( "BE4_CREATE_PROFILE_PROPERTIES" );
+//        setupAnt();
+//        if(propertiesFile != null)
+//        {
+//            storeProperties( propertiesFile );
+//        }
     }
-/*
-    private void checkProfileProtection()
+
+    private void checkProfileProtection() throws MojoFailureException
     {
         if(beanExplorerProject.getConnectionProfile() != null &&
                 beanExplorerProject.getConnectionProfile().isProtected() &&
-                !"true".equals( getProject().getProperty( "BE4_UNLOCK_PROTECTED_PROFILE" ) ))
+                ! unlockProtectedProfile )
         {
             System.err.println( "=== WARNING! ===" ); 
             System.err.println( "You are using the protected profile '" + beanExplorerProject.getConnectionProfileName()+"'");
@@ -96,15 +91,16 @@ getLog().info("Validate, debug=" + debug);
                 setProperty( "BE4_UNLOCK_PROTECTED_PROFILE", "true" );
             } else 
             {
-                throw new MojoFailureException( "Aborted" );
+                throw new MojoFailureException("Aborted");
             }
         }
     }
 
-    private void loadModules()
+    private void loadModules() throws MojoFailureException
     {
         if(!modules)
             return;
+        
         LoadContext loadContext = new LoadContext();
         List<ProjectElementException> errors = new ArrayList<>();
         try
@@ -116,7 +112,7 @@ getLog().info("Validate, debug=" + debug);
         }
         catch ( ProjectLoadException e )
         {
-            throw new MojoFailureException( e );
+            throw new MojoFailureException("Can not load project modules", e);
         }
         checkErrors( loadContext, "Modules have %d error(s)" );
     }
@@ -124,7 +120,6 @@ getLog().info("Validate, debug=" + debug);
     private void setRdbms()
     {
         // Need to set any system to validate project
-        String rdbmsName = getProject().getProperty( "BE4_RDBMS" );
         if(rdbmsName != null)
             beanExplorerProject.setDatabaseSystem( Rdbms.valueOf( rdbmsName.toUpperCase(Locale.ENGLISH) ) );
         if(beanExplorerProject.getDatabaseSystem() == null)
@@ -133,10 +128,10 @@ getLog().info("Validate, debug=" + debug);
         }
     }
 
-    private void validateProject()
+    private void validateProject() throws MojoFailureException
     {
         List<ProjectElementException> errors = new ArrayList<>();
-        if(isProperty( "BE4_SKIP_VALIDATION" ))
+        if( skipValidation )
         {
             logger.setOperationName( "Validation skipped" );
         } else
@@ -188,6 +183,7 @@ getLog().info("Validate, debug=" + debug);
         return moduleErrors;
     }
 
+/*    
     private void saveProject()
     {
         if(isProperty( "BE4_SAVE" ))

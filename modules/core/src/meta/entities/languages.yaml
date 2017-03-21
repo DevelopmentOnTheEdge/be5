@@ -1,0 +1,53 @@
+languages:
+  type: dictionary
+  displayName: Languages
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: CHAR(2)
+        primaryKey: true
+    - name:
+        type: VARCHAR(30)
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      operations: Filter
+      code: SELECT ID AS "Code", name AS "Name" FROM languages
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Clone
+      - Delete
+      - Edit
+      - Explain Plan
+      - Filter
+      - Insert
+      code: |-
+        SELECT ID AS "Code", name AS "Name"
+
+         FROM languages
+  operations:
+  - Clone:
+      records: 1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+  - Filter:
+      records: -1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+  - Insert:
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+  - PermaLink:
+      records: 1
+      code: com.beanexplorer.enterprise.operations.PermaLink

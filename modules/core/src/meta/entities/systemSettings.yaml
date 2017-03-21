@@ -1,0 +1,20 @@
+systemSettings:
+  type: metadata
+  displayName: System Settings
+  primaryKey: _dummy_
+  scheme:
+    columns:
+    - section_name:
+        type: VARCHAR(255)
+        defaultValue: '''system'''
+    - setting_name:
+        type: VARCHAR(64)
+    - setting_value:
+        type: TEXT
+    indices:
+    - I_UE_SS_SN_SN:
+        unique: true
+        columns:
+        - section_name
+        - setting_name
+  operations: []

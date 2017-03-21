@@ -1,0 +1,79 @@
+classifications:
+  type: genericCollection
+  displayName: Assigned categories
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - recordID:
+        type: VARCHAR(200)
+        reference:
+          to: []
+          view: ''
+    - categoryID:
+        type: KEYTYPE
+        reference: categories
+    - importID:
+        type: KEYTYPE
+        canBeNull: true
+        extras: module:attributes
+        reference: import.ID
+    - whoInserted___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - creationDate___:
+        type: DATETIME
+        canBeNull: true
+    indices:
+    - IDX_CLASSIF1:
+        columns:
+        - recordID
+        - categoryID
+    - IDX_CLASSIF2:
+        columns:
+        - categoryID
+        - recordID
+  queries:
+  - All records:
+      type: 1D
+      operations:
+      - Clone
+      - Delete
+      - Edit
+      - Explain Plan
+      - Filter
+      - Insert
+      code: |
+        SELECT
+
+         CONCAT( '{{{',e.displayName ,'}}}: ' ,
+             COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;'                     ),''        ) ,
+             COALESCE( CONCAT( '{{{',c7.name ,'}}}-&gt;'                     ),''        ) ,
+             COALESCE( CONCAT( '{{{',c6.name ,'}}}-&gt;'                     ),''        ) ,
+             COALESCE( CONCAT( '{{{',c5.name ,'}}}-&gt;'                     ),''        ) ,
+             COALESCE( CONCAT( '{{{',c4.name ,'}}}-&gt;'                     ),''        ) ,
+             COALESCE( CONCAT( '{{{',c3.name ,'}}}-&gt;'                     ),''        ) ,
+             COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;'                     ),''        ) ,
+             '{{{' ,c1.name ,'}}}'           )
+         AS "Category",
+             e.displayName AS "Class",
+             cl.recordID AS "___cid",
+             cl.recordID "Record;___cid;*;ID"
+         FROM classifications cl
+            ,categories c1
+
+            LEFT JOIN categories c2 on c1.parentID = c2.ID
+            LEFT JOIN categories c3 on c2.parentID = c3.ID
+            LEFT JOIN categories c4 on c3.parentID = c4.ID
+            LEFT JOIN categories c5 on c4.parentID = c5.ID
+            LEFT JOIN categories c6 on c5.parentID = c6.ID
+            LEFT JOIN categories c7 on c6.parentID = c7.ID
+            LEFT JOIN categories c8 on c7.parentID = c8.ID
+
+            ,entities e
+         WHERE cl.categoryID = cat.ID
+            AND cl.recordID LIKE CONCAT( e.name,'.%'                      )
+  operations: []

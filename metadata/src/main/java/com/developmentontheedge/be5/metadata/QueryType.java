@@ -59,7 +59,8 @@ public enum QueryType
         return name;
     }
 
-    public static QueryType fromString(String name){
+    public static QueryType fromString(String name)
+    {
         if("1D".equalsIgnoreCase(name))return QueryType.D1;
         if("1D_unknown".equalsIgnoreCase(name))return QueryType.D1_UNKNOWN;
         if("2D".equalsIgnoreCase(name))return QueryType.D2;
