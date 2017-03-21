@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.mojo;
+package com.developmentontheedge.be5.maven;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
