@@ -17,9 +17,36 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.sql.format.*;
+import com.developmentontheedge.sql.format.CategoryFilter;
+import com.developmentontheedge.sql.format.ColumnAdder;
+import com.developmentontheedge.sql.format.ColumnRef;
+import com.developmentontheedge.sql.format.Context;
+import com.developmentontheedge.sql.format.ContextApplier;
+import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.FilterApplier;
 import com.developmentontheedge.sql.format.Formatter;
-import com.developmentontheedge.sql.model.*;
+import com.developmentontheedge.sql.format.LimitsApplier;
+import com.developmentontheedge.sql.format.QueryContext;
+import com.developmentontheedge.sql.format.Simplifier;
+import com.developmentontheedge.sql.model.AstBeParameterTag;
+import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
+import com.developmentontheedge.sql.model.AstDerivedColumn;
+import com.developmentontheedge.sql.model.AstFrom;
+import com.developmentontheedge.sql.model.AstIdentifierConstant;
+import com.developmentontheedge.sql.model.AstLimit;
+import com.developmentontheedge.sql.model.AstNestedQuery;
+import com.developmentontheedge.sql.model.AstNumericConstant;
+import com.developmentontheedge.sql.model.AstOrderBy;
+import com.developmentontheedge.sql.model.AstOrderingElement;
+import com.developmentontheedge.sql.model.AstQuery;
+import com.developmentontheedge.sql.model.AstSelect;
+import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.AstTableRef;
+import com.developmentontheedge.sql.model.DefaultParserContext;
+import com.developmentontheedge.sql.model.ParserContext;
+import com.developmentontheedge.sql.model.SqlQuery;
+import com.developmentontheedge.sql.model.Token;
+
 import com.google.common.collect.ImmutableList;
 import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
@@ -27,11 +54,21 @@ import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
 import java.io.PrintStream;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-//import com.developmentontheedge.be5.query.QueryIterator;
 
 /**
  * A modern query executor that uses our new parser.
@@ -487,7 +524,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return sortCol;
     }
 
-    private DynamicProperty[] getSchema(String sql) throws SQLException {
+    private DynamicProperty[] getSchema(String sql) throws SQLException
+    {
         Connection conn = connector.getConnection();
 
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
