@@ -56,8 +56,8 @@ public abstract class Be5Mojo extends AbstractMojo
     @Parameter (property = "BE5_DEBUG")
     protected boolean debug = true; //false;
 
-    @Parameter (property = "BE5_LOG_DIR")
-    protected String logDirPath;
+    @Parameter (property = "BE5_LOG_PATH")
+    protected File logPath;
     
     protected Project beanExplorerProject; // Can be injected to avoid parsing
     public void setBeanExplorerProject( final Project project )
@@ -69,16 +69,6 @@ public abstract class Be5Mojo extends AbstractMojo
         return beanExplorerProject;
     }
 
-    protected File logDir;
-    public File getLogDir()
-    {
-        return logDir;
-    }
-    public void setLogDir( File logDir )
-    {
-        this.logDir = logDir;
-    }
-    
     protected boolean useMeta;
     public boolean isUseMeta()
     {
@@ -133,11 +123,6 @@ public abstract class Be5Mojo extends AbstractMojo
             ModuleUtils.setDebugStream( System.err );
         }
         
-        if(logDirPath != null)
-        {
-            logDir = new File(logDirPath);
-        }
-
         getLog().info("BE5 - projectPath: " + projectPath);
 
         if ( beanExplorerProject == null )

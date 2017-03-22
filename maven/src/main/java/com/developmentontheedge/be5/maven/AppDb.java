@@ -1,31 +1,45 @@
-package com.developmentontheedge.be5.mojo;
+package com.developmentontheedge.be5.maven;
+
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.io.PrintStream;
 
-import org.apache.tools.ant.BuildException;
+import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.DdlElement;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
+import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.model.ViewDef;
+import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
-import com.beanexplorer.enterprise.metadata.exception.FreemarkerSqlException;
-import com.beanexplorer.enterprise.metadata.exception.ProjectElementException;
-import com.beanexplorer.enterprise.metadata.model.DdlElement;
-import com.beanexplorer.enterprise.metadata.model.Entity;
-import com.beanexplorer.enterprise.metadata.model.FreemarkerCatalog;
-import com.beanexplorer.enterprise.metadata.model.FreemarkerScript;
-import com.beanexplorer.enterprise.metadata.model.Module;
-import com.beanexplorer.enterprise.metadata.model.TableDef;
-import com.beanexplorer.enterprise.metadata.model.ViewDef;
-import com.beanexplorer.enterprise.metadata.model.base.BeVectorCollection;
-import com.beanexplorer.enterprise.metadata.sql.BeSqlExecutor;
-import com.beanexplorer.enterprise.metadata.util.ModuleUtils;
+import com.developmentontheedge.dbms.SqlExecutor;
 
-public class AppDb extends BETask
+@Mojo( name = "db")
+public class AppDb extends Be5Mojo
 {
-    private BeSqlExecutor sql;
+    private SqlExecutor sql;
     private PrintStream ps;
+
     private String moduleName;
+    public String getModule()
+    {
+        return moduleName;
+    }
+    public void setModule( String module )
+    {
+        this.moduleName = module;
+    }
 
     @Override
-    public void execute() throws BuildException
+    public void execute() throws MojoFailureException
     {
         initParameters();
         
@@ -35,18 +49,20 @@ public class AppDb extends BETask
             {
                 mergeModules();
             }
-            if(logDir != null)
+            if( logPath != null)
             {
-                logDir.mkdirs();
-                ps = new PrintStream( new File( logDir, (moduleName == null ? beanExplorerProject.getName() : moduleName) + "_db.sql" ), "UTF-8" );
+                logPath.mkdirs();
+                ps = new PrintStream( new File(logPath, (moduleName == null ? beanExplorerProject.getName() : moduleName) + "_db.sql" ), "UTF-8" );
             }
-            sql = new BeSqlExecutor( connector, ps );
-            if(moduleName != null)
+
+            sql = new SqlExecutor(connector, ps, null); // TODO - properties - null, what should be?
+            
+            if( moduleName != null )
             {
                 Module module = beanExplorerProject.getModule( moduleName );
                 if(module == null)
                 {
-                    throw new BuildException("Module '"+moduleName+"' not found!");
+                    throw new MojoFailureException("Module '" + moduleName + "' not found!");
                 }
                 createDb(module);
             }
@@ -60,19 +76,20 @@ public class AppDb extends BETask
                 createDb(beanExplorerProject.getApplication());
             }
         }
-        catch( BuildException e )
+        catch( MojoFailureException e )
         {
             throw e;
         }
         catch ( ProjectElementException | FreemarkerSqlException e )
         {
             if(debug)
-                throw new BuildException( e );
-            throw new BuildException( e.getMessage() );
+                throw new MojoFailureException("Setup db error", e);
+            
+            throw new MojoFailureException(e.getMessage());
         }
-        catch( Exception e )
+        catch(Exception e)
         {
-            throw new BuildException(e);
+            throw new MojoFailureException("Setup db error", e);
         }
         finally
         {
@@ -154,13 +171,4 @@ public class AppDb extends BETask
         }
     }
 
-    public String getModule()
-    {
-        return moduleName;
-    }
-
-    public void setModule( String module )
-    {
-        this.moduleName = module;
-    }
 }
