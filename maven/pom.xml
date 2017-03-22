@@ -2,15 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.developmentontheedge.be5</groupId>
+	<groupId>com.developmentontheedge.be5</groupId>
 	<artifactId>be5-maven-plugin</artifactId>
 	<version>0.1.0</version>
-    <packaging>maven-plugin</packaging>
-    <!--packaging>jar</packaging-->
+	<packaging>maven-plugin</packaging>
+	<!--packaging>jar</packaging-->
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+					<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<name>be5-maven</name>
 	<description>Maven plug-ins for be5</description>
@@ -36,7 +36,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-    	<dependency>
+		<dependency>
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>be5-metadata</artifactId>
 			<version>0.3.0</version>
@@ -50,12 +50,9 @@
 
 	</dependencies>
 
-  <build>
-
-   
-    <plugins>
-
-    		<plugin>
+	<build>
+		<plugins>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -65,25 +62,25 @@
 				</configuration>
 			</plugin>
 
-      <plugin>
-        <groupId>com.developmentontheedge.be5</groupId>
-        <artifactId>be5-maven-plugin</artifactId>
-        <version>0.1.0</version>
-        <configuration>
-            <msg>from config</msg>
-        </configuration>
-      </plugin>
+			<plugin>
+				<groupId>com.developmentontheedge.be5</groupId>
+				<artifactId>be5-maven-plugin</artifactId>
+				<version>0.1.0</version>
+				<configuration>
+					<msg>from config</msg>
+				</configuration>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.5</version>
-        <configuration>
-            <mojoDependencies></mojoDependencies>
-        </configuration>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.5</version>
+				<configuration>
+					<mojoDependencies></mojoDependencies>
+				</configuration>
+			</plugin>
 
-    </plugins>
-  </build>
+		</plugins>
+	</build>
 
 </project>
