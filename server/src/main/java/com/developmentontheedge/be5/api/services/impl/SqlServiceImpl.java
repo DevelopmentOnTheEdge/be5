@@ -13,11 +13,12 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SqlServiceImpl implements SqlService
 {
-    private static Logger log = Logger.getLogger(SqlServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger(SqlServiceImpl.class.getName());
 
     private QueryRunner queryRunner;
 
@@ -92,6 +93,7 @@ public class SqlServiceImpl implements SqlService
     }
 
     private RuntimeException propagate(Exception e) {
+        log.log(Level.SEVERE, e.getMessage(), e);
         if (e instanceof RuntimeException) {
             return (RuntimeException) e;
         }
