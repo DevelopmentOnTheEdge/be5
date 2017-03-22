@@ -19,7 +19,7 @@ icons:
     - name:
         type: VARCHAR(100)
     - mimeType:
-        type: ENUM('image/jpeg','image/pjpeg','image/gif','image/png')
+        type: ENUM('image/gif','image/jpeg','image/pjpeg','image/png')
         defaultValue: '''image/gif'''
     - data:
         type: MEDIUMBLOB

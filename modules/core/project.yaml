@@ -19,7 +19,6 @@ core:
   - Pre-db
   - dict/languages
   - dict/mimeTypes
-  - dict/provinces
   - dict/systemSettings
   - dictionaries
   - procedures_oracle

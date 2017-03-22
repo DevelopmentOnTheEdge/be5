@@ -42,8 +42,8 @@ categories:
         columns: publicID
   queries:
   - '*** Selection view ***':
-      type: 1D
-      code: |
+      type: D1
+      code: |-
         SELECT
                 c1.ID AS "Code",
          CONCAT( '{{{',e.displayName ,'}}}: ' ,
@@ -80,7 +80,7 @@ categories:
              COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;' ),'' ) ,
              '{{{' ,c1.name ,'}}}' )
   - All records:
-      type: 1D
+      type: D1
       operations:
       - Clone
       - Delete
@@ -88,7 +88,7 @@ categories:
       - Explain Plan
       - Filter
       - Insert
-      code: |
+      code: |-
         SELECT
          CONCAT( '{{{',e.displayName ,'}}}: ' ,
              COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;' ),'' ) ,

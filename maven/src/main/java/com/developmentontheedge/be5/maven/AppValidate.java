@@ -45,11 +45,23 @@ import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 @Mojo( name = "validate")
 public class AppValidate extends Be5Mojo
 {
+    @Parameter (property = "BE5_RDBMS")
+    protected String rdbmsName; 
+
+    @Parameter (property = "BE5_SKIP_VALIDATION")
+    protected boolean skipValidation = false;
+
     @Parameter (property = "BE5_CHECK_QUERY")
     protected String queryPath;
 
     @Parameter (property = "BE5_CHECK_ROLES")
     protected boolean checkRoles;
+    
+    @Parameter (property = "BE5_CHECK_DDL")
+    protected String ddlPath;
+
+    @Parameter (property = "BE5_SAVE_PROJECT")
+    protected boolean saveProject;
     
     @Override
     public void execute() throws MojoFailureException
@@ -63,8 +75,8 @@ public class AppValidate extends Be5Mojo
         validateProject();
         checkQuery();
         checkRoles();
-//        checkDdl();
-//        saveProject();
+        checkDdl();
+        saveProject();
 //        checkProfileProtection();
 //        String propertiesFile = getProject().getProperty( "BE4_CREATE_PROFILE_PROPERTIES" );
 //        setupAnt();
@@ -190,23 +202,23 @@ public class AppValidate extends Be5Mojo
         return moduleErrors;
     }
 
-/*    
-    private void saveProject()
+    
+    private void saveProject() throws MojoFailureException
     {
-        if(isProperty( "BE4_SAVE" ))
+        if( saveProject )
         {
             try
             {
                 logger.setOperationName( "Saving..." );
                 Serialization.save( beanExplorerProject, beanExplorerProject.getLocation() );
             }
-            catch ( ProjectSaveException e )
+            catch(ProjectSaveException e)
             {
-                throw new MojoFailureException( e );
+                throw new MojoFailureException("Can not save project.", e);
             }
         }
     }
-
+/*
     private void storeProperties( String propertiesFile )
     {
         File file = getProject().resolveFile( propertiesFile );
@@ -224,26 +236,24 @@ public class AppValidate extends Be5Mojo
             throw new MojoFailureException( e );
         }
     }
-
-    private void checkDdl()
+*/
+    private void checkDdl() throws MojoFailureException
     {
-        String entityName = getProject().getProperty( "BE4_CHECK_DDL" );
-        if(entityName != null)
+        if( ddlPath != null)
         {
-            Entity entity = beanExplorerProject.getEntity( entityName );
+            Entity entity = beanExplorerProject.getEntity(ddlPath);
             if(entity == null)
             {
-                throw new MojoFailureException( "Invalid entity: "+entityName );
+                throw new MojoFailureException("Invalid entity: " +  ddlPath);
             }
             DdlElement scheme = entity.getScheme();
             if(scheme == null)
             {
-                throw new MojoFailureException( "Entity has no scheme: "+entityName );
+                throw new MojoFailureException("Entity has no scheme: " + ddlPath);
             }
             System.err.println( scheme.getDdl().replaceAll( "\n", System.lineSeparator() ) );
         }
     }
-*/
     
     private void checkRoles()
     {

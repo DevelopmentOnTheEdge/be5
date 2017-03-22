@@ -50,12 +50,6 @@ public abstract class Be5Mojo extends AbstractMojo
     @Parameter (property = "BE5_PROJECT_PATH", defaultValue = "./")
     protected File projectPath; 
 
-    @Parameter (property = "BE5_RDBMS")
-    protected String rdbmsName; 
-
-    @Parameter (property = "BE5_SKIP_VALIDATION")
-    protected boolean skipValidation = false;
-
     @Parameter (property = "BE5_UNLOCK_PROTECTED_PROFILE")
     protected boolean unlockProtectedProfile = false;
     

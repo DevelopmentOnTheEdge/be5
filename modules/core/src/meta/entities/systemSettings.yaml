@@ -17,4 +17,3 @@ systemSettings:
         columns:
         - section_name
         - setting_name
-  operations: []

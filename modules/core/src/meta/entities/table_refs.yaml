@@ -24,4 +24,3 @@ table_refs:
         - tableFrom
         - columnsFrom
         - tableTo
-  operations: []

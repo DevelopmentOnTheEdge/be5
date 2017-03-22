@@ -2,4 +2,3 @@ _system_:
   type: table
   displayName: System
   primaryKey: _dummy_
-  queries: []
