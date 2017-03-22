@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.maven;
 
+import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -20,12 +19,10 @@ import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
-import com.developmentontheedge.dbms.SqlExecutor;
-
 @Mojo( name = "db")
 public class AppDb extends Be5Mojo
 {
-    private SqlExecutor sql;
+    private BeSqlExecutor sql;
     private PrintStream ps;
 
     private String moduleName;
@@ -55,7 +52,7 @@ public class AppDb extends Be5Mojo
                 ps = new PrintStream( new File(logPath, (moduleName == null ? beanExplorerProject.getName() : moduleName) + "_db.sql" ), "UTF-8" );
             }
 
-            sql = new SqlExecutor(connector, ps, null); // TODO - properties - null, what should be?
+            sql = new BeSqlExecutor(connector, ps); // TODO - properties - null, what should be?
             
             if( moduleName != null )
             {

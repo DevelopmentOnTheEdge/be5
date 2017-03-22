@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 public class DatabaseServiceImpl implements DatabaseService
 {
-    private static Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
     private ProjectProvider projectProvider;
     private BasicDataSource bds = null;
@@ -43,18 +43,11 @@ public class DatabaseServiceImpl implements DatabaseService
     @Override
     public DbmsConnector getDbmsConnector()
     {
-        try
+        BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
+        Connection connection = getConnection();
+        if(connection != null)
         {
-            BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
-            Connection connection = getConnection();
-            if(connection != null)
-            {
-                return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), connection);
-            }
-        }
-        catch (SQLException e)
-        {
-            log.log(Level.SEVERE, "Not create SimpleConnector", e);
+            return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), connection);
         }
         return null;
     }
@@ -67,10 +60,10 @@ public class DatabaseServiceImpl implements DatabaseService
         try
         {
             return bds.getConnection();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
-            e.printStackTrace();
-            log.log(Level.SEVERE, e.getMessage());
+            log.log(Level.SEVERE, e.getMessage(), e);
             return null;
         }
 

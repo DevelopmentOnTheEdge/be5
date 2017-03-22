@@ -18,7 +18,7 @@ public class SimpleConnector implements DbmsConnector
 //        this.connection = DriverManager.getConnection( connectionUrl, username, password );
 //    }
 
-    public SimpleConnector(DbmsType type, String connectionUrl, Connection connection) throws SQLException
+    public SimpleConnector(DbmsType type, String connectionUrl, Connection connection)
     {
         this.type = type;
         this.connectionUrl = connectionUrl;
