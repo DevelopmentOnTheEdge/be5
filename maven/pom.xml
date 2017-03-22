@@ -6,20 +6,17 @@
 	<artifactId>be5-maven-plugin</artifactId>
 	<version>0.1.0</version>
 	<packaging>maven-plugin</packaging>
-	<!--packaging>jar</packaging-->
+	<!--packaging>jar</packaging -->
 
 	<properties>
-					<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<name>be5-maven</name>
 	<description>Maven plug-ins for be5</description>
 
-	<!--parent>
-		<groupId>com.developmentontheedge</groupId>
-		<artifactId>be5</artifactId>
-		<version>0.0.2</version>
-	</parent-->
+	<!--parent> <groupId>com.developmentontheedge</groupId> <artifactId>be5</artifactId> 
+		<version>0.0.2</version> </parent -->
 
 	<dependencies>
 
@@ -46,6 +43,12 @@
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>dbms</artifactId>
 			<version>0.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.0.0</version>
 		</dependency>
 
 	</dependencies>

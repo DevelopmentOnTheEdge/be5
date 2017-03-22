@@ -19,7 +19,7 @@ import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
-@Mojo( name = "db")
+@Mojo( name = "create-db")
 public class AppDb extends Be5Mojo
 {
     private BeSqlExecutor sql;

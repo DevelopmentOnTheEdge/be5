@@ -1,6 +1,7 @@
 package com.developmentontheedge.dbms;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,13 +11,13 @@ public class SimpleConnector implements DbmsConnector
     private final String connectionUrl;
     private final DbmsType type;
     private final Connection connection;
-//
-//    public SimpleConnector(DbmsType type, String connectionUrl, String username, String password) throws SQLException
-//    {
-//        this.type = type;
-//        this.connectionUrl = connectionUrl;
-//        this.connection = DriverManager.getConnection( connectionUrl, username, password );
-//    }
+
+    public SimpleConnector(DbmsType type, String connectionUrl, String username, String password) throws SQLException
+    {
+        this.type = type;
+        this.connectionUrl = connectionUrl;
+        this.connection = DriverManager.getConnection( connectionUrl, username, password );
+    }
 
     public SimpleConnector(DbmsType type, String connectionUrl, Connection connection)
     {

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
@@ -30,6 +31,7 @@ import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.be5.metadata.util.WriterLogger;
@@ -37,6 +39,7 @@ import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.ComponentModel;
 import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.dbms.MultiSqlParser;
+import com.developmentontheedge.dbms.SimpleConnector;
 
 public abstract class Be5Mojo extends AbstractMojo
 {
@@ -141,11 +144,11 @@ public abstract class Be5Mojo extends AbstractMojo
             beanExplorerProject.setDebugStream( System.err );
         }
     	
+        BeConnectionProfile profile = beanExplorerProject.getConnectionProfile();
         if ( connectionUrl == null )
         {
             String user = null;
             String password = null;
-            BeConnectionProfile profile = beanExplorerProject.getConnectionProfile();
             if ( profile != null )
             {
                 connectionUrl = profile.getConnectionUrl();
@@ -173,12 +176,21 @@ public abstract class Be5Mojo extends AbstractMojo
         }
 System.out.println("!!connect=" + connectionUrl);
 
-		// TODO
-        //this.connector = DBMSBase.createConnector( connectionUrl );
-        this.beanExplorerProject.setDatabaseSystem( DatabaseUtils.getRdbms( connector ) );
+		this.beanExplorerProject.setDatabaseSystem( Rdbms.getRdbms(connectionUrl) );
+		try
+		{
+			this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
+					                             profile.getConnectionUrl(), 
+												 profile.getUsername(), profile.getPassword());
+		}
+		catch(SQLException e)
+		{
+            throw new MojoFailureException("Can not connect to database", e);
+		}
     }
-
     
+    
+   
     protected Project loadProject(final Path root) throws MojoFailureException
     {
         final LoadContext loadContext = new LoadContext();
