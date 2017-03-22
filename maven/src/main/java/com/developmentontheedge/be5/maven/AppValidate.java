@@ -47,6 +47,9 @@ public class AppValidate extends Be5Mojo
 {
     @Parameter (property = "BE5_CHECK_QUERY")
     protected String queryPath;
+
+    @Parameter (property = "BE5_CHECK_ROLES")
+    protected boolean checkRoles;
     
     @Override
     public void execute() throws MojoFailureException
@@ -59,7 +62,7 @@ public class AppValidate extends Be5Mojo
         loadModules();
         validateProject();
         checkQuery();
-//        checkRoles();
+        checkRoles();
 //        checkDdl();
 //        saveProject();
 //        checkProfileProtection();
@@ -240,15 +243,16 @@ public class AppValidate extends Be5Mojo
             System.err.println( scheme.getDdl().replaceAll( "\n", System.lineSeparator() ) );
         }
     }
-
+*/
+    
     private void checkRoles()
     {
-        if(isProperty( "BE4_CHECK_ROLES" ) )
+        if( checkRoles )
         {
             System.err.println( "Available roles:\n" + String.join( System.lineSeparator(), beanExplorerProject.getAvailableRoles() ) );
         }
     }
-*/
+
     private void checkQuery() throws MojoFailureException
     {
         if( queryPath == null)
