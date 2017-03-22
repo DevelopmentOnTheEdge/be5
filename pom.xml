@@ -15,7 +15,7 @@
   <module>freemarker-patched</module>
   <module>metadata</module>
   <module>server</module>
-  <module>mojo</module>
+  <module>maven</module>
  </modules>
 
  <properties>

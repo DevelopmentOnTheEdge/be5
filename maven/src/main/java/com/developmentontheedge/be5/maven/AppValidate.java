@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.maven;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugin.MojoExecutionException; 
 
 import java.io.BufferedReader;
@@ -44,6 +45,9 @@ import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 @Mojo( name = "validate")
 public class AppValidate extends Be5Mojo
 {
+    @Parameter (property = "BE5_CHECK_QUERY")
+    protected String queryPath;
+    
     @Override
     public void execute() throws MojoFailureException
     {
@@ -54,7 +58,7 @@ public class AppValidate extends Be5Mojo
         setRdbms();
         loadModules();
         validateProject();
-//        checkQuery();
+        checkQuery();
 //        checkRoles();
 //        checkDdl();
 //        saveProject();
@@ -244,23 +248,23 @@ public class AppValidate extends Be5Mojo
             System.err.println( "Available roles:\n" + String.join( System.lineSeparator(), beanExplorerProject.getAvailableRoles() ) );
         }
     }
-
-    private void checkQuery()
+*/
+    private void checkQuery() throws MojoFailureException
     {
-        String path = getProject().getProperty( "BE4_CHECK_QUERY" );
-        if(path == null)
+        if( queryPath == null)
             return;
-        int pos = path.indexOf( '.' );
+        
+        int pos = queryPath.indexOf( '.' );
         if(pos <= 0)
         {
-            throw new MojoFailureException( "Invalid path supplied: "+path );
+            throw new MojoFailureException("Invalid query path supplied: " + queryPath);
         }
-        String entityName = path.substring( 0, pos );
-        String queryName = path.substring( pos+1 );
+        String entityName = queryPath.substring( 0, pos );
+        String queryName  = queryPath.substring( pos+1 );
         Entity entity = beanExplorerProject.getEntity( entityName );
         if(entity == null)
         {
-            throw new MojoFailureException("Invalid entity: "+entityName);
+            throw new MojoFailureException("Invalid entity: " + entityName);
         }
         Query query = entity.getQueries().get( queryName );
         if(query == null)
@@ -270,9 +274,9 @@ public class AppValidate extends Be5Mojo
                 queryName = new String(queryName.getBytes( "CP866" ), "CP1251");
                 query = entity.getQueries().get( queryName );
             }
-            catch ( UnsupportedEncodingException e )
+            catch(UnsupportedEncodingException e)
             {
-                throw new MojoFailureException(e);
+                throw new MojoFailureException("Can not load query, path=" + queryPath, e);
             }
         }
         if(query == null)
@@ -282,6 +286,7 @@ public class AppValidate extends Be5Mojo
         System.err.println( query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator() ) );
     }
 
+/*    
     protected void setupAnt()
     {
         List<String> moduleNames = new ArrayList<>();

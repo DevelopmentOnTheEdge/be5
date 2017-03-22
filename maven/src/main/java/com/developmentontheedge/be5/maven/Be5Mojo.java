@@ -49,15 +49,7 @@ public abstract class Be5Mojo extends AbstractMojo
     //
     @Parameter (property = "BE5_PROJECT_PATH", defaultValue = "./")
     protected File projectPath; 
-/*    public File getProjectPath()
-    {
-        return projectPath;
-    }
-    public void setProjectPath( final File projectPath )
-    {
-        this.projectPath = projectPath;
-    }
-*/
+
     @Parameter (property = "BE5_RDBMS")
     protected String rdbmsName; 
 
