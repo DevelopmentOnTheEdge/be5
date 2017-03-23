@@ -101,7 +101,7 @@ public final class FreemarkerUtils
         
         configTemplate.setLocalizedLookup( false );
         configTemplate.setTemplateUpdateDelay( 0 );
-        configTemplate.addAutoInclude( "beanexplorer4/common.ftl" );
+//        configTemplate.addAutoInclude( "beanexplorer4/common.ftl" ); //TODO
         configTemplate.setCacheStorage( new NullCacheStorage() );
     }
     

@@ -29,6 +29,7 @@ import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 
@@ -343,7 +344,7 @@ public class ModuleUtils
 
     public static Project loadModule( String moduleName, LoadContext context ) throws ProjectLoadException
     {
-        return moduleLoader.loadModule( moduleName, context );
+        return ModuleLoader2.loadModule( moduleName, context );
     }
 
     private static Set<String> getModuleList( Path basePath )
@@ -402,7 +403,7 @@ public class ModuleUtils
         List<Project> result = new ArrayList<>();
         for ( Module module : application.getModules() )
         {
-            if ( isModuleExist( module.getName() ) )
+            if ( ModuleLoader2.containsModule(module.getName()) )
             {
                 if ( logger != null )
                 {

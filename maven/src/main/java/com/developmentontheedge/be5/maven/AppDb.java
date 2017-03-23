@@ -17,6 +17,7 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
 @Mojo( name = "create-db")
@@ -42,7 +43,7 @@ public class AppDb extends Be5Mojo
         
         try
         {
-            if(isModules())
+            if(true) // TODOisModules())
             {
                 mergeModules();
             }
@@ -67,7 +68,7 @@ public class AppDb extends Be5Mojo
             {
                 for(Module module : beanExplorerProject.getModules())
                 {
-                    if ( isBe4Module( module ) )
+                    if( ModuleLoader2.containsModule(module.getName()) ) 
                         createDb( module );
                 }
                 createDb(beanExplorerProject.getApplication());
@@ -95,11 +96,6 @@ public class AppDb extends Be5Mojo
                 ps.close();
             }
         }
-    }
-
-    private boolean isBe4Module( Module module )
-    {
-        return ( useMeta && module.getName().equals( ModuleUtils.SYSTEM_MODULE ) ) || ModuleUtils.isModuleExist( module.getName() );
     }
 
     private void createDb( Module module ) throws ProjectElementException
