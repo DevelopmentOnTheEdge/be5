@@ -79,6 +79,13 @@ public class ModuleLoader2
         return modulesMap.containsKey(name);
     }
     
+    public static Path resolveModule(String name)
+    {
+        init();
+        
+        return modulesMap.get(name);
+    }
+
     public static Project loadModule(String name, LoadContext context) throws ProjectLoadException
     {
         if( ! containsModule(name))

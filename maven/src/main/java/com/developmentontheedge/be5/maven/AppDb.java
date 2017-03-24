@@ -38,7 +38,7 @@ public class AppDb extends Be5Mojo
     @Override
     public void execute() throws MojoFailureException
     {
-        initParameters();
+        init();
         
         try
         {

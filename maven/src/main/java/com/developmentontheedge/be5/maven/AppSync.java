@@ -12,9 +12,6 @@ import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedExcepti
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
@@ -26,8 +23,6 @@ import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
 
-import one.util.streamex.StreamEx;
-
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -36,81 +31,49 @@ import org.yaml.snakeyaml.Yaml;
 @Mojo( name = "sync")
 public class AppSync extends Be5Mojo
 {
-    @Parameter (property = "BE5_FORCE_UPDATE")
-    protected boolean forceUpdate;
-
     @Parameter (property = "BE5_UPDATE_CLONES")
     protected boolean updateClones;
 
-    private String mode = "all";
-    public String getMode()             { return mode;  }
-    public void setMode(String mode)    { this.mode = mode; }
-
-    private boolean demo;
-    public boolean isDemo()             { return demo; }
-    public void setDemo(boolean demo)   { this.demo = demo;}
-
-    private boolean mergeModules;
-    public boolean isMergeModules()     { return mergeModules;}
-    public void setMergeModules(boolean mergeModules)   { this.mergeModules = mergeModules; }
+    @Parameter (property = "BE5_FORCE_UPDATE")
+    protected boolean forceUpdate;
 
     private File appPath;
-    public File getAppPath()            { return appPath;  }
-    public void setAppPath(File appPath){ this.appPath = appPath; }
 
     ///////////////////////////////////////////////////////////////////
     
     @Override
     public void execute() throws MojoFailureException
     {
-        initParameters();
-        mergeModules |= modules;
+        init();
+        mergeModules();
 
-        SyncMode syncMode = getSyncMode();
+        SyncMode syncMode = SyncMode.DDL;
+        if( updateClones )
+            syncMode = SyncMode.DDL_CLONES;
+        
         PrintStream ps = null;
         try
         {
-            final LoadContext loadContext = new LoadContext();
             if(logPath != null)
             {
                 logPath.mkdirs();
-                ps = new PrintStream( new File( logPath, beanExplorerProject.getName() + "_sync_" + mode + ".sql" ), "UTF-8" );
+                ps = new PrintStream(new File(logPath, beanExplorerProject.getName() + "_sync_ddl.sql"), "UTF-8");
             }
-            BeSqlExecutor sql = new BeSqlExecutor( connector, ps );
-            if(!mergeModules)
-            {
-                ModuleUtils.addModuleScripts( beanExplorerProject );
-            }
+            
+            final LoadContext loadContext = new LoadContext();
+            BeSqlExecutor sqlExecutor = new BeSqlExecutor(connector, ps);
+
+            /*
             if(beanExplorerProject.isModuleProject() && appPath != null)
             {
                 Project hostProject = loadProject( appPath.toPath() );
                 ModuleUtils.addModuleScripts( hostProject );
                 beanExplorerProject.mergeHostProject( hostProject );
-
-                /* TODO
-                if(beanExplorerProject.getConnectionProfile() == null)
-                {
-                    String profileName = getProject().getProperty( "BE4_PROFILE" );
-                    if(profileName != null)
-                    {
-                        hostProject.setConnectionProfileName( profileName );
-                        BeConnectionProfile profile = hostProject.getConnectionProfile();
-                        if(profile == null)
-                        {
-                            throw new MojoFailureException( "Cannot find connection profile '"+profileName+"'" );
-                        }
-                        DataElementUtils.save( profile.clone( beanExplorerProject.getConnectionProfiles().getLocalProfiles(), profile.getName() ) );
-                        beanExplorerProject.setConnectionProfileName( profileName );
-                    }
-                }*/
             }
-            Project oldProject = new SqlModelReader( connector, getReadMode( syncMode ) ).readProject( beanExplorerProject.getName(), beanExplorerProject.isModuleProject() );
+
+            Project oldProject = new SqlModelReader(connector, SqlModelReader.READ_TABLEDEFS)
+            						.readProject( beanExplorerProject.getName(), beanExplorerProject.isModuleProject() );
             Project origProject = useMeta ? ModuleUtils.loadMetaProject( loadContext ) : oldProject;
-            
-            // Remove orphans temporary to exclude them from merging, massChanges processing, etc.
-            /* TODO
-            Module orphans = oldProject.getModules().get( SqlModelReader.ORPHANS_MODULE_NAME );
-            oldProject.getModules().remove( SqlModelReader.ORPHANS_MODULE_NAME ); */
             
             if(mergeModules)
             {
@@ -119,9 +82,10 @@ public class AppSync extends Be5Mojo
             } else
             {
                 beanExplorerProject.merge( origProject );
-            }
+            }*/
 
-            beanExplorerProject.applyMassChanges( loadContext );
+            // PENDING ? needed
+            //beanExplorerProject.applyMassChanges( loadContext );
             
             if(beanExplorerProject.getDebugStream() != null)
             {
@@ -142,41 +106,38 @@ public class AppSync extends Be5Mojo
             }
             
             checkErrors( loadContext, "Mass changes failed with %d error(s)" );
-            
-            /* TODO
-            // Put orphans back: DatabaseSynchronizer will use it
-            if(orphans != null)
-                DataElementUtils.save( orphans ); */
-            
-            DatabaseSynchronizer databaseSynchronizer = new DatabaseSynchronizer(logger, sql, beanExplorerProject);
-            if((syncMode == SyncMode.DDL || syncMode == SyncMode.DDL_CLONES) && demo)
-            {
-                processDdlDemo( oldProject, syncMode == SyncMode.DDL_CLONES, databaseSynchronizer );
-                return;
-            }
-            if((syncMode == SyncMode.ALL || syncMode == SyncMode.DDL || syncMode == SyncMode.DDL_CLONES) && !forceUpdate )
-            {
-                String ddlStatements = MultiSqlParser.normalize( beanExplorerProject.getDatabaseSystem().getType(),
-                        databaseSynchronizer.getDdlStatements( oldProject, syncMode == SyncMode.DDL_CLONES, true ) );
 
-                if(!ddlStatements.isEmpty())
-                {
-                    throw new MojoFailureException("Schema changes must be applied which may result in data loss or adding arbitrary default values!\n"
-                        + "Please rerun with -DBE5_FORCE_UPDATE=true to update anyways.\n"
-                        + "The following SQL statements are considered as dangerous:\n"
-                        + ddlStatements);
-                }
+            Project oldProject = new SqlModelReader(connector, SqlModelReader.READ_TABLEDEFS)
+					.readProject( beanExplorerProject.getName(), beanExplorerProject.isModuleProject() );
+
+            DatabaseSynchronizer databaseSynchronizer = new DatabaseSynchronizer(logger, sqlExecutor, beanExplorerProject);
+            String ddlString = databaseSynchronizer.getDdlStatements(oldProject, updateClones, false);
+            ddlString = MultiSqlParser.normalize(beanExplorerProject.getDatabaseSystem().getType(), ddlString);
+
+            if(ddlString.isEmpty())
+            {
+            	this.getLog().info("Database scheme is up-to-date");
+            	return;
+            } 
+            
+            if( forceUpdate )
+            {
+                databaseSynchronizer.sync( syncMode, oldProject );
+            }
+            else
+            {
+                    System.err.println("The following statements should be executed to update database scheme:");
+                    System.err.println(ddlString);
             }
             
-            databaseSynchronizer.sync( syncMode, oldProject );
-            checkSynchronizationStatus( databaseSynchronizer );
+            checkSynchronizationStatus(databaseSynchronizer);
             logger.setOperationName( "Finished" );
         }
         catch( MojoFailureException e )
         {
             throw e;
         }
-        catch ( ProjectElementException | FreemarkerSqlException | ExtendedSqlException | ReadException | ProjectLoadException | SQLException e )
+        catch ( ProjectElementException | FreemarkerSqlException | ExtendedSqlException | SQLException e ) //ReadException | ProjectLoadException | SQLException e )
         {
             if(debug)
                 throw new MojoFailureException("Synchronisation error: " + e.getMessage(), e);
@@ -186,55 +147,17 @@ public class AppSync extends Be5Mojo
         {
             throw new MojoFailureException("Synchronisation error: " + e.getMessage(), e);
         }
+        catch( Throwable t )
+        {
+        	t.printStackTrace();
+            throw new MojoFailureException("Synchronisation error: " + t.getMessage(), t);
+        }
         finally
         {
             if(ps != null)
             {
                 ps.close();
             }
-        }
-    }
-
-    private SyncMode getSyncMode() throws MojoFailureException
-    {
-        SyncMode syncMode;
-        try
-        {
-            syncMode = SyncMode.valueOf( mode.toUpperCase() );
-        }
-        catch ( IllegalArgumentException e )
-        {
-            throw new MojoFailureException( "Invalid mode specified (" + mode + "). Available modes are: "
-                + StreamEx.of(SyncMode.values()).joining( ", " ) );
-        }
-        if ( syncMode == SyncMode.DDL && updateClones )
-            syncMode = SyncMode.DDL_CLONES;
-        return syncMode;
-    }
-
-    private int getReadMode( SyncMode syncMode )
-    {
-        switch(syncMode)
-        {
-        case DDL:
-        case DDL_CLONES:
-            return SqlModelReader.READ_TABLEDEFS; // TODO | SqlModelReader.READ_ORPHANS_MODULE;
-        default:
-            return SqlModelReader.READ_ALL;
-        }
-    }
-
-    private void processDdlDemo( Project oldProject, boolean supportClones, DatabaseSynchronizer databaseSynchronizer ) throws ExtendedSqlException
-    {
-        String ddlString = databaseSynchronizer.getDdlStatements( oldProject, supportClones, false );
-        if(ddlString.isEmpty())
-        {
-            System.err.println("Database scheme is up-to-date");
-        } else
-        {
-            System.err.println("The following statements should be executed to update database scheme:");
-            dumpSql( ddlString );
-            checkSynchronizationStatus( databaseSynchronizer );
         }
     }
 

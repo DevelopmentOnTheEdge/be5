@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.maven;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugin.MojoExecutionException; 
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,7 +57,6 @@ public class AppValidate extends Be5Mojo
     {
         logger.setOperationName( "Reading project from " + projectPath + "..." );
         this.beanExplorerProject = loadProject( projectPath.toPath() );
-        applyProfile();
 
         setRdbms();
         loadModules();

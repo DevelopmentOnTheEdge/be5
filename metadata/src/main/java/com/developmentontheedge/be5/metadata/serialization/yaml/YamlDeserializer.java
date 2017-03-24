@@ -87,6 +87,7 @@ import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.serialization.Field;
 import com.developmentontheedge.be5.metadata.serialization.Fields;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
@@ -1372,14 +1373,14 @@ public class YamlDeserializer
 
         public MacrosDeserializer( final Module module ) throws ReadException
         {
-            super( ProjectFileSystem.getProjectFile( ModuleUtils.getModulePath( module.getName() ) ) );
+            super( ProjectFileSystem.getProjectFile( ModuleLoader2.resolveModule(module.getName()) ) );
             this.module = module;
         }
 
         @Override
         protected void doDeserialize( Object serializedRoot ) throws ReadException
         {
-            final Path root = ModuleUtils.getModulePath( module.getName() );
+            final Path root = ModuleLoader2.resolveModule(module.getName());
             final Map<String, Object> serializedModule = asMap( serializedRoot );
             final Map<String, Object> serializedModuleBody = asMap( serializedModule.values().iterator().next() );
             final String projectName = root.getFileName().toString(); // not sure if this has any sense

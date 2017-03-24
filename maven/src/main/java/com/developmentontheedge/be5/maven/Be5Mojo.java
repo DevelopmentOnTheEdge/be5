@@ -73,43 +73,15 @@ public abstract class Be5Mojo extends AbstractMojo
     }
 
     protected boolean useMeta;
-    public boolean isUseMeta()
-    {
-        return useMeta;
-    }
-    public void setUseMeta( boolean useMeta )
-    {
-        this.useMeta = useMeta;
-    }
-
-    protected String connectionUrl; // Ant input
-    public String getConnectionUrl()
-    {
-        return connectionUrl;
-    }
-    public void setConnectionUrl( final String connectionUrl )
-    {
-        this.connectionUrl = connectionUrl;
-    }
-
+    protected String  connectionUrl; // Ant input
     protected boolean modules = false;
-    public boolean isModules()
-    {
-        return modules;
-    }
-    public void setModules( boolean modules )
-    {
-        this.modules = modules;
-    }
-   
 
     ///////////////////////////////////////////////////////////////////    
     
-    public void init() // throws MojoFailureException
+    protected void init() throws MojoFailureException
     {
-    	Properties properties = new Properties();
-
     	// TODO replace to Maven logging
+    	Properties properties = new Properties();
     	properties.setProperty( "log4j.rootCategory", "INFO,stderr" );
         properties.setProperty( "log4j.appender.stderr", "org.apache.log4j.ConsoleAppender" );
         properties.setProperty( "log4j.appender.stderr.Threshold", "INFO" );
@@ -117,28 +89,15 @@ public abstract class Be5Mojo extends AbstractMojo
         properties.setProperty( "log4j.appender.stderr.layout", "org.apache.log4j.PatternLayout" );
         properties.setProperty( "log4j.appender.stderr.layout.ConversionPattern", "%-5p %d [%t][%F:%L] : %m%n" );
         PropertyConfigurator.configure( properties );
-    }
 
-    protected void initParameters() throws MojoFailureException
-    {
-        if( debug == true )
-        {
-            ModuleUtils.setDebugStream( System.err );
-        }
         
         getLog().info("BE5 - projectPath: " + projectPath);
-
-        if ( beanExplorerProject == null )
+        if( projectPath == null )
         {
-            if ( projectPath == null )
-            {
-                throw new MojoFailureException( "Please specify projectPath attribute" );
-            }
-            logger.setOperationName( "Reading project from '" + projectPath + "'..." );
-            final Path root = projectPath.toPath();
-            this.beanExplorerProject = loadProject( root );
-        	applyProfile();
+            throw new MojoFailureException("Please specify projectPath attribute");
         }
+        logger.setOperationName("Reading project from '" + projectPath + "'...");
+        beanExplorerProject = loadProject(projectPath.toPath());
         if(debug)
         {
             beanExplorerProject.setDebugStream( System.err );
@@ -228,89 +187,6 @@ System.out.println("!!connect=" + connectionUrl);
             }
             throw new MojoFailureException( "Modules have " + loadContext.getWarnings().size() + " error(s)" );
         }
-    }
-
-    protected void applyProfile() throws MojoFailureException
-    {
-    	/* TODO
-        String profileSerialized = getProject().getProperty( "BE4_PROFILE_SERIALIZED" );
-        if(profileSerialized != null)
-        {
-            try
-            {
-                LoadContext loadContext = new LoadContext();
-                final Project proj = beanExplorerProject;
-                
-                BeConnectionProfile createdProfile = YamlDeserializer.deserializeConnectionProfile( loadContext, profileSerialized, proj );
-                if(!loadContext.getWarnings().isEmpty())
-                    throw loadContext.getWarnings().get( 0 );
-                DataElementUtils.saveQuiet( createdProfile );
-                beanExplorerProject.setConnectionProfileName( createdProfile.getName() );
-                return;
-            }
-            catch ( ReadException | ClassCastException e )
-            {
-                throw new MojoExecutionException("apply profile error: " + e);
-            }
-        }
-        String profileName = getProject().getProperty( "BE4_PROFILE" );
-        if(profileName != null)
-        {
-            beanExplorerProject.setConnectionProfileName( profileName );
-            if(beanExplorerProject.getConnectionProfile() == null && !beanExplorerProject.isModuleProject())
-            {
-                throw new MojoFailureException( "Cannot find connection profile '"+profileName+"'" );
-            }
-        }*/
-    	
-        BeConnectionProfile profile = beanExplorerProject.getConnectionProfile();
-        if(profile != null)
-        {
-            setupProfile(profile);
-        }
-    }
-
-    private void setupProfile(BeConnectionProfile profile) throws MojoFailureException
-    {
-    	/* TODO
-        String[] properties = profile.getPropertiesToRequest();
-        if(properties == null)
-            return;
-        ComponentModel model = ComponentFactory.getModel(profile, ComponentFactory.Policy.DEFAULT);
-        for(String propertyName : properties)
-        {
-            Property property = model.findProperty( propertyName );
-            if(property == null)
-            {
-                throw new MojoFailureException("Error in connection profile '"+profile.getName()+"': unknown property '"+propertyName+"'");
-            }
-            try
-            {
-                Object value = property.getValue();
-                String propertyValue = getProject().getProperty( "BE4_PROFILE_PROPERTY_"+propertyName.replace( '/', '_' ) );
-                if(propertyValue == null)
-                {
-                    propertyValue = readString(property.getDisplayName(), value == null ? "" : value.toString());
-                }
-                if(value instanceof Integer)
-                {
-                    property.setValue( Integer.valueOf( propertyValue ) );
-                } else
-                {
-                    property.setValue( propertyValue );
-                }
-            }
-            catch ( IOException | NumberFormatException | NoSuchMethodException e )
-            {
-                throw new MojoExecutionException("Connection profile error: ", e);
-            }
-        }
-        profile.setPropertiesToRequest( null );
-        LinkedHashMap<String, Object> serializedProfiles = new LinkedHashMap<>();
-        serializedProfiles.put( profile.getName(), YamlSerializer.serializeProfile( profile ) );
-        String serialized = new Yaml().dump( serializedProfiles );
-        setProperty( "BE4_PROFILE_SERIALIZED", serialized );
-        */
     }
 
     ///////////////////////////////////////////////////////////////////    

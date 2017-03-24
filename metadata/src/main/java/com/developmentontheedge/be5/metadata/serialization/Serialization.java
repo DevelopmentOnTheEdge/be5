@@ -396,7 +396,7 @@ public class Serialization
     
     public static void loadModuleMacros( final Module module ) throws ReadException
     {
-        final Path root = ModuleUtils.resolveModule( module.getName() ).orElse( null );
+        final Path root = ModuleLoader2.resolveModule(module.getName());
         
         if ( root != null )
         {
