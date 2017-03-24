@@ -162,7 +162,7 @@ public class AppSync extends Be5Mojo
                 if(!ddlStatements.isEmpty())
                 {
                     throw new MojoFailureException("Schema changes must be applied which may result in data loss or adding arbitrary default values!\n"
-                        + "Please rerun with -DBE4_FORCE_UPDATE=true to update anyways.\n"
+                        + "Please rerun with -DBE5_FORCE_UPDATE=true to update anyways.\n"
                         + "The following SQL statements are considered as dangerous:\n"
                         + ddlStatements);
                 }

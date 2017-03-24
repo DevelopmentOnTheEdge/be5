@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.metadata.sql;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,8 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import one.util.streamex.StreamEx;
@@ -24,57 +20,15 @@ import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SqlExecutor;
 
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
-import com.developmentontheedge.be5.metadata.freemarker.FreemarkerUtils;
-import com.developmentontheedge.be5.metadata.model.ColumnDef;
-import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.DdlElement;
-import com.developmentontheedge.be5.metadata.model.EntitiesFactory;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityLocalizations;
-import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.metadata.model.Icon;
-import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
-import com.developmentontheedge.be5.metadata.model.IndexDef;
-import com.developmentontheedge.be5.metadata.model.JavaScriptForm;
-import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
-import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
-import com.developmentontheedge.be5.metadata.model.Localizations;
-import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.metadata.model.OperationExtender;
-import com.developmentontheedge.be5.metadata.model.PageCustomization;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.model.QuerySettings;
-import com.developmentontheedge.be5.metadata.model.QuickFilter;
-import com.developmentontheedge.be5.metadata.model.SqlColumnType;
-import com.developmentontheedge.be5.metadata.model.StaticPage;
-import com.developmentontheedge.be5.metadata.model.TableDef;
-import com.developmentontheedge.be5.metadata.model.TableRef;
-import com.developmentontheedge.be5.metadata.model.TableReference;
-import com.developmentontheedge.be5.metadata.model.ViewDef;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
-import com.developmentontheedge.be5.metadata.sql.pojo.DaemonInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.EntityInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.ExtenderInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.IconInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.LocalizationInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.OperationInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.PageCustomizationInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.QueryInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.QueryPerRoleInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.QuerySettingsInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.QuickFilterInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.StaticPageInfo;
-import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.DefaultTypeManager;
 import com.developmentontheedge.be5.metadata.util.DerivedController;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
-import com.developmentontheedge.be5.metadata.util.ObjectCache;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 
@@ -92,8 +46,26 @@ public class SqlModelReader
     private Rdbms rdbms;
     private int mode;
 
-    private String skippedOrigin;
+    public static final int LOG_ERRORS = 0x10;
+    public static final int USE_HEURISTICS = 0x20;
+    public static final int ADVANCED_HEURISTICS = 0x100;
 
+    private static final List<String> PREDEFINED_COLUMN_NAMES = Arrays.asList( "whoInserted___", "whoModified___", "creationDate___",
+            "modificationDate___", "activeFrom", "activeTo", "ID", "CODE" );
+    
+    private final List<String> warnings = new ArrayList<>();
+
+    // cache
+    private Map<String, String>  tableTypes;
+    private List<EntityInfo>     entities;
+    private Map<String, List<QueryInfo>>             queries;
+    private Map<String, List<OperationInfo>>         operations;
+    private Map<String, List<SqlColumnInfo>>         columns;
+    private Map<String, List<IndexInfo>>             indices;
+
+    private String defSchema = null;
+    private final Map<String, String>                columnNames = new HashMap<>(); 
+    
     /**
      * Initializes model reader with the given database connector.
      *
@@ -134,7 +106,7 @@ public class SqlModelReader
     private void readProject(final Project project, ProcessController controller ) throws ExtendedSqlException, SQLException, ProcessInterruptedException
     {
         long time = System.currentTimeMillis();
-        this.skippedOrigin = (mode & SKIP_APPLICATION) == 0 ? "" : project.getProjectOrigin();
+        
         cache(new DerivedController( controller, 0, 0.9, "Caching" ));
         
         addColumnNameGuesses();
@@ -144,7 +116,8 @@ public class SqlModelReader
         if((mode & LOG_ERRORS) != 0)
         {
             controller.setOperationName( "Checking errors..." );
-            checkFinally();
+            // checkFinally(); // PENDING - is it needed?
+            
             if(!warnings.isEmpty())
             {
                 System.err.println( warnings.size()+" warning(s) during loading the project from "+sql.getConnector().getConnectString() );
@@ -155,10 +128,134 @@ public class SqlModelReader
                 }
             }
         }
-        //System.err.println( "SQL reading: "+(System.currentTimeMillis()-time) );
+        
         controller.setOperationName( "SQLs read in " + ( System.currentTimeMillis() - time ) + "ms." );
         controller.setProgress( 1.0 );
     }
+
+    private void cache(ProcessController controller) throws ExtendedSqlException, SQLException, ProcessInterruptedException
+    {
+        double totalWork = 0;
+        int worked = 0;
+
+        if ( ( mode & READ_TABLEDEFS ) != 0 )
+            totalWork+=140;
+
+        if ( ( mode & LOG_ERRORS ) != 0 )
+            totalWork+=2;
+
+        if ( ( mode & READ_TABLEDEFS ) != 0 )
+        {
+            controller.setOperationName( "Reading schema" );
+            this.defSchema  = rdbms.getSchemaReader().getDefaultSchema( sql );
+            this.tableTypes = rdbms.getSchemaReader().readTableNames( sql, defSchema,
+                    new DerivedController( controller, worked / totalWork, ( worked + 10 ) / totalWork ) );
+            controller.setProgress( (worked+=10)/totalWork );
+            this.columns = rdbms.getSchemaReader().readColumns( sql, defSchema,
+                    new DerivedController( controller, worked / totalWork, ( worked + 90 ) / totalWork ) );
+            controller.setProgress( (worked+=90)/totalWork );
+            this.indices = rdbms.getSchemaReader().readIndices( sql, defSchema,
+                    new DerivedController( controller, worked / totalWork, ( worked + 40 ) / totalWork ) );
+            controller.setProgress( (worked+=40)/totalWork );
+        }
+
+        if ( ( mode & LOG_ERRORS ) != 0 )
+        {
+            controller.setOperationName( "Checking errors" );
+            checkCache();
+            controller.setProgress( (worked+=2)/totalWork );
+        }
+
+        assert(worked == totalWork);
+    }
+
+    private void checkCache()
+    {
+        Map<String, String> entityNames = new HashMap<>();
+        for(EntityInfo entity : entities)
+        {
+            entityNames.put( entity.getName(), entity.getOrigin() );
+        }
+
+        for(Entry<String, List<QueryInfo>> entry : queries.entrySet())
+        {
+            String entityModule = entityNames.get( entry.getKey() );
+            Set<String> queryNames = new HashSet<>();
+            for(QueryInfo info : entry.getValue())
+            {
+                if(queryNames.contains( info.getName() ))
+                {
+                    warnings.add("Duplicate query name "+entry.getKey()+"."+info.getName());
+                }
+
+                queryNames.add( info.getName() );
+                if ( !info.getName().equals( Query.SPECIAL_LOST_RECORDS ) && Project.APPLICATION.equals( entityModule )
+                    && !info.getOrigin().equals( Project.APPLICATION ) )
+                {
+                    warnings.add("Query "+entry.getKey()+"."+info.getName()+" is defined in the module "+info.getOrigin()+", but entity is defined in the application");
+                }
+            }
+            if(entityModule == null)
+            {
+                warnings.add( "There are "+(entry.getValue().size())+" queries belonging to missing entity '"+entry.getKey()+"': "+queryNames );
+            }
+        }
+
+        for(Entry<String, List<OperationInfo>> entry : operations.entrySet())
+        {
+            String entityModule = entityNames.get( entry.getKey() );
+            Set<String> operationNames = new HashSet<>();
+            for(OperationInfo info : entry.getValue())
+            {
+                operationNames.add( info.getName() );
+                if(Project.APPLICATION.equals( entityModule ) && !info.getOrigin().equals( Project.APPLICATION ))
+                {
+                    warnings.add("Operation "+entry.getKey()+"."+info.getName()+" is defined in the module "+info.getOrigin()+", but entity is defined in the application");
+                }
+            }
+            if(entityModule == null)
+            {
+                warnings.add( "There are "+(entry.getValue().size())+" operations belonging to missing entity '"+entry.getKey()+"': "+operationNames );
+            }
+        }
+    }
+
+    private void addColumnNameGuesses()
+    {
+        if((mode & USE_HEURISTICS) == 0)
+            return;
+        
+        for(String predefinedColumnName : PREDEFINED_COLUMN_NAMES)
+        {
+            columnNames.put( predefinedColumnName.toLowerCase(), predefinedColumnName );
+        }
+
+        for(EntityInfo entity : entities)
+        {
+            String name = entity.getName();
+            String columnName = name+"ID";
+            columnNames.put( columnName.toLowerCase(Locale.ENGLISH), columnName );
+            if(name.endsWith( "ies" ))
+            {
+                columnName = name.substring( 0, name.length()-3 )+"yID";
+                columnNames.put( columnName.toLowerCase(Locale.ENGLISH), columnName );
+            }
+            if(name.endsWith( "s" ))
+            {
+                columnName = name.substring( 0, name.length()-1 )+"ID";
+                columnNames.put( columnName.toLowerCase(Locale.ENGLISH), columnName );
+            }
+        }
+        if((mode & ADVANCED_HEURISTICS) == 0)
+            return;
+        StreamEx.ofValues(queries).flatMap(List::stream).map( QueryInfo::getQuery )
+            .flatMap( Pattern.compile( "\\W+" )::splitAsStream )
+            .distinct()
+            .filter( word -> !word.equals( word.toUpperCase(Locale.ENGLISH) ) &&
+                    !word.equals( word.toLowerCase(Locale.ENGLISH) ))
+            .forEach( word -> columnNames.putIfAbsent( word.toLowerCase(Locale.ENGLISH), word ) );
+    }
+
     
 ////////////////    
     
@@ -174,20 +271,17 @@ public class SqlModelReader
         + "else\\s*\\{\\s*"
         + "window.addEventListener\\(\"load\",\\s*\\1,\\s*false\\);\\s*\\}", Pattern.MULTILINE);
     
-    private static final List<String> PREDEFINED_COLUMN_NAMES = Arrays.asList( "whoInserted___", "whoModified___", "creationDate___",
-            "modificationDate___", "activeFrom", "activeTo", "ID", "CODE" );
-    
+    private String skippedOrigin;
+
+   
     public static final int READ_META = 0x01;
     public static final int READ_TABLEDEFS = 0x02;
     public static final int READ_LOCALIZATIONS = 0x04;
     public static final int READ_SECURITY = 0x08;
     public static final int READ_ALL = READ_TABLEDEFS | READ_LOCALIZATIONS | READ_META | READ_SECURITY;
     
-    public static final int LOG_ERRORS = 0x10;
-    public static final int USE_HEURISTICS = 0x20;
     public static final int SKIP_APPLICATION = 0x40;
     public static final int READ_ORPHANS_MODULE = 0x80;
-    public static final int ADVANCED_HEURISTICS = 0x100;
     
     private final ObjectCache<String> strings = new ObjectCache<>();
 
@@ -214,16 +308,11 @@ public class SqlModelReader
         }
     }
     
-    private final List<String> warnings = new ArrayList<>();
     
     // cache
-    private List<EntityInfo>     entities;
     private Set<String>          roles;
-    private Map<String, String>  tableTypes;
     private List<DaemonInfo>     daemonInfos;
     private List<StaticPageInfo> staticPages;
-    private Map<String, List<OperationInfo>>         operations;
-    private Map<String, List<QueryInfo>>             queries;
     private Map<Long, QueryInfo>                     id2query;
     private Map<Long, List<String>>                  rolesByOperation;
     private Map<Long, List<QueryPerRoleInfo>>        rolesByQuery;
@@ -234,13 +323,9 @@ public class SqlModelReader
     private Map<String, List<LocalizationInfo>>      localizationInfos;
     private Map<String, IconInfo>                    icons;
     private Map<String, List<PageCustomizationInfo>> pageCustomizations;
-    private Map<String, List<SqlColumnInfo>>         columns;
-    private Map<String, List<IndexInfo>>             indices;
     private Map<String, Map<String, Set<String>>>    genericRefEntities;
     private Map<String, String>                      jsForms;
     
-    private final Map<String, String>                columnNames = new HashMap<>(); 
-    private String defSchema = null;
     
     public SqlModelReader( DbmsConnector connector )
     {
@@ -353,40 +438,6 @@ public class SqlModelReader
         //System.err.println( "SQL reading: "+(System.currentTimeMillis()-time) );
         controller.setOperationName( "SQLs read in " + ( System.currentTimeMillis() - time ) + "ms." );
         controller.setProgress( 1.0 );
-    }
-
-    private void addColumnNameGuesses()
-    {
-        if((mode & USE_HEURISTICS) == 0)
-            return;
-        for(String predefinedColumnName : PREDEFINED_COLUMN_NAMES)
-        {
-            columnNames.put( predefinedColumnName.toLowerCase(), predefinedColumnName );
-        }
-        for(EntityInfo entity : entities)
-        {
-            String name = entity.getName();
-            String columnName = name+"ID";
-            columnNames.put( columnName.toLowerCase(Locale.ENGLISH), columnName );
-            if(name.endsWith( "ies" ))
-            {
-                columnName = name.substring( 0, name.length()-3 )+"yID";
-                columnNames.put( columnName.toLowerCase(Locale.ENGLISH), columnName );
-            }
-            if(name.endsWith( "s" ))
-            {
-                columnName = name.substring( 0, name.length()-1 )+"ID";
-                columnNames.put( columnName.toLowerCase(Locale.ENGLISH), columnName );
-            }
-        }
-        if((mode & ADVANCED_HEURISTICS) == 0)
-            return;
-        StreamEx.ofValues(queries).flatMap(List::stream).map( QueryInfo::getQuery )
-            .flatMap( Pattern.compile( "\\W+" )::splitAsStream )
-            .distinct()
-            .filter( word -> !word.equals( word.toUpperCase(Locale.ENGLISH) ) &&
-                    !word.equals( word.toLowerCase(Locale.ENGLISH) ))
-            .forEach( word -> columnNames.putIfAbsent( word.toLowerCase(Locale.ENGLISH), word ) );
     }
 
     private Module createModule( final String moduleName, final Project project )
