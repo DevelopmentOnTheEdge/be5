@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.maven;
 
-import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.File;
 import java.io.PrintStream;
 
+import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
@@ -18,7 +18,6 @@ import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
 @Mojo( name = "create-db")
 public class AppDb extends Be5Mojo

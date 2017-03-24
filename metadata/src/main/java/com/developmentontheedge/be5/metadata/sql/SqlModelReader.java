@@ -85,6 +85,84 @@ import com.developmentontheedge.dbms.ExtendedSqlException;
  */
 public class SqlModelReader 
 {
+    public static final int READ_TABLEDEFS = 0x02;
+    public static final int READ_ALL = READ_TABLEDEFS;
+
+    private SqlExecutor sql;
+    private Rdbms rdbms;
+    private int mode;
+
+    private String skippedOrigin;
+
+    /**
+     * Initializes model reader with the given database connector.
+     *
+     * @param connector Database connector.
+     */
+    public SqlModelReader(DbmsConnector connector, int mode)
+    {
+        try
+        {
+            this.sql = new SqlExecutor(connector, DatabaseSynchronizer.class.getResource("sql.properties"));            
+            this.rdbms = DatabaseUtils.getRdbms(connector);
+            this.mode = mode;
+        }
+        catch( IOException e )
+        {
+            // File with SQL queries not found
+            throw new RuntimeException( e );
+        }
+    }
+   
+    public Project readProject(final String name, final boolean moduleProject) throws ExtendedSqlException, SQLException, ProcessInterruptedException
+    {
+        return readProject( new NullLogger(), name, moduleProject );
+    }
+
+    public Project readProject(final ProcessController controller, final String name) throws ExtendedSqlException, SQLException, ProcessInterruptedException
+    {
+        return readProject(controller, name, false);
+    }
+
+    public Project readProject(final ProcessController controller, final String name, final boolean moduleProject) throws ExtendedSqlException, SQLException, ProcessInterruptedException
+    {
+        Project project = new Project(name, moduleProject);
+        readProject(project, controller);
+        return project;
+    }
+
+    private void readProject(final Project project, ProcessController controller ) throws ExtendedSqlException, SQLException, ProcessInterruptedException
+    {
+        long time = System.currentTimeMillis();
+        this.skippedOrigin = (mode & SKIP_APPLICATION) == 0 ? "" : project.getProjectOrigin();
+        cache(new DerivedController( controller, 0, 0.9, "Caching" ));
+        
+        addColumnNameGuesses();
+        
+        project.setDatabaseSystem(rdbms);
+
+        if((mode & LOG_ERRORS) != 0)
+        {
+            controller.setOperationName( "Checking errors..." );
+            checkFinally();
+            if(!warnings.isEmpty())
+            {
+                System.err.println( warnings.size()+" warning(s) during loading the project from "+sql.getConnector().getConnectString() );
+                Collections.sort( warnings );
+                for(String warning : warnings)
+                {
+                    System.err.println(warning);
+                }
+            }
+        }
+        //System.err.println( "SQL reading: "+(System.currentTimeMillis()-time) );
+        controller.setOperationName( "SQLs read in " + ( System.currentTimeMillis() - time ) + "ms." );
+        controller.setProgress( 1.0 );
+    }
+    
+////////////////    
+    
+/**
     public static final String ORPHANS_MODULE_NAME = "beanexplorer_orphans";
     private static final String COMMENT_START = "<!--";
     private static final String COMMENT_END = "-->";
@@ -136,11 +214,7 @@ public class SqlModelReader
         }
     }
     
-    private SqlExecutor sql;
-    private Rdbms rdbms;
-    private int mode;
     private final List<String> warnings = new ArrayList<>();
-    private String skippedOrigin;
     
     // cache
     private List<EntityInfo>     entities;
@@ -173,32 +247,13 @@ public class SqlModelReader
         this( connector, READ_ALL | USE_HEURISTICS );
     }
     
-    /**
-     * Initializes model reader with the given database connector.
-     *
-     * @param connector Database connector.
-     */
-    public SqlModelReader( DbmsConnector connector, int mode )
-    {
-        try
-        {
-            this.sql = new SqlExecutor( connector );
-            this.rdbms = DatabaseUtils.getRdbms( connector );
-            this.mode = mode;
-        }
-        catch( IOException e )
-        {
-            // File with SQL queries not found
-            throw new RuntimeException( e );
-        }
-    }
     
     /**
      * Initializes model reader with the given database connector.
      *
      * @param connector Database connector.
      */
-    public SqlModelReader( SqlExecutor executor, int mode )
+/* public SqlModelReader( SqlExecutor executor, int mode )
     {
         this.sql = executor;
         this.rdbms = DatabaseUtils.getRdbms( executor.getConnector() );
@@ -210,24 +265,7 @@ public class SqlModelReader
         return readProject(name, false);
     }
 
-    public Project readProject(final String name, final boolean moduleProject) throws ExtendedSqlException, SQLException, ProcessInterruptedException
-    {
-        return readProject( new NullLogger(), name, moduleProject );
-    }
-
-    public Project readProject(final ProcessController controller, final String name) throws ExtendedSqlException, SQLException, ProcessInterruptedException
-    {
-        return readProject(controller, name, false);
-    }
-
-    public Project readProject(final ProcessController controller, final String name, final boolean moduleProject) throws ExtendedSqlException, SQLException, ProcessInterruptedException
-    {
-        Project project = new Project(name, moduleProject);
-        readProject(project, controller);
-        return project;
-    }
-
-    private void readProject( final Project project, ProcessController controller ) throws ExtendedSqlException, SQLException, ProcessInterruptedException
+    private void readProject(final Project project, ProcessController controller ) throws ExtendedSqlException, SQLException, ProcessInterruptedException
     {
         long time = System.currentTimeMillis();
         this.skippedOrigin = (mode & SKIP_APPLICATION) == 0 ? "" : project.getProjectOrigin();
@@ -376,7 +414,7 @@ public class SqlModelReader
     /**
      * @return special "orphans" module which contains the tables which appear to the database, but absent in the entities table
      */
-    private Module readOrphans(Project project) throws ExtendedSqlException, SQLException
+/*    private Module readOrphans(Project project) throws ExtendedSqlException, SQLException
     {
         Module module = new Module( ORPHANS_MODULE_NAME, project.getModules() );
         if(columns != null)
@@ -887,7 +925,7 @@ public class SqlModelReader
 
         if ( !sql.getConnector().isMySQL() )
             return;
-        // For MySQL only now*/
+        // For MySQL only now
         for ( Entity entity : module.getEntities() )
         {
             final String table = entity.getName();
@@ -1779,4 +1817,5 @@ public class SqlModelReader
         }
         return quickFilters;
     }
+*/    
 }
