@@ -1,43 +1,32 @@
 package com.developmentontheedge.be5.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Parameter;
-
-///
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.yaml.snakeyaml.Yaml;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
 
-import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.be5.metadata.util.WriterLogger;
-import com.developmentontheedge.beans.model.ComponentFactory;
-import com.developmentontheedge.beans.model.ComponentModel;
-import com.developmentontheedge.beans.model.Property;
+import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.MultiSqlParser;
 import com.developmentontheedge.dbms.SimpleConnector;
 
@@ -136,16 +125,10 @@ public abstract class Be5Mojo extends AbstractMojo
 System.out.println("!!connect=" + connectionUrl);
 
 		this.beanExplorerProject.setDatabaseSystem( Rdbms.getRdbms(connectionUrl) );
-		try
-		{
-			this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
+
+        this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
 					                             profile.getConnectionUrl(), 
 												 profile.getUsername(), profile.getPassword());
-		}
-		catch(SQLException e)
-		{
-            throw new MojoFailureException("Can not connect to database", e);
-		}
     }
     
     
