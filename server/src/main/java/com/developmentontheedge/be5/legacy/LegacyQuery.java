@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.legacy;
 
 import com.developmentontheedge.be5.api.services.QueryLink;
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.dbutils.handlers.BeanHandler;
+import com.developmentontheedge.be5.api.sql.ResultSetParser;
 
 /**
  * Represents a row in the queries table.
@@ -11,7 +10,8 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
  */
 public class LegacyQuery
 {
-    static ResultSetHandler<LegacyQuery> rsh = new BeanHandler<>(LegacyQuery.class);
+    public static final ResultSetParser<LegacyQuery> parser = rs ->
+            new LegacyQuery(rs.getString(MetaTables.Queries.ENTITY_NAME), rs.getString(MetaTables.Queries.NAME));
 
     private final String entityName;
     private final String name;

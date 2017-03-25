@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import one.util.streamex.StreamEx;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -17,12 +16,6 @@ import java.util.List;
  */
 public interface QueryExecutor
 {
-    @FunctionalInterface
-    interface ResultSetParser<T>
-    {
-        T parse(ResultSet rs) throws SQLException;
-    }
-
     /**
      * Sets a limit (changes state). Returns the query executor itself.
      */

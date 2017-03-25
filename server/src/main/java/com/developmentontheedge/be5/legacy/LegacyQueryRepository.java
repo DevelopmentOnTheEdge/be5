@@ -19,7 +19,7 @@ public class LegacyQueryRepository
     
     public LegacyQuery findOne(int id)
     {
-        return db.select("select * from queries WHERE ID = ?", LegacyQuery.rsh, id);
+        return db.select("select * from queries WHERE ID = ?", LegacyQuery.parser, id);
     }
 
 }
