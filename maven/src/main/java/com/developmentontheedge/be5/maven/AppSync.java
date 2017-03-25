@@ -5,19 +5,24 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
@@ -28,10 +33,8 @@ import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
-import com.developmentontheedge.be5.metadata.sql.DatabaseSynchronizer;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.sql.DatabaseSynchronizer.SyncMode;
 import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
 import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
 import com.developmentontheedge.be5.metadata.sql.schema.DbmsSchemaReader;
@@ -43,6 +46,8 @@ import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
 
+import one.util.streamex.IntStreamEx;
+
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -50,11 +55,17 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo( name = "sync")
 public class AppSync extends Be5Mojo
 {
+    @Parameter (property = "BE5_FORCE_UPDATE")
+    protected boolean forceUpdate;
+
     @Parameter (property = "BE5_UPDATE_CLONES")
     protected boolean updateClones;
 
-    @Parameter (property = "BE5_FORCE_UPDATE")
-    protected boolean forceUpdate;
+    @Parameter (property = "BE5_REMOVE_CLONES")
+    protected boolean removeClones;
+
+    @Parameter (property = "BE5_UNUSED_TABLES")
+    protected boolean unusedTables;
 
     protected BeSqlExecutor sqlExecutor;
     
@@ -88,20 +99,10 @@ public class AppSync extends Be5Mojo
             readSchema();
             createEntities();
 
-            DatabaseSynchronizer databaseSynchronizer = new DatabaseSynchronizer(logger, sqlExecutor, beanExplorerProject);
-            Project oldProject = null;
-            String ddlString = databaseSynchronizer.getDdlStatements(oldProject, updateClones, false);
+            String ddlString = getDdlStatements(false);
             ddlString = MultiSqlParser.normalize(beanExplorerProject.getDatabaseSystem().getType(), ddlString);
 
-            
-            /* TODO
-            if(orphans != null)
-            {
-                beanExplorerProject.getDebugStream().println("Orphan tables: "+orphans.getEntityNames());
-            } */
-            
-            
-            if(ddlString.isEmpty())
+            if( ddlString.isEmpty() )
             {
             	this.getLog().info("Database scheme is up-to-date");
             	return;
@@ -109,7 +110,10 @@ public class AppSync extends Be5Mojo
             
             if( forceUpdate )
             {
-                databaseSynchronizer.sync( SyncMode.DDL_CLONES, oldProject );
+                sqlExecutor.startSection( "Sync schema" );
+                logger.setOperationName( "[>] Schema" );
+                sqlExecutor.executeMultiple(ddlString);
+                sqlExecutor.startSection( null );
             }
             else
             {
@@ -117,10 +121,10 @@ public class AppSync extends Be5Mojo
                     System.err.println(ddlString);
             }
             
-            checkSynchronizationStatus(databaseSynchronizer);
+            checkSynchronizationStatus();
             logger.setOperationName( "Finished" );
         }
-        catch ( ProjectElementException | FreemarkerSqlException | ExtendedSqlException | SQLException e ) //ReadException | ProjectLoadException | SQLException e )
+        catch (FreemarkerSqlException | ExtendedSqlException | SQLException e ) //ReadException | ProjectLoadException | SQLException e )
         {
             if(debug)
                 throw new MojoFailureException("Synchronisation error: " + e.getMessage(), e);
@@ -144,17 +148,19 @@ public class AppSync extends Be5Mojo
         }
     }
 
-    protected void checkSynchronizationStatus( DatabaseSynchronizer databaseSynchronizer )
+    protected void checkSynchronizationStatus()
     {
-        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
+    	// TODO
+/*        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
         if(!warnings.isEmpty())
         {
-            System.err.println( "Synchronization of "+databaseSynchronizer.getProject().getName()+" produced "+warnings.size()+" warning(s):" );
+            System.err.println( "Synchronization of " + databaseSynchronizer.getProject().getName()+" produced "+warnings.size()+" warning(s):" );
             for(ProjectElementException warning : warnings)
             {
                 displayError( warning );
             }
         }
+*/        
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -208,6 +214,7 @@ public class AppSync extends Be5Mojo
 
         entities = new ArrayList<>();
         Project project = new Project("internal-db");
+        project.setDatabaseSystem(beanExplorerProject.getDatabaseSystem());
         Module module = new Module("temp", project);
         
         for(String table : tableTypes.keySet() )
@@ -221,7 +228,7 @@ public class AppSync extends Be5Mojo
             
             Entity entity = new Entity(table, module, EntityType.TABLE);
             entities.add(entity);
-            
+
             TableDef tableDef = new TableDef(entity);
             for(SqlColumnInfo info : columnInfos)
             {
@@ -375,82 +382,78 @@ public class AppSync extends Be5Mojo
     ///////////////////////////////////////////////////////////////////////////
     // Synchronization
     //
-/*    
+    
     protected String getDdlStatements(boolean dangerousOnly) throws ExtendedSqlException
     {
         Map<String, DdlElement> oldSchemes = new HashMap<>();
         Map<String, DdlElement> newSchemes = new HashMap<>();
-        Set<String> allNames = new HashSet<>();
-        for ( Module module : project.getModulesAndApplication() )
+
+        for( Module module : beanExplorerProject.getModulesAndApplication() )
         {
-            for ( Entity entity : module.getEntities() )
+            for( Entity entity : module.getEntities() )
             {
                 DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-                if ( scheme != null )
+                if( scheme != null )
                 {
                     String normalizedName = entity.getName().toLowerCase();
-                    newSchemes.put( normalizedName, scheme );
-                    allNames.add( normalizedName );
+                    newSchemes.put(normalizedName, scheme);
                 }
             }
         }
-        for ( Module module : oldProject.getModulesAndApplication() )
+        
+        for( Entity entity : entities )
         {
-            for ( Entity entity : module.getEntities() )
+        	DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
+            if( scheme != null )
             {
-                DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-                if ( scheme != null )
-                {
-                    String normalizedName = entity.getName().toLowerCase();
-                    oldSchemes.put( normalizedName, scheme );
-                    if ( !module.getName().equals( ORPHANS_MODULE_NAME ) )
-                        allNames.add( normalizedName );
-                }
+            	String normalizedName = entity.getName().toLowerCase();
+                oldSchemes.put( normalizedName, scheme );
             }
         }
 
         StringBuilder sb = new StringBuilder();
-        for ( String entityName : allNames )
+        for( String entityName : newSchemes.keySet() )
         {
-            DdlElement oldScheme = oldSchemes.get( entityName );
-            DdlElement scheme = newSchemes.get( entityName );
+            DdlElement oldScheme = oldSchemes.get(entityName);
+            DdlElement newScheme = newSchemes.get(entityName);
 
-            if(scheme.withoutDbScheme())
+            if(newScheme.withoutDbScheme())
             {
-                if (scheme == null)
-                {
-                    sb.append(oldScheme.getDropDdl());
-                    continue;
-                }
                 if (!dangerousOnly)
                 {
-                    warnings.addAll(scheme.getWarnings());
+                    // PENDING - list of other type
+                	//warnings.addAll(newScheme.getWarnings());
                 }
+
                 if (oldScheme == null)
                 {
                     if (!dangerousOnly)
                     {
-                        sb.append(scheme.getCreateDdl());
+                    	sb.append(newScheme.getCreateDdl());
                     }
                     continue;
                 }
-                if (scheme.equals(oldScheme) || scheme.getDiffDdl(oldScheme, null).isEmpty())
+                
+                if( newScheme.equals(oldScheme) || newScheme.getDiffDdl(oldScheme, null).isEmpty() )
                     continue;
-                if (oldScheme.getModule().getName().equals(ORPHANS_MODULE_NAME) &&
-                        oldScheme instanceof TableDef && scheme instanceof TableDef)
-                    fixPrimaryKey((TableDef) oldScheme, (TableDef) scheme);
-                sb.append(dangerousOnly ? scheme.getDangerousDiffStatements(oldScheme, sql) : scheme.getDiffDdl(oldScheme, sql));
+                
+                // PENDING
+                if( oldScheme instanceof TableDef && newScheme instanceof TableDef )
+                    fixPrimaryKey((TableDef) oldScheme, (TableDef) newScheme);
+                
+                sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor) 
+                		                : newScheme.getDiffDdl(oldScheme, sqlExecutor));
             }
             else
             {
-                System.out.println("Skip table with schema: " + scheme.getEntityName());
+                System.out.println("Skip table with schema: " + newScheme.getEntityName());
             }
         }
         
-        Module orphans = oldProject.getModule( "beanexplorer_orphans"); // SqlModelReader.ORPHANS_MODULE_NAME
-        if ( includeClones && orphans != null )
+        // PENDING
+        if( updateClones )
         {
-            for ( Entity entity : orphans.getEntities() )
+            for( Entity entity : entities )
             {
                 TableDef cloneDdl = entity.findTableDefinition();
                 if(cloneDdl.withoutDbScheme())
@@ -465,7 +468,8 @@ public class AppSync extends Be5Mojo
                         syncCloneDdl(cloneDdl, ddl, cloneId);
                         if (!ddl.equals(cloneDdl) && !ddl.getDiffDdl(cloneDdl, null).isEmpty())
                         {
-                            sb.append(dangerousOnly ? ddl.getDangerousDiffStatements(cloneDdl, sql) : ddl.getDiffDdl(cloneDdl, sql));
+                            sb.append(dangerousOnly ? ddl.getDangerousDiffStatements(cloneDdl, sqlExecutor) 
+                            		                : ddl.getDiffDdl(cloneDdl, sqlExecutor));
                         }
                     }
                 }
@@ -475,8 +479,81 @@ public class AppSync extends Be5Mojo
                 }
             }
         }
+
+/*        if (newScheme == null)
+        {
+            sb.append(oldScheme.getDropDdl());
+            continue;
+        }
+ */       
         return sb.toString();
     }
-*/
+
+    private void fixPrimaryKey( TableDef orphanDdl, TableDef ddl )
+    {
+        ColumnDef pk = ddl.getColumns().get( ddl.getEntity().getPrimaryKey() );
+        // Orphans have no primary key set: try to set the same column as in original table
+        if(pk != null)
+        {
+            ColumnDef orphanPk = orphanDdl.getColumns().getCaseInsensitive( pk.getName() );
+            if(orphanPk != null)
+            {
+                orphanDdl.getIndicesUsingColumn( orphanPk.getName() ).stream().filter( idx -> idx.getSize() == 1 && idx.isUnique() )
+                    .findFirst().ifPresent( idx -> {
+                        // Remove primary key index
+                        DataElementUtils.remove( idx );
+                        orphanDdl.getEntity().setPrimaryKey( orphanPk.getName() );
+                        orphanPk.setPrimaryKey( true );
+                    });
+            }
+        }
+    }
+
+    private static final Pattern CLONE_ID = Pattern.compile( "(\\d+)$" );
+    private static DdlElement getDdlForClone( Map<String, DdlElement> schemes, String cloneName )
+    {
+        String name = cloneName.toLowerCase();
+        Matcher matcher = CLONE_ID.matcher( name );
+        if ( !matcher.find() )
+            return null;
+        String cloneId = matcher.group();
+        return IntStreamEx.range( name.length() - cloneId.length(), name.length() )
+                .mapToObj( len -> schemes.get( name.substring( 0, len ) ) ).nonNull().findFirst().orElse( null );
+    }
+
+    // Fix known changes in cloned table and in normal table
+    private void syncCloneDdl( TableDef cloneDdl, TableDef mainDdl, String cloneId )
+    {
+        // Copy special columns
+        List<String> specialColumns = Arrays.asList( "transportstatus", "linkrule", "linkstatus", "origid" );
+        for(String colName : specialColumns)
+        {
+            ColumnDef cloneCol = cloneDdl.getColumns().getCaseInsensitive( colName );
+            ColumnDef mainCol = mainDdl.getColumns().getCaseInsensitive( colName );
+            if(cloneCol != null && mainCol == null)
+            {
+                DataElementUtils.save( cloneCol.clone( mainDdl.getColumns(), cloneCol.getName() ) );
+            }
+        }
+        
+        // Map indexes as clone indexes may have different names
+        Function<? super IndexDef, ? extends List<String>> classifier = indexDef -> indexDef.stream().map( IndexColumnDef::getDefinition )
+                .toList();
+        Map<List<String>, Deque<IndexDef>> ddlMap = cloneDdl.getIndices().stream().groupingTo( classifier, ArrayDeque::new );
+        for ( IndexDef indexDef : mainDdl.getIndices().stream().toList() )
+        {
+            List<String> key = classifier.apply( indexDef );
+            Deque<IndexDef> list = ddlMap.get( key );
+            IndexDef oldIdx = list == null ? null : list.poll();
+            String newName = oldIdx == null ? indexDef.getName() + cloneId : oldIdx.getName();
+            mainDdl.renameIndex( indexDef.getName(), newName );
+        }
+        // Copy indexes for special columns
+        ddlMap.values().stream().flatMap( Deque::stream )
+                .filter( idx -> specialColumns.stream().anyMatch( col -> idx.getCaseInsensitive( col ) != null ) )
+                .map( idx -> idx.clone( mainDdl.getIndices(), idx.getName() ) )
+                .forEach( DataElementUtils::save );
+        fixPrimaryKey( cloneDdl, mainDdl );
+    }
     
 }
