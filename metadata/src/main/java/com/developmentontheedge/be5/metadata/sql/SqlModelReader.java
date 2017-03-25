@@ -159,6 +159,9 @@ public class SqlModelReader
             controller.setProgress( (worked+=40)/totalWork );
         }
 
+        controller.setOperationName( "Reading entities" );
+//        this.entities = readAllEntities();
+
         if ( ( mode & LOG_ERRORS ) != 0 )
         {
             controller.setOperationName( "Checking errors" );
