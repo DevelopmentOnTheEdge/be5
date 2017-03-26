@@ -64,8 +64,8 @@ public class AppSync extends Be5Mojo
     @Parameter (property = "BE5_REMOVE_CLONES")
     protected boolean removeClones;
 
-    @Parameter (property = "BE5_UNUSED_TABLES")
-    protected boolean unusedTables;
+    @Parameter (property = "BE5_REMOVE_UNUSED_TABLES")
+    protected boolean removeUnusedTables;
 
     protected BeSqlExecutor sqlExecutor;
     
@@ -451,41 +451,49 @@ public class AppSync extends Be5Mojo
         }
         
         // PENDING
-        if( updateClones )
+        if( updateClones || removeClones || removeUnusedTables)
         {
             for( Entity entity : entities )
             {
-                TableDef cloneDdl = entity.findTableDefinition();
-                if(cloneDdl.withoutDbScheme())
+                TableDef oldScheme = entity.findTableDefinition();
+
+                if( !oldScheme.withoutDbScheme() )
                 {
-                    TableDef ddl = (TableDef) getDdlForClone(newSchemes, entity.getName());
-                    if (ddl != null && cloneDdl != null)
-                    {
-                        String cloneId = entity.getName().substring(ddl.getEntityName().length());
-                        Entity curEntity = ddl.getEntity();
+                    System.out.println("Skip table with schema: " + oldScheme.getEntityName());
+                    continue;
+                }
+
+                TableDef newScheme = (TableDef) getDdlForClone(newSchemes, entity.getName());
+
+                if( newScheme == null )
+                {
+                	if( removeUnusedTables && newSchemes.get(entity.getName().toLowerCase()) == null )
+                		sb.append(oldScheme.getDropDdl());                	
+                }
+                else // process clone
+                {
+                	if( removeClones )
+                	{
+                		sb.append(oldScheme.getDropDdl());
+                		
+                	}
+                	else if( updateClones)
+                	{
+                        String cloneId = entity.getName().substring(newScheme.getEntityName().length());
+                        Entity curEntity = newScheme.getEntity();
                         Entity renamedEntity = curEntity.clone(curEntity.getOrigin(), entity.getName(), false);
-                        ddl = renamedEntity.findTableDefinition();
-                        syncCloneDdl(cloneDdl, ddl, cloneId);
-                        if (!ddl.equals(cloneDdl) && !ddl.getDiffDdl(cloneDdl, null).isEmpty())
+                        newScheme = renamedEntity.findTableDefinition();
+                        syncCloneDdl(oldScheme, newScheme, cloneId);
+                        if (!newScheme.equals(oldScheme) && !newScheme.getDiffDdl(oldScheme, null).isEmpty())
                         {
-                            sb.append(dangerousOnly ? ddl.getDangerousDiffStatements(cloneDdl, sqlExecutor) 
-                            		                : ddl.getDiffDdl(cloneDdl, sqlExecutor));
+                            sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor) 
+                            		                : newScheme.getDiffDdl(oldScheme, sqlExecutor));
                         }
                     }
-                }
-                else
-                {
-                    System.out.println("Skip table with schema: " + cloneDdl.getEntityName());
                 }
             }
         }
 
-/*        if (newScheme == null)
-        {
-            sb.append(oldScheme.getDropDdl());
-            continue;
-        }
- */       
         return sb.toString();
     }
 
