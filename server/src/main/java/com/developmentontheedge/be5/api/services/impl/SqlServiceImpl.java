@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.helpers.JulLoggerUtils.getInternalBe5Exception;
+import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
 public class SqlServiceImpl implements SqlService
 {

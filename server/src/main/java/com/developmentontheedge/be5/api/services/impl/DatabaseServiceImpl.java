@@ -15,7 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.helpers.JulLoggerUtils.getInternalBe5Exception;
+import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
 class DatabaseServiceImpl implements DatabaseService
 {

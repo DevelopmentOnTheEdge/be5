@@ -1,11 +1,10 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.api.exceptions;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class JulLoggerUtils
+public class ExceptionHelper
 {
     public static Be5Exception getInternalBe5Exception(Logger log, Throwable e) {
         log.log(Level.SEVERE, e.getMessage(), e);
