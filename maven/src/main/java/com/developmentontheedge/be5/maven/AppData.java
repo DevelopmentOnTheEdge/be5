@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.mojo;
+package com.developmentontheedge.be5.maven;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,39 +8,45 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tools.ant.BuildException;
-
-import com.beanexplorer.enterprise.metadata.exception.FreemarkerSqlException;
-import com.beanexplorer.enterprise.metadata.exception.ProjectElementException;
-import com.beanexplorer.enterprise.metadata.freemarker.FreemarkerSqlHandler;
-import com.beanexplorer.enterprise.metadata.model.FreemarkerCatalog;
-import com.beanexplorer.enterprise.metadata.model.FreemarkerScript;
-import com.beanexplorer.enterprise.metadata.model.Module;
-import com.beanexplorer.enterprise.metadata.model.base.DataElementPath;
-import com.beanexplorer.enterprise.metadata.sql.BeSqlExecutor;
-import com.beanexplorer.enterprise.metadata.sql.DatabaseUtils;
-import com.beanexplorer.enterprise.metadata.util.ModuleUtils;
+import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.freemarker.FreemarkerSqlHandler;
+import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
+import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
+import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
+import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.dbms.SqlExecutor;
 
-public class AppData extends BETask
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+@Mojo( name = "data")
+public class AppData extends Be5Mojo
 {
     private String script = FreemarkerCatalog.DATA;
     
     private boolean ignoreMissing = false;
 
     @Override
-    public void execute() throws BuildException
+    public void execute() throws MojoFailureException
     {
-        initParameters();
+        init();
+        mergeModules();
 
         PrintStream ps = null;
         try
         {
-            if(logDir != null)
+            if(logPath != null)
             {
-                logDir.mkdirs();
-                ps = new PrintStream( new File( logDir, beanExplorerProject.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql" ), "UTF-8" );
+                logPath.mkdirs();
+                ps = new PrintStream( new File(logPath, beanExplorerProject.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql" ), "UTF-8" );
             }
+
+///        
             ModuleUtils.addModuleScripts( beanExplorerProject );
             if(script.contains( ":" ))
                 mergeModules();
@@ -82,7 +88,7 @@ public class AppData extends BETask
                                 continue;
                             }
                             else
-                                throw new BuildException( "Module '"+moduleName+"' not found" );
+                                throw new MojoFailureException( "Module '"+moduleName+"' not found" );
                         }
                         scriptsCatalog = module.getFreemarkerScripts();
                     }
@@ -96,7 +102,7 @@ public class AppData extends BETask
                         continue;
                     }
                     else
-                        throw new BuildException("FTL script "+scriptName+" not found");
+                        throw new MojoFailureException("FTL script "+scriptName+" not found");
                 }
                 scripts.add( freemarkerScript );
             }
@@ -107,20 +113,13 @@ public class AppData extends BETask
             }
             DatabaseUtils.clearAllCache( sqlExecutor );
         }
-        catch( BuildException e )
-        {
-            throw e;
-        }
         catch( ProjectElementException | FreemarkerSqlException e )
         {
-            if(debug)
-                throw new BuildException(e);
-            else
-                throw new BuildException(e.getMessage());
+            throw new MojoFailureException(e.getMessage(), e);
         }
-        catch( Exception e )
+        catch(Exception e)
         {
-            throw new BuildException(e);
+            throw new MojoFailureException(e.getMessage(), e);
         }
         finally
         {
@@ -134,10 +133,10 @@ public class AppData extends BETask
     protected void executeScript( final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript ) throws ProjectElementException, IOException
     {
         String compiled = freemarkerScript.getResult().validate();
-        if(logDir != null)
+        if(logPath != null)
         {
             Files.write(
-                    logDir.toPath().resolve(
+                    logPath.toPath().resolve(
                             beanExplorerProject.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
                                 + freemarkerScript.getName() + ".compiled" ), compiled.getBytes( StandardCharsets.UTF_8 ) );
         }
