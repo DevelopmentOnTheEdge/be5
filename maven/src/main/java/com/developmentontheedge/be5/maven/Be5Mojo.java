@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.PropertyConfigurator;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -204,45 +205,6 @@ System.out.println("!!connect=" + connectionUrl);
     }
 
     ///////////////////////////////////////////////////////////////////    
-
-    protected void setProperty(String name, String value)
-    {
-    	/* TODO
-        if(value != null)
-        {
-            value = getProject().replaceProperties( value );
-        }
-        if(debug)
-        {
-            String oldValue = getProject().getProperty( name );
-            if ( value == null )
-            {
-                System.err.println( "BE4 skips null value for property " + name );
-            }
-            else
-            {
-                if ( oldValue == null )
-                {
-                    System.err.println( "BE4 sets " + name + "=" + value.replace( "\n", System.lineSeparator() ) );
-                }
-                else if ( !oldValue.equals( value ) )
-                {
-                    System.err.println( "BE4 does not update existing property " + name );
-                    System.err.println( "\tExisting value: " + oldValue.replace( "\n", System.lineSeparator() ) );
-                    System.err.println( "\tRequested and ignored value: " + value.replace( "\n", System.lineSeparator() ) );
-                }
-            }
-        }
-        if(value == null)
-            return;
-        getProject().setNewProperty( name, value );
-        if(!name.startsWith( "BE4_" ) && !name.endsWith( "::extras" ) && value != null && properties.getProperty( name ) == null)
-        {
-            properties.setProperty( name, getProject().getProperty( name ) );
-        }
-        */
-    }
-
    
     protected String readString( String prompt, String defaultValue, Object... values ) throws IOException
     {

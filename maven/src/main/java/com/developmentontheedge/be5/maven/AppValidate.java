@@ -152,7 +152,7 @@ public class AppValidate extends Be5Mojo
                 throw new MojoFailureException( "Project has "+count+" errors" );
             }
             logger.setOperationName( "Project is valid." );
-            setProperty( "BE4_SKIP_VALIDATION", "true" );
+            skipValidation = true;
         }
     }
 
