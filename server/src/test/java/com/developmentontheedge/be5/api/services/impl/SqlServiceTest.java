@@ -55,21 +55,21 @@ public class SqlServiceTest
 
     @Test
     public void testSelectScalar() {
-        String password = db.selectString("SELECT password FROM persons WHERE name = ?", "user2");
+        String password = db.selectScalar("SELECT password FROM persons WHERE name = ?", "user2");
 
         assertEquals("pass2", password);
     }
 
     @Test
     public void testCount() {
-        long count = db.selectLong("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser");
+        long count = db.selectScalar("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser");
 
         assertEquals(0, count);
     }
 
     @Test
     public void testSelectString() {
-        String password = db.selectString("SELECT password FROM persons WHERE name = ?",
+        String password = db.selectScalar("SELECT password FROM persons WHERE name = ?",
                 "user2");
 
         assertEquals("pass2", password);
@@ -77,7 +77,7 @@ public class SqlServiceTest
 
     @Test
     public void testGetNullIfNotContain() {
-        Long id = db.selectLong("SELECT id FROM persons WHERE name = ?", "notContainUser");
+        Long id = db.selectScalar("SELECT id FROM persons WHERE name = ?", "notContainUser");
 
         assertEquals(null, id);
     }
@@ -173,7 +173,7 @@ public class SqlServiceTest
         long id = db.insert("INSERT INTO persons (name, password) VALUES (?,?)",
                 uniqueName, "pass");
 
-        long idByName = db.selectLong("SELECT ID FROM persons WHERE name = ?", uniqueName);
+        long idByName = db.selectScalar("SELECT ID FROM persons WHERE name = ?", uniqueName);
 
         assertEquals(idByName, id);
     }

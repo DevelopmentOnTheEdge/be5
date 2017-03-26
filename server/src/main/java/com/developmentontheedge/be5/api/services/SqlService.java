@@ -9,13 +9,11 @@ public interface SqlService
 {
     <T> T query(String sql, ResultSetHandler<T> rsh, Object... params);
 
-    <T> T select(String sql, ResultSetParser<T> rsh, Object... params);
+    <T> T select(String sql, ResultSetParser<T> parser, Object... params);
 
-    <T> List<T> selectList(String sql, ResultSetParser<T> rsh, Object... params);
+    <T> List<T> selectList(String sql, ResultSetParser<T> parser, Object... params);
 
-    Long selectLong(String sql, Object... params);
-
-    String selectString(String sql, Object... params);
+    <T> T selectScalar(String sql, Object... params);
 
     int update(String sql, Object... params);
 

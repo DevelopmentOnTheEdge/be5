@@ -25,9 +25,6 @@ public class SqlServiceImpl implements SqlService
 {
     private static final Logger log = Logger.getLogger(SqlServiceImpl.class.getName());
 
-    private ScalarHandler<Long> longHandler = new ScalarHandler<>();
-    private ScalarHandler<String> stringHandler = new ScalarHandler<>();
-
     private QueryRunner queryRunner;
     private DatabaseService databaseService;
 
@@ -62,15 +59,9 @@ public class SqlServiceImpl implements SqlService
     }
 
     @Override
-    public Long selectLong(String sql, Object... params)
+    public <T> T selectScalar(String sql, Object... params)
     {
-        return execute(true, conn -> query(conn, sql, longHandler, params));
-    }
-
-    @Override
-    public String selectString(String sql, Object... params)
-    {
-        return execute(true, conn -> query(conn, sql, stringHandler, params));
+        return execute(true, conn -> query(conn, sql, new ScalarHandler<T>(), params));
     }
 
     @Override
