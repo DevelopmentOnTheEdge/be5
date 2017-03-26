@@ -35,7 +35,7 @@ public class AppTools extends Be5Mojo
         init();
         mergeModules();
 
-        BeConnectionProfile prof = beanExplorerProject.getConnectionProfile();
+        BeConnectionProfile prof = be5Project.getConnectionProfile();
         if(prof == null)
         {
             throw new MojoFailureException("Connection profile is required for SQL console");
@@ -64,7 +64,7 @@ public class AppTools extends Be5Mojo
                     }
                 }
             };
-            FreemarkerScript fs = new FreemarkerScript( "SQL", beanExplorerProject.getApplication().getFreemarkerScripts() );
+            FreemarkerScript fs = new FreemarkerScript( "SQL", be5Project.getApplication().getFreemarkerScripts() );
             DataElementUtils.save( fs );
             ProcessController log = new NullLogger();
             while(true)

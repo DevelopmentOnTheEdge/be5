@@ -52,19 +52,9 @@ public abstract class Be5Mojo extends AbstractMojo
     @Parameter (property = "BE5_LOG_PATH")
     protected File logPath;
     
-    protected Project beanExplorerProject; // Can be injected to avoid parsing
-    public void setBeanExplorerProject( final Project project )
-    {
-        this.beanExplorerProject = project;
-    }
-    public Project getBeanExplorerProject()
-    {
-        return beanExplorerProject;
-    }
+    protected Project be5Project; 
 
-    protected boolean useMeta;
-    protected String  connectionUrl; // Ant input
-    protected boolean modules = false;
+    protected String  connectionUrl;
 
     ///////////////////////////////////////////////////////////////////    
     
@@ -87,13 +77,13 @@ public abstract class Be5Mojo extends AbstractMojo
             throw new MojoFailureException("Please specify projectPath attribute");
         }
         logger.setOperationName("Reading project from '" + projectPath + "'...");
-        beanExplorerProject = loadProject(projectPath.toPath());
+        be5Project = loadProject(projectPath.toPath());
         if(debug)
         {
-            beanExplorerProject.setDebugStream( System.err );
+            be5Project.setDebugStream( System.err );
         }
     	
-        BeConnectionProfile profile = beanExplorerProject.getConnectionProfile();
+        BeConnectionProfile profile = be5Project.getConnectionProfile();
         if ( connectionUrl == null )
         {
             String user = null;
@@ -108,7 +98,7 @@ public abstract class Be5Mojo extends AbstractMojo
             {
                 throw new MojoFailureException(
                         "Please specify connection profile: either create "
-                      + beanExplorerProject.getProjectFileStructure().getSelectedProfileFile()
+                      + be5Project.getProjectFileStructure().getSelectedProfileFile()
                       + " file with profile name or use -DBE5_PROFILE=..." );
             }
             if ( user != null )
@@ -125,7 +115,7 @@ public abstract class Be5Mojo extends AbstractMojo
         }
 System.out.println("!!connect=" + connectionUrl);
 
-		this.beanExplorerProject.setDatabaseSystem( Rdbms.getRdbms(connectionUrl) );
+		this.be5Project.setDatabaseSystem( Rdbms.getRdbms(connectionUrl) );
 
         this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
 					                             profile.getConnectionUrl(), 
@@ -155,9 +145,7 @@ System.out.println("!!connect=" + connectionUrl);
         LoadContext loadContext = new LoadContext();
         try
         {
-            Project metaModule = useMeta ? ModuleUtils.loadMetaProject( loadContext )
-                : null;
-            ModuleUtils.mergeAllModules( beanExplorerProject, metaModule, logger, loadContext );
+            ModuleUtils.mergeAllModules( be5Project, logger, loadContext );
         }
         catch(ProjectLoadException e)
         {
@@ -201,7 +189,7 @@ System.out.println("!!connect=" + connectionUrl);
 
     protected void dumpSql( String ddlString )
     {
-        System.err.println( MultiSqlParser.normalize( beanExplorerProject.getDatabaseSystem().getType(), ddlString ) );
+        System.err.println( MultiSqlParser.normalize( be5Project.getDatabaseSystem().getType(), ddlString ) );
     }
 
     ///////////////////////////////////////////////////////////////////    
