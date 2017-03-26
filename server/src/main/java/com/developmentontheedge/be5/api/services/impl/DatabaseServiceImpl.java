@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.api.helpers.JulLoggerUtils.getInternalBe5Exception;
 
-public class DatabaseServiceImpl implements DatabaseService
+class DatabaseServiceImpl implements DatabaseService
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
@@ -46,21 +46,44 @@ public class DatabaseServiceImpl implements DatabaseService
     {
         BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
 
-        return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), getConnection());
+        try
+        {
+            return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), getConnection(false));
+        }
+        catch (SQLException e)
+        {
+            throw getInternalBe5Exception(log, e);
+        }
     }
 
     public DataSource getDataSource() {
         return bds;
     }
 
-    private Connection getConnection() {
-        try
-        {
-            return bds.getConnection();
+    public Connection getConnection(boolean isReadOnly) throws SQLException
+    {
+        Connection conn = getDataSource().getConnection();
+        if (isReadOnly) {
+            conn.setReadOnly(true);
         }
-        catch (SQLException e)
+        return conn;
+    }
+
+    public void close(Connection conn)
+    {
+        if (conn != null)
         {
-            throw getInternalBe5Exception(log, e);
+            try
+            {
+                if (conn.isReadOnly())
+                {
+                    conn.setReadOnly(false);
+                }
+                conn.close();
+            }
+            catch (SQLException e) {
+                throw getInternalBe5Exception(log, e);
+            }
         }
     }
 

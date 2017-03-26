@@ -17,7 +17,7 @@ public class JulLoggerUtils
         return Be5Exception.internal(message);
     }
 
-    public static Be5Exception getInternalBe5Exception(Logger log, Throwable e, String message) {
+    public static Be5Exception getInternalBe5Exception(Logger log, String message, Throwable e) {
         log.log(Level.SEVERE, message + " " + e.getMessage(), e);
         return Be5Exception.internal(e, message);
     }
