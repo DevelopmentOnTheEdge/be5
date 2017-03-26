@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.google.common.collect.ImmutableList;
@@ -41,10 +42,10 @@ public class OperationHelper
      */
     public List<Option> formOptions(String tableName, String valueColumnName, String textColumnName)
     {
-        //TODO user BeanHandler
-        return db.selectAll("SELECT ?,? FROM ?", rs -> new Option(rs.getString(valueColumnName), rs.getString(textColumnName)),
-                textColumnName, valueColumnName,tableName);
-        //return db.from(tableName).selectAll(ImmutableList.of(textColumnName, valueColumnName), rs -> new Option(rs.getString(valueColumnName), rs.getString(textColumnName)));
+        return db.selectList("SELECT "+valueColumnName+", "+textColumnName+" FROM " + tableName,
+                rs -> new Option(rs.getString(valueColumnName), rs.getString(textColumnName)));
+        //TODO check and del return db.from(tableName).selectAll(ImmutableList.of(textColumnName, valueColumnName),
+        // rs -> new Option(rs.getString(valueColumnName), rs.getString(textColumnName)));
     }
     
     public List<Option> formOptionsWithEmptyValue(String tableName, String valueColumnName, String textColumnName, String placeholder)
@@ -79,16 +80,19 @@ public class OperationHelper
         
         if (!foundQuery.isPresent())
             throw new IllegalArgumentException();
-//
-//        try
-//        {
-            return null;
-//            TODO return db.customSelect(foundQuery.get().getQueryCompiled().validate(), rs -> new Option(rs.getString(1), rs.getString(2)));
-//        }
-//        catch (ProjectElementException e)
-//        {
-//            throw new Error();
-//        }
+
+        try
+        {
+            return db.selectList(foundQuery.get().getQueryCompiled().validate(), rs ->
+                    new Option(rs.getString(1), rs.getString(2))
+            );
+//TODO check and del return db.customSelect(foundQuery.get().getQueryCompiled().validate(), rs ->
+//                  new Option(rs.getString(1), rs.getString(2)));
+        }
+        catch (ProjectElementException e)
+        {
+            throw new Error();
+        }
     }
     
     public List<Option> formOptionsWithEmptyValue(String tableName, String placeholder)

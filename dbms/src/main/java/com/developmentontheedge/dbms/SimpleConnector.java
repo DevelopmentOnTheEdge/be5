@@ -5,18 +5,29 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SimpleConnector implements DbmsConnector
 {
+    private static final Logger log = Logger.getLogger(SimpleConnector.class.getName());
+
     private final String connectionUrl;
     private final DbmsType type;
     private final Connection connection;
 
-    public SimpleConnector(DbmsType type, String connectionUrl, String username, String password) throws SQLException
+    public SimpleConnector(DbmsType type, String connectionUrl, String username, String password)
     {
         this.type = type;
         this.connectionUrl = connectionUrl;
-        this.connection = DriverManager.getConnection( connectionUrl, username, password );
+        try
+        {
+            this.connection = DriverManager.getConnection( connectionUrl, username, password );
+        }
+        catch (SQLException e)
+        {
+            throw propagate(e);
+        }
     }
 
     public SimpleConnector(DbmsType type, String connectionUrl, Connection connection)
@@ -255,5 +266,10 @@ public class SimpleConnector implements DbmsConnector
     public boolean isMSAccess()
     {
         return isDBMS( "jdbc:ucanaccess:" );
+    }
+
+    private RuntimeException propagate(SQLException e) {
+        log.log(Level.SEVERE, e.getMessage(), e);
+        return new RuntimeException(e);
     }
 }

@@ -27,7 +27,7 @@ public class MultiThreadedTest
     private static DatabaseService databaseService = null;
 
     @BeforeClass
-    public static void setUpProjectProviderImpl() throws Exception
+    public static void setUp() throws Exception
     {
         projectProvider = new ProjectProviderImpl(){
             @Override
@@ -87,14 +87,7 @@ public class MultiThreadedTest
                 conn.executeInsert("INSERT INTO Persons (name, password)" +
                         "VALUES ('test" + random.nextInt()%10 + "','" + random.nextInt() + "')");
 
-//                List<String> strings = db.from("Persons").selectAll(
-//                        rs -> rs.getString("ID") + " "
-//                                + rs.getString("name") + " " + rs.getString("password")
-//                );
-                //System.out.println(strings.size() + " last: "+ strings.get(strings.size()-1));
                 conn.releaseConnection(conn.getConnection());
-
-                //System.out.println(databaseService.getConnectionsStatistics());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -99,6 +99,7 @@ TOKEN_MGR_DECLS : {
 |   < ELSE:      "else"     >
 |   < END:       "end"      >
 |   < NULL:      "null"     >
+|   < REPLACEMENT_PARAMETER: "?" >
 |   < LIMIT:     "limit"    >
 |   < OFFSET:    "offset"   >
 |   < LIKE:      "like"     >
@@ -1306,6 +1307,7 @@ Token CompOperator() : { Token op; }
 void RowValuePredicand() : {}
 {
    ValueExpression()
+   | ReplacementParameter()
 // | <row value constructor predicand>					// @todo
 }
 
@@ -1676,6 +1678,17 @@ void SpecialConstant() #SpecialConstant :
     t = < NULL >
     {
         jjtThis.setValue(AstSpecialConstant.Special.NULL);
+    }
+}
+
+void ReplacementParameter() #ReplacementParameter :
+{
+    Token t;
+}
+{
+    t = < REPLACEMENT_PARAMETER >
+    {
+        jjtThis.setValue(t.image);
     }
 }
 

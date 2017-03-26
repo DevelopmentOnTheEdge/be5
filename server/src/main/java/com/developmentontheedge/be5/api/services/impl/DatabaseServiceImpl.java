@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
@@ -44,12 +45,8 @@ public class DatabaseServiceImpl implements DatabaseService
     public DbmsConnector getDbmsConnector()
     {
         BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
-        Connection connection = getConnection();
-        if(connection != null)
-        {
-            return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), connection);
-        }
-        return null;
+
+        return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), getConnection());
     }
 
     public DataSource getDataSource() {
@@ -63,10 +60,8 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch (SQLException e)
         {
-            log.log(Level.SEVERE, e.getMessage(), e);
-            return null;
+            throw propagate(e);
         }
-
     }
 
     public int getNumIdle()
@@ -81,5 +76,10 @@ public class DatabaseServiceImpl implements DatabaseService
 
     public String getConnectionsStatistics(){
         return "Active:" + getNumActive() + ", Idle:" + getNumIdle();
+    }
+
+    private Be5Exception propagate(SQLException e) {
+        log.log(Level.SEVERE, e.getMessage(), e);
+        return Be5Exception.internal(e);
     }
 }

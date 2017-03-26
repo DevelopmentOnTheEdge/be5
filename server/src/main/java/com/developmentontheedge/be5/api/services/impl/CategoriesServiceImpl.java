@@ -21,7 +21,9 @@ public class CategoriesServiceImpl implements CategoriesService
     @Override
     public List<Category> getCategoriesForest(String entity, boolean hideEmpty)
     {
-        List<MutableCategory> categories = null;//TODO db.from("categories").selectWith("entity", entity, MutableCategory::fromResultSet);
+        List<MutableCategory> categories = db.selectList("SELECT * FROM categories WHERE entity = ?",
+                MutableCategory::fromResultSet, entity);
+        //TODO check and del               db.from("categories").selectWith("entity", entity, MutableCategory::fromResultSet);
         List<MutableCategory> forest = Generators.forest(categories,
             c -> c.id,
             c -> c.parentId == 0,
@@ -71,7 +73,8 @@ public class CategoriesServiceImpl implements CategoriesService
     
     private boolean hasAnyItem(MutableCategory category)
     {
-        return false;//TODO db.in("classifications").existsWith("categoryID", category.id);
+        return db.selectLong("SELECT COUNT(*) FROM classifications WHERE categoryID = ?", category.id) > 0;
+        //TODO check and del return db.in("classifications").existsWith("categoryID", category.id); TODO check and delete
     }
     
 }

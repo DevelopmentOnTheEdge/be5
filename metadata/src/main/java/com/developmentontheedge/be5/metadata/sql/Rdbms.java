@@ -8,6 +8,8 @@ import com.developmentontheedge.dbms.DbmsType;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public enum Rdbms
 {
@@ -50,7 +52,9 @@ public enum Rdbms
             new PostgresTypeManager(),
             new PostgresSchemaReader(),
             "", "org.h2.Driver", "" );
-    
+
+    private static final Logger log = Logger.getLogger(Rdbms.class.getName());
+
     public static Rdbms getRdbms(final String url)
     {
         String realUrl = url.startsWith( "jdbc:" )?url.substring( "jdbc:".length() ):url; 
@@ -78,7 +82,9 @@ public enum Rdbms
         {
             return Rdbms.SQLSERVER;
         }
-        return null;
+
+        log.log(Level.SEVERE, "Database type not supported or not determined: " + realUrl);
+        throw new RuntimeException("Database type not supported or not determined: " + realUrl);
     }
 
     public static Rdbms getRdbms(DbmsConnector connector)
