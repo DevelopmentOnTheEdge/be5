@@ -42,17 +42,13 @@ public class AppDb extends Be5Mojo
         
         try
         {
-            if(true) // TODOisModules())
-            {
-                mergeModules();
-            }
             if( logPath != null)
             {
                 logPath.mkdirs();
                 ps = new PrintStream( new File(logPath, (moduleName == null ? be5Project.getName() : moduleName) + "_db.sql" ), "UTF-8" );
             }
 
-            sql = new BeSqlExecutor(connector, ps); // TODO - properties - null, what should be?
+            sql = new BeSqlExecutor(connector, ps);
             
             if( moduleName != null )
             {
