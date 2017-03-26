@@ -100,13 +100,18 @@ public class SqlServiceImpl implements SqlService
 
     private <T> T execute(boolean isReadOnly, SqlExecutor<T> executor) {
         Connection conn = null;
+        Connection txConn = databaseService.getCurrentTxConn();
+
         try {
-            conn = databaseService.getConnection(isReadOnly);
+            conn = (txConn != null) ? txConn : databaseService.getConnection(isReadOnly);
             return executor.run(conn);
         } catch (SQLException e) {
             throw getInternalBe5Exception(log, e);
         } finally {
-            databaseService.close(conn);
+            if(txConn == null)
+            {
+                databaseService.close(conn);
+            }
         }
     }
 
