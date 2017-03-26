@@ -55,7 +55,9 @@ public class AppValidate extends Be5Mojo
     @Override
     public void execute() throws MojoFailureException
     {
-        logger.setOperationName( "Reading project from " + projectPath + "..." );
+        initLogging();
+        
+        log.info("Reading project from " + projectPath + "..." );
         this.be5Project = loadProject( projectPath.toPath() );
 
         setRdbms();
@@ -99,13 +101,12 @@ public class AppValidate extends Be5Mojo
 
     private void loadModules() throws MojoFailureException
     {
-    	// PENDING - is it needed?
         LoadContext loadContext = new LoadContext();
         List<ProjectElementException> errors = new ArrayList<>();
         try
         {
             final Project model = be5Project;
-            List<Project> moduleProjects = ModuleUtils.loadModules( model, logger, loadContext );
+            List<Project> moduleProjects = ModuleUtils.loadModules(model, logger, loadContext);
             errors.addAll( validateDeps(moduleProjects) );
             ModuleUtils.mergeAllModules( model, moduleProjects, loadContext );
         }
@@ -132,10 +133,11 @@ public class AppValidate extends Be5Mojo
         List<ProjectElementException> errors = new ArrayList<>();
         if( skipValidation )
         {
-            logger.setOperationName( "Validation skipped" );
-        } else
+            log.info("Validation skipped");
+        } 
+        else
         {
-            logger.setOperationName( "Validating..." );
+            log.info("Validating...");
             errors.addAll( be5Project.getErrors() );
             int count = 0;
             for(ProjectElementException error : errors)
@@ -147,9 +149,10 @@ public class AppValidate extends Be5Mojo
             }
             if(count > 0)
             {
-                throw new MojoFailureException( "Project has "+count+" errors" );
+                throw new MojoFailureException("Project has " + count + " errors." );
             }
-            logger.setOperationName( "Project is valid." );
+            
+            log.info("Project is valid.");
             skipValidation = true;
         }
     }
@@ -188,8 +191,8 @@ public class AppValidate extends Be5Mojo
         {
             try
             {
-                logger.setOperationName( "Saving..." );
-                Serialization.save( be5Project, be5Project.getLocation() );
+                log.info("Saving...");
+                Serialization.save(be5Project, be5Project.getLocation());
             }
             catch(ProjectSaveException e)
             {
@@ -207,12 +210,14 @@ public class AppValidate extends Be5Mojo
             {
                 throw new MojoFailureException("Invalid entity: " +  ddlPath);
             }
+
             DdlElement scheme = entity.getScheme();
             if(scheme == null)
             {
                 throw new MojoFailureException("Entity has no scheme: " + ddlPath);
             }
-            System.err.println( scheme.getDdl().replaceAll( "\n", System.lineSeparator() ) );
+            
+            log.info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
         }
     }
     
@@ -220,7 +225,7 @@ public class AppValidate extends Be5Mojo
     {
         if( checkRoles )
         {
-            System.err.println( "Available roles:\n" + String.join( System.lineSeparator(), be5Project.getAvailableRoles() ) );
+            log.info("Available roles:\n" + String.join( System.lineSeparator(), be5Project.getAvailableRoles()));
         }
     }
 
@@ -234,6 +239,7 @@ public class AppValidate extends Be5Mojo
         {
             throw new MojoFailureException("Invalid query path supplied: " + queryPath);
         }
+        
         String entityName = queryPath.substring( 0, pos );
         String queryName  = queryPath.substring( pos+1 );
         Entity entity = be5Project.getEntity( entityName );
@@ -241,6 +247,7 @@ public class AppValidate extends Be5Mojo
         {
             throw new MojoFailureException("Invalid entity: " + entityName);
         }
+
         Query query = entity.getQueries().get( queryName );
         if(query == null)
         {
@@ -254,10 +261,12 @@ public class AppValidate extends Be5Mojo
                 throw new MojoFailureException("Can not load query, path=" + queryPath, e);
             }
         }
+
         if(query == null)
         {
             throw new MojoFailureException("Invalid query: "+queryName);
         }
-        System.err.println( query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator() ) );
+        
+        log.info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
     }
 }

@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.maven;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.apache.log4j.PropertyConfigurator;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
@@ -24,18 +24,21 @@ import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
-import com.developmentontheedge.be5.metadata.util.WriterLogger;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.MultiSqlParser;
 import com.developmentontheedge.dbms.SimpleConnector;
 
 public abstract class Be5Mojo extends AbstractMojo
 {
-    protected ProcessController logger = new WriterLogger();
-    protected Properties properties = new Properties();
-    protected DbmsConnector connector;
+	protected Logger log = Logger.getLogger(Be5Mojo.class.getPackage().getName());
+	
+	// temp, remove it later
+	protected ProcessController logger = new JULLogger(log);
+
+	protected DbmsConnector connector;
     
     ///////////////////////////////////////////////////////////////////
     // Properties
@@ -58,25 +61,15 @@ public abstract class Be5Mojo extends AbstractMojo
 
     ///////////////////////////////////////////////////////////////////    
     
+   
     protected void init() throws MojoFailureException
     {
-    	// TODO replace to Maven logging
-    	Properties properties = new Properties();
-    	properties.setProperty( "log4j.rootCategory", "INFO,stderr" );
-        properties.setProperty( "log4j.appender.stderr", "org.apache.log4j.ConsoleAppender" );
-        properties.setProperty( "log4j.appender.stderr.Threshold", "INFO" );
-        properties.setProperty( "log4j.appender.stderr.Target", "System.err" );
-        properties.setProperty( "log4j.appender.stderr.layout", "org.apache.log4j.PatternLayout" );
-        properties.setProperty( "log4j.appender.stderr.layout.ConversionPattern", "%-5p %d [%t][%F:%L] : %m%n" );
-        PropertyConfigurator.configure( properties );
-
-        
-        getLog().info("BE5 - projectPath: " + projectPath);
+    	initLogging();
+    	
         if( projectPath == null )
-        {
             throw new MojoFailureException("Please specify projectPath attribute");
-        }
-        logger.setOperationName("Reading project from '" + projectPath + "'...");
+
+        log.info("Reading be5 project from '" + projectPath + "'...");
         be5Project = loadProject(projectPath.toPath());
         if(debug)
         {
@@ -84,16 +77,22 @@ public abstract class Be5Mojo extends AbstractMojo
         }
     	
         BeConnectionProfile profile = be5Project.getConnectionProfile();
-        if ( connectionUrl == null )
+        if ( connectionUrl != null )
+        {
+            log.info("Using connection " + connectionUrl);
+        }
+        else
         {
             String user = null;
             String password = null;
+         
             if ( profile != null )
             {
                 connectionUrl = profile.getConnectionUrl();
                 user = profile.getUsername();
                 password = profile.getPassword();
             }
+
             if ( connectionUrl == null )
             {
                 throw new MojoFailureException(
@@ -101,20 +100,18 @@ public abstract class Be5Mojo extends AbstractMojo
                       + be5Project.getProjectFileStructure().getSelectedProfileFile()
                       + " file with profile name or use -DBE5_PROFILE=..." );
             }
+
             if ( user != null )
             {
-                logger.setOperationName("Using connection "+DatabaseUtils.formatUrl( connectionUrl, user, "xxxxx" ));
-                connectionUrl = DatabaseUtils.formatUrl( connectionUrl, user, password );
-            } else
+                log.info("Using connection " + DatabaseUtils.formatUrl(connectionUrl, user, "xxxxx"));
+                connectionUrl = DatabaseUtils.formatUrl(connectionUrl, user, password);
+            } 
+            else
             {
                 logger.setOperationName("Using connection "+connectionUrl);
             }
-        } else
-        {
-            logger.setOperationName("Using connection "+connectionUrl);
-        }
-System.out.println("!!connect=" + connectionUrl);
-
+        } 
+        
 		this.be5Project.setDatabaseSystem( Rdbms.getRdbms(connectionUrl) );
 
         this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
@@ -122,8 +119,34 @@ System.out.println("!!connect=" + connectionUrl);
 												 profile.getUsername(), profile.getPassword());
     }
     
-    
-   
+    /**
+     * Configures JUL (java.util.logging).
+     */
+    protected void initLogging()
+    {
+    	// configure JUL logging
+    	String ln = System.lineSeparator();
+    	String level = debug ? "FINEST" : "INFO";
+    	String logConfig = 
+//    			".level=" + level +
+    			"handlers= java.util.logging.ConsoleHandler" + ln +
+    			"java.util.logging.ConsoleHandler.level = " + level + ln +
+     			"java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter" + ln +
+    	        "java.util.logging.SimpleFormatter.format =%1$TT %4$s: %5$s%n";
+
+    	// JUL - String.format(format, date, source, logger, level, message, thrown);
+    	//                             1     2       3       4      5        6    
+    	
+    	try 
+    	{
+            LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes()));
+        } 
+    	catch (IOException e) 
+    	{
+            System.err.println("Could not setup logger configuration: " + e.toString());
+        }    	
+    }
+
     protected Project loadProject(final Path root) throws MojoFailureException
     {
         final LoadContext loadContext = new LoadContext();

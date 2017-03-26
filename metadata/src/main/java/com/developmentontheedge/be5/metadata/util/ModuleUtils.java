@@ -240,38 +240,28 @@ public class ModuleUtils
     /**
      * 
      * @param model
-     * @param projectFromDb
-     *            can be null
      * @throws ProjectLoadException
      */
     public static void mergeAllModules(
         final Project model,
-        final Project projectFromDb,
         final ProcessController logger,
         final LoadContext context ) throws ProjectLoadException
     {
-        mergeAllModules( model, projectFromDb, loadModules( model, logger, context ), context );
+        mergeAllModules(model, loadModules(model, logger, context), context);
     }
 
     /**
      * 
      * @param model
-     * @param projectFromDb
-     *            can be null
      * @throws ProjectLoadException
      */
-    public static void mergeAllModules( final Project model, final Project projectFromDb, List<Project> modules, final LoadContext context ) throws ProjectLoadException
+    public static void mergeAllModules( final Project model, List<Project> modules, final LoadContext context ) throws ProjectLoadException
     {
         modules = new LinkedList<>( modules );
 
         for ( Project module : modules )
         {
             module.mergeHostProject( model );
-        }
-
-        if ( projectFromDb != null )
-        {
-            modules.add( 0, projectFromDb );
         }
 
         final Project compositeModule = foldModules( modules, context );
