@@ -91,7 +91,6 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ObjectCache;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.util.Beans;

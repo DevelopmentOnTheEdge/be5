@@ -21,11 +21,11 @@ import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.MultiSqlParser;
@@ -168,7 +168,7 @@ public abstract class Be5Mojo extends AbstractMojo
         LoadContext loadContext = new LoadContext();
         try
         {
-            ModuleUtils.mergeAllModules( be5Project, logger, loadContext );
+            ModuleLoader2.mergeAllModules( be5Project, logger, loadContext );
         }
         catch(ProjectLoadException e)
         {

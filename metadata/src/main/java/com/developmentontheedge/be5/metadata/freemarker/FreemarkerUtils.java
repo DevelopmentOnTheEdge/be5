@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.SoftCacheStorage;
@@ -234,6 +233,9 @@ public final class FreemarkerUtils
             {
                 return new StringReader( ( ( Wrapper ) templateSource ).templateSource.getTemplateCode() );
             }
+            
+            // TODO - be5 has not special directory foe macros
+            /**
             if(templateSource instanceof DataElementPath)
             {
                 DataElementPath path = (DataElementPath)templateSource;
@@ -245,7 +247,8 @@ public final class FreemarkerUtils
                 {
                     // ignore: no system macros available
                 }
-            }
+            }*/
+            
             return new StringReader( "" );
         }
 

@@ -23,9 +23,9 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
 /**
  * Usage example: 
@@ -106,9 +106,9 @@ public class AppValidate extends Be5Mojo
         try
         {
             final Project model = be5Project;
-            List<Project> moduleProjects = ModuleUtils.loadModules(model, logger, loadContext);
+            List<Project> moduleProjects = ModuleLoader2.loadModules(model, logger, loadContext);
             errors.addAll( validateDeps(moduleProjects) );
-            ModuleUtils.mergeAllModules( model, moduleProjects, loadContext );
+            ModuleLoader2.mergeAllModules( model, moduleProjects, loadContext );
         }
         catch ( ProjectLoadException e )
         {

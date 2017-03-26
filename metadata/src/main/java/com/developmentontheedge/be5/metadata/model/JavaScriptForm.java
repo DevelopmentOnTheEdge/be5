@@ -7,8 +7,8 @@ import java.util.Objects;
 
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 public class JavaScriptForm extends SourceFile
@@ -54,7 +54,7 @@ public class JavaScriptForm extends SourceFile
     {
         try
         {
-            setLinkedFile( ModuleUtils.getFileSystem( getProject(), module ).getJavaScriptFormsFolder().resolve( relativePath ) );
+            setLinkedFile( ModuleLoader2.getFileSystem(getProject(), module).getJavaScriptFormsFolder().resolve( relativePath ) );
         }
         catch ( Exception e )
         {

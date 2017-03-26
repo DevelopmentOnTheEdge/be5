@@ -15,9 +15,9 @@ import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.dbms.SqlExecutor;
 
 import org.apache.maven.plugin.MojoFailureException;
@@ -45,10 +45,8 @@ public class AppData extends Be5Mojo
                 ps = new PrintStream( new File(logPath, be5Project.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql" ), "UTF-8" );
             }
 
-///        
-            ModuleUtils.addModuleScripts( be5Project );
-            if(script.contains( ":" ))
-                mergeModules();
+            ModuleLoader2.addModuleScripts(be5Project);
+
             List<FreemarkerScript> scripts = new ArrayList<>();
             for(String scriptName : script.split(";"))
             {
