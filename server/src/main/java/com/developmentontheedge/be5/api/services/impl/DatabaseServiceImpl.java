@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsConnector;
@@ -84,6 +86,54 @@ class DatabaseServiceImpl implements DatabaseService
             catch (SQLException e) {
                 throw getInternalBe5Exception(log, e);
             }
+        }
+    }
+
+    private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
+
+    public Connection getCurrentTxConn() {
+        return TRANSACT_CONN.get();
+    }
+
+    private Connection getTxConnection() throws SQLException
+    {
+        Connection conn = TRANSACT_CONN.get();
+        if (conn != null) {
+            throw getInternalBe5Exception(log, "Start second transaction in one thread");
+        }
+        conn = getDataSource().getConnection();
+        conn.setAutoCommit(false);
+        TRANSACT_CONN.set(conn);
+        return conn;
+    }
+
+    private void closeTx(Connection conn) {
+        close(conn);
+        TRANSACT_CONN.set(null);
+    }
+
+    public <T> T transaction(SqlExecutor<T> executor) {
+        Connection conn = null;
+        try {
+            conn = getTxConnection();
+            T res = executor.run(conn);
+            conn.commit();
+            return res;
+        } catch (Error | Exception e) {
+            throw rollback(conn, e);
+        } finally {
+            closeTx(conn);
+        }
+    }
+
+    private Be5Exception rollback(Connection conn, Throwable e) {
+        try {
+            if (conn != null) {
+                conn.rollback();
+            }
+            return getInternalBe5Exception(log, e);
+        } catch (SQLException se) {
+            return getInternalBe5Exception(log, "Unable to rollback transaction", e);
         }
     }
 
