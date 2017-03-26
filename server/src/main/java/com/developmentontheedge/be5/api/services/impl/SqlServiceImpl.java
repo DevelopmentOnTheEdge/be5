@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
@@ -16,8 +15,9 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.developmentontheedge.be5.api.helpers.JulLoggerUtils.getInternalBe5Exception;
 
 public class SqlServiceImpl implements SqlService
 {
@@ -41,7 +41,7 @@ public class SqlServiceImpl implements SqlService
         }
         catch (SQLException e)
         {
-            throw propagate(e);
+            throw getInternalBe5Exception(log, e);
         }
     }
 
@@ -71,7 +71,7 @@ public class SqlServiceImpl implements SqlService
         }
         catch (SQLException e)
         {
-            throw propagate(e);
+            throw getInternalBe5Exception(log, e);
         }
     }
 
@@ -83,7 +83,7 @@ public class SqlServiceImpl implements SqlService
         }
         catch (SQLException e)
         {
-            throw propagate(e);
+            throw getInternalBe5Exception(log, e);
         }
     }
 
@@ -105,8 +105,4 @@ public class SqlServiceImpl implements SqlService
         return new Formatter().format(SqlQuery.parse(sql), new Context(Dbms.MYSQL), new DefaultParserContext());
     }
 
-    private Be5Exception propagate(SQLException e) {
-        log.log(Level.SEVERE, e.getMessage(), e);
-        return Be5Exception.internal(e);
-    }
 }

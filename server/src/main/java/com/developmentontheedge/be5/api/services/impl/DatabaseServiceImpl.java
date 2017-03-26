@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
@@ -14,8 +13,9 @@ import javax.naming.Context;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.developmentontheedge.be5.api.helpers.JulLoggerUtils.getInternalBe5Exception;
 
 public class DatabaseServiceImpl implements DatabaseService
 {
@@ -60,7 +60,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch (SQLException e)
         {
-            throw propagate(e);
+            throw getInternalBe5Exception(log, e);
         }
     }
 
@@ -78,8 +78,4 @@ public class DatabaseServiceImpl implements DatabaseService
         return "Active:" + getNumActive() + ", Idle:" + getNumIdle();
     }
 
-    private Be5Exception propagate(SQLException e) {
-        log.log(Level.SEVERE, e.getMessage(), e);
-        return Be5Exception.internal(e);
-    }
 }
