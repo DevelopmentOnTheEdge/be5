@@ -83,24 +83,24 @@ public class AppSync extends Be5Mojo
             if(logPath != null)
             {
                 logPath.mkdirs();
-                ps = new PrintStream(new File(logPath, beanExplorerProject.getName() + "_sync_ddl.sql"), "UTF-8");
+                ps = new PrintStream(new File(logPath, be5Project.getName() + "_sync_ddl.sql"), "UTF-8");
             }
             
             sqlExecutor = new BeSqlExecutor(connector, ps);
 
-            if(beanExplorerProject.getDebugStream() != null)
+            if(be5Project.getDebugStream() != null)
             {
-                beanExplorerProject.getDebugStream().println("Modules and extras for "+beanExplorerProject.getName()+":");
-                beanExplorerProject.allModules()
+                be5Project.getDebugStream().println("Modules and extras for "+be5Project.getName()+":");
+                be5Project.allModules()
                         .map( m -> "- " + m.getName() + ": " + (m.getExtras() == null ? "" : String.join(", ", m.getExtras())) )
-                        .forEach( beanExplorerProject.getDebugStream()::println );
+                        .forEach( be5Project.getDebugStream()::println );
             }
             
             readSchema();
             createEntities();
 
             String ddlString = getDdlStatements(false);
-            ddlString = MultiSqlParser.normalize(beanExplorerProject.getDatabaseSystem().getType(), ddlString);
+            ddlString = MultiSqlParser.normalize(be5Project.getDatabaseSystem().getType(), ddlString);
 
             if( ddlString.isEmpty() )
             {
@@ -214,7 +214,7 @@ public class AppSync extends Be5Mojo
 
         entities = new ArrayList<>();
         Project project = new Project("internal-db");
-        project.setDatabaseSystem(beanExplorerProject.getDatabaseSystem());
+        project.setDatabaseSystem(be5Project.getDatabaseSystem());
         Module module = new Module("temp", project);
         
         for(String table : tableTypes.keySet() )
@@ -388,7 +388,7 @@ public class AppSync extends Be5Mojo
         Map<String, DdlElement> oldSchemes = new HashMap<>();
         Map<String, DdlElement> newSchemes = new HashMap<>();
 
-        for( Module module : beanExplorerProject.getModulesAndApplication() )
+        for( Module module : be5Project.getModulesAndApplication() )
         {
             for( Entity entity : module.getEntities() )
             {

@@ -42,21 +42,17 @@ public class AppDb extends Be5Mojo
         
         try
         {
-            if(true) // TODOisModules())
-            {
-                mergeModules();
-            }
             if( logPath != null)
             {
                 logPath.mkdirs();
-                ps = new PrintStream( new File(logPath, (moduleName == null ? beanExplorerProject.getName() : moduleName) + "_db.sql" ), "UTF-8" );
+                ps = new PrintStream( new File(logPath, (moduleName == null ? be5Project.getName() : moduleName) + "_db.sql" ), "UTF-8" );
             }
 
-            sql = new BeSqlExecutor(connector, ps); // TODO - properties - null, what should be?
+            sql = new BeSqlExecutor(connector, ps);
             
             if( moduleName != null )
             {
-                Module module = beanExplorerProject.getModule( moduleName );
+                Module module = be5Project.getModule( moduleName );
                 if(module == null)
                 {
                     throw new MojoFailureException("Module '" + moduleName + "' not found!");
@@ -65,12 +61,12 @@ public class AppDb extends Be5Mojo
             }
             else
             {
-                for(Module module : beanExplorerProject.getModules())
+                for(Module module : be5Project.getModules())
                 {
                     if( ModuleLoader2.containsModule(module.getName()) ) 
                         createDb( module );
                 }
-                createDb(beanExplorerProject.getApplication());
+                createDb(be5Project.getApplication());
             }
         }
         catch( MojoFailureException e )

@@ -55,8 +55,10 @@ public class AppValidate extends Be5Mojo
     @Override
     public void execute() throws MojoFailureException
     {
-        logger.setOperationName( "Reading project from " + projectPath + "..." );
-        this.beanExplorerProject = loadProject( projectPath.toPath() );
+        initLogging();
+        
+        log.info("Reading project from " + projectPath + "..." );
+        this.be5Project = loadProject( projectPath.toPath() );
 
         setRdbms();
         loadModules();
@@ -70,13 +72,13 @@ public class AppValidate extends Be5Mojo
 
     private void checkProfileProtection() throws MojoFailureException
     {
-        if(beanExplorerProject.getConnectionProfile() != null &&
-                beanExplorerProject.getConnectionProfile().isProtected() &&
+        if(be5Project.getConnectionProfile() != null &&
+                be5Project.getConnectionProfile().isProtected() &&
                 ! unlockProtectedProfile )
         {
             System.err.println( "=== WARNING! ===" ); 
-            System.err.println( "You are using the protected profile '" + beanExplorerProject.getConnectionProfileName()+"'");
-            System.err.println( "The following database may be modified due to this command: " + beanExplorerProject.getConnectionProfile().getConnectionUrl());
+            System.err.println( "You are using the protected profile '" + be5Project.getConnectionProfileName()+"'");
+            System.err.println( "The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
             System.err.println( "Type the profile name to confirm its usage:" );
             String line = "";
             try
@@ -87,7 +89,7 @@ public class AppValidate extends Be5Mojo
             {
                 // ignore
             }
-            if(beanExplorerProject.getConnectionProfileName().equals( line ))
+            if(be5Project.getConnectionProfileName().equals( line ))
             {
                 unlockProtectedProfile = true;
             } else 
@@ -99,17 +101,14 @@ public class AppValidate extends Be5Mojo
 
     private void loadModules() throws MojoFailureException
     {
-        if(!modules)
-            return;
-        
         LoadContext loadContext = new LoadContext();
         List<ProjectElementException> errors = new ArrayList<>();
         try
         {
-            final Project model = beanExplorerProject;
-            List<Project> moduleProjects = ModuleUtils.loadModules( model, logger, loadContext );
+            final Project model = be5Project;
+            List<Project> moduleProjects = ModuleUtils.loadModules(model, logger, loadContext);
             errors.addAll( validateDeps(moduleProjects) );
-            ModuleUtils.mergeAllModules( model, null, moduleProjects, loadContext );
+            ModuleUtils.mergeAllModules( model, moduleProjects, loadContext );
         }
         catch ( ProjectLoadException e )
         {
@@ -122,10 +121,10 @@ public class AppValidate extends Be5Mojo
     {
         // Need to set any system to validate project
         if(rdbmsName != null)
-            beanExplorerProject.setDatabaseSystem( Rdbms.valueOf( rdbmsName.toUpperCase(Locale.ENGLISH) ) );
-        if(beanExplorerProject.getDatabaseSystem() == null)
+            be5Project.setDatabaseSystem( Rdbms.valueOf( rdbmsName.toUpperCase(Locale.ENGLISH) ) );
+        if(be5Project.getDatabaseSystem() == null)
         {
-            beanExplorerProject.setDatabaseSystem( Rdbms.POSTGRESQL );
+            be5Project.setDatabaseSystem( Rdbms.POSTGRESQL );
         }
     }
 
@@ -134,24 +133,26 @@ public class AppValidate extends Be5Mojo
         List<ProjectElementException> errors = new ArrayList<>();
         if( skipValidation )
         {
-            logger.setOperationName( "Validation skipped" );
-        } else
+            log.info("Validation skipped");
+        } 
+        else
         {
-            logger.setOperationName( "Validating..." );
-            errors.addAll( beanExplorerProject.getErrors() );
+            log.info("Validating...");
+            errors.addAll( be5Project.getErrors() );
             int count = 0;
             for(ProjectElementException error : errors)
             {
-                if(error.getPath().equals( beanExplorerProject.getName() ) && error.getProperty().equals( "connectionProfileName" ))
+                if(error.getPath().equals( be5Project.getName() ) && error.getProperty().equals( "connectionProfileName" ))
                     continue;
                 count++;
                 displayError( error );
             }
             if(count > 0)
             {
-                throw new MojoFailureException( "Project has "+count+" errors" );
+                throw new MojoFailureException("Project has " + count + " errors." );
             }
-            logger.setOperationName( "Project is valid." );
+            
+            log.info("Project is valid.");
             skipValidation = true;
         }
     }
@@ -190,8 +191,8 @@ public class AppValidate extends Be5Mojo
         {
             try
             {
-                logger.setOperationName( "Saving..." );
-                Serialization.save( beanExplorerProject, beanExplorerProject.getLocation() );
+                log.info("Saving...");
+                Serialization.save(be5Project, be5Project.getLocation());
             }
             catch(ProjectSaveException e)
             {
@@ -204,17 +205,19 @@ public class AppValidate extends Be5Mojo
     {
         if( ddlPath != null)
         {
-            Entity entity = beanExplorerProject.getEntity(ddlPath);
+            Entity entity = be5Project.getEntity(ddlPath);
             if(entity == null)
             {
                 throw new MojoFailureException("Invalid entity: " +  ddlPath);
             }
+
             DdlElement scheme = entity.getScheme();
             if(scheme == null)
             {
                 throw new MojoFailureException("Entity has no scheme: " + ddlPath);
             }
-            System.err.println( scheme.getDdl().replaceAll( "\n", System.lineSeparator() ) );
+            
+            log.info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
         }
     }
     
@@ -222,7 +225,7 @@ public class AppValidate extends Be5Mojo
     {
         if( checkRoles )
         {
-            System.err.println( "Available roles:\n" + String.join( System.lineSeparator(), beanExplorerProject.getAvailableRoles() ) );
+            log.info("Available roles:\n" + String.join( System.lineSeparator(), be5Project.getAvailableRoles()));
         }
     }
 
@@ -236,13 +239,15 @@ public class AppValidate extends Be5Mojo
         {
             throw new MojoFailureException("Invalid query path supplied: " + queryPath);
         }
+        
         String entityName = queryPath.substring( 0, pos );
         String queryName  = queryPath.substring( pos+1 );
-        Entity entity = beanExplorerProject.getEntity( entityName );
+        Entity entity = be5Project.getEntity( entityName );
         if(entity == null)
         {
             throw new MojoFailureException("Invalid entity: " + entityName);
         }
+
         Query query = entity.getQueries().get( queryName );
         if(query == null)
         {
@@ -256,10 +261,12 @@ public class AppValidate extends Be5Mojo
                 throw new MojoFailureException("Can not load query, path=" + queryPath, e);
             }
         }
+
         if(query == null)
         {
             throw new MojoFailureException("Invalid query: "+queryName);
         }
-        System.err.println( query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator() ) );
+        
+        log.info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
     }
 }

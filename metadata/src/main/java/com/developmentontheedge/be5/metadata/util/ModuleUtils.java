@@ -4,11 +4,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -20,7 +18,6 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -59,14 +56,9 @@ public class ModuleUtils
         ModuleUtils.basePathProvider = basePathProvider;
     }
 
-    public static void setAdditionalModulePaths( Collection<Path> paths )
-    {
-        moduleLoader = new ModuleLoader( paths );
-    }
 
     private static BasePathProvider basePathProvider;
     private static volatile Path basePath;
-    private static volatile ModuleLoader moduleLoader = new ModuleLoader( Collections.emptyList() );
 
     public static Path getBasePath()
     {
@@ -114,40 +106,10 @@ public class ModuleUtils
         return getBasePath().resolve( "modules" ).resolve( moduleName );
     }
 
-    /**
-     * Returns path for the BE4 module if it exists
-     * 
-     * @param moduleName
-     *            module name
-     * @return path if it exists
-     * @throws IllegalArgumentException
-     *             if module does not exist
-     */
-    public static Path getModulePath( String moduleName )
-    {
-        return resolveModule( moduleName ).orElseThrow( ( ) -> new IllegalArgumentException( "Module not found: " + moduleName ) );
-    }
-
-    /**
-     * Returns path for the BE4 module if it exists
-     * 
-     * @param moduleName
-     *            module name
-     * @return path if it exists, empty optional otherwise
-     */
-    public static Optional<Path> resolveModule( String moduleName )
-    {
-        return moduleLoader.resolveModule( moduleName );
-    }
 
     public static Path getLegacyModulePath( String moduleName )
     {
         return getLegacyBeanExplorerPath().resolve( "modules" ).resolve( moduleName );
-    }
-
-    public static boolean isModuleExist( String moduleName )
-    {
-        return moduleLoader.isModuleExists( moduleName );
     }
 
     public static boolean isLegacyModuleExist( String moduleName )
@@ -172,11 +134,6 @@ public class ModuleUtils
             }
         }
         return result;
-    }
-
-    public static Set<String> getAvailableModules()
-    {
-        return moduleLoader.moduleNames().toSet();
     }
 
     public static Set<String> getAvailableLegacyModules()
@@ -240,38 +197,28 @@ public class ModuleUtils
     /**
      * 
      * @param model
-     * @param projectFromDb
-     *            can be null
      * @throws ProjectLoadException
      */
     public static void mergeAllModules(
         final Project model,
-        final Project projectFromDb,
         final ProcessController logger,
         final LoadContext context ) throws ProjectLoadException
     {
-        mergeAllModules( model, projectFromDb, loadModules( model, logger, context ), context );
+        mergeAllModules(model, loadModules(model, logger, context), context);
     }
 
     /**
      * 
      * @param model
-     * @param projectFromDb
-     *            can be null
      * @throws ProjectLoadException
      */
-    public static void mergeAllModules( final Project model, final Project projectFromDb, List<Project> modules, final LoadContext context ) throws ProjectLoadException
+    public static void mergeAllModules( final Project model, List<Project> modules, final LoadContext context ) throws ProjectLoadException
     {
         modules = new LinkedList<>( modules );
 
         for ( Project module : modules )
         {
             module.mergeHostProject( model );
-        }
-
-        if ( projectFromDb != null )
-        {
-            modules.add( 0, projectFromDb );
         }
 
         final Project compositeModule = foldModules( modules, context );
@@ -344,7 +291,7 @@ public class ModuleUtils
         {
             return new ProjectFileSystem( app );
         }
-        Path modulePath = moduleLoader.resolveModule( moduleName ).orElse( null );
+        Path modulePath = ModuleLoader2.resolveModule(moduleName);
         if ( modulePath != null )
         {
             Project project = new Project( moduleName );
@@ -364,13 +311,5 @@ public class ModuleUtils
             return new ProjectFileSystem( project );
         }
         return null;
-    }
-
-    public static Project loadMetaProject( LoadContext ctx ) throws ProjectLoadException
-    {
-        Project metaModule = loadModule( SYSTEM_MODULE_SERIALIZED, ctx );
-        Project metaProject = new Project( SYSTEM_MODULE_SERIALIZED );
-        DataElementUtils.save( metaModule.getApplication().clone( metaProject.getModules(), SYSTEM_MODULE ) );
-        return metaProject;
     }
 }

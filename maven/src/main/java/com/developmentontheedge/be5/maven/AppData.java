@@ -22,7 +22,6 @@ import com.developmentontheedge.dbms.SqlExecutor;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo( name = "data")
 public class AppData extends Be5Mojo
@@ -43,25 +42,25 @@ public class AppData extends Be5Mojo
             if(logPath != null)
             {
                 logPath.mkdirs();
-                ps = new PrintStream( new File(logPath, beanExplorerProject.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql" ), "UTF-8" );
+                ps = new PrintStream( new File(logPath, be5Project.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql" ), "UTF-8" );
             }
 
 ///        
-            ModuleUtils.addModuleScripts( beanExplorerProject );
+            ModuleUtils.addModuleScripts( be5Project );
             if(script.contains( ":" ))
                 mergeModules();
             List<FreemarkerScript> scripts = new ArrayList<>();
             for(String scriptName : script.split(";"))
             {
                 int pos = scriptName.indexOf( ':' );
-                FreemarkerCatalog scriptsCatalog = beanExplorerProject.getApplication().getFreemarkerScripts();
+                FreemarkerCatalog scriptsCatalog = be5Project.getApplication().getFreemarkerScripts();
                 if(pos > 0)
                 {
                     String moduleName = scriptName.substring( 0, pos );
                     scriptName = scriptName.substring( pos+1 );
                     if(moduleName.equals( "all" ))
                     {
-                        for(Module module : beanExplorerProject.getModules())
+                        for(Module module : be5Project.getModules())
                         {
                             scriptsCatalog = module.getFreemarkerScripts();
                             if(scriptsCatalog == null)
@@ -71,7 +70,7 @@ public class AppData extends Be5Mojo
                                 continue;
                             scripts.add( script );
                         }
-                        FreemarkerScript script = beanExplorerProject.getApplication().getFreemarkerScripts().optScript( scriptName );
+                        FreemarkerScript script = be5Project.getApplication().getFreemarkerScripts().optScript( scriptName );
                         if(script != null)
                         {
                             scripts.add( script );
@@ -79,7 +78,7 @@ public class AppData extends Be5Mojo
                         continue;
                     } else
                     {
-                        Module module = beanExplorerProject.getModule( moduleName );
+                        Module module = be5Project.getModule( moduleName );
                         if(module == null)
                         {
                             if(ignoreMissing)
@@ -137,7 +136,7 @@ public class AppData extends Be5Mojo
         {
             Files.write(
                     logPath.toPath().resolve(
-                            beanExplorerProject.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
+                            be5Project.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
                                 + freemarkerScript.getName() + ".compiled" ), compiled.getBytes( StandardCharsets.UTF_8 ) );
         }
         String sql = compiled.trim();
