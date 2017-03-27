@@ -1,10 +1,27 @@
 package com.developmentontheedge.be5.metadata.sql;
 
-import com.developmentontheedge.be5.metadata.sql.macro.*;
-import com.developmentontheedge.be5.metadata.sql.schema.*;
-import com.developmentontheedge.be5.metadata.sql.type.*;
+import com.developmentontheedge.be5.metadata.sql.macro.BeSQLMacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.macro.Db2MacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.macro.IMacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.macro.MySqlMacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.macro.OracleMacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.macro.PostgresMacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.macro.SqlServerMacroProcessorStrategy;
+import com.developmentontheedge.be5.metadata.sql.schema.Db2SchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.DbmsSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.MySqlSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.OracleSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.PostgresSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.SqlServerSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.type.Db2TypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.SqlServerTypeManager;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.DbmsType;
+import com.developmentontheedge.sql.format.Dbms;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -87,23 +104,26 @@ public enum Rdbms
         throw new RuntimeException("Database type not supported or not determined: " + realUrl);
     }
 
-    public static Rdbms getRdbms(DbmsConnector connector)
+    public static Rdbms getRdbms(DbmsConnector connector){
+        return getRdbms(connector.getType());
+    }
+
+    public static Rdbms getRdbms(DbmsType dbmsType)
     {
-        switch( connector.getType() )
+        Rdbms[] values = Rdbms.values();
+        for (int i = 0; i < values.length; i++)
         {
-            case MYSQL:         return Rdbms.MYSQL; 
-            case DB2:           return Rdbms.DB2; 
-            case ORACLE:        return Rdbms.ORACLE; 
-            case POSTGRESQL:    return Rdbms.POSTGRESQL; 
-            case SQLSERVER:     return Rdbms.SQLSERVER; 
-            case BESQL:         return Rdbms.BESQL;
-            case H2:            return Rdbms.H2;
+            if(values[i].getType() == dbmsType)return values[i];
         }
 
-        throw new IllegalStateException("Unsupported connector: " + connector.getConnectString());
+        throw new IllegalStateException( "Unsupported connector: " + dbmsType );
     }
-    
-  
+
+    public Dbms getDbms()
+    {
+        return Dbms.valueOf(this.name().toUpperCase());
+    }
+
     ///////////////////////////////////////////////////////////////////
     // RDBMS implementation
     //

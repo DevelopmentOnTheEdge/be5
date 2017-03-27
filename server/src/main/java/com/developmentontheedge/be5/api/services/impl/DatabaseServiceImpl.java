@@ -6,9 +6,6 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.dbms.DbmsType;
-import com.developmentontheedge.dbms.SimpleConnector;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.naming.Context;
@@ -22,19 +19,15 @@ import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInt
 class DatabaseServiceImpl implements DatabaseService
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
-
-    private ProjectProvider projectProvider;
     private BasicDataSource bds = null;
+    private Rdbms type;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider){
-        this.projectProvider = projectProvider;
-
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
 
         BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
-        Rdbms rdbms = profile.getRdbms();
-        DbmsType type = rdbms.getType();
+        type = profile.getRdbms();
 
         bds = new BasicDataSource();
         bds.setDriverClassName(profile.getDriverDefinition());
@@ -43,22 +36,7 @@ class DatabaseServiceImpl implements DatabaseService
         bds.setPassword(profile.getPassword());
     }
 
-    @Override
-    public DbmsConnector getDbmsConnector()
-    {
-        BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
-
-        try
-        {
-            return new SimpleConnector(profile.getRdbms().getType(), profile.getConnectionUrl(), getConnection(false));
-        }
-        catch (SQLException e)
-        {
-            throw getInternalBe5Exception(log, e);
-        }
-    }
-
-    public DataSource getDataSource() {
+    private DataSource getDataSource() {
         return bds;
     }
 
@@ -149,6 +127,12 @@ class DatabaseServiceImpl implements DatabaseService
 
     public String getConnectionsStatistics(){
         return "Active:" + getNumActive() + ", Idle:" + getNumIdle();
+    }
+
+    @Override
+    public Rdbms getRdbms()
+    {
+        return type;
     }
 
 }

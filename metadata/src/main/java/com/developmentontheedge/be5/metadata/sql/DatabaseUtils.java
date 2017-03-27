@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.metadata.sql;
 
 import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.SqlExecutor;
 
@@ -34,36 +35,12 @@ public class DatabaseUtils
         }
         return null;
     }
-    
+
     public static Rdbms getRdbms( final DbmsConnector connector )
     {
-        if ( connector.isDb2() )
-        {
-            return Rdbms.DB2;
-        }
-        else if ( connector.isMySQL() )
-        {
-            return Rdbms.MYSQL;
-        }
-        else if ( connector.isOracle() )
-        {
-            return Rdbms.ORACLE;
-        }
-        else if ( connector.isSQLServer() )
-        {
-            return Rdbms.SQLSERVER;
-        }
-        else if ( connector.isPostgreSQL() )
-        {
-            return Rdbms.POSTGRESQL;
-        }
-        else if ( connector.isH2() )
-        {
-            return Rdbms.H2;
-        }
-        throw new IllegalStateException( "Unsupported connector: "+connector.getConnectString() );
+        return Rdbms.getRdbms(connector.getType());
     }
-    
+
     public static String formatUrl( final String baseURL, final String user, final String password )
     {
         final String correctedPassword = password == null ? "" : password;

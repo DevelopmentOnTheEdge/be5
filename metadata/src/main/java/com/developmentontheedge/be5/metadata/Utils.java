@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.metadata;
 
 import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.DbmsType;
 //import com.developmentontheedge.be5.metadata.caches.Cache;
 //import com.developmentontheedge.be5.metadata.caches.SystemSettingsCache;
 
@@ -220,7 +221,7 @@ public class Utils
 
         String newText;
 
-        if( connector != null && ( connector.isMySQL() || connector.isMySQL5() ) )
+        if( connector != null && ( connector.getType() == DbmsType.MYSQL ) )
         {
             newText = safestrMySQL( text );
         }

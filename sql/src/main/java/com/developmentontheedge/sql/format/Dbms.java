@@ -1,29 +1,24 @@
 package com.developmentontheedge.sql.format;
 
-import com.developmentontheedge.dbms.DbmsType;
-
 public enum Dbms
 {
-    DB2       ( DbmsType.DB2),
-    MYSQL     ( DbmsType.MYSQL),
-    ORACLE    ( DbmsType.ORACLE),
-    SQLSERVER ( DbmsType.SQLSERVER),
-    POSTGRESQL( DbmsType.POSTGRESQL);
+    DB2( "db2" ),
+    MYSQL( "mysql" ),
+    ORACLE( "oracle" ),
+    SQLSERVER( "sqlserver"),
+    POSTGRESQL( "postgres"),
+    H2("h2");
 
-    private Dbms(DbmsType type)
-    {
-        this.type = type;
-    }
+    private String name;
 
-    private final DbmsType type;
-    public DbmsType getType()
+    Dbms(String name)
     {
-        return type;
+        this.name = name;
     }
 
     public String getName()
     {
-        return type.getName();
+        return name;
     }
 
 }

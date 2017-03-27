@@ -12,7 +12,8 @@ public class Context
         case MYSQL:      dbmsTransformer = new MySqlTransformer();        break; 
         case ORACLE:     dbmsTransformer = new OracleTransformer();       break; 
         case POSTGRESQL: dbmsTransformer = new PostgreSqlTransformer();   break; 
-        case SQLSERVER:  dbmsTransformer = new SqlServerTransformer();    break; 
+        case SQLSERVER:  dbmsTransformer = new SqlServerTransformer();    break;
+        case H2:         dbmsTransformer = new PostgreSqlTransformer();   break;
         }
     }
 

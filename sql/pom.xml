@@ -17,11 +17,6 @@
  </parent>
 
  <dependencies>
-  <dependency>
-   <groupId>com.developmentontheedge</groupId>
-   <artifactId>dbms</artifactId>
-   <version>0.1.0</version>
-  </dependency>
 
   <dependency>
    <groupId>junit</groupId>

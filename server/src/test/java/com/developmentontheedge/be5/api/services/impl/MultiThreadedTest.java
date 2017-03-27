@@ -2,7 +2,8 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.dbms.DbmsConnector;
+
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.junit.Test;
 import javax.servlet.ServletContext;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -23,32 +23,32 @@ import static junit.framework.TestCase.assertNotNull;
 
 public class MultiThreadedTest
 {
-    private static ProjectProviderImpl projectProvider = null;
-    private static DatabaseService databaseService = null;
+    private static SqlService db;
+    private static DatabaseService databaseService;
 
     @BeforeClass
     public static void setUp() throws Exception
     {
-        projectProvider = new ProjectProviderImpl(){
+        ProjectProviderImpl projectProvider = new ProjectProviderImpl()
+        {
             @Override
-            public Path getPath(ServletContext ctx, String attributeName) {
-                if("be5.configPath".equals(attributeName) || "be5.projectSource".equals(attributeName))
+            public Path getPath(ServletContext ctx, String attributeName)
+            {
+                if ("be5.configPath".equals(attributeName) || "be5.projectSource".equals(attributeName))
                     return Paths.get("src/test/resources/app").toAbsolutePath();
                 return Paths.get("");
             }
         };
         assertNotNull(projectProvider);
         databaseService = new DatabaseServiceImpl(projectProvider);
-        DbmsConnector conn = databaseService.getDbmsConnector();
-        assertNotNull(conn);
-        conn.executeUpdate("DROP TABLE IF EXISTS Persons;" );
-        conn.executeUpdate("CREATE TABLE Persons (\n" +
+        db = new SqlServiceImpl(databaseService);
+        db.update("DROP TABLE IF EXISTS Persons" );
+        db.update("CREATE TABLE Persons (\n" +
                 "    ID int NOT NULL AUTO_INCREMENT,\n" +
                 "    name varchar(255),\n" +
                 "    password varchar(255),\n" +
                 "    email varchar(255) \n" +
-                ");");
-        conn.releaseConnection(conn.getConnection());
+                ")");
     }
 
     @Test
@@ -64,12 +64,7 @@ public class MultiThreadedTest
             e.printStackTrace();
         }
 
-        DbmsConnector conn = databaseService.getDbmsConnector();
-        ResultSet rs = conn.executeQuery("select count(*) AS \"count\" from Persons;");
-        rs.next();
-        int count = Integer.parseInt(rs.getString("count"));
-        conn.close(rs);
-        conn.releaseConnection(conn.getConnection());
+        long count = db.selectScalar("select count(*) AS \"count\" from Persons");
 
         assertEquals(100, count);
     }
@@ -78,19 +73,10 @@ public class MultiThreadedTest
 
         @Override
         public void run()  {
-            try {
-                DbmsConnector conn = databaseService.getDbmsConnector();
+            Random random = new Random();
 
-                SqlService db = new SqlServiceImpl(databaseService);
-                Random random = new Random();
-
-                conn.executeInsert("INSERT INTO Persons (name, password)" +
+            db.update("INSERT INTO Persons (name, password)" +
                         "VALUES ('test" + random.nextInt()%10 + "','" + random.nextInt() + "')");
-
-                conn.releaseConnection(conn.getConnection());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

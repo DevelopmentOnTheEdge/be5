@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.sql.format.Context;
-import com.developmentontheedge.sql.format.Dbms;
 import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
@@ -78,8 +77,8 @@ public class SqlServiceImpl implements SqlService
 
     private String format(String sql)
     {
-        //TODO get Dbms from DatabaseServiceImpl
-        return new Formatter().format(SqlQuery.parse(sql), new Context(Dbms.MYSQL), new DefaultParserContext());
+        return new Formatter().format(SqlQuery.parse(sql),
+                new Context(databaseService.getRdbms().getDbms()), new DefaultParserContext());
     }
 
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException

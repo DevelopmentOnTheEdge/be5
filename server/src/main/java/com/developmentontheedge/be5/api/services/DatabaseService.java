@@ -1,18 +1,13 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
-import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface DatabaseService
 {
-    DataSource getDataSource();
-
-    DbmsConnector getDbmsConnector();
-
     Connection getConnection(boolean isReadOnly) throws SQLException;
 
     void close(Connection conn);
@@ -26,4 +21,6 @@ public interface DatabaseService
     int getNumActive();
 
     String getConnectionsStatistics();
+
+    Rdbms getRdbms();
 }
