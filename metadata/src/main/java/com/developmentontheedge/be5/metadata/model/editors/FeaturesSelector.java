@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.metadata.model.editors;
 
-import java.util.Set;
-
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.beans.editors.GenericMultiSelectEditor;
 
 public class FeaturesSelector extends GenericMultiSelectEditor
@@ -17,11 +14,16 @@ public class FeaturesSelector extends GenericMultiSelectEditor
 
     public static String[] getFeatures()
     {
+    	// TODO - be5 features are undefined yet
+    	/**
         if(features == null)
         {
             Set<String> featuresSet = ModuleUtils.getAvailableFeatures();
             features = featuresSet.toArray( new String[featuresSet.size()] );
         }
         return features.clone();
+        */
+    	
+    	return new String[] {};
     }
 }

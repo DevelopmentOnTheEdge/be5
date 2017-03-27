@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 @PropertyName("Icon")
@@ -158,16 +157,21 @@ public class Icon
     
     protected byte[] getBeIcon() throws IOException
     {
+    	// TODO be5 has not special path for icons
+    	/*
         Path beanExplorerIconsPath;
         try
         {
-            beanExplorerIconsPath = ModuleUtils.getBeanExplorerIconsPath();
+        	beanExplorerIconsPath = ModuleUtils.getBeanExplorerIconsPath();
         }
         catch ( UnsupportedOperationException e )
         {
             throw new IOException( e );
         }
         return Files.readAllBytes( beanExplorerIconsPath.resolve( name ) );
+        */
+    	
+    	return null;
     }
     
     public byte[] getData()

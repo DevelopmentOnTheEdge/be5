@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.metadata.model.editors;
 
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 import com.developmentontheedge.beans.editors.StringTagEditor;
 
 public class ModuleSelector extends StringTagEditor
@@ -17,7 +16,7 @@ public class ModuleSelector extends StringTagEditor
         }
         catch( Exception e )
         {
-            return new String[] {Project.APPLICATION, ModuleUtils.SYSTEM_MODULE};
+            return new String[] {Project.APPLICATION};
         }
     }
 }

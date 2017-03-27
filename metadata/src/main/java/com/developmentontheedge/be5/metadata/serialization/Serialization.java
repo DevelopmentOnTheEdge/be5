@@ -32,7 +32,6 @@ import com.developmentontheedge.be5.metadata.model.SecurityCollection;
 import com.developmentontheedge.be5.metadata.model.StaticPages;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 
 /**
  * Facade.
