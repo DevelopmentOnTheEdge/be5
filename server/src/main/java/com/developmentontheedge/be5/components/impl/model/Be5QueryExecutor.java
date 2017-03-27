@@ -5,6 +5,8 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -17,7 +19,6 @@ import com.developmentontheedge.be5.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
-import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
@@ -283,7 +284,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private final Map<String, String> parametersMap;
-    private final DbmsConnector connector;
+    private final DatabaseService databaseService;
+    private final SqlService db;
     private final UserInfoManager userInfoManager;
     private final HttpSession session;
     private final ContextApplier contextApplier;
@@ -303,13 +305,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
-        this.connector = serviceProvider.getDbmsConnector();
+        this.databaseService = serviceProvider.getDatabaseService();
+        this.db = serviceProvider.getSqlService();
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
         this.userInfoManager = UserInfoManager.get(req, serviceProvider);
         this.session = req.getRawSession();
         this.queryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier( queryContext );
-        this.context = new Context( Dbms.valueOf( DatabaseUtils.getRdbms( connector ).name() ) );
+        this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
         this.serviceProvider = serviceProvider;
@@ -527,13 +530,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private DynamicProperty[] getSchema(String sql) throws SQLException
     {
-        Connection conn = connector.getConnection();
+        Connection conn = databaseService.getConnection(true);
 
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
             return DpsStreamer.createSchema(ps.getMetaData());
         }
         finally {
-            connector.releaseConnection(conn);
+            databaseService.close(conn);
         }
     }
 
@@ -559,58 +562,21 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private <T> List<T> getResults(String sql, ResultSetParser<T> parser)
     {
-        try
-        {
-            ResultSet rs = connector.executeQuery(sql);
-
-            try
-            {
-                List<T> result = new ArrayList<>();
-
-                while (rs.next())
-                {
-                    result.add(parser.parse(rs));
-                }
-
-                return ImmutableList.copyOf(result);
-            }
-            finally
-            {
-                connector.close(rs);
-            }
-        }
-        catch (SQLException e)
-        {
-            throw Be5Exception.internalInQuery( e, query );
-        }
+        return db.selectList(sql, parser);
     }
 
     private List<String> getColumnNames(String sql)
     {
-        try
-        {
-            ResultSet rs = connector.executeQuery(sql);
+        return db.select(sql, rs -> {
+            List<String> result = new ArrayList<>();
+            ResultSetMetaData meta = rs.getMetaData();
 
-            try
-            {
-                List<String> result = new ArrayList<>();
-                ResultSetMetaData meta = rs.getMetaData();
-
-                for (int column = 1, count = meta.getColumnCount(); column <= count; column++) {
-                    result.add(meta.getColumnName(column));
-                }
-
-                return ImmutableList.copyOf(result);
+            for (int column = 1, count = meta.getColumnCount(); column <= count; column++) {
+                result.add(meta.getColumnName(column));
             }
-            finally
-            {
-                connector.close(rs);
-            }
-        }
-        catch (SQLException e)
-        {
-            throw Be5Exception.internalInQuery( e, query );
-        }
+
+            return result;
+        });
     }
 
 //    private StreamEx<DynamicPropertySet> streamCustomQuery()

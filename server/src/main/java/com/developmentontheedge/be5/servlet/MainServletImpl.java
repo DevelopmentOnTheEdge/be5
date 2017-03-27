@@ -19,15 +19,14 @@ import javax.websocket.CloseReason.CloseCodes;
 import javax.websocket.Session;
 
 import com.developmentontheedge.be5.api.helpers.UserInfo;
+import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.env.Classes;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.env.ConfigurationProvider;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
-
-//import com.developmentontheedge.be5.DaemonStarter;
-import com.developmentontheedge.dbms.DbmsConnector;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
@@ -43,9 +42,7 @@ import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
-import com.developmentontheedge.be5.api.services.Logger;
 import com.developmentontheedge.be5.env.Be5ClassLoader;
-import com.developmentontheedge.be5.env.Classes;
 import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -271,7 +268,7 @@ public class MainServletImpl
         // a registered ('system -> REQUEST_PREPROCESSOR') request preprocessor
         try
         {
-            preprocessRequest( request, serviceProvider.getDbmsConnector(), UserInfoManager.get(req, serviceProvider).getUserInfo(), "qps" );
+            preprocessRequest( request, serviceProvider.getDatabaseService(), UserInfoManager.get(req, serviceProvider).getUserInfo(), "qps" );
         }
         catch( Exception e ) // ignore checkers' warnings, we want to catch them all
         {
@@ -292,15 +289,15 @@ public class MainServletImpl
         }
     }
 
-    void preprocessRequest(HttpServletRequest request, DbmsConnector connector, UserInfo userInfo, String url)
+    void preprocessRequest(HttpServletRequest request, DatabaseService databaseService, UserInfo userInfo, String url)
             throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
     {
-        String className = Utils.getSystemSetting( connector, "REQUEST_PREPROCESSOR" );
+        String className = null;//TODO Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
 
         if( className != null )
         {
             RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
-                    .getConstructor( DbmsConnector.class, UserInfo.class ).newInstance( connector, userInfo );
+                    .getConstructor(DatabaseService.class, UserInfo.class ).newInstance( databaseService, userInfo );
 
             preprocessor.preprocessUrl( request, url );
         }

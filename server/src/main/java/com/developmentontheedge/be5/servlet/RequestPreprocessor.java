@@ -3,18 +3,18 @@
 package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.helpers.UserInfo;
-import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 
 import javax.servlet.http.HttpServletRequest;
 
 abstract public class RequestPreprocessor
 {
-    protected DbmsConnector connector;
+    protected DatabaseService databaseService;
     protected UserInfo userInfo;
 
-    public RequestPreprocessor(DbmsConnector connector, UserInfo userInfo )
+    public RequestPreprocessor(DatabaseService databaseService, UserInfo userInfo )
     {
-        this.connector = connector;
+        this.databaseService = databaseService;
         this.userInfo = userInfo;
     }
 

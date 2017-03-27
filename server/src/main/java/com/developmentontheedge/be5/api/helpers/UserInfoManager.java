@@ -13,9 +13,9 @@ import java.util.Locale;
 @Beta
 public interface UserInfoManager {
     
-    public static UserInfoManager get(Request req, ServiceProvider serviceProvider)
+    static UserInfoManager get(Request req, ServiceProvider serviceProvider)
     {
-        return UserInfoManagerImpl.create(req, serviceProvider, serviceProvider.getDatabaseService().getDbmsConnector(), serviceProvider.getMeta());
+        return UserInfoManagerImpl.create(req, serviceProvider, serviceProvider.getMeta());
     }
     
     /**

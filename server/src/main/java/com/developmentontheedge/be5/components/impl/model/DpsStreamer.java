@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
-import com.developmentontheedge.dbms.DbmsConnector;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 
@@ -15,9 +14,13 @@ import java.sql.*;
 import java.util.*;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
+
+import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
 public class DpsStreamer
 {
+    private static final Logger log = Logger.getLogger(DpsStreamer.class.getName());
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
     
     @FunctionalInterface
@@ -26,11 +29,11 @@ public class DpsStreamer
         void process(Object value, Map<String, Map<String, String>> meta);
     }
     
-    private final DatabaseService databaseService;
+    private final SqlService db;
     
-    public DpsStreamer(DatabaseService databaseService)
+    public DpsStreamer(SqlService db)
     {
-        this.databaseService = databaseService;
+        this.db = db;
     }
     
     /**
@@ -38,59 +41,27 @@ public class DpsStreamer
      */
     public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
     {
-    	DbmsConnector connector = databaseService.getDbmsConnector();
-        
-        ResultSet rs = null;
-        try
+        return db.query(sql, rs -> StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE,
+                Spliterator.ORDERED | Spliterator.IMMUTABLE)
         {
-            rs = connector.executeQuery( sql );
-            ResultSet finalRs = rs;
-            //DynamicProperty[] schema = createSchema( rs.getMetaData() );
-            return StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE, Spliterator.ORDERED | Spliterator.IMMUTABLE) 
+            @Override
+            public boolean tryAdvance(Consumer<? super DynamicPropertySet> action)
             {
-                @Override
-                public boolean tryAdvance(Consumer<? super DynamicPropertySet> action)
-                {
-                    try
-                    {
-                        if( !finalRs.next() )
-                        {
-                            connector.close( finalRs );
-                            return false;
-                        }
-                        action.accept(createRow( finalRs, createSchema( finalRs.getMetaData() ), metaProcessor ));
-                        return true;
-                    }
-                    catch( Throwable t )
-                    {
-                        connector.close( finalRs );
-                        throw new RuntimeException(t);
-                    }
-                }
-            } ).onClose(() ->
-            {
-                connector.close(finalRs);
                 try
                 {
-                    connector.releaseConnection(connector.getConnection());
-                } catch (SQLException e)
-                {
-                    e.printStackTrace();
+                    if( !rs.next() )
+                    {
+                        return false;
+                    }
+                    action.accept(createRow( rs, createSchema( rs.getMetaData() ), metaProcessor ));
+                    return true;
                 }
-            });
-        }
-        catch( Exception e )
-        {
-            connector.close( rs );
-            try
-            {
-                connector.releaseConnection(connector.getConnection());
-            } catch (SQLException e1)
-            {
-                e1.printStackTrace();
+                catch( Throwable t )
+                {
+                    throw getInternalBe5Exception(log, t);
+                }
             }
-            throw new RuntimeException(e);
-        }
+        } ));
     }
 
     protected DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor) throws Exception

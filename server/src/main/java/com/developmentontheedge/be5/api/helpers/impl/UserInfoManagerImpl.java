@@ -5,10 +5,10 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.legacy.LegacyOperation;
 import com.developmentontheedge.be5.metadata.SessionConstants;
-import com.developmentontheedge.dbms.DbmsConnector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,9 +23,9 @@ import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
 
 public class UserInfoManagerImpl implements UserInfoManager {
     
-    public static UserInfoManagerImpl create(Request req, ServiceProvider serviceProvider, DbmsConnector connector, Meta meta)
+    public static UserInfoManagerImpl create(Request req, ServiceProvider serviceProvider, Meta meta)
     {
-        return new UserInfoManagerImpl(req, serviceProvider, connector, meta);
+        return new UserInfoManagerImpl(req, serviceProvider, meta);
     }
     
     private final Request req;
@@ -36,16 +36,16 @@ public class UserInfoManagerImpl implements UserInfoManager {
      * that do some actions after calling {@link UserInfoManager#login(String, String)} or {@link UserInfoManager#logout()}.
      */
     private UserInfo user = null;
-    private final DbmsConnector connector;
     private final Meta meta;
     private final ServiceProvider serviceProvider;
+    private final DatabaseService databaseService;
     
-    public UserInfoManagerImpl(Request req, ServiceProvider serviceProvider, DbmsConnector connector, Meta meta) {
+    public UserInfoManagerImpl(Request req, ServiceProvider serviceProvider, Meta meta) {
         this.req = req;
         this.serviceProvider = serviceProvider;
+        this.databaseService = serviceProvider.getDatabaseService();
         this.rawRequest = req.getRawRequest();
         this.rawSession = req.getRawRequest().getSession();
-        this.connector = connector;
         this.meta = meta;
     }
     
