@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.util;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.core.runtime.Platform;
-
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
 public class PrivateField
@@ -27,7 +25,10 @@ public class PrivateField
     {
         try
         {
-            Class<?> clazz = bundle == null ? Class.forName( className ) : Platform.getBundle( bundle ).loadClass( className );
+            // TODO
+            // Class<?> clazz = bundle == null ? Class.forName( className ) : Platform.getBundle( bundle ).loadClass( className );
+
+            Class<?> clazz = Class.forName( className );
             this.field = clazz.getDeclaredField( fieldName );
             field.setAccessible( true );
         }

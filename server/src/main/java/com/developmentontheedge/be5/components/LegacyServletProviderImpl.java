@@ -5,11 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.InvalidRegistryObjectException;
-import org.eclipse.core.runtime.Platform;
-
 import com.developmentontheedge.be5.api.services.Logger;
 
 public class LegacyServletProviderImpl implements LegacyServletProvider
@@ -18,6 +13,7 @@ public class LegacyServletProviderImpl implements LegacyServletProvider
 
     public LegacyServletProviderImpl(Logger logger)
     {
+        /** TODO
         IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
         for (IConfigurationElement element : extensionRegistry
                 .getConfigurationElementsFor("com.developmentontheedge.enterprise.components.LegacyServlet"))
@@ -36,6 +32,7 @@ public class LegacyServletProviderImpl implements LegacyServletProvider
                 logger.error(e);
             }
         }
+        */
     }
 
     public HttpServlet get(String name)

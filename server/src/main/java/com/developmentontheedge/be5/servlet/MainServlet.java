@@ -12,12 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.equinox.launcher.Main;
-
 /**
  * Servlet implementation class MainServlet
  */
-@WebServlet(description = "Routing requests", urlPatterns = { "/api/*" }, loadOnStartup = 1)
+//@WebServlet(description = "Routing requests", urlPatterns = { "/api/*" }, loadOnStartup = 1)
 public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private MainServletImpl mainServletImpl = null;
@@ -58,26 +56,6 @@ public class MainServlet extends HttpServlet {
 		args.add("com.developmentontheedge.be5.empty");
 		args.add("-noExit");
 		
-		/*
-		 * This thread is required to run an OSGi application,
-		 * because the OSGi environment lives while an application
-		 * handling its events, so running this main method would block
-		 * the current thread.
-		 */
-        new Thread("OSGi environment thread") {
-            @Override
-            public void run() {
-                try
-                {
-                    Main.main(args.toArray(new String[args.size()]));
-                }
-                catch (Throwable t)
-                {
-                    t.printStackTrace();
-                }
-            }
-        }.start();
-        
         try {
         	while(System.getProperties().get("com.developmentontheedge.be5.platformClass") == null) {
         		Thread.sleep(100);
