@@ -23,10 +23,6 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.env.Classes;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.env.ConfigurationProvider;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
@@ -132,6 +128,7 @@ public class MainServletImpl
 
     protected void bindServices(ServletContext servletContext)
     {
+        /** TODO
         for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.service" ) )
         {
             if( element.getName().equals( "service" ) )
@@ -139,6 +136,7 @@ public class MainServletImpl
                 bindService( element );
             }
         }
+        */ 
         //TODO delete logger serviceProvider.bind(Logger.class, ServletLogger.class, s -> s.setContext(servletContext));
 
         serviceProvider.freeze();
@@ -146,6 +144,7 @@ public class MainServletImpl
         serviceProvider.getLogger().info("Services initialized");
     }
 
+    /*
     private void bindService(IConfigurationElement element)
     {
         String serviceClassName = element.getAttribute("interface");
@@ -160,7 +159,7 @@ public class MainServletImpl
             Class<Object> serviceClass = (Class<Object>) bundle.loadClass(serviceClassName);
             @SuppressWarnings("unchecked")
             Class<Object> implementationClass = (Class<Object>) bundle.loadClass(implementationClassName);
-            Consumer<Object> initializer = service -> { /* do nothing */ };
+            Consumer<Object> initializer = service -> {} // do nothing;
 
             if (id != null)
             {
@@ -179,22 +178,22 @@ public class MainServletImpl
             serviceProvider.getLogger().error(e);
             throw e;
         }
-    }
+    }*/
 
     private void runInitializers(ServletConfig config)
     {
-
+        /* TODO
         InitializerContext context = new InitializerContextImpl( config );
-
         for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.initializer" ) )
         {
             if( element.getName().equals( "initializer" ) )
             {
                 runInitializer( element, context );
             }
-        }
+        }*/
     }
 
+    /*
     private void runInitializer(IConfigurationElement element, InitializerContext context)
     {
         try
@@ -210,7 +209,7 @@ public class MainServletImpl
             serviceProvider.getLogger().error(e);
             throw Be5Exception.internal( e );
         }
-    }
+    }*/
 
 //    public void destroy()
 //    {
@@ -360,12 +359,16 @@ public class MainServletImpl
      */
     private Class<?> loadComponentClass(String componentId)
     {
+        /* TODO
         IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.component", "component" );
 
         if( componentDeclaration == null )
             return null;
 
         return loadClass( componentId, componentDeclaration );
+        */
+        
+        return null;
     }
 
     /**
@@ -377,17 +380,22 @@ public class MainServletImpl
      */
     private Class<?> loadWebSocketComponentClass(String componentId)
     {
+        /** TODO
         IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.websocketcomponent", "component" );
 
         if( componentDeclaration == null )
             return null;
 
         return loadClass( componentId, componentDeclaration );
+        */
+        
+        return null;
     }
 
     /**
      * Tries to load a class by its name from the configuration element.
      */
+    /*
     private Class<?> loadClass(String id, IConfigurationElement configuration) throws AssertionError
     {
         String className = configuration.getAttribute( "class" );
@@ -405,11 +413,12 @@ public class MainServletImpl
         {
             throw new AssertionError( "Can't find a class '" + className + "' in bundle '" + bundleName + "' decalared in '" + id + "'", e );
         }
-    }
+    }*/
 
     /**
      * Tries to find an extension with a given ID.
      */
+    /*
     private IConfigurationElement findDeclaration(String componentId, String extensionPoint, String extensionTag)
     {
         IConfigurationElement[] elements = getConfigurationElements( extensionPoint );
@@ -446,7 +455,7 @@ public class MainServletImpl
         IConfigurationElement[] elements = extensionRegistry.getConfigurationElementsFor( extensionPoint );
 
         return elements;
-    }
+    }*/
 
     /**
      * Transforms a parameters from a multimap to a simple map,

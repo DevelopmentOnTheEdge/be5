@@ -83,7 +83,7 @@ public class Fields
             new Field( "unique", false ) ) );
     private static final List<Field> FILE_STRUCTURE = Collections.unmodifiableList( Arrays.asList(
         new Field( "htmlDir",           "src/html" ),
-        new Field( "javaSourcesDir",    "src/java" ),
+        new Field( "javaSourcesDir",    "src/main/java" ),
         new Field( "jsDir",             "src/js" ),
         new Field( "jsFormsDir",        "src/js/forms" ),
         new Field( "jsOperationsDir",   "src/js/operations" ),

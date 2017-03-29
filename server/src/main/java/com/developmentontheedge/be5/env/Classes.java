@@ -3,9 +3,6 @@ package com.developmentontheedge.be5.env;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
@@ -16,6 +13,9 @@ public class Classes
 
     public static <T> Class<? extends T> tryLoad(String moduleName, String className, Class<T> klass) throws Be5Exception
     {
+        throw Be5Exception.internal("Can't find bundle '" + moduleName + "'");
+
+        /** TODO
         Bundle moduleBundle = Platform.getBundle(moduleName);
         
         if (moduleBundle == null)
@@ -30,7 +30,7 @@ public class Classes
         catch (ClassNotFoundException | IllegalStateException | ClassCastException e2)
         {
             throw Be5Exception.internal(e2);
-        }
+        }*/
     }
 
     /**
@@ -74,13 +74,14 @@ public class Classes
 
     private static <T> Class<? extends T> tryGuessSourceBundleAndLoadClass(String className, Class<T> klass) {
         List<String> moduleNames = tryGuessSourceBundle(className);
-        
+
+        /** TODO
         for(String moduleName : moduleNames)
         {
-        	if(Platform.getBundle(moduleName) == null)
+            if(Platform.getBundle(moduleName) == null)
         		continue;
     		return tryLoad(moduleName, className, klass);
-        }
+        }*/
         throw Be5Exception.internal("No suitable source bundles found for '" + className + "'");
     }
 
