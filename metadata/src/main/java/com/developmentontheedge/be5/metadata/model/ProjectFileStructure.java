@@ -12,7 +12,7 @@ public class ProjectFileStructure extends BeModelElementSupport
     public static final String FORMAT_SUFFIX = ".yaml";
     
     private String htmlDir             = "src/html";
-    private String javaSourcesDir      = "src/java";
+    private String javaSourcesDir      = "src/main/java";
     private String jsDir               = "src/js";
     private String jsFormsDir          = "src/js/forms";
     private String jsOperationsDir     = "src/js/operations";
