@@ -32,6 +32,7 @@ import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
+import com.developmentontheedge.sql.model.AstCount;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstFrom;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
@@ -40,8 +41,10 @@ import com.developmentontheedge.sql.model.AstNestedQuery;
 import com.developmentontheedge.sql.model.AstNumericConstant;
 import com.developmentontheedge.sql.model.AstOrderBy;
 import com.developmentontheedge.sql.model.AstOrderingElement;
+import com.developmentontheedge.sql.model.AstParenthesis;
 import com.developmentontheedge.sql.model.AstQuery;
 import com.developmentontheedge.sql.model.AstSelect;
+import com.developmentontheedge.sql.model.AstSelectList;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.DefaultParserContext;
@@ -69,6 +72,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 
@@ -77,6 +82,8 @@ import java.util.regex.Pattern;
  */
 public class Be5QueryExecutor extends AbstractQueryExecutor
 {
+    private static final Logger log = Logger.getLogger(Be5QueryExecutor.class.getName());
+
     private enum ExtraQuery {
         DEFAULT, COUNT, AGGREGATE
     }
@@ -161,7 +168,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             String formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
 
+            formattedContent = userAwareMeta.getLocalizedCell(formattedContent, query.getEntity().getName(), query.getName());
+
             if(formattedContent != null && extraQuery == ExtraQuery.DEFAULT) {
+
+                Map<String, String> blankNullsProperties = cell.options.get(DatabaseConstants.COL_ATTR_BLANKNULLS);
+                if(blankNullsProperties != null)
+                {
+                    if( formattedContent.equals( "null" ) )
+                    {
+                        formattedContent = blankNullsProperties.getOrDefault("value", "");
+                    }
+                }
+
 
                 Map<String, String> nullIfProperties = cell.options.get(DatabaseConstants.COL_ATTR_NULLIF);
                 if(nullIfProperties != null)
@@ -414,7 +433,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         dql.log("Simplified", ast);
 
         if(extraQuery == ExtraQuery.COUNT){
-            ast = countFromQuery(ast);
+            countFromQuery(ast.getQuery());
             dql.log("Count(1) from query", ast);
         }
         if(extraQuery == ExtraQuery.DEFAULT){
@@ -427,21 +446,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         String finalSQL = new Formatter().format( ast, context, parserContext );
-        serviceProvider.getLogger().info("Final SQL: " + finalSQL);
+        log.info("Final SQL: " + finalSQL);
 
         return finalSQL;
     }
 
-    protected static AstStart countFromQuery(AstStart ast) {
-        AstStart newAst = SqlQuery.parse( "SELECT COUNT(*)" );
-        newAst.getQuery().jjtGetChild(0).addChild(new AstFrom(
-            new AstTableRef(
+    protected static void countFromQuery(AstQuery query) {
+        AstTableRef tableRef = new AstTableRef(
                 true,
-                new AstNestedQuery(ast.getQuery()),
-                new AstIdentifierConstant("data", true)
-            )
-        ));
-        return newAst;
+                new AstParenthesis( query.clone() ),
+                new AstIdentifierConstant( "data", true )
+        );
+        AstSelect select = new AstSelect( new AstSelectList(new AstCount()), new AstFrom( tableRef ) );
+        query.replaceWith( new AstQuery( select ) );
     }
 
     private void applyFilters(AstStart ast) {
@@ -552,6 +569,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             }
             catch( NumberFormatException e )
             {
+                IllegalArgumentException e2 = new IllegalArgumentException("Invalid category: " + categoryString, e);
+                log.log(Level.SEVERE, e2.toString() + query.getEntity().getName(), e2);
                 throw Be5Exception.internalInQuery( new IllegalArgumentException( "Invalid category: " + categoryString ),
                         query );
             }
@@ -612,6 +631,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
         catch (Exception e)
         {
+            log.log(Level.SEVERE, e.toString() + " Final SQL: " + finalSql, e);
             throw Be5Exception.internalInQuery(e, query);
         }
     }

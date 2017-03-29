@@ -37,4 +37,32 @@ public enum Be5ErrorCode
         }
     }
 
+    public boolean isAccessDenied()
+    {
+        switch (this)
+        {
+            case ACCESS_DENIED:
+            case ACCESS_DENIED_TO_OPERATION:
+            case ACCESS_DENIED_TO_QUERY:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isNotFound()
+    {
+        switch (this)
+        {
+            case UNKNOWN_ENTITY:
+            case UNKNOWN_COMPONENT:
+            case UNKNOWN_OPERATION:
+            case UNKNOWN_QUERY:
+            case NO_OPERATION_IN_QUERY:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }

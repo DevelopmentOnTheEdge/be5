@@ -1,5 +1,17 @@
 package com.developmentontheedge.be5.components.impl;
 
+import com.google.common.base.Splitter;
+import one.util.streamex.StreamEx;
+
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.nullToEmpty;
+
 public class FormGenerator
 {
 
@@ -20,7 +32,6 @@ public class FormGenerator
 //     * <li>selectedRows?</li>
 //     * <li>values?</li>
 //     * </ul>
-//     * @param DbmsConnector
 //     * @see Query#getParametrizingOperation()
 //     */
 //    public Either<FormPresentation, FrontendAction> generate(Request req)
@@ -33,7 +44,7 @@ public class FormGenerator
 //        Operation operation = UserAwareMeta.get(req, serviceProvider).getOperation(entityName, queryName, operationName);
 //
 //        return generate(req, entityName, queryName, operationName, selectedRowsString, operation,
-//                presetValues, serviceProvider.getDbmsConnector());
+//                presetValues, serviceProvider.getDatabaseConnector());
 //    }
 //
 //    public FormPresentation generateForm(Request req)
@@ -62,7 +73,7 @@ public class FormGenerator
 //        checkNotNull(operation);
 //        checkNotNull(req);
 //
-//        return generate(req, entityName, "", operationName, "", operation, presetValues, serviceProvider.getDbmsConnector());
+//        return generate(req, entityName, "", operationName, "", operation, presetValues, serviceProvider.getDatabaseConnector());
 //    }
 //
 //    public Either<FormPresentation, FrontendAction> generate(
@@ -75,7 +86,7 @@ public class FormGenerator
 //        checkNotNull(operation);
 //        checkNotNull(req);
 //
-//        return generate(req, entityName, queryName, operationName, "", operation, presetValues, serviceProvider.getDbmsConnector());
+//        return generate(req, entityName, queryName, operationName, "", operation, presetValues, serviceProvider.getDatabaseConnector());
 //    }
 //
 //    /**
@@ -83,8 +94,8 @@ public class FormGenerator
 //     * @param presetValues
 //     */
 //    private Either<FormPresentation, FrontendAction> generate(Request req, String entityName, String queryName,
-//            String operationName, String selectedRowsString, Operation operation, Map<String, String> presetValues,
-//            DbmsConnector connector)
+//                                                              String operationName, String selectedRowsString, Operation operation, Map<String, String> presetValues,
+//                                                              DatabaseConnector connector)
 //    {
 //        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
 //        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
@@ -103,27 +114,27 @@ public class FormGenerator
 //        }
 //
 //        // FIXME should use modern localizations from Meta
-//        Map<String, String> l10n = legacyOperation.getLocalizedMessages(userInfoManager.getLocale());
+//        //Map<String, String> l10n = legacyOperation.getLocalizedMessages(userInfoManager.getLocale());
 //        LegacyUrlsService legacyUrlsService = serviceProvider.get(LegacyUrlsService.class);
 //        Optional<String> customAction = legacyOperation.getCustomAction().map(legacyUrlsService::modernize).map(HashUrl::toString);
 //
 //        return Either.first(generateFormValue(entityName, queryName, operationName, selectedRowsString, presetValues,
-//                model, l10n, userAwareMeta, customAction));
+//                model, userAwareMeta, customAction));
 //    }
 //
 //    /**
 //     * Transforms a set of properties, i.e. generates a whole form.
 //     */
 //    private FormPresentation generateFormValue(String entityName, String queryName, String operationName,
-//            String selectedRows, Map<String, String> presetValues, ComponentModel model, Map<String, String> l10n,
-//            UserAwareMeta userAwareMeta, Optional<String> customAction)
+//                                               String selectedRows, Map<String, String> presetValues, ComponentModel model,
+//                                               UserAwareMeta userAwareMeta, Optional<String> customAction)
 //    {
-//        List<Field> fields = generateFormFields(model, l10n);
+//        List<Field> fields = generateFormFields(operationName, entityName, queryName, model, userAwareMeta);
 //        String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
 //        return new FormPresentation(entityName, queryName, operationName, title, selectedRows, fields, presetValues, customAction.orElse(null));
 //    }
 //
-//    private List<Field> generateFormFields(ComponentModel model, Map<String, String> l10n)
+//    private List<Field> generateFormFields(String operationName, String entityName, String queryName, ComponentModel model, UserAwareMeta userAwareMeta)
 //    {
 //        List<Field> fields = new ArrayList<>();
 //        int mode = Property.SHOW_PREFERRED;
@@ -137,16 +148,16 @@ public class FormGenerator
 //            if (property.isJavaClassProperty())
 //                continue;
 //
-//            fields.add(generateField(property, l10n));
+//            fields.add(generateField(operationName, entityName, queryName, property, userAwareMeta));
 //        }
 //
 //        return fields;
 //    }
 //
-//    private Field generateField(BeProperty property, Map<String, String> l10n)
+//    private Field generateField(String operationName, String entityName, String queryName, BeProperty property, UserAwareMeta userAwareMeta)
 //    {
 //        String name = property.getName();
-//        String title = property.getTitle(l10n);
+//        String title = userAwareMeta.getFieldTitle(entityName, operationName, queryName, name).orElse(name);
 //        boolean isReadOnly = property.isReadOnly();
 //        boolean canBeNull = property.canBeNull();
 //        boolean reloadOnChange = property.reloadOnChange();
@@ -217,5 +228,5 @@ public class FormGenerator
 //    {
 //        return builder.textArea(p.getAsStr(), p.getNumberOfCulumns().orElse(40), p.getNumberOfRows().orElse(4));
 //    }
-    
+
 }

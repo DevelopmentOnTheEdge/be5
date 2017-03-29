@@ -11,6 +11,7 @@ public interface DatabaseConstants
     // used in com.developmentontheedge.be5.components.impl.model.TableModel
     static final String COL_ATTR_AGGREGATE = "aggregate";
     static final String COL_ATTR_ROLES  = "roles";
+    static final String COL_ATTR_BLANKNULLS = "blankNulls";
 
     // constants from RecordEx, 
     // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer

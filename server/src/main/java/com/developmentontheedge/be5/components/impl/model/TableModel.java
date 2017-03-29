@@ -32,7 +32,6 @@ public class TableModel
     public static class Builder
     {
         private final Query query;
-        private final Object localizer; // TODO
         private final QueryExecutor execution;
         private boolean selectable;
         private int limit = Integer.MAX_VALUE;
@@ -47,7 +46,6 @@ public class TableModel
             this.selectable = selectable;
             this.sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
             this.desc = "desc".equals(req.get("order[0][dir]"));
-            this.localizer = null; //TODO new TableLocalizer(query, UserInfoManager.get(req, serviceProvider).getUserInfo(), serviceProvider.getDbmsConnector());
             this.execution = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
             this.execution.sortOrder(sortColumn, desc);
             this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
@@ -125,7 +123,7 @@ public class TableModel
 
             try (StreamEx<DynamicPropertySet> stream = stream())
             {
-                collectColumnsAndRows( query.getEntity().getName(), query.getName(), stream, selectable, columns, rows, localizer, limit );
+                collectColumnsAndRows( query.getEntity().getName(), query.getName(), stream, selectable, columns, rows, limit );
             }
             catch( Exception e )
             {
@@ -196,7 +194,7 @@ public class TableModel
 
             try (StreamEx<DynamicPropertySet> stream = aggregateStream())
             {
-                collectColumnsAndRows( query.getEntity().getName(), query.getName(), stream, selectable, new ArrayList<>(), rows, localizer, limit );
+                collectColumnsAndRows( query.getEntity().getName(), query.getName(), stream, selectable, new ArrayList<>(), rows, limit );
             }
             catch( Exception e )
             {
@@ -294,21 +292,21 @@ public class TableModel
          * @param maxRows rows per page
          */
         private void collectColumnsAndRows(String entityName, String queryName, StreamEx<DynamicPropertySet> stream, boolean selectable, List<ColumnModel> columns,
-                List<RowModel> rows, Object localizer, int maxRows)
+                                           List<RowModel> rows, int maxRows)
         {
             stream.forEach( properties -> {
                 if( columns.isEmpty() )
                 {
-                    columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta, localizer).collectColumns());
+                    columns.addAll( new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns() );
                 }
-                
-                rows.add( generateRow(entityName, queryName, selectable, properties, localizer, columns) );
+
+                rows.add( generateRow(entityName, queryName, selectable, properties, columns) );
             } );
         }
 
-        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties, Object localizer, List<ColumnModel> columns) throws AssertionError
+        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties, List<ColumnModel> columns) throws AssertionError
         {
-            PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta, localizer);
+            PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta);
             List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
             List<CellModel> processedCells = processCells( cells ); // only visible cells
             String id = selectable ? transformer.getRowId() : null;
@@ -409,7 +407,7 @@ public class TableModel
 
     /**
      * Can be legacy descriptional cell.
-     * 
+     *
      * @author asko
      */
     public static class RawCellModel
@@ -428,10 +426,10 @@ public class TableModel
         }
 
     }
-    
+
     /**
      * Result rendered cell.
-     * 
+     *
      * @author asko
      */
     public static class CellModel
@@ -447,7 +445,7 @@ public class TableModel
             this.content = content;
             this.options = options;
         }
-        
+
     }
 
     private final boolean selectable;

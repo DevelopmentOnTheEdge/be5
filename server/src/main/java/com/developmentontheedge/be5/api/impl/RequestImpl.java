@@ -62,7 +62,10 @@ public class RequestImpl implements Request {
                 JsonObject pair = (JsonObject) values.get(i);
                 String name = pair.get("name").getAsString();
                 String value = pair.get("value").getAsString();
-                fieldValues.put(name, value);
+                if( !"".equals(value) )
+                {
+                    fieldValues.put(name, value);
+                }
             }
         }
         catch (ClassCastException e)

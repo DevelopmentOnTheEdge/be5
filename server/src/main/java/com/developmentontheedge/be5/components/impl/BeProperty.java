@@ -25,15 +25,6 @@ public class BeProperty
 //        return property.getName();
 //    }
 //
-//    public String getTitle(Map<String, String> l10n)
-//    {
-//        String localized = Utils.getMessage(l10n, property.getName());
-//
-//        if (!localized.equals(property.getName()))
-//            return localized;
-//
-//        return property.getDisplayName();
-//    }
 //
 //    public boolean isReadOnly()
 //    {

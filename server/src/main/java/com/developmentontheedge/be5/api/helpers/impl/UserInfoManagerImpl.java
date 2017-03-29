@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.legacy.LegacyOperation;
 import com.developmentontheedge.be5.metadata.SessionConstants;
+import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -105,8 +106,13 @@ public class UserInfoManagerImpl implements UserInfoManager {
         if (user == null)
         {
             user = getUserInfo(rawRequest);
+
+            List<String> languages = StreamEx.of(serviceProvider.getProject().getLanguages()).toList();
+
+            if(!languages.contains(user.getLocale().getLanguage())){
+                user.setLocale(new Locale( languages.get(0) ));
+            }
         }
-        
         return user;
     }
 

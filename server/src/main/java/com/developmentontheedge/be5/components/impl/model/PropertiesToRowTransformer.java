@@ -24,22 +24,19 @@ class PropertiesToRowTransformer
     private final String queryName;
     private final DynamicPropertySet properties;
     private final UserAwareMeta userAwareMeta;
-    private final Object localizer; // TODO
     private SimpleDateFormat dateFormatter = new SimpleDateFormat( "dd.MM.yyyy" );
     private SimpleDateFormat timestampFormatter = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
-    
+
     /**
-     * 
+     *
      * @param properties represent a row
-     * @param localizer 
      */
-    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserAwareMeta userAwareMeta, Object localizer)
+    PropertiesToRowTransformer(String entityName, String queryName, DynamicPropertySet properties, UserAwareMeta userAwareMeta)
     {
         this.entityName = entityName;
         this.queryName = queryName;
         this.properties = properties;
         this.userAwareMeta = userAwareMeta;
-        this.localizer = localizer;
     }
 
     /**
@@ -76,7 +73,7 @@ class PropertiesToRowTransformer
 
     /**
      * Glues and constructs cells.
-     * @see RecordEx#preprocessProperties(DatabaseConnector, List<DynamicProperty>, Map<String, DynamicProperty>)
+     * @see # preprocessProperties(DatabaseConnector, List<DynamicProperty>, Map<String, DynamicProperty>)
      */
     List<RawCellModel> collectCells()
     {
@@ -113,10 +110,7 @@ class PropertiesToRowTransformer
         {
             String cellName = property.getName();
             String cellContent = toString(property);
-            // TODO
-            // cellContent = localizer.localize( cellContent );
             boolean hidden = shouldBeSkipped( cellName );
-            
             cells.add(new RawCellModel(cellName, cellContent, DynamicPropertyMeta.get(property), hidden));
         }
 

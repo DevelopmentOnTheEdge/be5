@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 public class LegacyUrlParser {
     public static final String GO_BACK_URL = "#goback";
+    public static final String GO_REFRESH_ALL = "#goRefreshAll";
     private static final Pattern REDIRECT_PATTERN = Pattern.compile("(.+?)\\.redir(\\?(.*))?");
     private final String value;
     private boolean parsed = false;

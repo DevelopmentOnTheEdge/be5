@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.xml.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 public class ResponseImpl implements Response
@@ -93,7 +94,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendAsRawJson(Object value)
     {
-        sendJson(new Gson().toJson(value));
+        sendJson(new GsonBuilder().disableHtmlEscaping().create().toJson(value));
     }
     
     @Override
