@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -22,46 +23,59 @@ public class DpsStreamer
 {
     private static final Logger log = Logger.getLogger(DpsStreamer.class.getName());
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
-    
+
     @FunctionalInterface
     public static interface MetaProcessor
     {
         void process(Object value, Map<String, Map<String, String>> meta);
     }
-    
-    private final SqlService db;
-    
-    public DpsStreamer(SqlService db)
+
+    private final DatabaseService databaseService;
+
+    public DpsStreamer(DatabaseService databaseService)
     {
-        this.db = db;
+        this.databaseService = databaseService;
     }
-    
+
     /**
      * Streams an SQL query result as a sequence of dynamic property sets.
      */
     public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
     {
-        return db.query(sql, rs -> StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE,
-                Spliterator.ORDERED | Spliterator.IMMUTABLE)
+        ResultSet rs = null;
+        try
         {
-            @Override
-            public boolean tryAdvance(Consumer<? super DynamicPropertySet> action)
+            rs = databaseService.executeQuery( sql , true);
+            ResultSet finalRs = rs;
+            return StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE,
+                    Spliterator.ORDERED | Spliterator.IMMUTABLE)
             {
-                try
+                @Override
+                public boolean tryAdvance(Consumer<? super DynamicPropertySet> action)
                 {
-                    if( !rs.next() )
+                    try
                     {
-                        return false;
+                        if( !finalRs.next() )
+                        {
+                            databaseService.close( finalRs );
+                            return false;
+                        }
+                        action.accept(createRow( finalRs, createSchema( finalRs.getMetaData() ), metaProcessor ));
+                        return true;
                     }
-                    action.accept(createRow( rs, createSchema( rs.getMetaData() ), metaProcessor ));
-                    return true;
+                    catch( Throwable t )
+                    {
+                        databaseService.close( finalRs );
+                        throw new RuntimeException(t);
+                    }
                 }
-                catch( Throwable t )
-                {
-                    throw getInternalBe5Exception(log, t);
-                }
-            }
-        } ));
+            } ).onClose( () -> databaseService.close( finalRs ) );
+        }
+        catch( Exception e )
+        {
+            databaseService.close( rs );
+            throw new RuntimeException(e);
+        }
     }
 
     protected DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor) throws Exception
@@ -90,7 +104,7 @@ public class DpsStreamer
         }
         return row;
     }
-    
+
     private Object getSqlValue(Class<?> clazz, ResultSet rs, int idx) throws SQLException
     {
         if( clazz == String.class )
@@ -111,7 +125,7 @@ public class DpsStreamer
             return rs.getTimestamp( idx );
         throw new IllegalArgumentException( clazz.getName() );
     }
-    
+
     public static DynamicProperty[] createSchema(ResultSetMetaData metaData) throws SQLException
     {
         int count = metaData.getColumnCount();
@@ -153,25 +167,25 @@ public class DpsStreamer
     {
         switch( columnType )
         {
-        case Types.BIGINT:
-            return Long.class;
-        case Types.INTEGER:
-            return Integer.class;
-        case Types.DOUBLE:
-        case Types.FLOAT:
-        case Types.DECIMAL:
-        case Types.REAL:
-        case Types.NUMERIC:
-            return Double.class;
-        case Types.BOOLEAN:
-            return Boolean.class;
-        case Types.DATE:
-            return Date.class;
-        case Types.TIME:
-        case Types.TIMESTAMP:
-            return Time.class;
-        default:
-            return String.class;
+            case Types.BIGINT:
+                return Long.class;
+            case Types.INTEGER:
+                return Integer.class;
+            case Types.DOUBLE:
+            case Types.FLOAT:
+            case Types.DECIMAL:
+            case Types.REAL:
+            case Types.NUMERIC:
+                return Double.class;
+            case Types.BOOLEAN:
+                return Boolean.class;
+            case Types.DATE:
+                return Date.class;
+            case Types.TIME:
+            case Types.TIMESTAMP:
+                return Time.class;
+            default:
+                return String.class;
         }
     }
 
@@ -185,5 +199,5 @@ public class DpsStreamer
         }
         return name;
     }
-    
+
 }

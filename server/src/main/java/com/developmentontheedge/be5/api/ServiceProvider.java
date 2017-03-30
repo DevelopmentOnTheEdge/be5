@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api;
 
 import com.developmentontheedge.be5.api.services.*;
+import com.developmentontheedge.be5.api.services.impl.ConsoleLogger;
 import com.developmentontheedge.be5.metadata.model.Project;
 
 import java.util.function.Consumer;
@@ -127,7 +128,7 @@ public interface ServiceProvider
      */
     default Logger getLogger()
     {
-        return get(Logger.class);
+        return new ConsoleLogger();
     }
     
     /**

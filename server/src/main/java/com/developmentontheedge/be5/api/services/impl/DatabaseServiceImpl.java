@@ -11,14 +11,26 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import javax.naming.Context;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
-class DatabaseServiceImpl implements DatabaseService
+public class DatabaseServiceImpl implements DatabaseService
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
+
+    private final static String MSG_ERROR_CLOSING = "Error closing result set";
+
+    //Thread local?
+    private final Map<ResultSet, Connection> queriesMap = new ConcurrentHashMap<>(100);
+
+    private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
+
     private BasicDataSource bds = null;
     private Rdbms type;
 
@@ -67,7 +79,50 @@ class DatabaseServiceImpl implements DatabaseService
         }
     }
 
-    private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
+    @Override
+    public void close(ResultSet rs)
+    {
+        if ( rs == null )
+            return;
+        Statement stmt;
+        try
+        {
+            stmt = rs.getStatement();
+        }
+        catch ( Throwable t )
+        {
+            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+        }
+        try
+        {
+            rs.close();
+        }
+        catch ( Throwable t )
+        {
+            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+        }
+        try
+        {
+            if ( stmt != null )
+                stmt.close();
+        }
+        catch ( Throwable t )
+        {
+            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+        }
+        try
+        {
+            Connection conn = queriesMap.remove( rs );
+            if ( conn != null && !inTransaction() )
+            {
+                close(conn);
+            }
+        }
+        catch ( Throwable t )
+        {
+            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+        }
+    }
 
     public Connection getCurrentTxConn() {
         return TRANSACT_CONN.get();
@@ -133,6 +188,70 @@ class DatabaseServiceImpl implements DatabaseService
     public Rdbms getRdbms()
     {
         return type;
+    }
+
+    @Override
+    public ResultSet executeQuery(String sql, boolean isReadOnly)
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            conn = getConnection(isReadOnly);
+            stmt = conn.createStatement();
+            rs = paranoidQuery(stmt, sql);
+        }
+        catch (SQLException e)
+        {
+            throw getInternalBe5Exception(log, e);
+        }
+        finally
+        {
+            if( rs == null )
+            {
+                try
+                {
+                    stmt.close();
+                } catch (SQLException e)
+                {
+                    throw getInternalBe5Exception(log, e);
+                }
+                if ( !inTransaction() )
+                {
+                    close(conn);
+                }
+            }
+            else if ( !inTransaction() )
+            {
+                queriesMap.put( rs, conn );
+            }
+        }
+
+        return rs;
+    }
+
+    private boolean inTransaction()
+    {
+        return getCurrentTxConn() != null;
+    }
+
+    protected ResultSet paranoidQuery(Statement stmt, String query)
+    {
+        ResultSet rs = null;
+
+        String hacked = query;
+        hacked += "/* STARTED: " + new java.sql.Timestamp( System.currentTimeMillis() ) + " */";
+
+        try
+        {
+            return stmt.executeQuery( hacked );
+        }
+        catch( SQLException e )
+        {
+            throw getInternalBe5Exception(log, e);
+        }
     }
 
 }
