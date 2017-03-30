@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,10 +38,20 @@ import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.env.Be5ClassLoader;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
+import com.developmentontheedge.be5.api.services.impl.MetaImpl;
+import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
+import com.developmentontheedge.be5.api.services.impl.SqlServiceImpl;
+import com.developmentontheedge.be5.components.Document;
+import com.developmentontheedge.be5.components.impl.model.DpsStreamer;
+import com.developmentontheedge.be5.components.tools.PoolStat;
 import com.developmentontheedge.be5.env.Classes;
 import com.developmentontheedge.be5.env.ConfigurationProvider;
-import com.developmentontheedge.be5.metadata.Utils;
+import com.developmentontheedge.be5.legacy.LegacyQueryRepository;
+import com.developmentontheedge.be5.legacy.LegacyUrlsService;
 import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -52,7 +63,7 @@ import com.google.common.collect.Iterables;
 public class MainServlet extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
-
+    static public ServletConfig config;
 	/**
      * Classes cache: componentId->class.
      */
@@ -146,10 +157,23 @@ public class MainServlet extends HttpServlet
         createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), serviceProvider );
     }
 
-    public void init(Object config)
-    {
-        ServletConfig cfg = Delegator.on( config, ServletConfig.class );
-        Utils.setClassLoader( new Be5ClassLoader() );
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        this.config = config;
+        loadedClasses.put("pool", PoolStat.class);
+        loadedClasses.put("document", Document.class);
+        serviceProvider.bind( PoolStat.class, PoolStat.class,(x)->{});
+        serviceProvider.bind( ProjectProvider.class, ProjectProviderImpl.class,(x)->{});
+        serviceProvider.bind( DatabaseService.class, DatabaseServiceImpl.class,(x)->{});
+        serviceProvider.bind( Meta.class, MetaImpl.class,(x)->{});
+        serviceProvider.bind( LegacyUrlsService.class, LegacyUrlsService.class,(x)->{});
+        serviceProvider.bind( LegacyQueryRepository.class, LegacyQueryRepository.class,(x)->{});
+        serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
+        serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
+
+        //ServletConfig cfg = Delegator.on( config, ServletConfig.class );
+        //Utils.setClassLoader( new Be5ClassLoader() );
 //        Utils.setDefaultConnector( Be5.getDbmsConnector() );
 //        try
 //        {
@@ -159,8 +183,8 @@ public class MainServlet extends HttpServlet
 //        {
 //            throw Be5Exception.internal( e );
 //        }
-        bindServices(cfg.getServletContext());
-        runInitializers( cfg );
+        //bindServices(cfg.getServletContext());
+        //runInitializers( cfg );
     }
 
     protected void bindServices(ServletContext servletContext)

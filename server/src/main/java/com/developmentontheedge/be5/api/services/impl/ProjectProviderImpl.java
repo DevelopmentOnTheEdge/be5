@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
+import com.developmentontheedge.be5.servlet.MainServlet;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -38,7 +39,8 @@ public class ProjectProviderImpl implements ProjectProvider
     
     public Path getPath(ServletContext ctx, String attributeName)
     {
-        String projectSource = ctx.getInitParameter( attributeName );
+        //String projectSource = ctx.getInitParameter( attributeName );
+        String projectSource = MainServlet.config.getInitParameter(attributeName);
         if(projectSource == null || projectSource.equals( "db") )
         {
             return null;

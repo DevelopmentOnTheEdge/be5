@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static com.developmentontheedge.be5.api.helpers.UserInfo.GUEST;
 import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
 
 
@@ -196,7 +197,7 @@ public class UserInfoManagerImpl implements UserInfoManager {
         try
         {
             //TODO return Utils.getUserInfo(connector, request);
-            return null;
+            return GUEST;
         }
         catch (Exception e)
         {

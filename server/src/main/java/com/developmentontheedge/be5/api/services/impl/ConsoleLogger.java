@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.api.services.Logger;
  * 
  * @author asko
  */
+@Deprecated
 public class ConsoleLogger implements Logger
 {
     
