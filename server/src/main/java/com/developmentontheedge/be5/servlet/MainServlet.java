@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +40,13 @@ import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.MetaImpl;
 import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.api.services.impl.SqlServiceImpl;
+import com.developmentontheedge.be5.components.ApplicationInfoComponent;
 import com.developmentontheedge.be5.components.Document;
+import com.developmentontheedge.be5.components.LanguageSelector;
+import com.developmentontheedge.be5.components.Login;
+import com.developmentontheedge.be5.components.Menu;
+import com.developmentontheedge.be5.components.RoleSelector;
+import com.developmentontheedge.be5.components.ScriptList;
 import com.developmentontheedge.be5.components.impl.model.DpsStreamer;
 import com.developmentontheedge.be5.components.tools.PoolStat;
 import com.developmentontheedge.be5.env.Classes;
@@ -49,12 +57,16 @@ import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
+import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
+
 /**
  * Servlet implementation class MainServlet
  */
 //@WebServlet(description = "Routing requests", urlPatterns = { "/api/*" }, loadOnStartup = 1)
 public class MainServlet extends HttpServlet 
 {
+    private static final Logger log = Logger.getLogger(MainServlet.class.getName());
+
     protected Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
 
     private static final long serialVersionUID = 1L;
@@ -98,8 +110,6 @@ public class MainServlet extends HttpServlet
 
     protected void bindServices()
     {
-        loadedClasses.put("pool", PoolStat.class);
-        loadedClasses.put("document", Document.class);
         serviceProvider.bind( PoolStat.class, PoolStat.class,(x)->{});
         serviceProvider.bind( ProjectProvider.class, ProjectProviderImpl.class,(x)->{});
         serviceProvider.bind( DatabaseService.class, DatabaseServiceImpl.class,(x)->{});
@@ -109,10 +119,18 @@ public class MainServlet extends HttpServlet
         serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
         serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
 
+        loadedClasses.put("pool", PoolStat.class);
+        loadedClasses.put("document", Document.class);
+        loadedClasses.put("menu", Menu.class);
+        loadedClasses.put("appInfo", ApplicationInfoComponent.class);
+        loadedClasses.put("scriptList", ScriptList.class);
+        loadedClasses.put("languageSelector", LanguageSelector.class);
+        loadedClasses.put("roleSelector", RoleSelector.class);
+        loadedClasses.put("login", Login.class);
+
         serviceProvider.freeze();
 
-        serviceProvider.getLogger().info("Services initialized");
-System.out.println("be5:bind services - completed");        
+        log.info("Services initialized");
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -193,7 +211,6 @@ System.out.println("be5:bind services - completed");
         }
         catch( Be5Exception e )
         {
-            serviceProvider.getLogger().error(e);
             trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
             return;
         }
@@ -254,7 +271,7 @@ System.out.println("be5:bind services - completed");
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
         {
-            throw Be5Exception.internal( e );
+            throw getInternalBe5Exception(log, e);
         }
     }
 
@@ -266,7 +283,7 @@ System.out.println("be5:bind services - completed");
         }
         catch( IOException e )
         {
-            serviceProvider.getLogger().error(e);
+            log.log(Level.SEVERE,"response.sendError", e);
         }
     }
 
