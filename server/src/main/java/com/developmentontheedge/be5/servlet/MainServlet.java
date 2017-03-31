@@ -2,21 +2,15 @@ package com.developmentontheedge.be5.servlet;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +20,6 @@ import javax.websocket.CloseReason.CloseCodes;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
-import com.developmentontheedge.be5.api.Initializer;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -62,8 +55,12 @@ import com.google.common.collect.Iterables;
 //@WebServlet(description = "Routing requests", urlPatterns = { "/api/*" }, loadOnStartup = 1)
 public class MainServlet extends HttpServlet 
 {
-	private static final long serialVersionUID = 1L;
-    static public ServletConfig config;
+    protected Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
+
+    private static final long serialVersionUID = 1L;
+	
+	public static ServletConfig config;
+	
 	/**
      * Classes cache: componentId->class.
      */
@@ -86,7 +83,43 @@ public class MainServlet extends HttpServlet
         this.serviceProvider = new MainServiceProvider();
     }
 
-	/**
+    ///////////////////////////////////////////////////////////////////
+    // init
+    //
+
+    @Override
+    public void init(ServletConfig config) throws ServletException 
+    {
+        super.init(config);
+        this.config = config;
+        
+        bindServices();
+    }
+
+    protected void bindServices()
+    {
+        loadedClasses.put("pool", PoolStat.class);
+        loadedClasses.put("document", Document.class);
+        serviceProvider.bind( PoolStat.class, PoolStat.class,(x)->{});
+        serviceProvider.bind( ProjectProvider.class, ProjectProviderImpl.class,(x)->{});
+        serviceProvider.bind( DatabaseService.class, DatabaseServiceImpl.class,(x)->{});
+        serviceProvider.bind( Meta.class, MetaImpl.class,(x)->{});
+        serviceProvider.bind( LegacyUrlsService.class, LegacyUrlsService.class,(x)->{});
+        serviceProvider.bind( LegacyQueryRepository.class, LegacyQueryRepository.class,(x)->{});
+        serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
+        serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
+
+        serviceProvider.freeze();
+
+        serviceProvider.getLogger().info("Services initialized");
+System.out.println("be5:bind services - completed");        
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    // responses
+    //
+    
+    /**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
@@ -118,165 +151,6 @@ public class MainServlet extends HttpServlet
         return;
     }
 
-    public void onWsOpen(Object sessionObj)
-    {
-        Session session = Delegator.on( sessionObj, Session.class );
-        String componentName = session.getPathParameters().get( "component" );
-        WebSocketComponent component;
-        try
-        {
-            component = createWebSocketComponent( componentName );
-        }
-        catch( Be5Exception ex )
-        {
-            try
-            {
-                session.close( new CloseReason( CloseCodes.getCloseCode( CloseCodes.CANNOT_ACCEPT.getCode() ), "Invalid component: "
-                        + componentName ) );
-            }
-            catch( IOException e )
-            {
-                // ignore
-            }
-            return;
-        }
-        component.onOpen( new WebSocketContextImpl( session ), serviceProvider );
-    }
-
-    public void onWsMessage(byte[] msg, Object sessionObj)
-    {
-        Session session = Delegator.on( sessionObj, Session.class );
-        String component = session.getPathParameters().get( "component" );
-        createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), serviceProvider, msg );
-    }
-
-    public void onWsClose(Object sessionObj)
-    {
-        Session session = Delegator.on( sessionObj, Session.class );
-        String component = session.getPathParameters().get( "component" );
-        createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), serviceProvider );
-    }
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        this.config = config;
-        loadedClasses.put("pool", PoolStat.class);
-        loadedClasses.put("document", Document.class);
-        serviceProvider.bind( PoolStat.class, PoolStat.class,(x)->{});
-        serviceProvider.bind( ProjectProvider.class, ProjectProviderImpl.class,(x)->{});
-        serviceProvider.bind( DatabaseService.class, DatabaseServiceImpl.class,(x)->{});
-        serviceProvider.bind( Meta.class, MetaImpl.class,(x)->{});
-        serviceProvider.bind( LegacyUrlsService.class, LegacyUrlsService.class,(x)->{});
-        serviceProvider.bind( LegacyQueryRepository.class, LegacyQueryRepository.class,(x)->{});
-        serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
-        serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
-
-        //ServletConfig cfg = Delegator.on( config, ServletConfig.class );
-        //Utils.setClassLoader( new Be5ClassLoader() );
-//        Utils.setDefaultConnector( Be5.getDbmsConnector() );
-//        try
-//        {
-//TODO            starter.init( new LegacyServletConfig( "DaemonStarter" ) );
-//        }
-//        catch( ServletException e )
-//        {
-//            throw Be5Exception.internal( e );
-//        }
-        //bindServices(cfg.getServletContext());
-        //runInitializers( cfg );
-    }
-
-    protected void bindServices(ServletContext servletContext)
-    {
-        /** TODO
-        for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.service" ) )
-        {
-            if( element.getName().equals( "service" ) )
-            {
-                bindService( element );
-            }
-        }
-        */ 
-        //TODO delete logger serviceProvider.bind(Logger.class, ServletLogger.class, s -> s.setContext(servletContext));
-
-        serviceProvider.freeze();
-
-        serviceProvider.getLogger().info("Services initialized");
-    }
-
-    /*
-    private void bindService(IConfigurationElement element)
-    {
-        String serviceClassName = element.getAttribute("interface");
-        String implementationClassName = element.getAttribute("implementation");
-        String bundleName = element.getContributor().getName();
-        Bundle bundle = Platform.getBundle(bundleName);
-        String id = element.getAttribute("id");
-
-        try
-        {
-            @SuppressWarnings("unchecked")
-            Class<Object> serviceClass = (Class<Object>) bundle.loadClass(serviceClassName);
-            @SuppressWarnings("unchecked")
-            Class<Object> implementationClass = (Class<Object>) bundle.loadClass(implementationClassName);
-            Consumer<Object> initializer = service -> {} // do nothing;
-
-            if (id != null)
-            {
-                initializer = service -> configureServiceIfConfigurable(service, id);
-            }
-
-            serviceProvider.bind(serviceClass, implementationClass, initializer);
-        }
-        catch (ClassNotFoundException e)
-        {
-            serviceProvider.getLogger().error(e);
-            throw new AssertionError( "Can't find a service class " + serviceClassName + "/" + implementationClassName, e );
-        }
-        catch (RuntimeException e)
-        {
-            serviceProvider.getLogger().error(e);
-            throw e;
-        }
-    }*/
-
-    private void runInitializers(ServletConfig config)
-    {
-        /* TODO
-        InitializerContext context = new InitializerContextImpl( config );
-        for( IConfigurationElement element : getConfigurationElements( "com.developmentontheedge.be5.initializer" ) )
-        {
-            if( element.getName().equals( "initializer" ) )
-            {
-                runInitializer( element, context );
-            }
-        }*/
-    }
-
-    /*
-    private void runInitializer(IConfigurationElement element, InitializerContext context)
-    {
-        try
-        {
-            String id = element.getAttribute( "id" );
-            Initializer initializer = (Initializer) loadClass( id, element ).newInstance();
-
-            configureInitializerIfConfigurable(initializer, id);
-            initializer.initialize( context, serviceProvider );
-        }
-        catch( Throwable e )
-        {
-            serviceProvider.getLogger().error(e);
-            throw Be5Exception.internal( e );
-        }
-    }*/
-
-//    public void destroy()
-//    {
-//        starter.destroy();
-//    }
-
     /**
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
@@ -285,13 +159,10 @@ public class MainServlet extends HttpServlet
      */
     public void respond(Object requestObj, Object responseObj, String method, String requestUri, Map<String, String[]> parameters)
     {
-        Pattern uriPattern = Pattern.compile( "/.*?/api/(.*)" );
-        Matcher matcher = uriPattern.matcher( requestUri );
         HttpServletRequest request = Delegator.on( requestObj, HttpServletRequest.class );
         HttpServletResponse response = Delegator.on( responseObj, HttpServletResponse.class );
 
         String origin = request.getHeader( "Origin" );
-
         // TODO test origin
 
         response.addHeader( "Access-Control-Allow-Credentials", "true" );
@@ -299,17 +170,25 @@ public class MainServlet extends HttpServlet
         response.addHeader( "Access-Control-Allow-Methods", "POST, GET" );
         response.addHeader( "Access-Control-Max-Age", "1728000" );
 
+        Matcher matcher = uriPattern.matcher( requestUri );
         if( !matcher.matches() )
         {
             trySendError( HttpServletResponse.SC_NOT_FOUND, response );
             return;
         }
 
-        String[] uriParts = matcher.group( 1 ).split( "/" ); // excluding '<projectName>/api/'
-        String componentId = uriParts[0];
-
+        String[] uriParts = requestUri.split("/");
+        int ind = 1;
+        for(String lexem : uriParts)
+        {
+            if( "api".equals(lexem) )
+                break;
+            
+            ind++;            
+        }
+        
+        String componentId = uriParts[ind];
         Component component;
-
         try
         {
             component = createComponent( componentId );
@@ -321,7 +200,7 @@ public class MainServlet extends HttpServlet
             return;
         }
 
-        String subRequestUri = Joiner.on( '/' ).join( Iterables.skip( Arrays.asList( uriParts ), 1 ) );
+        String subRequestUri = Joiner.on('/').join( Iterables.skip( Arrays.asList(uriParts), ind++));
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         // do some preprocessing using
@@ -363,18 +242,6 @@ public class MainServlet extends HttpServlet
         }
     }
 
-    private void trySendError(int errorCode, HttpServletResponse response)
-    {
-        try
-        {
-            response.sendError( errorCode );
-        }
-        catch( IOException e )
-        {
-            serviceProvider.getLogger().error(e);
-        }
-    }
-
     /**
      * Returns a created component.
      */
@@ -393,6 +260,62 @@ public class MainServlet extends HttpServlet
         }
     }
 
+    private void trySendError(int errorCode, HttpServletResponse response)
+    {
+        try
+        {
+            response.sendError( errorCode );
+        }
+        catch( IOException e )
+        {
+            serviceProvider.getLogger().error(e);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    // web socket
+    //
+
+
+    public void onWsOpen(Object sessionObj)
+    {
+        Session session = Delegator.on( sessionObj, Session.class );
+        String componentName = session.getPathParameters().get( "component" );
+        WebSocketComponent component;
+        try
+        {
+            component = createWebSocketComponent( componentName );
+        }
+        catch( Be5Exception ex )
+        {
+            try
+            {
+                session.close( new CloseReason( CloseCodes.getCloseCode( CloseCodes.CANNOT_ACCEPT.getCode() ), "Invalid component: "
+                        + componentName ) );
+            }
+            catch( IOException e )
+            {
+                // ignore
+            }
+            return;
+        }
+        component.onOpen( new WebSocketContextImpl( session ), serviceProvider );
+    }
+
+    public void onWsMessage(byte[] msg, Object sessionObj)
+    {
+        Session session = Delegator.on( sessionObj, Session.class );
+        String component = session.getPathParameters().get( "component" );
+        createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), serviceProvider, msg );
+    }
+
+    public void onWsClose(Object sessionObj)
+    {
+        Session session = Delegator.on( sessionObj, Session.class );
+        String component = session.getPathParameters().get( "component" );
+        createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), serviceProvider );
+    }
+
     /**
      * Returns a created component.
      */
@@ -409,27 +332,6 @@ public class MainServlet extends HttpServlet
         {
             throw Be5Exception.internal( e );
         }
-    }
-
-    /**
-     * Tries to find a component by its ID
-     * and returns a referenced class or null if can't find a component declaration.
-     *
-     * @param componentId
-     * @throws AssertionError if a found component declaration has incorrect class name
-     */
-    private Class<?> loadComponentClass(String componentId)
-    {
-        /* TODO
-        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.component", "component" );
-
-        if( componentDeclaration == null )
-            return null;
-
-        return loadClass( componentId, componentDeclaration );
-        */
-        
-        return null;
     }
 
     /**
@@ -453,70 +355,31 @@ public class MainServlet extends HttpServlet
         return null;
     }
 
+    ///////////////////////////////////////////////////////////////////
+    // misc
+    //
+    
     /**
-     * Tries to load a class by its name from the configuration element.
+     * Tries to find a component by its ID
+     * and returns a referenced class or null if can't find a component declaration.
+     *
+     * @param componentId
+     * @throws AssertionError if a found component declaration has incorrect class name
      */
-    /*
-    private Class<?> loadClass(String id, IConfigurationElement configuration) throws AssertionError
+    private Class<?> loadComponentClass(String componentId)
     {
-        String className = configuration.getAttribute( "class" );
-        String bundleName = configuration.getContributor().getName();
-        Bundle bundle = Platform.getBundle( bundleName );
+        /* TODO
+        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.component", "component" );
 
-        if( bundle == null )
-            throw new AssertionError( "Can't find a bundle '" + bundleName + "'" );
+        if( componentDeclaration == null )
+            return null;
 
-        try
-        {
-            return bundle.loadClass( className );
-        }
-        catch( ClassNotFoundException e )
-        {
-            throw new AssertionError( "Can't find a class '" + className + "' in bundle '" + bundleName + "' decalared in '" + id + "'", e );
-        }
-    }*/
-
-    /**
-     * Tries to find an extension with a given ID.
-     */
-    /*
-    private IConfigurationElement findDeclaration(String componentId, String extensionPoint, String extensionTag)
-    {
-        IConfigurationElement[] elements = getConfigurationElements( extensionPoint );
-        IConfigurationElement defaultElement = null;
-
-        for( IConfigurationElement element : elements )
-        {
-            String tag = element.getName();
-            if( tag.equals( extensionTag ) )
-            {
-                String id = element.getAttribute( "id" );
-                boolean isDefault = "true".equals(element.getAttribute( "default" ));
-                // id == null => incorrect declaration
-                if( componentId.equals( id ) )
-                {
-                    if(isDefault)
-                    {
-                        defaultElement = element;
-                    }
-                    else
-                    {
-                        return element;
-                    }
-                }
-            }
-        }
-
-        return defaultElement;
+        return loadClass( componentId, componentDeclaration );
+        */
+        
+        return null;
     }
 
-    private IConfigurationElement[] getConfigurationElements(String extensionPoint)
-    {
-        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-        IConfigurationElement[] elements = extensionRegistry.getConfigurationElementsFor( extensionPoint );
-
-        return elements;
-    }*/
 
     /**
      * Transforms a parameters from a multimap to a simple map,
@@ -540,16 +403,6 @@ public class MainServlet extends HttpServlet
     private static void configureComponentIfConfigurable(Component component, String componentId)
     {
         configureIfConfigurable(component, "components", componentId);
-    }
-
-    private static void configureInitializerIfConfigurable(Initializer initializer, String initializerId)
-    {
-        configureIfConfigurable(initializer, "initializers", initializerId);
-    }
-
-    private static void configureServiceIfConfigurable(Object service, String serviceId)
-    {
-        configureIfConfigurable(service, "services", serviceId);
     }
 
     private static <T> void configureIfConfigurable(T object, String collection, String id)
