@@ -179,15 +179,13 @@ System.out.println("be5:bind services - completed");
 
         String[] uriParts = requestUri.split("/");
         int ind = 1;
-        for(String lexem : uriParts)
+
+        while(!"api".equals(uriParts[ind]) && ind+1 < uriParts.length )
         {
-            if( "api".equals(lexem) )
-                break;
-            
-            ind++;            
+            ind++;
         }
         
-        String componentId = uriParts[ind];
+        String componentId = uriParts[++ind];
         Component component;
         try
         {
@@ -200,7 +198,7 @@ System.out.println("be5:bind services - completed");
             return;
         }
 
-        String subRequestUri = Joiner.on('/').join( Iterables.skip( Arrays.asList(uriParts), ind++));
+        String subRequestUri = Joiner.on('/').join( Iterables.skip( Arrays.asList(uriParts), ind+1));
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         // do some preprocessing using
