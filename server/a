@@ -1,0 +1,136 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building be5 server 0.1.1
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ be5-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory C:\projects\java\github\be5\server\src\main\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ be5-server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.4.0:manifest (bundle-manifest) @ be5-server ---
+[WARNING] Manifest com.developmentontheedge:be5-server:jar:0.1.1 : Export com.developmentontheedge.be5.api.exceptions,  has 1,  private references [com.developmentontheedge.be5.api.exceptions.impl], 
+[WARNING] Manifest com.developmentontheedge:be5-server:jar:0.1.1 : Export com.developmentontheedge.be5.api.services,  has 1,  private references [com.developmentontheedge.be5.components.impl.model], 
+[WARNING] Manifest com.developmentontheedge:be5-server:jar:0.1.1 : Export com.developmentontheedge.be5.model,  has 1,  private references [com.developmentontheedge.be5.components.impl], 
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ be5-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 12 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ be5-server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ be5-server ---
+[INFO] Surefire report directory: C:\projects\java\github\be5\server\target\surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.developmentontheedge.be5.api.services.impl.MultiThreadedTest
+Active:0, Idle:4
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.254 sec
+Running com.developmentontheedge.be5.api.services.impl.SerializationTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
+Running com.developmentontheedge.be5.api.services.impl.SqlServiceTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.018 sec <<< FAILURE!
+com.developmentontheedge.be5.api.services.impl.SqlServiceTest  Time elapsed: 0.018 sec  <<< ERROR!
+com.developmentontheedge.be5.api.exceptions.Be5Exception: Internal error occured: Can not load project.
+	at com.developmentontheedge.be5.api.exceptions.Be5Exception.internal(Be5Exception.java:49)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.loadProject(ProjectProviderImpl.java:82)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.getProject(ProjectProviderImpl.java:47)
+	at com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl.<init>(DatabaseServiceImpl.java:41)
+	at com.developmentontheedge.be5.api.services.impl.SqlServiceTest.setUp(SqlServiceTest.java:40)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+Caused by: com.developmentontheedge.be5.api.exceptions.Be5Exception: Project is not found in classpath or war file.
+	at com.developmentontheedge.be5.api.exceptions.Be5Exception.internal(Be5Exception.java:39)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.findProjectPath(ProjectProviderImpl.java:96)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.loadProject(ProjectProviderImpl.java:64)
+	... 24 more
+
+Running com.developmentontheedge.be5.api.services.impl.TransactionTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.01 sec <<< FAILURE!
+com.developmentontheedge.be5.api.services.impl.TransactionTest  Time elapsed: 0.009 sec  <<< ERROR!
+com.developmentontheedge.be5.api.exceptions.Be5Exception: Internal error occured: Can not load project.
+	at com.developmentontheedge.be5.api.exceptions.Be5Exception.internal(Be5Exception.java:49)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.loadProject(ProjectProviderImpl.java:82)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.getProject(ProjectProviderImpl.java:47)
+	at com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl.<init>(DatabaseServiceImpl.java:41)
+	at com.developmentontheedge.be5.api.services.impl.TransactionTest.setUp(TransactionTest.java:36)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+Caused by: com.developmentontheedge.be5.api.exceptions.Be5Exception: Project is not found in classpath or war file.
+	at com.developmentontheedge.be5.api.exceptions.Be5Exception.internal(Be5Exception.java:39)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.findProjectPath(ProjectProviderImpl.java:96)
+	at com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl.loadProject(ProjectProviderImpl.java:64)
+	... 24 more
+
+Running com.developmentontheedge.be5.components.impl.model.Be5QueryExecutorTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
+
+Results :
+
+Tests in error: 
+  com.developmentontheedge.be5.api.services.impl.SqlServiceTest: Internal error occured: Can not load project.
+  com.developmentontheedge.be5.api.services.impl.TransactionTest: Internal error occured: Can not load project.
+
+Tests run: 6, Failures: 0, Errors: 2, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 6.890 s
+[INFO] Finished at: 2017-04-01T19:46:25+07:00
+[INFO] Final Memory: 13M/207M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project be5-server: There are test failures.
+[ERROR] 
+[ERROR] Please refer to C:\projects\java\github\be5\server\target\surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

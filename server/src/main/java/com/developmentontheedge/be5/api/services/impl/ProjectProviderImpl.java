@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.servlet.MainServlet;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -59,47 +60,8 @@ public class ProjectProviderImpl implements ProjectProvider
             if(watcher != null)
                 watcher.stop();
 
-            // try to  find project in classpath or war
-            ArrayList<URL> urls = Collections.list((ProjectProviderImpl.class).getClassLoader().getResources(PROJECT_FILE_NAME));
-            
-            if( urls.isEmpty() )
-                throw Be5Exception.internal("Project is not found in classpath or war file.");
-            	
-            if( urls.size() > 1 )
-            {
-            	String ln = System.lineSeparator(); 
-            	StringBuffer sb = new StringBuffer("Several projects were found: +").append(ln);
-            	
-            	for(URL url : urls)
-            	{
-            		sb.append("  - ")
-            		  .append(url)
-            		  .append(ln);
-            	}
-            	
-            	log.severe(sb.toString());
-            	throw Be5Exception.internal(sb.toString());
-            }
-
             // init project path  
-            Path path;
-            URL url = urls.get(0);
-            String ext = url.toExternalForm();
-
-            if( ext.indexOf('!') < 0 ) // usual file in directory
-            {
-            	path = Paths.get(url.toURI());
-            }
-            else // war or jar file
-            {
-            	path = null;
-/*            
-                String jar = ext.substring(0, ext.indexOf('!'));
-                FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
-                Path p = fs.getPath("./");
-                System.out.println("ext=" + url.toExternalForm() + ", path=" + p);                
-*/            
-            }
+            Path path = findProjectPath();
 
             LoadContext loadContext = new LoadContext();
             Project project = Serialization.load(path, loadContext );
@@ -124,5 +86,53 @@ public class ProjectProviderImpl implements ProjectProvider
             dirty = false;
         }
     }
+
+    protected Path findProjectPath() throws IOException, URISyntaxException
+    {
+        // try to  find project in classpath or war
+        ArrayList<URL> urls = Collections.list((ProjectProviderImpl.class).getClassLoader().getResources(PROJECT_FILE_NAME));
+        
+        if( urls.isEmpty() )
+            throw Be5Exception.internal("Project is not found in classpath or war file.");
+        	
+        if( urls.size() > 1 )
+        {
+        	String ln = System.lineSeparator(); 
+        	StringBuffer sb = new StringBuffer("Several projects were found: +").append(ln);
+        	
+        	for(URL url : urls)
+        	{
+        		sb.append("  - ")
+        		  .append(url)
+        		  .append(ln);
+        	}
+        	
+        	log.severe(sb.toString());
+        	throw Be5Exception.internal(sb.toString());
+        }
+
+        // init project path  
+        Path path;
+        URL url = urls.get(0);
+        String ext = url.toExternalForm();
+
+        if( ext.indexOf('!') < 0 ) // usual file in directory
+        {
+        	path = Paths.get(url.toURI());
+        }
+        else // war or jar file
+        {
+        	path = null;
+/*            
+            String jar = ext.substring(0, ext.indexOf('!'));
+            FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
+            Path p = fs.getPath("./");
+            System.out.println("ext=" + url.toExternalForm() + ", path=" + p);                
+*/            
+        }
+        
+        return path;
+    }
+    
     
 }

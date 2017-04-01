@@ -3,12 +3,10 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 
-import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.servlet.ServletContext;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -32,11 +30,9 @@ public class MultiThreadedTest
         ProjectProviderImpl projectProvider = new ProjectProviderImpl()
         {
             @Override
-            public Path getPath(ServletContext ctx, String attributeName)
+        	protected Path findProjectPath() 
             {
-                if ("be5.configPath".equals(attributeName) || "be5.projectSource".equals(attributeName))
-                    return Paths.get("src/test/resources/app").toAbsolutePath();
-                return Paths.get("");
+            	return Paths.get("src/test/resources/app").toAbsolutePath();
             }
         };
         assertNotNull(projectProvider);

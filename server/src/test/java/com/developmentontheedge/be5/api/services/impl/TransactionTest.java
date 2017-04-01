@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.servlet.ServletContext;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -26,13 +25,12 @@ public class TransactionTest
         ProjectProviderImpl projectProvider = new ProjectProviderImpl()
         {
             @Override
-            public Path getPath(ServletContext ctx, String attributeName)
+        	protected Path findProjectPath() 
             {
-                if ("be5.configPath".equals(attributeName) || "be5.projectSource".equals(attributeName))
-                    return Paths.get("src/test/resources/app").toAbsolutePath();
-                return Paths.get("");
+            	return Paths.get("src/test/resources/app").toAbsolutePath();
             }
         };
+
         databaseService = new DatabaseServiceImpl(projectProvider);
         db = new SqlServiceImpl(databaseService);
         db.update("DROP TABLE IF EXISTS persons;" );
