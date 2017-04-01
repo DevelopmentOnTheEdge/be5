@@ -118,7 +118,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
         if( ext.indexOf('!') < 0 ) // usual file in directory
         {
-        	path = Paths.get(url.toURI());
+        	path = Paths.get(url.toURI()).getParent();
         }
         else // war or jar file
         {
