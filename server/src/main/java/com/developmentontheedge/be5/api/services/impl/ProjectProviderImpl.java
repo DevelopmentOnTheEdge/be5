@@ -5,112 +5,124 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.ServletContexts;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 import com.developmentontheedge.be5.servlet.MainServlet;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class ProjectProviderImpl implements ProjectProvider
 {
     private Logger log = Logger.getLogger(ProjectProviderImpl.class.getName());
-    private volatile boolean dirty = false;
-    private WatchDir watcher = null;
+    
+    private static String PROJECT_FILE_NAME = ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX;
     private Project project;
+
+    private WatchDir watcher = null;
+    private volatile boolean dirty = false;
     
     @Override
     synchronized public Project getProject()
     {
     	if(dirty || project == null)
     	{
-		    long time = System.nanoTime();
 			project = loadProject();
-            log.info("Loading project took "+TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time )+" ms");
     	}
 
     	return project;
     }
-    
-    public Path getPath(ServletContext ctx, String attributeName)
-    {
-        //String projectSource = ctx.getInitParameter( attributeName );
-        String projectSource = MainServlet.config.getInitParameter(attributeName);
-        if(projectSource == null || projectSource.equals( "db") )
-        {
-            return null;
-        }
-        if(projectSource.startsWith( "war:" ))
-        {
-            projectSource = ctx.getRealPath( projectSource.substring( "war:".length() ) );
-        }
-        return Paths.get(projectSource);
-    }
 
-    private Project loadProject() {
+    private Project loadProject() 
+    {
+        log.info("Loading project ...");
+	    long time = System.nanoTime();
+
         try
         {
             if(watcher != null)
                 watcher.stop();
-            ServletContext ctx = ServletContexts.getServletContext();
-            Path projectSource = getPath( ctx, "be5.projectSource" );
-            Path modulesSource = getPath( ctx, "be5.modulesSource" );
-            Path auxModulesSource = getPath( ctx, "be5.auxModulesSource" );
-            if(modulesSource == null)
+
+            // try to  find project in classpath or war
+            ArrayList<URL> urls = Collections.list((ProjectProviderImpl.class).getClassLoader().getResources(PROJECT_FILE_NAME));
+            
+            if( urls.isEmpty() )
+                throw Be5Exception.internal("Project is not found in classpath or war file.");
+            	
+            if( urls.size() > 1 )
             {
-                throw Be5Exception.internal( "be5.modulesSource is not specified in web.xml" );
+            	String ln = System.lineSeparator(); 
+            	StringBuffer sb = new StringBuffer("Several projects were found: +").append(ln);
+            	
+            	for(URL url : urls)
+            	{
+            		sb.append("  - ")
+            		  .append(url)
+            		  .append(ln);
+            	}
+            	
+            	log.severe(sb.toString());
+            	throw Be5Exception.internal(sb.toString());
             }
-            return loadProjectFromYaml( projectSource, modulesSource, auxModulesSource );
+
+            // init project path  
+            Path path;
+            URL url = urls.get(0);
+            String ext = url.toExternalForm();
+
+            if( ext.indexOf('!') < 0 ) // usual file in directory
+            {
+            	path = Paths.get(url.toURI());
+            }
+            else // war or jar file
+            {
+            	path = null;
+/*            
+                String jar = ext.substring(0, ext.indexOf('!'));
+                FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
+                Path p = fs.getPath("./");
+                System.out.println("ext=" + url.toExternalForm() + ", path=" + p);                
+*/            
+            }
+
+            LoadContext loadContext = new LoadContext();
+            Project project = Serialization.load(path, loadContext );
+//          ModuleUtils.mergeAllModules( project, metaProject, new NullLogger(), loadContext );
+            loadContext.check();
+            
+            // TODO - check
+            watcher = new WatchDir(project).onModify( onModify -> {
+                dirty = true;
+            } ).start();
+
+            log.info("Project loaded, name='" + project.getName() + "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time ) + " ms");
+            return project;
+        }
+        catch(Throwable t)
+        {
+        	log.severe("Can not load project, error: " + t.getMessage());
+        	throw Be5Exception.internal(t, "Can not load project.");
         }
         finally
         {
             dirty = false;
         }
     }
-
-    protected Project loadProjectFromYaml(Path projectSource, Path modulesSource, Path auxModulesSource)
-    {
-//TODO        logger.info("Loading BE4 project from YAML ["+projectSource+"]");
-//        ModuleUtils.setBasePathProvider( new BasePathProvider()
-//        {
-//            @Override
-//            public Path getBasePath()
-//            {
-//                return modulesSource;
-//            }
-//
-//            @Override
-//            public Path evalBasePath()
-//            {
-//                return modulesSource;
-//            }
-//
-//            @Override
-//            public void basePathGuessed(Path basePath)
-//            {
-//            }
-//        } );
-//        ModuleUtils.setAdditionalModulePaths( auxModulesSource == null ? Collections.emptyList() : Arrays.asList( auxModulesSource ) );
-        LoadContext loadContext = new LoadContext();
-        try
-        {
-            Project project = Serialization.load( projectSource, loadContext );
-//            Project metaProject = ModuleUtils.loadMetaProject( loadContext );
-//            ModuleUtils.mergeAllModules( project, metaProject, new NullLogger(), loadContext );
-            loadContext.check();
-            watcher = new WatchDir( project ).onModify( path -> {
-                dirty = true;
-            } ).start();
-            return project;
-        }
-        catch( ProjectLoadException | IOException e )
-        {
-            throw Be5Exception.internal( e, "Unable to load project from "+projectSource );
-        }
-    }
+    
 }

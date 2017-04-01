@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.env;
 
-import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
-import com.developmentontheedge.be5.env.ServletContexts;
+import com.developmentontheedge.be5.servlet.MainServlet;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
@@ -11,6 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public enum ConfigurationProvider
@@ -51,8 +51,7 @@ public enum ConfigurationProvider
     private void loadConfiguration()
     {
         ServletContext ctx = ServletContexts.getServletContext();
-        ProjectProviderImpl projectProvider = new ProjectProviderImpl();
-        Path projectSource = projectProvider.getPath( ctx, "be5.configPath" );
+        Path projectSource = getPath( ctx, "be5.configPath" );
         
         if (projectSource == null)
         {
@@ -69,6 +68,24 @@ public enum ConfigurationProvider
         {
             throw new RuntimeException(e);
         }
+    }
+
+    
+    public Path getPath(ServletContext ctx, String attributeName)
+    {
+    	//String projectSource = ctx.getInitParameter( attributeName );
+    	String projectSource = MainServlet.config.getInitParameter(attributeName);
+    	if(projectSource == null || projectSource.equals( "db") )
+    	{
+    		return null;
+    	}
+
+    	if(projectSource.startsWith( "war:" ))
+    	{
+    		projectSource = ctx.getRealPath( projectSource.substring( "war:".length() ) );
+    	}
+    	
+    	return Paths.get(projectSource);
     }
     
 }

@@ -62,7 +62,7 @@ public class ModuleLoader2
         }
     }
     
-    private static String parse(URL url) throws IOException
+    public static String parse(URL url) throws IOException
     {
         try(
                 InputStream in = url.openStream();
