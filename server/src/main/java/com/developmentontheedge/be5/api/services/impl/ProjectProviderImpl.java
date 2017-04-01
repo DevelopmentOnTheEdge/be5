@@ -122,13 +122,10 @@ public class ProjectProviderImpl implements ProjectProvider
         }
         else // war or jar file
         {
-        	path = null;
-/*            
             String jar = ext.substring(0, ext.indexOf('!'));
             FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
-            Path p = fs.getPath("./");
-            System.out.println("ext=" + url.toExternalForm() + ", path=" + p);                
-*/            
+            path = fs.getPath("./");
+            log.info("Load project from war: " + url.toExternalForm() + ", path=" + path);                
         }
         
         return path;
