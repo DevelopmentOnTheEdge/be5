@@ -157,7 +157,9 @@ public class FormGenerator
 //    private Field generateField(String operationName, String entityName, String queryName, BeProperty property, UserAwareMeta userAwareMeta)
 //    {
 //        String name = property.getName();
-//        String title = userAwareMeta.getFieldTitle(entityName, operationName, queryName, name).orElse(name);
+//            String title = userAwareMeta.getFieldTitle(entityName, operationName, queryName, name)
+//                    .orElse(property.getDisplayName());
+//
 //        boolean isReadOnly = property.isReadOnly();
 //        boolean canBeNull = property.canBeNull();
 //        boolean reloadOnChange = property.reloadOnChange();

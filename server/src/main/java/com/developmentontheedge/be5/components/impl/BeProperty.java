@@ -256,4 +256,7 @@ public class BeProperty
 //        return Collections.emptyMap();
 //    }
 //
+//    public String getDisplayName(){
+//        return property.getDisplayName();
+//    }
 }
