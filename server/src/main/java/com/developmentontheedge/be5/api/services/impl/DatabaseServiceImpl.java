@@ -46,6 +46,8 @@ public class DatabaseServiceImpl implements DatabaseService
         bds.setUrl(profile.getConnectionUrl());
         bds.setUsername(profile.getUsername());
         bds.setPassword(profile.getPassword());
+        //TODO add to Rdbms
+        bds.setValidationQuery("select 1");
     }
 
     private DataSource getDataSource() {
