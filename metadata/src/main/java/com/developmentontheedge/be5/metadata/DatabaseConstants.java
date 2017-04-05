@@ -5,6 +5,13 @@ package com.developmentontheedge.be5.metadata;
  */
 public interface DatabaseConstants 
 {
+    // constants from RecordEx,
+    // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer
+    public static final String HIDDEN_COLUMN_PREFIX = "___";
+    public static final String GLUE_COLUMN_PREFIX = "+";
+    public static final String EXTRA_HEADER_COLUMN_PREFIX = ";";
+
+
     static final String ALL_RECORDS_VIEW = "All records";
     static final String SELECTION_VIEW = "*** Selection view ***";
 
@@ -13,11 +20,7 @@ public interface DatabaseConstants
     static final String COL_ATTR_ROLES  = "roles";
     static final String COL_ATTR_BLANKNULLS = "blankNulls";
 
-    // constants from RecordEx, 
-    // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer
-    public static final String HIDDEN_COLUMN_PREFIX = "___";
-    public static final String GLUE_COLUMN_PREFIX = "+";
-    public static final String EXTRA_HEADER_COLUMN_PREFIX = ";";
+    static final String CSS_ROW_CLASS = HIDDEN_COLUMN_PREFIX + "css_class";
 
     // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer
     static final String ID_COLUMN_LABEL = HIDDEN_COLUMN_PREFIX + "ID";

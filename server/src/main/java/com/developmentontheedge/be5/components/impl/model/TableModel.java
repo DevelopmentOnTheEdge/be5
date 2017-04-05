@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import one.util.streamex.StreamEx;
@@ -308,10 +309,30 @@ public class TableModel
         {
             PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta);
             List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
+            addRowClass(cells);
             List<CellModel> processedCells = processCells( cells ); // only visible cells
             String id = selectable ? transformer.getRowId() : null;
 
             return new RowModel( id, processedCells );
+        }
+
+        private void addRowClass(List<RawCellModel> cells)
+        {
+            Optional<String> addClassName = cells.stream().filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS))
+                    .map(x -> x.content).findFirst();
+
+            if(addClassName.isPresent())
+            {
+                for (RawCellModel cell: cells)
+                {
+                    if(cell.options.get("grouping") != null)continue;
+                    Map<String, String> css = cell.options.putIfAbsent("css", new HashMap<>());
+                    if(css == null) css = cell.options.get("css");
+
+                    String className = css.getOrDefault("class", "");
+                    css.put("class", className + " " + addClassName.get());
+                }
+            }
         }
 
         /**
