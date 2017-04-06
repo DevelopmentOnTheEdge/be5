@@ -18,28 +18,42 @@ import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 
 public class ScriptList implements Component
 {
-    private static final String be5Category = "be5/scripts/be5/actions";
+    private static final String actionsCategory = "actions";
 
     @Override
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
     {
         List<ActionPaths> result = new ArrayList<>();
+
         String scriptCategory = req.get("category");
+        if(scriptCategory != null)load(req, result, scriptCategory, "");
 
         //TODO find and load also modules action
-        load(req, result, be5Category);
-        load(req, result, scriptCategory);
+        load(req, result, "be5/scripts", "be5");
+        //result.add(new ActionPaths("static", "be5:be5/actions/static"));
 
         res.sendAsRawJson(result);
     }
 
-    private void load(Request req, List<ActionPaths> result, String scriptCategory)
+    private void load(Request req, List<ActionPaths> result, String scriptCategory, String module)
     {
-        try (Stream<Path> paths = Files.list(Paths.get(req.getRawRequest().getSession().getServletContext().getRealPath(scriptCategory))))
+        boolean isModule = !"".equals(module);
+        try (Stream<Path> paths = Files.list(Paths.get(req.getRawRequest().getSession().getServletContext()
+                .getRealPath(scriptCategory +
+                        (isModule ? "/" + module : "") +
+                        "/" + actionsCategory
+                ))))
         {
             paths.map(p -> p.getFileName().toString())
                     .filter(n -> n.endsWith(".js"))
-                    .map(n -> new ActionPaths(n.substring(0, n.length() - ".js".length()), scriptCategory + "/" + n))
+                    .map(n -> {
+                        String name = n.substring(0, n.length() - ".js".length());
+                        if(isModule){
+                            return new ActionPaths(name, module + ":" + module + "/actions/" + name);
+                        }else{
+                            return new ActionPaths(name, "actions/" + name);
+                        }
+                    })
                     .forEach(result::add);
         }
         catch (IOException e)
