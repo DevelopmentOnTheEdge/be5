@@ -47,6 +47,7 @@ import com.developmentontheedge.be5.components.Login;
 import com.developmentontheedge.be5.components.Menu;
 import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.components.ScriptList;
+import com.developmentontheedge.be5.components.StaticPageComponent;
 import com.developmentontheedge.be5.components.impl.model.DpsStreamer;
 import com.developmentontheedge.be5.components.tools.PoolStat;
 import com.developmentontheedge.be5.env.Classes;
@@ -127,6 +128,7 @@ public class MainServlet extends HttpServlet
         loadedClasses.put("languageSelector", LanguageSelector.class);
         loadedClasses.put("roleSelector", RoleSelector.class);
         loadedClasses.put("login", Login.class);
+        loadedClasses.put("static", StaticPageComponent.class);
 
         serviceProvider.freeze();
 
