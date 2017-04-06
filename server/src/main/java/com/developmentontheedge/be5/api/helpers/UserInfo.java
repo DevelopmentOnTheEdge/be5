@@ -169,15 +169,7 @@ public class UserInfo implements Serializable
 
         public Locale getLocale()
         {
-            try
-            {
-                //return new Locale( Utils.getSystemSetting( Utils.getDefaultConnector(), "FORCED_LOCALE", "en_US" ) );
-                return Locale.US;
-            }
-            catch( Exception exc )
-            {
-                return Locale.US;
-            }
+            return locale != null ? locale : Locale.US;
         }
     };
 
@@ -195,7 +187,7 @@ public class UserInfo implements Serializable
 
         public Locale getLocale()
         {
-            return Locale.US;
+            return locale != null ? locale : Locale.US;
         }
     };
 
@@ -213,15 +205,7 @@ public class UserInfo implements Serializable
 
         public Locale getLocale()
         {
-            try
-            {
-                //return new Locale( Utils.getSystemSetting( Utils.getDefaultConnector(), "FORCED_LOCALE", "en_US" ) );
-                return new Locale( "en_US" );
-            }
-            catch( Exception exc )
-            {
-                return Locale.US;
-            }
+            return locale != null ? locale : Locale.US;
         }
     };
 }
