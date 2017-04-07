@@ -54,8 +54,6 @@ import com.developmentontheedge.be5.components.StaticPageComponent;
 import com.developmentontheedge.be5.components.impl.model.DpsStreamer;
 import com.developmentontheedge.be5.components.tools.PoolStat;
 import com.developmentontheedge.be5.env.ConfigurationProvider;
-import com.developmentontheedge.be5.legacy.LegacyQueryRepository;
-import com.developmentontheedge.be5.legacy.LegacyUrlsService;
 import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -116,8 +114,6 @@ public class MainServlet extends HttpServlet
         serviceProvider.bind( ProjectProvider.class, ProjectProviderImpl.class,(x)->{});
         serviceProvider.bind( DatabaseService.class, DatabaseServiceImpl.class,(x)->{});
         serviceProvider.bind( Meta.class, MetaImpl.class,(x)->{});
-        serviceProvider.bind( LegacyUrlsService.class, LegacyUrlsService.class,(x)->{});
-        serviceProvider.bind( LegacyQueryRepository.class, LegacyQueryRepository.class,(x)->{});
         serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
         serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
         serviceProvider.bind( LoginService.class, LoginServiceImpl.class,(x)->{});

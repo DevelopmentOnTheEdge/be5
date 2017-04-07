@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.components.impl.model;
 
 import java.util.regex.Pattern;
 
-import com.developmentontheedge.be5.legacy.LegacyUrlParser;
-import com.developmentontheedge.be5.legacy.LegacyUrlsService;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -15,7 +13,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 final public class Queries 
 {
     
-    public static Action toAction(Query query, LegacyUrlsService legacyQueriesService) 
+    public static Action toAction(Query query) 
     {
         if (isClientSide(query))
         {
@@ -37,31 +35,12 @@ final public class Queries
         {
             return Action.call(new HashUrl("static", query.getQuery()));
         }
-        else
-        {
-            LegacyUrlParser parser = legacyQueriesService.createParser(query.getQuery());
 
-            if( query.getType() == QueryType.STATIC )
-            {
-            	if( parser.isLegacy() )
-            	{
-                    if (parser.isForm())
-                    {
-                        return Action.call(new HashUrl("form", parser.getEntityName(), parser.getQueryName(), parser.getOperationName()));
-                    }
-                    // continue
-            	}
-            	else
-            	{
-                    return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
-            	}
-            }
-            
-            return Action.call(new HashUrl("table", query.getEntity().getName(), query.getName()));
-        }
+        return null;
     }
 
-    public static Action toAction(String query, Operation operation) {
+    public static Action toAction(String query, Operation operation) 
+    {
         String entityName = operation.getEntity().getName();
         HashUrl hashUrl = new HashUrl("form", entityName, query, operation.getName());
         
