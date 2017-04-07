@@ -6,24 +6,31 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoManager;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.legacy.LegacyOperation;
 import com.developmentontheedge.be5.metadata.SessionConstants;
+import com.developmentontheedge.be5.metadata.Utils;
 import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.api.helpers.UserInfo.GUEST;
 import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
 
 
 public class UserInfoManagerImpl implements UserInfoManager {
+
+    private static final Logger log = Logger.getLogger(UserInfoManagerImpl.class.getName());
     
     public static UserInfoManagerImpl create(Request req, ServiceProvider serviceProvider, Meta meta)
     {
@@ -38,17 +45,19 @@ public class UserInfoManagerImpl implements UserInfoManager {
      * that do some actions after calling {@link UserInfoManager#login(String, String)} or {@link UserInfoManager#logout()}.
      */
     private UserInfo user = null;
-    private final Meta meta;
     private final ServiceProvider serviceProvider;
+    private final SqlService db;
     private final DatabaseService databaseService;
-    
+    private final LoginService loginService;
+
     public UserInfoManagerImpl(Request req, ServiceProvider serviceProvider, Meta meta) {
         this.req = req;
         this.serviceProvider = serviceProvider;
+        this.loginService = serviceProvider.get(LoginService.class);
         this.databaseService = serviceProvider.getDatabaseService();
+        this.db = serviceProvider.getSqlService();
         this.rawRequest = req.getRawRequest();
         this.rawSession = req.getRawRequest().getSession();
-        this.meta = meta;
     }
     
     @Override
@@ -81,17 +90,22 @@ public class UserInfoManagerImpl implements UserInfoManager {
             if(getUserInfo().isAdmin()) {
                 return Collections.singletonList(ROLE_ADMINISTRATOR);
             }
-//TODO            String selectRolesSql = "SELECT role_name FROM user_roles WHERE user_name = " + Utils.safestr(connector, getUserInfo().getUserName(), true);
-//            String[] roles = (String[]) Utils.readAsArray(connector, selectRolesSql, new String[0]);
+            String selectRolesSql = "SELECT role_name FROM user_roles WHERE user_name = " + Utils.safestr(databaseService, getUserInfo().getUserName(), true);
+            List<String> selectRoles = db.selectList(selectRolesSql, rs -> rs.getString(1));
 
-            //return Collections.unmodifiableList(Arrays.asList(roles));
-            return Collections.singletonList("Guest");
+            return Collections.unmodifiableList(selectRoles);
         }
         catch (Exception e)
         {
             throw Be5Exception.internal(e);
         }
     }
+
+    public static String rolesToString( List<String> roles )
+    {
+        return Utils.toInClause( roles );
+    }
+
 
     @Override
     public void selectRoles(List<String> roles) throws Exception {
@@ -140,12 +154,17 @@ public class UserInfoManagerImpl implements UserInfoManager {
      * Tests if the login is correct and returns an username if the login is correct, otherwise returns null.
      */
     private String verify(String username, String password) throws Exception {
-        return runLegacyLoginOperation(getLegacyLoginOperation(), username, password);
+        //return runLegacyLoginOperation(getLegacyLoginOperation(), username, password);
+
+        if( HttpServletResponse.SC_OK == loginService.login(username, password, null, null)){
+            return username;
+        }
+        return null;
     }
 
-    private String runLegacyLoginOperation(LegacyOperation legacyOperation, String username, String password) throws SQLException
-    {
-        //TODO
+//    private String runLegacyLoginOperation(LegacyOperation legacyOperation, String username, String password) throws SQLException
+//    {
+//        //TODO
 //        Login loginOperation = (Login) legacyOperation.getRawOperation();
 //        loginOperation.setKey(null);
 //        String sessionId = req.getSessionId();
@@ -154,34 +173,40 @@ public class UserInfoManagerImpl implements UserInfoManager {
 //
 //        if (result == HttpServletResponse.SC_OK)
 //        	return loginOperation.getActualUser();
-        
-        return null;
-    }
+//
+//        return null;
+//    }
 
-    private LegacyOperation getLegacyLoginOperation() throws GeneralSecurityException
-    {
-        UserInfo user = getUserInfo();
-        
-        // See WebAppInitializer.
-        //TODO CryptoUtils.setPasswordAndAlgorithm("myHomeKey", "PBEWithMD5AndDES");
-        
-//        LegacyOperationFactory factory = serviceProvider.get(LegacyOperationsService.class).createFactory(user, getRequest());
-//        LegacyOperation legacyOperation = factory.create(meta.getOperation("users", "Login", getCurrentRoles()), req, null, Collections.<String>emptyList());
-        
-//        return legacyOperation;
-        return null;
-    }
+//    private LegacyOperation getLegacyLoginOperation() throws GeneralSecurityException
+//    {
+//        UserInfo user = getUserInfo();
+//
+//        // See WebAppInitializer.
+//        //TODO CryptoUtils.setPasswordAndAlgorithm("myHomeKey", "PBEWithMD5AndDES");
+//
+////        LegacyOperationFactory factory = serviceProvider.get(LegacyOperationsService.class).createFactory(user, getRequest());
+////        LegacyOperation legacyOperation = factory.create(meta.getOperation("users", "Login", getCurrentRoles()), req, null, Collections.<String>emptyList());
+//
+////        return legacyOperation;
+//        return null;
+//    }
     
     private void saveCurrentUser(String username) {
         HttpSession session = getRequest().getSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
         session.setAttribute(SessionConstants.CURRENT_USER, username);
-        session.removeAttribute(SessionConstants.USER_INFO);
+
+        UserInfo ui = new UserInfo(username, new Date());
+        ui.setLocale(req.getRawRequest().getLocale());
+        //todo add roleService
+        ui.setCurRoleList(rolesToString(getAvailableRoles()));
+
+        session.setAttribute( SessionConstants.USER_INFO, ui );
 
         user = null; // invalidate
         // re-read user info in order to have it stored in the session and to avoid race conditions
         UserInfo newUserInfo = getUserInfo();
-        System.out.println("Hi, " + newUserInfo.getUserName() + "!");
+        log.info("Login as user: " + newUserInfo.getUserName());
     }
 
     @Override
@@ -196,13 +221,29 @@ public class UserInfoManagerImpl implements UserInfoManager {
     private UserInfo getUserInfo(HttpServletRequest request) {
         try
         {
-            //TODO return Utils.getUserInfo(connector, request);
-            return GUEST;
+            UserInfo userInfo = synchronizedGetUserInfo(request, request.getSession());
+//            if(userInfo.getTimeZone() == null){
+//                userInfo.setTimeZone(Utils.getUserSetting( connector, userInfo.getUserName(), "time-zone" ));
+//                if(userInfo.getTimeZone() == null){
+//                    userInfo.setTimeZone("Asia/Novosibirsk");
+//                }
+//            }
+            return userInfo;
         }
         catch (Exception e)
         {
             throw Be5Exception.internal(e, "Can't load an user info");
         }
+    }
+
+    private synchronized UserInfo synchronizedGetUserInfo(HttpServletRequest request, HttpSession session)
+            throws Exception
+    {
+        UserInfo ui = (UserInfo) session.getAttribute(SessionConstants.USER_INFO);
+
+        if(ui == null)return GUEST;
+
+        return ui;
     }
 
     @Override
@@ -216,12 +257,12 @@ public class UserInfoManagerImpl implements UserInfoManager {
         return getUserInfo().getUserName() != null;
     }
 
-    @Override
-    public void setCurrentUser(String userName)
-    {
-        rawSession.setAttribute("remoteAddr", rawRequest.getRemoteAddr());
-        rawSession.setAttribute(SessionConstants.CURRENT_USER, userName);
-        rawSession.removeAttribute(SessionConstants.USER_INFO);
-    }
+//    @Override
+//    public void setCurrentUser(String userName)
+//    {
+//        rawSession.setAttribute("remoteAddr", rawRequest.getRemoteAddr());
+//        rawSession.setAttribute(SessionConstants.CURRENT_USER, userName);
+//        rawSession.removeAttribute(SessionConstants.USER_INFO);
+//    }
     
 }

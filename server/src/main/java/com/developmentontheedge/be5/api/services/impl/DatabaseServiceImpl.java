@@ -225,7 +225,7 @@ public class DatabaseServiceImpl implements DatabaseService
     @Override
     public int executeUpdate(String query) throws SQLException
     {
-        throw new RuntimeException("not implemented");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -237,7 +237,7 @@ public class DatabaseServiceImpl implements DatabaseService
     @Override
     public String executeInsert(String sql) throws SQLException
     {
-        throw new RuntimeException("not implemented");
+        throw new UnsupportedOperationException();
     }
 
     @Override

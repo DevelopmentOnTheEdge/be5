@@ -33,10 +33,12 @@ import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
+import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.MetaImpl;
 import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.api.services.impl.SqlServiceImpl;
@@ -44,6 +46,7 @@ import com.developmentontheedge.be5.components.ApplicationInfoComponent;
 import com.developmentontheedge.be5.components.Document;
 import com.developmentontheedge.be5.components.LanguageSelector;
 import com.developmentontheedge.be5.components.Login;
+import com.developmentontheedge.be5.components.Logout;
 import com.developmentontheedge.be5.components.Menu;
 import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.components.ScriptList;
@@ -118,6 +121,7 @@ public class MainServlet extends HttpServlet
         serviceProvider.bind( LegacyQueryRepository.class, LegacyQueryRepository.class,(x)->{});
         serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
         serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
+        serviceProvider.bind( LoginService.class, LoginServiceImpl.class,(x)->{});
 
         loadedClasses.put("pool", PoolStat.class);
         loadedClasses.put("document", Document.class);
@@ -127,6 +131,7 @@ public class MainServlet extends HttpServlet
         loadedClasses.put("languageSelector", LanguageSelector.class);
         loadedClasses.put("roleSelector", RoleSelector.class);
         loadedClasses.put("login", Login.class);
+        loadedClasses.put("logout", Logout.class);
         loadedClasses.put("static", StaticPageComponent.class);
 
         serviceProvider.freeze();

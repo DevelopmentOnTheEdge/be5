@@ -25,7 +25,15 @@ public class UserInfo implements Serializable
         return userName;
     }
 
-    public void setUserName( String userName )
+    public UserInfo(){}
+
+    public UserInfo(String userName, Date creationTime)
+    {
+        this.userName = userName;
+        this.creationTime = creationTime;
+    }
+
+    public void setUserName(String userName )
     {
         this.userName = userName;
     }

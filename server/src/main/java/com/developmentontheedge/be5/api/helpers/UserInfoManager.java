@@ -87,5 +87,5 @@ public interface UserInfoManager {
      * Changes the session information about the user: saves his name and network address.
      * @param userName usually the email of the user
      */
-    void setCurrentUser(String userName);
+//    void setCurrentUser(String userName);
 }
