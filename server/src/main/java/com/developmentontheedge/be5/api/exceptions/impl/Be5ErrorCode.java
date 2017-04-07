@@ -2,9 +2,15 @@ package com.developmentontheedge.be5.api.exceptions.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public enum Be5ErrorCode
 {
-    INTERNAL_ERROR, INTERNAL_ERROR_IN_OPERATION, INTERNAL_ERROR_IN_QUERY, NOT_INITIALIZED, UNKNOWN_COMPONENT, UNKNOWN_ENTITY, UNKNOWN_QUERY, UNKNOWN_OPERATION, PARAMETER_ABSENT, PARAMETER_EMPTY, PARAMETER_INVALID, STATE_INVALID, ACCESS_DENIED, ACCESS_DENIED_TO_OPERATION, ACCESS_DENIED_TO_QUERY, NO_OPERATION_IN_QUERY;
+    INTERNAL_ERROR, INTERNAL_ERROR_IN_OPERATION, INTERNAL_ERROR_IN_QUERY, NOT_INITIALIZED,
+    UNKNOWN_COMPONENT, UNKNOWN_ENTITY, UNKNOWN_QUERY, UNKNOWN_OPERATION, NO_OPERATION_IN_QUERY,
+    PARAMETER_ABSENT, PARAMETER_EMPTY, PARAMETER_INVALID, STATE_INVALID,
+    ACCESS_DENIED, ACCESS_DENIED_TO_OPERATION, ACCESS_DENIED_TO_QUERY;
 
     /**
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
@@ -19,9 +25,22 @@ public enum Be5ErrorCode
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
      */
-    public Be5Exception rethrow(Throwable t, Object... parameters)
+    public Be5Exception exception(Logger log, Object... parameters)
     {
-        return Be5Exception.create(this, ErrorMessages.formatMessage(this, parameters), t);
+        String msg = ErrorMessages.formatMessage(this, parameters);
+        log.severe(msg);
+        return Be5Exception.create(this, msg);
+    }
+
+    /**
+     * Creates a {@link Be5Exception} by the code and a formatted message. Note
+     * that this method is not a part of the API.
+     */
+    public Be5Exception rethrow(Logger log, Throwable t, Object... parameters)
+    {
+        String msg = ErrorMessages.formatMessage(this, parameters);
+        log.log(Level.SEVERE, msg, t);
+        return Be5Exception.create(this, msg, t);
     }
 
     public boolean isInternal()

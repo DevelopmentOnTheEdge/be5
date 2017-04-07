@@ -58,7 +58,6 @@ import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
-import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
 /**
  * Servlet implementation class MainServlet
@@ -268,12 +267,12 @@ public class MainServlet extends HttpServlet
         {
             Class<?> klass = loadedClasses.computeIfAbsent( componentId, this::loadComponentClass );
             if( klass == null )
-                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception( componentId );
+                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception(log, componentId );
             return (Component)klass.newInstance();
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
         {
-            throw getInternalBe5Exception(log, e);
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
     }
 

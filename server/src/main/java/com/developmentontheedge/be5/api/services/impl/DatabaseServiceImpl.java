@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
@@ -18,13 +19,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
 public class DatabaseServiceImpl implements DatabaseService
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
-
-    private final static String MSG_ERROR_CLOSING = "Error closing result set";
 
     //Thread local?
     private final Map<ResultSet, Connection> queriesMap = new ConcurrentHashMap<>(100);
@@ -76,7 +74,7 @@ public class DatabaseServiceImpl implements DatabaseService
                 conn.close();
             }
             catch (SQLException e) {
-                throw getInternalBe5Exception(log, e);
+                throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
             }
         }
     }
@@ -93,7 +91,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "get Statement" );
         }
         try
         {
@@ -101,7 +99,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "closing ResultSet" );
         }
         try
         {
@@ -110,7 +108,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "closing Statement" );
         }
         try
         {
@@ -122,7 +120,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw getInternalBe5Exception(log, MSG_ERROR_CLOSING, t );
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "closing Connection" );
         }
     }
 
@@ -134,7 +132,7 @@ public class DatabaseServiceImpl implements DatabaseService
     {
         Connection conn = TRANSACT_CONN.get();
         if (conn != null) {
-            throw getInternalBe5Exception(log, "Start second transaction in one thread");
+            throw Be5ErrorCode.INTERNAL_ERROR.exception(log, "Start second transaction in one thread");
         }
         conn = getDataSource().getConnection();
         conn.setAutoCommit(false);
@@ -166,9 +164,9 @@ public class DatabaseServiceImpl implements DatabaseService
             if (conn != null) {
                 conn.rollback();
             }
-            return getInternalBe5Exception(log, e);
+            return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         } catch (SQLException se) {
-            return getInternalBe5Exception(log, "Unable to rollback transaction", e);
+            return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, se, "Unable to rollback transaction", e);
         }
     }
 
@@ -207,7 +205,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch (SQLException e)
         {
-            throw getInternalBe5Exception(log, e);
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
         finally
         {
@@ -218,7 +216,7 @@ public class DatabaseServiceImpl implements DatabaseService
                     stmt.close();
                 } catch (SQLException e)
                 {
-                    throw getInternalBe5Exception(log, e);
+                    throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
                 }
                 if ( !inTransaction() )
                 {
@@ -241,8 +239,6 @@ public class DatabaseServiceImpl implements DatabaseService
 
     protected ResultSet paranoidQuery(Statement stmt, String query)
     {
-        ResultSet rs = null;
-
         String hacked = query;
         hacked += "/* STARTED: " + new java.sql.Timestamp( System.currentTimeMillis() ) + " */";
 
@@ -252,7 +248,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch( SQLException e )
         {
-            throw getInternalBe5Exception(log, e);
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
     }
 

@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.impl;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,7 +17,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class RequestImpl implements Request {
-	
+
+    public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
+
     private final HttpServletRequest rawRequest;
     private final String requestUri;
     private final Map<String, String> parameters;
@@ -70,7 +73,7 @@ public class RequestImpl implements Request {
         }
         catch (ClassCastException e)
         {
-            throw Be5ErrorCode.PARAMETER_INVALID.rethrow(e, parameter, valuesString);
+            throw Be5ErrorCode.PARAMETER_INVALID.rethrow(log, e, parameter, valuesString);
         }
 		return fieldValues;
     }

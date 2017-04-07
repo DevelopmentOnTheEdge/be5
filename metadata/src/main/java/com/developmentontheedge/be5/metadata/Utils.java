@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class Utils 
 {
-	public static Logger log = Logger.getLogger(Utils.class.getName());
+	public static final Logger log = Logger.getLogger(Utils.class.getName());
 
     static String MISSING_SETTING_VALUE = "some-absolutely-impossible-setting-value";
 

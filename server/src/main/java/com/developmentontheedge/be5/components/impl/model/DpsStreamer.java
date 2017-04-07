@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -17,7 +17,6 @@ import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.exceptions.ExceptionHelper.getInternalBe5Exception;
 
 public class DpsStreamer
 {
@@ -66,7 +65,7 @@ public class DpsStreamer
                     catch( Throwable t )
                     {
                         databaseService.close( finalRs );
-                        throw new RuntimeException(t);
+                        throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t);
                     }
                 }
             } ).onClose( () -> databaseService.close( finalRs ) );
@@ -74,7 +73,7 @@ public class DpsStreamer
         catch( Exception e )
         {
             databaseService.close( rs );
-            throw new RuntimeException(e);
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
     }
 
