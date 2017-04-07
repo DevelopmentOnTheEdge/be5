@@ -553,7 +553,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             return DpsStreamer.createSchema(ps.getMetaData());
         }
         finally {
-            databaseService.close(conn);
+            databaseService.releaseConnection(conn);
         }
     }
 

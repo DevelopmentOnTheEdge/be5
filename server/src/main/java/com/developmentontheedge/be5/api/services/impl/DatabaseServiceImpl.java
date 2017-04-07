@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.dbms.DbmsType;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.naming.Context;
@@ -31,12 +32,13 @@ public class DatabaseServiceImpl implements DatabaseService
 
     private BasicDataSource bds = null;
     private Rdbms type;
+    private BeConnectionProfile profile;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider){
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
         System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
 
-        BeConnectionProfile profile = projectProvider.getProject().getConnectionProfile();
+        profile = projectProvider.getProject().getConnectionProfile();
         type = profile.getRdbms();
 
         bds = new BasicDataSource();
@@ -52,6 +54,12 @@ public class DatabaseServiceImpl implements DatabaseService
         return bds;
     }
 
+    @Override
+    public Connection getConnection() throws SQLException
+    {
+        return getConnection(false);
+    }
+
     public Connection getConnection(boolean isReadOnly) throws SQLException
     {
         Connection conn = getDataSource().getConnection();
@@ -61,17 +69,30 @@ public class DatabaseServiceImpl implements DatabaseService
         return conn;
     }
 
-    public void close(Connection conn)
+    @Override
+    public void releaseConnection(Connection conn)
+    {
+        if ( !isInTransaction() )
+        {
+            returnConnection(conn);
+        }
+    }
+
+    private void returnConnection(Connection conn)
     {
         if (conn != null)
         {
             try
             {
-                if (conn.isReadOnly())
+                if(!conn.isClosed())
                 {
-                    conn.setReadOnly(false);
+                    if(!conn.getAutoCommit())
+                        conn.setAutoCommit(true);
+                    if (!conn.isReadOnly())
+                        conn.setReadOnly(false);
+
+                    conn.close();
                 }
-                conn.close();
             }
             catch (SQLException e) {
                 throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
@@ -79,7 +100,6 @@ public class DatabaseServiceImpl implements DatabaseService
         }
     }
 
-    @Override
     public void close(ResultSet rs)
     {
         if ( rs == null )
@@ -113,9 +133,9 @@ public class DatabaseServiceImpl implements DatabaseService
         try
         {
             Connection conn = queriesMap.remove( rs );
-            if ( conn != null && !inTransaction() )
+            if ( conn != null && !isInTransaction() )
             {
-                close(conn);
+                releaseConnection(conn);
             }
         }
         catch ( Throwable t )
@@ -141,7 +161,7 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     private void closeTx(Connection conn) {
-        close(conn);
+        returnConnection(conn);
         TRANSACT_CONN.set(null);
     }
 
@@ -191,6 +211,36 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
+    public DbmsType getType()
+    {
+        return type.getType();
+    }
+
+    @Override
+    public String getConnectString()
+    {
+        return profile.getConnectionUrl();
+    }
+
+    @Override
+    public int executeUpdate(String query) throws SQLException
+    {
+        throw new RuntimeException("not implemented");
+    }
+
+    @Override
+    public ResultSet executeQuery(String sql)
+    {
+        return executeQuery(sql, false);
+    }
+
+    @Override
+    public String executeInsert(String sql) throws SQLException
+    {
+        throw new RuntimeException("not implemented");
+    }
+
+    @Override
     public ResultSet executeQuery(String sql, boolean isReadOnly)
     {
         Connection conn = null;
@@ -218,12 +268,12 @@ public class DatabaseServiceImpl implements DatabaseService
                 {
                     throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
                 }
-                if ( !inTransaction() )
+                if ( !isInTransaction() )
                 {
-                    close(conn);
+                    returnConnection(conn);
                 }
             }
-            else if ( !inTransaction() )
+            else if ( !isInTransaction() )
             {
                 queriesMap.put( rs, conn );
             }
@@ -232,12 +282,12 @@ public class DatabaseServiceImpl implements DatabaseService
         return rs;
     }
 
-    private boolean inTransaction()
+    private boolean isInTransaction()
     {
         return getCurrentTxConn() != null;
     }
 
-    protected ResultSet paranoidQuery(Statement stmt, String query)
+    private ResultSet paranoidQuery(Statement stmt, String query)
     {
         String hacked = query;
         hacked += "/* STARTED: " + new java.sql.Timestamp( System.currentTimeMillis() ) + " */";

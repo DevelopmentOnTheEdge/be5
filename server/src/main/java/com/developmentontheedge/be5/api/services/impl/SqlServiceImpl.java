@@ -109,7 +109,7 @@ public class SqlServiceImpl implements SqlService
         } finally {
             if(txConn == null)
             {
-                databaseService.close(conn);
+                databaseService.releaseConnection(conn);
             }
         }
     }
