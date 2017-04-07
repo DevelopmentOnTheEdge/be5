@@ -130,6 +130,11 @@ public interface ServiceProvider
     {
         return new ConsoleLogger();
     }
+
+    default LoginService getLoginService()
+    {
+        return get(LoginService.class);
+    }
     
     /**
      * <p>Bind an interface to an implementation class.</p>

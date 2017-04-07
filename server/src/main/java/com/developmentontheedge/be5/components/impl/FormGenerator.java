@@ -97,12 +97,12 @@ public class FormGenerator
 //                                                              String operationName, String selectedRowsString, Operation operation, Map<String, String> presetValues,
 //                                                              DatabaseConnector connector)
 //    {
-//        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
+//        UserInfoManager userInfoManager = UserInfoHolder.get(req, serviceProvider);
 //        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
 //
 //        Iterable<String> selectedRows = Splitter.on(',').split(selectedRowsString);
 //
-//        UserInfo ui = userInfoManager.getUserInfo();
+//        UserInfo ui = UserInfoHolder.getUserInfo();
 //        LegacyOperationFactory legacyOperationFactory = serviceProvider.get(LegacyOperationsService.class).createFactory(ui, req.getRawRequest());
 //        LegacyOperation legacyOperation = legacyOperationFactory.create(operation, req, Utils.readQueryID(connector, entityName, queryName), selectedRows);
 //        ComponentModel model = legacyOperation.getParameters(new StringWriter(), presetValues);
@@ -114,7 +114,7 @@ public class FormGenerator
 //        }
 //
 //        // FIXME should use modern localizations from Meta
-//        //Map<String, String> l10n = legacyOperation.getLocalizedMessages(userInfoManager.getLocale());
+//        //Map<String, String> l10n = legacyOperation.getLocalizedMessages(UserInfoHolder.getLocale());
 //        LegacyUrlsService legacyUrlsService = serviceProvider.get(LegacyUrlsService.class);
 //        Optional<String> customAction = legacyOperation.getCustomAction().map(legacyUrlsService::modernize).map(HashUrl::toString);
 //

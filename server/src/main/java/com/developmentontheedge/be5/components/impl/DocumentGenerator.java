@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.impl.QueryRouter.Runner;
 import com.developmentontheedge.be5.components.impl.model.Operations;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
@@ -42,20 +42,18 @@ public class DocumentGenerator implements Runner {
     private final Response res;
     private final ServiceProvider serviceProvider;
     private final UserAwareMeta userAwareMeta;
-    private final UserInfoManager userInfoManager;
     
     private DocumentGenerator(Request req, Response res, ServiceProvider serviceProvider) {
         this.req = req;
         this.res = res;
         this.serviceProvider = serviceProvider;
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
-        this.userInfoManager = UserInfoManager.get(req, serviceProvider);
     }
     
     @Override
     public void onStatic(Query query)
     {
-        DocumentResponse.of(res).sendStaticPage(query.getProject().getStaticPageContent(UserInfoManager.get(req, serviceProvider).getLanguage(), query.getQuery().trim()));
+        DocumentResponse.of(res).sendStaticPage(query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim()));
     }
     
     @Override
@@ -130,7 +128,7 @@ public class DocumentGenerator implements Runner {
     
     private List<TableOperationPresentation> collectOperations(Query query) {
         List<TableOperationPresentation> operations = new ArrayList<>();
-        List<String> userRoles = userInfoManager.getCurrentRoles();
+        List<String> userRoles = UserInfoHolder.getCurrentRoles();
         
         try
         {

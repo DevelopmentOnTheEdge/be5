@@ -5,7 +5,7 @@ package com.developmentontheedge.be5.legacy;
 //import com.developmentontheedge.be5.UserInfo;
 //import com.developmentontheedge.be5.Utils;
 
-import com.developmentontheedge.be5.api.helpers.UserInfo;
+import com.developmentontheedge.be5.model.UserInfo;
 
 /**
  * Doesn't allow to get session directly.
@@ -18,7 +18,7 @@ class SafeUserInfo extends UserInfo
 //
 //    public SafeUserInfo(UserInfo orig) {
 //        this.userName = orig.getUserName();
-//        this.curRoleList = orig.getCurRoleList();
+//        this.curRoleList = orig.getCurRoles();
 //        this.locale = orig.getLocale();
 //        this.remoteAddr = orig.getRemoteAddr();
 //        this.session = orig.getSession();

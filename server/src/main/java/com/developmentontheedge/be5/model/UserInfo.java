@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.model;
 
 /** $Id: UserInfo.java,v 1.20 2014/02/13 06:24:45 lan Exp $ */
 
@@ -16,9 +16,11 @@ import java.util.StringTokenizer;
 
 public class UserInfo implements Serializable
 {
-    protected String userName;
-    protected Date creationTime;
-    protected String createdInThread;
+    private String userName;
+    private Date creationTime;
+    private String createdInThread;
+    private String availableRoles;
+    private String curRoleList;
 
     public String getUserName()
     {
@@ -38,9 +40,7 @@ public class UserInfo implements Serializable
         this.userName = userName;
     }
 
-    protected String curRoleList;
-
-    public String getCurRoleList()
+    public String getCurRoles()
     {
         return curRoleList;
     }
@@ -54,9 +54,9 @@ public class UserInfo implements Serializable
     {
         List<String> list = new ArrayList<>();
 
-        if( getCurRoleList() != null )
+        if( getCurRoles() != null )
         {
-            StringTokenizer roles = new StringTokenizer( getCurRoleList(), "()'," );
+            StringTokenizer roles = new StringTokenizer( getCurRoles(), "()'," );
 
             while( roles.hasMoreTokens() )
             {
@@ -146,15 +146,15 @@ public class UserInfo implements Serializable
     public boolean isUserInRole( String role )
     {
         role = role.trim();
-        return getCurRoleList() != null && getCurRoleList().contains("'" + role + "'");
+        return getCurRoles() != null && getCurRoles().contains("'" + role + "'");
     }
 
     public boolean isAdmin()
     {
-        return getCurRoleList() != null &&
+        return getCurRoles() != null &&
                 (
-                        getCurRoleList().contains("'" + RoleType.ROLE_ADMINISTRATOR + "'") ||
-                                getCurRoleList().contains("'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'")
+                        getCurRoles().contains("'" + RoleType.ROLE_ADMINISTRATOR + "'") ||
+                                getCurRoles().contains("'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'")
                 );
     }
 
@@ -170,7 +170,7 @@ public class UserInfo implements Serializable
             return RoleType.ROLE_ADMINISTRATOR;
         }
 
-        public String getCurRoleList()
+        public String getCurRoles()
         {
             return "('" + RoleType.ROLE_ADMINISTRATOR + "')";
         }
@@ -188,7 +188,7 @@ public class UserInfo implements Serializable
             return RoleType.ROLE_ADMINISTRATOR;
         }
 
-        public String getCurRoleList()
+        public String getCurRoles()
         {
             return "('" + RoleType.ROLE_ADMINISTRATOR + "')";
         }
@@ -206,7 +206,7 @@ public class UserInfo implements Serializable
             return null;
         }
 
-        public String getCurRoleList()
+        public String getCurRoles()
         {
             return "('" + RoleType.ROLE_GUEST + "')";
         }
@@ -216,4 +216,27 @@ public class UserInfo implements Serializable
             return locale != null ? locale : Locale.US;
         }
     };
+
+    public List<String> getAvailableRoles()
+    {
+        List<String> list = new ArrayList<>();
+
+        if( getCurRoles() != null )
+        {
+            StringTokenizer roles = new StringTokenizer( getCurRoles(), "()'," );
+
+            while( roles.hasMoreTokens() )
+            {
+                list.add( roles.nextToken() );
+            }
+        }
+
+        return list;
+    }
+
+
+    public void setAvailableRoles(String availableRoles)
+    {
+        this.availableRoles = availableRoles;
+    }
 }

@@ -26,8 +26,8 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.api.helpers.UserInfo;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
@@ -228,7 +228,7 @@ public class MainServlet extends HttpServlet
         // a registered ('system -> REQUEST_PREPROCESSOR') request preprocessor
         try
         {
-            preprocessRequest( request, serviceProvider.getDatabaseService(), UserInfoManager.get(req, serviceProvider).getUserInfo(), "qps" );
+            preprocessRequest( request, serviceProvider.getDatabaseService(), UserInfoHolder.getUserInfo(), "qps" );
         }
         catch( Exception e ) // ignore checkers' warnings, we want to catch them all
         {

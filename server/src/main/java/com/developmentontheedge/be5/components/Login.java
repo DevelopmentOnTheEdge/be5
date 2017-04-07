@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 
 public class Login implements Component
 {
@@ -33,7 +33,7 @@ public class Login implements Component
             return;
         // deprecated, the 'state' method should be instead instead
         case "test":
-            res.sendAsRawJson(UserInfoManager.get(req, serviceProvider).isLoggedIn());
+            res.sendAsRawJson(UserInfoHolder.isLoggedIn());
             return;
         case "state":
             res.sendAsJson("loginState", getState(req, serviceProvider));
@@ -46,7 +46,7 @@ public class Login implements Component
     
     private State getState(Request req, ServiceProvider serviceProvider)
     {
-        return new State(UserInfoManager.get(req, serviceProvider).isLoggedIn());
+        return new State(UserInfoHolder.isLoggedIn());
     }
     
     private void login(Request req, Response res, ServiceProvider serviceProvider)
@@ -60,7 +60,7 @@ public class Login implements Component
             return;
         }
         
-        if (!UserInfoManager.get(req, serviceProvider).login(username, password))
+        if (!serviceProvider.getLoginService().login(req, username, password))
         {
             res.sendError("Access denied", "loginError");
             return;

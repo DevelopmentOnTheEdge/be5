@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.legacy;
 
-import com.developmentontheedge.be5.api.helpers.UserInfo;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.metadata.Utils;
 
 import javax.servlet.http.HttpSession;
@@ -38,7 +38,7 @@ public class LocaleUserInfo extends UserInfo
 	}
 
 	@Override
-	public String getCurRoleList() {
+	public String getCurRoles() {
 		throw new UnsupportedOperationException();
 	}
 

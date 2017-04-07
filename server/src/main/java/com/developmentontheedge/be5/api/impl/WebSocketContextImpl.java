@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.api.WebSocketContext;
-import com.developmentontheedge.be5.api.helpers.UserInfo;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.metadata.SessionConstants;
 import com.developmentontheedge.be5.util.Delegator;
 import one.util.streamex.EntryStream;

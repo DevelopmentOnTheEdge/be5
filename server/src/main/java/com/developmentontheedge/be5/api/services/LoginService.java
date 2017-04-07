@@ -1,8 +1,16 @@
 package com.developmentontheedge.be5.api.services;
 
 
+import com.developmentontheedge.be5.api.Request;
 
 public interface LoginService
 {
-    int login(String user, String password, String passwordKey, String sessionId);
+
+    boolean login(Request req, String user, String password);
+
+    /**
+     * Tries to log out.
+     */
+    void logout(Request req);
+
 }

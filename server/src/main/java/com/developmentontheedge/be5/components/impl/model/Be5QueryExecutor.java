@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -24,7 +23,6 @@ import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
-import com.developmentontheedge.sql.format.Dbms;
 import com.developmentontheedge.sql.format.FilterApplier;
 import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.format.LimitsApplier;
@@ -37,7 +35,6 @@ import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstFrom;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
 import com.developmentontheedge.sql.model.AstLimit;
-import com.developmentontheedge.sql.model.AstNestedQuery;
 import com.developmentontheedge.sql.model.AstNumericConstant;
 import com.developmentontheedge.sql.model.AstOrderBy;
 import com.developmentontheedge.sql.model.AstOrderingElement;
@@ -61,7 +58,6 @@ import javax.servlet.http.HttpSession;
 import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -95,7 +91,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public StreamEx<String> roles()
         {
-            return StreamEx.of(userInfoManager.getCurrentRoles());
+            return StreamEx.of(UserInfoHolder.getCurrentRoles());
         }
 
         @Override
@@ -115,7 +111,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getUserName()
         {
-            return userInfoManager.getUserName();
+            return UserInfoHolder.getUserName();
         }
 
         @Override
@@ -305,7 +301,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Map<String, String> parametersMap;
     private final DatabaseService databaseService;
     private final SqlService db;
-    private final UserInfoManager userInfoManager;
     private final HttpSession session;
     private final ContextApplier contextApplier;
     private final UserAwareMeta userAwareMeta;
@@ -327,7 +322,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.databaseService = serviceProvider.getDatabaseService();
         this.db = serviceProvider.getSqlService();
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
-        this.userInfoManager = UserInfoManager.get(req, serviceProvider);
         this.session = req.getRawSession();
         this.queryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier( queryContext );
@@ -605,7 +599,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //            QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
 //                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
 //                    // TODO: create and pass ParamHelper
-//                    .newInstance( userInfoManager.getUserInfo(), new MapParamHelper(parametersMap), connector, offset, limit );
+//                    .newInstance( UserInfoHolder.getUserInfo(), new MapParamHelper(parametersMap), connector, offset, limit );
 //
 //            if (iterator instanceof Be5Query)
 //            {
