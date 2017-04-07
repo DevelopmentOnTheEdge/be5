@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.api.experimental.Be5Servlet;
 import com.developmentontheedge.be5.env.LegacyServletConfig;
 
 public class LegacyServlet implements Component
@@ -21,11 +20,6 @@ public class LegacyServlet implements Component
     {
         final String uri = req.getRequestUri();
         HttpServlet servlet = serviceProvider.get(LegacyServletProvider.class).get(uri);
-
-        if (servlet instanceof Be5Servlet)
-        {
-            ((Be5Servlet) servlet).initialize(serviceProvider);
-        }
 
         if (servlet == null)
         {

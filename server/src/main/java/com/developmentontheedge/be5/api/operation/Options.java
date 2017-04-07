@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.api.operation;
 
 import java.util.List;
 
-import com.developmentontheedge.be5.api.experimental.v1.DynamicPropertyAttributes;
-
 import one.util.streamex.StreamEx;
 
 public class Options

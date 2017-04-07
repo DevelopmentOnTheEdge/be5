@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.model;
 
 import java.util.Objects;
 
-import com.developmentontheedge.be5.api.experimental.v1.DynamicPropertyAttributes;
-
 /**
  * Features of a field to improve UX.
  */
