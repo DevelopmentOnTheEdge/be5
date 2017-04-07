@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
@@ -63,7 +63,7 @@ public class RoleSelector implements Component {
 
         try
         {
-            UserInfoManager.get(req, serviceProvider).selectRoles(Splitter.on(',').splitToList(roles));
+            UserInfoHolder.selectRoles(Splitter.on(',').splitToList(roles));
         }
         catch (Exception e)
         {
@@ -77,8 +77,7 @@ public class RoleSelector implements Component {
     {
         try
         {
-            UserInfoManager user = UserInfoManager.get(req, serviceProvider);
-            return new RoleSelectorResponse(user.getAvailableRoles(), user.getCurrentRoles());
+            return new RoleSelectorResponse(UserInfoHolder.getAvailableRoles(), UserInfoHolder.getCurrentRoles());
         }
         catch (Exception e)
         {

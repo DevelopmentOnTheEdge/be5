@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.impl.model.Queries;
 import com.developmentontheedge.be5.legacy.LegacyUrlsService;
@@ -198,23 +198,21 @@ public class Menu implements Component {
     }
 
     private MenuResponse generateMenu(Request req, ServiceProvider serviceProvider, boolean withIds) {
-        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
         UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
         
-        List<String> roles = userInfoManager.getCurrentRoles();
-        String language = userInfoManager.getLanguage();
-        boolean loggedIn = userInfoManager.isLoggedIn();
+        List<String> roles = UserInfoHolder.getCurrentRoles();
+        String language = UserInfoHolder.getLanguage();
+        boolean loggedIn = UserInfoHolder.isLoggedIn();
         List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, withIds);
         
         return new MenuResponse(loggedIn, entities);
     }
 
     private Action getDefaultAction(Request req, ServiceProvider serviceProvider) {
-        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
         UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
 
-        List<String> roles = userInfoManager.getCurrentRoles();
-        String language = userInfoManager.getLanguage();
+        List<String> roles = UserInfoHolder.getCurrentRoles();
+        String language = UserInfoHolder.getLanguage();
         List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, false);
 
         for (RootNode rootNode: entities)

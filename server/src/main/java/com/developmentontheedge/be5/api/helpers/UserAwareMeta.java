@@ -29,7 +29,7 @@ public interface UserAwareMeta
 
     public static UserAwareMeta get(Request req, ServiceProvider serviceProvider)
     {
-        return UserAwareMetaImpl.get(req, serviceProvider);
+        return UserAwareMetaImpl.get(serviceProvider);
     }
 
     /**

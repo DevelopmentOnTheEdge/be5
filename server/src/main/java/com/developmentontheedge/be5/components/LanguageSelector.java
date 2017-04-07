@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
 import one.util.streamex.StreamEx;
@@ -72,7 +72,7 @@ public class LanguageSelector implements Component
         if( language == null )
             throw Be5ErrorCode.PARAMETER_ABSENT.exception( "language" );
 
-        UserInfoManager.get(req, serviceProvider).changeLanguage(language);
+        UserInfoHolder.changeLanguage(language);
 
         return getState(req, serviceProvider);
     }
@@ -85,9 +85,8 @@ public class LanguageSelector implements Component
         {
             languages = Arrays.stream( project.getLanguages() ).map( String::toUpperCase ).collect(Collectors.toList());
         }
-        
-        UserInfoManager userInfoManager = UserInfoManager.get(req, serviceProvider);
-        String language = userInfoManager.getLanguage();
+
+        String language = UserInfoHolder.getLanguage();
         String selected = language.toUpperCase();
         Map<String, String> messages = readMessages(project, language);
         

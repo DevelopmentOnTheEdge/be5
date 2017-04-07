@@ -21,7 +21,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoManager;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
@@ -39,7 +39,6 @@ public class TableModel
         private final int sortColumn;
         private final boolean desc;
         private final UserAwareMeta userAwareMeta;
-        private final UserInfoManager userInfoManager;
 
         private Builder(Query query, Map<String, String> parametersMap, Request req, ServiceProvider serviceProvider, boolean selectable)
         {
@@ -50,7 +49,6 @@ public class TableModel
             this.execution = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
             this.execution.sortOrder(sortColumn, desc);
             this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
-            this.userInfoManager = UserInfoManager.get(req, serviceProvider);
         }
 
         public Builder offset(int offset)
@@ -150,7 +148,7 @@ public class TableModel
         * */
         void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows){
             if(rows.size() == 0)return;
-            List<String> currRoles = userInfoManager.getCurrentRoles();
+            List<String> currRoles = UserInfoHolder.getCurrentRoles();
 
             List<CellModel> firstLine = rows.get(0).cells;
             for (int i = firstLine.size()-1; i >= 0; i--) {

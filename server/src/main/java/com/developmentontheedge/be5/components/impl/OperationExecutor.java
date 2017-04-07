@@ -24,8 +24,8 @@ public class OperationExecutor
 //        Map<String, String> fieldValues = req.getValues(RestApiConstants.VALUES);
 //
 //        Operation operation = UserAwareMeta.get(req, servicesProvider).getOperation(entityName, queryName, operationName);
-//        UserInfoManager userInfoManager = UserInfoManager.get(req, servicesProvider);
-//        UserInfo ui = userInfoManager.getUserInfo();
+//        UserInfoManager userInfoManager = UserInfoHolder.get(req, servicesProvider);
+//        UserInfo ui = UserInfoHolder.getUserInfo();
 //        LegacyOperationFactory legacyOperationFactory = servicesProvider.get(LegacyOperationsService.class).createFactory(ui, req.getRawRequest());
 //        LegacyOperation legacyOperation = legacyOperationFactory.create(operation, req, Utils.readQueryID(connector, entityName, queryName), selectedRows);
 //
