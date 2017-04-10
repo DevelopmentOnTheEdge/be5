@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<name>be5-maven</name>
+	<name>be5-maven-plugin</name>
 	<description>Maven plug-ins for be5</description>
 
 	<!--parent> <groupId>com.developmentontheedge</groupId> <artifactId>be5</artifactId> 
@@ -71,7 +71,6 @@
 				<artifactId>be5-maven-plugin</artifactId>
 				<version>0.1.0</version>
 				<configuration>
-					<msg>from config</msg>
 				</configuration>
 			</plugin>
 
