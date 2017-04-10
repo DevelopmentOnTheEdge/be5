@@ -108,9 +108,30 @@ public class PostgresSchemaReader extends DefaultSchemaReader
     }
 
     @Override
-    public String getDefaultSchema( SqlExecutor sql )
+    public String getDefaultSchema( SqlExecutor sqlExecutor )
     {
-        return "public";
+        DbmsConnector connector = null;
+        ResultSet rs = null;
+        try
+        {
+            connector = sqlExecutor.getConnector();
+            rs = sqlExecutor.getConnector().executeQuery("SHOW search_path");
+            rs.next();
+            String search_path = rs.getString("search_path");
+            //for different settings: default and after setup
+            if (search_path.contains(","))
+                return search_path.split(",")[1].trim();
+            else
+                return search_path.trim();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            if(connector!= null)connector.close( rs );
+        }
     }
 
     @Override
