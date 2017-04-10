@@ -50,8 +50,8 @@ public enum ConfigurationProvider
     @SuppressWarnings("unchecked")
     private void loadConfiguration()
     {
-        ServletContext ctx = ServletContexts.getServletContext();
-        Path projectSource = getPath( ctx, "be5.configPath" );
+        //TODO implement as ProjectProviderImpl.findProjectPath
+        Path projectSource = null;//getPath( ctx, "be5.configPath" );
         
         if (projectSource == null)
         {
