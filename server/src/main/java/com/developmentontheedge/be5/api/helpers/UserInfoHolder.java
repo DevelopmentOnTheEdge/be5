@@ -29,10 +29,6 @@ public class UserInfoHolder
         getUserInfo().setLocale(new Locale(language));
     }
 
-    public static List<String> getCurrentRoles() {
-        return getUserInfo().getCurrentRoleList();
-    }
-
     public static void selectRoles(List<String> roles) throws Exception {
         //TODO RoleUtils.assignRoles(connector, getUserInfo(), roles);
     }
@@ -50,5 +46,9 @@ public class UserInfoHolder
     public static List<String> getAvailableRoles()
     {
         return getUserInfo().getAvailableRoles();
+    }
+
+    public static List<String> getCurrentRoles() {
+        return getUserInfo().getCurrentRoleList();
     }
 }

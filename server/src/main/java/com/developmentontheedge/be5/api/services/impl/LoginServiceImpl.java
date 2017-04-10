@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.metadata.RoleType.ROLE_ADMINISTRATOR;
 
 public class LoginServiceImpl implements LoginService
 {
