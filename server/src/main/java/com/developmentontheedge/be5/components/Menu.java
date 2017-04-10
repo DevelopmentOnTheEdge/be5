@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.impl.model.Queries;
-import com.developmentontheedge.be5.legacy.LegacyUrlsService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -203,7 +202,7 @@ public class Menu implements Component {
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
         boolean loggedIn = UserInfoHolder.isLoggedIn();
-        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, withIds);
+        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), userAwareMeta, language, roles, withIds);
         
         return new MenuResponse(loggedIn, entities);
     }
@@ -213,7 +212,7 @@ public class Menu implements Component {
 
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
-        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), serviceProvider.get(LegacyUrlsService.class), userAwareMeta, language, roles, false);
+        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), userAwareMeta, language, roles, false);
 
         for (RootNode rootNode: entities)
         {
@@ -251,18 +250,18 @@ public class Menu implements Component {
     /**
      * Adds all permitted queries to the root array.
      */
-    private List<RootNode> collectEntities(Meta meta, LegacyUrlsService legacyQueriesService, UserAwareMeta userAwareMeta, String language, List<String> roles, boolean withIds) {
+    private List<RootNode> collectEntities(Meta meta, UserAwareMeta userAwareMeta, String language, List<String> roles, boolean withIds) {
         List<RootNode> out = new ArrayList<>();
         
         for (Entity entity : meta.getOrderedEntities(language))
         {
-            collectEntityContent(entity, language, meta, legacyQueriesService, userAwareMeta, roles, withIds, out);
+            collectEntityContent(entity, language, meta, userAwareMeta, roles, withIds, out);
         }
         
         return out;
     }
 
-    private void collectEntityContent(Entity entity, String language, Meta meta, LegacyUrlsService legacyQueriesService, UserAwareMeta userAwareMeta, List<String> roles, boolean withIds, List<RootNode> out) {
+    private void collectEntityContent(Entity entity, String language, Meta meta, UserAwareMeta userAwareMeta, List<String> roles, boolean withIds, List<RootNode> out) {
         List<Query> permittedQueries = meta.getQueries(entity, roles);
         
         if (permittedQueries.isEmpty())
@@ -282,7 +281,7 @@ public class Menu implements Component {
         {
             // Query in the root, contains an action.
             Id id = null;
-            Action action = Queries.toAction(permittedQueries.get(0), legacyQueriesService);
+            Action action = Queries.toAction(permittedQueries.get(0));
             boolean isDefault = permittedQueries.get(0).isDefaultView();
             
             if (withIds)
@@ -296,13 +295,13 @@ public class Menu implements Component {
         else
         {
             // No query in the root, just inner queries.
-            List<QueryNode> children = generateEntityQueries(permittedQueries, legacyQueriesService, language, meta, withIds);
+            List<QueryNode> children = generateEntityQueries(permittedQueries, language, meta, withIds);
             Id id = new Id(entity.getName(), null);
             out.add(RootNode.container(id, title, children, operations));
         }
     }
     
-    private List<QueryNode> generateEntityQueries(List<Query> permittedQueries, LegacyUrlsService legacyQueriesService, String language, Meta meta, boolean withIds) {
+    private List<QueryNode> generateEntityQueries(List<Query> permittedQueries, String language, Meta meta, boolean withIds) {
         List<OrderedQuery> queries = new ArrayList<>();
         
         for (Query permittedQuery : permittedQueries)
@@ -324,7 +323,7 @@ public class Menu implements Component {
                 id = new Id(permittedQuery.getEntity().getName(), permittedQuery.getName());
             }
             
-            children.add(new QueryNode(id, query.title, Queries.toAction(permittedQuery, legacyQueriesService), permittedQuery.isDefaultView()));
+            children.add(new QueryNode(id, query.title, Queries.toAction(permittedQuery), permittedQuery.isDefaultView()));
         }
         
         return children;

@@ -47,7 +47,7 @@ public class LegacyOperationFactory {
 //        {
 //            Be5OperationUserInfo(UserInfo orig) {
 //                this.userName = orig.getUserName();
-//                this.curRoleList = orig.getCurRoles();
+//                this.curRoleList = orig.getCurRoleList();
 //                this.locale = orig.getLocale();
 //                this.remoteAddr = orig.getRemoteAddr();
 //                this.session = orig.getSession();

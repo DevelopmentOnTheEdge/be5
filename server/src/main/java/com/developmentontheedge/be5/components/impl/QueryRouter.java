@@ -6,9 +6,6 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.Queries;
-import com.developmentontheedge.be5.legacy.LegacyUrlParser;
-import com.developmentontheedge.be5.legacy.LegacyUrlsService;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 
@@ -41,14 +38,12 @@ public class QueryRouter
     
     private final Request req;
     private final UserAwareMeta userAwareMeta;
-    private final LegacyUrlsService legacyQueriesService;
     private final Meta meta;
     
     private QueryRouter(Request req, ServiceProvider serviceProvider)
     {
         this.req = req;
         this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
-        this.legacyQueriesService = serviceProvider.get(LegacyUrlsService.class);
         this.meta = serviceProvider.get(Meta.class);
     }
     
@@ -74,39 +69,6 @@ public class QueryRouter
             if (Queries.isStaticPage(query))
             {
                 runner.onStatic(query);
-                return;
-            }
-            final LegacyUrlParser parser = legacyQueriesService.createParser(query.getQuery());
-            if (parser.isLegacy())
-            {
-                if (!parser.isValid())
-                {
-                    runner.onError("Invalid legacy request '" + query.getQuery() + "'.");
-                    return;
-                }
-                String targetEntityName = parser.getEntityName();
-                String targetQueryName = parser.getQueryName();
-                String targetOperationName = parser.getOperationName();
-
-                if (targetOperationName != null)
-                {
-                    boolean useQueryName = targetQueryName != null;
-                    Operation operation = userAwareMeta.getOperation(useQueryName, targetEntityName, targetQueryName, targetOperationName);
-                    runner.onForm(targetEntityName, Optional.ofNullable(targetQueryName), targetOperationName, operation, parser.getParameters());
-                    return;
-                }
-                else if (targetQueryName != null && targetOperationName == null)
-                {
-                    routeAndRun(targetEntityName, targetQueryName, parametersMap, runner); // XXX probably parameters are lost/replaced
-                    return;
-                }
-                else if (targetEntityName != null)
-                {
-                    runner.onTable(userAwareMeta.getQuery(targetEntityName, DatabaseConstants.ALL_RECORDS_VIEW), parser.getParameters());
-                    return;
-                }
-
-                runner.onError("Unsupported legacy request '" + query.getQuery() + "'.");
                 return;
             }
             runner.onError("Unsupported static request '" + query.getQuery() + "'.");
