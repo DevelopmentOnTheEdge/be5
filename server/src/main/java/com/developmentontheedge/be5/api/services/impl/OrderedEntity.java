@@ -29,7 +29,7 @@ class OrderedEntity implements Comparable<OrderedEntity>
         Objects.requireNonNull(other);
 
         if (order != other.order)
-            return other.order - order;
+            return Integer.compare(order, other.order);
 
         return title.compareTo(other.title);
     }
