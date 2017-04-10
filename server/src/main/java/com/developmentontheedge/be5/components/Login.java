@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.SessionConstants;
-import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.DateUtils;
 
@@ -43,24 +42,15 @@ public class Login implements Component
         case "":
             login(req, res, serviceProvider);
             return;
-        // deprecated, the 'state' method should be instead instead
-        case "test":
-            res.sendAsRawJson(UserInfoHolder.isLoggedIn());
-            return;
         case "state":
-            res.sendAsJson("loginState", getState(req, serviceProvider));
+            res.sendAsJson("loginState", new State(UserInfoHolder.isLoggedIn()));
             return;
         default:
             res.sendUnknownActionError();
             return;
         }
     }
-    
-    private State getState(Request req, ServiceProvider serviceProvider)
-    {
-        return new State(UserInfoHolder.isLoggedIn());
-    }
-    
+
     private void login(Request req, Response res, ServiceProvider serviceProvider)
     {
         String username = req.get("username");
