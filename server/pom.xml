@@ -119,6 +119,14 @@
 	</dependencies>
 	
 	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}</directory>
+				<includes>
+					<include>*.yaml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 
 			<plugin>

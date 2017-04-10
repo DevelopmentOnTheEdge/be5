@@ -21,41 +21,18 @@ import javax.websocket.Session;
 import javax.websocket.CloseReason.CloseCodes;
 
 import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.api.services.ExecutorService;
-import com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl;
-import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.LoginService;
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
-import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
-import com.developmentontheedge.be5.api.services.impl.MetaImpl;
-import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
-import com.developmentontheedge.be5.api.services.impl.SqlServiceImpl;
-import com.developmentontheedge.be5.components.ApplicationInfoComponent;
-import com.developmentontheedge.be5.components.Document;
-import com.developmentontheedge.be5.components.LanguageSelector;
-import com.developmentontheedge.be5.components.Login;
-import com.developmentontheedge.be5.components.Logout;
-import com.developmentontheedge.be5.components.Menu;
-import com.developmentontheedge.be5.components.RoleSelector;
-import com.developmentontheedge.be5.components.ScriptList;
-import com.developmentontheedge.be5.components.StaticPageComponent;
-import com.developmentontheedge.be5.components.impl.model.DpsStreamer;
-import com.developmentontheedge.be5.components.tools.PoolStat;
-import com.developmentontheedge.be5.env.ConfigurationProvider;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -72,9 +49,7 @@ public class MainServlet extends HttpServlet
     protected Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
 
     private static final long serialVersionUID = 1L;
-	
-	public static ServletConfig config;
-	
+
 	/**
      * Classes cache: componentId->class.
      */
@@ -86,16 +61,7 @@ public class MainServlet extends HttpServlet
     private static final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
 
     //TODO private final DaemonStarter starter;
-    private final MainServiceProvider serviceProvider;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MainServlet() 
-    {
-        super();
-        this.serviceProvider = new MainServiceProvider();
-    }
+    private static final ServiceProvider serviceProvider = new MainServiceProvider();
 
     ///////////////////////////////////////////////////////////////////
     // init
@@ -105,36 +71,15 @@ public class MainServlet extends HttpServlet
     public void init(ServletConfig config) throws ServletException 
     {
         super.init(config);
-        this.config = config;
-        
-        bindServices();
-    }
 
-    protected void bindServices()
-    {
-        serviceProvider.bind( PoolStat.class, PoolStat.class,(x)->{});
-        serviceProvider.bind( ProjectProvider.class, ProjectProviderImpl.class,(x)->{});
-        serviceProvider.bind( DatabaseService.class, DatabaseServiceImpl.class,(x)->{});
-        serviceProvider.bind( Meta.class, MetaImpl.class,(x)->{});
-        serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
-        serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
-        serviceProvider.bind( LoginService.class, LoginServiceImpl.class,(x)->{});
-        serviceProvider.bind( ExecutorService.class, ExecutorServiceImpl.class,(x)->{});
-
-        loadedClasses.put("pool", PoolStat.class);
-        loadedClasses.put("document", Document.class);
-        loadedClasses.put("menu", Menu.class);
-        loadedClasses.put("appInfo", ApplicationInfoComponent.class);
-        loadedClasses.put("scriptList", ScriptList.class);
-        loadedClasses.put("languageSelector", LanguageSelector.class);
-        loadedClasses.put("roleSelector", RoleSelector.class);
-        loadedClasses.put("login", Login.class);
-        loadedClasses.put("logout", Logout.class);
-        loadedClasses.put("static", StaticPageComponent.class);
-
-        serviceProvider.freeze();
-
-        log.info("Services initialized");
+        try
+        {
+            new ServiceLoader().load(serviceProvider, loadedClasses);
+        }
+        catch (IOException e)
+        {
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -237,7 +182,7 @@ public class MainServlet extends HttpServlet
 
         try
         {
-            configureComponentIfConfigurable(component, componentId);
+            ServiceLoader.configureComponentIfConfigurable(component, componentId);
             component.generate( req, new ResponseImpl(response), serviceProvider );
         }
         catch ( RuntimeException | Error e )
@@ -420,22 +365,4 @@ public class MainServlet extends HttpServlet
         return simplified;
     }
 
-    private static void configureComponentIfConfigurable(Component component, String componentId)
-    {
-        configureIfConfigurable(component, "components", componentId);
-    }
-
-    private static <T> void configureIfConfigurable(T object, String collection, String id)
-    {
-        if (object instanceof Configurable)
-        {
-            @SuppressWarnings("unchecked")
-            Configurable<Object> configurable = (Configurable<Object>) object;
-            Object config = ConfigurationProvider.INSTANCE.loadConfiguration(configurable.getConfigurationClass(), collection, id);
-
-            configurable.configure(config);
-        }
-    }
-
-    
 }

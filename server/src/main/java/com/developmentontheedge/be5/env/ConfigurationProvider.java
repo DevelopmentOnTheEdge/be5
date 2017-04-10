@@ -69,23 +69,5 @@ public enum ConfigurationProvider
             throw new RuntimeException(e);
         }
     }
-
-    
-    public Path getPath(ServletContext ctx, String attributeName)
-    {
-    	//String projectSource = ctx.getInitParameter( attributeName );
-    	String projectSource = MainServlet.config.getInitParameter(attributeName);
-    	if(projectSource == null || projectSource.equals( "db") )
-    	{
-    		return null;
-    	}
-
-    	if(projectSource.startsWith( "war:" ))
-    	{
-    		projectSource = ctx.getRealPath( projectSource.substring( "war:".length() ) );
-    	}
-    	
-    	return Paths.get(projectSource);
-    }
     
 }
