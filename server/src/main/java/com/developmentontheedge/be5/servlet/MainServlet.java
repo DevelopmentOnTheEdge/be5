@@ -26,6 +26,8 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
+import com.developmentontheedge.be5.api.services.ExecutorService;
+import com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
@@ -122,6 +124,7 @@ public class MainServlet extends HttpServlet
         serviceProvider.bind( SqlService.class, SqlServiceImpl.class,(x)->{});
         serviceProvider.bind( DpsStreamer.class, DpsStreamer.class,(x)->{});
         serviceProvider.bind( LoginService.class, LoginServiceImpl.class,(x)->{});
+        serviceProvider.bind( ExecutorService.class, ExecutorServiceImpl.class,(x)->{});
 
         loadedClasses.put("pool", PoolStat.class);
         loadedClasses.put("document", Document.class);
