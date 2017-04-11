@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
+import com.developmentontheedge.be5.api.impl.ComponentProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -21,7 +22,7 @@ public class ServiceLoader
 {
     private static final Logger log = Logger.getLogger(ServiceLoader.class.getName());
 
-    public void load(ServiceProvider serviceProvider, Map<String, Class<?>> loadedClasses) throws IOException
+    public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses) throws IOException
     {
         ArrayList<URL> urls = Collections.list((ServiceLoader.class).getClassLoader().getResources("context.yaml"));
 
@@ -37,7 +38,7 @@ public class ServiceLoader
     }
 
     @SuppressWarnings("unchecked")
-    void loadModule(Reader reader, ServiceProvider serviceProvider, Map<String, Class<?>> loadedClasses)
+    void loadModule(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
     {
         Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
 
@@ -51,7 +52,7 @@ public class ServiceLoader
     }
 
     @SuppressWarnings("unchecked")
-    private void loadComponents(Map<String, Class<?>> loadedClasses, List<Map<String, Object>> components)
+    private void loadComponents(ComponentProvider loadedClasses, List<Map<String, Object>> components)
     {
         for (Map<String, Object> element: components)
         {

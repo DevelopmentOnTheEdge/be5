@@ -27,6 +27,7 @@ import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.impl.ComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
@@ -54,7 +55,7 @@ public class MainServlet extends HttpServlet
 	/**
      * Classes cache: componentId->class.
      */
-    private static final Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
+    private static final ComponentProvider loadedClasses = new ComponentProvider();
 
     /**
      * Classes cache: webSocketComponentId->class.
@@ -218,9 +219,8 @@ public class MainServlet extends HttpServlet
     {
         try
         {
-            Class<?> klass = loadedClasses.computeIfAbsent( componentId, this::loadComponentClass );
-            if( klass == null )
-                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception(log, componentId );
+            Class<?> klass = loadedClasses.get(componentId);
+            //reload component in osgi? Class<?> klass = loadedClasses.computeIfAbsent( componentId, this::loadComponentClass );
             return (Component)klass.newInstance();
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
