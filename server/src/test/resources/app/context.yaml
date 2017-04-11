@@ -1,0 +1,5 @@
+context:
+  components:
+  - login:
+      class: com.developmentontheedge.be5.components.Login
+      version: 2
