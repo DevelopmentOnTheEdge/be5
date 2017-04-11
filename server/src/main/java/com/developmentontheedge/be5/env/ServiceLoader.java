@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.api.impl.ComponentProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;

@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.env;
 
+import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.impl.ComponentProvider;
+import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.components.Menu;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class ServiceLoaderTest
     @Before
     public void newContainers(){
         serviceProvider = new MainServiceProvider();
-        loadedClasses = new ComponentProvider();
+        loadedClasses = new MainComponentProvider();
     }
 
     @Test

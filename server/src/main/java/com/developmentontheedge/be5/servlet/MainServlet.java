@@ -21,13 +21,14 @@ import javax.websocket.Session;
 import javax.websocket.CloseReason.CloseCodes;
 
 import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.ComponentProvider;
+import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
@@ -52,10 +53,7 @@ public class MainServlet extends HttpServlet
 
     private static final long serialVersionUID = 1L;
 
-	/**
-     * Classes cache: componentId->class.
-     */
-    private static final ComponentProvider loadedClasses = new ComponentProvider();
+    private static final ComponentProvider loadedClasses = new MainComponentProvider();
 
     /**
      * Classes cache: webSocketComponentId->class.
@@ -220,7 +218,6 @@ public class MainServlet extends HttpServlet
         try
         {
             Class<?> klass = loadedClasses.get(componentId);
-            //reload component in osgi? Class<?> klass = loadedClasses.computeIfAbsent( componentId, this::loadComponentClass );
             return (Component)klass.newInstance();
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
