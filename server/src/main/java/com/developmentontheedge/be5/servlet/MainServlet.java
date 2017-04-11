@@ -82,6 +82,8 @@ public class MainServlet extends HttpServlet
         {
             throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
+
+        WebSocketServlet.setMain(this);
     }
 
     ///////////////////////////////////////////////////////////////////

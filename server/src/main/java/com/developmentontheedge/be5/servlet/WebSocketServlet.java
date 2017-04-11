@@ -10,23 +10,22 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import com.developmentontheedge.be5.servlet.Reflection.DynamicObject;
 
 @ServerEndpoint ( value = "/ws/{component}", configurator = WebSocketHttpSessionConfigurator.class, subprotocols = {"binary"} )
 public class WebSocketServlet
 {
 
-    private static DynamicObject mainServlet;
+    private static MainServlet mainServletInstance;
 
-    public static void setMain(Object mainServletImpl)
+    public static void setMain(MainServlet mainServlet)
     {
-        mainServlet = Reflection.on( mainServletImpl );
+        mainServletInstance = mainServlet;
     }
 
     @OnOpen
     public void onOpen(Session session)
     {
-        if( mainServlet == null )
+        if( mainServletInstance == null )
         {
             try
             {
@@ -41,7 +40,7 @@ public class WebSocketServlet
         }
         try
         {
-            mainServlet.call( "onWsOpen", session );
+            mainServletInstance.onWsOpen( session );
         }
         catch( Exception e )
         {
@@ -52,11 +51,11 @@ public class WebSocketServlet
     @OnMessage
     public void onMessage(byte[] message, Session session)
     {
-        if( mainServlet == null )
+        if( mainServletInstance == null )
             return;
         try
         {
-            mainServlet.call( "onWsMessage", message, session );
+            mainServletInstance.onWsMessage( message, session );
         }
         catch( Exception e )
         {
@@ -67,11 +66,11 @@ public class WebSocketServlet
     @OnClose
     public void onClose(Session session)
     {
-        if( mainServlet == null )
+        if( mainServletInstance == null )
             return;
         try
         {
-            mainServlet.call( "onWsClose", session );
+            mainServletInstance.onWsClose( session );
         }
         catch( Exception e )
         {
