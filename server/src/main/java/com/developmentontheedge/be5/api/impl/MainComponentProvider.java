@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.api.impl;
 import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.components.Login;
-import com.developmentontheedge.be5.env.ServiceLoader;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +10,7 @@ import java.util.logging.Logger;
 
 public class MainComponentProvider implements ComponentProvider
 {
-    private static final Logger log = Logger.getLogger(ServiceLoader.class.getName());
+    private static final Logger log = Logger.getLogger(MainComponentProvider.class.getName());
 
     private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
 

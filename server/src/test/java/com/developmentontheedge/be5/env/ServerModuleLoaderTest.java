@@ -16,11 +16,11 @@ import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertEquals;
 
-public class ServiceLoaderTest
+public class ServerModuleLoaderTest
 {
     private static ServiceProvider serviceProvider = null;
     private static ComponentProvider loadedClasses = null;
-    private static final ServiceLoader serviceLoader = new ServiceLoader();
+    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
 
     @Before
     public void newContainers(){
@@ -31,22 +31,22 @@ public class ServiceLoaderTest
     @Test
     public void testMenuLoad()
     {
-        serviceLoader.loadModule(getReader("context.yaml"), serviceProvider, loadedClasses );
+        moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses );
         assertEquals(loadedClasses.get("menu"), Menu.class);
     }
 
     @Test
     public void testLoad()
     {
-        serviceLoader.loadModule(getReader("context.yaml"), serviceProvider, loadedClasses);
-        serviceLoader.loadModule(getReader("src/test/resources/app/context.yaml"), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("src/test/resources/app/context.yaml"), serviceProvider, loadedClasses);
     }
 
     @Test(expected = Be5Exception.class)
     public void testLoadTryRedefine()
     {
-        serviceLoader.loadModule(getReader("context.yaml"), serviceProvider, loadedClasses);
-        serviceLoader.loadModule(getReader("src/test/resources/tryRedefineApp/context.yaml"), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("src/test/resources/tryRedefineApp/context.yaml"), serviceProvider, loadedClasses);
     }
 
     private BufferedReader getReader(String file){

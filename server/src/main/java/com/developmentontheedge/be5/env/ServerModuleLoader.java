@@ -18,18 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ServiceLoader
+public class ServerModuleLoader
 {
-    private static final Logger log = Logger.getLogger(ServiceLoader.class.getName());
+    private static final Logger log = Logger.getLogger(ServerModuleLoader.class.getName());
 
     public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses) throws IOException
     {
-        ArrayList<URL> urls = Collections.list((ServiceLoader.class).getClassLoader().getResources("context.yaml"));
+        ArrayList<URL> urls = Collections.list((ServerModuleLoader.class).getClassLoader().getResources("context.yaml"));
 
         for (URL url: urls){
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
 
-            loadModule(reader, serviceProvider, loadedClasses);
+            loadModules(reader, serviceProvider, loadedClasses);
         }
 
         serviceProvider.freeze();
@@ -38,7 +38,7 @@ public class ServiceLoader
     }
 
     @SuppressWarnings("unchecked")
-    void loadModule(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
+    void loadModules(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
     {
         Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
 
@@ -116,7 +116,7 @@ public class ServiceLoader
     private Class loadClass(String path){
         try
         {
-            return ServiceLoader.class.getClassLoader().loadClass(path);
+            return ServerModuleLoader.class.getClassLoader().loadClass(path);
         }
         catch (ClassNotFoundException e)
         {
