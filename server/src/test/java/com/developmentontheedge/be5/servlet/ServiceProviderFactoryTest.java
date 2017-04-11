@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.servlet;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.components.Menu;
+import com.developmentontheedge.be5.env.ServiceLoader;
 import org.junit.Before;
 import org.junit.Test;
 

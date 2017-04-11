@@ -1,10 +1,9 @@
-package com.developmentontheedge.be5.servlet;
+package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.env.ConfigurationProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -21,45 +20,35 @@ public class ServiceLoader
 {
     private static final Logger log = Logger.getLogger(ServiceLoader.class.getName());
 
+    @SuppressWarnings("unchecked")
     public void load(ServiceProvider serviceProvider, Map<String, Class<?>> loadedClasses) throws IOException
     {
-        ArrayList<URL> urls = Collections.list((MainServlet.class).getClassLoader().getResources("context.yaml"));
+        ArrayList<URL> urls = Collections.list((ServiceLoader.class).getClassLoader().getResources("context.yaml"));
+
         for (URL url: urls){
-            BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
 
-            @SuppressWarnings( "unchecked" )
-            Map<String, Object> module = ( Map<String, Object> ) new Yaml().load( r );
-            @SuppressWarnings( "unchecked" )
-            List<Object> components = ( List<Object> ) module.get("components");
-            @SuppressWarnings( "unchecked" )
-            List<Object> services = ( List<Object> ) module.get("services");
+            Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
 
+            List<Map<String, String>> components = ( List<Map<String, String>> ) module.get("components");
+            List<Map<String, Map<String, String>>> services = ( List<Map<String, Map<String, String>>> ) module.get("services");
 
-            for (Object componentObj: components)
+            for (Map<String, String> element: components)
             {
-                @SuppressWarnings( "unchecked" )
-                Map<String, String> element = (Map<String, String>) componentObj;
+                Map.Entry<String,String> entry = element.entrySet().iterator().next();
 
-                Map.Entry<String,String> entry= element.entrySet().iterator().next();
-
-                @SuppressWarnings("unchecked")
                 Class<Object> serviceInterface = (Class<Object>) loadClass(entry.getValue());
 
                 loadedClasses.put(entry.getKey(), serviceInterface);
             }
 
-            for (Object serviceObj: services)
+            for (Map<String, Map<String, String>> element: services)
             {
-                @SuppressWarnings( "unchecked" )
-                Map<String, Map<String, String>> element = (Map<String, Map<String, String>>) serviceObj;
-
-                Map.Entry<String,Map<String, String>> entry= element.entrySet().iterator().next();
+                Map.Entry<String,Map<String, String>> entry = element.entrySet().iterator().next();
                 String key = entry.getKey();
                 Map<String, String> elementOptions = entry.getValue();
 
-                @SuppressWarnings("unchecked")
                 Class<Object> serviceInterface = (Class<Object>) loadClass(elementOptions.get("interface"));
-                @SuppressWarnings("unchecked")
                 Class<Object> serviceImplementation = (Class<Object>) loadClass(elementOptions.get("implementation"));
 
                 serviceProvider.bind( serviceInterface, serviceImplementation, service ->
@@ -80,7 +69,7 @@ public class ServiceLoader
         configureIfConfigurable(service, "services", serviceId);
     }
 
-    protected static void configureComponentIfConfigurable(Component component, String componentId)
+    public void configureComponentIfConfigurable(Component component, String componentId)
     {
         configureIfConfigurable(component, "components", componentId);
     }

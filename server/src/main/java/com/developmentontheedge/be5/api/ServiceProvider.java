@@ -11,23 +11,7 @@ import java.util.function.Consumer;
  * 
  * <p>Components and initializers should not work with model directly, they should delegate all actions to services.</p>
  * 
- * <p>Services are registered in <code>plugin.xml</code>, e.g.:
- * 
- * <pre>
- * {@code
- * <plugin>
- *   <extension point="com.developmentontheedge.be5.service">
- *     <service
- *       interface="com.developmentontheedge.be5.auth.SocialLogin"
- *       implementation="com.developmentontheedge.be5.auth.impl.SocialLoginImpl"
- *       name="Social Login"
- *       id="socialLogin">
- *     </service>
- *   </extension>
- * </plugin>
- * }
- * </pre>
- * </p>
+ * <p>Services are registered in <code>context.yaml</code>, e.g.:
  * 
  * <p>Interface is the public part of the service and should be exported from the module.
  * Implementation is the class that implements the interface and should be hidden from the users of the service.</p>

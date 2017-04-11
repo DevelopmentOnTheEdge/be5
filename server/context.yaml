@@ -1,4 +1,5 @@
-components:
+context:
+  components:
   - appInfo: com.developmentontheedge.be5.components.ApplicationInfoComponent
   - document: com.developmentontheedge.be5.components.Document
   - languageSelector: com.developmentontheedge.be5.components.LanguageSelector
@@ -9,7 +10,7 @@ components:
   - scriptList: com.developmentontheedge.be5.components.ScriptList
   - static: com.developmentontheedge.be5.components.StaticPageComponent
   - pool: com.developmentontheedge.be5.components.tools.PoolStat
-services:
+  services:
   - projectProvider:
       interface: com.developmentontheedge.be5.api.services.ProjectProvider
       implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl

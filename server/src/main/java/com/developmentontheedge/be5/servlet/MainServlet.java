@@ -32,6 +32,7 @@ import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.env.ServiceLoader;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
@@ -61,6 +62,7 @@ public class MainServlet extends HttpServlet
     private static final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
 
     //TODO private final DaemonStarter starter;
+    private static final ServiceLoader serviceLoader = new ServiceLoader();
     private static final ServiceProvider serviceProvider = new MainServiceProvider();
 
     ///////////////////////////////////////////////////////////////////
@@ -74,7 +76,7 @@ public class MainServlet extends HttpServlet
 
         try
         {
-            new ServiceLoader().load(serviceProvider, loadedClasses);
+            serviceLoader.load(serviceProvider, loadedClasses);
         }
         catch (IOException e)
         {
@@ -182,7 +184,7 @@ public class MainServlet extends HttpServlet
 
         try
         {
-            ServiceLoader.configureComponentIfConfigurable(component, componentId);
+            serviceLoader.configureComponentIfConfigurable(component, componentId);
             component.generate( req, new ResponseImpl(response), serviceProvider );
         }
         catch ( RuntimeException | Error e )

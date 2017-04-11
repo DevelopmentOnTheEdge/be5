@@ -1,21 +1,24 @@
 package com.developmentontheedge.be5.env;
 
-import com.developmentontheedge.be5.servlet.MainServlet;
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
+import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.servlet.ServletContext;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public enum ConfigurationProvider
 {
     INSTANCE;
+
+    private static final Logger log = Logger.getLogger(ConfigurationProvider.class.getName());
     
     private Map<String, Object> configuration;
     
@@ -50,23 +53,23 @@ public enum ConfigurationProvider
     @SuppressWarnings("unchecked")
     private void loadConfiguration()
     {
-        //TODO implement as ProjectProviderImpl.findProjectPath
-        Path projectSource = null;//getPath( ctx, "be5.configPath" );
-        
-        if (projectSource == null)
-        {
-            configuration = ImmutableMap.of("components", ImmutableMap.of());
-            return;
-        }
-        
         try
         {
-            String text = Files.asCharSource(projectSource.resolve("config.yaml").toFile(), Charsets.UTF_8).read();
-            configuration = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(text)).get("config");
+            ArrayList<URL> urls = Collections.list((ConfigurationProvider.class).getClassLoader().getResources("config.yaml"));
+            configuration = new HashMap<>();
+
+            for (URL url : urls)
+            {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
+                Map<String, Object> moduleConfiguration = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
+
+                //TODO several config check, test
+                configuration.putAll(moduleConfiguration);
+            }
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e);
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
     }
     
