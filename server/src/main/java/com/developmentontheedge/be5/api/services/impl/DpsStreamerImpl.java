@@ -1,8 +1,11 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DpsStreamer;
+import com.developmentontheedge.be5.components.impl.model.BeTagParser;
+import com.developmentontheedge.be5.components.impl.model.DynamicPropertyMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -18,9 +21,9 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 
-public class DpsStreamer
+public class DpsStreamerImpl implements DpsStreamer
 {
-    private static final Logger log = Logger.getLogger(DpsStreamer.class.getName());
+    private static final Logger log = Logger.getLogger(DpsStreamerImpl.class.getName());
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
     @FunctionalInterface
@@ -31,14 +34,12 @@ public class DpsStreamer
 
     private final DatabaseService databaseService;
 
-    public DpsStreamer(DatabaseService databaseService)
+    public DpsStreamerImpl(DatabaseService databaseService)
     {
         this.databaseService = databaseService;
     }
 
-    /**
-     * Streams an SQL query result as a sequence of dynamic property sets.
-     */
+    @Override
     public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
     {
         ResultSet rs = null;
@@ -125,7 +126,8 @@ public class DpsStreamer
         throw new IllegalArgumentException( clazz.getName() );
     }
 
-    public static DynamicProperty[] createSchema(ResultSetMetaData metaData) throws SQLException
+    @Override
+    public DynamicProperty[] createSchema(ResultSetMetaData metaData) throws SQLException
     {
         int count = metaData.getColumnCount();
         DynamicProperty[] schema = new DynamicProperty[count];

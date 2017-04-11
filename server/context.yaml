@@ -26,8 +26,8 @@ context:
       interface: com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
   - dpsStreamer:
-      interface: com.developmentontheedge.be5.components.impl.model.DpsStreamer
-      implementation: com.developmentontheedge.be5.components.impl.model.DpsStreamer
+      interface: com.developmentontheedge.be5.api.services.DpsStreamer
+      implementation: com.developmentontheedge.be5.api.services.impl.DpsStreamerImpl
   - executorService:
       interface: com.developmentontheedge.be5.api.services.ExecutorService
       implementation: com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl
