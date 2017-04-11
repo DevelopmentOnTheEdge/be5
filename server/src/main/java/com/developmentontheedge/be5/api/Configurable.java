@@ -87,7 +87,7 @@ public interface Configurable<T> {
     }
     
     /**
-     * <p>This will be called rigth before calling the {@link Component#generate(Request, Response, ServiceProvider)},
+     * <p>This will be called right before calling the {@link Component#generate(Request, Response, ServiceProvider)},
      * {@link Initializer#initialize(InitializerContext, ServiceProvider)} or after creation of a service.
      * A part of a configuration file will be parsed to the passed object. This object is created in any case,
      * even if there's no section in the configuration file for this component, therefore it can't be null.</p>
