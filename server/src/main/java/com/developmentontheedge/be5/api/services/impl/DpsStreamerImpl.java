@@ -27,7 +27,7 @@ public class DpsStreamerImpl implements DpsStreamer
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
     @FunctionalInterface
-    public static interface MetaProcessor
+    public interface MetaProcessor
     {
         void process(Object value, Map<String, Map<String, String>> meta);
     }
@@ -78,7 +78,7 @@ public class DpsStreamerImpl implements DpsStreamer
         }
     }
 
-    protected DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor) throws Exception
+    private DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor) throws Exception
     {
         DynamicPropertySet row = new DynamicPropertySetSupport();
         for( int i = 0; i < schema.length; i++ )

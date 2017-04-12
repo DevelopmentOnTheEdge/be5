@@ -45,8 +45,7 @@ public class CategoriesServiceImpl implements CategoriesService
         for (MutableCategory category : forest)
         {
             Optional<MutableCategory> r = removeLeafCategoriesWithNoItems(category);
-            if (r.isPresent())
-                result.add(r.get());
+            r.ifPresent(result::add);
         }
         
         return result.build();
@@ -59,8 +58,7 @@ public class CategoriesServiceImpl implements CategoriesService
         for (MutableCategory child : category.children)
         {
             Optional<MutableCategory> c = removeLeafCategoriesWithNoItems(child);
-            if (c.isPresent())
-                childrenBuilder.add(c.get());
+            c.ifPresent(childrenBuilder::add);
         }
         
         ImmutableList<MutableCategory> children = childrenBuilder.build();
@@ -73,7 +71,7 @@ public class CategoriesServiceImpl implements CategoriesService
     
     private boolean hasAnyItem(MutableCategory category)
     {
-        return (Integer)db.selectScalar("SELECT COUNT(*) FROM classifications WHERE categoryID = ?", category.id) > 0;
+        return (long)db.selectScalar("SELECT COUNT(*) FROM classifications WHERE categoryID = ?", category.id) > 0;
         //TODO check and del return db.in("classifications").existsWith("categoryID", category.id); TODO check and delete
     }
     

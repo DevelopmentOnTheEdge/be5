@@ -14,8 +14,6 @@ public interface DatabaseService extends DbmsConnector
 
     Connection getConnection(boolean isReadOnly) throws SQLException;
 
-    //void returnConnection(Connection conn);
-
     Connection getCurrentTxConn();
 
     <T> T transaction(SqlExecutor<T> executor);

@@ -69,13 +69,13 @@ public interface Configurable<T> {
             {
                 ParameterizedType parametrized = (ParameterizedType) type;
                 
-                /**
+                /*
                  * If we found configurable, then we can be sure that this is correct class
                  * because it is impossible to implement Configurable twice.
                  */
                 if (parametrized.getRawType() == Configurable.class)
                 {
-                    /**
+                    /*
                      * It is guaranteed that the generic type is only one and it is T.
                      */
                     return (Class<T>) parametrized.getActualTypeArguments()[0];

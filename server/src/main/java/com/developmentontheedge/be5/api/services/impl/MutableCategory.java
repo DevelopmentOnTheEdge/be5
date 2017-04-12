@@ -10,15 +10,15 @@ import com.developmentontheedge.be5.api.services.CategoriesService.Category;
 
 class MutableCategory {
     
-    public static MutableCategory fromResultSet(ResultSet rs) throws SQLException
+    static MutableCategory fromResultSet(ResultSet rs) throws SQLException
     {
         return new MutableCategory(rs.getInt("ID"), rs.getInt("parentID"), rs.getString("name"));
     }
     
     public final int id;
     public final String name;
-    public final int parentId;
-    public final List<MutableCategory> children;
+    final int parentId;
+    final List<MutableCategory> children;
     
     private MutableCategory(int id, int parentId, String name, List<MutableCategory> children)
     {
@@ -33,17 +33,17 @@ class MutableCategory {
         this(id, parentId, name, new ArrayList<>());
     }
     
-    public MutableCategory withChildren(List<MutableCategory> children)
+    MutableCategory withChildren(List<MutableCategory> children)
     {
         return new MutableCategory(id, parentId, name, children);
     }
     
-    public Category toCategory()
+    Category toCategory()
     {
         return new Category(id, name, MutableCategory.toCategories(children));
     }
     
-    public static List<Category> toCategories(List<MutableCategory> categories)
+    static List<Category> toCategories(List<MutableCategory> categories)
     {
         return categories.stream().map(MutableCategory::toCategory).collect(Collectors.toList());
     }

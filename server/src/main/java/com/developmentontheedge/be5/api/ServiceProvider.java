@@ -65,16 +65,7 @@ public interface ServiceProvider
     {
         return get(DatabaseService.class);
     }
-    
-    /**
-     * <summary>Returns a connection from its database service.</summary>
-     * 
-     * <p>
-     * This method should not be used in usual cases, as a database connector
-     * can be changed. Usually a service have to keep a database service and get
-     * a connector from it right before execution of a query.
-     * </p>
-     */
+
     
     /**
      * Returns a service that classifies categories.
