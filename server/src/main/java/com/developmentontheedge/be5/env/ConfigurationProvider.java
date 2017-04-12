@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.env;
 
-import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 

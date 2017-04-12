@@ -1,6 +1,4 @@
-package com.developmentontheedge.be5.api.exceptions.impl;
-
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+package com.developmentontheedge.be5.api.exceptions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +9,8 @@ public enum Be5ErrorCode
     UNKNOWN_COMPONENT, UNKNOWN_ENTITY, UNKNOWN_QUERY, UNKNOWN_OPERATION, NO_OPERATION_IN_QUERY,
     PARAMETER_ABSENT, PARAMETER_EMPTY, PARAMETER_INVALID, STATE_INVALID,
     ACCESS_DENIED, ACCESS_DENIED_TO_OPERATION, ACCESS_DENIED_TO_QUERY;
+
+    private static final Logger log = Logger.getLogger(Be5ErrorCode.class.getName());
 
     /**
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
@@ -30,6 +30,17 @@ public enum Be5ErrorCode
         String msg = ErrorMessages.formatMessage(this, parameters);
         log.severe(msg);
         return Be5Exception.create(this, msg);
+    }
+
+    /**
+     * Creates a {@link Be5Exception} by the code and a formatted message. Note
+     * that this method is not a part of the API.
+     */
+    public Be5Exception rethrow(Throwable t, Object... parameters)
+    {
+        String msg = ErrorMessages.formatMessage(this, parameters);
+        log.log(Level.SEVERE, msg, t);
+        return Be5Exception.create(this, msg, t);
     }
 
     /**

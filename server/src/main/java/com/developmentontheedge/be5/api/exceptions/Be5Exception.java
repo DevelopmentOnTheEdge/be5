@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.api.exceptions;
 
-import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
-import com.developmentontheedge.be5.api.exceptions.impl.ErrorMessages;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+
+import java.util.logging.Logger;
 
 /**
  * The general BeanExplorer5 exception. You can create instances of the exception with its static constructors.
@@ -16,7 +16,7 @@ public class Be5Exception extends RuntimeException
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    public static Be5Exception create(Be5ErrorCode code, String message)
+    static Be5Exception create(Be5ErrorCode code, String message)
     {
         return new Be5Exception(code, message);
     }
@@ -24,7 +24,7 @@ public class Be5Exception extends RuntimeException
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    public static Be5Exception create(Be5ErrorCode code, String message, Throwable t)
+    static Be5Exception create(Be5ErrorCode code, String message, Throwable t)
     {
         return new Be5Exception(code, message, t);
     }
@@ -36,7 +36,12 @@ public class Be5Exception extends RuntimeException
     
     public static Be5Exception internal(String message)
     {
-        return new Be5Exception(Be5ErrorCode.INTERNAL_ERROR, message);
+        return Be5ErrorCode.INTERNAL_ERROR.exception(message);
+    }
+
+    public static Be5Exception internal(Logger log, String message)
+    {
+        return Be5ErrorCode.INTERNAL_ERROR.exception(log, message);
     }
 
     public static Be5Exception internal(Throwable t)
@@ -46,17 +51,17 @@ public class Be5Exception extends RuntimeException
 
     public static Be5Exception internal(Throwable t, String message)
     {
-        return new Be5Exception(Be5ErrorCode.INTERNAL_ERROR, t, message);
+        return Be5ErrorCode.INTERNAL_ERROR.rethrow(t, message);
     }
 
     public static Be5Exception internalInQuery(Throwable t, Query q)
     {
-        return new Be5Exception(Be5ErrorCode.INTERNAL_ERROR_IN_QUERY, t, q.getEntity().getName(), q.getName(), t.getMessage());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(t, q.getEntity().getName(), q.getName(), t.getMessage());
     }
 
     public static Be5Exception internalInOperation(Throwable t, Operation o)
     {
-        return new Be5Exception(Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION, t, o.getEntity().getName(), o.getName(), t.getMessage());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName(), t.getMessage());
     }
     
     public static Be5Exception invalidRequestParameter(String parameterName, String invalidValue)

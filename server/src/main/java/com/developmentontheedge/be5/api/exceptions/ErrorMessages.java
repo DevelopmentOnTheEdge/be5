@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.api.exceptions.impl;
+package com.developmentontheedge.be5.api.exceptions;
 
-import static com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode.*;
+import static com.developmentontheedge.be5.api.exceptions.Be5ErrorCode.*;
 
 import java.util.EnumMap;
 

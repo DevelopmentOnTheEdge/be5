@@ -45,8 +45,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private Project loadProject() 
     {
-        log.info("Loading project ...");
-	    long time = System.nanoTime();
+        long time = System.nanoTime();
 
         try
         {
@@ -100,8 +99,7 @@ public class ProjectProviderImpl implements ProjectProvider
         		  .append(ln);
         	}
         	
-        	log.severe(sb.toString());
-        	throw Be5Exception.internal(sb.toString());
+        	throw Be5Exception.internal(log, sb.toString());
         }
 
         // init project path  

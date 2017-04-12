@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.api.ComponentProvider;
-import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.components.Login;
 
 import java.util.Map;

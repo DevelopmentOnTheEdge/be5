@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;

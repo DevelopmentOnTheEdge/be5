@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 import com.developmentontheedge.be5.api.Configurable;
-import com.developmentontheedge.be5.api.exceptions.impl.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.Logger;
 
 public class LoggerImpl implements Logger, Configurable<LoggerImpl.JulConfigPath>
