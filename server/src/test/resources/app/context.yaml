@@ -1,4 +1,7 @@
 context:
   components:
   - login: com.developmentontheedge.be5.components.Login
-
+config:
+  services:
+    logger:
+      path: '/logging.properties'

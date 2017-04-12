@@ -20,11 +20,13 @@ import java.util.logging.Logger;
 
 public class ServerModuleLoader
 {
+    static final String CONTEXT_FILE = "context.yaml";
+
     private static final Logger log = Logger.getLogger(ServerModuleLoader.class.getName());
 
     public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses) throws IOException
     {
-        ArrayList<URL> urls = Collections.list((ServerModuleLoader.class).getClassLoader().getResources("context.yaml"));
+        ArrayList<URL> urls = Collections.list((ServerModuleLoader.class).getClassLoader().getResources(CONTEXT_FILE));
 
         for (URL url: urls){
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));

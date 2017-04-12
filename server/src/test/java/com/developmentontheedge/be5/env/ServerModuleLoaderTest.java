@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
+import static com.developmentontheedge.be5.env.ServerModuleLoader.CONTEXT_FILE;
 import static org.junit.Assert.assertEquals;
 
 public class ServerModuleLoaderTest
@@ -31,25 +32,25 @@ public class ServerModuleLoaderTest
     @Test
     public void testMenuLoad()
     {
-        moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses );
+        moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses );
         assertEquals(loadedClasses.get("menu"), Menu.class);
     }
 
     @Test
     public void testLoad()
     {
-        moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses);
-        moduleLoader.loadModules(getReader("src/test/resources/app/context.yaml"), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("src/test/resources/app/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
-        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/app/config.yaml"));
+        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/app/" + CONTEXT_FILE));
         //LoggerHelper logger = serviceProvider.get(LoggerHelper.class);
     }
 
     @Test(expected = Be5Exception.class)
     public void testLoadTryRedefine()
     {
-        moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses);
-        moduleLoader.loadModules(getReader("src/test/resources/tryRedefineApp/context.yaml"), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("src/test/resources/tryRedefineApp/" + CONTEXT_FILE), serviceProvider, loadedClasses);
     }
 
     private BufferedReader getReader(String file){

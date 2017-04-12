@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.developmentontheedge.be5.env.ServerModuleLoader.CONTEXT_FILE;
+
 public enum ConfigurationProvider
 {
     INSTANCE;
@@ -56,7 +58,7 @@ public enum ConfigurationProvider
         configuration = new HashMap<>();
         try
         {
-            ArrayList<URL> urls = Collections.list((ConfigurationProvider.class).getClassLoader().getResources("config.yaml"));
+            ArrayList<URL> urls = Collections.list((ConfigurationProvider.class).getClassLoader().getResources(CONTEXT_FILE));
 
             for (URL url : urls)
             {
