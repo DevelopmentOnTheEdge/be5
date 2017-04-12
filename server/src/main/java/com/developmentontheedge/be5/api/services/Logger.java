@@ -6,13 +6,13 @@ public interface Logger
     /**
      * Logs a error.
      */
-    public void error(String message);
+    void error(String message);
     
     /**
      * Logs a error.
      */
-    public void error(Throwable t);
+    void error(Throwable t);
     
-    public void info(String message);
+    void info(String message);
     
 }

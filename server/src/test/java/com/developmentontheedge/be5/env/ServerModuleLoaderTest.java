@@ -40,6 +40,9 @@ public class ServerModuleLoaderTest
     {
         moduleLoader.loadModules(getReader("context.yaml"), serviceProvider, loadedClasses);
         moduleLoader.loadModules(getReader("src/test/resources/app/context.yaml"), serviceProvider, loadedClasses);
+        ConfigurationProvider.INSTANCE.loadConfiguration();
+        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/app/config.yaml"));
+        //LoggerHelper logger = serviceProvider.get(LoggerHelper.class);
     }
 
     @Test(expected = Be5Exception.class)

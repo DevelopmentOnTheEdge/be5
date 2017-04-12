@@ -32,7 +32,12 @@ public class ServerModuleLoader
             loadModules(reader, serviceProvider, loadedClasses);
         }
 
+        ConfigurationProvider.INSTANCE.loadConfiguration();
+
         serviceProvider.freeze();
+
+        //config first
+        serviceProvider.getLogger();
 
         log.info("Services initialized");
     }
@@ -47,7 +52,7 @@ public class ServerModuleLoader
 
         if(components != null)loadComponents(loadedClasses, components);
         if(services != null)bindServices(serviceProvider, services);
-        //runInitializers( );
+        //runInitializers( )?;
 
     }
 
@@ -107,7 +112,7 @@ public class ServerModuleLoader
         {
             @SuppressWarnings("unchecked")
             Configurable<Object> configurable = (Configurable<Object>) object;
-            Object config = ConfigurationProvider.INSTANCE.loadConfiguration(configurable.getConfigurationClass(), collection, id);
+            Object config = ConfigurationProvider.INSTANCE.getConfiguration(configurable.getConfigurationClass(), collection, id);
 
             configurable.configure(config);
         }
@@ -120,7 +125,7 @@ public class ServerModuleLoader
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e, "ClassNotFoundException by path='"+path+"' in context.yaml");
         }
     }
 }

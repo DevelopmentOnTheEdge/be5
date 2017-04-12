@@ -20,13 +20,13 @@ public enum ConfigurationProvider
 
     private static final Logger log = Logger.getLogger(ConfigurationProvider.class.getName());
     
-    private Map<String, Object> configuration;
+    private Map<String, Object> configuration = null;
     
-    public <T> T loadConfiguration(Class<T> configClass, String collection, String id)
+    public <T> T getConfiguration(Class<T> configClass, String collection, String id)
     {
         if (configuration == null)
         {
-            loadConfiguration();
+            throw Be5ErrorCode.INTERNAL_ERROR.exception("Call loadConfiguration first.");
         }
         
         @SuppressWarnings("unchecked")
@@ -50,21 +50,18 @@ public enum ConfigurationProvider
         return new Gson().fromJson(componentConfigJson, configClass);
     }
 
-    @SuppressWarnings("unchecked")
-    private void loadConfiguration()
+
+    public void loadConfiguration()
     {
+        configuration = new HashMap<>();
         try
         {
             ArrayList<URL> urls = Collections.list((ConfigurationProvider.class).getClassLoader().getResources("config.yaml"));
-            configuration = new HashMap<>();
 
             for (URL url : urls)
             {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-                Map<String, Object> moduleConfiguration = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
-
-                //TODO several config check, test
-                configuration.putAll(moduleConfiguration);
+                loadModuleConfiguration(reader);
             }
         }
         catch (IOException e)
@@ -72,5 +69,17 @@ public enum ConfigurationProvider
             throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
     }
-    
+
+    @SuppressWarnings("unchecked")
+    void loadModuleConfiguration(BufferedReader reader)
+    {
+        if (configuration == null)
+        {
+            throw Be5ErrorCode.INTERNAL_ERROR.exception("Call loadConfiguration first.");
+        }
+        Map<String, Object> moduleConfiguration = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("config");
+        //TODO several config check, test
+        if(moduleConfiguration != null)configuration.putAll(moduleConfiguration);
+    }
+
 }

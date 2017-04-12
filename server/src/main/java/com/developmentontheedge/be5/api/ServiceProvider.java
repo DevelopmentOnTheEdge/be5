@@ -1,7 +1,13 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.api.services.*;
-import com.developmentontheedge.be5.api.services.impl.ConsoleLogger;
+import com.developmentontheedge.be5.api.services.CategoriesService;
+import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.ExecutorService;
+import com.developmentontheedge.be5.api.services.Logger;
+import com.developmentontheedge.be5.api.services.LoginService;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Project;
 
 import java.util.function.Consumer;
@@ -112,7 +118,7 @@ public interface ServiceProvider
      */
     default Logger getLogger()
     {
-        return new ConsoleLogger();
+        return get(Logger.class);
     }
 
     default LoginService getLoginService()

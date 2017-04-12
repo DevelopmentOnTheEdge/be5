@@ -380,7 +380,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private String getFinalSql()
     {
-        DebugQueryLogger dql = new DebugQueryLogger(System.out);
+        DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
         String queryText;
         try
@@ -441,7 +441,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         String finalSQL = new Formatter().format( ast, context, parserContext );
-        log.info("Final SQL: " + finalSQL);
+        log.fine("Final SQL: " + finalSQL);
 
         return finalSQL;
     }
@@ -457,7 +457,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private void applyFilters(AstStart ast) {
-        DebugQueryLogger dql = new DebugQueryLogger(System.out);
+        DebugQueryLogger dql = new DebugQueryLogger();
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
         Map<ColumnRef, String> filters = EntryStream.of(parametersMap)
@@ -642,13 +642,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     static class DebugQueryLogger
     {
+        private static final Logger log = Logger.getLogger(DebugQueryLogger.class.getName());
         private String lastQuery;
-        private final PrintStream ps;
-
-        public DebugQueryLogger(PrintStream ps)
-        {
-            this.ps = ps;
-        }
 
         public void log(String name, AstStart ast)
         {
@@ -658,9 +653,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         public void log(String name, String query)
         {
             if(!query.equals(lastQuery)) {
-                ps.println(name+": ");
+                log.fine(name+": ");
                 if(lastQuery == null) {
-                    ps.println(query);
+                    log.fine(query);
                 } else {
                     String prefix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonPrefix());
                     String suffix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonSuffix());
@@ -677,7 +672,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                         substring = "..."+substring.substring(1);
                     if(endPos < query.length())
                         substring += "...";
-                    ps.println(substring);
+                    log.fine(substring);
                 }
                 lastQuery = query;
             }
