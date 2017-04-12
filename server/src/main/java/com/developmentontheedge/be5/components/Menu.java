@@ -188,11 +188,11 @@ public class Menu implements Component {
         }
     }
 
-    private MenuResponse generateMenuWithIds(ServiceProvider serviceProvider) {
+    MenuResponse generateMenuWithIds(ServiceProvider serviceProvider) {
         return generateMenu(serviceProvider, true);
     }
 
-    private MenuResponse generateSimpleMenu(ServiceProvider serviceProvider) {
+    MenuResponse generateSimpleMenu(ServiceProvider serviceProvider) {
         return generateMenu(serviceProvider, false);
     }
 

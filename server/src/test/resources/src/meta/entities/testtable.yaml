@@ -17,7 +17,7 @@ testtable:
   - Test 1D unknown:
       type: 1D_unknown
       operations: [Insert, Edit, Delete]
-      roles: [Administrator]
+      roles: [Guest, Administrator]
       code: |2-
             SELECT
               t.ID AS "___ID",

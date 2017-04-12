@@ -35,8 +35,29 @@ final public class Queries
         {
             return Action.call(new HashUrl("static", query.getQuery()));
         }
+        else
+        {
+            //LegacyUrlParser parser = legacyQueriesService.createParser(query.getQuery());
 
-        return null;
+            if( query.getType() == QueryType.STATIC )
+            {
+                return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
+//                if( parser.isLegacy() )
+//                {
+//                    if (parser.isForm())
+//                    {
+//                        return Action.call(new HashUrl("form", parser.getEntityName(), parser.getQueryName(), parser.getOperationName()));
+//                    }
+//                    // continue
+//                }
+//                else
+//                {
+//                    return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
+//                }
+            }
+
+            return Action.call(new HashUrl("table", query.getEntity().getName(), query.getName()));
+        }
     }
 
     public static Action toAction(String query, Operation operation) 
