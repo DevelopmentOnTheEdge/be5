@@ -10,7 +10,7 @@ public class UserInfoHolder
     private static final ThreadLocal<UserInfo> threadLocalScope = new  ThreadLocal<>();
 
     public static UserInfo getUserInfo() {
-        return threadLocalScope.get() != null ? threadLocalScope.get() : UserInfo.GUEST;
+        return threadLocalScope.get();
     }
 
     public static void setUserInfo(UserInfo user) {

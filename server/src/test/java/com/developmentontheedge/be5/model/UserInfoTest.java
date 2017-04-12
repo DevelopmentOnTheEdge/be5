@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.model;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class UserInfoTest
 {
     private static ProjectProvider projectProvider;
+    private static LoginServiceImpl loginService;
     private static UserInfo ui;
     @BeforeClass
     public static void setUp()
@@ -31,6 +33,7 @@ public class UserInfoTest
                 return Paths.get("src/test/resources/app").toAbsolutePath();
             }
         };
+        loginService = new LoginServiceImpl(null, null, projectProvider);
     }
 
     @Before
@@ -63,13 +66,15 @@ public class UserInfoTest
 
     @Test
     public void testGuestRoles(){
+        loginService.initGuest(null);
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getCurrentRoles());
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getAvailableRoles());
     }
 
     @Test
     public void testGuestLocale(){
-        //assertEquals("ru", UserInfoHolder.getLanguage());
+        loginService.initGuest(null);
+        assertEquals("ru", UserInfoHolder.getLanguage());
     }
 
 }

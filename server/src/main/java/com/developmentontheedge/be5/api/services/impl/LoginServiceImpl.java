@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
@@ -149,6 +150,26 @@ public class LoginServiceImpl implements LoginService
         String username = UserInfoHolder.getUserName();
         UserInfoHolder.setUserInfo(null);
         log.info("Logout user: " + username);
+    }
+
+    @Override
+    public void initGuest(Request req)
+    {
+        UserInfo ui = new UserInfo();
+        ui.setCurrentRoles(Collections.singletonList(RoleType.ROLE_GUEST));
+        ui.setAvailableRoles(Collections.singletonList(RoleType.ROLE_GUEST));
+
+        if(req != null)
+        {
+            ui.setLocale(req.getRawRequest().getLocale());
+        }
+        else
+        {
+            ui.setLocale(Locale.US);
+        }
+        setAvailableLanguage(ui);
+
+        UserInfoHolder.setUserInfo(ui);
     }
 
 }

@@ -36,7 +36,6 @@ import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.env.ServerModuleLoader;
 import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.util.Delegator;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -127,11 +126,8 @@ public class MainServlet extends HttpServlet
      *
      * @throws RuntimeException
      */
-    public void respond(Object requestObj, Object responseObj, String method, String requestUri, Map<String, String[]> parameters)
+    public void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        HttpServletRequest request = Delegator.on( requestObj, HttpServletRequest.class );
-        HttpServletResponse response = Delegator.on( responseObj, HttpServletResponse.class );
-
         String origin = request.getHeader( "Origin" );
         // TODO test origin
 
@@ -154,8 +150,15 @@ public class MainServlet extends HttpServlet
         {
             ind++;
         }
-        
-        String componentId = uriParts[++ind];
+
+        String subRequestUri = Joiner.on('/').join( Iterables.skip( Arrays.asList(uriParts), ind+2));
+        Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
+
+        if(UserInfoHolder.getUserInfo() == null){
+            serviceProvider.getLoginService().initGuest(req);
+        }
+
+        String componentId = uriParts[ind+1];
         Component component;
         try
         {
@@ -166,9 +169,6 @@ public class MainServlet extends HttpServlet
             trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
             return;
         }
-
-        String subRequestUri = Joiner.on('/').join( Iterables.skip( Arrays.asList(uriParts), ind+1));
-        Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         // do some preprocessing using
         // a registered ('system -> REQUEST_PREPROCESSOR') request preprocessor
@@ -243,9 +243,8 @@ public class MainServlet extends HttpServlet
     //
 
 
-    public void onWsOpen(Object sessionObj)
+    public void onWsOpen(Session session)
     {
-        Session session = Delegator.on( sessionObj, Session.class );
         String componentName = session.getPathParameters().get( "component" );
         WebSocketComponent component;
         try
@@ -268,16 +267,14 @@ public class MainServlet extends HttpServlet
         component.onOpen( new WebSocketContextImpl( session ), serviceProvider );
     }
 
-    public void onWsMessage(byte[] msg, Object sessionObj)
+    public void onWsMessage(byte[] msg, Session session)
     {
-        Session session = Delegator.on( sessionObj, Session.class );
         String component = session.getPathParameters().get( "component" );
         createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), serviceProvider, msg );
     }
 
-    public void onWsClose(Object sessionObj)
+    public void onWsClose(Session session)
     {
-        Session session = Delegator.on( sessionObj, Session.class );
         String component = session.getPathParameters().get( "component" );
         createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), serviceProvider );
     }

@@ -8,8 +8,6 @@ import one.util.streamex.StreamEx;
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -158,33 +156,5 @@ public class UserInfo implements Serializable
     {
         currentRoles = StreamEx.of(roles).filter(role -> availableRoles.contains(role)).toList();
     }
-
-    public static final UserInfo GUEST = new UserInfo()
-    {
-
-        @Override
-        public String getUserName()
-        {
-            return null;
-        }
-
-        @Override
-        public List<String> getCurrentRoles()
-        {
-            return Collections.singletonList(RoleType.ROLE_GUEST);
-        }
-
-        @Override
-        public List<String> getAvailableRoles()
-        {
-            return Collections.singletonList(RoleType.ROLE_GUEST);
-        }
-
-        @Override
-        public Locale getLocale()
-        {
-            return locale != null ? locale : Locale.US;
-        }
-    };
 
 }
