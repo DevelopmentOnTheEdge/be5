@@ -40,9 +40,9 @@ public class ServerModuleLoaderTest
     public void testLoad()
     {
         moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
-        moduleLoader.loadModules(getReader("src/test/resources/app/" + CONTEXT_FILE), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
-        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/app/" + CONTEXT_FILE));
+        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
         //LoggerHelper logger = serviceProvider.get(LoggerHelper.class);
     }
 

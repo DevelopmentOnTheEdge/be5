@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -13,7 +14,7 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 
 
-public class TransactionTest
+public class TransactionTest extends AbstractProjectTest
 {
     private static SqlService db;
 
@@ -22,17 +23,8 @@ public class TransactionTest
     @BeforeClass
     public static void setUp()
     {
-        ProjectProviderImpl projectProvider = new ProjectProviderImpl()
-        {
-            @Override
-        	protected Path findProjectPath() 
-            {
-            	return Paths.get("src/test/resources/app").toAbsolutePath();
-            }
-        };
-
-        databaseService = new DatabaseServiceImpl(projectProvider);
-        db = new SqlServiceImpl(databaseService);
+        databaseService = getServiceProvider().getDatabaseService();
+        db = getServiceProvider().getSqlService();
         db.update("DROP TABLE IF EXISTS persons;" );
         db.update("CREATE TABLE persons (\n" +
                 "    ID  BIGSERIAL PRIMARY KEY,\n" +

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model;
 
+import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
@@ -17,7 +18,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserInfoTest
+public class UserInfoTest extends AbstractProjectTest
 {
     private static ProjectProvider projectProvider;
     private static LoginServiceImpl loginService;
@@ -26,14 +27,7 @@ public class UserInfoTest
     @BeforeClass
     public static void setUp()
     {
-        projectProvider = new ProjectProviderImpl()
-        {
-            @Override
-            protected Path findProjectPath()
-            {
-                return Paths.get("src/test/resources/app").toAbsolutePath();
-            }
-        };
+        projectProvider = getServiceProvider().getProjectProvider();
         loginService = new LoginServiceImpl(null, null, projectProvider);
     }
 

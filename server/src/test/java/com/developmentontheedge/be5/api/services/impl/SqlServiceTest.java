@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class SqlServiceTest
+public class SqlServiceTest extends AbstractProjectTest
 {
     private static SqlService db;
 
@@ -26,17 +27,7 @@ public class SqlServiceTest
     @BeforeClass
     public static void setUp()
     {
-        ProjectProviderImpl projectProvider = new ProjectProviderImpl()
-        {
-            @Override
-        	protected Path findProjectPath() 
-            {
-            	return Paths.get("src/test/resources/app").toAbsolutePath();
-            }
-        };
-        
-        DatabaseService databaseService = new DatabaseServiceImpl(projectProvider);
-        db = new SqlServiceImpl(databaseService);
+        db = getServiceProvider().getSqlService();
         db.update("DROP TABLE IF EXISTS persons;" );
         db.update("CREATE TABLE persons (\n" +
                 "    ID  BIGSERIAL PRIMARY KEY,\n" +

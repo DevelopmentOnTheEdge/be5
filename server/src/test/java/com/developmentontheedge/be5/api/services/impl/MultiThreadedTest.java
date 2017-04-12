@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 
@@ -19,7 +20,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
 
-public class MultiThreadedTest
+public class MultiThreadedTest extends AbstractProjectTest
 {
     private static SqlService db;
     private static DatabaseService databaseService;
@@ -27,17 +28,8 @@ public class MultiThreadedTest
     @BeforeClass
     public static void setUp() throws Exception
     {
-        ProjectProviderImpl projectProvider = new ProjectProviderImpl()
-        {
-            @Override
-        	protected Path findProjectPath() 
-            {
-            	return Paths.get("src/test/resources/app").toAbsolutePath();
-            }
-        };
-        assertNotNull(projectProvider);
-        databaseService = new DatabaseServiceImpl(projectProvider);
-        db = new SqlServiceImpl(databaseService);
+        databaseService = getServiceProvider().getDatabaseService();
+        db = getServiceProvider().getSqlService();
         db.update("DROP TABLE IF EXISTS Persons" );
         db.update("CREATE TABLE Persons (\n" +
                 "    ID int NOT NULL AUTO_INCREMENT,\n" +
