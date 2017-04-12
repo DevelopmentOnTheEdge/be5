@@ -51,8 +51,7 @@ public class LoginServiceImpl implements LoginService
             String passwordCheckClause = getPasswordCheckClause( databaseService, password );
             sql += " AND ("+passwordCheckClause+")";
 
-            //todo improve SqlService db.selectScalar(sql) == 1
-            if(db.selectScalar(sql, user).equals(Long.parseLong("1"))){
+            if((long)db.selectScalar(sql, user) == 1){
                 return true;
             }
         }
