@@ -82,7 +82,7 @@ public class ProjectProviderImpl implements ProjectProvider
     protected Path findProjectPath() throws IOException, URISyntaxException
     {
         // try to  find project in classpath or war
-        ArrayList<URL> urls = Collections.list((ProjectProviderImpl.class).getClassLoader().getResources(PROJECT_FILE_NAME));
+        ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(PROJECT_FILE_NAME));
         
         if( urls.isEmpty() )
             throw Be5Exception.internal("Project is not found in classpath or war file.");

@@ -22,6 +22,7 @@ public class UserInfoTest
     private static ProjectProvider projectProvider;
     private static LoginServiceImpl loginService;
     private static UserInfo ui;
+
     @BeforeClass
     public static void setUp()
     {
@@ -69,6 +70,9 @@ public class UserInfoTest
         loginService.initGuest(null);
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getCurrentRoles());
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getAvailableRoles());
+
+        UserInfoHolder.getUserInfo().selectRoles(Collections.singletonList("Admin"));
+        assertEquals(Collections.emptyList(), UserInfoHolder.getUserInfo().getCurrentRoles());
     }
 
     @Test

@@ -33,6 +33,12 @@ public enum ConfigurationProvider
         
         @SuppressWarnings("unchecked")
         Map<String, Object> configurations = (Map<String, Object>) configuration.get(collection);
+
+        if(configurations == null){
+            log.warning("Module in " + collection + " '" + id + "' not configured.");
+            return null;
+        }
+
         Object config = configurations.get(id);
         
         if (config == null)
@@ -58,7 +64,7 @@ public enum ConfigurationProvider
         configuration = new HashMap<>();
         try
         {
-            ArrayList<URL> urls = Collections.list((ConfigurationProvider.class).getClassLoader().getResources(CONTEXT_FILE));
+            ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
 
             for (URL url : urls)
             {

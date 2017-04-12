@@ -26,7 +26,7 @@ public class ServerModuleLoader
 
     public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses) throws IOException
     {
-        ArrayList<URL> urls = Collections.list((ServerModuleLoader.class).getClassLoader().getResources(CONTEXT_FILE));
+        ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
 
         for (URL url: urls){
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
@@ -123,7 +123,7 @@ public class ServerModuleLoader
     private Class loadClass(String path){
         try
         {
-            return ServerModuleLoader.class.getClassLoader().loadClass(path);
+            return getClass().getClassLoader().loadClass(path);
         }
         catch (ClassNotFoundException e)
         {

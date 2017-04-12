@@ -23,11 +23,15 @@ public class LoggerImpl implements Logger, Configurable<LoggerImpl.JulConfigPath
     {
         try
         {
-            InputStream resourceAsStream = LoggerImpl.class.getResourceAsStream(config.path);
-            if(resourceAsStream == null){
-                throw Be5ErrorCode.INTERNAL_ERROR.exception( "File not found: " + config.path);
+            if(config != null)
+            {
+                InputStream resourceAsStream = LoggerImpl.class.getResourceAsStream(config.path);
+                if (resourceAsStream == null)
+                {
+                    throw Be5ErrorCode.INTERNAL_ERROR.exception("File not found: " + config.path);
+                }
+                LogManager.getLogManager().readConfiguration(resourceAsStream);
             }
-            LogManager.getLogManager().readConfiguration(resourceAsStream);
             log = java.util.logging.Logger.getLogger(LoggerImpl.class.getName());
             log.info("Log configured. Level: " + log.getParent().getLevel().getName() +
                     " Handlers: " + Arrays.asList(log.getParent().getHandlers()));
