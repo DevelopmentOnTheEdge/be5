@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
@@ -108,7 +109,7 @@ public class SqlServiceImpl implements SqlService
             conn = (txConn != null) ? txConn : databaseService.getConnection(isReadOnly);
             return executor.run(conn);
         } catch (SQLException e) {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5Exception.internal(e);
         } finally {
             if(txConn == null)
             {

@@ -174,13 +174,13 @@ public class Menu implements Component {
         switch (req.getRequestUri())
         {
         case "":
-            res.sendAsRawJson(generateSimpleMenu(req, serviceProvider));
+            res.sendAsRawJson(generateSimpleMenu(serviceProvider));
             return;
         case "withIds":
-            res.sendAsRawJson(generateMenuWithIds(req, serviceProvider));
+            res.sendAsRawJson(generateMenuWithIds(serviceProvider));
             return;
         case "defaultAction":
-            res.sendAsRawJson(getDefaultAction(req, serviceProvider));
+            res.sendAsRawJson(getDefaultAction(serviceProvider));
             return;
         default:
             res.sendUnknownActionError();
@@ -188,16 +188,16 @@ public class Menu implements Component {
         }
     }
 
-    private MenuResponse generateMenuWithIds(Request req, ServiceProvider serviceProvider) {
-        return generateMenu(req, serviceProvider, true);
+    private MenuResponse generateMenuWithIds(ServiceProvider serviceProvider) {
+        return generateMenu(serviceProvider, true);
     }
 
-    private MenuResponse generateSimpleMenu(Request req, ServiceProvider serviceProvider) {
-        return generateMenu(req, serviceProvider, false);
+    private MenuResponse generateSimpleMenu(ServiceProvider serviceProvider) {
+        return generateMenu(serviceProvider, false);
     }
 
-    private MenuResponse generateMenu(Request req, ServiceProvider serviceProvider, boolean withIds) {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+    private MenuResponse generateMenu(ServiceProvider serviceProvider, boolean withIds) {
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
         
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
@@ -207,8 +207,8 @@ public class Menu implements Component {
         return new MenuResponse(loggedIn, entities);
     }
 
-    private Action getDefaultAction(Request req, ServiceProvider serviceProvider) {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+    private Action getDefaultAction(ServiceProvider serviceProvider) {
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
 
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();

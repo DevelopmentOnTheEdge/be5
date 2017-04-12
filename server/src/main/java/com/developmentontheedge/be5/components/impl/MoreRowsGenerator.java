@@ -57,7 +57,7 @@ public class MoreRowsGenerator {
         }
         
         boolean selectable = Boolean.parseBoolean(selectableStr);
-        Query query = UserAwareMeta.get(req, serviceProvider).getQuery(entityName, queryName);
+        Query query = UserAwareMeta.get(serviceProvider).getQuery(entityName, queryName);
         
         return generateMoreRows(query, req, parametersMap, selectable, draw, start, length, totalNumberOfRows);
     }

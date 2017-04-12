@@ -15,7 +15,7 @@ import com.google.common.annotations.Beta;
 public interface UserAwareMeta
 {
 
-    public static class Column {
+    class Column {
 
         public final String name;
         public final String localizedName;
@@ -27,7 +27,7 @@ public interface UserAwareMeta
 
     }
 
-    public static UserAwareMeta get(Request req, ServiceProvider serviceProvider)
+    static UserAwareMeta get(ServiceProvider serviceProvider)
     {
         return UserAwareMetaImpl.get(serviceProvider);
     }

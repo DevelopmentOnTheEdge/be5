@@ -48,7 +48,7 @@ public class TableModel
             this.desc = "desc".equals(req.get("order[0][dir]"));
             this.execution = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
             this.execution.sortOrder(sortColumn, desc);
-            this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+            this.userAwareMeta = UserAwareMeta.get(serviceProvider);
         }
 
         public Builder offset(int offset)

@@ -322,7 +322,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.databaseService = serviceProvider.getDatabaseService();
         this.db = serviceProvider.getSqlService();
-        this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
         this.session = req.getRawSession();
         this.queryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier( queryContext );

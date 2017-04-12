@@ -43,7 +43,7 @@ public class QueryRouter
     private QueryRouter(Request req, ServiceProvider serviceProvider)
     {
         this.req = req;
-        this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
         this.meta = serviceProvider.get(Meta.class);
     }
     

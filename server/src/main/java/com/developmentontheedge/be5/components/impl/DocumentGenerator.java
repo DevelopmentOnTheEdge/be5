@@ -47,7 +47,7 @@ public class DocumentGenerator implements Runner {
         this.req = req;
         this.res = res;
         this.serviceProvider = serviceProvider;
-        this.userAwareMeta = UserAwareMeta.get(req, serviceProvider);
+        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
     }
     
     @Override
