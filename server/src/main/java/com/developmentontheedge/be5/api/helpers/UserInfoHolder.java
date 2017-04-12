@@ -30,7 +30,7 @@ public class UserInfoHolder
     }
 
     public static void selectRoles(List<String> roles) throws Exception {
-        //TODO RoleUtils.assignRoles(connector, getUserInfo(), roles);
+        getUserInfo().selectRoles(roles);
     }
 
     public static String getUserName()
@@ -49,6 +49,6 @@ public class UserInfoHolder
     }
 
     public static List<String> getCurrentRoles() {
-        return getUserInfo().getCurrentRoleList();
+        return getUserInfo().getCurrentRoles();
     }
 }

@@ -46,12 +46,12 @@ public class LoginServiceImpl implements LoginService
     {
         try
         {
-            String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = " + Utils.safestr( databaseService, user, true );
+            String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = ?";
             String passwordCheckClause = getPasswordCheckClause( databaseService, password );
             sql += " AND ("+passwordCheckClause+")";
 
             //todo improve SqlService db.selectScalar(sql) == 1
-            if(db.selectScalar(sql).equals(Long.parseLong("1"))){
+            if(db.selectScalar(sql, user).equals(Long.parseLong("1"))){
                 return true;
             }
         }
@@ -90,17 +90,8 @@ public class LoginServiceImpl implements LoginService
     }
 
     private List<String> getAvailableRoles(String username) {
-        try
-        {
-            String selectRolesSql = "SELECT role_name FROM user_roles WHERE user_name = " + Utils.safestr(databaseService, username, true);
-            List<String> selectRoles = db.selectList(selectRolesSql, rs -> rs.getString(1));
-
-            return Collections.unmodifiableList(selectRoles);
-        }
-        catch (Exception e)
-        {
-            throw Be5Exception.internal(e);
-        }
+        return db.selectList("SELECT role_name FROM user_roles WHERE user_name = ?",
+                    rs -> rs.getString(1), username);
     }
 
     public boolean login(Request req, String username, String password) {
@@ -121,29 +112,32 @@ public class LoginServiceImpl implements LoginService
     }
 
     private void saveCurrentUser(Request req, String username) {
-        HttpSession session = req.getRawSession();
-        session.setAttribute("remoteAddr", req.getRemoteAddr());
-        session.setAttribute(SessionConstants.CURRENT_USER, username);
-
         UserInfo ui = new UserInfo(username, new Date());
 
-        String roles = Utils.toInClause(getAvailableRoles(username));
+        //Roles
+        List<String> availableRoles = getAvailableRoles(username);
+        ui.setCurrentRoles(availableRoles);
+        ui.setAvailableRoles(availableRoles);
 
-        ui.setCurRoleList(roles);
-        ui.setAvailableRoles(roles);
-
+        //Locale
         ui.setLocale(req.getRawRequest().getLocale());
+        setAvailableLanguage(ui);
 
+        HttpSession session = req.getRawSession();
+        session.setAttribute("remoteAddr", req.getRemoteAddr());
+        session.setAttribute( SessionConstants.USER_INFO, ui );
+        //unused? session.setAttribute(SessionConstants.CURRENT_USER, username);
+        UserInfoHolder.setUserInfo(ui);
+
+        log.info("Login user: " + username);
+    }
+
+    public void setAvailableLanguage(UserInfo ui){
         List<String> languages = StreamEx.of(project.getProject().getLanguages()).toList();
 
         if(!languages.contains(ui.getLocale().getLanguage())){
             ui.setLocale(new Locale( languages.get(0) ));
         }
-
-        session.setAttribute( SessionConstants.USER_INFO, ui );
-        UserInfoHolder.setUserInfo(ui);
-
-        log.info("Login as user: " + username);
     }
 
     @Override
@@ -152,7 +146,9 @@ public class LoginServiceImpl implements LoginService
         session.removeAttribute( SessionConstants.USER_INFO );
         session.invalidate();
 
+        String username = UserInfoHolder.getUserName();
         UserInfoHolder.setUserInfo(null);
+        log.info("Logout user: " + username);
     }
 
 }

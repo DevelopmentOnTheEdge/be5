@@ -3,24 +3,26 @@ package com.developmentontheedge.be5.model;
 /** $Id: UserInfo.java,v 1.20 2014/02/13 06:24:45 lan Exp $ */
 
 import com.developmentontheedge.be5.metadata.RoleType;
+import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.StringTokenizer;
 
 public class UserInfo implements Serializable
 {
     private String userName;
     private Date creationTime;
     private String createdInThread;
-    private String availableRoles;
-    private String curRoleList;
+
+    private List<String> availableRoles;
+    private List<String> currentRoles;
 
     public String getUserName()
     {
@@ -38,33 +40,6 @@ public class UserInfo implements Serializable
     public void setUserName(String userName )
     {
         this.userName = userName;
-    }
-
-    public String getCurRoles()
-    {
-        return curRoleList;
-    }
-
-    public void setCurRoleList( String curRoleList )
-    {
-        this.curRoleList = curRoleList;
-    }
-
-    public List<String> getCurrentRoleList()
-    {
-        List<String> list = new ArrayList<>();
-
-        if( getCurRoles() != null )
-        {
-            StringTokenizer roles = new StringTokenizer( getCurRoles(), "()'," );
-
-            while( roles.hasMoreTokens() )
-            {
-                list.add( roles.nextToken() );
-            }
-        }
-
-        return list;
     }
 
     protected Locale locale;
@@ -145,17 +120,13 @@ public class UserInfo implements Serializable
 
     public boolean isUserInRole( String role )
     {
-        role = role.trim();
-        return getCurRoles() != null && getCurRoles().contains("'" + role + "'");
+        return currentRoles.contains(role);
     }
 
     public boolean isAdmin()
     {
-        return getCurRoles() != null &&
-                (
-                        getCurRoles().contains("'" + RoleType.ROLE_ADMINISTRATOR + "'") ||
-                                getCurRoles().contains("'" + RoleType.ROLE_SYSTEM_DEVELOPER + "'")
-                );
+        return currentRoles.contains(RoleType.ROLE_ADMINISTRATOR)
+                || currentRoles.contains(RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
     public boolean isGuest()
@@ -163,80 +134,57 @@ public class UserInfo implements Serializable
         return getUserName() == null;
     }
 
-    public static final UserInfo ADMIN = new UserInfo()
+    public List<String> getAvailableRoles()
     {
-        public String getUserName()
-        {
-            return RoleType.ROLE_ADMINISTRATOR;
-        }
+        return availableRoles;
+    }
 
-        public String getCurRoles()
-        {
-            return "('" + RoleType.ROLE_ADMINISTRATOR + "')";
-        }
-
-        public Locale getLocale()
-        {
-            return locale != null ? locale : Locale.US;
-        }
-    };
-
-    public static final UserInfo ADMIN_NODB = new UserInfo()
+    public void setAvailableRoles(List<String> availableRoles)
     {
-        public String getUserName()
-        {
-            return RoleType.ROLE_ADMINISTRATOR;
-        }
+        this.availableRoles = availableRoles;
+    }
 
-        public String getCurRoles()
-        {
-            return "('" + RoleType.ROLE_ADMINISTRATOR + "')";
-        }
+    public List<String> getCurrentRoles()
+    {
+        return currentRoles;
+    }
 
-        public Locale getLocale()
-        {
-            return locale != null ? locale : Locale.US;
-        }
-    };
+    public void setCurrentRoles(List<String> currentRoles)
+    {
+        this.currentRoles = currentRoles;
+    }
+
+    public void selectRoles(List<String> roles)
+    {
+        currentRoles = StreamEx.of(roles).filter(role -> availableRoles.contains(role)).toList();
+    }
 
     public static final UserInfo GUEST = new UserInfo()
     {
+
+        @Override
         public String getUserName()
         {
             return null;
         }
 
-        public String getCurRoles()
+        @Override
+        public List<String> getCurrentRoles()
         {
-            return "('" + RoleType.ROLE_GUEST + "')";
+            return Collections.singletonList(RoleType.ROLE_GUEST);
         }
 
+        @Override
+        public List<String> getAvailableRoles()
+        {
+            return Collections.singletonList(RoleType.ROLE_GUEST);
+        }
+
+        @Override
         public Locale getLocale()
         {
             return locale != null ? locale : Locale.US;
         }
     };
 
-    public List<String> getAvailableRoles()
-    {
-        List<String> list = new ArrayList<>();
-
-        if( getCurRoles() != null )
-        {
-            StringTokenizer roles = new StringTokenizer( getCurRoles(), "()'," );
-
-            while( roles.hasMoreTokens() )
-            {
-                list.add( roles.nextToken() );
-            }
-        }
-
-        return list;
-    }
-
-
-    public void setAvailableRoles(String availableRoles)
-    {
-        this.availableRoles = availableRoles;
-    }
 }

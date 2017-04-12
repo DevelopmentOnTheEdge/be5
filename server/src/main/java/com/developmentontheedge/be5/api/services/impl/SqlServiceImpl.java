@@ -84,16 +84,19 @@ public class SqlServiceImpl implements SqlService
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException
     {
         sql = format(sql);
+        log.fine(sql);
         return queryRunner.query(conn, sql , rsh, params);
     }
 
     private int update(Connection conn, String sql, Object... params) throws SQLException
     {
+        log.fine(sql);
         return queryRunner.update(conn, sql, params);
     }
 
     private <T> T insert(Connection conn, String sql, Object... params) throws SQLException
     {
+        log.fine(sql);
         return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
     }
 
