@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.env.ServerModuleLoader;
-import org.junit.BeforeClass;
 
 import java.io.IOException;
 
@@ -26,7 +25,7 @@ public abstract class AbstractProjectTest
         }
     }
 
-    public static ServiceProvider getServiceProvider(){
+    protected static ServiceProvider getServiceProvider(){
         return serviceProvider;
     }
 

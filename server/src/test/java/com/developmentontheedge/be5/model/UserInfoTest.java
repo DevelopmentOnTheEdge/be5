@@ -2,16 +2,12 @@ package com.developmentontheedge.be5.model;
 
 import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
-import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -20,15 +16,13 @@ import static org.junit.Assert.assertEquals;
 
 public class UserInfoTest extends AbstractProjectTest
 {
-    private static ProjectProvider projectProvider;
     private static LoginServiceImpl loginService;
     private static UserInfo ui;
 
     @BeforeClass
     public static void setUp()
     {
-        projectProvider = getServiceProvider().getProjectProvider();
-        loginService = new LoginServiceImpl(null, null, projectProvider);
+        loginService = new LoginServiceImpl(null, null, getServiceProvider().getProjectProvider());
     }
 
     @Before
