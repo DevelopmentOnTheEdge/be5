@@ -26,3 +26,4 @@ core:
   - procedures_sqlserver
   includes:
   - common
+  - core
