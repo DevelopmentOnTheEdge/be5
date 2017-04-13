@@ -20,7 +20,7 @@ public class SqlServiceTest extends AbstractProjectTest
 {
     private static SqlService db;
 
-    static final ResultSetParser<TestPerson> parser = rs ->
+    private static final ResultSetParser<TestPerson> parser = rs ->
             new TestPerson(rs.getLong("id"),rs.getString("name"),
                     rs.getString("password"),rs.getString("email"));
 

@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -260,10 +261,10 @@ public class DatabaseServiceImpl implements DatabaseService
             {
                 try
                 {
-                    stmt.close();
+                    if(stmt != null)stmt.close();
                 } catch (SQLException e)
                 {
-                    throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+                    log.log(Level.SEVERE, e.getMessage(), e);
                 }
                 if ( !isInTransaction() )
                 {

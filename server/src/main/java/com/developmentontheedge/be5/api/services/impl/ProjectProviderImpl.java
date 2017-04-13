@@ -61,9 +61,7 @@ public class ProjectProviderImpl implements ProjectProvider
             loadContext.check();
             
             // TODO - check
-            watcher = new WatchDir(project).onModify( onModify -> {
-                dirty = true;
-            } ).start();
+            watcher = new WatchDir(project).onModify( onModify -> dirty = true).start();
 
             log.info("Project loaded, name='" + project.getName() + "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time ) + " ms");
             return project;
@@ -79,7 +77,7 @@ public class ProjectProviderImpl implements ProjectProvider
         }
     }
 
-    protected Path findProjectPath() throws IOException, URISyntaxException
+    private Path findProjectPath() throws IOException, URISyntaxException
     {
         // try to  find project in classpath or war
         ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(PROJECT_FILE_NAME));
@@ -90,7 +88,7 @@ public class ProjectProviderImpl implements ProjectProvider
         if( urls.size() > 1 )
         {
         	String ln = System.lineSeparator(); 
-        	StringBuffer sb = new StringBuffer("Several projects were found: +").append(ln);
+        	StringBuilder sb = new StringBuilder("Several projects were found: +").append(ln);
         	
         	for(URL url : urls)
         	{

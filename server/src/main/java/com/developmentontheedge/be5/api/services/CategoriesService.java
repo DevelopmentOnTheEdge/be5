@@ -6,7 +6,7 @@ import java.util.Objects;
 public interface CategoriesService
 {
 
-    public static class Category {
+    class Category {
         
         public final int id;
         public final String name;
@@ -28,6 +28,6 @@ public interface CategoriesService
     /**
      * Returns a list of root categories.
      */
-    public List<Category> getCategoriesForest(String entity, boolean hideEmpty);
+    List<Category> getCategoriesForest(String entity, boolean hideEmpty);
     
 }

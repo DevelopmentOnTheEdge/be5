@@ -43,7 +43,7 @@ public class LoginServiceImpl implements LoginService
         this.project = project;
     }
 
-    public boolean login(String user, String password)
+    private boolean login(String user, String password)
     {
         try
         {
@@ -51,8 +51,7 @@ public class LoginServiceImpl implements LoginService
             String passwordCheckClause = getPasswordCheckClause( databaseService, password );
             sql += " AND ("+passwordCheckClause+")";
 
-            //todo improve SqlService db.selectScalar(sql) == 1
-            if(db.selectScalar(sql, user).equals(Long.parseLong("1"))){
+            if((long)db.selectScalar(sql, user) == 1){
                 return true;
             }
         }
@@ -71,7 +70,7 @@ public class LoginServiceImpl implements LoginService
         return false;
     }
 
-    public static String getPasswordCheckClause(DbmsConnector connector, String password) throws SQLException,
+    private static String getPasswordCheckClause(DbmsConnector connector, String password) throws SQLException,
             GeneralSecurityException, UnsupportedEncodingException
     {
 //        if( passwordKey != null )
@@ -133,7 +132,7 @@ public class LoginServiceImpl implements LoginService
         log.info("Login user: " + username);
     }
 
-    public void setAvailableLanguage(UserInfo ui){
+    private void setAvailableLanguage(UserInfo ui){
         List<String> languages = StreamEx.of(project.getProject().getLanguages()).toList();
 
         if(!languages.contains(ui.getLocale().getLanguage())){

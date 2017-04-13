@@ -32,7 +32,7 @@ public interface Response
      * <p>Sends a JSON content with two fields, <code>type</code> and <code>value</code>.
      * The <code>type</code> is the passed string, the <code>value</code> is the result of serialization of the given value object with Gson.</p>
      * 
-     * @param type
+     * @param type type of response
      * @param value will be serialized with Gson,
      *        see <a href="https://sites.google.com/site/gson/gson-user-guide">the Gson documentation</a> for more information.
      * @see Gson#toJson(Object)
@@ -41,8 +41,7 @@ public interface Response
     
     /**
      * <p>The conventional way to send untyped responses. It is recommended to use typed responses.</p>
-     * 
-     * @param type
+     *
      * @param value will be serialized with Gson,
      *        see <a href="https://sites.google.com/site/gson/gson-user-guide">the Gson documentation</a> for more information.
      * @see Gson#toJson(Object)
