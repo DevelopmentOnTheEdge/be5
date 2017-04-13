@@ -32,5 +32,5 @@ context:
       interface: com.developmentontheedge.be5.api.services.ExecutorService
       implementation: com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl
   - logger:
-      interface: com.developmentontheedge.be5.api.services.Logger
-      implementation: com.developmentontheedge.be5.api.services.impl.LoggerImpl
+      interface: com.developmentontheedge.be5.api.services.impl.LogConfigurator
+      implementation: com.developmentontheedge.be5.api.services.impl.LogConfigurator

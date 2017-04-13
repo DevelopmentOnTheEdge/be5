@@ -3,16 +3,17 @@ package com.developmentontheedge.be5.api.services.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.api.services.Logger;
 
-public class LoggerImpl implements Logger, Configurable<LoggerImpl.JulConfigPath>
+/**
+ * create initializator module for init on startup? Now it just calls in ServerModuleLoader
+ */
+public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPath>
 {
-    private java.util.logging.Logger log = java.util.logging.Logger.getLogger(LoggerImpl.class.getName());
+    private java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogConfigurator.class.getName());
 
     class JulConfigPath{
         String path;
@@ -25,14 +26,14 @@ public class LoggerImpl implements Logger, Configurable<LoggerImpl.JulConfigPath
         {
             if(config != null)
             {
-                InputStream resourceAsStream = LoggerImpl.class.getResourceAsStream(config.path);
+                InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(config.path);
                 if (resourceAsStream == null)
                 {
                     throw Be5ErrorCode.INTERNAL_ERROR.exception("File not found: " + config.path);
                 }
                 LogManager.getLogManager().readConfiguration(resourceAsStream);
             }
-            log = java.util.logging.Logger.getLogger(LoggerImpl.class.getName());
+            log = java.util.logging.Logger.getLogger(LogConfigurator.class.getName());
             log.info("Log configured. Level: " + log.getParent().getLevel().getName() +
                     " Handlers: " + Arrays.asList(log.getParent().getHandlers()));
         }
@@ -40,24 +41,6 @@ public class LoggerImpl implements Logger, Configurable<LoggerImpl.JulConfigPath
         {
             throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
         }
-    }
-
-    @Override
-    public void error(String message)
-    {
-        log.severe(message);
-    }
-
-    @Override
-    public void error(Throwable t)
-    {
-        log.log(Level.SEVERE, "",t);
-    }
-
-    @Override
-    public void info(String message)
-    {
-        log.info(message);
     }
 
 }

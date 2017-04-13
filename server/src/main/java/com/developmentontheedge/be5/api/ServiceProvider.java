@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ExecutorService;
-import com.developmentontheedge.be5.api.services.Logger;
+import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -107,9 +107,9 @@ public interface ServiceProvider
     /**
      * Returns a logger service.
      */
-    default Logger getLogger()
+    default LogConfigurator getLogger()
     {
-        return get(Logger.class);
+        return get(LogConfigurator.class);
     }
 
     default LoginService getLoginService()

@@ -7,8 +7,13 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.components.impl.DocumentResponse;
 
-public class Form implements Component {
-    
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Form implements Component
+{
+    private static final Logger log = Logger.getLogger(Document.class.getName());
+
     public Form()
     {
         /* stateless */
@@ -39,7 +44,7 @@ public class Form implements Component {
         catch (Be5Exception ex)
         {
             if(ex.getCode().isInternal()) {
-                serviceProvider.getLogger().error(ex);
+                log.log(Level.SEVERE, ex.getMessage(), ex);
             }
             res.sendError(ex);
         }

@@ -178,7 +178,7 @@ public class MainServlet extends HttpServlet
         }
         catch( Exception e ) // ignore checkers' warnings, we want to catch them all
         {
-            serviceProvider.getLogger().error(e);
+            log.log(Level.SEVERE, e.getMessage(), e);
             trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
             return;
         }
@@ -190,8 +190,7 @@ public class MainServlet extends HttpServlet
         }
         catch ( RuntimeException | Error e )
         {
-            serviceProvider.getLogger().error(e);
-            throw e;
+            throw Be5Exception.internal(e);
         }
     }
 

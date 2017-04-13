@@ -10,9 +10,13 @@ import com.developmentontheedge.be5.components.impl.DocumentResponse;
 import com.developmentontheedge.be5.components.impl.MoreRowsGenerator;
 import com.developmentontheedge.be5.components.impl.TableCounter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Document implements Component 
 {
-    
+    private static final Logger log = Logger.getLogger(Document.class.getName());
+
     public Document()
     {
         /* stateless */
@@ -47,7 +51,7 @@ public class Document implements Component
         {
             if(ex.getCode().isInternal()) 
             {
-                serviceProvider.getLogger().error(ex);
+                log.log(Level.SEVERE, ex.getMessage(), ex);
             }
             res.sendError(ex);
         }
