@@ -116,6 +116,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>be5-module-core</artifactId>
+			<version>0.1.0</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	
 	<build>
