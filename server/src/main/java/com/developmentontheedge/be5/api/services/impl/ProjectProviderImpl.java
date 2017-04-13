@@ -150,7 +150,9 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private void logLoadedProject(Project project, List<Project> modules, long startTime)
     {
-        StringBuilder sb = new StringBuilder("Project loaded, name='" + project.getName() + "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-startTime ) + " ms");
+        StringBuilder sb = new StringBuilder("Project loaded, name='" + project.getName() +
+                "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-startTime ) + " ms");
+
         if(modules.size()>0)
         {
             sb.append("\nModules: ");

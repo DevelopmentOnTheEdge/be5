@@ -10,14 +10,14 @@ import java.io.IOException;
 
 public abstract class AbstractProjectTest
 {
-    private static final ServiceProvider serviceProvider = new MainServiceProvider();
+    protected static final ServiceProvider sp = new MainServiceProvider();
     private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
     private static final ComponentProvider loadedClasses = new MainComponentProvider();
 
     static {
         try
         {
-            moduleLoader.load(serviceProvider, loadedClasses);
+            moduleLoader.load(sp, loadedClasses);
         }
         catch (IOException e)
         {
@@ -26,7 +26,7 @@ public abstract class AbstractProjectTest
     }
 
     protected static ServiceProvider getServiceProvider(){
-        return serviceProvider;
+        return sp;
     }
 
 }

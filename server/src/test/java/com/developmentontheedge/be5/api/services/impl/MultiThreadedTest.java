@@ -28,7 +28,7 @@ public class MultiThreadedTest extends AbstractProjectTest
     @BeforeClass
     public static void setUp() throws Exception
     {
-        databaseService = getServiceProvider().getDatabaseService();
+        databaseService = sp.getDatabaseService();
         db = getServiceProvider().getSqlService();
         db.update("DROP TABLE IF EXISTS Persons" );
         db.update("CREATE TABLE Persons (\n" +

@@ -10,7 +10,7 @@ public class MenuTest extends AbstractProjectTest
 {
     @Test
     public void test(){
-        getServiceProvider().getLoginService().initGuest(null);
+        sp.getLoginService().initGuest(null);
         Menu menu = new Menu();
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(getServiceProvider());
         assertEquals("testtable", menuResponse.root.get(0).title);

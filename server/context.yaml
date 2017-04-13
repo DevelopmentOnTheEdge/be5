@@ -1,36 +1,36 @@
 context:
   components:
-  - appInfo: com.developmentontheedge.be5.components.ApplicationInfoComponent
-  - document: com.developmentontheedge.be5.components.Document
+  - appInfo:          com.developmentontheedge.be5.components.ApplicationInfoComponent
+  - document:         com.developmentontheedge.be5.components.Document
   - languageSelector: com.developmentontheedge.be5.components.LanguageSelector
-  - logout: com.developmentontheedge.be5.components.Logout
-  - menu: com.developmentontheedge.be5.components.Menu
-  - roleSelector: com.developmentontheedge.be5.components.RoleSelector
-  - scriptList: com.developmentontheedge.be5.components.ScriptList
-  - static: com.developmentontheedge.be5.components.StaticPageComponent
-  - pool: com.developmentontheedge.be5.components.tools.PoolStat
+  - logout:           com.developmentontheedge.be5.components.Logout
+  - menu:             com.developmentontheedge.be5.components.Menu
+  - roleSelector:     com.developmentontheedge.be5.components.RoleSelector
+  - scriptList:       com.developmentontheedge.be5.components.ScriptList
+  - static:           com.developmentontheedge.be5.components.StaticPageComponent
+  - pool:             com.developmentontheedge.be5.components.tools.PoolStat
   services:
   - projectProvider:
-      interface: com.developmentontheedge.be5.api.services.ProjectProvider
+      interface:      com.developmentontheedge.be5.api.services.ProjectProvider
       implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl
   - databaseService:
-      interface: com.developmentontheedge.be5.api.services.DatabaseService
+      interface:      com.developmentontheedge.be5.api.services.DatabaseService
       implementation: com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl
   - loginService:
-      interface: com.developmentontheedge.be5.api.services.LoginService
+      interface:      com.developmentontheedge.be5.api.services.LoginService
       implementation: com.developmentontheedge.be5.api.services.impl.LoginServiceImpl
   - meta:
-      interface: com.developmentontheedge.be5.api.services.Meta
+      interface:      com.developmentontheedge.be5.api.services.Meta
       implementation: com.developmentontheedge.be5.api.services.impl.MetaImpl
   - sqlService:
-      interface: com.developmentontheedge.be5.api.services.SqlService
+      interface:      com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
   - dpsStreamer:
-      interface: com.developmentontheedge.be5.api.services.DpsStreamer
+      interface:      com.developmentontheedge.be5.api.services.DpsStreamer
       implementation: com.developmentontheedge.be5.api.services.impl.DpsStreamerImpl
   - executorService:
-      interface: com.developmentontheedge.be5.api.services.ExecutorService
+      interface:      com.developmentontheedge.be5.api.services.ExecutorService
       implementation: com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl
   - logger:
-      interface: com.developmentontheedge.be5.api.services.impl.LogConfigurator
+      interface:      com.developmentontheedge.be5.api.services.impl.LogConfigurator
       implementation: com.developmentontheedge.be5.api.services.impl.LogConfigurator

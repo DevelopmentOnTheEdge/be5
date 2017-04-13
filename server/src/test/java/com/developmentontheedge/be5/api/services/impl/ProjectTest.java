@@ -1,9 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.AbstractProjectTest;
-import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.ParseResult;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import org.junit.Test;
@@ -16,7 +14,7 @@ public class ProjectTest extends AbstractProjectTest
     @Test
     public void testGetQuery()
     {
-        Project project = getServiceProvider().getProject();
+        Project project = sp.getProject();
         assertEquals("    SELECT\n" +
                 "      t.ID AS \"___ID\",\n" +
                 "      t.name AS \"Name\",\n" +
@@ -29,11 +27,9 @@ public class ProjectTest extends AbstractProjectTest
     @Test
     public void testQueryCompiledValidate() throws ProjectElementException
     {
-        ServiceProvider sp = getServiceProvider();
+        Query testQuery = sp.getProject().getApplication().getEntity("testtable").getQueries().get("Test 1D unknown");
 
-        Query testQuery = sp.getMeta().getQueryIgnoringRoles("testtable", "Test 1D unknown");
-        ParseResult queryCompiled = testQuery.getQueryCompiled();
-        String validatedQuery = queryCompiled.validate();
+        String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertEquals("SELECT\n" +
                 "      t.ID AS \"___ID\",\n" +
                 "      t.name AS \"Name\",\n" +

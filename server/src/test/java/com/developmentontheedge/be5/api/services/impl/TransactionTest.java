@@ -18,12 +18,12 @@ public class TransactionTest extends AbstractProjectTest
 {
     private static SqlService db;
 
-    static DatabaseService databaseService;
+    private static DatabaseService databaseService;
 
     @BeforeClass
     public static void setUp()
     {
-        databaseService = getServiceProvider().getDatabaseService();
+        databaseService = sp.getDatabaseService();
         db = getServiceProvider().getSqlService();
         db.update("DROP TABLE IF EXISTS persons;" );
         db.update("CREATE TABLE persons (\n" +
