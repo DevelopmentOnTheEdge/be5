@@ -18,28 +18,27 @@ public class ProjectLoadTest
     private static ProjectProviderImpl projectProvider = new ProjectProviderImpl();
     private static List<Project> modulesAndProject;
 
-//ProjectProviderImpl.loadModulesAndProject lock FileSystem
-//    @BeforeClass
-//    public static void load() throws IOException, URISyntaxException, ProjectLoadException
-//    {
-//        modulesAndProject = projectProvider.loadModulesAndProject(new LoadContext());
-//    }
-//
-//    @Test
-//    public void testLoadProject() throws IOException, URISyntaxException, ProjectLoadException
-//    {
-//        Project project = projectProvider.getProject(modulesAndProject);
-//
-//        assertNotNull(project);
-//        assertEquals("testProject", project.getName());
-//    }
-//
-//    @Test
-//    public void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
-//    {
-//        List<Project> modules = projectProvider.getModules(modulesAndProject);
-//        assertEquals(1, modules.size());
-//        assertEquals("core", modules.get(0).getName());
-//    }
+    @BeforeClass
+    public static void load() throws IOException, URISyntaxException, ProjectLoadException
+    {
+        modulesAndProject = projectProvider.loadModulesAndProject(new LoadContext());
+    }
+
+    @Test
+    public void testLoadProject() throws IOException, URISyntaxException, ProjectLoadException
+    {
+        Project project = projectProvider.getProject(modulesAndProject);
+
+        assertNotNull(project);
+        assertEquals("testProject", project.getName());
+    }
+
+    @Test
+    public void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
+    {
+        List<Project> modules = projectProvider.getModules(modulesAndProject);
+        assertEquals(1, modules.size());
+        assertEquals("core", modules.get(0).getName());
+    }
 
 }

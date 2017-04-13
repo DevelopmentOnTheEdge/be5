@@ -108,10 +108,7 @@ public class ProjectProviderImpl implements ProjectProvider
                 FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
                 Path path = fs.getPath("./");
                 module = Serialization.load(path, loadContext);
-
-                //TODO fs.close(), read FreemarkerUtils.mergeTemplateByPath need open FileSystem:
-                // freemarker.cache.TemplateCache.loadTemplate
-                //maybe load all and close FileSystem
+                fs.close();
 
                 log.info("Load module from " + url.toExternalForm() + ", path=" + path);
             }

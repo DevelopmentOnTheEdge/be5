@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ProjectTest extends AbstractProjectTest
 {
@@ -20,22 +21,33 @@ public class ProjectTest extends AbstractProjectTest
                 "      t.name AS \"Name\",\n" +
                 "      t.value AS \"Value\"\n" +
                 "    FROM\n" +
-                "      testtable t", project.getApplication().getEntity("testtable").getQueries().get("Test 1D unknown").getQuery());
+                "      testtable t", project.getEntity("testtable").getQueries().get("Test 1D unknown").getQuery());
 
     }
 
     @Test
     public void testQueryCompiledValidate() throws ProjectElementException
     {
-        Query testQuery = sp.getProject().getApplication().getEntity("testtable").getQueries().get("Test 1D unknown");
+        Query testQuery = sp.getProject().getEntity("testtable").getQueries().get("Test 1D unknown");
 
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
+        assertNotNull(validatedQuery);
         assertEquals("SELECT\n" +
                 "      t.ID AS \"___ID\",\n" +
                 "      t.name AS \"Name\",\n" +
                 "      t.value AS \"Value\"\n" +
                 "    FROM\n" +
                 "      testtable t", validatedQuery);
+    }
+
+    @Test
+    public void testQueryCompiledValidateCore() throws ProjectElementException
+    {
+        Query testQuery = sp.getProject().getEntity("languages").getQueries().get("All records");
+
+        String validatedQuery = testQuery.getQueryCompiled().validate().trim();
+        assertNotNull(validatedQuery);
+
     }
 
 }

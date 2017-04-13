@@ -2607,6 +2607,7 @@ public class YamlDeserializer
                 if ( Files.exists( macroFile ) )
                 {
                     script.setLinkedFile( macroFile );
+                    script.getTemplateCode();
                 }
                 DataElementUtils.saveQuiet( script );
             }

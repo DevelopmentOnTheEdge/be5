@@ -24,4 +24,5 @@ core:
   - procedures_oracle
   - procedures_postgres
   - procedures_sqlserver
-  includes: common
+  includes:
+  - common
