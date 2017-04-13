@@ -35,9 +35,6 @@ public class DatabaseServiceImpl implements DatabaseService
     private BeConnectionProfile profile;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider){
-        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
-        System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
-
         profile = projectProvider.getProject().getConnectionProfile();
         type = profile.getRdbms();
 
@@ -46,8 +43,8 @@ public class DatabaseServiceImpl implements DatabaseService
         bds.setUrl(profile.getConnectionUrl());
         bds.setUsername(profile.getUsername());
         bds.setPassword(profile.getPassword());
-        //TODO add to Rdbms
-        bds.setValidationQuery("select 1");
+//        //TODO add to Rdbms
+//        bds.setValidationQuery("select 1");
     }
 
     private DataSource getDataSource() {

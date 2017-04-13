@@ -37,11 +37,12 @@ public class ServerModuleLoader
         ConfigurationProvider.INSTANCE.loadConfiguration();
 
         serviceProvider.freeze();
-
-        //config first
-        serviceProvider.getLogger();
-
         log.info("Services initialized");
+
+        //config logger first
+        serviceProvider.getLogger();
+        //init main modules on startup
+        serviceProvider.getDatabaseService();
     }
 
     @SuppressWarnings("unchecked")
