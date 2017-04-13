@@ -2,11 +2,14 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
+import one.util.streamex.StreamEx;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -45,25 +49,27 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private Project loadProject() 
     {
-        long time = System.nanoTime();
+        long startTime = System.nanoTime();
 
         try
         {
             if(watcher != null)
                 watcher.stop();
 
-            // init project path  
-            Path path = findProjectPath();
-
             LoadContext loadContext = new LoadContext();
-            Project project = Serialization.load(path, loadContext );
-//          ModuleUtils.mergeAllModules( project, metaProject, new NullLogger(), loadContext );
+
+            List<Project> modulesAndProject = loadModulesAndProject(loadContext);
+
+            Project project = getProject(modulesAndProject);
+            List<Project> modules = getModules(modulesAndProject);
+
+            ModuleLoader2.mergeAllModules( project, modules, loadContext );
             loadContext.check();
             
             // TODO - check
             watcher = new WatchDir(project).onModify( onModify -> dirty = true).start();
 
-            log.info("Project loaded, name='" + project.getName() + "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-time ) + " ms");
+            logLoadedProject(project, modules, startTime);
             return project;
         }
         catch(Throwable t)
@@ -77,49 +83,83 @@ public class ProjectProviderImpl implements ProjectProvider
         }
     }
 
-    private Path findProjectPath() throws IOException, URISyntaxException
+    List<Project> loadModulesAndProject(LoadContext loadContext) throws ProjectLoadException, IOException, URISyntaxException
     {
-        // try to  find project in classpath or war
         ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(PROJECT_FILE_NAME));
-        
         if( urls.isEmpty() )
-            throw Be5Exception.internal("Project is not found in classpath or war file.");
-        	
-        if( urls.size() > 1 )
         {
-        	String ln = System.lineSeparator(); 
-        	StringBuilder sb = new StringBuilder("Several projects were found: +").append(ln);
-        	
-        	for(URL url : urls)
-        	{
-        		sb.append("  - ")
-        		  .append(url)
-        		  .append(ln);
-        	}
-        	
-        	throw Be5Exception.internal(log, sb.toString());
+            throw Be5Exception.internal("Modules is not found in classpath or war file.");
         }
 
-        // init project path  
-        Path path;
-        URL url = urls.get(0);
-        String ext = url.toExternalForm();
+        List<Project> modules = new ArrayList<>();
+        for (URL url: urls)
+        {
+            Project module;
+            String ext = url.toExternalForm();
+            if( ext.indexOf('!') < 0 ) // usual file in directory
+            {
+                Path path = Paths.get(url.toURI()).getParent();
+                module = Serialization.load(path, loadContext);
+                log.info("Load module from dir: " + path);
+            }
+            else // war or jar file
+            {
+                String jar = ext.substring(0, ext.indexOf('!'));
+                FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
+                Path path = fs.getPath("./");
+                module = Serialization.load(path, loadContext);
 
-        if( ext.indexOf('!') < 0 ) // usual file in directory
-        {
-        	path = Paths.get(url.toURI()).getParent();
-            log.info("Load project from dir: " + path);                
+                //TODO fs.close(), read FreemarkerUtils.mergeTemplateByPath need open FileSystem:
+                // freemarker.cache.TemplateCache.loadTemplate
+                //maybe load all and close FileSystem
+
+                log.info("Load module from " + url.toExternalForm() + ", path=" + path);
+            }
+            if(module!= null)modules.add(module);
         }
-        else // war or jar file
-        {
-            String jar = ext.substring(0, ext.indexOf('!'));
-            FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
-            path = fs.getPath("./");
-            log.info("Load project from war: " + url.toExternalForm() + ", path=" + path);                
-        }
-        
-        return path;
+        return modules;
     }
-    
+
+    Project getProject(List<Project> modulesAndProject)
+    {
+        Project project = null;
+        for (Project module: modulesAndProject)
+        {
+            if(module != null && !module.isModuleProject())
+            {
+                if(project != null)
+                {
+                    throw Be5Exception.internal("Several projects were found: " + project + ", " + module);
+                }
+                else
+                {
+                    project = module;
+                }
+            }
+        }
+        if(project == null){
+            throw Be5Exception.internal("Project is not found in load modules.");
+        }
+        return project;
+    }
+
+    List<Project> getModules(List<Project> modulesAndProject)
+    {
+        return StreamEx.of(modulesAndProject).filter(module -> module != null && module.isModuleProject()).toList();
+    }
+
+    private void logLoadedProject(Project project, List<Project> modules, long startTime)
+    {
+        StringBuilder sb = new StringBuilder("Project loaded, name='" + project.getName() + "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-startTime ) + " ms");
+        if(modules.size()>0)
+        {
+            sb.append("\nModules: ");
+            for (Project module : modules)
+            {
+                sb.append("\n - "); sb.append(module.getAppName());
+            }
+        }
+        log.info(sb.toString());
+    }
     
 }

@@ -1,4 +1,4 @@
-condo_lk:
+testProject:
   features: logging
   l10n: ru
   projectFileStructure: {}

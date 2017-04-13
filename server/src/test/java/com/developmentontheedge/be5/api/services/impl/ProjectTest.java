@@ -1,16 +1,14 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.AbstractProjectTest;
+import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.ParseResult;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
-import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import org.junit.BeforeClass;
+import com.developmentontheedge.be5.metadata.model.Query;
 import org.junit.Test;
 
-import java.nio.file.Paths;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class ProjectTest extends AbstractProjectTest
 {
@@ -25,5 +23,23 @@ public class ProjectTest extends AbstractProjectTest
                 "      t.value AS \"Value\"\n" +
                 "    FROM\n" +
                 "      testtable t", project.getApplication().getEntity("testtable").getQueries().get("Test 1D unknown").getQuery());
+
     }
+
+    @Test
+    public void testQueryCompiledValidate() throws ProjectElementException
+    {
+        ServiceProvider sp = getServiceProvider();
+
+        Query testQuery = sp.getMeta().getQueryIgnoringRoles("testtable", "Test 1D unknown");
+        ParseResult queryCompiled = testQuery.getQueryCompiled();
+        String validatedQuery = queryCompiled.validate();
+        assertEquals("SELECT\n" +
+                "      t.ID AS \"___ID\",\n" +
+                "      t.name AS \"Name\",\n" +
+                "      t.value AS \"Value\"\n" +
+                "    FROM\n" +
+                "      testtable t", validatedQuery);
+    }
+
 }
