@@ -166,7 +166,10 @@ public class MainServlet extends HttpServlet
         }
         catch( Be5Exception e )
         {
-            trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
+            if(e.getCode().isNotFound()){
+                trySendError( HttpServletResponse.SC_NOT_FOUND, e.getMessage(), response );
+            }
+            trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage(), response );
             return;
         }
 
@@ -227,9 +230,14 @@ public class MainServlet extends HttpServlet
 
     private void trySendError(int errorCode, HttpServletResponse response)
     {
+        trySendError(errorCode, "", response);
+    }
+
+    private void trySendError(int errorCode, String message, HttpServletResponse response)
+    {
         try
         {
-            response.sendError( errorCode );
+            response.sendError( errorCode, message );
         }
         catch( IOException e )
         {

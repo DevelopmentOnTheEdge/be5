@@ -19,7 +19,7 @@ public class MainComponentProvider implements ComponentProvider
     {
         if(!loadedClasses.containsKey(componentId)){
             if("login".equals(componentId)){
-                throw Be5ErrorCode.STATE_INVALID.exception(log,"Component 'login' is not specified in 'config.yaml'. " +
+                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception(log,"Component 'login' is not specified in 'config.yaml'. " +
                         "You can specify the default be5 implementation: " + Login.class.getName());
             }else{
                 throw Be5ErrorCode.UNKNOWN_COMPONENT.exception(log, componentId );
