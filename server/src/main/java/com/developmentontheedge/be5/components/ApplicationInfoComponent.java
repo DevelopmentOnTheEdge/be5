@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.components;
 
-import java.lang.reflect.Method;
-
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -46,7 +44,7 @@ public class ApplicationInfoComponent implements Component
         
         try
         {
-            appInfo = getApplicationInfo(req);
+            appInfo = getApplicationInfo(req, serviceProvider);
             res.sendAsRawJson(appInfo);
         }
         catch (Exception e)
@@ -56,40 +54,17 @@ public class ApplicationInfoComponent implements Component
     }
 
     
-    public static ApplicationInfo getApplicationInfo(Request req)throws Exception
+    public static ApplicationInfo getApplicationInfo(Request req, ServiceProvider serviceProvider)throws Exception
     {
-    	// TODO
-    	//String appName = getSystemSetting( connector, DatabaseConstants.APPLICATION_NAME );
-        //String appUrl = getSystemSetting( connector, DatabaseConstants.APPLICATION_URL );
+        String title = UserAwareMeta.get(serviceProvider)
+                .getColumnTitle("index.jsp", "application", "applicationName")
+                .orElse("Be5 Application");
 
-    	String title = "";
-
-    	ServletContext context = req.getRawRequest().getServletContext();
-        if( context != null )
-        {
-            try
-            {
-                Method ctxNameMethod = context.getClass().getMethod( "getServletContextName", ( Class[] )null );
-                if( ctxNameMethod != null )
-                {
-                    title = (String)ctxNameMethod.invoke(context, (Object[])null);
-                }
-            }
-            catch( NoSuchMethodException | IllegalAccessException | java.lang.reflect.InvocationTargetException e )
-            {} 
-
-            if( "com.developmentontheedge.be5.servlet".equals(title) )
-            	title = req.getRawRequest().getContextPath().substring(1);
-        }
-
-        // TODO - localise title 
-
-        HttpServletRequest request = req.getRawRequest();
         String url = "";
+        HttpServletRequest request = req.getRawRequest();
         if( request != null )
         {
             url = getContextPrefix( request );
-            
         }
 
         return new ApplicationInfo(title, url);
@@ -101,7 +76,7 @@ public class ApplicationInfoComponent implements Component
      * @param request
      * @return link
      */
-    public static String getContextPrefix( HttpServletRequest request )
+    private static String getContextPrefix( HttpServletRequest request )
     {
         String ret;
         if( request.isSecure() )
