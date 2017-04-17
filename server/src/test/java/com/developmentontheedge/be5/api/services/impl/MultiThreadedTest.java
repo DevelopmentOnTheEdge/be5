@@ -8,8 +8,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 
 
 public class MultiThreadedTest extends AbstractProjectTest
@@ -29,7 +26,7 @@ public class MultiThreadedTest extends AbstractProjectTest
     public static void setUp() throws Exception
     {
         databaseService = sp.getDatabaseService();
-        db = getServiceProvider().getSqlService();
+        db = sp.getSqlService();
         db.update("DROP TABLE IF EXISTS Persons" );
         db.update("CREATE TABLE Persons (\n" +
                 "    ID int NOT NULL AUTO_INCREMENT,\n" +

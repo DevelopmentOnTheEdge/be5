@@ -12,7 +12,7 @@ public class MenuTest extends AbstractProjectTest
     public void test(){
         sp.getLoginService().initGuest(null);
         Menu menu = new Menu();
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(getServiceProvider());
+        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(sp);
         assertEquals("testtable", menuResponse.root.get(0).title);
         assertNotNull(menuResponse.root.get(0).children);
         assertEquals("call", menuResponse.root.get(0).children.get(0).action.name);

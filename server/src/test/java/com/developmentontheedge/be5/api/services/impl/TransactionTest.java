@@ -8,8 +8,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,7 +22,7 @@ public class TransactionTest extends AbstractProjectTest
     public static void setUp()
     {
         databaseService = sp.getDatabaseService();
-        db = getServiceProvider().getSqlService();
+        db = sp.getSqlService();
         db.update("DROP TABLE IF EXISTS persons;" );
         db.update("CREATE TABLE persons (\n" +
                 "    ID  BIGSERIAL PRIMARY KEY,\n" +
@@ -39,7 +37,7 @@ public class TransactionTest extends AbstractProjectTest
         databaseService.transaction(conn -> {
             db.update("INSERT INTO persons (name, password) VALUES (?,?)","user1", "pass1");
             db.update("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
-            return null;
+            return null;//TODO сделаем возможность запросов без возвращения результата (аналог Spring TransactionCallbackWithoutResult) https://habrahabr.ru/post/183204/
         });
         long countUser1 = db.selectScalar("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
         assertEquals(2, countUser1);

@@ -22,7 +22,7 @@ public class UserInfoTest extends AbstractProjectTest
     @BeforeClass
     public static void setUp()
     {
-        loginService = new LoginServiceImpl(null, null, getServiceProvider().getProjectProvider());
+        loginService = new LoginServiceImpl(null, null, sp.getProjectProvider());
     }
 
     @Before

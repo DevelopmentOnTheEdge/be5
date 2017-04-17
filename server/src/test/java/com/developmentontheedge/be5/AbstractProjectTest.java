@@ -25,8 +25,4 @@ public abstract class AbstractProjectTest
         }
     }
 
-    protected static ServiceProvider getServiceProvider(){
-        return sp;
-    }
-
 }
