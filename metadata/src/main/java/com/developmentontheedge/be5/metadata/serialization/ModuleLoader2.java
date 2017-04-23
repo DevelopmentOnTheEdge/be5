@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
@@ -27,6 +28,8 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 
 public class ModuleLoader2
 {
+    private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
+
     private static String PROJECT_FILE_NAME = ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX;
     
     private static Map<String, Path> modulesMap;
@@ -51,9 +54,8 @@ public class ModuleLoader2
                 String jar = ext.substring(0, ext.indexOf('!'));
                 FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
                 Path p = fs.getPath("./");
-                System.out.println("ext=" + url.toExternalForm() + ", path=" + p);                
-
-                modulesMap.put(name, fs.getPath("./"));
+                modulesMap.put(name, p);
+                log.info("Module: " + name + "\text=" + url.toExternalForm() + ", path=" + p);
             }
         }
         catch(IOException e)
