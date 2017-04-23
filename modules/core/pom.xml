@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.developmentontheedge</groupId>
-	<artifactId>be5-module-core</artifactId>
+	<groupId>com.developmentontheedge.be5.modules</groupId>
+	<artifactId>be5-modules-core</artifactId>
 	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
@@ -28,8 +28,6 @@
 	</dependencies>
 
 	<build>
-
-		<sourceDirectory>src/java</sourceDirectory>
 		<resources>
 			<resource>
 				<directory>${basedir}</directory>

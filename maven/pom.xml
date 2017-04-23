@@ -67,14 +67,6 @@
 			</plugin>
 
 			<plugin>
-				<groupId>com.developmentontheedge.be5</groupId>
-				<artifactId>be5-maven-plugin</artifactId>
-				<version>0.1.0</version>
-				<configuration>
-				</configuration>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.5</version>
