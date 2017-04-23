@@ -70,7 +70,7 @@ public class ProjectProviderImpl implements ProjectProvider
             // TODO - check
             watcher = new WatchDir(project).onModify( onModify -> dirty = true).start();
 
-            logLoadedProject(project, modulesForProject, startTime);
+            logLoadedProject(project, startTime);
             return project;
         }
         catch(Throwable t)
@@ -158,17 +158,17 @@ public class ProjectProviderImpl implements ProjectProvider
         return modules;
     }
 
-    private void logLoadedProject(Project project, List<Project> modules, long startTime)
+    private void logLoadedProject(Project project, long startTime)
     {
         StringBuilder sb = new StringBuilder("Project loaded, name='" + project.getName() +
                 "', loading time: " + TimeUnit.NANOSECONDS.toMillis( System.nanoTime()-startTime ) + " ms");
 
-        if(modules.size()>0)
+        if(project.getModules().getSize()>0)
         {
             sb.append("\nModules: ");
-            for (Project module : modules)
+            for (Module module : project.getModules())
             {
-                sb.append("\n - "); sb.append(module.getAppName());
+                sb.append("\n - "); sb.append(module.getName());
             }
         }
         log.info(sb.toString());
