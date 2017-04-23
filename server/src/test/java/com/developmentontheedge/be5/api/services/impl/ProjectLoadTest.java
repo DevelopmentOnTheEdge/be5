@@ -36,7 +36,8 @@ public class ProjectLoadTest
     @Test
     public void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
     {
-        List<Project> modules = projectProvider.getModules(modulesAndProject);
+        Project project = projectProvider.getProject(modulesAndProject);
+        List<Project> modules = projectProvider.getModulesForProject(project, modulesAndProject);
         assertEquals(1, modules.size());
         assertEquals("core", modules.get(0).getName());
     }

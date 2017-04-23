@@ -58,10 +58,10 @@ public class ProjectProviderImpl implements ProjectProvider
 
             LoadContext loadContext = new LoadContext();
 
-            List<Project> modulesAndProject = loadModulesAndProject(loadContext);
+            List<Project> availableModulesAndProjects = loadModulesAndProject(loadContext);
 
-            Project project = getProject(modulesAndProject);
-            List<Project> modules = getModules(modulesAndProject);
+            Project project = getProject(availableModulesAndProjects);
+            List<Project> modules = getModulesForProject(project, availableModulesAndProjects);
 
             ModuleLoader2.mergeAllModules( project, modules, loadContext );
             loadContext.check();
@@ -117,10 +117,10 @@ public class ProjectProviderImpl implements ProjectProvider
         return modules;
     }
 
-    Project getProject(List<Project> modulesAndProject)
+    Project getProject(List<Project> availableModulesAndProjects)
     {
         Project project = null;
-        for (Project module: modulesAndProject)
+        for (Project module: availableModulesAndProjects)
         {
             if(module != null && !module.isModuleProject())
             {
@@ -140,9 +140,11 @@ public class ProjectProviderImpl implements ProjectProvider
         return project;
     }
 
-    List<Project> getModules(List<Project> modulesAndProject)
+    List<Project> getModulesForProject(Project project, List<Project> availableModulesAndProjects)
     {
-        return StreamEx.of(modulesAndProject).filter(module -> module != null && module.isModuleProject()).toList();
+        return StreamEx.of(availableModulesAndProjects)
+                .filter(module -> module != null && module.isModuleProject())
+                .filter(module -> project.getModules().contains(module.getName())).toList();
     }
 
     private void logLoadedProject(Project project, List<Project> modules, long startTime)
