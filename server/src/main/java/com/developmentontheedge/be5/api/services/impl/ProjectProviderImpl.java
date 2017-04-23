@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
+import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
@@ -146,12 +147,13 @@ public class ProjectProviderImpl implements ProjectProvider
                 .filter(module -> module != null && module.isModuleProject())
                 .filter(module -> project.getModules().contains(module.getName())).toList();
 
-        project.getModules().stream().forEach(requiredModule -> {
+        for (Module requiredModule : project.getModules())
+        {
             if (!modules.contains(requiredModule))
             {
                 throw Be5Exception.internal("Required module " + requiredModule + " not load.");
             }
-        });
+        }
 
         return modules;
     }
