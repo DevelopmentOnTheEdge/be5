@@ -61,15 +61,15 @@ public class ProjectProviderImpl implements ProjectProvider
             List<Project> availableModulesAndProjects = loadModulesAndProject(loadContext);
 
             Project project = getProject(availableModulesAndProjects);
-            List<Project> modules = getModulesForProject(project, availableModulesAndProjects);
+            List<Project> modulesForProject = getModulesForProject(project, availableModulesAndProjects);
 
-            ModuleLoader2.mergeAllModules( project, modules, loadContext );
+            ModuleLoader2.mergeAllModules(project, modulesForProject, loadContext);
             loadContext.check();
             
             // TODO - check
             watcher = new WatchDir(project).onModify( onModify -> dirty = true).start();
 
-            logLoadedProject(project, modules, startTime);
+            logLoadedProject(project, modulesForProject, startTime);
             return project;
         }
         catch(Throwable t)
@@ -142,9 +142,18 @@ public class ProjectProviderImpl implements ProjectProvider
 
     List<Project> getModulesForProject(Project project, List<Project> availableModulesAndProjects)
     {
-        return StreamEx.of(availableModulesAndProjects)
+        List<Project> modules = StreamEx.of(availableModulesAndProjects)
                 .filter(module -> module != null && module.isModuleProject())
                 .filter(module -> project.getModules().contains(module.getName())).toList();
+
+        project.getModules().stream().forEach(requiredModule -> {
+            if (!modules.contains(requiredModule))
+            {
+                throw Be5Exception.internal("Required module " + requiredModule + " not load.");
+            }
+        });
+
+        return modules;
     }
 
     private void logLoadedProject(Project project, List<Project> modules, long startTime)
