@@ -1,0 +1,57 @@
+users:
+  type: table
+  primaryKey: user_name
+  scheme:
+    columns:
+    - user_name:
+        type: VARCHAR(100)
+        primaryKey: true
+    - user_pass:
+        type: VARCHAR(50)
+        canBeNull: true
+    - emailAddress:
+        type: VARCHAR(255)
+        canBeNull: true
+    - encrypt_user_pass:
+        type: VARCHAR(100)
+        canBeNull: true
+    - encrypt_passwordMnemonic:
+        type: VARCHAR(255)
+        canBeNull: true
+    - registrationDate:
+        type: DATE
+        canBeNull: true
+    - passwordAssignmentDate:
+        type: DATE
+        canBeNull: true
+    - passwordExpirationDate:
+        type: DATE
+        canBeNull: true
+    - status:
+        type: ENUM('valid','blocked')
+        defaultValue: '''valid'''
+    - noOfSessions:
+        type: INT
+        defaultValue: '9999'
+    - attempt:
+        type: INT
+        defaultValue: '0'
+    - blockingReason:
+        type: VARCHAR(255)
+        canBeNull: true
+    - comments:
+        type: VARCHAR(255)
+        canBeNull: true
+  queries:
+  - '*** Selection view ***':
+      code: |-
+        SELECT
+            u.user_name AS "Code", u.user_name AS "Name" FROM users u
+            <if parameter="selector">
+                WHERE u.user_name LIKE '<parameter:selector/>%'
+            </if>
+        ORDER BY 1
+  - All records:
+      roles: Administrator
+      code: |-
+        SELECT * from users

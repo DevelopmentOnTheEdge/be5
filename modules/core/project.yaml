@@ -14,6 +14,7 @@ core:
   - sequences
   - systemSettings
   - table_refs
+  - users
   scripts:
   - Post-db
   - Pre-db
