@@ -36,11 +36,15 @@ public class ScriptList implements Component
     private void load(Request req, List<ActionPaths> result, String scriptCategory, String module)
     {
         boolean isModule = !"".equals(module);
-        try (Stream<Path> paths = Files.list(Paths.get(req.getRawRequest().getSession().getServletContext()
+        Path path = Paths.get(req.getRawRequest().getSession().getServletContext()
                 .getRealPath(scriptCategory +
                         (isModule ? "/" + module : "") +
                         "/" + actionsCategory
-                ))))
+                ));
+
+        if(!Files.exists(path))return;
+
+        try (Stream<Path> paths = Files.list(path))
         {
             paths.map(p -> p.getFileName().toString())
                     .filter(n -> n.endsWith(".js"))
