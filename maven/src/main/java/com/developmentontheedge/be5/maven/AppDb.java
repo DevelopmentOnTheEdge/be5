@@ -39,6 +39,7 @@ public class AppDb extends Be5Mojo
     public void execute() throws MojoFailureException
     {
         init();
+        mergeModules();
         
         try
         {
