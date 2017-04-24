@@ -104,7 +104,7 @@ public class AppSync extends Be5Mojo
 
             if( ddlString.isEmpty() )
             {
-            	this.getLog().info("Database scheme is up-to-date");
+            	log.info("Database scheme is up-to-date");
             	return;
             } 
             
@@ -177,7 +177,7 @@ public class AppSync extends Be5Mojo
     
     private void readSchema() throws ExtendedSqlException, SQLException, ProcessInterruptedException
     {
-        getLog().info("Read database scheme ...");
+        log.info("Read database scheme ...");
         long time = System.currentTimeMillis();
         
         ProcessController controller = new NullLogger();
@@ -203,7 +203,7 @@ public class AppSync extends Be5Mojo
             }
         }
         
-        getLog().info("  comleted, " + (System.currentTimeMillis() - time) + "ms.");
+        log.info("comleted, " + (System.currentTimeMillis() - time) + "ms.");
     }
 
     private void createEntities() throws ExtendedSqlException, SQLException
