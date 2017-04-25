@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DpsStreamer;
 import com.developmentontheedge.be5.components.impl.model.BeTagParser;
@@ -66,7 +65,7 @@ public class DpsStreamerImpl implements DpsStreamer
                     catch( Throwable t )
                     {
                         databaseService.close( finalRs );
-                        throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t);
+                        throw new RuntimeException(t);
                     }
                 }
             } ).onClose( () -> databaseService.close( finalRs ) );

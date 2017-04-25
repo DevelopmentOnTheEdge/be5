@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.api.ComponentProvider;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.components.Login;
 
 import java.util.Map;
@@ -19,10 +19,10 @@ public class MainComponentProvider implements ComponentProvider
     {
         if(!loadedClasses.containsKey(componentId)){
             if("login".equals(componentId)){
-                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception(log,"Component 'login' is not specified in 'config.yaml'. " +
+                throw Be5Exception.unknownComponent("Component 'login' is not specified in 'config.yaml'. " +
                         "You can specify the default be5 implementation: " + Login.class.getName());
             }else{
-                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception(log, componentId );
+                throw Be5Exception.unknownComponent( componentId );
             }
         }
         return loadedClasses.get(componentId);
@@ -32,7 +32,7 @@ public class MainComponentProvider implements ComponentProvider
     public void put(String componentId, Class<?> value)
     {
         if(loadedClasses.containsKey(componentId)){
-            throw Be5ErrorCode.STATE_INVALID.exception(log,"Component redefine forbidden.");
+            throw Be5Exception.invalidState("Component redefine forbidden.");
         }
         loadedClasses.put(componentId, value);
     }

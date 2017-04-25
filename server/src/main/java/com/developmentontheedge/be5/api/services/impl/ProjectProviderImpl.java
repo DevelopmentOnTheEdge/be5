@@ -76,7 +76,7 @@ public class ProjectProviderImpl implements ProjectProvider
         catch(Throwable t)
         {
         	log.severe("Can not load project, error: " + t.getMessage());
-        	throw Be5Exception.internal(t, "Can not load project.");
+        	throw Be5Exception.internal(t, "Can not load project");
         }
         finally
         {

@@ -27,7 +27,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
@@ -79,7 +78,7 @@ public class MainServlet extends HttpServlet
         }
         catch (IOException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5Exception.internal(e, "Can't load server modules.");
         }
 
         WebSocketServlet.setMain(this);
@@ -168,10 +167,7 @@ public class MainServlet extends HttpServlet
         }
         catch( Be5Exception e )
         {
-            if(e.getCode().isNotFound()){
-                res.sendError( e );
-            }
-            res.sendError( Be5Exception.internal(e, "createComponent") );
+            res.sendError(e);
             return;
         }
 
@@ -184,7 +180,7 @@ public class MainServlet extends HttpServlet
         catch( Exception e ) // ignore checkers' warnings, we want to catch them all
         {
             log.log(Level.SEVERE, e.getMessage(), e);
-            res.sendError( Be5Exception.internal(e, "preprocessRequest") );
+            res.sendError( Be5Exception.internal(e, "preprocess Request") );
             return;
         }
 
@@ -226,7 +222,7 @@ public class MainServlet extends HttpServlet
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5Exception.internal(e, "Can't create component");
         }
     }
 
@@ -280,7 +276,7 @@ public class MainServlet extends HttpServlet
         {
             Class<?> klass = loadedWsClasses.computeIfAbsent( componentId, this::loadWebSocketComponentClass );
             if( klass == null )
-                throw Be5ErrorCode.UNKNOWN_COMPONENT.exception( componentId );
+                throw Be5Exception.unknownComponent( componentId );
             return (WebSocketComponent)klass.newInstance();
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
