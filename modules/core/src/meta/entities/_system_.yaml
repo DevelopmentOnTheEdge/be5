@@ -5,5 +5,5 @@ _system_:
   queries:
   - Pool:
       type: static
-      roles: SystemDeveloper
+      roles: Administrator
       value: pool

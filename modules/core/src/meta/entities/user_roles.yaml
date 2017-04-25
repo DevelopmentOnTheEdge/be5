@@ -1,0 +1,15 @@
+user_roles:
+  type: dictionary
+  primaryKey: user_name
+  scheme:
+    columns:
+    - user_name:
+        type: VARCHAR(100)
+    - role_name:
+        type: VARCHAR(100)
+    indices:
+    - idx_ur_full:
+        unique: true
+        columns:
+        - user_name
+        - role_name
