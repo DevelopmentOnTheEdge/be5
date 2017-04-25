@@ -52,6 +52,18 @@ users:
             </if>
         ORDER BY 1
   - All records:
+      type: D1_UNKNOWN
       roles: Administrator
       code: |-
-        SELECT * from users
+        SELECT
+          u.user_name AS "User",
+          u.emailAddress,
+          u.registrationDate,
+          u.status,
+          u.blockingReason,
+          u.comments,
+        FROM users u
+  - Login:
+      type: static
+      roles: Guest
+      value: login

@@ -6,6 +6,7 @@ core:
   modules: []
   application:
   - _system_
+  - _logout_
   - categories
   - classifications
   - icons
@@ -16,7 +17,6 @@ core:
   - table_refs
   - users
   - user_roles
-  - roles
   scripts:
   - Post-db
   - Pre-db

@@ -1,0 +1,10 @@
+_logout_:
+  type: table
+  displayName: Logout
+  order: '99'
+  primaryKey: dummy
+  queries:
+  - All records:
+      type: static
+      roles: '@AllRolesExceptGuest'
+      value: logout
