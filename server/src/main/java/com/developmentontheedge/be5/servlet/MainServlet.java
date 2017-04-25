@@ -23,6 +23,7 @@ import javax.websocket.CloseReason.CloseCodes;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -135,11 +136,12 @@ public class MainServlet extends HttpServlet
         response.addHeader( "Access-Control-Allow-Origin", origin );
         response.addHeader( "Access-Control-Allow-Methods", "POST, GET" );
         response.addHeader( "Access-Control-Max-Age", "1728000" );
+        Response res = new ResponseImpl(response);
 
         Matcher matcher = uriPattern.matcher( requestUri );
         if( !matcher.matches() )
         {
-            trySendError( HttpServletResponse.SC_NOT_FOUND, response );
+            res.sendError( Be5Exception.unknownComponent(requestUri) );
             return;
         }
 
@@ -167,9 +169,9 @@ public class MainServlet extends HttpServlet
         catch( Be5Exception e )
         {
             if(e.getCode().isNotFound()){
-                trySendError( HttpServletResponse.SC_NOT_FOUND, e.getMessage(), response );
+                res.sendError( e );
             }
-            trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage(), response );
+            res.sendError( Be5Exception.internal(e, "createComponent") );
             return;
         }
 
@@ -182,14 +184,14 @@ public class MainServlet extends HttpServlet
         catch( Exception e ) // ignore checkers' warnings, we want to catch them all
         {
             log.log(Level.SEVERE, e.getMessage(), e);
-            trySendError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
+            res.sendError( Be5Exception.internal(e, "preprocessRequest") );
             return;
         }
 
         try
         {
             moduleLoader.configureComponentIfConfigurable(component, componentId);
-            component.generate( req, new ResponseImpl(response), serviceProvider );
+            component.generate( req, res, serviceProvider );
         }
         catch ( RuntimeException | Error e )
         {
@@ -225,23 +227,6 @@ public class MainServlet extends HttpServlet
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
         {
             throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
-        }
-    }
-
-    private void trySendError(int errorCode, HttpServletResponse response)
-    {
-        trySendError(errorCode, "", response);
-    }
-
-    private void trySendError(int errorCode, String message, HttpServletResponse response)
-    {
-        try
-        {
-            response.sendError( errorCode, message );
-        }
-        catch( IOException e )
-        {
-            log.log(Level.SEVERE,"response.sendError", e);
         }
     }
 

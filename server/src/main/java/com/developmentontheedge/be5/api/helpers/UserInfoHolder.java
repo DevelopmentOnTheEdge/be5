@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
 
 import java.util.List;
@@ -51,4 +52,9 @@ public class UserInfoHolder
     public static List<String> getCurrentRoles() {
         return getUserInfo().getCurrentRoles();
     }
+
+    public static boolean isAdmin(){
+        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR);
+    }
+
 }

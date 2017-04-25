@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.xml.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -88,7 +89,9 @@ public class ResponseImpl implements Response
     @Override
     public void sendError(Be5Exception e)
     {
-        sendAsJson("error", new Error(e.getMessage(), e.getCode().toString()));
+        String msg = UserInfoHolder.isAdmin() ? e.getMessage() : "";
+        //TODO localize e.getCode()
+        sendAsJson("error", new Error(msg, e.getCode().toString()));
     }
         
     @Override
