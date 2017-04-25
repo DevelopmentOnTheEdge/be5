@@ -22,12 +22,15 @@ import com.developmentontheedge.dbms.SqlExecutor;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo( name = "data")
 public class AppData extends Be5Mojo
 {
+    @Parameter(property = "BE5_SCRIPT")
     private String script = FreemarkerCatalog.DATA;
-    
+
+    @Parameter(property = "BE5_IGNORE_MISSING")
     private boolean ignoreMissing = false;
 
     @Override
@@ -147,23 +150,4 @@ public class AppData extends Be5Mojo
         new FreemarkerSqlHandler(sqlExecutor, debug, logger).execute(freemarkerScript);
     }
 
-    public String getScriptName()
-    {
-        return script;
-    }
-
-    public void setScriptName( String scriptName )
-    {
-        this.script = scriptName;
-    }
-
-    public boolean isIgnoreMissing()
-    {
-        return ignoreMissing;
-    }
-
-    public void setIgnoreMissing( boolean ignoreMissing )
-    {
-        this.ignoreMissing = ignoreMissing;
-    }
 }
