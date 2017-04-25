@@ -8,9 +8,14 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class IconTest extends TestCase
 {
+
+    @Test
+    @Ignore
     public void testIcons() throws Exception
     {
 //        Project project = new Project("TestProject");

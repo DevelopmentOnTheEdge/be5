@@ -8,12 +8,17 @@ import com.developmentontheedge.be5.metadata.model.Templates;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class TemplatesTest extends TestCase
 {
+
+    @Test
+    @Ignore
     public void testLoadTemplates() throws ReadException
     {
-//TODO        Project project = Templates.getTemplatesProject();
+//        Project project = Templates.getTemplatesProject();
 //        assertNotNull( project );
 //        Entity entity = project.getEntity( "dictionary" );
 //        assertNotNull( entity );
