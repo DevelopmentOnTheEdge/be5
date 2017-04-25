@@ -61,7 +61,7 @@ users:
           u.registrationDate,
           u.status,
           u.blockingReason,
-          u.comments,
+          u.comments
         FROM users u
   - Login:
       type: static
