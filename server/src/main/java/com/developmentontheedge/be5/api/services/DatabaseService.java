@@ -10,8 +10,6 @@ import java.sql.SQLException;
 
 public interface DatabaseService extends DbmsConnector
 {
-    ResultSet executeQuery(String sql, boolean isReadOnly);
-
     Connection getConnection(boolean isReadOnly) throws SQLException;
 
     Connection getCurrentTxConn();

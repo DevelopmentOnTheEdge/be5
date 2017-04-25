@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import javax.naming.Context;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -227,19 +226,13 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
-    public ResultSet executeQuery(String sql)
-    {
-        return executeQuery(sql, false);
-    }
-
-    @Override
     public String executeInsert(String sql) throws SQLException
     {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ResultSet executeQuery(String sql, boolean isReadOnly)
+    public ResultSet executeQuery(String sql)
     {
         Connection conn = null;
         Statement stmt = null;
@@ -247,13 +240,13 @@ public class DatabaseServiceImpl implements DatabaseService
 
         try
         {
-            conn = getConnection(isReadOnly);
+            conn = getConnection(true);
             stmt = conn.createStatement();
             rs = paranoidQuery(stmt, sql);
         }
         catch (SQLException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw new RuntimeException(e);
         }
         finally
         {
@@ -296,7 +289,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch( SQLException e )
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw new RuntimeException(e);
         }
     }
 

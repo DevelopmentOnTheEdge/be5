@@ -45,7 +45,7 @@ public class DpsStreamerImpl implements DpsStreamer
         ResultSet rs = null;
         try
         {
-            rs = databaseService.executeQuery( sql , true);
+            rs = databaseService.executeQuery(sql);
             ResultSet finalRs = rs;
             return StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE,
                     Spliterator.ORDERED | Spliterator.IMMUTABLE)
@@ -74,7 +74,7 @@ public class DpsStreamerImpl implements DpsStreamer
         catch( Exception e )
         {
             databaseService.close( rs );
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw new RuntimeException(e);
         }
     }
 
