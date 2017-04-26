@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 import one.util.streamex.StreamEx;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -91,6 +92,7 @@ public class ProjectProviderImpl implements ProjectProvider
         {
             throw Be5Exception.internal("Modules is not found in classpath or war file.");
         }
+        replaceURLtoSource(urls);
 
         List<Project> modules = new ArrayList<>();
         for (URL url: urls)
@@ -116,6 +118,23 @@ public class ProjectProviderImpl implements ProjectProvider
             if(module!= null)modules.add(module);
         }
         return modules;
+    }
+
+    /**
+     * For Watch files
+     * @param urls
+     */
+    private void replaceURLtoSource(ArrayList<URL> urls) throws MalformedURLException
+    {
+        String targetPath = "target/classes/";
+        String projectPath = "";
+        for (int i =0; i<urls.size(); i++)
+        {
+            if(urls.get(i).getPath().contains(targetPath)){
+                urls.set(i, new URL(urls.get(i), urls.get(i).getPath().replace(targetPath, projectPath)));
+                log.info("replace project path from ");
+            }
+        }
     }
 
     Project getProject(List<Project> availableModulesAndProjects)
