@@ -41,20 +41,20 @@ public abstract class Be5Mojo extends AbstractMojo
     // Properties
     //
     @Parameter (property = "BE5_PROJECT_PATH", defaultValue = "./")
-    protected File projectPath; 
+    File projectPath;
 
     @Parameter (property = "BE5_UNLOCK_PROTECTED_PROFILE")
-    protected boolean unlockProtectedProfile = false;
+    boolean unlockProtectedProfile = false;
     
     @Parameter (property = "BE5_DEBUG")
-    protected boolean debug = true; //false;
+    boolean debug = false;
 
     @Parameter (property = "BE5_LOG_PATH")
-    protected File logPath;
+    File logPath;
     
-    protected Project be5Project; 
+    Project be5Project;
 
-    protected String  connectionUrl;
+    String  connectionUrl;
 
     ///////////////////////////////////////////////////////////////////    
     
