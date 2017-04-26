@@ -55,7 +55,7 @@ public class ModuleLoader2
                 FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
                 Path p = fs.getPath("./");
                 modulesMap.put(name, p);
-                log.info("Module: " + name + "\text=" + url.toExternalForm() + ", path=" + p);
+                log.fine("Module: " + name + "\text=" + url.toExternalForm() + ", path=" + p);
             }
         }
         catch(IOException e)

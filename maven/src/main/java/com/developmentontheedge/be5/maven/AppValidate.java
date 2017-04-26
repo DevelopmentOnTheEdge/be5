@@ -57,7 +57,7 @@ public class AppValidate extends Be5Mojo
     {
         initLogging();
         
-        log.info("Reading project from " + projectPath + "..." );
+        getLog().info("Reading project from " + projectPath + "..." );
         this.be5Project = loadProject( projectPath.toPath() );
 
         setRdbms();
@@ -133,11 +133,11 @@ public class AppValidate extends Be5Mojo
         List<ProjectElementException> errors = new ArrayList<>();
         if( skipValidation )
         {
-            log.info("Validation skipped");
+            getLog().info("Validation skipped");
         } 
         else
         {
-            log.info("Validating...");
+            getLog().info("Validating...");
             errors.addAll( be5Project.getErrors() );
             int count = 0;
             for(ProjectElementException error : errors)
@@ -152,7 +152,7 @@ public class AppValidate extends Be5Mojo
                 throw new MojoFailureException("Project has " + count + " errors." );
             }
             
-            log.info("Project is valid.");
+            getLog().info("Project is valid.");
             skipValidation = true;
         }
     }
@@ -191,7 +191,7 @@ public class AppValidate extends Be5Mojo
         {
             try
             {
-                log.info("Saving...");
+                getLog().info("Saving...");
                 Serialization.save(be5Project, be5Project.getLocation());
             }
             catch(ProjectSaveException e)
@@ -217,7 +217,7 @@ public class AppValidate extends Be5Mojo
                 throw new MojoFailureException("Entity has no scheme: " + ddlPath);
             }
             
-            log.info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
+            getLog().info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
         }
     }
     
@@ -225,7 +225,7 @@ public class AppValidate extends Be5Mojo
     {
         if( checkRoles )
         {
-            log.info("Available roles:\n" + String.join( System.lineSeparator(), be5Project.getAvailableRoles()));
+            getLog().info("Available roles:\n" + String.join( System.lineSeparator(), be5Project.getAvailableRoles()));
         }
     }
 
@@ -267,6 +267,6 @@ public class AppValidate extends Be5Mojo
             throw new MojoFailureException("Invalid query: "+queryName);
         }
         
-        log.info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
+        getLog().info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
     }
 }

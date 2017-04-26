@@ -33,10 +33,7 @@ import com.developmentontheedge.dbms.SimpleConnector;
 
 public abstract class Be5Mojo extends AbstractMojo
 {
-	protected Logger log = Logger.getLogger(Be5Mojo.class.getPackage().getName());
-	
-	// temp, remove it later
-	protected ProcessController logger = new JULLogger(log);
+	protected ProcessController logger = new MavenLogger(getLog());
 
 	protected DbmsConnector connector;
     
@@ -69,7 +66,7 @@ public abstract class Be5Mojo extends AbstractMojo
         if( projectPath == null )
             throw new MojoFailureException("Please specify projectPath attribute");
 
-        log.info("Reading be5 project from '" + projectPath + "'...");
+        getLog().info("Reading be5 project from '" + projectPath + "'...");
         be5Project = loadProject(projectPath.toPath());
         if(debug)
         {
@@ -79,7 +76,7 @@ public abstract class Be5Mojo extends AbstractMojo
         BeConnectionProfile profile = be5Project.getConnectionProfile();
         if ( connectionUrl != null )
         {
-            log.info("Using connection " + connectionUrl);
+            getLog().info("Using connection " + connectionUrl);
         }
         else
         {
@@ -103,7 +100,7 @@ public abstract class Be5Mojo extends AbstractMojo
 
             if ( user != null )
             {
-                log.info("Using connection " + DatabaseUtils.formatUrl(connectionUrl, user, "xxxxx"));
+                getLog().info("Using connection " + DatabaseUtils.formatUrl(connectionUrl, user, "xxxxx"));
                 connectionUrl = DatabaseUtils.formatUrl(connectionUrl, user, password);
             } 
             else
