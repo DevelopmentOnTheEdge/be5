@@ -35,22 +35,22 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 public class AppValidate extends Be5Mojo
 {
     @Parameter (property = "BE5_RDBMS")
-    protected String rdbmsName; 
+    String rdbmsName;
 
     @Parameter (property = "BE5_SKIP_VALIDATION")
-    protected boolean skipValidation = false;
+    boolean skipValidation = false;
 
     @Parameter (property = "BE5_CHECK_QUERY")
-    protected String queryPath;
+    String queryPath;
 
     @Parameter (property = "BE5_CHECK_ROLES")
-    protected boolean checkRoles;
+    boolean checkRoles;
     
     @Parameter (property = "BE5_CHECK_DDL")
-    protected String ddlPath;
+    String ddlPath;
 
     @Parameter (property = "BE5_SAVE_PROJECT")
-    protected boolean saveProject;
+    boolean saveProject;
     
     @Override
     public void execute() throws MojoFailureException

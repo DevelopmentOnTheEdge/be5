@@ -56,18 +56,18 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class AppSync extends Be5Mojo
 {
     @Parameter (property = "BE5_FORCE_UPDATE")
-    protected boolean forceUpdate;
+    boolean forceUpdate;
 
     @Parameter (property = "BE5_UPDATE_CLONES")
-    protected boolean updateClones;
+    boolean updateClones;
 
     @Parameter (property = "BE5_REMOVE_CLONES")
-    protected boolean removeClones;
+    boolean removeClones;
 
     @Parameter (property = "BE5_REMOVE_UNUSED_TABLES")
-    protected boolean removeUnusedTables;
+    boolean removeUnusedTables;
 
-    protected BeSqlExecutor sqlExecutor;
+    BeSqlExecutor sqlExecutor;
     
     ///////////////////////////////////////////////////////////////////
     
