@@ -5,6 +5,6 @@ _logout_:
   primaryKey: dummy
   queries:
   - All records:
-      type: static
+      type: STATIC
       roles: '@AllRolesExceptGuest'
-      value: logout
+      code: logout

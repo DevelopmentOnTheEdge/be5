@@ -1,6 +1,6 @@
 user_roles:
   type: dictionary
-  primaryKey: user_name
+  primaryKey: ''
   scheme:
     columns:
     - user_name:

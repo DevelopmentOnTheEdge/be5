@@ -5,8 +5,8 @@ core:
   projectFileStructure: {}
   modules: []
   application:
-  - _system_
   - _logout_
+  - _system_
   - categories
   - classifications
   - icons
@@ -15,8 +15,8 @@ core:
   - sequences
   - systemSettings
   - table_refs
-  - users
   - user_roles
+  - users
   scripts:
   - Post-db
   - Pre-db

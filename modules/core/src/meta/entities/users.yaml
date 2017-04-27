@@ -28,7 +28,7 @@ users:
         type: DATE
         canBeNull: true
     - status:
-        type: ENUM('valid','blocked')
+        type: ENUM('blocked','valid')
         defaultValue: '''valid'''
     - noOfSessions:
         type: INT
@@ -64,6 +64,6 @@ users:
           u.comments
         FROM users u
   - Login:
-      type: static
+      type: STATIC
       roles: Guest
-      value: login
+      code: login
