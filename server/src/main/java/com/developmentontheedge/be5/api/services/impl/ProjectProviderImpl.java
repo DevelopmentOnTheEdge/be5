@@ -131,8 +131,9 @@ public class ProjectProviderImpl implements ProjectProvider
         for (int i =0; i<urls.size(); i++)
         {
             if(urls.get(i).getPath().contains(targetPath)){
+                URL oldUrl = urls.get(i);
                 urls.set(i, new URL(urls.get(i), urls.get(i).getPath().replace(targetPath, projectPath)));
-                log.info("replace project path from ");
+                log.info("replace project path \nfrom target:\t" + oldUrl +"\nto src:\t" + urls.get(i));
             }
         }
     }
