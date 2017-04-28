@@ -50,7 +50,7 @@ public class ServerModuleLoader
     {
         Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
 
-        List<Map<String, Object>> components = ( List<Map<String, Object>> ) module.get("components");
+        List<Map<String, String>> components = ( List<Map<String, String>> ) module.get("components");
         List<Map<String, Map<String, String>>> services = ( List<Map<String, Map<String, String>>> ) module.get("services");
 
         if(components != null)loadComponents(loadedClasses, components);
@@ -60,22 +60,12 @@ public class ServerModuleLoader
     }
 
     @SuppressWarnings("unchecked")
-    private void loadComponents(ComponentProvider loadedClasses, List<Map<String, Object>> components)
+    private void loadComponents(ComponentProvider loadedClasses, List<Map<String, String>> components)
     {
-        for (Map<String, Object> element: components)
+        for (Map<String, String> element: components)
         {
-            Map.Entry<String,Object> entry = element.entrySet().iterator().next();
-            Class<Object> serviceInterface;
-            if(entry.getValue() instanceof String)
-            {
-                serviceInterface = (Class<Object>) loadClass((String)entry.getValue());
-            }
-            else
-            {
-                Map<String, Object> componentWithOptions = (Map<String, Object>) entry.getValue();
-                serviceInterface = (Class<Object>) loadClass((String) componentWithOptions.get("class"));
-                Integer version = (Integer) componentWithOptions.get("version");
-            }
+            Map.Entry<String,String> entry = element.entrySet().iterator().next();
+            Class<Object> serviceInterface = (Class<Object>) loadClass(entry.getValue());
 
             loadedClasses.put(entry.getKey(), serviceInterface);
         }
@@ -128,7 +118,8 @@ public class ServerModuleLoader
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e, "ClassNotFoundException by path='"+path+"' in context.yaml");
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e,
+                    "ClassNotFoundException by path='"+path+"' in " + CONTEXT_FILE);
         }
     }
 }
