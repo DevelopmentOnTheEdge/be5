@@ -130,9 +130,9 @@ public class Db2SchemaReader extends DefaultSchemaReader
     }
     
     //
-    public static HashMap loadEntityEnums(DbmsConnector connector, String entity) throws SQLException
+    public static HashMap<String, String[]> loadEntityEnums(DbmsConnector connector, String entity) throws SQLException
     {
-        HashMap enums = new HashMap();
+        HashMap<String, String[]> enums = new HashMap<>();
 
         // try to read DB2's constraints
         // that are stored like sex IN ( 'male', 'female' )
