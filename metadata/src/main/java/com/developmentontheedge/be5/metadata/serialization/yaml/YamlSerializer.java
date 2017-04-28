@@ -963,7 +963,7 @@ public class YamlSerializer
             
             if ( customizedProperties.contains( "query" ) )
             {
-                if ( query.getType().equals( "static" ) )
+                if ( query.getType() == QueryType.STATIC )
                     content.put( ATTR_QUERY_CODE, query.getQuery() );
                 else if ( query.getType() == QueryType.JAVASCRIPT )
                 {

@@ -6,4 +6,4 @@ _system_:
   - Pool:
       type: STATIC
       roles: Administrator
-      code: pool
+      value: pool

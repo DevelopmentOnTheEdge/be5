@@ -7,4 +7,4 @@ _logout_:
   - All records:
       type: STATIC
       roles: '@AllRolesExceptGuest'
-      code: logout
+      value: logout

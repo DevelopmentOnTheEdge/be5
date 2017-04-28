@@ -66,4 +66,4 @@ users:
   - Login:
       type: STATIC
       roles: Guest
-      code: login
+      value: login
