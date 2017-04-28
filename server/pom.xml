@@ -18,15 +18,15 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>be5-metadata</artifactId>
 			<version>0.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -42,52 +42,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.developmentontheedge</groupId>
-			<artifactId>beans</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>21.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>one.util</groupId>
-			<artifactId>streamex</artifactId>
-			<version>0.5.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge</groupId>
-			<artifactId>dbms</artifactId>
-			<version>0.1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge</groupId>
-			<artifactId>sql</artifactId>
-			<version>0.0.27</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge</groupId>
-			<artifactId>freemarker-patched</artifactId>
-			<version>2.3.20p3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>1.11</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.193</version>
-    		<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -100,6 +57,13 @@
 			<groupId>commons-dbutils</groupId>
 			<artifactId>commons-dbutils</artifactId>
 			<version>1.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.193</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
