@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,6 +41,14 @@ public class ProjectLoadTest
         List<Project> modules = projectProvider.getModulesForProject(project, modulesAndProject);
         assertEquals(1, modules.size());
         assertEquals("core", modules.get(0).getName());
+    }
+
+    @Test
+    public void testReadDevPathsToSourceProjects() throws IOException, URISyntaxException, ProjectLoadException
+    {
+        Map<String, String> pathsToSourceProjects = new ProjectProviderImpl().readDevPathsToSourceProjects();
+        assertEquals(1, pathsToSourceProjects.size());
+        assertEquals("src/test/resources/project.yaml", pathsToSourceProjects.get("testProject"));
     }
 
 }
