@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class ProjectLoadTest
     }
 
     @Test
+    @Ignore
     public void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
     {
         Project project = projectProvider.getProject(modulesAndProject);

@@ -30,27 +30,13 @@ public class ServerModuleLoaderTest
     }
 
     @Test
-    public void testMenuLoad()
-    {
-        moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses );
-        assertEquals(loadedClasses.get("menu"), Menu.class);
-    }
-
-    @Test
     public void testLoad()
     {
-        moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
-        //moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
+        //moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
+        moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
-        //ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
+        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
 
-    }
-
-    @Test(expected = Be5Exception.class)
-    public void testLoadTryRedefine()
-    {
-        moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
-        moduleLoader.loadModules(getReader("src/test/resources/tryRedefineApp/" + CONTEXT_FILE), serviceProvider, loadedClasses);
     }
 
     private BufferedReader getReader(String file){

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.modules.core.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;

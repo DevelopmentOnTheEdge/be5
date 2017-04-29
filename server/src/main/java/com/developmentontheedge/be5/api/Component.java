@@ -3,15 +3,13 @@ package com.developmentontheedge.be5.api;
 /**
  * <p>This is the general interface for components.</p>
  * 
- * <p>Components are registered in <code>plugin.xml</code> of your application or module, e.g.:
+ * <p>Components are registered in <code>context.yaml</code> of your application or module, e.g.:
  * 
  * <pre>
  * {@code
- * <plugin>
- *   <extension point="com.developmentontheedge.be5.component">
- *     <component class="com.developmentontheedge.be5.auth.components.SocialLoginComponent" id="socialLogin" name="Social Login" />
- *   </extension>
- * </plugin>
+ * context:
+ *  components:
+ *  - appInfo:  com.developmentontheedge.be5.components.ApplicationInfoComponent
  * }
  * </pre>
  * </p>

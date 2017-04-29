@@ -2,7 +2,5 @@ testProject:
   features: logging
   l10n: ru
   projectFileStructure: {}
-  modules:
-  - core:
-      entities: []
+  modules: []
   application: testtable

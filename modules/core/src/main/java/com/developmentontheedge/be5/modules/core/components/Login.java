@@ -1,12 +1,11 @@
-package com.developmentontheedge.be5.components;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
+package com.developmentontheedge.be5.modules.core.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.google.common.base.Strings;
 
 import java.util.logging.Logger;
 
@@ -16,10 +15,9 @@ public class Login implements Component
 
     public static class State
     {
-        
-        public final boolean loggedIn;
+        final boolean loggedIn;
 
-        public State(boolean loggedIn)
+        State(boolean loggedIn)
         {
             this.loggedIn = loggedIn;
         }
@@ -39,7 +37,6 @@ public class Login implements Component
             return;
         default:
             res.sendUnknownActionError();
-            return;
         }
     }
 
@@ -48,7 +45,7 @@ public class Login implements Component
         String username = req.get("username");
         String password = req.get("password");
         
-        if (isNullOrEmpty(username) || isNullOrEmpty(password))
+        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password))
         {
             res.sendError("Empty username or password", "loginError");
             return;

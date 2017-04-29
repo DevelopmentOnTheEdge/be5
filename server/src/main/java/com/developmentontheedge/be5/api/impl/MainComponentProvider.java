@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.components.Login;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,9 +17,9 @@ public class MainComponentProvider implements ComponentProvider
     public Class<?> get(String componentId)
     {
         if(!loadedClasses.containsKey(componentId)){
-            if("login".equals(componentId)){
-                throw Be5Exception.unknownComponent("Component 'login' is not specified in 'config.yaml'. " +
-                        "You can specify the default be5 implementation: " + Login.class.getName());
+            if("login".equals(componentId) || "logout".equals(componentId)){
+                throw Be5Exception.unknownComponent("Component 'login' is not specified in 'context.yaml'. " +
+                        "You can specify the default implementation, for example: be5/modules/core/src/test/resources/context.yaml.");
             }else{
                 throw Be5Exception.unknownComponent( componentId );
             }

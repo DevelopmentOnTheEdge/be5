@@ -3,7 +3,6 @@ context:
   - appInfo:          com.developmentontheedge.be5.components.ApplicationInfoComponent
   - document:         com.developmentontheedge.be5.components.Document
   - languageSelector: com.developmentontheedge.be5.components.LanguageSelector
-  - logout:           com.developmentontheedge.be5.components.Logout
   - menu:             com.developmentontheedge.be5.components.Menu
   - roleSelector:     com.developmentontheedge.be5.components.RoleSelector
   - scriptList:       com.developmentontheedge.be5.components.ScriptList

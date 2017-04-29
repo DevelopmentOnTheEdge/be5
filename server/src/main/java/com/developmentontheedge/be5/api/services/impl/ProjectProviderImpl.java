@@ -35,7 +35,6 @@ public class ProjectProviderImpl implements ProjectProvider
 {
     private Logger log = Logger.getLogger(ProjectProviderImpl.class.getName());
     
-    private static String PROJECT_FILE_NAME = ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX;
     private Project project;
 
     private WatchDir watcher = null;
@@ -90,7 +89,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
     List<Project> loadModulesAndProject(LoadContext loadContext) throws ProjectLoadException, IOException, URISyntaxException
     {
-        ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(PROJECT_FILE_NAME));
+        ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
         if( urls.isEmpty() )
         {
             throw Be5Exception.internal("Modules is not found in classpath or war file.");

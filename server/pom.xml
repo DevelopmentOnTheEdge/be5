@@ -15,6 +15,12 @@
 		<version>0.0.2</version>
 	</parent>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -80,19 +86,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5.modules</groupId>
-			<artifactId>be5-modules-core</artifactId>
-			<version>0.1.0</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-maven-plugin</artifactId>
-			<version>0.1.0</version>
-		</dependency>
-
 	</dependencies>
 	
 	<build>
@@ -105,7 +98,7 @@
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
+			<!--<plugin> TODO delete if not work validate
 				<groupId>com.developmentontheedge.be5</groupId>
 				<artifactId>be5-maven-plugin</artifactId>
 				<version>0.1.0</version>
@@ -113,33 +106,7 @@
 					<projectPath>./src/test/resources/</projectPath>
 					<saveProject>true</saveProject>
 				</configuration>
-				<!-- duplicate for (ModuleLoader2.class).getClassLoader().getResources(PROJECT_FILE_NAME); -->
-				<dependencies>
-					<dependency>
-						<groupId>com.developmentontheedge.be5.modules</groupId>
-						<artifactId>be5-modules-core</artifactId>
-						<version>0.1.0</version>
-					</dependency>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>1.4.193</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<compilerArgs>
-						<arg>-Xlint:all</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin>
+			</plugin> -->
 
 			<!--plugin>
 				<groupId>org.apache.maven.plugins</groupId>

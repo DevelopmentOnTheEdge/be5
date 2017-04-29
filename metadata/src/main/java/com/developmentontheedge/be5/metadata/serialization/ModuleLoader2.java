@@ -30,8 +30,6 @@ public class ModuleLoader2
 {
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
 
-    private static String PROJECT_FILE_NAME = ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX;
-    
     private static Map<String, Path> modulesMap;
     
     private static synchronized void init()
@@ -39,11 +37,11 @@ public class ModuleLoader2
         if( modulesMap != null )
             return;
 
-        modulesMap= new HashMap<>();
+        modulesMap = new HashMap<>();
 
         try
         {
-            Enumeration<URL> urls = (ModuleLoader2.class).getClassLoader().getResources(PROJECT_FILE_NAME);
+            Enumeration<URL> urls = (ModuleLoader2.class).getClassLoader().getResources(ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX);
             URL url;
             while( urls.hasMoreElements() )
             {
@@ -66,10 +64,8 @@ public class ModuleLoader2
     
     public static String parse(URL url) throws IOException
     {
-        try(
-                InputStream in = url.openStream();
-                BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8"));
-            )
+        try(InputStream in = url.openStream();
+            BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8")))
         {
             String ln = r.readLine();
             return ln.substring(0, ln.indexOf(':')).trim();

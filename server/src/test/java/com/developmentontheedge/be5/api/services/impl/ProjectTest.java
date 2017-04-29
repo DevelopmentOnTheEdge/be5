@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -41,6 +42,7 @@ public class ProjectTest extends AbstractProjectTest
     }
 
     @Test
+    @Ignore
     public void testQueryCompiledValidateCore() throws ProjectElementException
     {
         Query testQuery = sp.getProject().getEntity("languages").getQueries().get("All records");
