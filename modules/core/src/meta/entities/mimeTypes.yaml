@@ -12,11 +12,11 @@ mimeTypes:
         canBeNull: true
   queries:
   - '*** Selection view ***':
-      type: D1
+      type: 1D
       operations: Filter
       code: SELECT type AS "Code", name AS "Name" FROM mimeTypes
   - All records:
-      type: D1
+      type: 1D
       roles: Administrator
       operations:
       - Clone

@@ -42,7 +42,7 @@ categories:
         columns: publicID
   queries:
   - '*** Selection view ***':
-      type: D1
+      type: 1D
       code: |-
         SELECT
                 c1.ID AS "Code",
@@ -80,7 +80,7 @@ categories:
              COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;' ),'' ) ,
              '{{{' ,c1.name ,'}}}' )
   - All records:
-      type: D1
+      type: 1D
       operations:
       - Clone
       - Delete

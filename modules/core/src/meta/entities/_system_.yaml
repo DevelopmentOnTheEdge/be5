@@ -4,6 +4,6 @@ _system_:
   primaryKey: _dummy_
   queries:
   - Pool:
-      type: STATIC
+      type: static
       roles: Administrator
       value: pool

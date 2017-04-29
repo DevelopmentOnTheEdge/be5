@@ -41,7 +41,7 @@ classifications:
         - recordID
   queries:
   - All records:
-      type: D1
+      type: 1D
       operations:
       - Clone
       - Delete

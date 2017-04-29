@@ -52,7 +52,7 @@ users:
             </if>
         ORDER BY 1
   - All records:
-      type: D1_UNKNOWN
+      type: 1D_unknown
       roles: Administrator
       code: |-
         SELECT
@@ -64,6 +64,6 @@ users:
           u.comments
         FROM users u
   - Login:
-      type: STATIC
+      type: static
       roles: Guest
       value: login

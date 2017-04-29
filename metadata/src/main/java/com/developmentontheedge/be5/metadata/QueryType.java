@@ -45,7 +45,7 @@ public enum QueryType
 
     private final String name;
 
-    private QueryType(String readableName)
+    QueryType(String readableName)
     {
         this.name = readableName;
     }
@@ -68,4 +68,8 @@ public enum QueryType
         return valueOf(name.toUpperCase());
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

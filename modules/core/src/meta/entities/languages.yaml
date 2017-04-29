@@ -11,11 +11,11 @@ languages:
         type: VARCHAR(30)
   queries:
   - '*** Selection view ***':
-      type: D1
+      type: 1D
       operations: Filter
       code: SELECT ID AS "Code", name AS "Name" FROM languages
   - All records:
-      type: D1
+      type: 1D
       roles: Administrator
       operations:
       - Clone
