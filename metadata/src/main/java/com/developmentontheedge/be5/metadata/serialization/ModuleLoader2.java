@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
@@ -24,13 +26,14 @@ import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 
 public class ModuleLoader2
 {
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
 
-    private static Map<String, Path> modulesMap;
+    private static Map<String, Project> modulesMap;
     
     private static synchronized void init()
     {
@@ -38,26 +41,41 @@ public class ModuleLoader2
             return;
 
         modulesMap = new HashMap<>();
+        LoadContext loadContext = new LoadContext();
 
         try
         {
-            Enumeration<URL> urls = (ModuleLoader2.class).getClassLoader().getResources(ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX);
+            Enumeration<URL> urls = (ModuleLoader2.class).getClassLoader().getResources(
+                    ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX);
+
             URL url;
             while( urls.hasMoreElements() )
             {
                 url = urls.nextElement();
-                final String name = parse(url);
-                
+
+                Project module;
                 String ext = url.toExternalForm();
-                String jar = ext.substring(0, ext.indexOf('!'));
-                FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
-                Path p = fs.getPath("./");
-                modulesMap.put(name, p);
-                log.fine("Module: " + name + "\text=" + url.toExternalForm() + ", path=" + p);
+                if( ext.indexOf('!') < 0 ) // usual file in directory
+                {
+                    Path path = Paths.get(url.toURI()).getParent();
+                    module = Serialization.load(path, loadContext);
+                    log.fine("Load module from dir: " + path);
+                }
+                else // war or jar file
+                {
+                    String jar = ext.substring(0, ext.indexOf('!'));
+                    FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
+                    Path path = fs.getPath("./");
+                    module = Serialization.load(path, loadContext);
+                    //TODO close if not maven script fs.close();
+
+                    log.fine("Load module from " + url.toExternalForm() + ", path=" + path);
+                }
+
+                modulesMap.put(module.getAppName(), module);
             }
         }
-        catch(IOException e)
-        {
+        catch (ProjectLoadException | IOException | URISyntaxException e){
             e.printStackTrace();
         }
     }
@@ -70,12 +88,6 @@ public class ModuleLoader2
             String ln = r.readLine();
             return ln.substring(0, ln.indexOf(':')).trim();
         }
-        catch (IOException x) 
-        {
-            //System.out.println( "Error reading configuration file", x);
-        }
-        
-        return null;
     }
     
     public static boolean containsModule(String name)
@@ -85,22 +97,48 @@ public class ModuleLoader2
         return modulesMap.containsKey(name);
     }
     
-    public static Path resolveModule(String name)
+    public static Path getModulePath(String name)
     {
         init();
         
-        return modulesMap.get(name);
+        return modulesMap.get(name).getLocation();
     }
 
-    public static Project loadModule(String name, LoadContext context) throws ProjectLoadException
-    {
+    public static Project loadProject() throws ProjectLoadException {
         init();
 
-    	if( ! containsModule(name))
-            throw new IllegalArgumentException("Module not found: " + name);
+        Project project = null;
+        for (Map.Entry<String,Project> module: modulesMap.entrySet())
+        {
+            if(module.getValue() != null && !module.getValue().isModuleProject())
+            {
+                if(project != null)
+                {
+                    throw new RuntimeException("Several projects were found: " + project + ", " + module);
+                }
+                else
+                {
+                    project = module.getValue();
+                }
+            }
+        }
+        if(project == null){
+            throw new RuntimeException("Project is not found in load modules.");
+        }
+        ModuleLoader2.mergeModules(project, new JULLogger(log));
 
-        return Serialization.load(modulesMap.get(name), true, context );
+        return project;
     }
+
+//    public static Project loadModule(String name, LoadContext context) throws ProjectLoadException
+//    {
+//        init();
+//
+//    	if( ! containsModule(name))
+//            throw new IllegalArgumentException("Module not found: " + name);
+//
+//        return Serialization.load(modulesMap.get(name), true, context );
+//    }
 
     public static void addModuleScripts( Project project ) throws ReadException
     {
@@ -123,18 +161,32 @@ public class ModuleLoader2
                 {
                     logger.setOperationName( "Reading module " + module.getName() + "..." );
                 }
-                Project moduleProject = loadModule( module.getName(), loadContext );
+                Project moduleProject = modulesMap.get(module.getName());
                 result.add( moduleProject );
             }
         }
-        Collections.sort( result, ( o1, o2 ) -> {
-            if ( o1.getModules().contains( o2.getName() ) )
+        result.sort((o1, o2) -> {
+            if (o1.getModules().contains(o2.getName()))
                 return 1;
-            if ( o2.getModules().contains( o1.getName() ) )
+            if (o2.getModules().contains(o1.getName()))
                 return -1;
             return 0;
-        } );
+        });
         return result;
+    }
+
+    public static void mergeModules(Project be5Project, ProcessController logger) throws ProjectLoadException
+    {
+        LoadContext loadContext = new LoadContext();
+        try
+        {
+            ModuleLoader2.mergeAllModules( be5Project, logger, loadContext );
+        }
+        catch(ProjectLoadException e)
+        {
+            throw new ProjectLoadException("Merge modules", e);
+        }
+        loadContext.check();
     }
 
     /**
@@ -213,7 +265,7 @@ public class ModuleLoader2
         {
             return new ProjectFileSystem( app );
         }
-        Path modulePath = ModuleLoader2.resolveModule(moduleName);
+        Path modulePath = ModuleLoader2.getModulePath(moduleName);
         if ( modulePath != null )
         {
             Project project = new Project( moduleName );
@@ -223,5 +275,23 @@ public class ModuleLoader2
         }
 
         return null;
+    }
+
+    public static String logLoadedProject(Project project, long startTime)
+    {
+        StringBuilder sb = new StringBuilder("Project loaded:\n" + project.getName());
+
+        if(project.getModules().getSize()>0)
+        {
+            sb.append("\nModules: ");
+            for (Module module : project.getModules())
+            {
+                sb.append("\n - "); sb.append(module.getName());
+            }
+        }
+        sb.append("\nloading time: ")
+                .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
+        //log.info(sb.toString());
+        return sb.toString();
     }
 }

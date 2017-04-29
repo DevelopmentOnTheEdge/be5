@@ -1372,14 +1372,14 @@ public class YamlDeserializer
 
         public MacrosDeserializer( final Module module ) throws ReadException
         {
-            super( ProjectFileSystem.getProjectFile( ModuleLoader2.resolveModule(module.getName()) ) );
+            super( ProjectFileSystem.getProjectFile( ModuleLoader2.getModulePath(module.getName()) ) );
             this.module = module;
         }
 
         @Override
         protected void doDeserialize( Object serializedRoot ) throws ReadException
         {
-            final Path root = ModuleLoader2.resolveModule(module.getName());
+            final Path root = ModuleLoader2.getModulePath(module.getName());
             final Map<String, Object> serializedModule = asMap( serializedRoot );
             final Map<String, Object> serializedModuleBody = asMap( serializedModule.values().iterator().next() );
             final String projectName = root.getFileName().toString(); // not sure if this has any sense

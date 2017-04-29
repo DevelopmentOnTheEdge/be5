@@ -98,7 +98,7 @@
 			</resource>
 		</resources>
 		<plugins>
-			<!--<plugin> TODO delete if not work validate
+			<plugin>
 				<groupId>com.developmentontheedge.be5</groupId>
 				<artifactId>be5-maven-plugin</artifactId>
 				<version>0.1.0</version>
@@ -106,7 +106,14 @@
 					<projectPath>./src/test/resources/</projectPath>
 					<saveProject>true</saveProject>
 				</configuration>
-			</plugin> -->
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>1.4.193</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 
 			<!--plugin>
 				<groupId>org.apache.maven.plugins</groupId>

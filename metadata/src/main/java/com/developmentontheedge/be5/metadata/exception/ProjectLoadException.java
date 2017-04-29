@@ -10,4 +10,12 @@ public class ProjectLoadException extends Exception
     {
         super("Unable to load project from "+path, cause);
     }
+
+    public ProjectLoadException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ProjectLoadException(String message) {
+        super(message);
+    }
 }

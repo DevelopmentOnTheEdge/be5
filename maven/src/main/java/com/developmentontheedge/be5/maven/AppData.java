@@ -37,7 +37,6 @@ public class AppData extends Be5Mojo
     public void execute() throws MojoFailureException
     {
         init();
-        mergeModules();
 
         PrintStream ps = null;
         try

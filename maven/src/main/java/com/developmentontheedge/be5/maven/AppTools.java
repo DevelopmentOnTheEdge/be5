@@ -33,7 +33,6 @@ public class AppTools extends Be5Mojo
     public void execute() throws MojoFailureException
     {
         init();
-        mergeModules();
 
         BeConnectionProfile prof = be5Project.getConnectionProfile();
         if(prof == null)
@@ -42,7 +41,7 @@ public class AppTools extends Be5Mojo
         }
         try
         {
-            System.err.println("Welcome to FTL/SQL console!");
+            getLog().info("Welcome to FTL/SQL console!");
             BeSqlExecutor sql = new BeSqlExecutor( connector )
             {
                 @Override
@@ -69,7 +68,7 @@ public class AppTools extends Be5Mojo
             ProcessController log = new NullLogger();
             while(true)
             {
-                System.err.println("Enter FTL/SQL (use 'quit' to exit):");
+                getLog().info("Enter FTL/SQL (use 'quit' to exit):");
                 String line = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
                 if(line == null)
                 {
@@ -83,9 +82,9 @@ public class AppTools extends Be5Mojo
                 fs.setSource( line );
                 ParseResult result = fs.getResult();
                 if(result.getResult() != null) {
-                    System.err.println("SQL> "+result.getResult());
+                    getLog().info("SQL> "+result.getResult());
                 } else {
-                    System.err.println("ERROR> "+result.getError());
+                    getLog().info("ERROR> "+result.getError());
                     continue;
                 }
                 try
@@ -94,7 +93,7 @@ public class AppTools extends Be5Mojo
                 }
                 catch ( Exception e )
                 {
-                    System.err.println("ERROR> "+e.getMessage());
+                    getLog().info("ERROR> "+e.getMessage());
                 }
             }
         }

@@ -207,7 +207,6 @@ public class Serialization
      * @param root
      * @return
      * @throws ProjectLoadException
-     * @throws IllegalAgrumentException
      * @see Serialization#canBeLoaded(Path)
      */
     public static Project load( final Path root ) throws ProjectLoadException
@@ -226,7 +225,6 @@ public class Serialization
      * @param loadContext
      * @return
      * @throws ProjectLoadException
-     * @throws IllegalAgrumentException
      * @see Serialization#canBeLoaded(Path)
      */
     public static Project load( final Path root, final boolean fuseTemplates, final LoadContext loadContext ) throws ProjectLoadException
@@ -395,7 +393,7 @@ public class Serialization
     
     public static void loadModuleMacros( final Module module ) throws ReadException
     {
-        final Path root = ModuleLoader2.resolveModule(module.getName());
+        final Path root = ModuleLoader2.getModulePath(module.getName());
         
         if ( root != null )
         {

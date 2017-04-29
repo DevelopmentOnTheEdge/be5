@@ -39,7 +39,6 @@ public class AppDb extends Be5Mojo
     public void execute() throws MojoFailureException
     {
         init();
-        mergeModules();
         
         try
         {
@@ -76,13 +75,16 @@ public class AppDb extends Be5Mojo
         }
         catch ( ProjectElementException | FreemarkerSqlException e )
         {
-            if(debug)
+            if(debug) {
+                e.printStackTrace();
                 throw new MojoFailureException("Setup db error", e);
+            }
             
             throw new MojoFailureException(e.getMessage());
         }
         catch(Exception e)
         {
+            e.printStackTrace();
             throw new MojoFailureException("Setup db error", e);
         }
         finally

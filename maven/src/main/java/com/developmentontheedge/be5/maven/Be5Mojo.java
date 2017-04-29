@@ -59,6 +59,7 @@ public abstract class Be5Mojo extends AbstractMojo
    
     protected void init() throws MojoFailureException
     {
+        long startTime = System.nanoTime();
     	initLogging();
     	
         if( projectPath == null )
@@ -112,6 +113,14 @@ public abstract class Be5Mojo extends AbstractMojo
         this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
 					                             profile.getConnectionUrl(), 
 												 profile.getUsername(), profile.getPassword());
+
+        try {
+            ModuleLoader2.mergeModules(be5Project, logger);
+        } catch (ProjectLoadException e) {
+            e.printStackTrace();
+            throw new MojoFailureException(e.getMessage());
+        }
+        getLog().info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
     
     /**
@@ -156,27 +165,6 @@ public abstract class Be5Mojo extends AbstractMojo
         }
         checkErrors( loadContext, "Project has %d error(s)" );
         return prj;
-    }
-
-    protected void mergeModules() throws MojoFailureException
-    {
-        LoadContext loadContext = new LoadContext();
-        try
-        {
-            ModuleLoader2.mergeAllModules( be5Project, logger, loadContext );
-        }
-        catch(ProjectLoadException e)
-        {
-            throw new MojoFailureException("Merge modules", e);
-        }
-        if(!loadContext.getWarnings().isEmpty())
-        {
-            for(ReadException exception : loadContext.getWarnings())
-            {
-                System.err.println( "Error: "+exception.getMessage() );
-            }
-            throw new MojoFailureException( "Modules have " + loadContext.getWarnings().size() + " error(s)" );
-        }
     }
 
     ///////////////////////////////////////////////////////////////////    
