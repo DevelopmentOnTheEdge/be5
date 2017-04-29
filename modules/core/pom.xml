@@ -11,21 +11,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<name>be5-modules-core</name>
+	<name>be5 modules core</name>
 	<description>Core database module for be5 applications</description>
-
-	<!--parent> <groupId>com.developmentontheedge</groupId> <artifactId>be5</artifactId> 
-		<version>0.0.2</version> </parent -->
-
-	<dependencies>
-
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-maven-plugin</artifactId>
-			<version>0.1.0</version>
-		</dependency>
-
-	</dependencies>
 
 	<build>
 		<resources>

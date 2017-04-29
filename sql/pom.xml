@@ -6,7 +6,7 @@
  <version>0.0.27</version>
  <packaging>jar</packaging>
 
- <name>SQL parser-generator</name>
+ <name>SQL parser generator</name>
  <description>Parse SQL (select statement only) and builds its AST. 
  Then DBMS specific SQL select statement can be generated.</description>
 
