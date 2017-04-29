@@ -11,4 +11,4 @@ connectionProfiles:
     test:
       connectionUrl: jdbc:h2:~/testBe5
       username: sa
-      password:
+      password: ''

@@ -5,5 +5,4 @@ testProject:
   modules:
   - core:
       entities: []
-  application:
-  - testtable
+  application: testtable

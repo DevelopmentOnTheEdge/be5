@@ -1,12 +1,19 @@
 ru:
   entities:
+  - _homepage_:
+    - topics: displayName
+      entries:
+      - homepage: Главная
+  - _welcome_:
+    - topics: displayName
+      entries:
+      - Welcome: Добро пожаловать
   - query.jsp:
     - topics: page
       entries:
       - Active From: Дата начала
       - Active To: Дата окончания
       - Aсtive From: Дата начала
-      - changeDate: Дата изменения
       - Class: Класс
       - Fio: Ф.И.О.
       - Please select exactly one record for: Пожалуйста выберите ровно одну запись для
@@ -26,12 +33,14 @@ ru:
       - blockedMeter: заблокировано сч-ком
       - build.: зд.
       - buildingAddress: Адрес дома
+      - changeDate: Дата изменения
       - countAccounts: Кол-во ЛС
       - date: Дата
       - diff.: разн.
       - docCount: Кол-во док-тов
       - docName: Наим. док-та
       - docType: Тип док.
+      - 'false': нет
       - female: жен.
       - fio: Ф.И.О.
       - fl.: кв.
@@ -43,10 +52,9 @@ ru:
       - male: муж.
       - managementType: Тип управления
       - met.: сч.
-      - yes: да
-      - no: нет
-      - 'false': нет
+      - 'no': нет
       - 'true': да
+      - 'yes': да
   - testtable:
     - topics: operationName
       entries:
@@ -56,11 +64,3 @@ ru:
     - topics: viewName
       entries:
       - All records For Banks: Все записи
-  - _welcome_:
-    - topics: displayName
-      entries:
-      - Welcome: Добро пожаловать
-  - _homepage_:
-    - topics: displayName
-      entries:
-      - homepage: Главная

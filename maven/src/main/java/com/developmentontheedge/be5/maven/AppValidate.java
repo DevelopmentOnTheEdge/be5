@@ -57,7 +57,7 @@ public class AppValidate extends Be5Mojo
     {
         initLogging();
         
-        getLog().info("Reading project from " + projectPath + "..." );
+        getLog().info("Reading project from " + projectPath );
         this.be5Project = loadProject( projectPath.toPath() );
 
         setRdbms();

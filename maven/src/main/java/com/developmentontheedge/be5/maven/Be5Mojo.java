@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
@@ -25,7 +24,6 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.MultiSqlParser;
@@ -41,7 +39,7 @@ public abstract class Be5Mojo extends AbstractMojo
     // Properties
     //
     @Parameter (property = "BE5_PROJECT_PATH", defaultValue = "./")
-    File projectPath;
+    public File projectPath;
 
     @Parameter (property = "BE5_UNLOCK_PROTECTED_PROFILE")
     boolean unlockProtectedProfile = false;

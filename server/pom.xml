@@ -87,6 +87,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-maven-plugin</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
 	</dependencies>
 	
 	<build>
@@ -99,6 +105,28 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>com.developmentontheedge.be5</groupId>
+				<artifactId>be5-maven-plugin</artifactId>
+				<version>0.1.0</version>
+				<configuration>
+					<projectPath>./src/test/resources/</projectPath>
+					<saveProject>true</saveProject>
+				</configuration>
+				<!-- duplicate for (ModuleLoader2.class).getClassLoader().getResources(PROJECT_FILE_NAME); -->
+				<dependencies>
+					<dependency>
+						<groupId>com.developmentontheedge.be5.modules</groupId>
+						<artifactId>be5-modules-core</artifactId>
+						<version>0.1.0</version>
+					</dependency>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>1.4.193</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
