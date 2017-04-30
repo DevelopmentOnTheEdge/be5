@@ -8,6 +8,7 @@ context:
   - scriptList:       com.developmentontheedge.be5.components.ScriptList
   - static:           com.developmentontheedge.be5.components.StaticPageComponent
   - pool:             com.developmentontheedge.be5.components.tools.PoolStat
+  - categories:       com.developmentontheedge.be5.components.Categories
   services:
   - projectProvider:
       interface:      com.developmentontheedge.be5.api.services.ProjectProvider
@@ -33,3 +34,6 @@ context:
   - logger:
       interface:      com.developmentontheedge.be5.api.services.impl.LogConfigurator
       implementation: com.developmentontheedge.be5.api.services.impl.LogConfigurator
+  - logger:
+      interface:      com.developmentontheedge.be5.api.services.CategoriesService
+      implementation: com.developmentontheedge.be5.api.services.impl.CategoriesServiceImpl
