@@ -7,12 +7,10 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.env.ServerModuleLoader;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 
 import static org.mockito.Mockito.mock;
@@ -37,7 +35,7 @@ public abstract class AbstractProjectTest
         }
     }
 
-    protected Request getRequestWithUri(String requestUri){
+    protected Request getMockRequestWithUri(String requestUri){
         Request request = mock(Request.class);
         when(request.getRequestUri()).thenReturn(requestUri);
         return request;
