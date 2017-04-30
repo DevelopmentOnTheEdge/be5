@@ -33,7 +33,7 @@ public class RoleSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri(""), response, sp);
+        component.generate(getMockRequest(""), response, sp);
 
         RoleSelector.RoleSelectorResponse roleSelectorResponse =
                 new RoleSelector.RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST), ImmutableList.of(RoleType.ROLE_GUEST));

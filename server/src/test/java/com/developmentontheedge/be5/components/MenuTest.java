@@ -29,7 +29,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri(""), response, sp);
+        component.generate(getMockRequest(""), response, sp);
 
         verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
     }
@@ -39,7 +39,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri("withIds"), response, sp);
+        component.generate(getMockRequest("withIds"), response, sp);
 
         verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
     }
@@ -49,7 +49,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, sp);
 
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtable/All records")));
     }
@@ -60,7 +60,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         Response response = mock(Response.class);
-        component.generate(getMockRequestWithUri("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, sp);
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtableAdmin/All records")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
@@ -72,7 +72,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles("User");
 
         Response response = mock(Response.class);
-        component.generate(getMockRequestWithUri("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, sp);
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtUser/testtUser")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
@@ -84,7 +84,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles("TestUser2");
 
         Response response = mock(Response.class);
-        component.generate(getMockRequestWithUri("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, sp);
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtUser2/Test1")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
@@ -95,7 +95,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri("foo"), response, sp);
+        component.generate(getMockRequest("foo"), response, sp);
 
         verify(response).sendUnknownActionError();
     }

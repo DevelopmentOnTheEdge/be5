@@ -108,5 +108,9 @@ public class RequestImpl implements Request {
     {
         return getRawRequest().getSession();
     }
-		
+
+    @Override
+    public String getServletContextRealPath(String s){
+        return getRawRequest().getSession().getServletContext().getRealPath(s);
+    }
 }

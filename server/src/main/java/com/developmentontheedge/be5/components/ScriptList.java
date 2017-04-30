@@ -36,11 +36,8 @@ public class ScriptList implements Component
     private void load(Request req, List<ActionPaths> result, String scriptCategory, String module)
     {
         boolean isModule = !"".equals(module);
-        Path path = Paths.get(req.getRawRequest().getSession().getServletContext()
-                .getRealPath(scriptCategory +
-                        (isModule ? "/" + module : "") +
-                        "/" + actionsCategory
-                ));
+        String sPath = scriptCategory + (isModule ? "/" + module : "") + "/" + actionsCategory;
+        Path path = Paths.get(req.getServletContextRealPath(sPath));
 
         if(!Files.exists(path))return;
 
@@ -64,14 +61,35 @@ public class ScriptList implements Component
         }
     }
 
-    class ActionPaths{
+    static class ActionPaths{
         String name;
         String path;
 
-        public ActionPaths(String name, String path)
+        ActionPaths(String name, String path)
         {
             this.name = name;
             this.path = path;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ActionPaths that = (ActionPaths) o;
+
+            return (name != null ? name.equals(that.name) : that.name == null) &&
+                   (path != null ? path.equals(that.path) : that.path == null);
+        }
+
+        @Override
+        public String toString()
+        {
+            return "ActionPaths{" +
+                    "name='" + name + '\'' +
+                    ", path='" + path + '\'' +
+                    '}';
         }
     }
 

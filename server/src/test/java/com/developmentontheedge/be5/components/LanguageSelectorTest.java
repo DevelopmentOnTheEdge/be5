@@ -34,7 +34,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri(""), response, sp);
+        component.generate(getMockRequest(""), response, sp);
 
         LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
                 new LanguageSelector.LanguageSelectorResponse(

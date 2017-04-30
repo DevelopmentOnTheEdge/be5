@@ -73,7 +73,7 @@ public abstract class AbstractProjectTest
         }
     }
 
-    protected Request getMockRequestWithUri(String requestUri){
+    protected Request getMockRequest(String requestUri){
         Request request = mock(Request.class);
         when(request.getRequestUri()).thenReturn(requestUri);
         return request;
@@ -85,7 +85,6 @@ public abstract class AbstractProjectTest
 
     protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters){
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
-        when(httpServletRequest.getRemoteAddr()).thenReturn("");
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
         Request request = spy(new RequestImpl(httpServletRequest, null, parameters));
