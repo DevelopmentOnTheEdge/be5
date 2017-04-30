@@ -41,7 +41,6 @@ public class ModuleLoader2
             return;
 
         modulesMap = new HashMap<>();
-        LoadContext loadContext = new LoadContext();
 
         try
         {
@@ -51,6 +50,7 @@ public class ModuleLoader2
             URL url;
             while( urls.hasMoreElements() )
             {
+                LoadContext loadContext = new LoadContext();
                 url = urls.nextElement();
 
                 Project module;
@@ -71,7 +71,7 @@ public class ModuleLoader2
 
                     log.fine("Load module from " + url.toExternalForm() + ", path=" + path);
                 }
-
+                loadContext.check();
                 modulesMap.put(module.getAppName(), module);
             }
         }
