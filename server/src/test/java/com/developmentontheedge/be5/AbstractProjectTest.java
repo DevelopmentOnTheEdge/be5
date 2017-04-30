@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -78,26 +79,18 @@ public abstract class AbstractProjectTest
         return request;
     }
 
-    protected Request getSpyMockRequestWithUriAndParams(String requestUri, String... parametrs){
-        HashMap<String, String> parametrsMap = new HashMap<>();
-        assert(parametrs.length % 2 == 0);
-        for (int i = 0; i < parametrs.length / 2; i++)
-        {
-            parametrsMap.put(parametrs[i*2], parametrs[i*2+1]);
-        }
+    protected Request getSpyMockRequest(String requestUri){
+        return getSpyMockRequest(requestUri, new HashMap<>());
+    }
 
+    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters){
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getRemoteAddr()).thenReturn("");
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
-        Request request = spy(new RequestImpl(httpServletRequest, null, parametrsMap));
+        Request request = spy(new RequestImpl(httpServletRequest, null, parameters));
         when(request.getRequestUri()).thenReturn(requestUri);
         return request;
-
-    }
-
-    protected Request getSpyMockRequestWithUri(String requestUri){
-        return getSpyMockRequestWithUriAndParams(requestUri);
     }
 
     protected void initUserWithRoles(String... roles)

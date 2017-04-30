@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class LanguageSelectorTest extends AbstractProjectTest
 {
@@ -53,7 +53,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
 
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequestWithUri("select"), response, sp);
+        component.generate(getSpyMockRequest("select"), response, sp);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        Request request = getSpyMockRequestWithUriAndParams("select","language", "RU" );
+        Request request = getSpyMockRequest("select", ImmutableMap.of("language", "RU") );
 
         component.generate(request, response, sp);
 

@@ -8,11 +8,11 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -50,7 +50,7 @@ public class RoleSelectorTest extends AbstractProjectTest
         expectedEx.expect(Be5Exception.class);
         expectedEx.expectMessage(ErrorMessages.formatMessage(Be5ErrorCode.PARAMETER_ABSENT, "roles"));
 
-        component.generate(getSpyMockRequestWithUri("select"), mock(Response.class), sp);
+        component.generate(getSpyMockRequest("select"), mock(Response.class), sp);
     }
 
     @Test
@@ -58,8 +58,8 @@ public class RoleSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequestWithUriAndParams("",
-                "roles", RoleType.ROLE_ADMINISTRATOR), response, sp);
+        component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
+                response, sp);
 
         RoleSelector.RoleSelectorResponse roleSelectorResponse =
                 new RoleSelector.RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST),
@@ -75,8 +75,8 @@ public class RoleSelectorTest extends AbstractProjectTest
 
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequestWithUriAndParams("select",
-                "roles", RoleType.ROLE_ADMINISTRATOR), response, sp);
+        component.generate(getSpyMockRequest("select",
+                ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, sp);
 
         RoleSelector.RoleSelectorResponse roleSelectorResponse =
                 new RoleSelector.RoleSelectorResponse(
