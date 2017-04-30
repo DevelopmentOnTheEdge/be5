@@ -68,7 +68,7 @@ public interface ParametersAccess
      */
     default String getOrEmpty(String parameter)
     {
-        String value = getParameters().get( parameter );
+        String value = get( parameter );
         return value == null ? "" : value;
     }
 
@@ -80,7 +80,7 @@ public interface ParametersAccess
      */
     default boolean get(String parameter, boolean defaultValue) throws Be5Exception
     {
-        String value = getParameters().get( parameter );
+        String value = get( parameter );
         if( value != null && !value.equals( "true" ) && !value.equals( "false" ) )
             throw Be5ErrorCode.PARAMETER_ABSENT.exception( parameter );
         if( value != null )
@@ -96,7 +96,7 @@ public interface ParametersAccess
      */
     default String getNonEmpty(String parameter) throws Be5Exception
     {
-        String value = getParameters().get( parameter );
+        String value = get( parameter );
         if( value == null )
             throw Be5ErrorCode.PARAMETER_ABSENT.exception( parameter );
         value = value.trim();

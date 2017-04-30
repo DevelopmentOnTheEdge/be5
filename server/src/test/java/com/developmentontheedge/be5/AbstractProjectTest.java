@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
+import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.ServerModuleLoader;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
@@ -14,11 +15,15 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.model.UserInfo;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractProjectTest
@@ -71,6 +76,28 @@ public abstract class AbstractProjectTest
         Request request = mock(Request.class);
         when(request.getRequestUri()).thenReturn(requestUri);
         return request;
+    }
+
+    protected Request getSpyMockRequestWithUriAndParams(String requestUri, String... parametrs){
+        HashMap<String, String> parametrsMap = new HashMap<>();
+        assert(parametrs.length % 2 == 0);
+        for (int i = 0; i < parametrs.length / 2; i++)
+        {
+            parametrsMap.put(parametrs[i*2], parametrs[i*2+1]);
+        }
+
+        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+        when(httpServletRequest.getRemoteAddr()).thenReturn("");
+        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
+
+        Request request = spy(new RequestImpl(httpServletRequest, null, parametrsMap));
+        when(request.getRequestUri()).thenReturn(requestUri);
+        return request;
+
+    }
+
+    protected Request getSpyMockRequestWithUri(String requestUri){
+        return getSpyMockRequestWithUriAndParams(requestUri);
     }
 
     protected void initUserWithRoles(String... roles)

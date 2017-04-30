@@ -190,7 +190,13 @@ public class MainServlet extends HttpServlet
         }
         catch ( RuntimeException | Error e )
         {
-            throw Be5Exception.internal(e);
+            if(e.getClass() != Be5Exception.class ){
+                res.sendError(Be5Exception.internal(e));
+            }
+            else
+            {
+                res.sendError((Be5Exception) e);
+            }
         }
     }
 

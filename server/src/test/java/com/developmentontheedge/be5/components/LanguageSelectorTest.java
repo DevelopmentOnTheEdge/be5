@@ -53,12 +53,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
 
         Response response = mock(Response.class);
 
-        component.generate(getMockRequestWithUri("select"), response, sp);
-
-        LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
-                new LanguageSelector.LanguageSelectorResponse(
-                        Collections.singletonList("RU"), "RU", new HashMap<>());
-        verify(response).sendAsRawJson(eq(languageSelectorResponse));
+        component.generate(getSpyMockRequestWithUri("select"), response, sp);
     }
 
     @Test
@@ -66,8 +61,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        Request request = getMockRequestWithUri("select");
-        when(request.get("language")).thenReturn("RU");
+        Request request = getSpyMockRequestWithUriAndParams("select","language", "RU" );
 
         component.generate(request, response, sp);
 

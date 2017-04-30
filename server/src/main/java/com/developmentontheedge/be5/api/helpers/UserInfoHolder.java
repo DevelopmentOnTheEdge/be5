@@ -30,7 +30,7 @@ public class UserInfoHolder
         getUserInfo().setLocale(new Locale(language));
     }
 
-    public static void selectRoles(List<String> roles) throws Exception {
+    public static void selectRoles(List<String> roles) {
         getUserInfo().selectRoles(roles);
     }
 

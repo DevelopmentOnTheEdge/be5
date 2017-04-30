@@ -24,7 +24,19 @@ public class RoleSelector implements Component {
             this.availableRoles = availableRoles;
             this.selectedRoles = selectedRoles;
         }
-        
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            RoleSelectorResponse that = (RoleSelectorResponse) o;
+
+            if (availableRoles != null ? !availableRoles.equals(that.availableRoles) : that.availableRoles != null)
+                return false;
+            return selectedRoles != null ? selectedRoles.equals(that.selectedRoles) : that.selectedRoles == null;
+        }
     }
     
     public RoleSelector() {
@@ -53,36 +65,15 @@ public class RoleSelector implements Component {
     }
 
     private void selectRolesAndSendNewState(Request req, Response res, ServiceProvider serviceProvider) {
-        final String roles = req.get("roles");
-        
-        if (roles == null)
-        {
-            res.sendError("Roles are required");
-            return;
-        }
-
-        try
-        {
-            UserInfoHolder.selectRoles(Splitter.on(',').splitToList(roles));
-        }
-        catch (Exception e)
-        {
-            // can't change roles, (TODO) should return a error message to show it to the user
-        }
+        String roles = req.getNonEmpty("roles");
+        UserInfoHolder.selectRoles(Splitter.on(',').splitToList(roles));
         
         res.sendAsRawJson(getState(req, serviceProvider));
     }
     
     private RoleSelectorResponse getState(Request req, ServiceProvider serviceProvider)
     {
-        try
-        {
-            return new RoleSelectorResponse(UserInfoHolder.getAvailableRoles(), UserInfoHolder.getCurrentRoles());
-        }
-        catch (Exception e)
-        {
-            return new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST), ImmutableList.of(RoleType.ROLE_GUEST));
-        }
+        return new RoleSelectorResponse(UserInfoHolder.getAvailableRoles(), UserInfoHolder.getCurrentRoles());
     }
 
 }

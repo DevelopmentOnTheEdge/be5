@@ -79,12 +79,7 @@ public class LanguageSelector implements Component
 
     private LanguageSelectorResponse selectLanguage(Request req, ServiceProvider serviceProvider)
     {
-        String language = req.get("language");
-
-        if( language == null )
-            throw Be5Exception.requestParameterIsAbsent("language");
-
-        UserInfoHolder.changeLanguage(language);
+        UserInfoHolder.changeLanguage(req.getNonEmpty("language"));
 
         return getState(serviceProvider);
     }
