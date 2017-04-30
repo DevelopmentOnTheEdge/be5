@@ -1021,7 +1021,7 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             return page.getContent();
         }
         
-        return "";
+        return null;
     }
     
     /**

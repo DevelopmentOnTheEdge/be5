@@ -112,5 +112,16 @@ public class Be5Exception extends RuntimeException
     {
         return code;
     }
-    
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Be5Exception that = (Be5Exception) o;
+
+        return code == that.code;
+    }
+
 }

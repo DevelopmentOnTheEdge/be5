@@ -17,11 +17,6 @@ public class Document implements Component
 {
     private static final Logger log = Logger.getLogger(Document.class.getName());
 
-    public Document()
-    {
-        /* stateless */
-    }
-    
     @Override
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
     {

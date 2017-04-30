@@ -1,3 +1,4 @@
 pages:
   ru:
-    welcome.be: ' <h1>Inline html</h1>'
+    info.be:
+      file: info.html

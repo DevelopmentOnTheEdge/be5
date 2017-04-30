@@ -14,11 +14,6 @@ public class Form implements Component
 {
     private static final Logger log = Logger.getLogger(Document.class.getName());
 
-    public Form()
-    {
-        /* stateless */
-    }
-
     @Override
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
     {

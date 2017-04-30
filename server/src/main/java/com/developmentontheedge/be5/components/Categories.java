@@ -7,12 +7,7 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 
 public class Categories implements Component
 {
-    
-    public Categories()
-    {
-        // stateless
-    }
-    
+
     @Override
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
     {
