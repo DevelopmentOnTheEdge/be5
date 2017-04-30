@@ -4,7 +4,7 @@ testProject:
   projectFileStructure: {}
   modules: []
   application:
-  - canBeMovedToRoot
   - testtable
+  - testtableAdmin
   - testtUser
   - testtUser2

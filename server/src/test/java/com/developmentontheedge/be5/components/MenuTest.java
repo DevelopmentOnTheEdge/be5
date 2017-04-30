@@ -51,7 +51,7 @@ public class MenuTest extends AbstractProjectTest
 
         component.generate(getMockRequestWithUri("defaultAction"), response, sp);
 
-        verify(response).sendAsRawJson(eq(new Action("call", "table/canBeMovedToRoot/All records")));
+        verify(response).sendAsRawJson(eq(new Action("call", "table/testtable/All records")));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MenuTest extends AbstractProjectTest
 
         Response response = mock(Response.class);
         component.generate(getMockRequestWithUri("defaultAction"), response, sp);
-        verify(response).sendAsRawJson(eq(new Action("call", "table/testtable/All records")));
+        verify(response).sendAsRawJson(eq(new Action("call", "table/testtableAdmin/All records")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
@@ -105,9 +105,9 @@ public class MenuTest extends AbstractProjectTest
     {
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(sp);
-        assertEquals("canBeMovedToRoot", menuResponse.root.get(0).title);
+        assertEquals("testtable", menuResponse.root.get(0).title);
 
-        assertEquals("table/canBeMovedToRoot/All records", menuResponse.root.get(0).action.arg);
+        assertEquals("table/testtable/All records", menuResponse.root.get(0).action.arg);
         assertNull(menuResponse.root.get(0).children);
     }
 
@@ -119,7 +119,7 @@ public class MenuTest extends AbstractProjectTest
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(sp);
         assertEquals("Insert", menuResponse.root.get(1).operations.get(0).title);
-        assertEquals(new Action("call", "form/testtable/All records/Insert"),
+        assertEquals(new Action("call", "form/testtableAdmin/All records/Insert"),
                 menuResponse.root.get(1).operations.get(0).action);
 
         initUserWithRoles(RoleType.ROLE_GUEST);

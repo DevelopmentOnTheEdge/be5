@@ -22,14 +22,14 @@ public class ProjectTest extends AbstractProjectTest
                 "      t.name AS \"Name\",\n" +
                 "      t.value AS \"Value\"\n" +
                 "    FROM\n" +
-                "      testtable t", project.getEntity("testtable").getQueries().get("Test 1D unknown").getQuery());
+                "      testtable t", project.getEntity("testtable").getQueries().get("All records").getQuery());
 
     }
 
     @Test
     public void testQueryCompiledValidate() throws ProjectElementException
     {
-        Query testQuery = sp.getProject().getEntity("testtable").getQueries().get("Test 1D unknown");
+        Query testQuery = sp.getProject().getEntity("testtable").getQueries().get("All records");
 
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertNotNull(validatedQuery);

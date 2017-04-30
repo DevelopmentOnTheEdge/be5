@@ -1,7 +1,7 @@
 testtable:
   type: table
   displayName: testtable
-  order: '10'
+  order: '9'
   primaryKey: ID
   scheme:
     columns:
@@ -15,24 +15,8 @@ testtable:
         type: VARCHAR(30)
   queries:
   - All records:
-      defaultView: true
-      type: 1D
-      roles: Administrator
-      operations:
-      - Add
-      - Delete
-      - Edit
-      - Insert
-      code: |2-
-            SELECT
-              t.ID AS "___ID",
-              t.name AS "Name",
-              t.value AS "Value"
-            FROM
-              testtable t
-  - Test 1D unknown:
       type: 1D_unknown
-      roles: Administrator
+      roles: '@AllRoles'
       code: |2-
             SELECT
               t.ID AS "___ID",
@@ -40,21 +24,3 @@ testtable:
               t.value AS "Value"
             FROM
               testtable t
-  operations:
-  - Add:
-      type: JavaScript/server
-      roles: Administrator
-      file: test.js
-  - Delete:
-      records: 2
-      roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
-  - Edit:
-      records: 2
-      roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentEditOperation
-  - Insert:
-      roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
-  - Send password:
-      code: com.beanexplorer.enterprise.operations.SendPassword
