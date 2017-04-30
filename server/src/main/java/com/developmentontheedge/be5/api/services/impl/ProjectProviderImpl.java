@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -48,7 +47,7 @@ public class ProjectProviderImpl implements ProjectProvider
             if(watcher != null)watcher.stop();
 
             long startTime = System.nanoTime();
-            Project project = ModuleLoader2.loadProject();
+            Project project = ModuleLoader2.findAndLoadProjectWithModules();
             log.info(ModuleLoader2.logLoadedProject(project, startTime));
 
             watcher = new WatchDir(project).onModify( onModify -> dirty = true).start();

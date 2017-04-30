@@ -104,7 +104,7 @@ public class ModuleLoader2
         return modulesMap.get(name).getLocation();
     }
 
-    public static Project loadProject() throws ProjectLoadException {
+    public static Project findAndLoadProjectWithModules() throws ProjectLoadException {
         init();
 
         Project project = null;

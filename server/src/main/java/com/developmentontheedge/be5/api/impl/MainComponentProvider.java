@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.impl;
 
+import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
@@ -13,8 +14,24 @@ public class MainComponentProvider implements ComponentProvider
 
     private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
 
+    /**
+     * Returns a created component.
+     */
     @Override
-    public Class<?> get(String componentId)
+    public Component get(String componentId)
+    {
+        try
+        {
+            Class<?> klass = getComponentClass(componentId);
+            return (Component)klass.newInstance();
+        }
+        catch( InstantiationException | IllegalAccessException | ClassCastException e )
+        {
+            throw Be5Exception.internal(e, "Can't create component");
+        }
+    }
+
+    private Class<?> getComponentClass(String componentId)
     {
         if(!loadedClasses.containsKey(componentId)){
             if("login".equals(componentId) || "logout".equals(componentId)){

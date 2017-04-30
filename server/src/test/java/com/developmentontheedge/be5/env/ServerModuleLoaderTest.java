@@ -33,7 +33,7 @@ public class ServerModuleLoaderTest
     public void testMenuLoad()
     {
         moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses );
-        assertEquals(loadedClasses.get("menu"), Menu.class);
+        assertEquals(loadedClasses.get("menu").getClass(), Menu.class);
     }
 
     @Test

@@ -5,7 +5,7 @@ package com.developmentontheedge.be5.api;
  */
 public interface ComponentProvider
 {
-    Class<?> get(String componentId);
+    Component get(String componentId);
 
     void put(String componentId, Class<?> value);
 }

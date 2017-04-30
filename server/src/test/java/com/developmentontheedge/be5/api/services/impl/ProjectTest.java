@@ -41,15 +41,4 @@ public class ProjectTest extends AbstractProjectTest
                 "      testtable t", validatedQuery);
     }
 
-    @Test
-    @Ignore
-    public void testQueryCompiledValidateCore() throws ProjectElementException
-    {
-        Query testQuery = sp.getProject().getEntity("languages").getQueries().get("All records");
-
-        String validatedQuery = testQuery.getQueryCompiled().validate().trim();
-        assertNotNull(validatedQuery);
-
-    }
-
 }

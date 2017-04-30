@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import static com.developmentontheedge.be5.env.ServerModuleLoader.CONTEXT_FILE;
 import static org.junit.Assert.assertEquals;
 
-public class ServerModuleLoaderTest
+public class ServerModuleLoaderCoreTest
 {
     private static ServiceProvider serviceProvider = null;
     private static ComponentProvider loadedClasses = null;

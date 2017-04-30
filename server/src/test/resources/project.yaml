@@ -3,4 +3,8 @@ testProject:
   l10n: ru
   projectFileStructure: {}
   modules: []
-  application: testtable
+  application:
+  - canBeMovedToRoot
+  - testtable
+  - testtUser
+  - testtUser2

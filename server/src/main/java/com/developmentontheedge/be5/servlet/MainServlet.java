@@ -50,8 +50,9 @@ public class MainServlet extends HttpServlet
 
     protected Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
 
-    private static final long serialVersionUID = 1L;
+    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
 
+    private static final ServiceProvider serviceProvider = new MainServiceProvider();
     private static final ComponentProvider loadedClasses = new MainComponentProvider();
 
     /**
@@ -60,8 +61,6 @@ public class MainServlet extends HttpServlet
     private static final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
 
     //TODO private final DaemonStarter starter;
-    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
-    private static final ServiceProvider serviceProvider = new MainServiceProvider();
 
     ///////////////////////////////////////////////////////////////////
     // init
@@ -163,7 +162,7 @@ public class MainServlet extends HttpServlet
         Component component;
         try
         {
-            component = createComponent( componentId );
+            component = loadedClasses.get(componentId);
         }
         catch( Be5Exception e )
         {
@@ -208,22 +207,6 @@ public class MainServlet extends HttpServlet
 
             preprocessor.preprocessUrl( request, url );
         }*/
-    }
-
-    /**
-     * Returns a created component.
-     */
-    private Component createComponent(String componentId)
-    {
-        try
-        {
-            Class<?> klass = loadedClasses.get(componentId);
-            return (Component)klass.newInstance();
-        }
-        catch( InstantiationException | IllegalAccessException | ClassCastException e )
-        {
-            throw Be5Exception.internal(e, "Can't create component");
-        }
     }
 
     ///////////////////////////////////////////////////////////////////

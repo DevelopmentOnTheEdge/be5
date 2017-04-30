@@ -14,7 +14,8 @@ testtable:
     - value:
         type: VARCHAR(30)
   queries:
-  - Test 1D:
+  - All records:
+      defaultView: true
       type: 1D
       roles: Administrator
       operations:
@@ -31,7 +32,7 @@ testtable:
               testtable t
   - Test 1D unknown:
       type: 1D_unknown
-      roles: [Administrator, Guest]
+      roles: Administrator
       code: |2-
             SELECT
               t.ID AS "___ID",

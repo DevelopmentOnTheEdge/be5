@@ -4,4 +4,5 @@ security:
     Guest: {}
     SystemDeveloper: {}
     User: {}
+    TestUser2: {}
   groups: {}

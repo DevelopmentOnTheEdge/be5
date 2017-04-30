@@ -1,0 +1,26 @@
+testtUser:
+  type: table
+  displayName: testtUser
+  order: '8'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: VARCHAR(30)
+  queries:
+  - testtUser:
+      type: 1D_unknown
+      roles: User
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t

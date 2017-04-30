@@ -43,4 +43,16 @@ public class Action
         return new Action(action, arg);
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Action action = (Action) o;
+
+        if (name != null ? !name.equals(action.name) : action.name != null) return false;
+        return arg != null ? arg.equals(action.arg) : action.arg == null;
+    }
+
 }

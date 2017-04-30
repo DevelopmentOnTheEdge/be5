@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -32,7 +32,19 @@ public class LanguageSelector implements Component
             this.selected = selected;
             this.messages = messages;
         }
-        
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            LanguageSelectorResponse that = (LanguageSelectorResponse) o;
+
+            if (languages != null ? !languages.equals(that.languages) : that.languages != null) return false;
+            if (selected != null ? !selected.equals(that.selected) : that.selected != null) return false;
+            return messages != null ? messages.equals(that.messages) : that.messages == null;
+        }
     }
     
     /* cache */
@@ -49,7 +61,7 @@ public class LanguageSelector implements Component
         switch( req.getRequestUri() )
         {
         case "":
-            res.sendAsRawJson(getInitialData(req, serviceProvider));
+            res.sendAsRawJson(getInitialData(serviceProvider));
             return;
         case "select":
             res.sendAsRawJson(selectLanguage(req, serviceProvider));
@@ -60,9 +72,9 @@ public class LanguageSelector implements Component
         }
     }
 
-    private LanguageSelectorResponse getInitialData(Request req, ServiceProvider serviceProvider)
+    private LanguageSelectorResponse getInitialData(ServiceProvider serviceProvider)
     {
-        return getState(req, serviceProvider);
+        return getState(serviceProvider);
     }
 
     private LanguageSelectorResponse selectLanguage(Request req, ServiceProvider serviceProvider)
@@ -70,14 +82,14 @@ public class LanguageSelector implements Component
         String language = req.get("language");
 
         if( language == null )
-            throw Be5ErrorCode.PARAMETER_ABSENT.exception( "language" );
+            throw Be5Exception.requestParameterIsAbsent("language");
 
         UserInfoHolder.changeLanguage(language);
 
-        return getState(req, serviceProvider);
+        return getState(serviceProvider);
     }
 
-    private LanguageSelectorResponse getState(Request req, ServiceProvider serviceProvider)
+    private LanguageSelectorResponse getState(ServiceProvider serviceProvider)
     {
         Project project = serviceProvider.getProject();
         
