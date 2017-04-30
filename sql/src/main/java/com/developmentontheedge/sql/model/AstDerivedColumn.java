@@ -57,6 +57,7 @@ public class AstDerivedColumn extends SimpleNode
     
     public void setAlias(String alias)
     {
+        setAsToken(true);
         if( jjtGetNumChildren() == 1 )
         {
             addChild( new AstIdentifierConstant( alias, true ) );

@@ -56,7 +56,6 @@ import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
-import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
@@ -378,7 +377,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return sql == null ? StreamEx.empty() : stream(sql);
     }
 
-    private String getFinalSql()
+    String getFinalSql()
     {
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
@@ -452,7 +451,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                 new AstParenthesis( query.clone() ),
                 new AstIdentifierConstant( "data", true )
         );
-        AstSelect select = new AstSelect( new AstSelectList(new AstCount()), new AstFrom( tableRef ) );
+        AstSelectList count = new AstSelectList(new AstDerivedColumn(new AstCount(), "count"));
+        AstSelect select = new AstSelect( count, new AstFrom( tableRef ) );
         query.replaceWith( new AstQuery( select ) );
     }
 

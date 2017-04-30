@@ -18,7 +18,6 @@ public class ProjectTest extends AbstractProjectTest
     {
         Project project = sp.getProject();
         assertEquals("    SELECT\n" +
-                "      t.ID AS \"___ID\",\n" +
                 "      t.name AS \"Name\",\n" +
                 "      t.value AS \"Value\"\n" +
                 "    FROM\n" +
@@ -34,7 +33,6 @@ public class ProjectTest extends AbstractProjectTest
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertNotNull(validatedQuery);
         assertEquals("SELECT\n" +
-                "      t.ID AS \"___ID\",\n" +
                 "      t.name AS \"Name\",\n" +
                 "      t.value AS \"Value\"\n" +
                 "    FROM\n" +
