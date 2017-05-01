@@ -27,8 +27,8 @@ public class DocumentTest extends AbstractProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("", ImmutableMap.of(
-                        "entity","testtable",
-                        "query","All records")), response, sp);
+                RestApiConstants.ENTITY,"testtable",
+                RestApiConstants.QUERY,"All records")), response, sp);
 
         verify(response).sendAsJson(eq("table"), any(TablePresentation.class));
     }
@@ -38,8 +38,8 @@ public class DocumentTest extends AbstractProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("count", ImmutableMap.of(
-                "entity","testtable",
-                "query","All records")), response, sp);
+                RestApiConstants.ENTITY,"testtable",
+                RestApiConstants.QUERY,"All records")), response, sp);
 
         verify(response).sendAsJson(eq(2L));
     }

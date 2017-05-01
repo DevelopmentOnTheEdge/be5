@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.developmentontheedge.be5.api.FrontendAction;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TablePresentation;
@@ -28,13 +29,13 @@ public class DocumentResponse
     public void sendStaticPage(String content)
     {
         checkNotNull(content);
-        res.sendAsJson("static", content);
+        res.sendAsJson(FrontendConstants.STATIC_ACTION, content);
     }
 
     public void send(TablePresentation tablePresentation)
     {
         checkNotNull(tablePresentation);
-        res.sendAsJson("table", tablePresentation);
+        res.sendAsJson(FrontendConstants.TABLE_ACTION, tablePresentation);
     }
     
     public void send(Either<FormPresentation, FrontendAction> formOrResult)
@@ -46,7 +47,7 @@ public class DocumentResponse
     public void send(FormPresentation form)
     {
         checkNotNull(form);
-        res.sendAsJson("form", form);
+        res.sendAsJson(FrontendConstants.FORM_ACTION, form);
     }
     
     public void send(FrontendAction result)
