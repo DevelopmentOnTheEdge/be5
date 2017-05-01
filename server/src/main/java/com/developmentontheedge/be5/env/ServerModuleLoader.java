@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.metadata.model.Project;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -42,7 +43,11 @@ public class ServerModuleLoader
         //config logger first
         serviceProvider.getLogger();
         //init main modules on startup
-        serviceProvider.getDatabaseService();
+
+        if(serviceProvider.getProject().getProject().getConnectionProfile() != null)
+        {
+            serviceProvider.getDatabaseService();
+        }
     }
 
     @SuppressWarnings("unchecked")

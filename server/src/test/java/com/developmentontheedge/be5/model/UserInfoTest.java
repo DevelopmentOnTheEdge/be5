@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.model;
 
-import com.developmentontheedge.be5.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

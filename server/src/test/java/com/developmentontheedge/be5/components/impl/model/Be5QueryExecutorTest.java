@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import com.developmentontheedge.be5.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicPropertySet;
