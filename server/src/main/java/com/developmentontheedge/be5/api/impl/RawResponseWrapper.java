@@ -23,7 +23,7 @@ public class RawResponseWrapper {
     private boolean contentTypeIsSet = false;
     private boolean characterEncodingIsSet = false;
 
-    public RawResponseWrapper(HttpServletResponse rawResponse)
+    RawResponseWrapper(HttpServletResponse rawResponse)
     {
         this.rawResponse = rawResponse;
     }
@@ -36,7 +36,7 @@ public class RawResponseWrapper {
         contentTypeIsSet = true;
     }
 
-    public void setCharacterEncoding(Charset charset)
+    void setCharacterEncoding(Charset charset)
     {
         checkNotNull(charset);
         checkState(!characterEncodingIsSet);
@@ -78,7 +78,7 @@ public class RawResponseWrapper {
         return out;
     }
     
-    public HttpServletResponse getRawResponse()
+    HttpServletResponse getRawResponse()
     {
         return rawResponse;
     }
