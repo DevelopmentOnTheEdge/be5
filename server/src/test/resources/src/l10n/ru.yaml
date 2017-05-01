@@ -1,5 +1,11 @@
 ru:
   entities:
+  - javascript:
+    - topics: page
+      entries:
+      - fio: Ф.И.О.
+      - no: нет
+      - yes: да
   - _homepage_:
     - topics: displayName
       entries:

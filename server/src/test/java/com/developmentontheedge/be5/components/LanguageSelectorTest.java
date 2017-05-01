@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -29,6 +28,11 @@ public class LanguageSelectorTest extends AbstractProjectTest
         component = loadedClasses.get("languageSelector");
     }
 
+    private LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
+            new LanguageSelector.LanguageSelectorResponse(
+                    Collections.singletonList("RU"), "RU", ImmutableMap.of(
+                    "fio","Ф.И.О.","no","нет","yes","да"));
+
     @Test
     public void generate() throws Exception
     {
@@ -36,9 +40,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
 
         component.generate(getMockRequest(""), response, sp);
 
-        LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
-                new LanguageSelector.LanguageSelectorResponse(
-                    Collections.singletonList("RU"), "RU", new HashMap<>());
+
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
     }
 
@@ -65,9 +67,6 @@ public class LanguageSelectorTest extends AbstractProjectTest
 
         component.generate(request, response, sp);
 
-        LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
-                new LanguageSelector.LanguageSelectorResponse(
-                        Collections.singletonList("RU"), "RU", new HashMap<>());
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
     }
 }

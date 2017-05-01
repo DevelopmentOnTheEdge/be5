@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import one.util.streamex.StreamEx;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -46,14 +46,6 @@ public class LanguageSelector implements Component
             return messages != null ? messages.equals(that.messages) : that.messages == null;
         }
     }
-    
-    /* cache */
-    private List<String> languages = null;
-
-    public LanguageSelector()
-    {
-        /* Should be stateless, but we use some caches. */
-    }
 
     @Override
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
@@ -68,7 +60,6 @@ public class LanguageSelector implements Component
             return;
         default:
             res.sendUnknownActionError();
-            return;
         }
     }
 
@@ -86,25 +77,21 @@ public class LanguageSelector implements Component
     private LanguageSelectorResponse getState(ServiceProvider serviceProvider)
     {
         Project project = serviceProvider.getProject();
-        
-        if( languages == null )
-        {
-            languages = Arrays.stream( project.getLanguages() ).map( String::toUpperCase ).collect(Collectors.toList());
-        }
 
-        String language = UserInfoHolder.getLanguage();
-        String selected = language.toUpperCase();
-        Map<String, String> messages = readMessages(project, language);
+        List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
+
+        String selectedLanguage = UserInfoHolder.getLanguage().toUpperCase();
+        Map<String, String> messages = readMessages(project, selectedLanguage);
         
-        return new LanguageSelectorResponse(languages, selected, messages);
+        return new LanguageSelectorResponse(languages, selectedLanguage, messages);
     }
 
     private Map<String, String> readMessages(Project project, String language)
     {
-        Map<String, String> messages = new LinkedHashMap<>();
+        Map<String, String> messages = new HashMap<>();
         
         StreamEx.of(project.getModulesAndApplication())
-            .map( m -> m.getLocalizations().get( language )).nonNull()
+            .map( m -> m.getLocalizations().get( language.toLowerCase() )).nonNull()
             .map( ll -> ll.get( "javascript" ) ).nonNull()
             .flatMap( el -> el.getRows().stream() )
             .filter( row -> row.getTopic().equals( DatabaseConstants.L10N_TOPIC_PAGE ) )
