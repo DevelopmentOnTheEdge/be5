@@ -155,7 +155,7 @@ public class MainServlet extends HttpServlet
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         if(UserInfoHolder.getUserInfo() == null){
-            serviceProvider.getLoginService().initGuest(req);
+            serviceProvider.getLoginService().initGuest(req, serviceProvider);
         }
 
         String componentId = uriParts[ind+1];

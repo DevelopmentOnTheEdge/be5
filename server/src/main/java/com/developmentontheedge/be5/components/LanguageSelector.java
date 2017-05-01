@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -13,6 +12,7 @@ import one.util.streamex.StreamEx;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -54,7 +54,7 @@ public class LanguageSelector implements Component
     {
         /* Should be stateless, but we use some caches. */
     }
-    
+
     @Override
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
     {
@@ -79,8 +79,7 @@ public class LanguageSelector implements Component
 
     private LanguageSelectorResponse selectLanguage(Request req, ServiceProvider serviceProvider)
     {
-        UserInfoHolder.changeLanguage(req.getNonEmpty("language"));
-
+        serviceProvider.getLoginService().setLanguage(new Locale(req.getNonEmpty("language")));
         return getState(serviceProvider);
     }
 

@@ -1,11 +1,12 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -20,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -89,7 +89,7 @@ public class LoginServiceImpl implements LoginService
         return "user_pass = " + Utils.safestr( connector, password, true );
     }
 
-    private List<String> getAvailableRoles(String username) {
+    private List<String> selectAvailableRoles(String username) {
         return db.selectList("SELECT role_name FROM user_roles WHERE user_name = ?",
                     rs -> rs.getString(1), username);
     }
@@ -99,7 +99,7 @@ public class LoginServiceImpl implements LoginService
         {
             if (login(username, password))
             {
-                saveCurrentUser(req, username);
+                saveUser(username, req);
                 return true;
             }
 
@@ -111,32 +111,36 @@ public class LoginServiceImpl implements LoginService
         }
     }
 
-    private void saveCurrentUser(Request req, String username) {
-        UserInfo ui = new UserInfo(username, new Date());
-
-        //Roles
-        List<String> availableRoles = getAvailableRoles(username);
-        ui.setCurrentRoles(availableRoles);
-        ui.setAvailableRoles(availableRoles);
-
-        //Locale
-        ui.setLocale(req.getRawRequest().getLocale());
-        setAvailableLanguage(ui);
+    private void saveUser(String username, Request req) {
+        UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale());
 
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
-        session.setAttribute( SessionConstants.USER_INFO, ui );
-        //unused? session.setAttribute(SessionConstants.CURRENT_USER, username);
-        UserInfoHolder.setUserInfo(ui);
+        session.setAttribute(SessionConstants.USER_INFO, ui);
 
         log.info("Login user: " + username);
     }
 
-    private void setAvailableLanguage(UserInfo ui){
+    @Override
+    public UserInfo saveUser(String userName, List<String> availableRoles, Locale locale){
+        UserInfo ui = new UserInfo(userName, availableRoles);
+        UserInfoHolder.setUserInfo(ui);
+        setLanguage(locale);
+        return ui;
+    }
+
+    @Override
+    public void setLanguage(Locale locale)
+    {
         List<String> languages = StreamEx.of(project.getProject().getLanguages()).toList();
 
-        if(!languages.contains(ui.getLocale().getLanguage())){
-            ui.setLocale(new Locale( languages.get(0) ));
+        if(languages.contains(locale.getLanguage()))
+        {
+            UserInfoHolder.getUserInfo().setLocale(locale);
+        }
+        else
+        {
+            UserInfoHolder.getUserInfo().setLocale(new Locale( languages.get(0) ));
         }
     }
 
@@ -152,23 +156,19 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public void initGuest(Request req)
+    public void initGuest(Request req, ServiceProvider sp)
     {
-        UserInfo ui = new UserInfo();
-        ui.setCurrentRoles(Collections.singletonList(RoleType.ROLE_GUEST));
-        ui.setAvailableRoles(Collections.singletonList(RoleType.ROLE_GUEST));
-
+        Locale locale;
         if(req != null)
         {
-            ui.setLocale(req.getRawRequest().getLocale());
+            locale = req.getRawRequest().getLocale();
         }
         else
         {
-            ui.setLocale(Locale.US);
+            locale = Locale.US;
         }
-        setAvailableLanguage(ui);
 
-        UserInfoHolder.setUserInfo(ui);
+        sp.getLoginService().saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale);
     }
 
 }

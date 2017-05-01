@@ -5,9 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 

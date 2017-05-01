@@ -38,7 +38,7 @@ public abstract class AbstractProjectTest
         try
         {
             moduleLoader.load(sp, loadedClasses);
-            sp.getLoginService().initGuest(null);
+            sp.getLoginService().initGuest(null, sp);
         }
         catch (IOException e)
         {
@@ -94,14 +94,7 @@ public abstract class AbstractProjectTest
 
     protected void initUserWithRoles(String... roles)
     {
-        UserInfo ui = new UserInfo();
-        ui.setUserName("testUser");
-        ui.setLocale(Locale.US);
-
-        ui.setCurrentRoles(Arrays.asList(roles));
-        ui.setAvailableRoles(Arrays.asList(roles));
-
-        UserInfoHolder.setUserInfo(ui);
+        sp.getLoginService().saveUser("testUser", Arrays.asList(roles), Locale.US);
     }
 
 }

@@ -9,8 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,14 +30,8 @@ public class UserInfoTest extends AbstractProjectTest
     @Before
     public void setUpTestUser()
     {
-        String username = "test";
-        ArrayList<String> roles = new ArrayList<>();
-        roles.add("1");roles.add("2");
-
-        ui = new UserInfo(username, new Date());
-
-        ui.setCurrentRoles( new ArrayList<>(roles));
-        ui.setAvailableRoles( new ArrayList<>(roles));
+        List<String> roles = Arrays.asList("1", "2");
+        ui = sp.getLoginService().saveUser("test", roles, Locale.US);
 
         assertEquals(roles, ui.getCurrentRoles());
     }
@@ -55,7 +51,7 @@ public class UserInfoTest extends AbstractProjectTest
 
     @Test
     public void testGuestRoles(){
-        loginService.initGuest(null);
+        loginService.initGuest(null, sp);
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getCurrentRoles());
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getAvailableRoles());
 
@@ -65,7 +61,7 @@ public class UserInfoTest extends AbstractProjectTest
 
     @Test
     public void testGuestLocale(){
-        loginService.initGuest(null);
+        loginService.initGuest(null, sp);
         assertEquals("ru", UserInfoHolder.getLanguage());
     }
 

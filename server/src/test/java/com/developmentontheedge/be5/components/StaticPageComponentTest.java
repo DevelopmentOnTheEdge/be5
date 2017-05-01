@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,8 +27,7 @@ public class StaticPageComponentTest extends AbstractProjectTest
         Response response = mock(Response.class);
 
         component.generate(getMockRequest("info.be"), response, sp);
-
-        verify(response).sendAsJson(eq("static"), eq("<h1>Info</h1>\n<p>Test text.</p>"));
+        verify(response).sendAsJson(eq("static"), eq("<h1>Info</h1><p>Test text.</p>"));
     }
 
     @Test

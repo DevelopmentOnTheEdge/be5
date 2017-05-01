@@ -2,12 +2,13 @@ package com.developmentontheedge.be5.model;
 
 /** $Id: UserInfo.java,v 1.20 2014/02/13 06:24:45 lan Exp $ */
 
-import com.developmentontheedge.be5.metadata.RoleType;
+import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -17,7 +18,6 @@ public class UserInfo implements Serializable
 {
     private String userName;
     private Date creationTime;
-    private String createdInThread;
 
     private List<String> availableRoles;
     private List<String> currentRoles;
@@ -27,12 +27,14 @@ public class UserInfo implements Serializable
         return userName;
     }
 
-    public UserInfo(){}
-
-    public UserInfo(String userName, Date creationTime)
+    public UserInfo(String userName, List<String> availableRoles)
     {
         this.userName = userName;
-        this.creationTime = creationTime;
+        this.availableRoles = ImmutableList.copyOf(availableRoles);
+        this.currentRoles = new ArrayList<>(availableRoles);
+
+        this.creationTime = new Date();
+        this.locale = Locale.US;
     }
 
     public void setUserName(String userName )
@@ -83,10 +85,6 @@ public class UserInfo implements Serializable
         return false;
     }
 
-//    public Operation.SessionAdapter createSessionAdapter()
-//    {
-//        return Utils.createSessionAdapter( getSession() );
-//    }
 
     protected Timestamp loggedInTime;
     public Timestamp getLoggedInTime()
@@ -106,11 +104,6 @@ public class UserInfo implements Serializable
         return remoteAddr;
     }
 
-    public String getCreatedInThread()
-    {
-        return createdInThread;
-    }
-
     public Date getCreationTime()
     {
         return creationTime;
@@ -121,35 +114,14 @@ public class UserInfo implements Serializable
         return currentRoles.contains(role);
     }
 
-    public boolean isAdmin()
-    {
-        return currentRoles.contains(RoleType.ROLE_ADMINISTRATOR)
-                || currentRoles.contains(RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
-    public boolean isGuest()
-    {
-        return getUserName() == null;
-    }
-
     public List<String> getAvailableRoles()
     {
         return availableRoles;
     }
 
-    public void setAvailableRoles(List<String> availableRoles)
-    {
-        this.availableRoles = availableRoles;
-    }
-
     public List<String> getCurrentRoles()
     {
         return currentRoles;
-    }
-
-    public void setCurrentRoles(List<String> currentRoles)
-    {
-        this.currentRoles = currentRoles;
     }
 
     public void selectRoles(List<String> roles)
