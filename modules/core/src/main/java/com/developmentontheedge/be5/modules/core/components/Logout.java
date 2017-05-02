@@ -13,7 +13,7 @@ public class Logout implements Component
     public void generate(Request req, Response res, ServiceProvider serviceProvider)
     {
         serviceProvider.getLoginService().logout(req);
-        res.sendAsRawJson(ImmutableMap.of());
+        res.sendSuccess();
     }
 
 }
