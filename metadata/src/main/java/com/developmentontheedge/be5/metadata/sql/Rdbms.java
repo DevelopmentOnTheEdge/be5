@@ -15,6 +15,8 @@ import com.developmentontheedge.be5.metadata.sql.schema.PostgresSchemaReader;
 import com.developmentontheedge.be5.metadata.sql.schema.SqlServerSchemaReader;
 import com.developmentontheedge.be5.metadata.sql.type.Db2TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.DefaultTypeManager;
+import com.developmentontheedge.be5.metadata.sql.type.H2TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
@@ -65,7 +67,7 @@ public enum Rdbms
             null, "", "", "" ),
     H2(DbmsType.H2,
             new PostgresMacroProcessorStrategy(),
-            new PostgresTypeManager(),
+            new H2TypeManager(),
             new PostgresSchemaReader(),
             "", "org.h2.Driver", "" );
 

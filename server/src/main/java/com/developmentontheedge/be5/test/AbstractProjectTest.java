@@ -8,10 +8,14 @@ import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.ServerModuleLoader;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,21 +43,24 @@ public abstract class AbstractProjectTest
             e.printStackTrace();
         }
 
-        if(sp.getProject().getProject().getConnectionProfile() != null)
+        if(sp.getProject().getProject().getConnectionProfile() == null)
         {
-            sp.getLoginService().initGuest(null, sp);
-            createTables();
-            insertTestData();
-        }
-    }
+            Project project = sp.getProject().getProject();
+            BeConnectionProfile profile = new BeConnectionProfile( "testProfile", project.getConnectionProfiles().getLocalProfiles());
+            profile.setConnectionUrl( "jdbc:h2:~/testBe5" );
+            profile.setUsername("sa");
+            profile.setPassword("");
+            profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
+            DataElementUtils.save( profile );
+            project.setConnectionProfileName( "testProfile" );
 
-    private static void insertTestData()
-    {
-        SqlService db = sp.getSqlService();
-        db.insert("insert into testtable (name, value) VALUES (?, ?)",
-                "test", "1");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)",
-                "test", "2");
+            if(project.getProject().getLanguages().length == 0){
+                project.getApplication().getLocalizations().addLocalization( "en", "test", Arrays.asList("myTopic"), "foo", "bar" );
+            }
+        }
+
+        sp.getLoginService().initGuest(null, sp);
+        createTables();
     }
 
     private static void createTables()

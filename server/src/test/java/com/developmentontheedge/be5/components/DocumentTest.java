@@ -41,7 +41,7 @@ public class DocumentTest extends AbstractProjectTest
                 RestApiConstants.ENTITY,"testtable",
                 RestApiConstants.QUERY,"All records")), response, sp);
 
-        verify(response).sendAsJson(eq(2L));
+        verify(response).sendAsJson(eq(0L));
     }
 
 }

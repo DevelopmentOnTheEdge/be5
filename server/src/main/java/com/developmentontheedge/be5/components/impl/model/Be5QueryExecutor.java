@@ -445,7 +445,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return finalSQL;
     }
 
-    protected static void countFromQuery(AstQuery query) {
+    private void countFromQuery(AstQuery query) {
         AstTableRef tableRef = new AstTableRef(
                 true,
                 new AstParenthesis( query.clone() ),
