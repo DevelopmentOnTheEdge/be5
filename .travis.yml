@@ -1,5 +1,5 @@
 language: java
-before_deploy:
+before_install:
   - git clone https://github.com/DevelopmentOnTheEdge/xmltest.git
     && cd xmltest
     && mvn install
