@@ -1,4 +1,12 @@
 language: java
+before_deploy:
+  - git clone https://github.com/DevelopmentOnTheEdge/xmltest.git \
+    && cd xmltest \
+    && mvn install \
+    && cd ../ \
+    && git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git \
+    && cd beanexplorer/beans \
+    && mvn install
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 after_success:
