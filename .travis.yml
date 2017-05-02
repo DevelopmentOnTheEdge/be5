@@ -3,9 +3,11 @@ before_install:
   - git clone https://github.com/DevelopmentOnTheEdge/xmltest.git
     && cd xmltest
     && mvn install
+    && cd ../
   - git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git
     && cd beanexplorer/beans
     && mvn install
+    && cd ../../
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
