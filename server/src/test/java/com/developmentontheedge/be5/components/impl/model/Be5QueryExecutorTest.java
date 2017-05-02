@@ -1,10 +1,12 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import com.developmentontheedge.be5.AbstractProjectTest;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -17,12 +19,24 @@ public class Be5QueryExecutorTest extends AbstractProjectTest
 {
     private static Be5QueryExecutor be5QueryExecutor;
 
+    @BeforeClass
+    public static void beforeClass()
+    {
+        SqlService db = sp.getSqlService();
+        db.insert("insert into testtable (name, value) VALUES (?, ?)",
+                "test", "1");
+        db.insert("insert into testtable (name, value) VALUES (?, ?)",
+                "test", "2");
+    }
+
     @Before
     public void init(){
         Query query = sp.getProject().getEntity("testtable").getQueries().get("All records");
         Request req = mock(Request.class);
         be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), req, sp);
     }
+
+
 
     @Test
     public void testExecute()

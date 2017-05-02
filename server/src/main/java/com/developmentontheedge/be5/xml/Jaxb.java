@@ -49,7 +49,7 @@ public class Jaxb
         }
         catch (JAXBException e)
         {
-            throw new AssertionError();
+            throw new RuntimeException(e);
         }
 
         return out.toString();

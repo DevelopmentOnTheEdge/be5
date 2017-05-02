@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
-import com.developmentontheedge.be5.components.Menu;
+import com.developmentontheedge.be5.modules.core.components.Login;
+import com.developmentontheedge.be5.modules.core.components.Logout;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,11 +32,12 @@ public class ServerModuleLoaderCoreTest
     @Test
     public void testLoad()
     {
-        //moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
         moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
         ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
 
+        assertEquals(Login.class, loadedClasses.get("login").getClass());
+        assertEquals(Logout.class, loadedClasses.get("logout").getClass());
     }
 
     private BufferedReader getReader(String file){

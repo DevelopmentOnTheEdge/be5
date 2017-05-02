@@ -121,6 +121,19 @@ public class DefaultTypeManager implements DbmsTypeManager
                 sb.append( ' ' ).append( "DEFAULT " ).append( defaultValue );
             }
         }
+
+        addCanBeNullAndAndConstraintClause(column, sb);
+
+        if ( column.isPrimaryKey() )
+        {
+            sb.append( ' ' ).append( "PRIMARY KEY" );
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public void addCanBeNullAndAndConstraintClause(ColumnDef column, StringBuilder sb)
+    {
         String constraint = getConstraintClause( column );
         if(!constraint.isEmpty())
         {
@@ -130,11 +143,6 @@ public class DefaultTypeManager implements DbmsTypeManager
         {
             sb.append( ' ' ).append( "NOT NULL" );
         }
-        if ( column.isPrimaryKey() )
-        {
-            sb.append( ' ' ).append( "PRIMARY KEY" );
-        }
-        return sb.toString();
     }
 
     public String getGeneratedPrefix()

@@ -1,10 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

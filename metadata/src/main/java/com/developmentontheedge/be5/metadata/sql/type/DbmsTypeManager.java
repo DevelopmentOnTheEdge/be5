@@ -29,8 +29,10 @@ public interface DbmsTypeManager
     String getDropColumnStatements( ColumnDef column );
     
     String getRenameColumnStatements( ColumnDef column, String newName );
-    
-    String getDropTableStatements( String table );
+
+    void addCanBeNullAndAndConstraintClause(ColumnDef column, StringBuilder sb);
+
+    String getDropTableStatements(String table );
 
     String getDropIndexClause( String index, String table );
     

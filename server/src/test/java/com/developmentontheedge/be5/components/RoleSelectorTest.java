@@ -1,11 +1,12 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.developmentontheedge.be5.components.RoleSelector.RoleSelectorResponse;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -35,8 +36,8 @@ public class RoleSelectorTest extends AbstractProjectTest
 
         component.generate(getMockRequest(""), response, sp);
 
-        RoleSelector.RoleSelectorResponse roleSelectorResponse =
-                new RoleSelector.RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST), ImmutableList.of(RoleType.ROLE_GUEST));
+        RoleSelectorResponse roleSelectorResponse =
+                new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST), ImmutableList.of(RoleType.ROLE_GUEST));
 
         verify(response).sendAsRawJson(eq(roleSelectorResponse));
     }
@@ -61,8 +62,8 @@ public class RoleSelectorTest extends AbstractProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
                 response, sp);
 
-        RoleSelector.RoleSelectorResponse roleSelectorResponse =
-                new RoleSelector.RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST),
+        RoleSelectorResponse roleSelectorResponse =
+                new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST),
                                                       ImmutableList.of(RoleType.ROLE_GUEST));
 
         verify(response).sendAsRawJson(eq(roleSelectorResponse));
@@ -78,8 +79,8 @@ public class RoleSelectorTest extends AbstractProjectTest
         component.generate(getSpyMockRequest("select",
                 ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, sp);
 
-        RoleSelector.RoleSelectorResponse roleSelectorResponse =
-                new RoleSelector.RoleSelectorResponse(
+        RoleSelectorResponse roleSelectorResponse =
+                new RoleSelectorResponse(
                         ImmutableList.of(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER),
                         ImmutableList.of(RoleType.ROLE_ADMINISTRATOR));
 

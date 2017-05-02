@@ -123,8 +123,14 @@ public class ModuleLoader2
             }
         }
         if(project == null){
-            throw new RuntimeException("Project is not found in load modules.");
+            log.warning("Project is not found in load modules.");
         }
+
+        //todo init module in current directory (not in jar)
+        for (Map.Entry<String,Project> module: modulesMap.entrySet()){
+            return module.getValue();
+        }
+
         ModuleLoader2.mergeModules(project, new JULLogger(log));
 
         return project;

@@ -7,6 +7,8 @@ public class FrontendConstants
      * The first part of the link to the table.
      */
     public static final String TABLE_ACTION = "table";
+
+    public static final String STATIC_ACTION = "static";
     
     /**
      * The first part of the link to the form.

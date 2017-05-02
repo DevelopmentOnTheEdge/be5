@@ -91,6 +91,15 @@ public class TableDefTest
             "TYPE VARCHAR(1) CHECK(TYPE IN ('a', 'b', 'c') ) NOT NULL,\n"+
             "\"comment\" VARCHAR(5000));\n"+
             "CREATE INDEX TEST_ID_IDX ON TEST(ID);\n", def.getDdl());
+
+        def.getProject().setDatabaseSystem( Rdbms.H2 );
+        assertEquals("DROP TABLE IF EXISTS test;\n"+
+                "CREATE TABLE test (\n"+
+                "id BIGINT NOT NULL,\n"+
+                "name VARCHAR(20),\n"+
+                "type VARCHAR(1) NOT NULL CHECK(type IN ('a', 'b', 'c') ),\n"+
+                "\"comment\" VARCHAR(5000));\n"+
+                "CREATE INDEX test_id_idx ON test(id);\n", def.getDdl());
     }
     
     @Test
