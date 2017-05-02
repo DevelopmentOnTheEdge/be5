@@ -1,11 +1,10 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.test.AbstractProjectTestH2DB;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -13,45 +12,39 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class Be5QueryExecutorTest extends AbstractProjectTest
+public class Be5QueryExecutorTest extends AbstractProjectTestH2DB
 {
-    private static Be5QueryExecutor be5QueryExecutor;
+    private Query query = sp.getProject().getEntity("testtable").getQueries().get("All records");
 
     @BeforeClass
-    public static void beforeClass()
+    public static void hasOneRow()
     {
         SqlService db = sp.getSqlService();
-        db.insert("insert into testtable (name, value) VALUES (?, ?)",
-                "test", "1");
-        db.insert("insert into testtable (name, value) VALUES (?, ?)",
-                "test", "2");
+        if((Long)db.selectScalar("select count(*) from testtable") == 0)
+        {
+            db.insert("insert into testtable (name, value) VALUES (?, ?)",
+                    "test", "1");
+        }
     }
-
-    @Before
-    public void init(){
-        Query query = sp.getProject().getEntity("testtable").getQueries().get("All records");
-        Request req = mock(Request.class);
-        be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), req, sp);
-    }
-
-
 
     @Test
     public void testExecute()
     {
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
         List<DynamicPropertySet> dps = be5QueryExecutor.execute().toList();
-        assertEquals(2, dps.size());
+        assertTrue(dps.size() > 0);
 
         Class<?> klass = dps.get(0).getProperty("name").getType();
         assertEquals(String.class, klass);
-        assertEquals("test", klass.cast(dps.get(0).getProperty("name").getValue()));
     }
 
     @Test
     public void testColumnNames()
     {
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
         List<String> columnNames = be5QueryExecutor.getColumnNames();
         assertEquals(2, columnNames.size());
         assertEquals("NAME", columnNames.get(0));
@@ -60,8 +53,9 @@ public class Be5QueryExecutorTest extends AbstractProjectTest
     @Test
     public void testCountFromQuery()
     {
-        long count = be5QueryExecutor.count();
-        assertEquals(2, count);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
+
+        assertTrue(be5QueryExecutor.count() > 0);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM " + "(" +
                 "SELECT\n" +
                 "      t.name AS \"Name\",\n" +

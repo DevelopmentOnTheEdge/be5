@@ -31,14 +31,11 @@ public class LoginServiceImpl implements LoginService
 {
     public static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
-    private DatabaseService databaseService;
     private SqlService db;
     private ProjectProvider project;
 
-
-    public LoginServiceImpl(DatabaseService databaseService, SqlService db, ProjectProvider project)
+    public LoginServiceImpl(SqlService db, ProjectProvider project)
     {
-        this.databaseService = databaseService;
         this.db = db;
         this.project = project;
     }
@@ -48,10 +45,10 @@ public class LoginServiceImpl implements LoginService
         try
         {
             String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = ?";
-            String passwordCheckClause = getPasswordCheckClause( databaseService, password );
+            String passwordCheckClause = getPasswordCheckClause();
             sql += " AND ("+passwordCheckClause+")";
 
-            if((long)db.selectScalar(sql, user) == 1){
+            if((long)db.selectScalar(sql, user, password) == 1){
                 return true;
             }
         }
@@ -70,7 +67,7 @@ public class LoginServiceImpl implements LoginService
         return false;
     }
 
-    private static String getPasswordCheckClause(DbmsConnector connector, String password) throws SQLException,
+    private static String getPasswordCheckClause() throws SQLException,
             GeneralSecurityException, UnsupportedEncodingException
     {
 //        if( passwordKey != null )
@@ -86,7 +83,7 @@ public class LoginServiceImpl implements LoginService
 //                    + Utils.safestr( connector, password, true );
 //        }
 
-        return "user_pass = " + Utils.safestr( connector, password, true );
+        return "user_pass = ?";
     }
 
     private List<String> selectAvailableRoles(String username) {
@@ -168,7 +165,7 @@ public class LoginServiceImpl implements LoginService
             locale = Locale.US;
         }
 
-        sp.getLoginService().saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale);
+        saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale);
     }
 
 }

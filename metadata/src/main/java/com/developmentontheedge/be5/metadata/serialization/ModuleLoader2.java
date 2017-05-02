@@ -12,7 +12,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +28,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
+import org.yaml.snakeyaml.Yaml;
 
 public class ModuleLoader2
 {
@@ -35,7 +36,7 @@ public class ModuleLoader2
 
     private static Map<String, Project> modulesMap;
     
-    private static synchronized void init()
+    private static synchronized void loadAllProjects()
     {
         if( modulesMap != null )
             return;
@@ -44,14 +45,14 @@ public class ModuleLoader2
 
         try
         {
-            Enumeration<URL> urls = (ModuleLoader2.class).getClassLoader().getResources(
-                    ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX);
+            ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
+                    ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
 
-            URL url;
-            while( urls.hasMoreElements() )
+            replaceURLtoSource(urls);
+
+            for (URL url : urls)
             {
                 LoadContext loadContext = new LoadContext();
-                url = urls.nextElement();
 
                 Project module;
                 String ext = url.toExternalForm();
@@ -92,20 +93,22 @@ public class ModuleLoader2
     
     public static boolean containsModule(String name)
     {
-        init();
+        loadAllProjects();
         
         return modulesMap.containsKey(name);
     }
     
     public static Path getModulePath(String name)
     {
-        init();
+        loadAllProjects();
         
         return modulesMap.get(name).getLocation();
     }
 
     public static Project findAndLoadProjectWithModules() throws ProjectLoadException {
-        init();
+        long startTime = System.nanoTime();
+
+        loadAllProjects();
 
         Project project = null;
         for (Map.Entry<String,Project> module: modulesMap.entrySet())
@@ -124,21 +127,21 @@ public class ModuleLoader2
         }
         if(project == null){
             log.warning("Project is not found in load modules.");
-        }
-
-        //todo init module in current directory (not in jar)
-        for (Map.Entry<String,Project> module: modulesMap.entrySet()){
-            return module.getValue();
+            //todo loadAllProjects module in current directory (not in jar)
+            for (Map.Entry<String,Project> module: modulesMap.entrySet()){
+                return module.getValue();
+            }
         }
 
         ModuleLoader2.mergeModules(project, new JULLogger(log));
 
+        log.info(ModuleLoader2.logLoadedProject(project, startTime));
         return project;
     }
 
 //    public static Project loadModule(String name, LoadContext context) throws ProjectLoadException
 //    {
-//        init();
+//        loadAllProjects();
 //
 //    	if( ! containsModule(name))
 //            throw new IllegalArgumentException("Module not found: " + name);
@@ -148,7 +151,7 @@ public class ModuleLoader2
 
     public static void addModuleScripts( Project project ) throws ReadException
     {
-        init();
+        loadAllProjects();
 
         for ( Module module : project.getModules() )
         {
@@ -299,5 +302,72 @@ public class ModuleLoader2
                 .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
         //log.info(sb.toString());
         return sb.toString();
+    }
+
+    /**
+     * For hot reload
+     * @param urls projects URL
+     */
+    private static void replaceURLtoSource(ArrayList<URL> urls)
+    {
+        try
+        {
+            Map<String, String> modulesSource = readDevPathsToSourceProjects();
+            StringBuilder sb = new StringBuilder("Replace project path for hot reload:");
+            boolean started = false;
+            for (int i = 0; i < urls.size(); i++)
+            {
+                for (Map.Entry<String, String> moduleSource : modulesSource.entrySet())
+                {
+                    String name = getProjectName(urls.get(i));
+                    if (name.equals(moduleSource.getKey()))
+                    {
+                        started = true;
+                        urls.set(i, Paths.get(moduleSource.getValue()).toUri().toURL());
+                        sb.append("\n - ").append(name).append(": ").append(urls.get(i));
+                    }
+                }
+            }
+            if(started)log.info(sb.toString());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static  String getProjectName(URL url) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
+        Map<String, Object> module = (Map<String, Object>)new Yaml().load(reader);
+        return module.entrySet().iterator().next().getKey();
+    }
+
+    /**
+     * dev.yaml example:
+     * pathsToSourceProjects:
+     * - testBe5app: /home/uuinnk/workspace/github/testapp/project.yaml
+     *
+     * @return Map name -> source path of modules
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, String> readDevPathsToSourceProjects() throws IOException
+    {
+        ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
+        if(urls.size() == 1){
+            BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
+            List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) ((Map<String, Object>) new Yaml().load(reader)).get("pathsToSourceProjects");
+            if(modulesTemp == null)return new HashMap<>();
+            Map<String, String> modules = new HashMap<>();
+            for (Map<String, String> element: modulesTemp)
+            {
+                Map.Entry<String, String> entry = element.entrySet().iterator().next();
+                modules.put(entry.getKey(), entry.getValue());
+            }
+            return modules;
+        }
+        return new HashMap<>();
     }
 }

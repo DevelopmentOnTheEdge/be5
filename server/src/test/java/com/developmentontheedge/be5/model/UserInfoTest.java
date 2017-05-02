@@ -17,14 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class UserInfoTest extends AbstractProjectTest
 {
-    private static LoginServiceImpl loginService;
     private static UserInfo ui;
-
-    @BeforeClass
-    public static void setUp()
-    {
-        loginService = new LoginServiceImpl(null, null, sp.getProjectProvider());
-    }
 
     @Before
     public void setUpTestUser()
