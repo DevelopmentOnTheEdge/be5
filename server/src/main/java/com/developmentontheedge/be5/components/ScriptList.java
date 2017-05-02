@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -13,6 +14,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.google.common.collect.ComparisonChain;
 
 public class ScriptList implements Component
 {
@@ -28,8 +30,8 @@ public class ScriptList implements Component
 
         //TODO find and load also modules action
         load(req, result, "be5/scripts", "be5");
-        //result.add(new ActionPaths("static", "be5:be5/actions/static"));
 
+        Collections.sort(result);
         res.sendAsRawJson(result);
     }
 
@@ -61,7 +63,7 @@ public class ScriptList implements Component
         }
     }
 
-    static class ActionPaths{
+    static class ActionPaths implements Comparable<ActionPaths>{
         String name;
         String path;
 
@@ -90,6 +92,15 @@ public class ScriptList implements Component
                     "name='" + name + '\'' +
                     ", path='" + path + '\'' +
                     '}';
+        }
+
+        @Override
+        public int compareTo(ActionPaths o)
+        {
+            return ComparisonChain.start()
+                    .compare(name, o.name)
+                    .compare(path, o.path)
+                    .result();
         }
     }
 
