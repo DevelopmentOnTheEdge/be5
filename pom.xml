@@ -21,6 +21,8 @@
 
  <properties>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <java.version>1.8</java.version>
+  <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
  </properties>
 
  <distributionManagement>
@@ -40,6 +42,14 @@
 
  <build>
   <plugins>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+     <source>${java.version}</source>
+     <target>${java.version}</target>
+    </configuration>
+   </plugin>
    <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-source-plugin</artifactId>
@@ -81,6 +91,11 @@
   </plugins>
   <pluginManagement>
    <plugins>
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-compiler-plugin</artifactId>
+     <version>${maven-compiler-plugin.version}</version>
+    </plugin>
     <plugin>
      <groupId>org.jacoco</groupId>
      <artifactId>jacoco-maven-plugin</artifactId>
