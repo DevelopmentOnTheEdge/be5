@@ -45,9 +45,6 @@ public class MainServlet extends HttpServlet
 
         // load on startup
         ServerModules.getServiceProvider();
-
-
-        //WebSocketServlet.setMain(this);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class MainServlet extends HttpServlet
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         if(UserInfoHolder.getUserInfo() == null){
-            ServerModules.getServiceProvider().getLoginService().initGuest(req, ServerModules.getServiceProvider());
+            ServerModules.getServiceProvider().getLoginService().initGuest(req);
         }
 
         runComponent(uriParts[ind+1], req, res);
@@ -121,19 +118,18 @@ public class MainServlet extends HttpServlet
         }
     }
 
-    private void preprocessRequest(HttpServletRequest request)
-    {
-        /*
-    	String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
-
-        if( className != null )
-        {
-            RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
-                    .getConstructor(DatabaseService.class, UserInfo.class ).newInstance( databaseService, userInfo );
-
-            preprocessor.preprocessUrl( request, url );
-        }*/
-    }
+//    private void preprocessRequest(HttpServletRequest request)
+//    {
+//        String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
+//
+//        if( className != null )
+//        {
+//            RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
+//                    .getConstructor(DatabaseService.class, UserInfo.class ).newInstance( databaseService, userInfo );
+//
+//            preprocessor.preprocessUrl( request, url );
+//        }
+//    }
 
     ///////////////////////////////////////////////////////////////////
     // web socket
@@ -223,7 +219,7 @@ public class MainServlet extends HttpServlet
      * Transforms a parameters from a multimap to a simple map,
      * ignoring parameters with several values.
      */
-    private Map<String, String> simplify(Map<String, String[]> parameters)
+    Map<String, String> simplify(Map<String, String[]> parameters)
     {
         Map<String, String> simplified = new HashMap<>();
 

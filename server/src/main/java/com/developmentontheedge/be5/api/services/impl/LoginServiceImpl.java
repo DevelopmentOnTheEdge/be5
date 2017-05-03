@@ -153,7 +153,7 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public void initGuest(Request req, ServiceProvider sp)
+    public void initGuest(Request req)
     {
         Locale locale;
         if(req != null)

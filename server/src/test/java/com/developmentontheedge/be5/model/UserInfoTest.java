@@ -43,7 +43,7 @@ public class UserInfoTest extends AbstractProjectTest
 
     @Test
     public void testGuestRoles(){
-        loginService.initGuest(null, sp);
+        loginService.initGuest(null);
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getCurrentRoles());
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getAvailableRoles());
 
@@ -53,7 +53,7 @@ public class UserInfoTest extends AbstractProjectTest
 
     @Test
     public void testGuestLocale(){
-        loginService.initGuest(null, sp);
+        loginService.initGuest(null);
         assertEquals("ru", UserInfoHolder.getLanguage());
     }
 

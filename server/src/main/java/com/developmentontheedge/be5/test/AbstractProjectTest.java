@@ -32,7 +32,7 @@ public abstract class AbstractProjectTest
         }
 
         loginService = new LoginServiceImpl(null, sp.getProjectProvider());
-        loginService.initGuest(null, sp);
+        loginService.initGuest(null);
     }
 
     protected Request getMockRequest(String requestUri){
