@@ -36,9 +36,9 @@ public class ModuleLoader2
 
     private static Map<String, Project> modulesMap;
     
-    private static synchronized void loadAllProjects()
+    private static synchronized void loadAllProjects(boolean dirty)
     {
-        if( modulesMap != null )
+        if( modulesMap != null && !dirty)
             return;
 
         modulesMap = new HashMap<>();
@@ -93,14 +93,14 @@ public class ModuleLoader2
     
     public static boolean containsModule(String name)
     {
-        loadAllProjects();
+        loadAllProjects(false);
         
         return modulesMap.containsKey(name);
     }
     
     public static Path getModulePath(String name)
     {
-        loadAllProjects();
+        loadAllProjects(false);
         
         return modulesMap.get(name).getLocation();
     }
@@ -108,7 +108,7 @@ public class ModuleLoader2
     public static Project findAndLoadProjectWithModules() throws ProjectLoadException {
         long startTime = System.nanoTime();
 
-        loadAllProjects();
+        loadAllProjects(true);
 
         Project project = null;
         for (Map.Entry<String,Project> module: modulesMap.entrySet())
@@ -141,7 +141,7 @@ public class ModuleLoader2
 
     public static void addModuleScripts( Project project ) throws ReadException
     {
-        loadAllProjects();
+        loadAllProjects(false);
 
         for ( Module module : project.getModules() )
         {
