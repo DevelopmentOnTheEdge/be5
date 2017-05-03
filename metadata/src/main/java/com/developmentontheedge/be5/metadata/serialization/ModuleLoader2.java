@@ -129,7 +129,7 @@ public class ModuleLoader2
             log.warning("Project is not found in load modules.");
             //todo loadAllProjects module in current directory (not in jar)
             for (Map.Entry<String,Project> module: modulesMap.entrySet()){
-                return module.getValue();
+                project = module.getValue();
             }
         }
 
@@ -188,12 +188,7 @@ public class ModuleLoader2
         loadContext.check();
     }
 
-    /**
-     * 
-     * @param model
-     * @throws ProjectLoadException
-     */
-    public static void mergeAllModules(
+    private static void mergeAllModules(
         final Project model,
         final ProcessController logger,
         final LoadContext context ) throws ProjectLoadException
@@ -201,11 +196,6 @@ public class ModuleLoader2
         mergeAllModules(model, loadModules(model, logger, context), context);
     }
 
-    /**
-     * 
-     * @param model
-     * @throws ProjectLoadException
-     */
     public static void mergeAllModules( final Project model, List<Project> modules, final LoadContext context ) throws ProjectLoadException
     {
         modules = new LinkedList<>( modules );
@@ -222,7 +212,7 @@ public class ModuleLoader2
         }
     }
 
-    public static Project foldModules( final List<Project> modules, LoadContext context )
+    private static Project foldModules( final List<Project> modules, LoadContext context )
     {
         if ( modules.isEmpty() )
         {
@@ -278,7 +268,17 @@ public class ModuleLoader2
 
     public static String logLoadedProject(Project project, long startTime)
     {
-        StringBuilder sb = new StringBuilder("Project loaded:\n" + project.getName());
+        StringBuilder sb = new StringBuilder();
+        if(project.isModuleProject())
+        {
+            sb.append("Module loaded:\n");
+        }
+        else
+        {
+            sb.append("Project loaded:\n");
+        }
+
+        sb.append(project.getName());
 
         if(project.getModules().getSize()>0)
         {
@@ -339,7 +339,6 @@ public class ModuleLoader2
      * - testBe5app: /home/uuinnk/workspace/github/testapp/project.yaml
      *
      * @return Map name -> source path of modules
-     * @throws IOException
      */
     @SuppressWarnings("unchecked")
     private static Map<String, String> readDevPathsToSourceProjects() throws IOException
