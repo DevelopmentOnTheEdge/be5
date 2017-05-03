@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components;
 
+import com.developmentontheedge.be5.env.ServerModules;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -25,7 +26,7 @@ public class RoleSelectorTest extends AbstractProjectTest
 
     @BeforeClass
     public static void init(){
-        component = loadedClasses.get("roleSelector");
+        component = ServerModules.getComponent("roleSelector");
     }
 
 

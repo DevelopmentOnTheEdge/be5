@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
-import com.developmentontheedge.be5.env.ServerModuleLoader;
+import com.developmentontheedge.be5.env.ServerModules;
 import com.developmentontheedge.be5.metadata.model.Project;
 import org.mockito.Mockito;
 
@@ -23,17 +23,12 @@ import static org.mockito.Mockito.mock;
 
 public abstract class AbstractProjectTest
 {
-    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
-
-    protected static final ServiceProvider sp = new MainServiceProvider();
-    protected static final ComponentProvider loadedClasses = new MainComponentProvider();
+    protected static final ServiceProvider sp = ServerModules.getServiceProvider();
 
     protected static final LoginServiceImpl loginService ;
 
     static {
-        moduleLoader.load(sp, loadedClasses);
-
-        Project project = sp.getProject().getProject();
+        Project project = ServerModules.getServiceProvider().getProject();
 
         if(project.getProject().getLanguages().length == 0){
             project.getApplication().getLocalizations().addLocalization( "en", "test", Collections.singletonList("myTopic"), "foo", "bar" );
