@@ -17,7 +17,7 @@ public class Login implements Component
     {
         final boolean loggedIn;
 
-        State(boolean loggedIn)
+        public State(boolean loggedIn)
         {
             this.loggedIn = loggedIn;
         }
