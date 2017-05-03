@@ -1,10 +1,7 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.impl.MainComponentProvider;
-import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.env.ServerModules;

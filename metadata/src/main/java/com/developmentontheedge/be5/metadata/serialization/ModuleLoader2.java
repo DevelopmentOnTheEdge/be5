@@ -326,7 +326,7 @@ public class ModuleLoader2
     }
 
     @SuppressWarnings("unchecked")
-    private static  String getProjectName(URL url) throws IOException
+    private static String getProjectName(URL url) throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
         Map<String, Object> module = (Map<String, Object>)new Yaml().load(reader);

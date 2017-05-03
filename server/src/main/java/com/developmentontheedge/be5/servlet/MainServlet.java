@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.servlet;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,22 +13,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
-import javax.websocket.CloseReason.CloseCodes;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
-import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.env.ServerModules;
-import com.developmentontheedge.be5.model.UserInfo;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -47,10 +38,6 @@ public class MainServlet extends HttpServlet
 
     //TODO private final DaemonStarter starter;
 
-    ///////////////////////////////////////////////////////////////////
-    // init
-    //
-
     @Override
     public void init(ServletConfig config) throws ServletException 
     {
@@ -63,38 +50,16 @@ public class MainServlet extends HttpServlet
         //WebSocketServlet.setMain(this);
     }
 
-    ///////////////////////////////////////////////////////////////////
-    // responses
-    //
-    
-    /**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	@Override
+    @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-	    respond(request, response);
+	    respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
 	}
 	
-	/**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    @Override
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
     {
-        respond(request, response);
-    }
-    
-    private void respond(HttpServletRequest request, HttpServletResponse response) throws ServletException 
-    {
-        try
-        {
-            respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
-	    }
-        catch (Exception e)
-        {
-	        throw new ServletException(e);
-	    }
+        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
     }
 
     /**
@@ -135,33 +100,14 @@ public class MainServlet extends HttpServlet
             ServerModules.getServiceProvider().getLoginService().initGuest(req, ServerModules.getServiceProvider());
         }
 
-        String componentId = uriParts[ind+1];
-        Component component;
-        try
-        {
-            component = ServerModules.getComponent(componentId);
-        }
-        catch( Be5Exception e )
-        {
-            res.sendError(e);
-            return;
-        }
+        runComponent(uriParts[ind+1], req, res);
+    }
 
-        // do some preprocessing using
-        // a registered ('system -> REQUEST_PREPROCESSOR') request preprocessor
+    void runComponent(String componentId, Request req, Response res)
+    {
         try
         {
-            preprocessRequest( request, ServerModules.getServiceProvider().getDatabaseService(), UserInfoHolder.getUserInfo(), "qps" );
-        }
-        catch( Exception e ) // ignore checkers' warnings, we want to catch them all
-        {
-            log.log(Level.SEVERE, e.getMessage(), e);
-            res.sendError( Be5Exception.internal(e, "preprocess Request") );
-            return;
-        }
-
-        try
-        {
+            Component component = ServerModules.getComponent(componentId);
             ServerModules.configureComponentIfConfigurable(component, componentId);
             component.generate( req, res, ServerModules.getServiceProvider() );
         }
@@ -175,8 +121,7 @@ public class MainServlet extends HttpServlet
         }
     }
 
-    private void preprocessRequest(HttpServletRequest request, DatabaseService databaseService, UserInfo userInfo, String url)
-            throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
+    private void preprocessRequest(HttpServletRequest request)
     {
         /*
     	String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
