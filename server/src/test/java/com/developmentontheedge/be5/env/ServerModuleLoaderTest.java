@@ -5,7 +5,9 @@ import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
+import com.developmentontheedge.be5.components.Document;
 import com.developmentontheedge.be5.components.Menu;
+import com.developmentontheedge.be5.components.StaticPageComponent;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,8 +44,10 @@ public class ServerModuleLoaderTest
         moduleLoader.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
         //moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
-        //ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
+        ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader(CONTEXT_FILE));
 
+        assertEquals(Document.class, loadedClasses.get("document").getClass());
+        assertEquals(StaticPageComponent.class, loadedClasses.get("static").getClass());
     }
 
     @Test(expected = Be5Exception.class)

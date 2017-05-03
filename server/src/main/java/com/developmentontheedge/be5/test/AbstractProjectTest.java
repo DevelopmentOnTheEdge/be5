@@ -13,8 +13,8 @@ import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -31,19 +31,12 @@ public abstract class AbstractProjectTest
     protected static final LoginServiceImpl loginService ;
 
     static {
-        try
-        {
-            moduleLoader.load(sp, loadedClasses);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        moduleLoader.load(sp, loadedClasses);
 
         Project project = sp.getProject().getProject();
 
         if(project.getProject().getLanguages().length == 0){
-            project.getApplication().getLocalizations().addLocalization( "en", "test", Arrays.asList("myTopic"), "foo", "bar" );
+            project.getApplication().getLocalizations().addLocalization( "en", "test", Collections.singletonList("myTopic"), "foo", "bar" );
         }
 
         loginService = new LoginServiceImpl(null, sp.getProjectProvider());

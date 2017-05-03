@@ -70,15 +70,7 @@ public class MainServlet extends HttpServlet
     public void init(ServletConfig config) throws ServletException 
     {
         super.init(config);
-
-        try
-        {
-            moduleLoader.load(serviceProvider, loadedClasses);
-        }
-        catch (IOException e)
-        {
-            throw Be5Exception.internal(e, "Can't load server modules.");
-        }
+        moduleLoader.load(serviceProvider, loadedClasses);
 
         WebSocketServlet.setMain(this);
     }

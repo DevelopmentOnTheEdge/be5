@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -25,14 +25,21 @@ public class ServerModuleLoader
 
     private static final Logger log = Logger.getLogger(ServerModuleLoader.class.getName());
 
-    public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses) throws IOException
+    public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses)
     {
-        ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
-
-        for (URL url: urls){
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-
-            loadModules(reader, serviceProvider, loadedClasses);
+        try{
+            ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
+            for (URL url: urls)
+            {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+                {
+                    loadModules(reader, serviceProvider, loadedClasses);
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            throw Be5Exception.internal(e, "Can't load server modules.");
         }
 
         ConfigurationProvider.INSTANCE.loadConfiguration();
@@ -44,7 +51,7 @@ public class ServerModuleLoader
         serviceProvider.getLogger();
         //init main modules on startup
 
-        if(serviceProvider.getProject().getProject().getConnectionProfile() != null)
+        if(serviceProvider.getProject().getConnectionProfile() != null)
         {
             serviceProvider.getDatabaseService();
         }

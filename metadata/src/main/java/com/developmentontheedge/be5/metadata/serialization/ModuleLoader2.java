@@ -139,16 +139,6 @@ public class ModuleLoader2
         return project;
     }
 
-//    public static Project loadModule(String name, LoadContext context) throws ProjectLoadException
-//    {
-//        loadAllProjects();
-//
-//    	if( ! containsModule(name))
-//            throw new IllegalArgumentException("Module not found: " + name);
-//
-//        return Serialization.load(modulesMap.get(name), true, context );
-//    }
-
     public static void addModuleScripts( Project project ) throws ReadException
     {
         loadAllProjects();
@@ -300,7 +290,6 @@ public class ModuleLoader2
         }
         sb.append("\nloading time: ")
                 .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
-        //log.info(sb.toString());
         return sb.toString();
     }
 
