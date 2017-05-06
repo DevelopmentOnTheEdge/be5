@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.env.ServerModuleLoader.CONTEXT_FILE;
+import static com.developmentontheedge.be5.env.ServerModules.CONTEXT_FILE;
 
 public enum ConfigurationProvider
 {
@@ -68,13 +69,15 @@ public enum ConfigurationProvider
 
             for (URL url : urls)
             {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-                loadModuleConfiguration(reader);
+                try(BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+                {
+                    loadModuleConfiguration(reader);
+                }
             }
         }
         catch (IOException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5Exception.internal(e,"Can't load server modules configuration.");
         }
     }
 

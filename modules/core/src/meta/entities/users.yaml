@@ -42,6 +42,10 @@ users:
     - comments:
         type: VARCHAR(255)
         canBeNull: true
+    indices:
+    - IDX_USER_EMAIL:
+        columns:
+        - emailAddress
   queries:
   - '*** Selection view ***':
       code: |-

@@ -5,7 +5,9 @@ import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.impl.MainComponentProvider;
+import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
@@ -19,20 +21,55 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ServerModuleLoader
+public class ServerModules
 {
+    private static final Logger log = Logger.getLogger(ServerModules.class.getName());
+
+    private final ServiceProvider serviceProvider = new MainServiceProvider();
+    private final ComponentProvider loadedClasses = new MainComponentProvider();
+
+    /**
+     * Classes cache: webSocketComponentId->class.
+     */
+    //private static final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
+
     static final String CONTEXT_FILE = "context.yaml";
 
-    private static final Logger log = Logger.getLogger(ServerModuleLoader.class.getName());
+    private static class SingletonHolder {
+        private static final ServerModules instance = new ServerModules();
+    }
 
-    public void load(ServiceProvider serviceProvider, ComponentProvider loadedClasses) throws IOException
+    public static ServiceProvider getServiceProvider() {
+        return SingletonHolder.instance.serviceProvider;
+    }
+
+    public static ComponentProvider getComponents() {
+        return SingletonHolder.instance.loadedClasses;
+    }
+
+    public static Component getComponent(String componentId) {
+        return SingletonHolder.instance.loadedClasses.get(componentId);
+    }
+
+    public static void configureComponentIfConfigurable(Component component, String componentId)
     {
-        ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
+        configureIfConfigurable(component, "components", componentId);
+    }
 
-        for (URL url: urls){
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-
-            loadModules(reader, serviceProvider, loadedClasses);
+    private ServerModules() {
+        try{
+            ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
+            for (URL url: urls)
+            {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+                {
+                    loadModules(reader, serviceProvider, loadedClasses);
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            throw Be5Exception.internal(e, "Can't load server modules.");
         }
 
         ConfigurationProvider.INSTANCE.loadConfiguration();
@@ -42,16 +79,15 @@ public class ServerModuleLoader
 
         //config logger first
         serviceProvider.getLogger();
-        //init main modules on startup
 
-        if(serviceProvider.getProject().getProject().getConnectionProfile() != null)
+        if(serviceProvider.getProject().getConnectionProfile() != null)
         {
             serviceProvider.getDatabaseService();
         }
     }
 
     @SuppressWarnings("unchecked")
-    void loadModules(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
+    static void loadModules(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
     {
         Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
 
@@ -65,7 +101,7 @@ public class ServerModuleLoader
     }
 
     @SuppressWarnings("unchecked")
-    private void loadComponents(ComponentProvider loadedClasses, List<Map<String, String>> components)
+    private static void loadComponents(ComponentProvider loadedClasses, List<Map<String, String>> components)
     {
         for (Map<String, String> element: components)
         {
@@ -77,7 +113,7 @@ public class ServerModuleLoader
     }
 
     @SuppressWarnings("unchecked")
-    private void bindServices(ServiceProvider serviceProvider, List<Map<String, Map<String, String>>> services)
+    private static void bindServices(ServiceProvider serviceProvider, List<Map<String, Map<String, String>>> services)
     {
         for (Map<String, Map<String, String>> element: services)
         {
@@ -99,11 +135,6 @@ public class ServerModuleLoader
         configureIfConfigurable(service, "services", serviceId);
     }
 
-    public void configureComponentIfConfigurable(Component component, String componentId)
-    {
-        configureIfConfigurable(component, "components", componentId);
-    }
-
     private static <T> void configureIfConfigurable(T object, String collection, String id)
     {
         if (object instanceof Configurable)
@@ -116,10 +147,10 @@ public class ServerModuleLoader
         }
     }
 
-    private Class loadClass(String path){
+    private static Class loadClass(String path){
         try
         {
-            return getClass().getClassLoader().loadClass(path);
+            return ServerModules.class.getClassLoader().loadClass(path);
         }
         catch (ClassNotFoundException e)
         {

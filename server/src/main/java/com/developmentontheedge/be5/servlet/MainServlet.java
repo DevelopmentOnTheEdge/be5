@@ -1,12 +1,9 @@
 package com.developmentontheedge.be5.servlet;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,26 +13,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
-import javax.websocket.CloseReason.CloseCodes;
 
 import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.WebSocketComponent;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.MainComponentProvider;
-import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.developmentontheedge.be5.api.impl.WebSocketContextImpl;
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.env.ServerModuleLoader;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.env.ServerModules;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -48,84 +34,37 @@ public class MainServlet extends HttpServlet
 {
     private static final Logger log = Logger.getLogger(MainServlet.class.getName());
 
-    protected Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
-
-    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
-
-    private static final ServiceProvider serviceProvider = new MainServiceProvider();
-    private static final ComponentProvider loadedClasses = new MainComponentProvider();
-
-    /**
-     * Classes cache: webSocketComponentId->class.
-     */
-    private static final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
+    private Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
 
     //TODO private final DaemonStarter starter;
-
-    ///////////////////////////////////////////////////////////////////
-    // init
-    //
 
     @Override
     public void init(ServletConfig config) throws ServletException 
     {
         super.init(config);
 
-        try
-        {
-            moduleLoader.load(serviceProvider, loadedClasses);
-        }
-        catch (IOException e)
-        {
-            throw Be5Exception.internal(e, "Can't load server modules.");
-        }
-
-        WebSocketServlet.setMain(this);
+        // load on startup
+        ServerModules.getServiceProvider();
     }
 
-    ///////////////////////////////////////////////////////////////////
-    // responses
-    //
-    
-    /**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	@Override
+    @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-	    respond(request, response);
+	    respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
 	}
 	
-	/**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    @Override
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
     {
-        respond(request, response);
-    }
-    
-    private void respond(HttpServletRequest request, HttpServletResponse response) throws ServletException 
-    {
-        try
-        {
-            respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
-	    }
-        catch (Exception e)
-        {
-	        throw new ServletException(e);
-	    }
-        
-        return;
+        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
     }
 
     /**
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
      *
-     * @throws RuntimeException
      */
-    public void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
+    private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
         String origin = request.getHeader( "Origin" );
         // TODO test origin
@@ -155,177 +94,132 @@ public class MainServlet extends HttpServlet
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         if(UserInfoHolder.getUserInfo() == null){
-            serviceProvider.getLoginService().initGuest(req, serviceProvider);
+            ServerModules.getServiceProvider().getLoginService().initGuest(req);
         }
 
-        String componentId = uriParts[ind+1];
-        Component component;
+        runComponent(uriParts[ind+1], req, res);
+    }
+
+    void runComponent(String componentId, Request req, Response res)
+    {
         try
         {
-            component = loadedClasses.get(componentId);
+            Component component = ServerModules.getComponent(componentId);
+            ServerModules.configureComponentIfConfigurable(component, componentId);
+            component.generate( req, res, ServerModules.getServiceProvider() );
         }
-        catch( Be5Exception e )
+        catch ( Be5Exception e )
         {
             res.sendError(e);
-            return;
-        }
-
-        // do some preprocessing using
-        // a registered ('system -> REQUEST_PREPROCESSOR') request preprocessor
-        try
-        {
-            preprocessRequest( request, serviceProvider.getDatabaseService(), UserInfoHolder.getUserInfo(), "qps" );
-        }
-        catch( Exception e ) // ignore checkers' warnings, we want to catch them all
-        {
-            log.log(Level.SEVERE, e.getMessage(), e);
-            res.sendError( Be5Exception.internal(e, "preprocess Request") );
-            return;
-        }
-
-        try
-        {
-            moduleLoader.configureComponentIfConfigurable(component, componentId);
-            component.generate( req, res, serviceProvider );
         }
         catch ( RuntimeException | Error e )
         {
-            if(e.getClass() != Be5Exception.class ){
-                res.sendError(Be5Exception.internal(e));
-            }
-            else
-            {
-                res.sendError((Be5Exception) e);
-            }
+            res.sendError(Be5Exception.internal(e));
         }
     }
 
-    void preprocessRequest(HttpServletRequest request, DatabaseService databaseService, UserInfo userInfo, String url)
-            throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
-    {
-        /** TODO - remove?
-    	String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
-
-        if( className != null )
-        {
-            RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
-                    .getConstructor(DatabaseService.class, UserInfo.class ).newInstance( databaseService, userInfo );
-
-            preprocessor.preprocessUrl( request, url );
-        }*/
-    }
+//    private void preprocessRequest(HttpServletRequest request)
+//    {
+//        String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
+//
+//        if( className != null )
+//        {
+//            RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
+//                    .getConstructor(DatabaseService.class, UserInfo.class ).newInstance( databaseService, userInfo );
+//
+//            preprocessor.preprocessUrl( request, url );
+//        }
+//    }
 
     ///////////////////////////////////////////////////////////////////
     // web socket
     //
 
 
-    public void onWsOpen(Session session)
-    {
-        String componentName = session.getPathParameters().get( "component" );
-        WebSocketComponent component;
-        try
-        {
-            component = createWebSocketComponent( componentName );
-        }
-        catch( Be5Exception ex )
-        {
-            try
-            {
-                session.close( new CloseReason( CloseCodes.getCloseCode( CloseCodes.CANNOT_ACCEPT.getCode() ), "Invalid component: "
-                        + componentName ) );
-            }
-            catch( IOException e )
-            {
-                // ignore
-            }
-            return;
-        }
-        component.onOpen( new WebSocketContextImpl( session ), serviceProvider );
-    }
-
-    public void onWsMessage(byte[] msg, Session session)
-    {
-        String component = session.getPathParameters().get( "component" );
-        createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), serviceProvider, msg );
-    }
-
-    public void onWsClose(Session session)
-    {
-        String component = session.getPathParameters().get( "component" );
-        createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), serviceProvider );
-    }
-
-    /**
-     * Returns a created component.
-     */
-    private WebSocketComponent createWebSocketComponent(String componentId)
-    {
-        try
-        {
-            Class<?> klass = loadedWsClasses.computeIfAbsent( componentId, this::loadWebSocketComponentClass );
-            if( klass == null )
-                throw Be5Exception.unknownComponent( componentId );
-            return (WebSocketComponent)klass.newInstance();
-        }
-        catch( InstantiationException | IllegalAccessException | ClassCastException e )
-        {
-            throw Be5Exception.internal( e );
-        }
-    }
-
-    /**
-     * Tries to find a web socket component by its ID
-     * and returns a referenced class or null if can't find a component declaration.
-     *
-     * @param componentId
-     * @throws AssertionError if a found component declaration has incorrect class name
-     */
-    private Class<?> loadWebSocketComponentClass(String componentId)
-    {
-        /** TODO
-        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.websocketcomponent", "component" );
-
-        if( componentDeclaration == null )
-            return null;
-
-        return loadClass( componentId, componentDeclaration );
-        */
-        
-        return null;
-    }
+//    public void onWsOpen(Session session)
+//    {
+//        String componentName = session.getPathParameters().get( "component" );
+//        WebSocketComponent component;
+//        try
+//        {
+//            component = createWebSocketComponent( componentName );
+//        }
+//        catch( Be5Exception ex )
+//        {
+//            try
+//            {
+//                session.close( new CloseReason( CloseCodes.getCloseCode( CloseCodes.CANNOT_ACCEPT.getCode() ), "Invalid component: "
+//                        + componentName ) );
+//            }
+//            catch( IOException e )
+//            {
+//                // ignore
+//            }
+//            return;
+//        }
+//        component.onOpen( new WebSocketContextImpl( session ), ServerModules.getServiceProvider() );
+//    }
+//
+//    public void onWsMessage(byte[] msg, Session session)
+//    {
+//        String component = session.getPathParameters().get( "component" );
+//        createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), ServerModules.getServiceProvider(), msg );
+//    }
+//
+//    public void onWsClose(Session session)
+//    {
+//        String component = session.getPathParameters().get( "component" );
+//        createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), ServerModules.getServiceProvider() );
+//    }
+//
+//    /**
+//     * Returns a created component.
+//     */
+//    private WebSocketComponent createWebSocketComponent(String componentId)
+//    {
+//        try
+//        {
+//            Class<?> klass = loadedWsClasses.computeIfAbsent( componentId, this::loadWebSocketComponentClass );
+//            if( klass == null )
+//                throw Be5Exception.unknownComponent( componentId );
+//            return (WebSocketComponent)klass.newInstance();
+//        }
+//        catch( InstantiationException | IllegalAccessException | ClassCastException e )
+//        {
+//            throw Be5Exception.internal( e );
+//        }
+//    }
+//
+//    /**
+//     * Tries to find a web socket component by its ID
+//     * and returns a referenced class or null if can't find a component declaration.
+//     *
+//     * @param componentId
+//     * @throws AssertionError if a found component declaration has incorrect class name
+//     */
+//    private Class<?> loadWebSocketComponentClass(String componentId)
+//    {
+//        /** TODO
+//        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.websocketcomponent", "component" );
+//
+//        if( componentDeclaration == null )
+//            return null;
+//
+//        return loadClass( componentId, componentDeclaration );
+//        */
+//
+//        return null;
+//    }
 
     ///////////////////////////////////////////////////////////////////
     // misc
     //
-    
-    /**
-     * Tries to find a component by its ID
-     * and returns a referenced class or null if can't find a component declaration.
-     *
-     * @param componentId
-     * @throws AssertionError if a found component declaration has incorrect class name
-     */
-    private Class<?> loadComponentClass(String componentId)
-    {
-        /* TODO
-        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.component", "component" );
-
-        if( componentDeclaration == null )
-            return null;
-
-        return loadClass( componentId, componentDeclaration );
-        */
-        
-        return null;
-    }
-
 
     /**
      * Transforms a parameters from a multimap to a simple map,
      * ignoring parameters with several values.
      */
-    private Map<String, String> simplify(Map<String, String[]> parameters)
+    Map<String, String> simplify(Map<String, String[]> parameters)
     {
         Map<String, String> simplified = new HashMap<>();
 

@@ -17,14 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class UserInfoTest extends AbstractProjectTest
 {
-    private static LoginServiceImpl loginService;
     private static UserInfo ui;
-
-    @BeforeClass
-    public static void setUp()
-    {
-        loginService = new LoginServiceImpl(null, null, sp.getProjectProvider());
-    }
 
     @Before
     public void setUpTestUser()
@@ -50,7 +43,7 @@ public class UserInfoTest extends AbstractProjectTest
 
     @Test
     public void testGuestRoles(){
-        loginService.initGuest(null, sp);
+        loginService.initGuest(null);
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getCurrentRoles());
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getAvailableRoles());
 
@@ -60,7 +53,7 @@ public class UserInfoTest extends AbstractProjectTest
 
     @Test
     public void testGuestLocale(){
-        loginService.initGuest(null, sp);
+        loginService.initGuest(null);
         assertEquals("ru", UserInfoHolder.getLanguage());
     }
 

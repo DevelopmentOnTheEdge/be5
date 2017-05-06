@@ -14,7 +14,7 @@ public interface LoginService
 
     void logout(Request req);
 
-    void initGuest(Request req, ServiceProvider sp);
+    void initGuest(Request req);
 
     void setLanguage(Locale locale);
 

@@ -1,85 +1,42 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.ComponentProvider;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.impl.MainComponentProvider;
-import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
-import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.env.ServerModuleLoader;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.DdlElement;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
+import com.developmentontheedge.be5.env.ServerModules;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.TableDef;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.mockito.Mockito.mock;
+
 public abstract class AbstractProjectTest
 {
-    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
+    protected static final ServiceProvider sp = ServerModules.getServiceProvider();
 
-    protected static final ServiceProvider sp = new MainServiceProvider();
-    protected static final ComponentProvider loadedClasses = new MainComponentProvider();
+    protected static final LoginServiceImpl loginService ;
 
     static {
-        try
-        {
-            moduleLoader.load(sp, loadedClasses);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+        Project project = ServerModules.getServiceProvider().getProject();
+
+        if(project.getProject().getLanguages().length == 0){
+            project.getApplication().getLocalizations().addLocalization( "en", "test", Collections.singletonList("myTopic"), "foo", "bar" );
         }
 
-        if(sp.getProject().getProject().getConnectionProfile() == null)
-        {
-            Project project = sp.getProject().getProject();
-            BeConnectionProfile profile = new BeConnectionProfile( "testProfile", project.getConnectionProfiles().getLocalProfiles());
-            profile.setConnectionUrl( "jdbc:h2:~/testBe5" );
-            profile.setUsername("sa");
-            profile.setPassword("");
-            profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
-            DataElementUtils.save( profile );
-            project.setConnectionProfileName( "testProfile" );
-
-            if(project.getProject().getLanguages().length == 0){
-                project.getApplication().getLocalizations().addLocalization( "en", "test", Arrays.asList("myTopic"), "foo", "bar" );
-            }
-        }
-
-        sp.getLoginService().initGuest(null, sp);
-        createTables();
-    }
-
-    private static void createTables()
-    {
-        Module application = sp.getProject().getApplication();
-        SqlService db = sp.getSqlService();
-        for(Entity entity : application.getOrCreateEntityCollection().getAvailableElements())
-        {
-            DdlElement scheme = entity.getScheme();
-            if(scheme instanceof TableDef)
-            {
-                final String generatedQuery = scheme.getDdl();
-                db.update( generatedQuery );
-            }
-        }
+        loginService = new LoginServiceImpl(null, sp.getProjectProvider());
+        loginService.initGuest(null);
     }
 
     protected Request getMockRequest(String requestUri){
-        Request request = Mockito.mock(Request.class);
+        Request request = mock(Request.class);
         Mockito.when(request.getRequestUri()).thenReturn(requestUri);
         return request;
     }
@@ -89,8 +46,8 @@ public abstract class AbstractProjectTest
     }
 
     protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters){
-        HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(httpServletRequest.getSession()).thenReturn(Mockito.mock(HttpSession.class));
+        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+        Mockito.when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
         Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, parameters));
         Mockito.when(request.getRequestUri()).thenReturn(requestUri);
@@ -99,7 +56,7 @@ public abstract class AbstractProjectTest
 
     protected void initUserWithRoles(String... roles)
     {
-        sp.getLoginService().saveUser("testUser", Arrays.asList(roles), Locale.US);
+        loginService.saveUser("testUser", Arrays.asList(roles), Locale.US);
     }
 
 }

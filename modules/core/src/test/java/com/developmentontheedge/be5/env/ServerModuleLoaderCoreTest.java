@@ -14,14 +14,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
-import static com.developmentontheedge.be5.env.ServerModuleLoader.CONTEXT_FILE;
+import static com.developmentontheedge.be5.env.ServerModules.CONTEXT_FILE;
 import static org.junit.Assert.assertEquals;
 
 public class ServerModuleLoaderCoreTest
 {
     private static ServiceProvider serviceProvider = null;
     private static ComponentProvider loadedClasses = null;
-    private static final ServerModuleLoader moduleLoader = new ServerModuleLoader();
 
     @Before
     public void newContainers(){
@@ -32,7 +31,7 @@ public class ServerModuleLoaderCoreTest
     @Test
     public void testLoad()
     {
-        moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
+        ServerModules.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
         ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
 
