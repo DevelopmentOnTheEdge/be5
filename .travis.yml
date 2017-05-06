@@ -5,9 +5,9 @@ before_install:
     && mvn install
     && cd ../
   - git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git
-    && cd beanexplorer/beans
+    && cd beanexplorer
     && mvn install
-    && cd ../../
+    && cd ../
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 after_success:
