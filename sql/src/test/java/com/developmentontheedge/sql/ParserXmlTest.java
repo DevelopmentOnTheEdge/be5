@@ -9,7 +9,7 @@ import com.developmentontheedge.xmltest.XmlTestSuite;
 
 public class ParserXmlTest extends TestCase
 {
-    protected static final String relativePath = "./src/test/java/com/developmentontheedge/sql/xml/";     
+    protected static final String relativePath = "./src/test/resources/";
     
     /** Standart JUnit constructor */
     public ParserXmlTest(String name)
