@@ -25,7 +25,7 @@ testtable:
               testtable t
   - Sub Query:
       type: 1D_unknown
-      roles: '@AllRoles'
+      roles: SystemDeveloper
       code: |2-
             SELECT
               t.name AS "___Name",
