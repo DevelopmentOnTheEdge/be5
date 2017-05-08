@@ -34,23 +34,18 @@ public interface QueryExecutor
     /**
      * Executes the query.
      */
-    StreamEx<DynamicPropertySet> execute() throws Be5Exception;
+    List<DynamicPropertySet> execute() throws Be5Exception;
 
     /**
      * Executes the query for aggregate.
      */
-    StreamEx<DynamicPropertySet> executeAggregate() throws Be5Exception;
+    List<DynamicPropertySet> executeAggregate() throws Be5Exception;
     
     /**
      * Executes the query.
      */
     <T> List<T> execute(ResultSetParser<T> parser) throws Be5Exception;
-    
-    /**
-     * Executes the query. Supposes that the result value is the only column "value" in the only row.
-     */
-    boolean test() throws Be5Exception;
-    
+
     /**
      * Counts the number of resulting rows.
      */

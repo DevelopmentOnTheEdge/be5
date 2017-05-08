@@ -10,8 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import one.util.streamex.StreamEx;
-
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -64,79 +62,19 @@ public class TableModel
             return this;
         }
 
-        private StreamEx<DynamicPropertySet> stream()
-        {
-            try
-            {
-                return execution.execute();
-            }
-            catch( Exception e )
-            {
-                if( isNoResults( e ) )
-                    return StreamEx.empty();
-                throw e;
-            }
-        }
-
-        private StreamEx<DynamicPropertySet> aggregateStream()
-        {
-            try
-            {
-                return execution.executeAggregate();
-            }
-            catch( Exception e )
-            {
-                if( isNoResults( e ) )
-                    return StreamEx.empty();
-                throw e;
-            }
-        }
-
         public long count()
         {
-            try
-            {
-                return execution.count();
-            }
-            catch( Exception e )
-            {
-                if( isNoResults( e ) )
-                    return 0;
-                throw e;
-            }
+            return execution.count();
         }
 
-        private boolean isNoResults(Exception e)
-        {
-            // FIXME ugly hack
-            return e.getMessage() != null && e.getMessage().toLowerCase().contains( "no results" );
-        }
-
-        /**
-         * @throws Be5Exception
-         */
         public TableModel build()
         {
             List<ColumnModel> columns = new ArrayList<>();
             List<RowModel> rows = new ArrayList<>();
 
-            try (StreamEx<DynamicPropertySet> stream = stream())
-            {
-                collectColumnsAndRows( query.getEntity().getName(), query.getName(), stream, selectable, columns, rows, limit );
-            }
-            catch( Exception e )
-            {
-                throw Be5Exception.internalInQuery( e, query );
-            }
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), execution.execute(), selectable, columns, rows, limit );
 
-            boolean hasAggregate = rows.size() > 0
-                    && rows.get(0).cells.stream().anyMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE));
-
-            if(hasAggregate)
-            {
-                RowModel aggregateRow = aggregateRow();
-                if(aggregateRow != null)rows.add(aggregateRow);
-            }
+            boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
             filterWithRoles(columns, rows);
 
@@ -187,24 +125,19 @@ public class TableModel
             }
         }
 
-        private RowModel aggregateRow()
+        private boolean addAggregateRowIfNeeded(List<RowModel> rows)
         {
-            List<RowModel> rows = new ArrayList<>();
+            if(rows.size() == 0 || rows.get(0).cells.stream()
+                    .noneMatch(x -> x.options.containsKey(DatabaseConstants.COL_ATTR_AGGREGATE)))return false;
 
-            try (StreamEx<DynamicPropertySet> stream = aggregateStream())
-            {
-                collectColumnsAndRows( query.getEntity().getName(), query.getName(), stream, selectable, new ArrayList<>(), rows, limit );
-            }
-            catch( Exception e )
-            {
-                throw Be5Exception.internalInQuery( e, query );
-            }
+            List<RowModel> aggregateRow = new ArrayList<>();
 
-            if(rows.size() == 0)return null;
-            List<CellModel> firstLine = rows.get(0).cells;
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), execution.executeAggregate(), selectable, new ArrayList<>(), aggregateRow, limit );
+
+            List<CellModel> firstLine = aggregateRow.get(0).cells;
             double[] resD = new double[firstLine.size()];
 
-            for (RowModel row : rows)
+            for (RowModel row : aggregateRow)
             {
                 for (int i = 0; i < firstLine.size(); i++)
                 {
@@ -249,7 +182,7 @@ public class TableModel
                             case "COUNT":
                                 break;
                             case "AVG":
-                                resD[i] /= rows.size();
+                                resD[i] /= aggregateRow.size();
                                 break;
                             default:
                                 throw Be5Exception.internal("aggregate not support function: " + aggregate.get("function"));
@@ -284,23 +217,22 @@ public class TableModel
                 res.add(new CellModel(content, options));
             }
 
-            return new RowModel("aggregate", res);
+            rows.add(new RowModel("aggregate", res));
+            return true;
         }
 
         /**
          * @param maxRows rows per page
          */
-        private void collectColumnsAndRows(String entityName, String queryName, StreamEx<DynamicPropertySet> stream, boolean selectable, List<ColumnModel> columns,
+        private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> stream, boolean selectable, List<ColumnModel> columns,
                                            List<RowModel> rows, int maxRows)
         {
-            stream.forEach( properties -> {
-                if( columns.isEmpty() )
-                {
-                    columns.addAll( new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns() );
+            for (DynamicPropertySet properties : stream) {
+                if (columns.isEmpty()) {
+                    columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns());
                 }
-
-                rows.add( generateRow(entityName, queryName, selectable, properties, columns) );
-            } );
+                rows.add(generateRow(entityName, queryName, selectable, properties, columns));
+            }
         }
 
         private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties, List<ColumnModel> columns) throws AssertionError
@@ -400,7 +332,6 @@ public class TableModel
 
         /**
          * @param id can be null
-         * @param cells
          */
         RowModel(String id, List<CellModel> cells)
         {
@@ -416,7 +347,7 @@ public class TableModel
 
         /**
          * Returns an identifier. Never returns null.
-         * @throws NullPointerException
+         * @throws NullPointerException if null
          */
         public String getId()
         {
@@ -436,7 +367,7 @@ public class TableModel
         public final Map<String, Map<String, String>> options;
         public final boolean hidden;
 
-        public RawCellModel(String name, String content, Map<String, Map<String, String>> options, boolean hidden)
+        RawCellModel(String name, String content, Map<String, Map<String, String>> options, boolean hidden)
         {
             this.name = name;
             this.content = content;
@@ -459,7 +390,7 @@ public class TableModel
         public final Object content;
         public final Map<String, Map<String, String>> options;
 
-        public CellModel(Object content, Map<String, Map<String, String>> options)
+        CellModel(Object content, Map<String, Map<String, String>> options)
         {
             this.content = content;
             this.options = options;
@@ -503,7 +434,6 @@ public class TableModel
 
     /**
      * Counts all rows.
-     * @throws Be5Exception
      */
     public Long getTotalNumberOfRows()
     {

@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.components.impl.DocumentGenerator;
 import com.developmentontheedge.be5.components.impl.DocumentResponse;
 import com.developmentontheedge.be5.components.impl.MoreRowsGenerator;
-import com.developmentontheedge.be5.components.impl.TableCounter;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,15 +30,11 @@ public class Document implements Component
             case "":
                 DocumentGenerator.generateAndSend(req, res, serviceProvider);
                 return;
-            case "count":
-                TableCounter.countAndSend(req, res, serviceProvider);
-                return;
             case "moreRows":
                 response.send(new MoreRowsGenerator(serviceProvider).generate(req));
                 return;
             default:
                 res.sendUnknownActionError();
-                return;
             }
         }
         catch (Be5Exception ex)

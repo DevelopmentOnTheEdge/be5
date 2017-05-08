@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.DpsStreamer;
+import com.developmentontheedge.be5.api.services.DpsExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
@@ -216,9 +216,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             ImmutableList.Builder<Object> builder = ImmutableList.builder();
 
-            Unzipper.on(SUBQUERY_PATTERN).trim().unzip(cellContent, builder::add, subquery -> {
-                builder.add(applySubqueryIfPossible(subquery, varResolver));
-            });
+            Unzipper.on(SUBQUERY_PATTERN).trim().unzip(cellContent, builder::add, subquery ->
+                builder.add(applySubqueryIfPossible(subquery, varResolver))
+            );
 
             ImmutableList<Object> formattedParts = builder.build();
 
@@ -266,14 +266,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
 
-            try (StreamEx<DynamicPropertySet> stream = stream(finalSQL))
+            try (StreamEx<DynamicPropertySet> stream = streamDps(finalSQL))
             {
                 return toTable(stream, varResolver);
             }
         }
 
         /**
-         * Returns a two-dimensional list of processed content. Each element is either a string or a table.
+         * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
          */
         private List<List<Object>> toTable(StreamEx<DynamicPropertySet> stream, VarResolver varResolver)
         {
@@ -281,7 +281,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         /**
-         * Transforms a set of properties to a list. Each element of the list is a string or a table.
+         * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
          */
         private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver)
         {
@@ -307,7 +307,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Context context;
     private final ParserContext parserContext;
     private final ServiceProvider serviceProvider;
-    private final DpsStreamer dpsStreamer;
+    private final DpsExecutor dpsExecutor;
     private Set<String> subQueryKeys;
     private final ExecutorQueryContext queryContext;
     private ExtraQuery extraQuery;
@@ -329,20 +329,19 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
         this.serviceProvider = serviceProvider;
-        this.dpsStreamer = serviceProvider.get(DpsStreamer.class);
+        this.dpsExecutor = serviceProvider.get(DpsExecutor.class);
         this.extraQuery = ExtraQuery.DEFAULT;
     }
 
-    private StreamEx<DynamicPropertySet> executeQuery()
+    private List<DynamicPropertySet> executeQuery()
     {
         switch (query.getType())
         {
 //        case Query.QUERY_TYPE_CUSTOM:
 //            return streamCustomQuery();
         case D1:
-            return stream1DQuery();
         case D1_UNKNOWN:
-            return stream1DUnknownQuery();
+            return listDps(getFinalSql());
         default:
             // TODO: support other query types
             throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
@@ -363,18 +362,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN) )
             return getColumnNames(getFinalSql());
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
-    }
-
-    private StreamEx<DynamicPropertySet> stream1DQuery()
-    {
-        String sql = getFinalSql();
-        return sql == null ? StreamEx.empty() : stream(sql);
-    }
-
-    private StreamEx<DynamicPropertySet> stream1DUnknownQuery()
-    {
-        String sql = getFinalSql();
-        return sql == null ? StreamEx.empty() : stream(sql);
     }
 
     String getFinalSql()
@@ -445,7 +432,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return finalSQL;
     }
 
-    void countFromQuery(AstQuery query) {
+    private void countFromQuery(AstQuery query) {
         AstTableRef tableRef = new AstTableRef(
                 true,
                 new AstParenthesis( query.clone() ),
@@ -481,7 +468,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         AstSelect select = selectOpt.get();
         return select.getSelectList().children()
             .select(AstDerivedColumn.class)
-            .map(dc -> dc.getAlias())
+            .map(AstDerivedColumn::getAlias)
             .nonNull()
             .map(alias -> alias.replaceFirst("^\"(.+)\"$", "$1"))
             .has(idColumnLabel);
@@ -545,7 +532,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         Connection conn = databaseService.getConnection(true);
 
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
-            return dpsStreamer.createSchema(ps.getMetaData());
+            return dpsExecutor.createSchema(ps.getMetaData());
         }
         finally {
             databaseService.releaseConnection(conn);
@@ -608,8 +595,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //            }
 //
 //            @SuppressWarnings("unchecked")
-//            StreamEx<DynamicPropertySet> stream = StreamEx.of( iterator );
-//            return stream;
+//            StreamEx<DynamicPropertySet> streamDps = StreamEx.of( iterator );
+//            return streamDps;
 //        }
 //        catch( InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 //                | NoSuchMethodException | SecurityException | ProjectElementException e )
@@ -618,11 +605,24 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //        }
 //    }
 
-    private StreamEx<DynamicPropertySet> stream(String finalSql)
+    private StreamEx<DynamicPropertySet> streamDps(String finalSql)
     {
         try
         {
-            return dpsStreamer.stream(finalSql, this::processMeta);
+            return dpsExecutor.stream(finalSql, this::processMeta);
+        }
+        catch (Exception e)
+        {
+            log.log(Level.SEVERE, e.toString() + " Final SQL: " + finalSql, e);
+            throw Be5Exception.internalInQuery(e, query);
+        }
+    }
+
+    private List<DynamicPropertySet> listDps(String finalSql)
+    {
+        try
+        {
+            return dpsExecutor.list(finalSql, this::processMeta);
         }
         catch (Exception e)
         {
@@ -690,7 +690,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         private final DynamicPropertySet dps;
 
-        public RootVarResolver(DynamicPropertySet dps)
+        RootVarResolver(DynamicPropertySet dps)
         {
             this.dps = dps;
         }
@@ -710,7 +710,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         private final VarResolver local;
         private final VarResolver parent;
 
-        public CompositeVarResolver(VarResolver local, VarResolver parent)
+        CompositeVarResolver(VarResolver local, VarResolver parent)
         {
             this.local = local;
             this.parent = parent;
@@ -739,40 +739,29 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public StreamEx<DynamicPropertySet> execute()
+    public List<DynamicPropertySet> execute()
     {
         extraQuery = ExtraQuery.DEFAULT;
         return executeQuery();
     }
 
     @Override
-    public StreamEx<DynamicPropertySet> executeAggregate(){
+    public List<DynamicPropertySet> executeAggregate(){
         extraQuery = ExtraQuery.AGGREGATE;
         return executeQuery();
     }
 
-    /**
-     * @throws Be5Exception
-     */
     @Override
     public long count()
     {
         extraQuery = ExtraQuery.COUNT;
-        try (StreamEx<DynamicPropertySet> stream = executeQuery())
-        {
-            DynamicPropertySet dynamicProperties = stream.findFirst().orElse(null);
-
-            return (Long)dynamicProperties.asMap().get("count");
-        }
+        return (Long)executeQuery().get(0).asMap().get("count");
     }
 
     @Override
     public DynamicPropertySet getRow()
     {
-        try (StreamEx<DynamicPropertySet> stream = executeQuery())
-        {
-            return stream.findFirst().get();
-        }
+        return executeQuery().get(0);
     }
 
 }

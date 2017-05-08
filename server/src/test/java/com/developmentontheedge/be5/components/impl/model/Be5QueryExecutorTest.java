@@ -34,7 +34,7 @@ public class Be5QueryExecutorTest extends AbstractProjectTestH2DB
     public void testExecute()
     {
         Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
-        List<DynamicPropertySet> dps = be5QueryExecutor.execute().toList();
+        List<DynamicPropertySet> dps = be5QueryExecutor.execute();
         assertTrue(dps.size() > 0);
 
         Class<?> klass = dps.get(0).getProperty("name").getType();

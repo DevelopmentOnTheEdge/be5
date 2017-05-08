@@ -2,7 +2,8 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.DpsStreamer;
+import com.developmentontheedge.be5.api.services.DpsExecutor;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.impl.model.BeTagParser;
 import com.developmentontheedge.be5.components.impl.model.DynamicPropertyMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -17,12 +18,10 @@ import java.sql.*;
 import java.util.*;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 
-public class DpsStreamerImpl implements DpsStreamer
+public class DpsExecutorImpl implements DpsExecutor
 {
-    private static final Logger log = Logger.getLogger(DpsStreamerImpl.class.getName());
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
     @FunctionalInterface
@@ -32,10 +31,17 @@ public class DpsStreamerImpl implements DpsStreamer
     }
 
     private final DatabaseService databaseService;
+    private final SqlService db;
 
-    public DpsStreamerImpl(DatabaseService databaseService)
+    public DpsExecutorImpl(DatabaseService databaseService, SqlService db)
     {
         this.databaseService = databaseService;
+        this.db = db;
+    }
+
+    @Override
+    public List<DynamicPropertySet> list(String sql, MetaProcessor metaProcessor) {
+        return db.selectList(sql, rs -> createRow(rs, createSchema(rs.getMetaData()), metaProcessor));
     }
 
     @Override
@@ -77,31 +83,35 @@ public class DpsStreamerImpl implements DpsStreamer
         }
     }
 
-    private DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor) throws Exception
+    private DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor)
     {
-        DynamicPropertySet row = new DynamicPropertySetSupport();
-        for( int i = 0; i < schema.length; i++ )
-        {
-            DynamicProperty dp = schema[i];
-            Object refIdxObj = dp.getAttribute(COLUMN_REF_IDX_PROPERTY);
-            if(refIdxObj instanceof Integer) {
-                int refIdx = (int) refIdxObj;
-                if(refIdx >= 0) {
-                    Map<String, Map<String, String>> tags = new TreeMap<>();
-                    BeTagParser.parseTags(tags, resultSet.getString(i+1));
-                    DynamicPropertyMeta.add(schema[refIdx], tags);
-                    dp.setAttribute(COLUMN_REF_IDX_PROPERTY, -1);
+        try {
+            DynamicPropertySet row = new DynamicPropertySetSupport();
+            for( int i = 0; i < schema.length; i++ )
+            {
+                DynamicProperty dp = schema[i];
+                Object refIdxObj = dp.getAttribute(COLUMN_REF_IDX_PROPERTY);
+                if(refIdxObj instanceof Integer) {
+                    int refIdx = (int) refIdxObj;
+                    if(refIdx >= 0) {
+                        Map<String, Map<String, String>> tags = new TreeMap<>();
+                        BeTagParser.parseTags(tags, resultSet.getString(i+1));
+                        DynamicPropertyMeta.add(schema[refIdx], tags);
+                        dp.setAttribute(COLUMN_REF_IDX_PROPERTY, -1);
+                    }
+                    continue;
                 }
-                continue;
+                Object val = getSqlValue( dp.getType(), resultSet, i + 1 );
+                Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
+                metaProcessor.process(val, metaInfo);
+                DynamicProperty property = DynamicPropertySetSupport.cloneProperty( dp );
+                property.setValue( val );
+                row.add( property );
             }
-            Object val = getSqlValue( dp.getType(), resultSet, i + 1 );
-            Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
-            metaProcessor.process(val, metaInfo);
-            DynamicProperty property = DynamicPropertySetSupport.cloneProperty( dp );
-            property.setValue( val );
-            row.add( property );
+            return row;
+        }catch (Exception e){
+            throw Be5Exception.internal(e);
         }
-        return row;
     }
 
     private Object getSqlValue(Class<?> clazz, ResultSet rs, int idx) throws SQLException
@@ -126,41 +136,43 @@ public class DpsStreamerImpl implements DpsStreamer
     }
 
     @Override
-    public DynamicProperty[] createSchema(ResultSetMetaData metaData) throws SQLException
+    public DynamicProperty[] createSchema(ResultSetMetaData metaData)
     {
-        int count = metaData.getColumnCount();
-        DynamicProperty[] schema = new DynamicProperty[count];
-        Set<String> names = new HashSet<>();
-        // TODO: support ";ColumnName" declarations
-        for( int i = 1; i <= count; i++ )
-        {
-            String columnLabel = metaData.getColumnLabel( i );
-            if(columnLabel.startsWith(";")) {
-                String refName = columnLabel.substring(1);
-                int refId = IntStreamEx.ofIndices(schema, dp -> dp != null && dp.getName().equals(refName))
-                        .findAny().orElseThrow(() -> Be5Exception.internal("No previous column with name "+refName));
-                DynamicProperty dp = new DynamicProperty( columnLabel, String.class );
-                dp.setAttribute(COLUMN_REF_IDX_PROPERTY, refId);
-                dp.setHidden(true);
+        try {
+            int count = metaData.getColumnCount();
+            DynamicProperty[] schema = new DynamicProperty[count];
+            Set<String> names = new HashSet<>();
+            // TODO: support ";ColumnName" declarations
+            for (int i = 1; i <= count; i++) {
+                String columnLabel = metaData.getColumnLabel(i);
+                if (columnLabel.startsWith(";")) {
+                    String refName = columnLabel.substring(1);
+                    int refId = IntStreamEx.ofIndices(schema, dp -> dp != null && dp.getName().equals(refName))
+                            .findAny().orElseThrow(() -> Be5Exception.internal("No previous column with name " + refName));
+                    DynamicProperty dp = new DynamicProperty(columnLabel, String.class);
+                    dp.setAttribute(COLUMN_REF_IDX_PROPERTY, refId);
+                    dp.setHidden(true);
+                    schema[i - 1] = dp;
+                    continue;
+                }
+                String[] parts = columnLabel.split(";", 2);
+                String name = getUniqueName(names, parts[0]);
+                Class<?> clazz = getTypeClass(metaData.getColumnType(i));
+                DynamicProperty dp = new DynamicProperty(name, clazz);
+                if (name.startsWith(DatabaseConstants.HIDDEN_COLUMN_PREFIX)) {
+                    dp.setHidden(true);
+                }
+                Map<String, Map<String, String>> tags = new TreeMap<>();
+                if (parts.length == 2)
+                    BeTagParser.parseTags(tags, parts[1]);
+                DynamicPropertyMeta.set(dp, tags);
+                // TODO: support various types, attributes, tags, meta
                 schema[i - 1] = dp;
-                continue;
             }
-            String[] parts = columnLabel.split( ";", 2 );
-            String name = getUniqName( names, parts[0] );
-            Class<?> clazz = getTypeClass( metaData.getColumnType( i ) );
-            DynamicProperty dp = new DynamicProperty( name, clazz );
-            if( name.startsWith( DatabaseConstants.HIDDEN_COLUMN_PREFIX ) )
-            {
-                dp.setHidden( true );
-            }
-            Map<String, Map<String, String>> tags = new TreeMap<>();
-            if(parts.length == 2)
-                BeTagParser.parseTags( tags, parts[1] );
-            DynamicPropertyMeta.set(dp, tags);
-            // TODO: support various types, attributes, tags, meta 
-            schema[i - 1] = dp;
+            return schema;
+        }catch (SQLException e){
+            throw Be5Exception.internal(e);
         }
-        return schema;
     }
 
     private static Class<?> getTypeClass(int columnType)
@@ -189,7 +201,7 @@ public class DpsStreamerImpl implements DpsStreamer
         }
     }
 
-    private static String getUniqName(Set<String> names, String baseName)
+    private static String getUniqueName(Set<String> names, String baseName)
     {
         String name = baseName;
         int i = 0;
