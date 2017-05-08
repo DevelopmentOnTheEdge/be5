@@ -18,16 +18,13 @@ import static org.mockito.Mockito.mock;
 public class Be5QueryExecutorTest extends AbstractProjectTestH2DB
 {
     private Query query = sp.getProject().getEntity("testtable").getQueries().get("All records");
+    private static SqlService db = sp.getSqlService();
 
     @BeforeClass
     public static void hasOneRow()
     {
-        SqlService db = sp.getSqlService();
-        if((Long)db.selectScalar("select count(*) from testtable") == 0)
-        {
-            db.insert("insert into testtable (name, value) VALUES (?, ?)",
-                    "test", "1");
-        }
+        db.insert("insert into testtable (name, value) VALUES (?, ?)",
+                "testBe5QueryExecutor", "1");
     }
 
     @Test
@@ -37,8 +34,7 @@ public class Be5QueryExecutorTest extends AbstractProjectTestH2DB
         List<DynamicPropertySet> dps = be5QueryExecutor.execute();
         assertTrue(dps.size() > 0);
 
-        Class<?> klass = dps.get(0).getProperty("name").getType();
-        assertEquals(String.class, klass);
+        assertEquals(String.class, dps.get(0).getProperty("name").getType());
     }
 
     @Test

@@ -217,7 +217,7 @@ public class ContextApplier
             new FilterApplier().addFilter(subQuery.getQuery(), conditions);
         }
 
-        String key = "<sql>SubQuery#" + ( subQueries.size() + 1 ) + "</sql>";
+        String key = "<sql> SubQuery# " + ( subQueries.size() + 1 ) + "</sql>";
         subQueries.put( key, subQuery );
         subQuery.replaceWith( new AstStringPart( key ) );
     }

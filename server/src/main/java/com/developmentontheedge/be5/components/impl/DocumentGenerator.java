@@ -87,7 +87,7 @@ public class DocumentGenerator implements Runner {
         }
         
         TableModel table = TableModel
-                .from(query, parametersMap, req, serviceProvider, selectable)
+                .from(query, parametersMap, req, selectable)
                 .limit(limit)
                 .build();
         List<Object> columns = table.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class DocumentGenerator implements Runner {
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
         if( totalNumberOfRows == null )
-            totalNumberOfRows = TableModel.from(query, parametersMap, req, serviceProvider).count();
+            totalNumberOfRows = TableModel.from(query, parametersMap, req).count();
 
         return new TablePresentation(title, category, page, operations, selectable, columns, rows, limit,
                 parametersMap, totalNumberOfRows, table.isHasAggregate());

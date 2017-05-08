@@ -198,7 +198,8 @@ TOKEN_MGR_DECLS : {
 
 <WithinBeSubQuery> TOKEN :
 {
-    < BE_SQL_SUB_END:   "</sql>"  > { popState(); }
+    < BE_SQL_SUB_RESULT: "SubQuery#"  >
+|   < BE_SQL_SUB_END:    "</sql>"     > { popState(); }
 }
 
 <WithinBeSubQuery, DEFAULT> TOKEN: /* JSON */
@@ -672,7 +673,7 @@ void BeSqlSubQuery() #BeSqlSubQuery :
 	<BE_SQL_SUB_START>
 	BeParameterList()
 	<TAG_END>
-	(Query() | BeVar())?
+	(Query() | BeVar() | BeSubQueryResult())?
 	<BE_SQL_SUB_END>
 	{
       jjtThis.init();
@@ -705,6 +706,13 @@ void BeVar() #BeSqlVar :
 	    jjtThis.setName(name.image);
         jjtThis.init();
     }
+}
+
+void BeSubQueryResult() #BeSubQueryResult :
+{}
+{
+    <BE_SQL_SUB_RESULT>
+    NumericConstant()
 }
 
 void BeSessionTag() #BeSessionTag :

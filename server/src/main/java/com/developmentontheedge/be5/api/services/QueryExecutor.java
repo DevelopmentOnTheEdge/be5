@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
+import com.developmentontheedge.be5.components.impl.model.CellFormatter;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import one.util.streamex.StreamEx;
 
@@ -54,13 +54,10 @@ public interface QueryExecutor
     DynamicPropertySet getRow();
 
     /**
-     * Formats a cell.
-     */
-    Object formatCell(RawCellModel cell, DynamicPropertySet previousCells);
-
-    /**
      * Returns a list of column names.
      */
     List<String> getColumnNames() throws Be5Exception;
+
+    StreamEx<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
 
 }

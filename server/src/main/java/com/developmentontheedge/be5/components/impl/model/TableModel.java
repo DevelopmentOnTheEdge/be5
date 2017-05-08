@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.developmentontheedge.be5.env.ServerModules;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -23,20 +24,18 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
-/**
- * // TODO localizer
- */
 public class TableModel
 {
     public static class Builder
     {
         private final Query query;
-        private final QueryExecutor execution;
+        private final QueryExecutor queryExecutor;
         private boolean selectable;
         private int limit = Integer.MAX_VALUE;
         private final int sortColumn;
         private final boolean desc;
         private final UserAwareMeta userAwareMeta;
+        private final CellFormatter cellFormatter;
 
         private Builder(Query query, Map<String, String> parametersMap, Request req, ServiceProvider serviceProvider, boolean selectable)
         {
@@ -44,27 +43,28 @@ public class TableModel
             this.selectable = selectable;
             this.sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
             this.desc = "desc".equals(req.get("order[0][dir]"));
-            this.execution = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
-            this.execution.sortOrder(sortColumn, desc);
+            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
+            this.queryExecutor.sortOrder(sortColumn, desc);
             this.userAwareMeta = UserAwareMeta.get(serviceProvider);
+            this.cellFormatter = new CellFormatter(query, queryExecutor);
         }
 
         public Builder offset(int offset)
         {
-            this.execution.offset( offset );
+            this.queryExecutor.offset( offset );
             return this;
         }
 
         public Builder limit(int limit)
         {
-            this.execution.limit( limit );
+            this.queryExecutor.limit( limit );
             this.limit = limit;
             return this;
         }
 
         public long count()
         {
-            return execution.count();
+            return queryExecutor.count();
         }
 
         public TableModel build()
@@ -72,7 +72,7 @@ public class TableModel
             List<ColumnModel> columns = new ArrayList<>();
             List<RowModel> rows = new ArrayList<>();
 
-            collectColumnsAndRows( query.getEntity().getName(), query.getName(), execution.execute(), selectable, columns, rows, limit );
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.execute(), selectable, columns, rows, limit );
 
             boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
@@ -132,7 +132,7 @@ public class TableModel
 
             List<RowModel> aggregateRow = new ArrayList<>();
 
-            collectColumnsAndRows( query.getEntity().getName(), query.getName(), execution.executeAggregate(), selectable, new ArrayList<>(), aggregateRow, limit );
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), selectable, new ArrayList<>(), aggregateRow, limit );
 
             List<CellModel> firstLine = aggregateRow.get(0).cells;
             double[] resD = new double[firstLine.size()];
@@ -277,7 +277,7 @@ public class TableModel
 
             for (RawCellModel cell : cells)
             {
-                Object processedContent = execution.formatCell(cell, previousCells);
+                String processedContent = cellFormatter.formatCell(cell, previousCells);
                 previousCells.add(new DynamicProperty(cell.name, processedContent == null ? String.class
                         : processedContent.getClass(), processedContent));
                 if (!cell.hidden)
@@ -291,14 +291,14 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Request req, ServiceProvider serviceProvider)
+    public static Builder from(Query query, Map<String, String> parametersMap, Request req)
     {
-        return from( query, parametersMap, req, serviceProvider, false);
+        return from( query, parametersMap, req, false);
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Request req, ServiceProvider serviceProvider, boolean selectable)
+    public static Builder from(Query query, Map<String, String> parametersMap, Request req, boolean selectable)
     {
-        return new Builder( query, parametersMap, req, serviceProvider, selectable);
+        return new Builder( query, parametersMap, req, ServerModules.getServiceProvider(), selectable);
     }
 
     public static class ColumnModel
@@ -373,6 +373,14 @@ public class TableModel
             this.content = content;
             this.options = options;
             this.hidden = hidden;
+        }
+
+        RawCellModel(String content)
+        {
+            this.name = "";
+            this.content = content;
+            this.options = new HashMap<>();
+            this.hidden = false;
         }
 
     }

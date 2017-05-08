@@ -203,7 +203,7 @@ public class SimpleNode implements Node, Cloneable
     @Override
     public String toString()
     {
-        return SqlParserTreeConstants.jjtNodeName[id] + " - " + this.format();
+        return this.format();
     }
 
     public String toString(String prefix)

@@ -23,3 +23,17 @@ testtable:
               t.value AS "Value"
             FROM
               testtable t
+  - Sub Query:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |2-
+            SELECT
+              t.name AS "___Name",
+              t.name AS "Name",
+              t.value AS "Value",
+              '<sql>SELECT u.value
+                    FROM testtUser u
+                    WHERE u.name = <var:___Name refColumn="testtable.name" />
+               </sql>' AS "testtUserValues"
+            FROM
+              testtable t

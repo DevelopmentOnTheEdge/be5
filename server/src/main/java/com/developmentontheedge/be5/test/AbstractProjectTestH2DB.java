@@ -16,7 +16,7 @@ public abstract class AbstractProjectTestH2DB extends AbstractProjectTest
         createTablesInH2();
     }
 
-    public static void createTablesInH2()
+    private static void createTablesInH2()
     {
         Project project = sp.getProject().getProject();
 

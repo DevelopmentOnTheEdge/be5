@@ -9,16 +9,12 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DpsExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.be5.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
@@ -50,7 +46,6 @@ import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.developmentontheedge.sql.model.Token;
 
-import com.google.common.collect.ImmutableList;
 import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
@@ -70,7 +65,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 
 /**
@@ -83,8 +77,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private enum ExtraQuery {
         DEFAULT, COUNT, AGGREGATE
     }
-
-    private static final Pattern SUBQUERY_PATTERN = Pattern.compile("<sql>SubQuery#[0-9]+</sql>");
 
     private final class ExecutorQueryContext implements QueryContext
     {
@@ -141,163 +133,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private class CellFormatter
-    {
-        private final RawCellModel cell;
-        private final VarResolver rootVarResolver;
-
-
-        public CellFormatter(RawCellModel cell, VarResolver rootVarResolver)
-        {
-            this.cell = cell;
-            this.rootVarResolver = rootVarResolver;
-        }
-
-        public Object format()
-        {
-            return formatCell(cell.content, rootVarResolver);
-        }
-
-        private Object formatCell(String cellContent, VarResolver varResolver)
-        {
-            ImmutableList<Object> formattedParts = getFormattedPartsWithoutLink(cellContent, varResolver);
-
-            String formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
-
-            formattedContent = userAwareMeta.getLocalizedCell(formattedContent, query.getEntity().getName(), query.getName());
-
-            if(formattedContent != null && extraQuery == ExtraQuery.DEFAULT) {
-
-                Map<String, String> blankNullsProperties = cell.options.get(DatabaseConstants.COL_ATTR_BLANKNULLS);
-                if(blankNullsProperties != null)
-                {
-                    if( formattedContent.equals( "null" ) )
-                    {
-                        formattedContent = blankNullsProperties.getOrDefault("value", "");
-                    }
-                }
-
-
-                Map<String, String> nullIfProperties = cell.options.get(DatabaseConstants.COL_ATTR_NULLIF);
-                if(nullIfProperties != null)
-                {
-                    if( formattedContent.equals( nullIfProperties.get("value") ) )
-                    {
-                        formattedContent = nullIfProperties.getOrDefault("result", "");
-                    }
-                }
-
-                Map<String, String> linkProperties = cell.options.get(DatabaseConstants.COL_ATTR_LINK);
-                if(linkProperties != null)
-                {
-                    HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
-                            .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
-                    String cols = linkProperties.get("columns");
-                    String vals = linkProperties.get("using");
-                    if(cols != null && vals != null)
-                    {
-                        url = url.named(EntryStream.zip(cols.split(","), vals.split(",")).mapValues(varResolver::resolve).toMap());
-                    }
-                    return "<a href=\"#!"+url+"\">"+formattedContent+"</a>";
-                }
-
-            }
-
-            return formattedContent;
-        }
-
-        ImmutableList<Object> getFormattedPartsWithoutLink(String cellContent, VarResolver varResolver){
-            boolean hasLink = cell != null && cell.options.containsKey("link");
-            Map<String, String> link = null;
-            if(hasLink) {
-                link = cell.options.get("link");
-                cell.options.remove("link");
-            }
-
-            ImmutableList.Builder<Object> builder = ImmutableList.builder();
-
-            Unzipper.on(SUBQUERY_PATTERN).trim().unzip(cellContent, builder::add, subquery ->
-                builder.add(applySubqueryIfPossible(subquery, varResolver))
-            );
-
-            ImmutableList<Object> formattedParts = builder.build();
-
-            if(hasLink) {
-                cell.options.put("link", link);
-            }
-
-            return formattedParts;
-        }
-
-        /**
-         * Dynamically casts tables to string using default formatting;
-         */
-        private String print(Object formattedPart)
-        {
-            if (formattedPart instanceof String)
-            {
-                return (String) formattedPart;
-            }
-            else if (formattedPart instanceof List)
-            {
-                @SuppressWarnings("unchecked")
-                List<List<Object>> table = (List<List<Object>>) formattedPart;
-                return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(", ")).joining("; ");
-            }
-            else
-            {
-                throw new AssertionError(formattedPart.getClass().getName());
-            }
-        }
-
-        private Object applySubqueryIfPossible(String subqueryName, VarResolver varResolver)
-        {
-            AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
-
-            if (subQuery != null)
-            {
-                return getSubqueryResult(subQuery, varResolver);
-            }
-
-            return subqueryName;
-        }
-
-        private List<List<Object>> getSubqueryResult(AstBeSqlSubQuery subQuery, VarResolver varResolver)
-        {
-            String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
-
-            try (StreamEx<DynamicPropertySet> stream = streamDps(finalSQL))
-            {
-                return toTable(stream, varResolver);
-            }
-        }
-
-        /**
-         * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
-         */
-        private List<List<Object>> toTable(StreamEx<DynamicPropertySet> stream, VarResolver varResolver)
-        {
-            return stream.map(dps -> toRow(dps, varResolver)).toList();
-        }
-
-        /**
-         * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
-         */
-        private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver)
-        {
-            DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
-
-            return StreamEx.of(dps.spliterator()).map(property -> {
-                String name = property.getName();
-                Object value = property.getValue();
-                Object processedCell = formatCell(String.valueOf(value), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
-                previousCells.add(new DynamicProperty(name, String.class, processedCell));
-                return processedCell;
-            }).toList();
-        }
-
-    }
-
     private final Map<String, String> parametersMap;
     private final DatabaseService databaseService;
     private final SqlService db;
@@ -309,7 +144,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final ServiceProvider serviceProvider;
     private final DpsExecutor dpsExecutor;
     private Set<String> subQueryKeys;
-    private final ExecutorQueryContext queryContext;
     private ExtraQuery extraQuery;
 
     /**
@@ -323,8 +157,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.db = serviceProvider.getSqlService();
         this.userAwareMeta = UserAwareMeta.get(serviceProvider);
         this.session = req.getRawSession();
-        this.queryContext = new ExecutorQueryContext();
-        this.contextApplier = new ContextApplier( queryContext );
+        this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
@@ -679,65 +512,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    @FunctionalInterface
-    private interface VarResolver
-    {
-        String resolve(String varName);
-    }
-
-    private static class RootVarResolver implements VarResolver
-    {
-
-        private final DynamicPropertySet dps;
-
-        RootVarResolver(DynamicPropertySet dps)
-        {
-            this.dps = dps;
-        }
-
-        @Override
-        public String resolve(String varName)
-        {
-            String value = dps.getValueAsString(varName);
-            return value != null ? value : varName;
-        }
-
-    }
-
-    private static class CompositeVarResolver implements VarResolver
-    {
-
-        private final VarResolver local;
-        private final VarResolver parent;
-
-        CompositeVarResolver(VarResolver local, VarResolver parent)
-        {
-            this.local = local;
-            this.parent = parent;
-        }
-
-        @Override
-        public String resolve(String varName)
-        {
-            String value = local.resolve(varName);
-
-            if (value != null)
-                return value;
-
-            return parent.resolve(varName);
-        }
-
-    }
-
-    /**
-     * Executes subqueries of the cell or returns the cell content itself.
-     */
-    @Override
-    public Object formatCell(RawCellModel cell, DynamicPropertySet previousCells)
-    {
-        return new CellFormatter(cell, new RootVarResolver(previousCells)).format();
-    }
-
     @Override
     public List<DynamicPropertySet> execute()
     {
@@ -764,4 +538,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return executeQuery().get(0);
     }
 
+    @Override
+    public StreamEx<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver)
+    {
+        AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
+
+        String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
+
+        return streamDps(finalSQL);
+    }
 }

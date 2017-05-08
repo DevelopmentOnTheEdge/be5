@@ -35,6 +35,17 @@ public class SubQueryTest
     }
 
     @Test
+    public void testSubQueryResultParse() {
+        String sql= "SELECT\n" +
+                "      t.name AS \"___Name\",\n" +
+                "      '<sql>SubQuery#1</sql>' AS \"testtUserValues\"\n" +
+                "    FROM\n" +
+                "      testtable t ORDER BY 2 LIMIT 2147483647";
+        AstStart start = SqlQuery.parse(sql);
+        //assertEquals(sql, start.format());
+    }
+
+    @Test
     public void testSubQueryResolverCheckExpression()
     {
         AstStart start = SqlQuery.parse( "SELECT ID, '<sql limit=\"2\" queryName=\"test\"></sql>' FROM table" );
