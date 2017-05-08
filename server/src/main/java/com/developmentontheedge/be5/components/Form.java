@@ -6,6 +6,8 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.components.impl.DocumentResponse;
+import com.developmentontheedge.be5.components.impl.FormGenerator;
+import com.developmentontheedge.be5.components.impl.OperationExecutor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,12 +27,12 @@ public class Form implements Component
         {
             switch (req.getRequestUri())
             {
-//            case "":
-//                response.send(new FormGenerator(serviceProvider).generate(req));
-//                return;
-//            case "apply":
-//                response.send(new OperationExecutor(serviceProvider).execute(req));
-//                return;
+            case "":
+                response.send(new FormGenerator().generate(req));
+                return;
+            case "apply":
+                response.send(new OperationExecutor(serviceProvider).execute(req));
+                return;
             default:
                 res.sendUnknownActionError();
                 return;

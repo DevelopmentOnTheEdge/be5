@@ -48,13 +48,11 @@ testtableAdmin:
   - Delete:
       records: 2
       roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+      code: com.developmentontheedge.be5.api.operationstest.SilentDeleteOperation
   - Edit:
       records: 2
       roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.api.operationstest.SilentEditOperation
   - Insert:
       roles: Administrator
-      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
-  - Send password:
-      code: com.beanexplorer.enterprise.operations.SendPassword
+      code: com.developmentontheedge.be5.api.operationstest.SilentInsertOperation

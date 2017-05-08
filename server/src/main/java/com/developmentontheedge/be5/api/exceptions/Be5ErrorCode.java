@@ -61,6 +61,7 @@ public enum Be5ErrorCode
         case INTERNAL_ERROR:
         case INTERNAL_ERROR_IN_OPERATION:
         case INTERNAL_ERROR_IN_QUERY:
+        case NOT_INITIALIZED:
             return true;
         default:
             return false;

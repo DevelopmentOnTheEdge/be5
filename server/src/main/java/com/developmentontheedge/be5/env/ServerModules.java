@@ -147,10 +147,10 @@ public class ServerModules
         }
     }
 
-    private static Class loadClass(String path){
+    private static Class<?> loadClass(String path){
         try
         {
-            return ServerModules.class.getClassLoader().loadClass(path);
+            return Class.forName(path);//ServerModules.class.getClassLoader().loadClass(path);
         }
         catch (ClassNotFoundException e)
         {

@@ -40,4 +40,6 @@ public interface DatabaseConstants
     String L10N_TOPIC_SCHEME = "scheme";
     String L10N_TOPIC_ATTRIBUTE = "attribute";
     String L10N_TOPIC_INSERT = "Insert";
+
+    String PLATFORM_HTML = "HTML";
 }
