@@ -236,10 +236,11 @@ public class LegacyOperation {
      * {@link Utils #doInvokeOperation(Operation, DbmsConnector, Writer)}
      */
     private void invokeOperationWithExtenders(Be5Operation operation, Writer out) throws Exception {
-//        OperationFragmentHelper.invokeExtenders("preInvoke", out, connector, operation, null, null);
+        //OperationFragmentHelper.invokeExtenders("preInvoke", out, connector, operation, null, null);
+        operation.invoke(out, connector);
 //        if (!Boolean.TRUE.equals(OperationFragmentHelper.invokeExtenders("skipInvoke", out, connector, operation, null, null)))
 //        {
-//            operation.invoke(out, connector);
+//
 //            OperationFragmentHelper.invokeExtenders("postInvoke", out, connector, operation, null, null);
 //        }
 //        else

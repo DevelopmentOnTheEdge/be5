@@ -1,14 +1,25 @@
 package com.developmentontheedge.be5.api.operationstest;
 
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.operationstest.analyzers.DatabaseAnalyzer;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.Utils;
+import com.developmentontheedge.be5.metadata.model.Operation;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +148,11 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
     public Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
     {
         parameters = getTableBean( entity );
+        Map<String, String> newPresets = mapPresetsForTheDatabase( connector, parameters, presetValues );
+        for(DynamicProperty p : parameters)
+        {
+            p.setValue(newPresets.get(p.getName()));
+        }
         //String pk = primaryKey;
 
 //        boolean isFirstSearch = Utils.isEmpty( getAnyParam( HttpConstants.SEARCH_PARAM ) );
@@ -153,7 +169,7 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //                searchPresetsMap.put( st.nextToken(), "dummy" );
 //        }
 //
-        Map<String, String> newPresets = mapPresetsForTheDatabase( connector, parameters, presetValues );
+//        Map<String, String> newPresets = mapPresetsForTheDatabase( connector, parameters, presetValues );
 //        if( !isFirstSearch )
 //        {
 //            for( Iterator entries = newPresets.entrySet().iterator(); entries.hasNext(); )
@@ -254,131 +270,131 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //        }
 
         // add fields from collections and owners
-        if( bFast )
-            return parameters;
-
-        if( bNoCollectionsOrOwners )
-            return parameters;
-
-        ArrayList ownerProps = new ArrayList();
-        ArrayList ownerOpsList = new ArrayList();
-
-//*
-        int propCount = 0;
-        for( Iterator props = parameters.propertyIterator(); props.hasNext(); )
-        {
-            propCount++;
-            DynamicProperty prop = ( DynamicProperty ) props.next();
-            if( prop.isReadOnly() )
-                continue;
-            Object ref = prop.getAttribute( TABLE_REF );
-            Object ext = prop.getAttribute( EXTERNAL_TAG_LIST );
-
-            List ents;
-//            if( ref instanceof String )
-//            {
-//                try
-//                {
-//                    String etype = Utils.getEntityType( connector, ( String )ref );
-//                    if( ENTITY_TYPE_TABLE.equals( etype ) )
-//                    {
-//                        ents = Collections.singletonList( ref );
-//                    }
-//                    else
-//                        continue;
-//                }
-//                catch( Exception exc )
-//                {
-//                    continue;
-//                }
-//            }
-//            else if ( ext instanceof ArrayList )
-//            {
-//                ents = ( List )ext;
-//            }
-//            else
+//        if( bFast )
+//            return parameters;
+//
+//        if( bNoCollectionsOrOwners )
+//            return parameters;
+//
+//        ArrayList ownerProps = new ArrayList();
+//        ArrayList ownerOpsList = new ArrayList();
+//
+////*
+//        int propCount = 0;
+//        for( Iterator props = parameters.propertyIterator(); props.hasNext(); )
+//        {
+//            propCount++;
+//            DynamicProperty prop = ( DynamicProperty ) props.next();
+//            if( prop.isReadOnly() )
 //                continue;
-
-//            for( int i = 0; i < ents.size(); i++ )
-//            {
-//                String ent = ( String )ents.get( i );
-//                if( ent.equals( entity ) )
-//                    continue; // to avoid confusion
-//                //System.out.println( "ent = " + ent );
-//                Operation ownerOp = getInsertOwnerOperation( out,  connector, ent );
-//                if( ownerOp == null )
-//                    continue;
-//                //System.out.println( "2ent = " + ent );
-//                ownerOpsList.add( ownerOp );
-//                ( ( InsertOperation )ownerOp ).setNoCollectionsOrOwners( true );
-//                DynamicPropertySet opars = ( DynamicPropertySet )
-//                    ownerOp.getParameters( out, connector, getPresetValuesForOwnerOperation(presetValues) );
+//            Object ref = prop.getAttribute( TABLE_REF );
+//            Object ext = prop.getAttribute( EXTERNAL_TAG_LIST );
 //
-//                for( Iterator oprops = opars.propertyIterator(); oprops.hasNext(); )
-//                {
-//                    DynamicProperty oprop = ( DynamicProperty ) oprops.next();
-//                    String origName = oprop.getName();
+//            List ents;
+////            if( ref instanceof String )
+////            {
+////                try
+////                {
+////                    String etype = Utils.getEntityType( connector, ( String )ref );
+////                    if( ENTITY_TYPE_TABLE.equals( etype ) )
+////                    {
+////                        ents = Collections.singletonList( ref );
+////                    }
+////                    else
+////                        continue;
+////                }
+////                catch( Exception exc )
+////                {
+////                    continue;
+////                }
+////            }
+////            else if ( ext instanceof ArrayList )
+////            {
+////                ents = ( List )ext;
+////            }
+////            else
+////                continue;
 //
-//                    oprop.setAttribute( ORIG_PROPERTY_NAME_ATTR, origName );
-//                    oprop.setAttribute( ORIG_PROPERTY_ENTITY_ATTR, ent );
-//
-//                    oprop.setName( OWNER_PREFIX + ent + "_" + prop.getName() + i + "_" + origName );
-//
-//                    oprop.setAttribute( MOVE_AFTER, new Integer( propCount ) );
-//                    oprop.setAttribute( FOR_PROPERTY, prop );
-//
-//                    oprop.setAttribute( BeanInfoConstants.GROUP_ID, prop.getName() + i );
-//                    oprop.setAttribute( BeanInfoConstants.GROUP_NAME, localizedMessage( "Insert into" ) + " " + localizedMessage( ent ) );
-//                    oprop.setAttribute( BeanInfoConstants.GROUP_INITIALLY_CLOSED, Boolean.TRUE );
-//
-//                    if( !oprop.isCanBeNull() )
-//                    {
-//                        oprop.setAttribute( CONDITIONALLY_NOT_NULL, Boolean.TRUE );
-//                    }
-//                    oprop.setCanBeNull( true );
-//
-//                    if( !oprop.isHidden() && !oprop.isExpert() )
-//                    {
-//                        oprop.setValue( null );
-//                    }
-//
-//                    ownerProps.add( oprop );
-//                }
-//            }
-        }
+////            for( int i = 0; i < ents.size(); i++ )
+////            {
+////                String ent = ( String )ents.get( i );
+////                if( ent.equals( entity ) )
+////                    continue; // to avoid confusion
+////                //System.out.println( "ent = " + ent );
+////                Operation ownerOp = getInsertOwnerOperation( out,  connector, ent );
+////                if( ownerOp == null )
+////                    continue;
+////                //System.out.println( "2ent = " + ent );
+////                ownerOpsList.add( ownerOp );
+////                ( ( InsertOperation )ownerOp ).setNoCollectionsOrOwners( true );
+////                DynamicPropertySet opars = ( DynamicPropertySet )
+////                    ownerOp.getParameters( out, connector, getPresetValuesForOwnerOperation(presetValues) );
+////
+////                for( Iterator oprops = opars.propertyIterator(); oprops.hasNext(); )
+////                {
+////                    DynamicProperty oprop = ( DynamicProperty ) oprops.next();
+////                    String origName = oprop.getName();
+////
+////                    oprop.setAttribute( ORIG_PROPERTY_NAME_ATTR, origName );
+////                    oprop.setAttribute( ORIG_PROPERTY_ENTITY_ATTR, ent );
+////
+////                    oprop.setName( OWNER_PREFIX + ent + "_" + prop.getName() + i + "_" + origName );
+////
+////                    oprop.setAttribute( MOVE_AFTER, new Integer( propCount ) );
+////                    oprop.setAttribute( FOR_PROPERTY, prop );
+////
+////                    oprop.setAttribute( BeanInfoConstants.GROUP_ID, prop.getName() + i );
+////                    oprop.setAttribute( BeanInfoConstants.GROUP_NAME, localizedMessage( "Insert into" ) + " " + localizedMessage( ent ) );
+////                    oprop.setAttribute( BeanInfoConstants.GROUP_INITIALLY_CLOSED, Boolean.TRUE );
+////
+////                    if( !oprop.isCanBeNull() )
+////                    {
+////                        oprop.setAttribute( CONDITIONALLY_NOT_NULL, Boolean.TRUE );
+////                    }
+////                    oprop.setCanBeNull( true );
+////
+////                    if( !oprop.isHidden() && !oprop.isExpert() )
+////                    {
+////                        oprop.setValue( null );
+////                    }
+////
+////                    ownerProps.add( oprop );
+////                }
+////            }
+//        }
 
         //System.out.println( "Step 2" );
-        if( ownerOpsList.size() > 0 )
-        {
-            ownerOps = ( Be5Operation[] )ownerOpsList.toArray( new Be5Operation[0] );
-            int prevBase = -1;
-            int offset = 0;
-            int nAdded = 0;
-            int shift = 0;
-            for( int i = 0; i < ownerProps.size(); i++ )
-            {
-                DynamicProperty prop = ( DynamicProperty ) ownerProps.get( i );
-                parameters.add( prop );
-                int base = ( ( Integer )prop.getAttribute( MOVE_AFTER ) ).intValue();
-                if( prevBase != base )
-                {
-                    shift += nAdded;
-                    nAdded = 0;
-                    prevBase = base;
-                    offset = 0;
-                }
-                parameters.moveTo( prop.getName(), base + shift + offset++ );
-                nAdded++;
-
-                //Do you want to have a brain damage? Look at operationPage.js :)
-                DynamicProperty forProperty = ( DynamicProperty )prop.getAttribute( FOR_PROPERTY );
-                if( !forProperty.isCanBeNull() )
-                {
-                    forProperty.setAttribute( CONDITIONALLY_NOT_NULL, Boolean.TRUE );
-                }
-                forProperty.setCanBeNull( true );
-            }
-        }
+//        if( ownerOpsList.size() > 0 )
+//        {
+//            ownerOps = ( Be5Operation[] )ownerOpsList.toArray( new Be5Operation[0] );
+//            int prevBase = -1;
+//            int offset = 0;
+//            int nAdded = 0;
+//            int shift = 0;
+//            for( int i = 0; i < ownerProps.size(); i++ )
+//            {
+//                DynamicProperty prop = ( DynamicProperty ) ownerProps.get( i );
+//                parameters.add( prop );
+//                int base = ( ( Integer )prop.getAttribute( MOVE_AFTER ) ).intValue();
+//                if( prevBase != base )
+//                {
+//                    shift += nAdded;
+//                    nAdded = 0;
+//                    prevBase = base;
+//                    offset = 0;
+//                }
+//                parameters.moveTo( prop.getName(), base + shift + offset++ );
+//                nAdded++;
+//
+//                //Do you want to have a brain damage? Look at operationPage.js :)
+//                DynamicProperty forProperty = ( DynamicProperty )prop.getAttribute( FOR_PROPERTY );
+//                if( !forProperty.isCanBeNull() )
+//                {
+//                    forProperty.setAttribute( CONDITIONALLY_NOT_NULL, Boolean.TRUE );
+//                }
+//                forProperty.setCanBeNull( true );
+//            }
+//        }
 //*/
 
 //        String myFromQuery = fromQuery;
@@ -551,36 +567,36 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //        }
 
         // Make possibility to add several records at once for simple collections like companies2territories
-        ArrayList<DynamicProperty> multHackArray = new ArrayList<DynamicProperty>();
-        for( DynamicProperty dp : parameters )
-        {
-            if( dp.isHidden() )
-                continue; 
-            if( dp.isExpert() )
-                continue; 
-            multHackArray.add( dp );
-        }
-
-        if( multHackArray.size() == 2 &&
-            ( 
-               multHackArray.get( 0 ).isReadOnly() && multHackArray.get( 1 ).getAttribute( TAG_LIST_ATTR ) != null ||
-               multHackArray.get( 1 ).isReadOnly() && multHackArray.get( 0 ).getAttribute( TAG_LIST_ATTR ) != null 
-            )
-          )
-        {
-            if( multHackArray.get( 0 ).isReadOnly() && multHackArray.get( 1 ).getAttribute( EXTERNAL_TAG_LIST ) == null )
-            {
-                multForcedProperty = multHackArray.get( 1 );
-            }
-            else if( multHackArray.get( 0 ).getAttribute( EXTERNAL_TAG_LIST ) == null )
-            {
-                multForcedProperty = multHackArray.get( 0 );
-            }
-            if( multForcedProperty != null )
-            {
-                multForcedProperty.setAttribute( MULTIPLE_SELECTION_LIST, true );
-            } 
-        }
+//        ArrayList<DynamicProperty> multHackArray = new ArrayList<DynamicProperty>();
+//        for( DynamicProperty dp : parameters )
+//        {
+//            if( dp.isHidden() )
+//                continue;
+//            if( dp.isExpert() )
+//                continue;
+//            multHackArray.add( dp );
+//        }
+//
+//        if( multHackArray.size() == 2 &&
+//            (
+//               multHackArray.get( 0 ).isReadOnly() && multHackArray.get( 1 ).getAttribute( TAG_LIST_ATTR ) != null ||
+//               multHackArray.get( 1 ).isReadOnly() && multHackArray.get( 0 ).getAttribute( TAG_LIST_ATTR ) != null
+//            )
+//          )
+//        {
+//            if( multHackArray.get( 0 ).isReadOnly() && multHackArray.get( 1 ).getAttribute( EXTERNAL_TAG_LIST ) == null )
+//            {
+//                multForcedProperty = multHackArray.get( 1 );
+//            }
+//            else if( multHackArray.get( 0 ).getAttribute( EXTERNAL_TAG_LIST ) == null )
+//            {
+//                multForcedProperty = multHackArray.get( 0 );
+//            }
+//            if( multForcedProperty != null )
+//            {
+//                multForcedProperty.setAttribute( MULTIPLE_SELECTION_LIST, true );
+//            }
+//        }
 
         //System.out.println( "last parameters = " + parameters );
         return parameters;
@@ -588,168 +604,167 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 
     DynamicProperty multForcedProperty = null;
 
-//    public static String safeValue( DatabaseService connector, DynamicProperty prop )
-//        throws java.io.UnsupportedEncodingException,
-//               java.security.GeneralSecurityException,
-//               java.io.IOException
-//    {
-//        Object val = prop.getValue();
+    public static String safeValue( DatabaseService connector, DynamicProperty prop )
+        throws java.io.UnsupportedEncodingException,
+               java.security.GeneralSecurityException,
+               java.io.IOException
+    {
+        Object val = prop.getValue();
 //
 //        if( val instanceof Wrapper )
 //        {
 //             val = ( (Wrapper)val ).unwrap();
 //        }
 //
-//        String value;
-//        if( val == null )
-//        {
-//            value = "";
-//        }
-//        else if( val instanceof java.sql.Timestamp )
-//        {
-//            value = new SimpleDateFormat( connector.isOracle() ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd HH:mm:ss.SSS" ).format( val );
-//        }
-//        else if( val instanceof java.sql.Time )
-//        {
-//            value = new SimpleDateFormat( "HH:mm:ss" ).format( val );
-//        }
-//        else if( val instanceof Date )
-//        {
-//            java.sql.Date sqlDate = new java.sql.Date( ( ( Date )val ).getTime() );
-//            value = sqlDate.toString();
-//        }
-//        else if( val instanceof Calendar )
-//        {
-//            value = new SimpleDateFormat( connector.isOracle() ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd HH:mm:ss.SSS" ).format( ( ( Calendar )val ).getTime() );
-//        }
-//        else if( val instanceof Boolean ) // BIT
-//        {
-//            value = Boolean.TRUE.equals( val ) ? "1" : "0";
-//        }
-//        // must be encrypted?
+        String value;
+        if( val == null )
+        {
+            value = "";
+        }
+        else if( val instanceof java.sql.Timestamp )
+        {
+            value = new SimpleDateFormat( connector.getRdbms() == Rdbms.ORACLE ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd HH:mm:ss.SSS" ).format( val );
+        }
+        else if( val instanceof java.sql.Time )
+        {
+            value = new SimpleDateFormat( "HH:mm:ss" ).format( val );
+        }
+        else if( val instanceof Date)
+        {
+            java.sql.Date sqlDate = new java.sql.Date( ( ( Date )val ).getTime() );
+            value = sqlDate.toString();
+        }
+        else if( val instanceof Calendar)
+        {
+            value = new SimpleDateFormat( connector.getRdbms() == Rdbms.ORACLE ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd HH:mm:ss.SSS" ).format( ( ( Calendar )val ).getTime() );
+        }
+        else if( val instanceof Boolean ) // BIT
+        {
+            value = Boolean.TRUE.equals( val ) ? "1" : "0";
+        }
+        // must be encrypted?
 //        else if( prop.getName().toLowerCase().startsWith( ENCRYPT_COLUMN_PREFIX ) )
 //        {
 //            value = CryptoUtils.encrypt( val.toString() );
 //            prop.setAttribute( PASSWORD_FIELD, Boolean.TRUE );
 //        }
-//        else
-//        {
-//            value = val.toString();
-//
-//            if( Number.class.isAssignableFrom( prop.getType() ) )
-//            {
-//                value = Utils.subst( value, ",", "." );
-//            }
-//
-///*          String orig = value;
-//            String sizeStr = ( String )prop.getAttribute( COLUMN_SIZE_ATTR );
-//            String encoding = connector.getEncoding();
-//            if( value != null && value.length() > 0 && sizeStr != null && encoding != null )
-//            {
-//                if( connector.isOracle() )
-//                {
-//                    // truncate value since it causes exception
-//                    int size = Integer.parseInt( sizeStr );
-//                    byte bytes[] = value.getBytes( encoding );
-//                    int length = size;
-//                    if( length > bytes.length )
-//                        length = bytes.length;
-//                    value = new String( bytes, 0, length, encoding );
-//
-//                    // in case we got into middle of multi-byte char
-//                    // From Google
-//                    // Unicode 65533 is a substitute character for use when
-//                    // a character is found that can't be output in the selected encoding
-//                    char last = value.charAt( value.length() - 1 );
-//                    if( (int)last == 65533 )
-//                    {
-//                        value = value.substring( 0, value.length() - 1 );
-//                    }
-//                }
-//            }
-//*/
-//        }
-//
-//        if( "".equals( value ) && prop.isCanBeNull() )
-//            value = null;
-//
-//        if( value == null && String.class.equals( prop.getType() ) && !prop.isCanBeNull() )
-//            value = "";
-//
-//        return value;
-//    }
+        else
+        {
+            value = val.toString();
+
+            if( Number.class.isAssignableFrom( prop.getType() ) )
+            {
+                value = value.replace(",", ".");
+            }
+
+/*          String orig = value;
+            String sizeStr = ( String )prop.getAttribute( COLUMN_SIZE_ATTR );
+            String encoding = connector.getEncoding();
+            if( value != null && value.length() > 0 && sizeStr != null && encoding != null )
+            {
+                if( connector.isOracle() )
+                {
+                    // truncate value since it causes exception
+                    int size = Integer.parseInt( sizeStr );
+                    byte bytes[] = value.getBytes( encoding );
+                    int length = size;
+                    if( length > bytes.length )
+                        length = bytes.length;
+                    value = new String( bytes, 0, length, encoding );
+
+                    // in case we got into middle of multi-byte char
+                    // From Google
+                    // Unicode 65533 is a substitute character for use when
+                    // a character is found that can't be output in the selected encoding
+                    char last = value.charAt( value.length() - 1 );
+                    if( (int)last == 65533 )
+                    {
+                        value = value.substring( 0, value.length() - 1 );
+                    }
+                }
+            }
+*/
+        }
+
+        if( "".equals( value ) && prop.isCanBeNull() )
+            value = null;
+
+        if( value == null && String.class.equals( prop.getType() ) && !prop.isCanBeNull() )
+            value = "";
+
+        return value;
+    }
 
     public String generateSQL( DatabaseService connector, boolean bSkipNulls ) throws Exception
     {
-        //DatabaseAnalyzer analyzer = connector.getAnalyzer();
+        DatabaseAnalyzer analyzer = connector.getAnalyzer();
 
         boolean bFirstValue = true;
         String pk = primaryKey;
         StringBuffer sql = new StringBuffer();
         ArrayList<String> columnsUsed = new ArrayList<String>();
         sql.append( "INSERT INTO " );
-//        sql.append( analyzer.quoteIdentifier( entity + Utils.ifNull( tcloneId, "" ) ) ).append( " ( " );
-//        for( DynamicProperty prop : parameters )
-//        {
-//            // collection's or owner property
-//            if( prop.getName().startsWith( OWNER_PREFIX ) )
-//                continue;
-//            if( prop.getName().startsWith( COLL_PREFIX ) )
-//                continue;
-//
+        sql.append( analyzer.quoteIdentifier( entity ) ).append( " ( " );
+        for( DynamicProperty prop : parameters )
+        {
+            // collection's or owner property
+            if( prop.getName().startsWith( OWNER_PREFIX ) )
+                continue;
+            if( prop.getName().startsWith( COLL_PREFIX ) )
+                continue;
+
 //            if( Boolean.TRUE.equals( prop.getAttribute( JDBCRecordAdapter.COMPUTED_COLUMN ) ) )
 //                continue;
-//
-//            boolean isUtilsInsert = bFast && completeParams != null && completeParams.get( prop.getName() ) != null;
-//            if( !isUtilsInsert && Boolean.TRUE.equals( prop.getAttribute( WebFormPropertyInspector.PSEUDO_PROPERTY ) ) )
-//                continue;
-//
-//            if( prop.getAttribute( CATEGORY_ATTRIBUTE_ID ) != null )
-//                continue;
-//
-//            // Ignore auto-increment columns but check first if PK is indeed SET
+
+            boolean isUtilsInsert = bFast && completeParams != null && completeParams.get( prop.getName() ) != null;
+            if( !isUtilsInsert && Boolean.TRUE.equals( prop.getAttribute( WebFormPropertyInspector.PSEUDO_PROPERTY ) ) )
+                continue;
+
+            if( prop.getAttribute( CATEGORY_ATTRIBUTE_ID ) != null )
+                continue;
+
+            // Ignore auto-increment columns but check first if PK is indeed SET
 //            if( Boolean.TRUE.equals( prop.getAttribute( JDBCRecordAdapter.AUTO_IDENTITY ) ) && bRetainPKColumn && prop.getValue() == null )
 //            {
 //                bRetainPKColumn = false;
 //            }
 //            if( Boolean.TRUE.equals( prop.getAttribute( JDBCRecordAdapter.AUTO_IDENTITY ) ) && !bRetainPKColumn )
 //                continue;
-//
-//            String value = safeValue( connector, prop );
-//
-//            String colName = prop.getName();
-//
+
+            String value = safeValue( connector, prop );
+
+            String colName = prop.getName();
+
 //            if( value == null && bSkipNulls && !SQLHelper.SYSTEM_FIELDS.contains( colName ) )
 //                 continue;
-//
-//            columnsUsed.add( colName );
-//
-//            if( !bFirstValue )
-//                sql.append( ',' );
-//            sql.append( connector.NL() );
-//            sql.append( "          " ).append( analyzer.quoteIdentifier( colName ) );
-//            bFirstValue = false;
-//        }
-//        sql.append( connector.NL() );
-//        sql.append( ") VALUES ( " );
-//
-//        bFirstValue = true;
-//        for( DynamicProperty prop : parameters )
-//        {
-//            String colName = prop.getName();
-//            if( !columnsUsed.contains( colName ) )
-//            {
-//                continue;
-//            }
-//
-//            String value = safeValue( connector, prop );
-//
-//            if( !bFirstValue )
-//                sql.append( ',' );
-//            sql.append( connector.NL() );
-//            sql.append( "          " );
-//
-//            // Oracle trick for auto-generated IDs
+
+            columnsUsed.add( colName );
+
+            if( !bFirstValue )
+                sql.append( ',' );
+            sql.append( "\n" );//sql.append( connector.NL() );
+            sql.append( "          " ).append( analyzer.quoteIdentifier( colName ) );
+            bFirstValue = false;
+        }
+        sql.append( "\n" );
+        sql.append( ") VALUES ( " );
+
+        bFirstValue = true;
+        for( DynamicProperty prop : parameters )
+        {
+            String colName = prop.getName();
+            if( !columnsUsed.contains( colName ) )
+            {
+                continue;
+            }
+
+            String value = safeValue( connector, prop );
+
+            if( !bFirstValue )
+                sql.append( ",\n" );
+            sql.append( "          " );
+
+            // Oracle trick for auto-generated IDs
 //            if( connector.isOracle() && colName.equalsIgnoreCase( pk ) )
 //            {
 //                if( entity.equalsIgnoreCase( value ) || JDBCRecordAdapter.AUTO_IDENTITY.equals( value ) )
@@ -771,52 +786,52 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //            {
 //                sql.append( OracleDatabaseAnalyzer.makeClobValue( connector, value ) );
 //            }
-//            else if( colName.equalsIgnoreCase( WHO_INSERTED_COLUMN_NAME ) && !userInfo.isGuest() )
+//            else if( colName.equalsIgnoreCase( WHO_INSERTED_COLUMN_NAME ) )
+//            {
+//                sql.append( "'" ).append( Utils.safestr( connector, UserInfoHolder.getUserName() ) ).append( "'" );
+//            }
+//            else if( colName.equalsIgnoreCase( WHO_MODIFIED_COLUMN_NAME ) )
 //            {
 //                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getUserName() ) ).append( "'" );
 //            }
-//            else if( colName.equalsIgnoreCase( WHO_MODIFIED_COLUMN_NAME ) && !userInfo.isGuest() )
-//            {
-//                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getUserName() ) ).append( "'" );
-//            }
-//            else if( colName.equalsIgnoreCase( CREATION_DATE_COLUMN_NAME ) )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//            else if( colName.equalsIgnoreCase( MODIFICATION_DATE_COLUMN_NAME ) )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//            else if( colName.equalsIgnoreCase( IS_DELETED_COLUMN_NAME ) )
-//            {
-//                sql.append( "'no'" );
-//            }
-//            else if( DBMS_DATE_PLACEHOLDER.equals( value )  )
-//            {
-//                sql.append( analyzer.getCurrentDateExpr() );
-//            }
-//            else if( DBMS_DATETIME_PLACEHOLDER.equals( value ) )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//            else if( InsertOperation.FORCE_NULL_PLACEHOLDER.equals( value ) )
-//            {
-//                sql.append( "NULL" );
-//            }
-//
-//            else if( Boolean.TRUE.equals( prop.getAttribute( PUT_DBMS_DATE_PLACEHOLDER_FLAG ) ) &&
-//                     ( value == null || value != null && value.equals( prop.getAttribute( BeanInfoConstants.DEFAULT_VALUE ) ) )
-//                   )
-//            {
-//                sql.append( analyzer.getCurrentDateExpr() );
-//            }
-//            else if( Boolean.TRUE.equals( prop.getAttribute( PUT_DBMS_DATETIME_PLACEHOLDER_FLAG ) ) &&
-//                     ( value == null || value != null && value.equals( prop.getAttribute( BeanInfoConstants.DEFAULT_VALUE ) ) )
-//                   )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//
+            if( colName.equalsIgnoreCase( CREATION_DATE_COLUMN_NAME ) )
+            {
+                sql.append( analyzer.getCurrentDateTimeExpr() );
+            }
+            else if( colName.equalsIgnoreCase( MODIFICATION_DATE_COLUMN_NAME ) )
+            {
+                sql.append( analyzer.getCurrentDateTimeExpr() );
+            }
+            else if( colName.equalsIgnoreCase( IS_DELETED_COLUMN_NAME ) )
+            {
+                sql.append( "'no'" );
+            }
+            else if( DBMS_DATE_PLACEHOLDER.equals( value )  )
+            {
+                sql.append( analyzer.getCurrentDateExpr() );
+            }
+            else if( DBMS_DATETIME_PLACEHOLDER.equals( value ) )
+            {
+                sql.append( analyzer.getCurrentDateTimeExpr() );
+            }
+            else if( InsertOperation.FORCE_NULL_PLACEHOLDER.equals( value ) )
+            {
+                sql.append( "NULL" );
+            }
+
+            else if( Boolean.TRUE.equals( prop.getAttribute( PUT_DBMS_DATE_PLACEHOLDER_FLAG ) ) &&
+                     ( value == null || value != null && value.equals( prop.getAttribute( BeanInfoConstants.DEFAULT_VALUE ) ) )
+                   )
+            {
+                sql.append( analyzer.getCurrentDateExpr() );
+            }
+            else if( Boolean.TRUE.equals( prop.getAttribute( PUT_DBMS_DATETIME_PLACEHOLDER_FLAG ) ) &&
+                     ( value == null || value != null && value.equals( prop.getAttribute( BeanInfoConstants.DEFAULT_VALUE ) ) )
+                   )
+            {
+                sql.append( analyzer.getCurrentDateTimeExpr() );
+            }
+
 //            else if( colName.equalsIgnoreCase( IP_INSERTED_COLUMN_NAME ) && userInfo.getRemoteAddr() != null )
 //            {
 //                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getRemoteAddr() ) ).append( "'" );
@@ -825,13 +840,13 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //            {
 //                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getRemoteAddr() ) ).append( "'" );
 //            }
-//            else
-//            {
-//                justAddValueToQuery( connector, entity, prop, value, sql );
-//            }
-//            bFirstValue = false;
-//        }
-//        sql.append( connector.NL() );
+            else
+            {
+                justAddValueToQuery( connector, entity, prop, value, sql );
+            }
+            bFirstValue = false;
+        }
+        sql.append( "\n" );
         sql.append( ")" );
         return sql.toString();
     }
@@ -842,11 +857,11 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
         String hackStringBeforeSendingToDB(String entity, String value);
     };
 
-//    static void justAddValueToQuery( DatabaseService connector, String entity, DynamicProperty prop, String value, StringBuffer sql )
-//        throws Exception
-//    {
-//        if( value != null )
-//        {
+    static void justAddValueToQuery( DatabaseService connector, String entity, DynamicProperty prop, String value, StringBuffer sql )
+        throws Exception
+    {
+        if( value != null )
+        {
 //            if( Boolean.TRUE.equals( prop.getAttribute( JDBCRecordAdapter.NUMERIC_COLUMN ) ) )
 //            {
 //                sql.append( Utils.safestr( connector, value ) );
@@ -865,29 +880,31 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //                sql.append( "CONVERT( DATETIME, '" ).append( value ).append( "', 120 )" );
 //            }
 //            else
-//            {
-//                String hackVal = Utils.safestr( connector, value, true );
+            {
+                String hackVal = Utils.safestr( connector, value, true );
 //                String hackClassName = Utils.getSystemSetting( connector, "STRING_HACKER_CLASS" );
 //                if( hackClassName != null )
 //                {
 //                    StringHacker hacker = Class.forName( hackClassName ).asSubclass( StringHacker.class ).newInstance();
 //                    hackVal = hacker.hackStringBeforeSendingToDB( entity, hackVal );
 //                }
-//                sql.append( hackVal );
-//            }
-//        }
-//        else
-//        {
-//            sql.append( "NULL" );
-//        }
-//    }
+                sql.append( hackVal );
+            }
+        }
+        else
+        {
+            sql.append( "NULL" );
+        }
+    }
 
     protected String lastInsertID;
 
     public String getLastInsertID() { return lastInsertID; }
 
-//    private void singleInsert( MessageHandler output, DatabaseService connector, Operation.InterruptMonitor interruptChecker ) throws Exception
-//    {
+    private void singleInsert( Writer output, DatabaseService connector, Be5Operation.InterruptMonitor interruptChecker ) throws Exception
+    {
+        String sql = generateSQL( connector, false );
+        db.insert(sql);
 //        if( ownerOps != null )
 //        {
 //            Operation[] ops = ownerOps;
@@ -1103,12 +1120,12 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //             }
 //        }
 //
-//    }
+    }
 
     @Override
-    public void invoke( Writer out, DatabaseService connector )
-            throws Exception
+    public void invoke( Writer out, DatabaseService connector ) throws Exception
     {
+        singleInsert( out, connector, null );
 //        if( multForcedProperty != null && multForcedProperty.getValue() != null )
 //        {
 //            Object []ret = ( Object [] )multForcedProperty.getValue();

@@ -42,4 +42,13 @@ public interface DatabaseConstants
     String L10N_TOPIC_INSERT = "Insert";
 
     String PLATFORM_HTML = "HTML";
+
+    String WHO_INSERTED_COLUMN_NAME = "whoInserted___";
+    String WHO_MODIFIED_COLUMN_NAME = "whoModified___";
+    String CREATION_DATE_COLUMN_NAME = "creationDate___";
+    String MODIFICATION_DATE_COLUMN_NAME = "modificationDate___";
+    String IP_INSERTED_COLUMN_NAME = "ipInserted___";
+    String IP_MODIFIED_COLUMN_NAME = "ipModified___";
+
+    String IS_DELETED_COLUMN_NAME = "isDeleted___";
 }

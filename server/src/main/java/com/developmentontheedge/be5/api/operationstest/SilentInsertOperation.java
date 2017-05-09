@@ -21,7 +21,7 @@ public class SilentInsertOperation extends InsertOperation implements HttpOperat
 
     public void invoke( Writer out, DatabaseService connector ) throws Exception
     {
-        super.invoke( new StringWriter(), connector );
+        super.invoke( out, connector );
     }
 
     protected String referer;

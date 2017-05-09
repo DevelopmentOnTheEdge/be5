@@ -117,13 +117,13 @@ public interface Be5Operation extends Serializable
         void removeVar(String name);
         Map<String, Object> getVarsAsMap();
     }
-//
-//    interface InterruptMonitor
-//    {
-//        boolean isInterrupted();
-//        void setInterrupted(boolean interrupted);
-//    }
-//
+
+    interface InterruptMonitor
+    {
+        boolean isInterrupted();
+        void setInterrupted(boolean interrupted);
+    }
+
 
     void setSessionAdapter(SessionAdapter sa);
 

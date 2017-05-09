@@ -87,7 +87,7 @@ public class DatabaseServiceImpl implements DatabaseService
                 {
                     if(!conn.getAutoCommit())
                         conn.setAutoCommit(true);
-                    if (!conn.isReadOnly())
+                    if (conn.isReadOnly())
                         conn.setReadOnly(false);
 
                     conn.close();

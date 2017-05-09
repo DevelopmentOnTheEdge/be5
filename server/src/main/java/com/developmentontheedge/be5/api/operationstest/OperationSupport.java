@@ -29,14 +29,14 @@ import java.util.stream.Collectors;
 
 public class OperationSupport implements Be5Operation, DatabaseConstants
 {
+    public SqlService db = ServerModules.getServiceProvider().getSqlService();
+
     private static final Logger log = Logger.getLogger(OperationSupport.class.getName());
     public static final String TAG_DELIMITER = "\u0000";
     private Status result = Status.FINISHED;
 
     private String name;
     private String origName;
-
-    SqlService db = ServerModules.getServiceProvider().getSqlService();
 
     protected ApplicationInfoComponent.ApplicationInfo appInfo;
 
