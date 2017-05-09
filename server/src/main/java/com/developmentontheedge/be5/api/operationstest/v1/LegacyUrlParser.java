@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.operationstest.v1;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.operationstest.LegacyQueryRepository;
 import com.developmentontheedge.be5.api.operationstest.MetaTables;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -28,12 +27,9 @@ public class LegacyUrlParser {
     private String operationName = null;
     private Map<String, String> parameters = null;
     private Optional<Integer> queryNumber = Optional.empty();
-    
-    private final LegacyQueryRepository queryRepository;
-    
-    public LegacyUrlParser(LegacyQueryRepository queryRepository, String value)
+
+    public LegacyUrlParser(String value)
     {
-        this.queryRepository = queryRepository;
         this.value = value.trim();
     }
     

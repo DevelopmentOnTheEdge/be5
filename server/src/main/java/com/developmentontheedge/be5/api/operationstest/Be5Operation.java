@@ -78,7 +78,7 @@ public interface Be5Operation extends Serializable
 
     String[] getRecordIDs();
 
-    Object getParameters(Writer out, DatabaseService connector, Map presetValues) throws Exception;
+    Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues) throws Exception;
     Object getStoredParameters();
     //Operation []getCollectionOperations();
     //Operation []getOwnerOperations();

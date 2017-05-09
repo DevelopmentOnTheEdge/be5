@@ -632,7 +632,7 @@ public abstract class DatabaseAnalyzerSupport implements DatabaseAnalyzer
 //        String pk;
 //        try
 //        {
-//            bean = ( DynamicPropertySet )Utils.readTableBean( srcConnector, origName ).clone();
+//            bean = ( DynamicPropertySet )Utils.getTableBean( srcConnector, origName ).clone();
 //
 //            pk = Utils.findPrimaryKeyName( srcConnector, origName );
 //            OperationSupport.addTagEditors( srcConnector, DatabaseConstants.PLATFORM_HTML, UserInfo.ADMIN, origName, pk, bean, new HashMap(), true, null );
@@ -1141,7 +1141,7 @@ public abstract class DatabaseAnalyzerSupport implements DatabaseAnalyzer
         String ret = bAddComma ? "," : "";
 //        try
 //        {
-//            DynamicPropertySet bean = Utils.readTableBean( connector, table );
+//            DynamicPropertySet bean = Utils.getTableBean( connector, table );
 //            for( DynamicProperty prop : bean )
 //            {
 //                String colName = prop.getName();
@@ -1166,7 +1166,7 @@ public abstract class DatabaseAnalyzerSupport implements DatabaseAnalyzer
         String ret = bAddComma ? "," : "";
 //        try
 //        {
-//            DynamicPropertySet bean = Utils.readTableBean( connector, table );
+//            DynamicPropertySet bean = Utils.getTableBean( connector, table );
 //            for( DynamicProperty prop : bean )
 //            {
 //                String colName = prop.getName();

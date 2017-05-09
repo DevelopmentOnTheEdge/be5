@@ -134,15 +134,10 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
     }
 
     @Override
-    public Object getParameters(Writer out, DatabaseService connector, Map presetValues ) throws Exception
+    public Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
     {
-        //System.out.println( "*presetValues = " + presetValues );
-
-        //parameters = (DynamicPropertySet) Utils.readTableBean( connector, entity, tcloneId ).clone();
-
-        //System.out.println( "0 parameters = " + parameters );
-
-        String pk = primaryKey;
+        parameters = getTableBean( entity );
+        //String pk = primaryKey;
 
 //        boolean isFirstSearch = Utils.isEmpty( getAnyParam( HttpConstants.SEARCH_PARAM ) );
 //        Object searchPresetsObj = getAnyParam( HttpConstants.SEARCH_PRESETS_PARAM );
@@ -158,7 +153,7 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //                searchPresetsMap.put( st.nextToken(), "dummy" );
 //        }
 //
-//        Map newPresets = mapPresetsForTheDatabase( connector, parameters, presetValues );
+        Map<String, String> newPresets = mapPresetsForTheDatabase( connector, parameters, presetValues );
 //        if( !isFirstSearch )
 //        {
 //            for( Iterator entries = newPresets.entrySet().iterator(); entries.hasNext(); )

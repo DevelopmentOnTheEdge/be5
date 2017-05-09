@@ -43,6 +43,10 @@ public class ServerModules
         return SingletonHolder.instance.serviceProvider;
     }
 
+    public static <T> T getService(Class<T> serviceClass) {
+        return SingletonHolder.instance.serviceProvider.get(serviceClass);
+    }
+
     public static ComponentProvider getComponents() {
         return SingletonHolder.instance.loadedClasses;
     }

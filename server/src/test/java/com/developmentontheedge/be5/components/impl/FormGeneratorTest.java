@@ -18,7 +18,6 @@ public class FormGeneratorTest extends AbstractProjectTest
 {
 
     @Test
-    @Ignore
     public void testGenerate(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
@@ -34,6 +33,9 @@ public class FormGeneratorTest extends AbstractProjectTest
                 RestApiConstants.VALUES, values)));
 
         assertNotNull(generate);
+        assertEquals(2, generate.getFirst().parameters.size());
+        assertEquals("test1", generate.getFirst().parameters.get("name"));
+        assertEquals("test2", generate.getFirst().parameters.get("value"));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

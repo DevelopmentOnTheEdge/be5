@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.operationstest.analyzers.DatabaseAnalyzer;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsConnector;
@@ -23,4 +24,6 @@ public interface DatabaseService extends DbmsConnector
     String getConnectionsStatistics();
 
     Rdbms getRdbms();
+
+    DatabaseAnalyzer getAnalyzer();
 }

@@ -1,15 +1,31 @@
 package com.developmentontheedge.be5.api.operationstest;
 
+import com.developmentontheedge.be5.api.operationstest.analyzers.DatabaseAnalyzer;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.ApplicationInfoComponent;
 import com.developmentontheedge.be5.env.ServerModules;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.io.Writer;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class OperationSupport implements Be5Operation, DatabaseConstants
 {
@@ -231,7 +247,7 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
      * @return null
      */
     @Override
-    public Object getParameters( Writer out, DatabaseService connector, Map presetValues )
+    public Object getParameters( Writer out, DatabaseService connector, Map<String, String> presetValues )
             throws Exception
     {
         return null;
@@ -843,51 +859,51 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
 //        return genericRefs != null && genericRefs.length > 0;
 //    }
 //
-//    /**
-//     * Returns map in which keys from presetValues are established according by
-//     * {@link com.beanexplorer.enterprise.DatabaseAnalyzer#getIdentifierCase()} values for the specified connector to the database.
-//     * If presetValues is empty, then return presetValues.
-//     *
-//     * @param connector connector to the DB
-//     * @param presetValues the map preset value
-//     * @return map preset values map
-//     */
-//    protected Map mapPresetsForTheDatabase( DatabaseService connector,
-//        DynamicPropertySet record, Map<?,?> presetValues )
-//    {
-//        if( presetValues.isEmpty() )
-//        {
-//            return presetValues;
-//        }
-//
-//        HashMap newPresets = new HashMap( presetValues.size() );
-//        if( connector.getAnalyzer().getIdentifierCase() != IdentifierCase.NEUTRAL )
-//        {
-//            for( Map.Entry<?, ?> entry : presetValues.entrySet() )
-//            {
-//                String name = ( String )entry.getKey();
-//                String newName = connector.getAnalyzer().quoteIdentifier( name );
-//                if( name.equals( newName ) )
-//                {
-//                    newPresets.put( connector.getAnalyzer().getCaseCorrectedIdentifier(name), entry.getValue() );
-//                }
-//                else
-//                {
-//                    newPresets.put( name, entry.getValue() );
-//                }
-//            }
-//            return newPresets;
-//        }
-//
-//        for( Map.Entry<?, ?> entry : presetValues.entrySet() )
-//        {
-//            String name = ( String )entry.getKey();
-//            DynamicProperty prop = record.getProperty( name );
-//            newPresets.put( prop != null ? prop.getName() : name, entry.getValue() );
-//        }
-//
-//        return newPresets;
-//    }
+    /**
+     * Returns map in which keys from presetValues are established according by
+     * {@link com .beanexplorer.enterprise.DatabaseAnalyzer#getIdentifierCase()} values for the specified connector to the database.
+     * If presetValues is empty, then return presetValues.
+     *
+     * @param connector connector to the DB
+     * @param presetValues the map preset value
+     * @return map preset values map
+     */
+    protected Map<String, String> mapPresetsForTheDatabase(DatabaseService connector,
+                                           DynamicPropertySet record, Map<String, String> presetValues )
+    {
+        if( presetValues.isEmpty() )
+        {
+            return presetValues;
+        }
+
+        HashMap<String,String> newPresets = new HashMap<>( presetValues.size() );
+        if( connector.getAnalyzer().getIdentifierCase() != DatabaseAnalyzer.IdentifierCase.NEUTRAL )
+        {
+            for( Map.Entry<String, String> entry : presetValues.entrySet() )
+            {
+                String name = entry.getKey();
+                String newName = connector.getAnalyzer().quoteIdentifier( name );
+                if( name.equals( newName ) )
+                {
+                    newPresets.put( connector.getAnalyzer().getCaseCorrectedIdentifier(name), entry.getValue() );
+                }
+                else
+                {
+                    newPresets.put( name, entry.getValue() );
+                }
+            }
+            return newPresets;
+        }
+
+        for( Map.Entry<String, String> entry : presetValues.entrySet() )
+        {
+            String name = entry.getKey();
+            DynamicProperty prop = record.getProperty( name );
+            newPresets.put( prop != null ? prop.getName() : name, entry.getValue() );
+        }
+
+        return newPresets;
+    }
 //
 //    /**
 //     * Same as
@@ -1612,7 +1628,7 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
 //    {
 //        try
 //        {
-//            return loadEntityEnums( connector, entity, Utils.readTableBean( connector, entity ) );
+//            return loadEntityEnums( connector, entity, Utils.getTableBean( connector, entity ) );
 //        }
 //        catch( SQLException se )
 //        {
@@ -3901,4 +3917,25 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
 //        return this.database;
 //    }
 
+    public static DynamicPropertySet getTableBean(String entityName) throws Exception
+    {
+        Project project = ServerModules.getServiceProvider().getProject();
+        Entity entity = project.getEntity(entityName);
+
+        BeModelElement scheme = entity.getAvailableElement("Scheme");
+
+        if(scheme == null)return null;
+
+        BeModelElement columns = ((TableDef) scheme).get("Columns");
+
+        DynamicPropertySet bean = new DynamicPropertySetSupport();
+
+
+        ((BeCaseInsensitiveCollection<ColumnDef>) columns).stream()
+                .filter(x -> !x.getName().equals(entity.getPrimaryKey()))
+                .map(x -> new DynamicProperty(x.getName(), x.getType().getClass()))
+                .forEach(bean::add);
+
+        return bean;
+    }
 }

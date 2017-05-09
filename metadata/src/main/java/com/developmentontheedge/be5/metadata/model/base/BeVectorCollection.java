@@ -246,7 +246,24 @@ public class BeVectorCollection<T extends BeModelElement> extends BeModelElement
         return getAvailableElements( beVectorCollection );
     }
 
-    public static <T extends BeModelElement> Collection<T> getAvailableElements( final Iterable<T> iterable )
+    public T getAvailableElement(String name)
+    {
+        final BeVectorCollection<T> beVectorCollection = this;
+        return getAvailableElement(name, beVectorCollection);
+    }
+
+    private <T2 extends BeModelElement> T2 getAvailableElement(String name, final Iterable<T2> iterable){
+        for ( T2 element : iterable )
+        {
+            if ( element.isAvailable() && name.equals(element.getName()))
+            {
+                return element;
+            }
+        }
+        return null;
+    }
+
+    private static <T extends BeModelElement> Collection<T> getAvailableElements( final Iterable<T> iterable )
     {
         Collection<T> result = new ArrayList<>();
         for ( T element : iterable )

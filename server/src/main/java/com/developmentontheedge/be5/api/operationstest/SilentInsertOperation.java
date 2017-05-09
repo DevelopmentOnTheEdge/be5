@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class SilentInsertOperation extends InsertOperation implements HttpOperation
 {
-    private Map myPars;
+    private Map<String, String> myPars;
 
-    public Object getParameters(Writer out, DatabaseService connector, Map presetValues ) throws Exception
+    public Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
     {
         myPars = presetValues;              
         return super.getParameters( out, connector, presetValues );
