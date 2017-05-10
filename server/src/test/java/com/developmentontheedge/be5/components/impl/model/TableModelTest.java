@@ -17,7 +17,7 @@ public class TableModelTest extends AbstractProjectTestH2DB
 
     @Test
     public void testExecuteSubQuery() {
-        if((Long)db.selectScalar("select count(*) from testtUser") == 0){
+        if(db.getLong("select count(*) from testtUser") == 0){
             db.insert("insert into testtable (name, value) VALUES (?, ?)",
                     "tableModelTest", "1");
             db.insert("insert into testtUser (name, value) VALUES (?, ?)","tableModelTest", "user1");

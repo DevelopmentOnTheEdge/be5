@@ -37,7 +37,7 @@ public class OperationExecutorTest extends AbstractProjectTestH2DB
                 RestApiConstants.VALUES, values)));
 
         assertNotNull(frontendAction);
-        assertEquals((Long)1L, db.selectScalar(
+        assertEquals((Long)1L, db.getScalar(
                 "SELECT COUNT(*) FROM testtableAdmin WHERE name = ? AND value = ?", name, value));
 
         initUserWithRoles(RoleType.ROLE_GUEST);

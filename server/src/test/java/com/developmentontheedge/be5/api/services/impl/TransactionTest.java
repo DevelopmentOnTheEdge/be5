@@ -39,7 +39,7 @@ public class TransactionTest extends AbstractProjectTest
             db.update("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
             return null;//TODO сделаем возможность запросов без возвращения результата (аналог Spring TransactionCallbackWithoutResult) https://habrahabr.ru/post/183204/
         });
-        long countUser1 = db.selectScalar("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
+        long countUser1 = db.getScalar("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
         assertEquals(2, countUser1);
     }
 
@@ -55,7 +55,7 @@ public class TransactionTest extends AbstractProjectTest
         }
         catch (Be5Exception e) {
             Assert.assertTrue(true);
-            long countUserError = db.selectScalar("SELECT count(*) FROM persons WHERE name = 'userError'" );
+            long countUserError = db.getScalar("SELECT count(*) FROM persons WHERE name = 'userError'" );
             assertEquals(0, countUserError);
         }
     }

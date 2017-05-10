@@ -1,19 +1,15 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.SessionConstants;
-import com.developmentontheedge.be5.metadata.Utils;
-import com.developmentontheedge.dbms.DbmsConnector;
 import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
@@ -48,7 +44,7 @@ public class LoginServiceImpl implements LoginService
             String passwordCheckClause = getPasswordCheckClause();
             sql += " AND ("+passwordCheckClause+")";
 
-            if((long)db.selectScalar(sql, user, password) == 1){
+            if(db.getLong(sql, user, password) == 1L){
                 return true;
             }
         }

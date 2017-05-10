@@ -49,9 +49,7 @@ public class MultiThreadedTest extends AbstractProjectTest
             e.printStackTrace();
         }
 
-        long count = db.selectScalar("select count(*) AS \"count\" from Persons");
-
-        assertEquals(100, count);
+        assertEquals((Long)100L, db.getLong("select count(*) AS \"count\" from Persons"));
     }
 
     public class Test2 implements Runnable{

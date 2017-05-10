@@ -33,39 +33,34 @@ public class SqlServiceTest extends AbstractProjectTest
                 "    email varchar(255) \n" +
                 ");");
 
-        db.update("INSERT INTO persons (name, password) VALUES (?,?)",
+        int update = db.update("INSERT INTO persons (name, password) VALUES (?,?)",
                 "user1", "pass1");
+        assertEquals(1, update);
         db.insert("INSERT INTO persons (name, password, email) VALUES (?,?,?)",
                 "user2", "pass2", "email2@mail.ru");
     }
 
     @Test
     public void testSelectScalar() {
-        String password = db.selectScalar("SELECT password FROM persons WHERE name = ?", "user2");
+        String password = db.getScalar("SELECT password FROM persons WHERE name = ?", "user2");
 
         assertEquals("pass2", password);
     }
 
     @Test
     public void testCount() {
-        long count = db.selectScalar("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser");
-
-        assertEquals(0, count);
+        assertEquals((Long)0L, db.getLong("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser"));
     }
 
     @Test
     public void testSelectString() {
-        String password = db.selectScalar("SELECT password FROM persons WHERE name = ?",
-                "user2");
-
-        assertEquals("pass2", password);
+        assertEquals("pass2", db.getString("SELECT password FROM persons WHERE name = ?",
+                "user2"));
     }
 
     @Test
     public void testGetNullIfNotContain() {
-        Long id = db.selectScalar("SELECT id FROM persons WHERE name = ?", "notContainUser");
-
-        assertEquals(null, id);
+        assertEquals(null, db.getLong("SELECT id FROM persons WHERE name = ?", "notContainUser"));
     }
 
     @Test
@@ -156,11 +151,9 @@ public class SqlServiceTest extends AbstractProjectTest
     @Test
     public void testGetInsertId() {
         String uniqueName = "testGetInsertId";
-        long id = db.insert("INSERT INTO persons (name, password) VALUES (?,?)",
+        Long id = db.insert("INSERT INTO persons (name, password) VALUES (?,?)",
                 uniqueName, "pass");
 
-        long idByName = db.selectScalar("SELECT ID FROM persons WHERE name = ?", uniqueName);
-
-        assertEquals(idByName, id);
+        assertEquals(id, db.getLong("SELECT ID FROM persons WHERE name = ?", uniqueName));
     }
 }

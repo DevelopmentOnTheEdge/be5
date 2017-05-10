@@ -71,7 +71,7 @@ public class CategoriesServiceImpl implements CategoriesService
     
     private boolean hasAnyItem(MutableCategory category)
     {
-        return (long)db.selectScalar("SELECT COUNT(*) FROM classifications WHERE categoryID = ?", category.id) > 0;
+        return db.getLong("SELECT COUNT(*) FROM classifications WHERE categoryID = ?", category.id) > 0;
         //TODO check and del return db.in("classifications").existsWith("categoryID", category.id); TODO check and delete
     }
     

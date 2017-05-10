@@ -58,7 +58,7 @@ public class SqlServiceImpl implements SqlService
     }
 
     @Override
-    public <T> T selectScalar(String sql, Object... params)
+    public <T> T getScalar(String sql, Object... params)
     {
         return execute(true, conn -> query(conn, sql, new ScalarHandler<T>(), params));
     }

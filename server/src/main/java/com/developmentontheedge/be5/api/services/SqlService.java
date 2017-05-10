@@ -13,9 +13,25 @@ public interface SqlService
 
     <T> List<T> selectList(String sql, ResultSetParser<T> parser, Object... params);
 
-    <T> T selectScalar(String sql, Object... params);
+    <T> T getScalar(String sql, Object... params);
 
     int update(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
+
+    default Long getLong(String sql, Object... params){
+        return getScalar(sql, params);
+    }
+
+    default String getString(String sql, Object... params){
+        return getScalar(sql, params);
+    }
+
+    default Integer getInteger(String sql, Object... params){
+        return getScalar(sql, params);
+    }
+
+    default Double getDouble(String sql, Object... params){
+        return getScalar(sql, params);
+    }
 }
