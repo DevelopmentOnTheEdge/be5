@@ -22,6 +22,7 @@ public class MenuTest extends AbstractProjectTest
 
     @BeforeClass
     public static void init(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
         component = ServerModules.getComponent("menu");
     }
 
@@ -106,9 +107,12 @@ public class MenuTest extends AbstractProjectTest
     {
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(sp);
-        assertEquals("testtable", menuResponse.root.get(0).title);
 
-        assertEquals("table/testtable/All records", menuResponse.root.get(0).action.arg);
+        assertEquals(true, menuResponse.loggedIn);
+
+        assertEquals(1, menuResponse.root.size());
+        assertEquals("testtable", menuResponse.root.get(0).title);
+        assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(0).action);
         assertNull(menuResponse.root.get(0).children);
     }
 

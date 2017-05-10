@@ -22,7 +22,7 @@ public abstract class AbstractProjectTest
 {
     protected static final ServiceProvider sp = ServerModules.getServiceProvider();
 
-    protected static final LoginServiceImpl loginService ;
+    private static final LoginServiceImpl loginService;
 
     static {
         Project project = ServerModules.getServiceProvider().getProject();
@@ -32,7 +32,7 @@ public abstract class AbstractProjectTest
         }
 
         loginService = new LoginServiceImpl(null, sp.getProjectProvider());
-        loginService.initGuest(null);
+        new LoginServiceImpl(null, sp.getProjectProvider()).initGuest(null);
     }
 
     protected Request getMockRequest(String requestUri){
@@ -54,7 +54,7 @@ public abstract class AbstractProjectTest
         return request;
     }
 
-    protected void initUserWithRoles(String... roles)
+    protected static void initUserWithRoles(String... roles)
     {
         loginService.saveUser("testUser", Arrays.asList(roles), Locale.US);
     }
