@@ -25,6 +25,7 @@ import java.util.OptionalInt;
  * 
  * @author asko
  */
+@Deprecated
 public class BeProperty
 {
 
