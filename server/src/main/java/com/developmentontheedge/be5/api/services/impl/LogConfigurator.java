@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
@@ -13,7 +14,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
  */
 public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPath>
 {
-    private java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogConfigurator.class.getName());
+    private Logger log = Logger.getLogger(LogConfigurator.class.getName());
 
     class JulConfigPath{
         String path;
@@ -33,7 +34,7 @@ public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPa
                 }
                 LogManager.getLogManager().readConfiguration(resourceAsStream);
             }
-            log = java.util.logging.Logger.getLogger(LogConfigurator.class.getName());
+            log = Logger.getLogger(LogConfigurator.class.getName());
             log.info("Log configured. Level: " + log.getParent().getLevel().getName() +
                     " Handlers: " + Arrays.asList(log.getParent().getHandlers()));
         }
