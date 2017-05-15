@@ -74,7 +74,7 @@ public class MainServiceProvider implements ServiceProvider
     /**
      * Resolve a service. Adds this service to the instantiated services.
      */
-    private <T> T resolveService(Class<T> serviceClass, List<Class<?>> stack)
+    private synchronized <T> T resolveService(Class<T> serviceClass, List<Class<?>> stack)
     {
         checkState(!stack.contains(serviceClass), "Cyclic service dependency: " + stack.toString() + ", " + serviceClass.toString());
         stack.add(serviceClass);
