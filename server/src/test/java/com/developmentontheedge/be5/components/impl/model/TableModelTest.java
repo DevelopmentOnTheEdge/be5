@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components.impl.model;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.test.AbstractProjectTestH2DB;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public class TableModelTest extends AbstractProjectTestH2DB
+public class TableModelTest extends AbstractProjectIntegrationH2Test
 {
     private static SqlService db = sp.getSqlService();
 

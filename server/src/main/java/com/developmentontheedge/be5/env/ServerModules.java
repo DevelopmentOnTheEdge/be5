@@ -83,11 +83,7 @@ public class ServerModules
 
         //config logger first
         serviceProvider.getLogger();
-
-        if(serviceProvider.getProject().getConnectionProfile() != null)
-        {
-            serviceProvider.getDatabaseService();
-        }
+        serviceProvider.getProject();
     }
 
     @SuppressWarnings("unchecked")

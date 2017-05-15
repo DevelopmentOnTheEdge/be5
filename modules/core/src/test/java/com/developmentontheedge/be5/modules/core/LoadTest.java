@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.test.AbstractProjectTestH2DB;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 
-public class LoadTest extends AbstractProjectTestH2DB
+public class LoadTest extends AbstractProjectIntegrationH2Test
 {
 
     @Test

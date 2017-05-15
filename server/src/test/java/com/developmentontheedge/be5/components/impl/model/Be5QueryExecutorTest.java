@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components.impl.model;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.test.AbstractProjectTestH2DB;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class Be5QueryExecutorTest extends AbstractProjectTestH2DB
+public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
 {
     private Query query = sp.getProject().getEntity("testtable").getQueries().get("All records");
     private static SqlService db = sp.getSqlService();

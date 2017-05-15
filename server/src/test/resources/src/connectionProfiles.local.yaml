@@ -8,7 +8,7 @@ connectionProfiles:
       tomcatManagerReloadUrlTemplate: http://localhost:8080/manager/text/reload?path=/{projectName}
       properties:
       - PROJECT_SOURCE: direct
-    test:
-      connectionUrl: jdbc:h2:~/testBe5
+    profileForIntegrationTests:
+      connectionUrl: jdbc:h2:~/profileForIntegrationTests
       username: sa
       password: ''

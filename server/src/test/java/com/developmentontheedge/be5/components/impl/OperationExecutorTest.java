@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.ServerModules;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.test.AbstractProjectTestH2DB;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class OperationExecutorTest extends AbstractProjectTestH2DB
+public class OperationExecutorTest extends AbstractProjectIntegrationH2Test
 {
     private SqlService db = ServerModules.getServiceProvider().getSqlService();
 

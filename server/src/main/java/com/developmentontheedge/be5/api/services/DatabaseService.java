@@ -26,4 +26,8 @@ public interface DatabaseService extends DbmsConnector
     Rdbms getRdbms();
 
     DatabaseAnalyzer getAnalyzer();
+
+    String getConnectionProfileName();
+
+    String getUsername();
 }

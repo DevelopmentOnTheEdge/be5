@@ -15,7 +15,9 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private WatchDir watcher = null;
     private volatile boolean dirty = false;
-    
+
+    public ProjectProviderImpl(LogConfigurator logConfigurator){}
+
     @Override
     synchronized public Project getProject()
     {

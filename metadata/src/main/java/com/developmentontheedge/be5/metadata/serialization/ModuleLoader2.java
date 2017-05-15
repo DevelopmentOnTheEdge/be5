@@ -271,14 +271,14 @@ public class ModuleLoader2
         StringBuilder sb = new StringBuilder();
         if(project.isModuleProject())
         {
-            sb.append("Module loaded:\n");
+            sb.append("Module loaded:");
         }
         else
         {
-            sb.append("Project loaded:\n");
+            sb.append("Project loaded:");
         }
 
-        sb.append(project.getName());
+        sb.append("\nName: ").append(project.getName());
 
         if(project.getModules().getSize()>0)
         {
@@ -288,7 +288,7 @@ public class ModuleLoader2
                 sb.append("\n - "); sb.append(module.getName());
             }
         }
-        sb.append("\nloading time: ")
+        sb.append("\nLoading time: ")
                 .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
         return sb.toString();
     }

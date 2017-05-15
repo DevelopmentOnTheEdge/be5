@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -47,6 +48,9 @@ public class DatabaseServiceImpl implements DatabaseService
         bds.setPassword(profile.getPassword());
 //        //TODO add to Rdbms
 //        bds.setValidationQuery("select 1");
+
+        log.info("Using connection: " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
+                + "\nConnection profile: " + getConnectionProfileName());
     }
 
     private DataSource getDataSource() {
@@ -221,9 +225,21 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
+    public String getConnectionProfileName()
+    {
+        return profile.getName();
+    }
+
+    @Override
     public String getConnectString()
     {
         return profile.getConnectionUrl();
+    }
+
+    @Override
+    public String getUsername()
+    {
+        return profile.getUsername();
     }
 
     @Override
