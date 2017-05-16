@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -33,9 +32,9 @@ public class FormGeneratorTest extends AbstractProjectTest
                 RestApiConstants.VALUES, values)));
 
         assertNotNull(generate);
-        assertEquals(2, generate.getFirst().parameters.size());
-        assertEquals("test1", generate.getFirst().parameters.get("name"));
-        assertEquals("test2", generate.getFirst().parameters.get("value"));
+        assertEquals(2, generate.getFirst().dps.size());
+        assertEquals("test1", generate.getFirst().dps.getProperty("name").getValue());
+        assertEquals("test2", generate.getFirst().dps.getProperty("value").getValue());
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

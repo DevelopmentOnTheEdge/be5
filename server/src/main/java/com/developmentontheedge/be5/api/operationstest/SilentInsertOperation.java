@@ -3,6 +3,7 @@
 package com.developmentontheedge.be5.api.operationstest;
 
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import javax.servlet.http.Cookie;
 import java.io.StringWriter;
@@ -13,7 +14,7 @@ public class SilentInsertOperation extends InsertOperation implements HttpOperat
 {
     private Map<String, String> myPars;
 
-    public Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
+    public DynamicPropertySet getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
     {
         myPars = presetValues;              
         return super.getParameters( out, connector, presetValues );

@@ -5,6 +5,7 @@ package com.developmentontheedge.be5.api.operationstest;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.beans.BeanInfoConstants;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.io.Serializable;
 import java.io.Writer;
@@ -78,7 +79,7 @@ public interface Be5Operation extends Serializable
 
     String[] getRecordIDs();
 
-    Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues) throws Exception;
+    DynamicPropertySet getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues) throws Exception;
     Object getStoredParameters();
     //Operation []getCollectionOperations();
     //Operation []getOwnerOperations();

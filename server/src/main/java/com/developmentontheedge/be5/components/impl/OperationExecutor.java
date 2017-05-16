@@ -44,19 +44,18 @@ public class OperationExecutor
         Map<String, String> fieldValues = req.getValues(RestApiConstants.VALUES);
 
         Operation operation = UserAwareMeta.get(servicesProvider).getOperation(entityName, queryName, operationName);
-        UserInfo ui = UserInfoHolder.getUserInfo();
         LegacyOperationFactory legacyOperationFactory = new LegacyOperationFactory(req.getRawRequest());//servicesProvider.get(LegacyOperationsService.class).createFactory(ui, req.getRawRequest());
         LegacyOperation legacyOperation = legacyOperationFactory.create(operation, req, "Utils.readQueryID", selectedRows);
 
-        return execute(legacyOperation, fieldValues, ui, req);
+        return execute(legacyOperation, fieldValues, req);
     }
 
-    public FrontendAction execute(LegacyOperation legacyOperation, Map<String, String> fieldValues, UserInfo ui, Request req)
+    public FrontendAction execute(LegacyOperation legacyOperation, Map<String, String> fieldValues, Request req)
     {
         StringWriter out = new StringWriter();
         //LocalizingWriter writer = new LocalizingWriter(ui, out, legacyOperation.getLocalizedMessages(ui.getLocale()));
 
-        legacyOperation.execute(out, fieldValues, ui);
+        legacyOperation.execute(out, fieldValues);
 
         if (legacyOperation.isOperationWithFrontendAction())
         {

@@ -40,6 +40,7 @@ import com.developmentontheedge.be5.api.operationstest.Be5Operation;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.ComponentModel;
@@ -131,20 +132,9 @@ public class LegacyOperation {
      * @param presetValues
      * @return component model or null if operation parameters is null
      */
-    public ComponentModel getParameters(Writer out, Map<String, String> presetValues) throws Be5Exception {
+    public DynamicPropertySet getParameters(Writer out, Map<String, String> presetValues) throws Be5Exception {
         try {
-			Object formParameters = operation.getParameters(out, connector, presetValues);
-
-			if (formParameters == null)
-			{
-			    return null;
-			}
-
-			// TODO invoke extenders
-			// see call of getParameters() in FormEmitter
-			ComponentModel model = ComponentFactory.getModel(formParameters);
-
-			return model;
+            return operation.getParameters(out, connector, presetValues);
 		} catch (Exception e) {
 			throw rethrow(e, out.toString());
 		}
@@ -158,10 +148,10 @@ public class LegacyOperation {
     /**
      * Tries to execute the operation.
      */
-    public void execute(Writer out, Map<String, String> fieldValues, UserInfo ui) throws Be5Exception {
+    public void execute(Writer out, Map<String, String> fieldValues) throws Be5Exception {
         try {
 			HashMap<String, String> fieldValuesCopy = new HashMap<>(fieldValues);
-			Object formParameters = operation.getParameters(out, connector, fieldValuesCopy);
+            DynamicPropertySet formParameters = operation.getParameters(out, connector, fieldValuesCopy);
 
 			if (formParameters == null)
 			{
