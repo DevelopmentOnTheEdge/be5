@@ -145,7 +145,7 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
     }
 
     @Override
-    public Object getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
+    public DynamicPropertySet getParameters(Writer out, DatabaseService connector, Map<String, String> presetValues ) throws Exception
     {
         parameters = getTableBean( entity );
         Map<String, String> newPresets = mapPresetsForTheDatabase( connector, parameters, presetValues );
@@ -153,6 +153,7 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
         {
             p.setValue(newPresets.get(p.getName()));
         }
+        return parameters;
         //String pk = primaryKey;
 
 //        boolean isFirstSearch = Utils.isEmpty( getAnyParam( HttpConstants.SEARCH_PARAM ) );
@@ -599,7 +600,7 @@ public class InsertOperation extends OperationSupport implements DatabaseConstan
 //        }
 
         //System.out.println( "last parameters = " + parameters );
-        return parameters;
+
     }
 
     DynamicProperty multForcedProperty = null;

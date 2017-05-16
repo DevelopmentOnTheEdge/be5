@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.beans.json.JsonFactory;
 
 public class DocumentResponse
 {
@@ -53,6 +54,7 @@ public class DocumentResponse
     public void send(FrontendAction result)
     {
         checkNotNull(result);
+        //TODO res.sendJson(JsonFactory.bean()) ?
         res.sendAsJson("formResult", result);
     }
 

@@ -247,7 +247,7 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
      * @return null
      */
     @Override
-    public Object getParameters( Writer out, DatabaseService connector, Map<String, String> presetValues )
+    public DynamicPropertySet getParameters( Writer out, DatabaseService connector, Map<String, String> presetValues )
             throws Exception
     {
         return null;
