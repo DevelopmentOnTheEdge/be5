@@ -114,7 +114,9 @@ public interface Response
      * A way to report about an occured error;
      */
     void sendTextError(String messagee);
-    
+
+    void sendAsBean(Object object);
+
     /**
      * Returns a raw response. Used only for low-level API. Should not be used in ordinary components.
      */

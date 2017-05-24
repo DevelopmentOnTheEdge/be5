@@ -9,8 +9,8 @@ import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.beans.json.JsonFactory;
 
+@Deprecated
 public class DocumentResponse
 {
     
@@ -51,12 +51,6 @@ public class DocumentResponse
         res.sendAsJson(FrontendConstants.FORM_ACTION, form);
     }
 
-    public void sendAsBean(FormPresentation form)
-    {
-        checkNotNull(form);
-        res.sendJson(JsonFactory.bean(form).toString());
-    }
-    
     public void send(FrontendAction result)
     {
         checkNotNull(result);

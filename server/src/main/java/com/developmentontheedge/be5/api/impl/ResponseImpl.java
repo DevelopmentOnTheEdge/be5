@@ -5,12 +5,16 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.xml.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ResponseImpl implements Response
 {
@@ -98,6 +102,17 @@ public class ResponseImpl implements Response
     public void sendAsRawJson(Object value)
     {
         sendJson(new GsonBuilder().disableHtmlEscaping().create().toJson(value));
+    }
+
+    @Override
+    public void sendAsBean(Object object)
+    {
+        checkNotNull(object);
+        if(object instanceof Either){
+            ((Either)object).apply(this::sendAsBean, this::sendAsBean);
+        }else{
+            sendJson(JsonFactory.bean(object).toString());
+        }
     }
     
     @Override
