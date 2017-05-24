@@ -127,7 +127,7 @@ public class FormGenerator
 
         String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
 
-        return Either.first(new FormPresentation(title, selectedRowsString, dps));
+        return Either.first(new FormPresentation(title, selectedRowsString, dps, presetValues));
     }
 
 

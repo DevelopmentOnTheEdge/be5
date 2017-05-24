@@ -50,6 +50,12 @@ public class DocumentResponse
         checkNotNull(form);
         res.sendAsJson(FrontendConstants.FORM_ACTION, form);
     }
+
+    public void sendAsBean(FormPresentation form)
+    {
+        checkNotNull(form);
+        res.sendJson(JsonFactory.bean(form).toString());
+    }
     
     public void send(FrontendAction result)
     {
