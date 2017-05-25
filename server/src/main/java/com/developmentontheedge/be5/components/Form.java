@@ -28,8 +28,7 @@ public class Form implements Component
             switch (req.getRequestUri())
             {
             case "":
-                res.sendAsBean(new FormGenerator().generate(req));
-                //response.send(new FormGenerator().generate(req));
+                response.send(new FormGenerator().generate(req));
                 return;
             case "apply":
                 response.send(new OperationExecutor(serviceProvider).execute(req));

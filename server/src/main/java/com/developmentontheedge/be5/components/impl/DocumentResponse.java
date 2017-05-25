@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.util.Either;
 
-@Deprecated
 public class DocumentResponse
 {
     
@@ -48,7 +47,7 @@ public class DocumentResponse
     public void send(FormPresentation form)
     {
         checkNotNull(form);
-        res.sendAsJson(FrontendConstants.FORM_ACTION, form);
+        res.sendBeanAsJson(FrontendConstants.FORM_ACTION, form);
     }
 
     public void send(FrontendAction result)

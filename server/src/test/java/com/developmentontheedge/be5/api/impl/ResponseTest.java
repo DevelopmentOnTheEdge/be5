@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Ignore
 public class ResponseTest extends AbstractProjectTest{
 
     private Response response;

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class LanguageSelector implements Component
 {
 
-    static class LanguageSelectorResponse
+    public static class LanguageSelectorResponse
     {
 
         public final List<String> languages;
@@ -44,6 +44,21 @@ public class LanguageSelector implements Component
             if (languages != null ? !languages.equals(that.languages) : that.languages != null) return false;
             if (selected != null ? !selected.equals(that.selected) : that.selected != null) return false;
             return messages != null ? messages.equals(that.messages) : that.messages == null;
+        }
+
+        public List<String> getLanguages()
+        {
+            return languages;
+        }
+
+        public String getSelected()
+        {
+            return selected;
+        }
+
+        public Map<String, String> getMessages()
+        {
+            return messages;
         }
     }
 

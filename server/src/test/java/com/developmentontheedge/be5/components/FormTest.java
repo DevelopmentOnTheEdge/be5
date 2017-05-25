@@ -26,24 +26,24 @@ public class FormTest extends AbstractProjectTest
         component = ServerModules.getComponent("form");
     }
 
-//    @Test
-//    public void generate() throws Exception {
-//        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-//
-//        Response response = mock(Response.class);
-//        String values = new Gson().toJson(ImmutableList.of(
-//                ImmutableMap.of("name","name",  "value","test1"),
-//                ImmutableMap.of("name","value", "value","test2")));
-//        component.generate(getSpyMockRequest("", ImmutableMap.of(
-//                RestApiConstants.ENTITY,"testtableAdmin",
-//                RestApiConstants.QUERY,"All records",
-//                RestApiConstants.OPERATION,"Insert",
-//                RestApiConstants.SELECTED_ROWS, "0",
-//                RestApiConstants.VALUES, values)), response, sp);
-//
-//        verify(response).sendAsJson(eq("table"), any(Either.class));
-//
-//        initUserWithRoles(RoleType.ROLE_GUEST);
-//    }
+    @Test
+    public void generate() throws Exception {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+
+        Response response = mock(Response.class);
+        String values = new Gson().toJson(ImmutableList.of(
+                ImmutableMap.of("name","name",  "value","test1"),
+                ImmutableMap.of("name","value", "value","test2")));
+        component.generate(getSpyMockRequest("", ImmutableMap.of(
+                RestApiConstants.ENTITY,"testtableAdmin",
+                RestApiConstants.QUERY,"All records",
+                RestApiConstants.OPERATION,"Insert",
+                RestApiConstants.SELECTED_ROWS, "0",
+                RestApiConstants.VALUES, values)), response, sp);
+
+        verify(response).sendBeanAsJson(eq("form"), any(Either.class));
+
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
 
 }

@@ -14,6 +14,16 @@ public class Action
         this.arg = arg;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getArg()
+    {
+        return arg;
+    }
+
     /**
      * Generates an action that should be interpreted as client-side action via a hash URL. 
      */

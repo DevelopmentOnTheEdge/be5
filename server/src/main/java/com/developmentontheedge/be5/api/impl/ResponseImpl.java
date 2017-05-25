@@ -5,14 +5,10 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.xml.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,42 +19,68 @@ public class ResponseImpl implements Response
      * Must not be public.
      * @author asko
      */
-    static class TypedResponse {
+    public static class TypedResponse {
         final String type;
         final Object value;
-        
+
         TypedResponse(String type, Object value)
         {
             this.type = type;
             this.value = value;
         }
+
+        public String getType()
+        {
+            return type;
+        }
+
+        public Object getValue()
+        {
+            return value;
+        }
     }
-    
+
     /**
      * Must not be public.
      * @author asko
      */
-    static class UntypedResponse {
+    public static class UntypedResponse {
         final Object value;
-        
+
         UntypedResponse(Object value)
         {
             this.value = value;
         }
+
+        public Object getValue()
+        {
+            return value;
+        }
     }
-    
+
     /**
      * Must not be public.
      * @author asko
      */
-    static class Error {
+    public static class ErrorResponse
+    {
         final String message;
         final String code;
 
-        Error(String message, String code)
+        ErrorResponse(String message, String code)
         {
             this.message = message;
             this.code = code;
+        }
+
+        public String getMessage()
+        {
+            return message;
+        }
+
+        public String getCode()
+        {
+            return code;
         }
     }
     
@@ -89,37 +111,41 @@ public class ResponseImpl implements Response
     {
         sendAsRawJson(untyped(value));
     }
-    
+
     @Override
     public void sendError(Be5Exception e)
     {
         String msg = UserInfoHolder.isAdmin() ? e.getMessage() : "";
         //TODO localize e.getCode()
-        sendAsJson("error", new Error(msg, e.getCode().toString()));
+        sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
     }
         
     @Override
     public void sendAsRawJson(Object value)
     {
-        sendJson(new GsonBuilder().disableHtmlEscaping().create().toJson(value));
+        sendJson(JsonFactory.beanValues(value).toString());
     }
 
     @Override
-    public void sendAsBean(Object object)
+    public void sendBeanAsJson(String type, Object value)
     {
-        checkNotNull(object);
-        if(object instanceof Either){
-            ((Either)object).apply(this::sendAsBean, this::sendAsBean);
-        }else{
-            sendJson(JsonFactory.bean(object).toString());
-        }
+        checkNotNull(type);
+        checkNotNull(value);
+        sendAsRawJson(typed(type, JsonFactory.bean(value)));
     }
-    
+
     @Override
-    public void sendAsRawJson(JsonElement value)
+    public void sendBeanAsJson(Object value)
     {
-        sendJson(new Gson().toJson(value));
+        checkNotNull(value);
+        sendAsRawJson(untyped(JsonFactory.bean(value)));
     }
+
+//    @Override
+//    public void sendAsRawJson(JsonElement value)
+//    {
+//        sendJson(new Gson().toJson(value));
+//    }
 
     @Override
     public void sendJson(String json)
@@ -178,7 +204,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendError(String message, String code)
     {
-        sendAsJson("error", new Error(message, code));
+        sendAsJson("error", new ErrorResponse(message, code));
     }
     
     @Override

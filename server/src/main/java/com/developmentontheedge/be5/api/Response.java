@@ -48,24 +48,28 @@ public interface Response
      * @see Response#sendAsJson(String, Object)
      */
     void sendAsJson(Object value);
+
+    void sendBeanAsJson(String type, Object value);
+
+    void sendBeanAsJson(Object value);
     
-    /**
-     * A way to send a pure response. Should be used only to support frontend components that we can't edit, e.g. DataTables jQuery plugin.
-     * 
-     * @param value will be serialized with Gson,
-     *        see <a href="https://sites.google.com/site/gson/gson-user-guide">the Gson documentation</a> for more information.
-     * @see Gson#toJson(Object)
-     */
+//    /**
+//     * A way to send a pure response. Should be used only to support frontend components that we can't edit, e.g. DataTables jQuery plugin.
+//     *
+//     * @param value will be serialized with Gson,
+//     *        see <a href="https://sites.google.com/site/gson/gson-user-guide">the Gson documentation</a> for more information.
+//     * @see Gson#toJson(Object)
+//     */
     void sendAsRawJson(Object value);
     
-    /**
-     * A way to send a pure response. Should be used only to support frontend components that we can't edit, e.g. DataTables jQuery plugin.
-     * 
-     * @param value will be serialized with Gson,
-     *        see <a href="https://sites.google.com/site/gson/gson-user-guide">the Gson documentation</a> for more information.
-     * @see Gson#toJson(Object)
-     */
-    void sendAsRawJson(JsonElement value);
+//    /**
+//     * A way to send a pure response. Should be used only to support frontend components that we can't edit, e.g. DataTables jQuery plugin.
+//     *
+//     * @param value will be serialized with Gson,
+//     *        see <a href="https://sites.google.com/site/gson/gson-user-guide">the Gson documentation</a> for more information.
+//     * @see Gson#toJson(Object)
+//     */
+    //void sendAsRawJson(JsonElement value);
     
     /**
      * Sends a serialized json. It is recommended to use {@link Response#sendAsJson(String, Object)} or  {@link Response#sendAsJson(Object)} instead.
@@ -114,8 +118,6 @@ public interface Response
      * A way to report about an occured error;
      */
     void sendTextError(String messagee);
-
-    void sendAsBean(Object object);
 
     /**
      * Returns a raw response. Used only for low-level API. Should not be used in ordinary components.
