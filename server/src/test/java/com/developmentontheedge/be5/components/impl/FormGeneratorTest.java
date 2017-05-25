@@ -36,6 +36,8 @@ public class FormGeneratorTest extends AbstractProjectTest
         assertEquals("test1", generate.getFirst().dps.getProperty("name").getValue());
         assertEquals("test2", generate.getFirst().dps.getProperty("value").getValue());
 
+        assertEquals(String.class, generate.getFirst().dps.getProperty("name").getType());
+
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
 

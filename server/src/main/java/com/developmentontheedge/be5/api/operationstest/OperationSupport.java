@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.operationstest;
 
 import com.developmentontheedge.be5.api.operationstest.analyzers.DatabaseAnalyzer;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.ApplicationInfoComponent;
 import com.developmentontheedge.be5.env.ServerModules;
@@ -10,22 +9,22 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.io.Writer;
-import java.util.Collection;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class OperationSupport implements Be5Operation, DatabaseConstants
 {
@@ -3917,7 +3916,7 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
 //        return this.database;
 //    }
 
-    public static DynamicPropertySet getTableBean(String entityName) throws Exception
+    public DynamicPropertySet getTableBean(String entityName) throws Exception
     {
         Project project = ServerModules.getServiceProvider().getProject();
         Entity entity = project.getEntity(entityName);
@@ -3933,9 +3932,39 @@ public class OperationSupport implements Be5Operation, DatabaseConstants
 
         ((BeCaseInsensitiveCollection<ColumnDef>) columns).stream()
                 .filter(x -> !x.getName().equals(entity.getPrimaryKey()))
-                .map(x -> new DynamicProperty(x.getName(), x.getType().getClass()))
+                .map(OperationSupport::getDynamicProperty)
                 .forEach(bean::add);
 
         return bean;
     }
+
+    static DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    {
+        DynamicProperty dynamicProperty = new DynamicProperty(columnDef.getName(), getTypeClass(columnDef.getType()));
+        dynamicProperty.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
+
+        return dynamicProperty;
+    }
+
+    private static Class<?> getTypeClass(SqlColumnType columnType)
+    {
+        switch( columnType.getTypeName() )
+        {
+            case SqlColumnType.TYPE_BIGINT:
+                return Long.class;
+            case SqlColumnType.TYPE_INT:
+                return Integer.class;
+            case SqlColumnType.TYPE_DECIMAL:
+                return Double.class;
+            case SqlColumnType.TYPE_BOOL:
+                return Boolean.class;
+            case SqlColumnType.TYPE_DATE:
+                return Date.class;
+            case SqlColumnType.TYPE_TIMESTAMP:
+                return Time.class;
+            default:
+                return String.class;
+        }
+    }
+
 }
