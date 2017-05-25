@@ -41,7 +41,7 @@ public class ResponseTest extends AbstractProjectTest{
         Action call = new Action("call", "test/path");
         response.sendAsJson(call);
 
-        verify(writer).append("{\"value\":{\"name\":\"call\",\"arg\":\"test/path\"}}");
+        verify(writer).append(doubleQuotes("{'value':{'name':'call','arg':'test/path'}}"));
         verify(writer).flush();
     }
 
@@ -50,14 +50,14 @@ public class ResponseTest extends AbstractProjectTest{
         Action call = new Action("call", "test/path");
         response.sendAsRawJson(call);
 
-        verify(writer).append("{\"name\":\"call\",\"arg\":\"test/path\"}");
+        verify(writer).append(doubleQuotes("{'name':'call','arg':'test/path'}"));
     }
 
     @Test
     public void sendSuccess() throws Exception {
         response.sendSuccess();
 
-        verify(writer).append("{\"type\":\"ok\"}");
+        verify(writer).append(doubleQuotes("{'type':'ok'}"));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ResponseTest extends AbstractProjectTest{
 
         verify(rawResponse).setContentType("application/json");
         verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append("{\"type\":\"error\",\"value\":{\"message\":\"\",\"code\":\"INTERNAL_ERROR\"}}");
+        verify(writer).append(doubleQuotes("{'type':'error','value':{'message':'','code':'INTERNAL_ERROR'}}"));
         verify(writer).flush();
     }
 
@@ -74,7 +74,7 @@ public class ResponseTest extends AbstractProjectTest{
     public void sendErrorText()  {
         response.sendError("test msg");
 
-        verify(writer).append("{\"type\":\"error\",\"value\":\"test msg\"}");
+        verify(writer).append(doubleQuotes("{'type':'error','value':'test msg'}"));
     }
 
     @Test
@@ -103,11 +103,16 @@ public class ResponseTest extends AbstractProjectTest{
         response.sendAsXml(ActionForXml.class, call);
 
         verify(rawResponse).setContentType("application/xml");
-        verify(writer).append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+        verify(writer).append(doubleQuotes("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" +
                 "<ActionForXml>\n" +
                 "    <name>call</name>\n" +
                 "    <arg>test/path</arg>\n" +
-                "</ActionForXml>\n");
+                "</ActionForXml>\n"));
+    }
+
+    private static String doubleQuotes(String s)
+    {
+        return s.replace("'", "\"");
     }
 
 }
