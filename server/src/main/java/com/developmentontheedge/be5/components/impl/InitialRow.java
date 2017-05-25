@@ -12,5 +12,14 @@ public class InitialRow {
         this.id = id;
         this.cells = cells;
     }
-    
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public List<Object> getCells()
+    {
+        return cells;
+    }
 }

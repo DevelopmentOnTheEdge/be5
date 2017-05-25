@@ -24,7 +24,7 @@ public class Menu implements Component {
 
     private static final String INSERT_OPERATION = "Insert";
     
-    static class MenuResponse {
+    public static class MenuResponse {
         
         final boolean loggedIn;
         final List<RootNode> root;
@@ -34,10 +34,19 @@ public class Menu implements Component {
             this.loggedIn = loggedIn;
             this.root = root;
         }
-        
+
+        public boolean isLoggedIn()
+        {
+            return loggedIn;
+        }
+
+        public List<RootNode> getRoot()
+        {
+            return root;
+        }
     }
-    
-    static class RootNode {
+
+    public static class RootNode {
         
         final Id id;
         final String title;
@@ -66,10 +75,39 @@ public class Menu implements Component {
             this.children = children;
             this.operations = operations;
         }
-        
+
+        public Id getId()
+        {
+            return id;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
+
+        public boolean isDefault()
+        {
+            return isDefault;
+        }
+
+        public Action getAction()
+        {
+            return action;
+        }
+
+        public List<QueryNode> getChildren()
+        {
+            return children;
+        }
+
+        public List<OperationNode> getOperations()
+        {
+            return operations;
+        }
     }
-    
-    static class Id {
+
+    public static class Id {
         
         final String entity;
         final String query;
@@ -79,10 +117,19 @@ public class Menu implements Component {
             this.entity = entity;
             this.query = query;
         }
-        
+
+        public String getEntity()
+        {
+            return entity;
+        }
+
+        public String getQuery()
+        {
+            return query;
+        }
     }
-    
-    static class QueryNode {
+
+    public static class QueryNode {
 
         final Id id;
         final String title;
@@ -97,10 +144,29 @@ public class Menu implements Component {
             this.action = action;
             this.isDefault = isDefault;
         }
-        
+
+        public Id getId()
+        {
+            return id;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
+
+        public Action getAction()
+        {
+            return action;
+        }
+
+        public boolean isDefault()
+        {
+            return isDefault;
+        }
     }
-    
-    static class OperationNode {
+
+    public static class OperationNode {
         
         final OperationId id;
         final String title;
@@ -112,10 +178,24 @@ public class Menu implements Component {
             this.title = title;
             this.action = action;
         }
-        
+
+        public OperationId getId()
+        {
+            return id;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
+
+        public Action getAction()
+        {
+            return action;
+        }
     }
-    
-    static class OperationId {
+
+    public static class OperationId {
         
         final String entity;
         final String operation;
@@ -124,14 +204,23 @@ public class Menu implements Component {
             this.entity = entity;
             this.operation = operation;
         }
-        
+
+        public String getEntity()
+        {
+            return entity;
+        }
+
+        public String getOperation()
+        {
+            return operation;
+        }
     }
     
     /**
      * Used to sort queries.
      * @author asko
      */
-    static class OrderedQuery implements Comparable<OrderedQuery> {
+    public static class OrderedQuery implements Comparable<OrderedQuery> {
         
         final Query query;
         final String title;
@@ -148,7 +237,16 @@ public class Menu implements Component {
             Objects.requireNonNull(other);
             return title.compareTo( other.title );
         }
-        
+
+        public Query getQuery()
+        {
+            return query;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
     }
 
     public Menu() {

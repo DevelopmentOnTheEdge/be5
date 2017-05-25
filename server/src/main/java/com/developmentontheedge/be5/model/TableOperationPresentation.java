@@ -19,5 +19,34 @@ public class TableOperationPresentation
         this.isClientSide = isClientSide;
         this.action = action;
     }
-    
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getVisibleWhen()
+    {
+        return visibleWhen;
+    }
+
+    public boolean isRequiresConfirmation()
+    {
+        return requiresConfirmation;
+    }
+
+    public boolean isClientSide()
+    {
+        return isClientSide;
+    }
+
+    public Action getAction()
+    {
+        return action;
+    }
 }

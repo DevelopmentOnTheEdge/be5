@@ -47,4 +47,58 @@ public class TablePresentation
         this.hasAggregate = hasAggregate;
     }
 
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getCategory()
+    {
+        return category;
+    }
+
+    public String getPage()
+    {
+        return page;
+    }
+
+    public List<TableOperationPresentation> getOperations()
+    {
+        return operations;
+    }
+
+    public boolean isSelectable()
+    {
+        return selectable;
+    }
+
+    public List<Object> getColumns()
+    {
+        return columns;
+    }
+
+    public List<InitialRow> getRows()
+    {
+        return rows;
+    }
+
+    public int getLength()
+    {
+        return length;
+    }
+
+    public Map<String, String> getParameters()
+    {
+        return parameters;
+    }
+
+    public Long getTotalNumberOfRows()
+    {
+        return totalNumberOfRows;
+    }
+
+    public boolean isHasAggregate()
+    {
+        return hasAggregate;
+    }
 }

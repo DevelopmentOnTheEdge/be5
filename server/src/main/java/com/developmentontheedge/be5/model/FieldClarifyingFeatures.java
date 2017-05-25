@@ -5,6 +5,7 @@ import java.util.Objects;
 /**
  * Features of a field to improve UX.
  */
+@Deprecated
 public class FieldClarifyingFeatures
 {
     

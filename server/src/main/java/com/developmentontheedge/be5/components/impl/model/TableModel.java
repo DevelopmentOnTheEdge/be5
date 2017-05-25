@@ -404,6 +404,15 @@ public class TableModel
             this.options = options;
         }
 
+        public Object getContent()
+        {
+            return content;
+        }
+
+        public Map<String, Map<String, String>> getOptions()
+        {
+            return options;
+        }
     }
 
     private final boolean selectable;

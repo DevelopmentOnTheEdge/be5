@@ -12,4 +12,13 @@ public class FormTable
         this.table = table;
     }
 
+    public FormPresentation getForm()
+    {
+        return form;
+    }
+
+    public TablePresentation getTable()
+    {
+        return table;
+    }
 }

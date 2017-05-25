@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.developmentontheedge.be5.api.operation.Option;
 import com.developmentontheedge.be5.metadata.model.Query;
 
+@Deprecated
 public class Field
 {
     public static class Group
