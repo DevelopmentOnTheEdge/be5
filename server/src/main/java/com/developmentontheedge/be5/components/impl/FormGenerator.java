@@ -17,6 +17,7 @@ import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.base.Splitter;
 
 import java.io.StringWriter;
@@ -127,7 +128,7 @@ public class FormGenerator
 
         String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
 
-        return Either.first(new FormPresentation(title, selectedRowsString, dps, presetValues));
+        return Either.first(new FormPresentation(title, selectedRowsString, JsonFactory.dps(dps), presetValues));
     }
 
 

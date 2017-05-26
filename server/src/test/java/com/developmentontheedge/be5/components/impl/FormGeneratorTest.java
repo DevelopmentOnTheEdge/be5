@@ -31,12 +31,21 @@ public class FormGeneratorTest extends AbstractProjectTest
                 RestApiConstants.SELECTED_ROWS, "0",
                 RestApiConstants.VALUES, values)));
 
-        assertNotNull(generate);
-        assertEquals(2, generate.getFirst().dps.size());
-        assertEquals("test1", generate.getFirst().dps.getProperty("name").getValue());
-        assertEquals("test2", generate.getFirst().dps.getProperty("value").getValue());
+        FormPresentation form = generate.getFirst();
 
-        assertEquals(String.class, generate.getFirst().dps.getProperty("name").getType());
+        assertEquals("{'name':'test1','value':'test2'}",
+                oneQuotes(form.dps.getJsonObject("values").toString()));
+
+        assertEquals("name",
+                form.dps.getJsonObject("meta").getJsonObject("/name").getString("displayName"));
+
+        assertEquals("value",
+                form.dps.getJsonObject("meta").getJsonObject("/value").getString("displayName"));
+
+        assertEquals("['/name','/value']",
+                oneQuotes(form.dps.getJsonArray("order").toString()));
+
+        assertEquals("Insert", form.title);
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

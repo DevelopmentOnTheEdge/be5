@@ -41,7 +41,7 @@ public class FormTest extends AbstractProjectTest
                 RestApiConstants.SELECTED_ROWS, "0",
                 RestApiConstants.VALUES, values)), response, sp);
 
-        verify(response).sendBeanAsJson(eq("form"), any(Either.class));
+        verify(response).sendAsJson(eq("form"), any(Either.class));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

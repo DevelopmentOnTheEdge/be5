@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.model;
 
-import com.developmentontheedge.beans.DynamicPropertySet;
-
-import java.util.List;
+import javax.json.JsonObject;
 import java.util.Map;
 
 public class FormPresentation
@@ -13,10 +11,10 @@ public class FormPresentation
 //    public final String operation;
     public final String title;
     public final String selectedRows;
-    public final DynamicPropertySet dps;
+    public final JsonObject dps;
     public final Map<String, String> parameters;
 
-    public FormPresentation(String title, String selectedRows, DynamicPropertySet dps, Map<String, String> parameters)
+    public FormPresentation(String title, String selectedRows, JsonObject dps, Map<String, String> parameters)
     {
         this.title = title;
         this.selectedRows = selectedRows;
@@ -34,7 +32,7 @@ public class FormPresentation
         return selectedRows;
     }
 
-    public DynamicPropertySet getDps()
+    public JsonObject getDps()
     {
         return dps;
     }

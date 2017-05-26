@@ -47,7 +47,7 @@ public class DocumentResponse
     public void send(FormPresentation form)
     {
         checkNotNull(form);
-        res.sendBeanAsJson(FrontendConstants.FORM_ACTION, form);
+        res.sendAsJson(FrontendConstants.FORM_ACTION, form);
     }
 
     public void send(FrontendAction result)

@@ -59,4 +59,8 @@ public abstract class AbstractProjectTest
         loginService.saveUser("testUser", Arrays.asList(roles), Locale.US);
     }
 
+    public static String oneQuotes(String s)
+    {
+        return s.replace("\"", "'");
+    }
 }
