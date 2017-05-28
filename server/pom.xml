@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>beans-json</artifactId>
-			<version>3.0.1</version>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
