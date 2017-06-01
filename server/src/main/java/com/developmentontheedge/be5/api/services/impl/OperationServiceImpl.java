@@ -5,10 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.operationstest.v1.LegacyUrlParser;
-import com.developmentontheedge.be5.api.operationstest.v1.OperationRequest;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
@@ -16,7 +13,6 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -112,10 +108,11 @@ public class OperationServiceImpl implements OperationService
 
     private FrontendAction formModernRedirectUrl(Operation operation, Request req)
     {
-        if(operation.equals(LegacyUrlParser.GO_BACK_URL))
-            return FrontendAction.goBack();
-
-        return FrontendAction.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, req.get(RestApiConstants.ENTITY), req.get(RestApiConstants.QUERY)).named(new OperationRequest(req).getAll()));
+//        if(operation.equals(FrontendAction.goBack()))
+//            return FrontendAction.goBack();
+//
+//        return FrontendAction.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, req.get(RestApiConstants.ENTITY), req.get(RestApiConstants.QUERY)).named(new OperationRequest(req).getAll()));
+        return null;
     }
 
     public Operation create(OperationInfo meta, OperationContext operationContext) {
