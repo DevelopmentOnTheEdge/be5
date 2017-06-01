@@ -10,8 +10,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.beans.json.JsonFactory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class ResponseImpl implements Response
 {
 
@@ -125,27 +123,6 @@ public class ResponseImpl implements Response
     {
         sendJson(JsonFactory.beanValues(value).toString());
     }
-
-    @Override
-    public void sendBeanAsJson(String type, Object value)
-    {
-        checkNotNull(type);
-        checkNotNull(value);
-        sendAsRawJson(typed(type, JsonFactory.bean(value)));
-    }
-
-    @Override
-    public void sendBeanAsJson(Object value)
-    {
-        checkNotNull(value);
-        sendAsRawJson(untyped(JsonFactory.bean(value)));
-    }
-
-//    @Override
-//    public void sendAsRawJson(JsonElement value)
-//    {
-//        sendJson(new Gson().toJson(value));
-//    }
 
     @Override
     public void sendJson(String json)

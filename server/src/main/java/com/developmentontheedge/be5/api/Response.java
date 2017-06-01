@@ -42,10 +42,6 @@ public interface Response
      */
     void sendAsJson(Object value);
 
-    void sendBeanAsJson(String type, Object value);
-
-    void sendBeanAsJson(Object value);
-
     void sendAsRawJson(Object value);
 
     /**
