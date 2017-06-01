@@ -53,11 +53,7 @@ public class OperationServiceImpl implements OperationService
                                                               String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues)
     {
         UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
-
-        Iterable<String> selectedRows = Splitter.on(',').split(selectedRowsString);
-
-        String[] records = Iterables.toArray(selectedRows, String.class);
-        OperationContext operationContext = new OperationContext(records);
+        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
         Operation operation = create(meta, operationContext);
 
         Object parameters;
@@ -86,12 +82,11 @@ public class OperationServiceImpl implements OperationService
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        Iterable<String> selectedRows = Splitter.on(',').split(req.getOrEmpty(RestApiConstants.SELECTED_ROWS));
+        String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, String> parameters = req.getValues(RestApiConstants.VALUES);
 
         OperationInfo meta = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
-        String[] records = Iterables.toArray(selectedRows, String.class);
-        OperationContext operationContext = new OperationContext(records);
+        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
 
         Operation operation = create(meta, operationContext);
 
@@ -169,4 +164,9 @@ public class OperationServiceImpl implements OperationService
         return operation;
     }
 
+    private String[] selectedRows(String selectedRowsString){
+        Iterable<String> selectedRows = Splitter.on(',').split(selectedRowsString);
+
+        return Iterables.toArray(selectedRows, String.class);
+    }
 }
