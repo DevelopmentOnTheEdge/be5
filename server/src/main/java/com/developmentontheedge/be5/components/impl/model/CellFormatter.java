@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
-import com.developmentontheedge.be5.env.ServerModules;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.HashUrl;
@@ -26,10 +27,10 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final QueryExecutor queryExecutor;
 
-    CellFormatter(Query query, QueryExecutor queryExecutor)
+    CellFormatter(Query query, QueryExecutor queryExecutor, ServiceProvider serviceProvider)
     {
         this.query = query;
-        this.userAwareMeta = UserAwareMeta.get(ServerModules.getServiceProvider());
+        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
         this.queryExecutor = queryExecutor;
     }
 

@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.env.ServerModules.CONTEXT_FILE;
+import static com.developmentontheedge.be5.env.Injector.CONTEXT_FILE;
 
 public enum ConfigurationProvider
 {

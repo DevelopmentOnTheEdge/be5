@@ -21,7 +21,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.developmentontheedge.be5.env.ServerModules;
+import com.developmentontheedge.be5.env.Injector;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -36,15 +36,19 @@ public class MainServlet extends HttpServlet
 
     private Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
 
+    private Injector injector;
+
     //TODO private final DaemonStarter starter;
 
     @Override
     public void init(ServletConfig config) throws ServletException 
     {
         super.init(config);
+        injector = Injector.createInjector();
+    }
 
-        // load on startup
-        ServerModules.getServiceProvider();
+    public Injector getInjector() {
+        return injector;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class MainServlet extends HttpServlet
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         if(UserInfoHolder.getUserInfo() == null){
-            ServerModules.getServiceProvider().getLoginService().initGuest(req);
+            injector.getServiceProvider().getLoginService().initGuest(req);
         }
 
         runComponent(uriParts[ind+1], req, res);
@@ -104,9 +108,9 @@ public class MainServlet extends HttpServlet
     {
         try
         {
-            Component component = ServerModules.getComponent(componentId);
-            ServerModules.configureComponentIfConfigurable(component, componentId);
-            component.generate( req, res, ServerModules.getServiceProvider() );
+            Component component = getInjector().getComponent(componentId);
+            getInjector().configureComponentIfConfigurable(component, componentId);
+            component.generate( req, res, getInjector().getServiceProvider() );
         }
         catch ( Be5Exception e )
         {
@@ -157,19 +161,19 @@ public class MainServlet extends HttpServlet
 //            }
 //            return;
 //        }
-//        component.onOpen( new WebSocketContextImpl( session ), ServerModules.getServiceProvider() );
+//        component.onOpen( new WebSocketContextImpl( session ), getInjector().getServiceProvider() );
 //    }
 //
 //    public void onWsMessage(byte[] msg, Session session)
 //    {
 //        String component = session.getPathParameters().get( "component" );
-//        createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), ServerModules.getServiceProvider(), msg );
+//        createWebSocketComponent( component ).onMessage( new WebSocketContextImpl( session ), getInjector().getServiceProvider(), msg );
 //    }
 //
 //    public void onWsClose(Session session)
 //    {
 //        String component = session.getPathParameters().get( "component" );
-//        createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), ServerModules.getServiceProvider() );
+//        createWebSocketComponent( component ).onClose( new WebSocketContextImpl( session ), getInjector().getServiceProvider() );
 //    }
 //
 //    /**

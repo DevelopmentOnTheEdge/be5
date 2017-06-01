@@ -26,7 +26,7 @@ public class TableModelTest extends AbstractProjectIntegrationH2Test
 
         Query query = sp.getProject().getEntity("testtable").getQueries().get("Sub Query");
         TableModel table = TableModel
-                .from(query, new HashMap<>(), mock(Request.class), false)
+                .from(sp, query, new HashMap<>(), mock(Request.class), false)
                 .limit(20)
                 .build();
 

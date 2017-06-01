@@ -16,13 +16,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
-import static com.developmentontheedge.be5.env.ServerModules.CONTEXT_FILE;
+import static com.developmentontheedge.be5.env.Injector.CONTEXT_FILE;
 import static org.junit.Assert.assertEquals;
 
-public class ServerModuleLoaderTest
+public class InjectorTest
 {
     private static ServiceProvider serviceProvider = null;
     private static ComponentProvider loadedClasses = null;
+    private static Injector injector = Injector.createInjector();
 
     @Before
     public void newContainers(){
@@ -33,14 +34,14 @@ public class ServerModuleLoaderTest
     @Test
     public void testMenuLoad()
     {
-        ServerModules.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses );
+        injector.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses );
         assertEquals(loadedClasses.get("menu").getClass(), Menu.class);
     }
 
     @Test
     public void testLoad()
     {
-        ServerModules.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
+        injector.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
         //moduleLoader.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
         ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader(CONTEXT_FILE));
@@ -52,8 +53,8 @@ public class ServerModuleLoaderTest
     @Test(expected = Be5Exception.class)
     public void testLoadTryRedefine()
     {
-        ServerModules.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
-        ServerModules.loadModules(getReader("src/test/resources/tryRedefineApp/" + CONTEXT_FILE), serviceProvider, loadedClasses);
+        injector.loadModules(getReader(CONTEXT_FILE), serviceProvider, loadedClasses);
+        injector.loadModules(getReader("src/test/resources/tryRedefineApp/" + CONTEXT_FILE), serviceProvider, loadedClasses);
     }
 
     private BufferedReader getReader(String file){

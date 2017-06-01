@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.impl.MainComponentProvider;
 import com.developmentontheedge.be5.api.impl.MainServiceProvider;
 import com.developmentontheedge.be5.modules.core.components.Login;
 import com.developmentontheedge.be5.modules.core.components.Logout;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,10 +15,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
-import static com.developmentontheedge.be5.env.ServerModules.CONTEXT_FILE;
+import static com.developmentontheedge.be5.env.Injector.CONTEXT_FILE;
 import static org.junit.Assert.assertEquals;
 
-public class ServerModuleLoaderCoreTest
+public class InjectorCoreTest extends AbstractProjectTest
 {
     private static ServiceProvider serviceProvider = null;
     private static ComponentProvider loadedClasses = null;
@@ -31,7 +32,7 @@ public class ServerModuleLoaderCoreTest
     @Test
     public void testLoad()
     {
-        ServerModules.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
+        injector.loadModules(getReader("src/test/resources/" + CONTEXT_FILE), serviceProvider, loadedClasses);
         ConfigurationProvider.INSTANCE.loadConfiguration();
         ConfigurationProvider.INSTANCE.loadModuleConfiguration(getReader("src/test/resources/" + CONTEXT_FILE));
 

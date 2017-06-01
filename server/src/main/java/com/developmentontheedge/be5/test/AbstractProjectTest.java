@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
-import com.developmentontheedge.be5.env.ServerModules;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Project;
 import org.mockito.Mockito;
 
@@ -17,15 +17,17 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public abstract class AbstractProjectTest
 {
-    protected static final ServiceProvider sp = ServerModules.getServiceProvider();
+    protected static Injector injector = Injector.createInjector();
+    protected static final ServiceProvider sp = injector.getServiceProvider();
 
     private static final LoginServiceImpl loginService;
 
     static {
-        Project project = ServerModules.getServiceProvider().getProject();
+        Project project = injector.getServiceProvider().getProject();
 
         if(project.getProject().getLanguages().length == 0){
             project.getApplication().getLocalizations().addLocalization( "en", "test", Collections.singletonList("myTopic"), "foo", "bar" );
@@ -37,7 +39,7 @@ public abstract class AbstractProjectTest
 
     protected Request getMockRequest(String requestUri){
         Request request = mock(Request.class);
-        Mockito.when(request.getRequestUri()).thenReturn(requestUri);
+        when(request.getRequestUri()).thenReturn(requestUri);
         return request;
     }
 
@@ -47,10 +49,10 @@ public abstract class AbstractProjectTest
 
     protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters){
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
-        Mockito.when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
+        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
         Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, parameters));
-        Mockito.when(request.getRequestUri()).thenReturn(requestUri);
+        when(request.getRequestUri()).thenReturn(requestUri);
         return request;
     }
 

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.env.ServerModules;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -23,7 +23,7 @@ public class MenuTest extends AbstractProjectTest
     @BeforeClass
     public static void init(){
         initUserWithRoles(RoleType.ROLE_GUEST);
-        component = ServerModules.getComponent("menu");
+        component = injector.getComponent("menu");
     }
 
     @Test

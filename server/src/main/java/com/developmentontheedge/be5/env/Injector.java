@@ -21,46 +21,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ServerModules
+public class Injector
 {
-    private static final Logger log = Logger.getLogger(ServerModules.class.getName());
+    private static final Logger log = Logger.getLogger(Injector.class.getName());
 
     private final ServiceProvider serviceProvider = new MainServiceProvider();
     private final ComponentProvider loadedClasses = new MainComponentProvider();
 
+    public static Injector createInjector()
+    {
+        return new Injector();
+    }
+
     /**
      * Classes cache: webSocketComponentId->class.
      */
-    //private static final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
+    //private final Map<String, Class<?>> loadedWsClasses = new ConcurrentHashMap<>();
 
     static final String CONTEXT_FILE = "context.yaml";
 
-    private static class SingletonHolder {
-        private static final ServerModules instance = new ServerModules();
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
     }
 
-    public static ServiceProvider getServiceProvider() {
-        return SingletonHolder.instance.serviceProvider;
+    public <T> T getService(Class<T> serviceClass) {
+        return serviceProvider.get(serviceClass);
     }
 
-    public static <T> T getService(Class<T> serviceClass) {
-        return SingletonHolder.instance.serviceProvider.get(serviceClass);
+    public ComponentProvider getComponents() {
+        return loadedClasses;
     }
 
-    public static ComponentProvider getComponents() {
-        return SingletonHolder.instance.loadedClasses;
+    public Component getComponent(String componentId) {
+        return loadedClasses.get(componentId);
     }
 
-    public static Component getComponent(String componentId) {
-        return SingletonHolder.instance.loadedClasses.get(componentId);
-    }
-
-    public static void configureComponentIfConfigurable(Component component, String componentId)
+    public void configureComponentIfConfigurable(Component component, String componentId)
     {
         configureIfConfigurable(component, "components", componentId);
     }
 
-    private ServerModules() {
+    private Injector() {
         try{
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
             for (URL url: urls)
@@ -87,7 +88,7 @@ public class ServerModules
     }
 
     @SuppressWarnings("unchecked")
-    static void loadModules(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
+    void loadModules(Reader reader, ServiceProvider serviceProvider, ComponentProvider loadedClasses)
     {
         Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
 
@@ -101,7 +102,7 @@ public class ServerModules
     }
 
     @SuppressWarnings("unchecked")
-    private static void loadComponents(ComponentProvider loadedClasses, List<Map<String, String>> components)
+    private void loadComponents(ComponentProvider loadedClasses, List<Map<String, String>> components)
     {
         for (Map<String, String> element: components)
         {
@@ -113,7 +114,7 @@ public class ServerModules
     }
 
     @SuppressWarnings("unchecked")
-    private static void bindServices(ServiceProvider serviceProvider, List<Map<String, Map<String, String>>> services)
+    private void bindServices(ServiceProvider serviceProvider, List<Map<String, Map<String, String>>> services)
     {
         for (Map<String, Map<String, String>> element: services)
         {
@@ -130,12 +131,12 @@ public class ServerModules
         }
     }
 
-    private static void configureServiceIfConfigurable(Object service, String serviceId)
+    private void configureServiceIfConfigurable(Object service, String serviceId)
     {
         configureIfConfigurable(service, "services", serviceId);
     }
 
-    private static <T> void configureIfConfigurable(T object, String collection, String id)
+    private <T> void configureIfConfigurable(T object, String collection, String id)
     {
         if (object instanceof Configurable)
         {
@@ -147,10 +148,10 @@ public class ServerModules
         }
     }
 
-    private static Class<?> loadClass(String path){
+    private Class<?> loadClass(String path){
         try
         {
-            return Class.forName(path);//ServerModules.class.getClassLoader().loadClass(path);
+            return Class.forName(path);//Injector.class.getClassLoader().loadClass(path);
         }
         catch (ClassNotFoundException e)
         {

@@ -28,10 +28,14 @@ public class MainServletTest extends AbstractProjectTest
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private PrintWriter writer = mock(PrintWriter.class);
+    private MainServlet spyMainServlet;
 
     @Before
     public void init() throws IOException
     {
+        spyMainServlet = spy(MainServlet.class);
+        when(spyMainServlet.getInjector()).thenReturn(injector);
+
         request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getSession()).thenReturn(mock(HttpSession.class));
@@ -47,8 +51,7 @@ public class MainServletTest extends AbstractProjectTest
         when(request.getRequestURI()).thenReturn("/api/static/info.be");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        MainServlet mainServlet = spy(MainServlet.class);
-        mainServlet.doGet(request, response);
+        spyMainServlet.doGet(request, response);
 
         verify(writer).append(doubleQuotes("{'type':'static','value':'<h1>Info</h1><p>Test text.</p>'}"));
     }
@@ -59,8 +62,7 @@ public class MainServletTest extends AbstractProjectTest
         when(request.getRequestURI()).thenReturn("/be5/api/static/info.be");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        MainServlet mainServlet = spy(MainServlet.class);
-        mainServlet.doGet(request, response);
+        spyMainServlet.doGet(request, response);
 
         verify(writer).append(doubleQuotes("{'type':'static','value':'<h1>Info</h1><p>Test text.</p>'}"));
     }
@@ -71,8 +73,7 @@ public class MainServletTest extends AbstractProjectTest
         when(request.getRequestURI()).thenReturn("/api");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        MainServlet mainServlet = spy(MainServlet.class);
-        mainServlet.doPost(request, response);
+        spyMainServlet.doPost(request, response);
 
         verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'UNKNOWN_COMPONENT','message':''}}"));
     }
@@ -83,8 +84,7 @@ public class MainServletTest extends AbstractProjectTest
         when(request.getRequestURI()).thenReturn("/api/static");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        MainServlet mainServlet = spy(MainServlet.class);
-        mainServlet.doPost(request, response);
+        spyMainServlet.doPost(request, response);
 
         verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'NOT_FOUND','message':''}}"));
     }
@@ -96,7 +96,7 @@ public class MainServletTest extends AbstractProjectTest
         when(req.getRequestUri()).thenReturn("info.be");
         Response res = mock(Response.class);
 
-        new MainServlet().runComponent("static", req, res);
+        spyMainServlet.runComponent("static", req, res);
 
         verify(res).sendAsJson(eq("static"), eq("<h1>Info</h1><p>Test text.</p>"));
     }
@@ -108,7 +108,7 @@ public class MainServletTest extends AbstractProjectTest
         Request req = mock(Request.class);
         Response res = mock(Response.class);
 
-        new MainServlet().runComponent(componentId, req, res);
+        spyMainServlet.runComponent(componentId, req, res);
 
         res.sendError(eq(ErrorMessages.formatMessage(Be5ErrorCode.UNKNOWN_COMPONENT, componentId)));
     }

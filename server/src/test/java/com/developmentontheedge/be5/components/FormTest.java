@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.env.ServerModules;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.util.Either;
@@ -23,7 +23,7 @@ public class FormTest extends AbstractProjectTest
 
     @BeforeClass
     public static void init(){
-        component = ServerModules.getComponent("form");
+        component = injector.getComponent("form");
     }
 
     @Test

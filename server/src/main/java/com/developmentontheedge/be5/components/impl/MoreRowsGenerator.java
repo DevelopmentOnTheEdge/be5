@@ -76,7 +76,7 @@ public class MoreRowsGenerator {
      * @param limit 
      */
     private List<List<Object>> runForMoreRows(Query query, Request req, Map<String, String> parametersMap, boolean selectable, int offset, int limit) {
-        TableModel table = TableModel.from(query, parametersMap, req, selectable).offset(offset).limit(limit).build();
+        TableModel table = TableModel.from(serviceProvider, query, parametersMap, req, selectable).offset(offset).limit(limit).build();
         return new MoreRowsBuilder(selectable).build(table);
     }
     

@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.developmentontheedge.be5.env.ServerModules;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -46,7 +46,7 @@ public class TableModel
             this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
             this.queryExecutor.sortOrder(sortColumn, desc);
             this.userAwareMeta = UserAwareMeta.get(serviceProvider);
-            this.cellFormatter = new CellFormatter(query, queryExecutor);
+            this.cellFormatter = new CellFormatter(query, queryExecutor, serviceProvider);
         }
 
         public Builder offset(int offset)
@@ -291,14 +291,14 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Request req)
+    public static Builder from(ServiceProvider serviceProvider, Query query, Map<String, String> parametersMap, Request req)
     {
-        return from( query, parametersMap, req, false);
+        return from(serviceProvider, query, parametersMap, req, false);
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Request req, boolean selectable)
+    public static Builder from(ServiceProvider serviceProvider, Query query, Map<String, String> parametersMap, Request req, boolean selectable)
     {
-        return new Builder( query, parametersMap, req, ServerModules.getServiceProvider(), selectable);
+        return new Builder(query, parametersMap, req, serviceProvider, selectable);
     }
 
     public static class ColumnModel
