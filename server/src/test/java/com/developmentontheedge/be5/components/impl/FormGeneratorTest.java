@@ -19,7 +19,6 @@ public class FormGeneratorTest extends AbstractProjectTest
 {
 
     @Test
-    @Ignore
     public void insertTestOperation(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
@@ -38,19 +37,19 @@ public class FormGeneratorTest extends AbstractProjectTest
 
         FormPresentation form = generate.getFirst();
 
-        assertEquals("{'name':'test1','value':'test2'}",
+        assertEquals("TestOperation", form.title);
+
+        assertEquals("{'name':'testName','number':1}",
                 oneQuotes(form.dps.getJsonObject("values").toString()));
 
-        assertEquals("name",
+        assertEquals("Name",
                 form.dps.getJsonObject("meta").getJsonObject("/name").getString("displayName"));
 
-        assertEquals("value",
-                form.dps.getJsonObject("meta").getJsonObject("/value").getString("displayName"));
+        assertEquals("Number",
+                form.dps.getJsonObject("meta").getJsonObject("/number").getString("displayName"));
 
-        assertEquals("['/name','/value']",
+        assertEquals("['/name','/number']",
                 oneQuotes(form.dps.getJsonArray("order").toString()));
-
-        assertEquals("Insert", form.title);
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
