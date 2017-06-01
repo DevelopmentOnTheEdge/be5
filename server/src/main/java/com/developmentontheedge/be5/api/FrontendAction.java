@@ -61,4 +61,15 @@ public class FrontendAction
     {
         return value;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FrontendAction that = (FrontendAction) o;
+
+        if (type != that.type) return false;
+        return value != null ? value.equals(that.value) : that.value == null;
+    }
 }

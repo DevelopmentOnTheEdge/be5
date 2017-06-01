@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Ignore
 public class MainServletTest extends AbstractProjectTest
 {
     private HttpServletRequest request = mock(HttpServletRequest.class);
@@ -52,7 +50,7 @@ public class MainServletTest extends AbstractProjectTest
         MainServlet mainServlet = spy(MainServlet.class);
         mainServlet.doGet(request, response);
 
-        verify(writer).append("{\"type\":\"static\",\"value\":\"<h1>Info</h1><p>Test text.</p>\"}");
+        verify(writer).append(doubleQuotes("{'type':'static','value':'<h1>Info</h1><p>Test text.</p>'}"));
     }
 
     @Test
@@ -64,7 +62,7 @@ public class MainServletTest extends AbstractProjectTest
         MainServlet mainServlet = spy(MainServlet.class);
         mainServlet.doGet(request, response);
 
-        verify(writer).append("{\"type\":\"static\",\"value\":\"<h1>Info</h1><p>Test text.</p>\"}");
+        verify(writer).append(doubleQuotes("{'type':'static','value':'<h1>Info</h1><p>Test text.</p>'}"));
     }
 
     @Test
@@ -76,7 +74,7 @@ public class MainServletTest extends AbstractProjectTest
         MainServlet mainServlet = spy(MainServlet.class);
         mainServlet.doPost(request, response);
 
-        verify(writer).append("{\"type\":\"error\",\"value\":{\"message\":\"\",\"code\":\"UNKNOWN_COMPONENT\"}}");
+        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'UNKNOWN_COMPONENT','message':''}}"));
     }
 
     @Test
@@ -88,7 +86,7 @@ public class MainServletTest extends AbstractProjectTest
         MainServlet mainServlet = spy(MainServlet.class);
         mainServlet.doPost(request, response);
 
-        verify(writer).append("{\"type\":\"error\",\"value\":{\"message\":\"\",\"code\":\"NOT_FOUND\"}}");
+        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'NOT_FOUND','message':''}}"));
     }
 
     @Test

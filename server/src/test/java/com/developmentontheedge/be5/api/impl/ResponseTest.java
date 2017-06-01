@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +20,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Ignore
 public class ResponseTest extends AbstractProjectTest{
 
     private Response response;
@@ -43,7 +41,7 @@ public class ResponseTest extends AbstractProjectTest{
         Action call = new Action("call", "test/path");
         response.sendAsJson(call);
 
-        verify(writer).append(doubleQuotes("{'value':{'name':'call','arg':'test/path'}}"));
+        verify(writer).append(doubleQuotes("{'value':{'arg':'test/path','name':'call'}}"));
         verify(writer).flush();
     }
 
@@ -52,14 +50,14 @@ public class ResponseTest extends AbstractProjectTest{
         Action call = new Action("call", "test/path");
         response.sendAsRawJson(call);
 
-        verify(writer).append(doubleQuotes("{'name':'call','arg':'test/path'}"));
+        verify(writer).append(doubleQuotes("{'arg':'test/path','name':'call'}"));
     }
 
     @Test
     public void sendSuccess() throws Exception {
         response.sendSuccess();
 
-        verify(writer).append(doubleQuotes("{'type':'ok'}"));
+        verify(writer).append(doubleQuotes("{'type':'ok','value':null}"));
     }
 
     @Test
@@ -68,7 +66,7 @@ public class ResponseTest extends AbstractProjectTest{
 
         verify(rawResponse).setContentType("application/json");
         verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append(doubleQuotes("{'type':'error','value':{'message':'','code':'INTERNAL_ERROR'}}"));
+        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR','message':''}}"));
         verify(writer).flush();
     }
 
@@ -110,11 +108,6 @@ public class ResponseTest extends AbstractProjectTest{
                 "    <name>call</name>\n" +
                 "    <arg>test/path</arg>\n" +
                 "</ActionForXml>\n"));
-    }
-
-    private static String doubleQuotes(String s)
-    {
-        return s.replace("'", "\"");
     }
 
 }
