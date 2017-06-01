@@ -38,6 +38,6 @@ context:
   - logger:
       interface:      com.developmentontheedge.be5.api.services.CategoriesService
       implementation: com.developmentontheedge.be5.api.services.impl.CategoriesServiceImpl
-  - legacyUrlsService:
-      interface:      com.developmentontheedge.be5.api.operationstest.v1.LegacyUrlsService
-      implementation: com.developmentontheedge.be5.api.operationstest.v1.LegacyUrlsService
+  - operationService:
+      interface:      com.developmentontheedge.be5.api.services.OperationService
+      implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl

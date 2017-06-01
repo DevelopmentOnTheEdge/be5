@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 
 /**
@@ -19,7 +20,7 @@ public class OperationInfo
     //
 
     /** @PENDING */
-    //public Entity getEntity()                       { return operationModel.getEntity();  }
+
     //public RoleSet getRoles()                       { return operationModel.getRoles();   }
     //public String getWellKnownName()                { return operationModel.getWellKnownName();   }
     //public String getNotSupported()                 { return operationModel.getNotSupported();  }
@@ -37,4 +38,5 @@ public class OperationInfo
     public String getLogging()                      { return operationModel.getLogging();  }  
     public boolean isConfirm()                      { return operationModel.isConfirm();  }
     public Long getCategoryID()                     { return operationModel.getCategoryID(); }
+    public Entity getEntity()                       { return operationModel.getEntity();  }
 }

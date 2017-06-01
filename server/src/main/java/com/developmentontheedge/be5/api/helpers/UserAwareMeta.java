@@ -2,13 +2,12 @@ package com.developmentontheedge.be5.api.helpers;
 
 import java.util.Optional;
 
-import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
+import com.developmentontheedge.be5.operation.OperationInfo;
 import com.google.common.annotations.Beta;
 
 @Beta
@@ -72,19 +71,19 @@ public interface UserAwareMeta
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    Operation getOperation(String entity, String name);
+    OperationInfo getOperation(String entity, String name);
 
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    Operation getOperation(String entity, String queryName, String name);
+    OperationInfo getOperation(String entity, String queryName, String name);
 
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    Operation getOperation(boolean useQueryName, String entity, String queryName, String name);
+    OperationInfo getOperation(boolean useQueryName, String entity, String queryName, String name);
 
     /**
      * Returns a localized title of a column - be4 format.

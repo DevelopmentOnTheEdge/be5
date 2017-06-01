@@ -23,7 +23,7 @@ public enum OperationStatus
 
     private final String value;
 
-    private OperationStatus( String value )
+    OperationStatus( String value )
     {
         this.value = value;
     }

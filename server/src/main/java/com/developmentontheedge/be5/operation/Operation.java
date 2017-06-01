@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.ServiceProvider;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -9,7 +12,10 @@ public interface Operation extends Serializable
 	///////////////////////////////////////////////////////////////////
 	// Main interface
 	//
-	
+
+    void initialize(ServiceProvider serviceProvider, OperationInfo meta,
+                    OperationContext operationContext, OperationResult operationResult);
+
 	/**
 	 * Returns meta-information from project definition for this operation.
 	 */
@@ -28,7 +34,7 @@ public interface Operation extends Serializable
      * @param out
      * @param parameters
      */
-    void invoke(Object parameters, OperationContext context) throws Exception;
+    void invoke(Object parameters) throws Exception;
     
     /**
      * Set flag (Thread.interrupt) to interrupt the operation.

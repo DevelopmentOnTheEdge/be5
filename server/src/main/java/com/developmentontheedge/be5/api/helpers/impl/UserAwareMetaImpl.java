@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
+import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.util.MoreStrings;
 import com.google.common.base.Strings;
 
@@ -131,27 +132,27 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public Operation getOperation(String entity, String queryName, String name)
+    public OperationInfo getOperation(String entity, String queryName, String name)
     {
-        return meta.getOperation(entity, queryName, name, UserInfoHolder.getCurrentRoles());
+        return new OperationInfo(meta.getOperation(entity, queryName, name, UserInfoHolder.getCurrentRoles()));
     }
 
     @Override
-    public Operation getOperation(boolean useQueryName, String entity, String queryName, String name)
+    public OperationInfo getOperation(boolean useQueryName, String entity, String queryName, String name)
     {
-        return meta.getOperation(useQueryName, entity, queryName, name, UserInfoHolder.getCurrentRoles());
+        return new OperationInfo(meta.getOperation(useQueryName, entity, queryName, name, UserInfoHolder.getCurrentRoles()));
+    }
+
+    @Override
+    public OperationInfo getOperation(String entity, String name)
+    {
+        return new OperationInfo(meta.getOperation(entity, name, UserInfoHolder.getCurrentRoles()));
     }
 
     @Override
     public Query getQuery(String entity, String name)
     {
         return meta.getQuery(entity, name, UserInfoHolder.getCurrentRoles());
-    }
-
-    @Override
-    public Operation getOperation(String entity, String name)
-    {
-        return meta.getOperation(entity, name, UserInfoHolder.getCurrentRoles());
     }
 
     @Override

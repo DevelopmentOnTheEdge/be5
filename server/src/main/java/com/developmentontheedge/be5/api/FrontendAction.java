@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FrontendAction
 {
-    private static final FrontendAction DEFAULT_ACTION = new FrontendAction(Type.DEFAULT_ACTION, null); // <- by default Gson don't serialize null values at all
+    private static final FrontendAction DEFAULT_ACTION = new FrontendAction(Type.DEFAULT_ACTION, null);
     private static final FrontendAction GO_BACK = new FrontendAction(Type.GO_BACK, null);
     private static final FrontendAction REFRESH_ALL = new FrontendAction(Type.REFRESH_ALL, null);
 

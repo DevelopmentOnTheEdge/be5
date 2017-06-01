@@ -20,25 +20,11 @@
  </modules>
 
  <properties>
+  <maven.deploy.skip>true</maven.deploy.skip>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <java.version>1.8</java.version>
   <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
  </properties>
-
- <distributionManagement>
-  <repository>
-   <uniqueVersion>false</uniqueVersion>
-   <id>dote</id>
-   <name>DOTE Repository</name>
-   <url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
-  </repository>
-  <snapshotRepository>
-   <uniqueVersion>true</uniqueVersion>
-   <id>dote-snapshots</id>
-   <name>DOTE Snapshots</name>
-   <url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
-  </snapshotRepository>
- </distributionManagement>
 
  <build>
   <plugins>

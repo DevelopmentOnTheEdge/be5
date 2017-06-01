@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.api.FrontendAction;
+
 public class OperationResult
 {
     ///////////////////////////////////////////////////////////////////
@@ -7,6 +9,8 @@ public class OperationResult
     //
     
     private OperationStatus status;
+    private FrontendAction frontendAction = FrontendAction.defaultAction();
+
     public OperationStatus getStatus()  { return status; }
     
     private String message;
@@ -50,58 +54,63 @@ public class OperationResult
     // OperationResult factory methods
     //
     
-    public OperationResult cancelled()
+    public static OperationResult cancelled()
     {
         return new OperationResult(OperationStatus.CANCELLED);
     }
 
-    public OperationResult progress()
+    public static OperationResult progress()
     {
         return new OperationResult(OperationStatus.IN_PROGRESS);
     }
     
-    public OperationResult progress(String message)
+    public static OperationResult progress(String message)
     {
         return new OperationResult(OperationStatus.IN_PROGRESS, message); 
     }
 
-    public OperationResult progress(double preparedness)
+    public static OperationResult progress(double preparedness)
     {
         return new OperationResult(OperationStatus.IN_PROGRESS, new Double(preparedness));
     }
 
-    public OperationResult interrupting()
+    public static OperationResult interrupting()
     {
         return new OperationResult(OperationStatus.INTERRUPTING); 
     }
 
-    public OperationResult interrupted()
+    public static OperationResult interrupted()
     {
         return new OperationResult(OperationStatus.INTERRUPTED); 
     }
 
-    public OperationResult finished()
+    public static OperationResult finished()
     {
         return new OperationResult(OperationStatus.FINISHED); 
     }
     
-    public OperationResult finished(String message)
+    public static OperationResult finished(String message)
     {
         return new OperationResult(OperationStatus.FINISHED, message); 
     }
 
-    public OperationResult redirect(String url)
+    public static OperationResult redirect(String url)
     {
         return new OperationResult(OperationStatus.REDIRECTED, url); 
     }
     
-    public OperationResult error(String message, Throwable details)
+    public static OperationResult error(String message, Throwable details)
     {
         return new OperationResult(OperationStatus.ERROR, message, details); 
     }
 
-    public OperationResult error(Throwable details)
+    public static OperationResult error(Throwable details)
     {
         return new OperationResult(OperationStatus.ERROR, details); 
+    }
+
+    public FrontendAction getFrontendAction()
+    {
+        return frontendAction;
     }
 }

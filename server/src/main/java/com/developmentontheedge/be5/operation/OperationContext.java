@@ -6,6 +6,18 @@ public class OperationContext
     // Properties
     //
 
+    public final String[] records;
+
+    public OperationContext(String[] records)
+    {
+        this.records = records;
+    }
+
+    public String[] getRecordIDs()
+    {
+        return records;
+    }
+
     //String platform, UserInfo ui, String[] records, String fromQuery, String category, String tcloneId
 
     

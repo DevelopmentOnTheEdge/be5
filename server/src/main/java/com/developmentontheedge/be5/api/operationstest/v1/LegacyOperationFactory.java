@@ -93,7 +93,7 @@ public class LegacyOperationFactory {
                 Class<?> aClass = Class.forName(meta.getCode());
                 operation = (Be5Operation)aClass.newInstance();
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                throw Be5Exception.internalInOperation(e, meta);
+                throw Be5Exception.internal(e);
             }
             break;
         }

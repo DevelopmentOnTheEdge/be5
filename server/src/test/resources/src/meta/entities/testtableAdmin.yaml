@@ -19,7 +19,7 @@ testtableAdmin:
       type: 1D
       roles: Administrator
       operations:
-      - Add
+      - TestOperation
       - Delete
       - Edit
       - Insert
@@ -41,18 +41,17 @@ testtableAdmin:
             FROM
               testtable t
   operations:
-  - Add:
-      type: JavaScript/server
+  - TestOperation:
       roles: Administrator
-      file: test.js
+      code: com.developmentontheedge.be5.operations.TestOperation
   - Delete:
-      records: 2
+      records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.api.operationstest.SilentDeleteOperation
+      code: com.developmentontheedge.be5.operations.DeleteOperation
   - Edit:
-      records: 2
+      records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.api.operationstest.SilentEditOperation
+      code: com.developmentontheedge.be5.operations.EditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.api.operationstest.SilentInsertOperation
+      code: com.developmentontheedge.be5.operations.InsertOperation
