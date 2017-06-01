@@ -4,7 +4,7 @@ package com.developmentontheedge.be5.api.operationstest;
 
 import javax.servlet.http.Cookie;
 
-public interface HttpOperation extends Be5Operation
+public interface HttpOperation //extends Be5Operation
 {
     void setReferer(String referer);
 

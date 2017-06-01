@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.api.operationstest.analyzers.DatabaseAnalyzer;
-import com.developmentontheedge.be5.api.operationstest.analyzers.PostgreSQLDatabaseAnalyzer;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
@@ -211,11 +209,6 @@ public class DatabaseServiceImpl implements DatabaseService
     public Rdbms getRdbms()
     {
         return type;
-    }
-
-    @Override
-    public DatabaseAnalyzer getAnalyzer() {
-        return new PostgreSQLDatabaseAnalyzer(this);
     }
 
     @Override
