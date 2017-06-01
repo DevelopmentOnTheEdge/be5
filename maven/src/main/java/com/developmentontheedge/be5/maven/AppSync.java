@@ -411,10 +411,10 @@ public class AppSync extends Be5Mojo
         }
 
         StringBuilder sb = new StringBuilder();
-        for( String entityName : newSchemes.keySet() )
+        for( Map.Entry<String,DdlElement> entity : newSchemes.entrySet() )
         {
-            DdlElement oldScheme = oldSchemes.get(entityName);
-            DdlElement newScheme = newSchemes.get(entityName);
+            DdlElement oldScheme = oldSchemes.get(entity.getKey());
+            DdlElement newScheme = entity.getValue();
 
             if(newScheme.withoutDbScheme())
             {

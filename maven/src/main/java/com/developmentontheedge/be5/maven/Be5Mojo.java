@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.TreeSet;
@@ -143,7 +144,7 @@ public abstract class Be5Mojo extends AbstractMojo
     	
     	try 
     	{
-            LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes()));
+            LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
         } 
     	catch (IOException e) 
     	{
@@ -222,7 +223,7 @@ public abstract class Be5Mojo extends AbstractMojo
             fullPrompt.append( "(default: " ).append( defaultValue ).append( ")" );
         }
         fullPrompt.append( ": " );
-        String result = "";
+        String result;
         do
         {
             System.err.println( fullPrompt );

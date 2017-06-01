@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class DocumentGenerator implements Runner {
-    
     /**
      * Generates a response by the given category and the page.
      * Parameters:
@@ -129,26 +129,15 @@ public class DocumentGenerator implements Runner {
     private List<TableOperationPresentation> collectOperations(Query query) {
         List<TableOperationPresentation> operations = new ArrayList<>();
         List<String> userRoles = UserInfoHolder.getCurrentRoles();
-        
-        try
+
+        for (Operation operation : getQueryOperations(query))
         {
-            for (Operation operation : getQueryOperations(query))
+            if (Operations.isAllowed(operation, userRoles))
             {
-                if (Operations.isAllowed(operation, userRoles))
-                {
-                    operations.add(presentOperation(query, operation));
-                }
+                operations.add(presentOperation(query, operation));
             }
         }
-        catch (RuntimeException e)
-        {
-            throw new AssertionError("", e);
-        }
-        catch (Exception e1)
-        {
-            // can't read roles
-        }
-        
+
         return operations;
     }
 

@@ -65,4 +65,10 @@ public class Action
         return arg != null ? arg.equals(action.arg) : action.arg == null;
     }
 
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (arg != null ? arg.hashCode() : 0);
+        return result;
+    }
 }

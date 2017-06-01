@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 public abstract class AbstractProjectTest
 {
-    protected static Injector injector = Injector.createInjector();
+    protected static final Injector injector = Injector.createInjector();
     protected static final ServiceProvider sp = injector.getServiceProvider();
 
     private static final LoginServiceImpl loginService;

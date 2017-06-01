@@ -72,4 +72,11 @@ public class FrontendAction
         if (type != that.type) return false;
         return value != null ? value.equals(that.value) : that.value == null;
     }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        return result;
+    }
 }

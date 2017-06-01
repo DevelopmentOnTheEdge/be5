@@ -32,8 +32,6 @@ public class TableModel
         private final QueryExecutor queryExecutor;
         private boolean selectable;
         private int limit = Integer.MAX_VALUE;
-        private final int sortColumn;
-        private final boolean desc;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
@@ -41,10 +39,9 @@ public class TableModel
         {
             this.query = query;
             this.selectable = selectable;
-            this.sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
-            this.desc = "desc".equals(req.get("order[0][dir]"));
+            int sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
             this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
-            this.queryExecutor.sortOrder(sortColumn, desc);
+            this.queryExecutor.sortOrder(sortColumn, "desc".equals(req.get("order[0][dir]")));
             this.userAwareMeta = UserAwareMeta.get(serviceProvider);
             this.cellFormatter = new CellFormatter(query, queryExecutor, serviceProvider);
         }
@@ -72,7 +69,7 @@ public class TableModel
             List<ColumnModel> columns = new ArrayList<>();
             List<RowModel> rows = new ArrayList<>();
 
-            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.execute(), selectable, columns, rows, limit );
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.execute(), selectable, columns, rows );
 
             boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
@@ -132,7 +129,7 @@ public class TableModel
 
             List<RowModel> aggregateRow = new ArrayList<>();
 
-            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), selectable, new ArrayList<>(), aggregateRow, limit );
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), selectable, new ArrayList<>(), aggregateRow );
 
             List<CellModel> firstLine = aggregateRow.get(0).cells;
             double[] resD = new double[firstLine.size()];
@@ -221,21 +218,18 @@ public class TableModel
             return true;
         }
 
-        /**
-         * @param maxRows rows per page
-         */
-        private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> stream, boolean selectable, List<ColumnModel> columns,
-                                           List<RowModel> rows, int maxRows)
+        private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, boolean selectable, List<ColumnModel> columns,
+                                           List<RowModel> rows)
         {
-            for (DynamicPropertySet properties : stream) {
+            for (DynamicPropertySet properties : list) {
                 if (columns.isEmpty()) {
                     columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns());
                 }
-                rows.add(generateRow(entityName, queryName, selectable, properties, columns));
+                rows.add(generateRow(entityName, queryName, selectable, properties));
             }
         }
 
-        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties, List<ColumnModel> columns) throws AssertionError
+        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties) throws AssertionError
         {
             PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta);
             List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells

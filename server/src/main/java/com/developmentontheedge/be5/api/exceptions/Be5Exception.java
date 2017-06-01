@@ -124,4 +124,8 @@ public class Be5Exception extends RuntimeException
         return code == that.code;
     }
 
+    @Override
+    public int hashCode() {
+        return code != null ? code.hashCode() : 0;
+    }
 }

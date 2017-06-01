@@ -257,14 +257,7 @@ public class MetaImpl implements Meta
     @Override
     public Operation getOperation(String entity, String queryName, String name, List<String> availableRoles)
     {
-        Query query = getQuery(entity, queryName, availableRoles);
-        Operation operation = getOperation(entity, name, availableRoles);
-//        // FIXME fix old BeanExplorer, e.g. _system_/System settings/System
-//        // settings
-//        if (!query.getOperationNames().getFinalValues().contains(name)
-//                && !query.getParametrizingOperationName().equals(name))
-//            throw Be5ErrorCode.NO_OPERATION_IN_QUERY.exception(entity, queryName, name);
-        return operation;
+        return getOperation(entity, name, availableRoles);
     }
 
     /*

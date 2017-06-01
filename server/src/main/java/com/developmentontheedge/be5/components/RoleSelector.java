@@ -47,10 +47,10 @@ public class RoleSelector implements Component {
         switch (req.getRequestUri())
         {
         case "":
-            sendInitialData(req, res, serviceProvider);
+            sendInitialData(res);
             return;
         case "select":
-            selectRolesAndSendNewState(req, res, serviceProvider);
+            selectRolesAndSendNewState(req, res);
             return;
         default:
             res.sendUnknownActionError();
@@ -58,18 +58,18 @@ public class RoleSelector implements Component {
         }
     }
     
-    private void sendInitialData(Request req, Response res, ServiceProvider serviceProvider) {
-        res.sendAsRawJson(getState(req, serviceProvider));
+    private void sendInitialData(Response res) {
+        res.sendAsRawJson(getState());
     }
 
-    private void selectRolesAndSendNewState(Request req, Response res, ServiceProvider serviceProvider) {
+    private void selectRolesAndSendNewState(Request req, Response res) {
         String roles = req.getNonEmpty("roles");
         UserInfoHolder.selectRoles(Splitter.on(',').splitToList(roles));
         
-        res.sendAsRawJson(getState(req, serviceProvider));
+        res.sendAsRawJson(getState());
     }
     
-    private RoleSelectorResponse getState(Request req, ServiceProvider serviceProvider)
+    private RoleSelectorResponse getState()
     {
         return new RoleSelectorResponse(UserInfoHolder.getAvailableRoles(), UserInfoHolder.getCurrentRoles());
     }

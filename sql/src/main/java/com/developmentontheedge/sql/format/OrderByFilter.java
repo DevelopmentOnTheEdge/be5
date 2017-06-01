@@ -42,21 +42,21 @@ public class OrderByFilter
 
     private void apply(Map<String, String> columns, AstQuery query, AstOrderBy orderBy)
     {
-        for( String column : columns.keySet() )
+        for( Map.Entry<String, String> column : columns.entrySet() )
         {
             int num = 0;
             for( AstDerivedColumn derColumn : query.tree().select( AstDerivedColumn.class ) )
             {
-                if( column.equals( derColumn.getColumn() ) || column.equals( derColumn.getAlias() ) )
+                if( column.getKey().equals( derColumn.getColumn() ) || column.getKey().equals( derColumn.getAlias() ) )
                 {
                     num = derColumn.jjtGetParent().indexOf( derColumn ) + 1;
                     break;
                 }
             }
             if( num == 0 )
-                throw new IllegalArgumentException( "Unknown column " + column + " in order clause" );
+                throw new IllegalArgumentException( "Unknown column " + column.getKey() + " in order clause" );
 
-            String dir = columns.get( column );
+            String dir = column.getValue();
             if( !dir.equalsIgnoreCase( "ASC" ) && !dir.equalsIgnoreCase( "DESC" ) )
                 throw new IllegalArgumentException( "Unknown direction " + dir + ". Was expecting ASC or DESC" );
 
