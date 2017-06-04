@@ -18,7 +18,7 @@ public abstract class OperationSupport implements Operation
 
     @Override
     public final void initialize(ServiceProvider serviceProvider, OperationInfo meta,
-                                 OperationContext operationContext, OperationResult operationResult)
+                                 OperationResult operationResult)
     {
         this.operationContext = operationContext;
         this.sp = serviceProvider;

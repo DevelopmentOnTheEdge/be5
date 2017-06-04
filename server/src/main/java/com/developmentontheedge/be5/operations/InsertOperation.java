@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -23,8 +24,7 @@ public class InsertOperation extends OperationSupport implements Operation
     }
 
     @Override
-    public void invoke(Object parameters) throws Exception
-    {
+    public void invoke(Object parameters, OperationContext context) throws Exception {
         //String sql = generateSQL( connector, false );
         //db.insert(sql);
     }

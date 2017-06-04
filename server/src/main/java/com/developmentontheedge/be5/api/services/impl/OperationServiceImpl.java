@@ -49,8 +49,7 @@ public class OperationServiceImpl implements OperationService
                                                               String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues)
     {
         UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
-        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
-        Operation operation = create(meta, operationContext);
+        Operation operation = create(meta);
 
         Object parameters;
         try
@@ -64,7 +63,8 @@ public class OperationServiceImpl implements OperationService
 
         if (parameters == null)
         {
-            return Either.second(execute(operation, presetValues));
+            OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
+            return Either.second(execute(operation, presetValues, operationContext));
         }
 
         String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
@@ -84,20 +84,18 @@ public class OperationServiceImpl implements OperationService
         OperationInfo meta = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
 
-        Operation operation = create(meta, operationContext);
+        Operation operation = create(meta);
 
-
-
-        execute(operation, parameters);
+        execute(operation, parameters, operationContext);
 
         return operation.getResult().getFrontendAction();
     }
 
-    public FrontendAction execute(Operation operation, Map<String, String> parameters)
+    public FrontendAction execute(Operation operation, Map<String, String> parameters, OperationContext operationContext)
     {
         try
         {
-            operation.invoke(parameters);
+            operation.invoke(parameters, operationContext);
             return operation.getResult().getFrontendAction();
         }
         catch (Exception e)
@@ -115,7 +113,7 @@ public class OperationServiceImpl implements OperationService
         return null;
     }
 
-    public Operation create(OperationInfo meta, OperationContext operationContext) {
+    public Operation create(OperationInfo meta) {
         Operation operation;
 
         switch (meta.getType())
@@ -156,7 +154,7 @@ public class OperationServiceImpl implements OperationService
                 break;
         }
 
-        operation.initialize(serviceProvider, meta, operationContext, OperationResult.progress());
+        operation.initialize(serviceProvider, meta, OperationResult.progress());
 
         return operation;
     }
