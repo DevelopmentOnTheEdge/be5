@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Deprecated
 public class FrontendAction
 {
     private static final FrontendAction DEFAULT_ACTION = new FrontendAction(Type.DEFAULT_ACTION, null);

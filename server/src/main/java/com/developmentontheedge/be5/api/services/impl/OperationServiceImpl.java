@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.FrontendAction;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -8,10 +7,7 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
-import com.developmentontheedge.be5.operation.OperationInfo;
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.*;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.base.Splitter;
@@ -32,7 +28,7 @@ public class OperationServiceImpl implements OperationService
     }
 
     @Override
-    public Either<FormPresentation, FrontendAction> generate(Request req)
+    public Either<FormPresentation, OperationResult> generate(Request req)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -45,7 +41,7 @@ public class OperationServiceImpl implements OperationService
                 presetValues);
     }
 
-    private Either<FormPresentation, FrontendAction> generate(String entityName, String queryName,
+    private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
                                                               String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues)
     {
         UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
@@ -73,7 +69,7 @@ public class OperationServiceImpl implements OperationService
     }
 
     @Override
-    public FrontendAction execute(Request req)
+    public OperationResult execute(Request req)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -88,15 +84,15 @@ public class OperationServiceImpl implements OperationService
 
         execute(operation, parameters, operationContext);
 
-        return operation.getResult().getFrontendAction();
+        return operation.getResult();
     }
 
-    public FrontendAction execute(Operation operation, Map<String, String> parameters, OperationContext operationContext)
+    public OperationResult execute(Operation operation, Map<String, String> parameters, OperationContext operationContext)
     {
         try
         {
             operation.invoke(parameters, operationContext);
-            return operation.getResult().getFrontendAction();
+            return operation.getResult();
         }
         catch (Exception e)
         {
@@ -104,14 +100,14 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    private FrontendAction formModernRedirectUrl(Operation operation, Request req)
-    {
+//    private FrontendAction formModernRedirectUrl(Operation operation, Request req)
+//    {
 //        if(operation.equals(FrontendAction.goBack()))
 //            return FrontendAction.goBack();
 //
 //        return FrontendAction.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, req.get(RestApiConstants.ENTITY), req.get(RestApiConstants.QUERY)).named(new OperationRequest(req).getAll()));
-        return null;
-    }
+//        return null;
+//    }
 
     public Operation create(OperationInfo meta) {
         Operation operation;

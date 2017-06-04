@@ -1,23 +1,14 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.api.FrontendAction;
-
 public class OperationResult
 {
     ///////////////////////////////////////////////////////////////////
     // immutable properties
     //
     
-    private OperationStatus status;
-    private FrontendAction frontendAction = FrontendAction.defaultAction();
-
-    public OperationStatus getStatus()  { return status; }
-    
-    private String message;
-    public String getMessage()          { return message; }
-
-    private Object details;
-    public Object getDetails()          { return details; }
+    private final OperationStatus status;
+    private final String message;
+    private final Object details;
 
     ///////////////////////////////////////////////////////////////////
     // private constructors
@@ -39,7 +30,22 @@ public class OperationResult
     {
         this(status, getLocalisedMessage(status), null);
     }
-  
+
+    public OperationStatus getStatus()
+    {
+        return status;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public Object getDetails()
+    {
+        return details;
+    }
+
     private static String getLocalisedMessage(OperationStatus status)
     {
         return null;
@@ -53,15 +59,18 @@ public class OperationResult
     ///////////////////////////////////////////////////////////////////
     // OperationResult factory methods
     //
-    
+    private static final OperationResult finished = new OperationResult(OperationStatus.FINISHED);
+    private static final OperationResult cancelled = new OperationResult(OperationStatus.CANCELLED);
+    private static final OperationResult progress = new OperationResult(OperationStatus.IN_PROGRESS);
+
     public static OperationResult cancelled()
     {
-        return new OperationResult(OperationStatus.CANCELLED);
+        return cancelled;
     }
 
     public static OperationResult progress()
     {
-        return new OperationResult(OperationStatus.IN_PROGRESS);
+        return progress;
     }
     
     public static OperationResult progress(String message)
@@ -86,7 +95,7 @@ public class OperationResult
 
     public static OperationResult finished()
     {
-        return new OperationResult(OperationStatus.FINISHED); 
+        return finished;
     }
     
     public static OperationResult finished(String message)
@@ -109,8 +118,6 @@ public class OperationResult
         return new OperationResult(OperationStatus.ERROR, details); 
     }
 
-    public FrontendAction getFrontendAction()
-    {
-        return frontendAction;
-    }
+
+
 }

@@ -2,12 +2,12 @@ package com.developmentontheedge.be5.components.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.developmentontheedge.be5.api.FrontendAction;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
 
 public class DocumentResponse
@@ -38,7 +38,7 @@ public class DocumentResponse
         res.sendAsJson(FrontendConstants.TABLE_ACTION, tablePresentation);
     }
     
-    public void send(Either<FormPresentation, FrontendAction> formOrResult)
+    public void send(Either<FormPresentation, OperationResult> formOrResult)
     {
         checkNotNull(formOrResult);
         formOrResult.apply(this::send, this::send);
@@ -50,7 +50,7 @@ public class DocumentResponse
         res.sendAsJson(FrontendConstants.FORM_ACTION, form);
     }
 
-    public void send(FrontendAction result)
+    public void send(OperationResult result)
     {
         checkNotNull(result);
         //TODO res.sendJson(JsonFactory.bean()) ?
