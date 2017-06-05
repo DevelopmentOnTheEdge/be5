@@ -4,11 +4,14 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.operationstest.v1.OperationRequest;
 import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.*;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -16,6 +19,7 @@ import com.google.common.collect.Iterables;
 import java.util.Map;
 
 import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.base.Strings.repeat;
 
 public class OperationServiceImpl implements OperationService
 {
@@ -38,11 +42,11 @@ public class OperationServiceImpl implements OperationService
         OperationInfo operationInfo = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
 
         return generate(entityName, queryName, operationName, selectedRowsString, operationInfo,
-                presetValues);
+                presetValues, req);
     }
 
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
-                                                              String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues)
+                                                              String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
     {
         UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
         Operation operation = create(meta);
@@ -59,8 +63,8 @@ public class OperationServiceImpl implements OperationService
 
         if (parameters == null)
         {
-            OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
-            return Either.second(execute(operation, presetValues, operationContext));
+            OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
+            return Either.second(execute(operation, presetValues, operationContext, req));
         }
 
         String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
@@ -78,20 +82,31 @@ public class OperationServiceImpl implements OperationService
         Map<String, String> parameters = req.getValues(RestApiConstants.VALUES);
 
         OperationInfo meta = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
-        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString));
+        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
         Operation operation = create(meta);
 
-        execute(operation, parameters, operationContext);
+        execute(operation, parameters, operationContext, req);
 
         return operation.getResult();
     }
 
-    public OperationResult execute(Operation operation, Map<String, String> parameters, OperationContext operationContext)
+    public OperationResult execute(Operation operation, Map<String, String> parameters, OperationContext operationContext, Request req)
     {
         try
         {
             operation.invoke(parameters, operationContext);
+
+            if(operation.getResult().getStatus() == OperationStatus.IN_PROGRESS)
+            {
+                operation.setResult(OperationResult.redirect(
+                        new HashUrl(FrontendConstants.TABLE_ACTION,
+                                req.get(RestApiConstants.ENTITY),
+                                req.get(RestApiConstants.QUERY))
+                                .named(new OperationRequest(req).getAll())
+                ));
+            }
+
             return operation.getResult();
         }
         catch (Exception e)

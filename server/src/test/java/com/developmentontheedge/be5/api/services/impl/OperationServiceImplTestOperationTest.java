@@ -1,12 +1,14 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -70,7 +72,10 @@ public class OperationServiceImplTestOperationTest extends AbstractProjectTest{
 
         assertNotNull(operationResult);
 
-        //assertEquals(OperationResult.finished(), operationResult);
+        assertEquals(OperationResult.redirect(
+                new HashUrl(FrontendConstants.TABLE_ACTION,"testtableAdmin", "All records")
+                            .named(ImmutableMap.of("name","test1", "value","test2"))
+        ), operationResult);
 
 //        assertEquals((Long)1L, db.getScalar(
 //                "SELECT COUNT(*) FROM testtableAdmin WHERE name = ? AND value = ?", name, value));

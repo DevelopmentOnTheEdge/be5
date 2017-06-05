@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.util.HashUrl;
+
 public class OperationResult
 {
     ///////////////////////////////////////////////////////////////////
@@ -103,9 +105,14 @@ public class OperationResult
         return new OperationResult(OperationStatus.FINISHED, message); 
     }
 
+    public static OperationResult redirect(HashUrl hashUrl)
+    {
+        return new OperationResult(OperationStatus.REDIRECTED, hashUrl.toString());
+    }
+
     public static OperationResult redirect(String url)
     {
-        return new OperationResult(OperationStatus.REDIRECTED, url); 
+        return new OperationResult(OperationStatus.REDIRECTED, url);
     }
     
     public static OperationResult error(String message, Throwable details)
@@ -118,6 +125,25 @@ public class OperationResult
         return new OperationResult(OperationStatus.ERROR, details); 
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        OperationResult that = (OperationResult) o;
 
+        if (status != that.status) return false;
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
+        return details != null ? details.equals(that.details) : that.details == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = status != null ? status.hashCode() : 0;
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (details != null ? details.hashCode() : 0);
+        return result;
+    }
 }

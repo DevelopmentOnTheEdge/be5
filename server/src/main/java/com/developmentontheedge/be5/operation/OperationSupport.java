@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.operation;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Map;
 
@@ -15,12 +17,12 @@ public abstract class OperationSupport implements Operation
     private OperationContext operationContext;
     private OperationInfo meta;
     private OperationResult operationResult;
+    public DynamicPropertySet parameters = new DynamicPropertySetSupport();
 
     @Override
     public final void initialize(ServiceProvider serviceProvider, OperationInfo meta,
                                  OperationResult operationResult)
     {
-        this.operationContext = operationContext;
         this.sp = serviceProvider;
         this.meta = meta;
         this.operationResult = operationResult;
@@ -59,4 +61,15 @@ public abstract class OperationSupport implements Operation
         return operationResult;
     }
 
+    @Override
+    public void setResult(OperationResult operationResult)
+    {
+        this.operationResult = operationResult;
+    }
+
+    @Override
+    public OperationContext getContext()
+    {
+        return operationContext;
+    }
 }

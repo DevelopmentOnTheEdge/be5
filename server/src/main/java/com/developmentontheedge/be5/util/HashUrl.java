@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.util;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -100,5 +101,24 @@ public class HashUrl {
 		}
 		return sb.toString();
 	}
-    
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		HashUrl hashUrl = (HashUrl) o;
+
+		if (!Arrays.equals(components, hashUrl.components)) return false;
+		return Arrays.equals(keyValues, hashUrl.keyValues);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = Arrays.hashCode(components);
+		result = 31 * result + Arrays.hashCode(keyValues);
+		return result;
+	}
 }

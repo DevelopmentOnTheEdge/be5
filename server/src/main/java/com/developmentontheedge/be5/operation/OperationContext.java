@@ -7,15 +7,22 @@ public class OperationContext
     //
 
     public final String[] records;
+    public final String queryName;
 
-    public OperationContext(String[] records)
+    public OperationContext(String[] records, String queryName)
     {
         this.records = records;
+        this.queryName = queryName;
     }
 
     public String[] getRecordIDs()
     {
         return records;
+    }
+
+    public String getQueryName()
+    {
+        return queryName;
     }
 
     //String platform, UserInfo ui, String[] records, String fromQuery, String category, String tcloneId

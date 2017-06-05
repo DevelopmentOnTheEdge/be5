@@ -52,4 +52,8 @@ public interface Operation extends Serializable
      *
      */
     OperationResult getResult();
+
+    OperationContext getContext();
+
+    void setResult(OperationResult operationResult);
 }
