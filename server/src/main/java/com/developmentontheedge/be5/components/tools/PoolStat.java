@@ -8,14 +8,19 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 
 
 public class PoolStat implements Component {
-    
-    static class PoolStatResponse
+
+    public static class PoolStatResponse
     {
         final String result;
 
         PoolStatResponse(String result)
         {
             this.result = result;
+        }
+
+        public String getResult()
+        {
+            return result;
         }
     }
 
