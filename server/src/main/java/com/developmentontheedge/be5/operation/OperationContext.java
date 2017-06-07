@@ -6,16 +6,16 @@ public class OperationContext
     // Properties
     //
 
-    public final String[] records;
+    public final long[] records;
     public final String queryName;
 
-    public OperationContext(String[] records, String queryName)
+    public OperationContext(long[] records, String queryName)
     {
         this.records = records;
         this.queryName = queryName;
     }
 
-    public String[] getRecordIDs()
+    public long[] getRecordIDs()
     {
         return records;
     }

@@ -16,9 +16,8 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.google.common.base.Strings.nullToEmpty;
@@ -164,9 +163,8 @@ public class OperationServiceImpl implements OperationService
         return operation;
     }
 
-    private String[] selectedRows(String selectedRowsString){
-        Iterable<String> selectedRows = Splitter.on(',').split(selectedRowsString);
-
-        return Iterables.toArray(selectedRows, String.class);
+    private long[] selectedRows(String selectedRowsString){
+        return Arrays.stream(selectedRowsString.split(","))
+                .mapToLong(Long::parseLong).toArray();
     }
 }

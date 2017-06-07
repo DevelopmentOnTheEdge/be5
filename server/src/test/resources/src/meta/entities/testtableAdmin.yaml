@@ -45,7 +45,7 @@ testtableAdmin:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.TestOperation
   - Delete:
-      records: 1
+      records: 2
       roles: Administrator
       code: com.developmentontheedge.be5.operations.DeleteOperation
   - Edit:

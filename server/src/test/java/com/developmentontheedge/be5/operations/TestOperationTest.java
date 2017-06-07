@@ -1,15 +1,12 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.be5.util.HashUrl;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -17,7 +14,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class OperationServiceImplTestOperationTest extends AbstractProjectTest{
+public class TestOperationTest extends AbstractProjectTest{
 
     private OperationService operationService = sp.get(OperationService.class);
 
