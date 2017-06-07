@@ -269,14 +269,16 @@ public class ModuleLoader2
     public static String logLoadedProject(Project project, long startTime)
     {
         StringBuilder sb = new StringBuilder();
+        sb.append("\n------------------------------------------------------------------------");
         if(project.isModuleProject())
         {
-            sb.append("Module loaded:");
+            sb.append("\nModule loaded:");
         }
         else
         {
-            sb.append("Project loaded:");
+            sb.append("\nProject loaded:");
         }
+        sb.append("\n------------------------------------------------------------------------");
 
         sb.append("\nName: ").append(project.getName());
 
@@ -290,6 +292,7 @@ public class ModuleLoader2
         }
         sb.append("\nLoading time: ")
                 .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
+        sb.append("\n");
         return sb.toString();
     }
 
@@ -302,7 +305,12 @@ public class ModuleLoader2
         try
         {
             Map<String, String> modulesSource = readDevPathsToSourceProjects();
-            StringBuilder sb = new StringBuilder("Replace project path for hot reload:");
+            if(modulesSource.isEmpty())return;
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n------------------------------------------------------------------------");
+            sb.append("\nReplace project path for hot reload (dev.yaml):");
+            sb.append("\n------------------------------------------------------------------------");
             boolean started = false;
             for (int i = 0; i < urls.size(); i++)
             {
@@ -317,6 +325,7 @@ public class ModuleLoader2
                     }
                 }
             }
+            sb.append("\n");
             if(started)log.info(sb.toString());
         }
         catch (IOException e)
