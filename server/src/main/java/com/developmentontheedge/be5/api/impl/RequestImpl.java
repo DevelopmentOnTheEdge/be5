@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.google.common.base.Strings;
-import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -59,17 +59,22 @@ public class RequestImpl implements Request {
         
         try
         {
-            JsonArray values = (JsonArray) new JsonParser().parse(valuesString);
-            for (int i = 0; i < values.size(); i++)
+            JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
+            for (Map.Entry entry: values.entrySet())
             {
-                JsonObject pair = (JsonObject) values.get(i);
-                String name = pair.get("name").getAsString();
-                String value = pair.get("value").getAsString();
-                if( !"".equals(value) )
-                {
-                    fieldValues.put(name, value);
-                }
+                fieldValues.put(entry.getKey().toString(), ((JsonElement)entry.getValue()).getAsString());
             }
+//            JsonArray values = (JsonArray) new JsonParser().parse(valuesString);
+//            for (int i = 0; i < values.size(); i++)
+//            {
+//                JsonObject pair = (JsonObject) values.get(i);
+//                String name = pair.get("name").getAsString();
+//                String value = pair.get("value").getAsString();
+//                if( !"".equals(value) )
+//                {
+//                    fieldValues.put(name, value);
+//                }
+//            }
         }
         catch (ClassCastException e)
         {

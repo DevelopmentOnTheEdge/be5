@@ -4,12 +4,15 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.operationstest.v1.OperationRequest;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.operation.*;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.json.JsonFactory;
@@ -19,7 +22,6 @@ import com.google.common.collect.Iterables;
 import java.util.Map;
 
 import static com.google.common.base.Strings.nullToEmpty;
-import static com.google.common.base.Strings.repeat;
 
 public class OperationServiceImpl implements OperationService
 {
@@ -80,31 +82,31 @@ public class OperationServiceImpl implements OperationService
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, String> parameters = req.getValues(RestApiConstants.VALUES);
+        Map<String, String> presetValues = req.getValues(RestApiConstants.VALUES);
 
         OperationInfo meta = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
         Operation operation = create(meta);
 
-        execute(operation, parameters, operationContext, req);
+        execute(operation, presetValues, operationContext, req);
 
         return operation.getResult();
     }
 
-    public OperationResult execute(Operation operation, Map<String, String> parameters, OperationContext operationContext, Request req)
+    public OperationResult execute(Operation operation, Map<String, String> presetValues, OperationContext operationContext, Request req)
     {
         try
         {
-            operation.invoke(parameters, operationContext);
+            operation.invoke(operation.getParameters(presetValues), operationContext);
 
             if(operation.getResult().getStatus() == OperationStatus.IN_PROGRESS)
             {
                 operation.setResult(OperationResult.redirect(
-                        new HashUrl(FrontendConstants.TABLE_ACTION,
-                                req.get(RestApiConstants.ENTITY),
-                                req.get(RestApiConstants.QUERY))
-                                .named(new OperationRequest(req).getAll())
+                    new HashUrl(FrontendConstants.TABLE_ACTION,
+                        req.get(RestApiConstants.ENTITY),
+                        req.get(RestApiConstants.QUERY))
+                        //TODO .named(new OperationRequest(req).getAll())
                 ));
             }
 
@@ -115,15 +117,6 @@ public class OperationServiceImpl implements OperationService
             throw Be5Exception.internalInOperation(e, operation.getInfo());
         }
     }
-
-//    private FrontendAction formModernRedirectUrl(Operation operation, Request req)
-//    {
-//        if(operation.equals(FrontendAction.goBack()))
-//            return FrontendAction.goBack();
-//
-//        return FrontendAction.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, req.get(RestApiConstants.ENTITY), req.get(RestApiConstants.QUERY)).named(new OperationRequest(req).getAll()));
-//        return null;
-//    }
 
     public Operation create(OperationInfo meta) {
         Operation operation;

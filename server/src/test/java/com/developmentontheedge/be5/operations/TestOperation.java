@@ -13,10 +13,10 @@ public class TestOperation extends OperationSupport implements Operation
     @Override
     public Object getParameters(Map<String, String> presetValues) throws Exception
     {
-        parameters.add(new DynamicProperty("name", "Name", String.class, "testName"));
-        parameters.add(new DynamicProperty("number", "Number", Long.class, 1L));
+        dps.add(new DynamicProperty("name", "Name", String.class, "testName"));
+        dps.add(new DynamicProperty("number", "Number", Long.class, 1L));
 
-        return parameters;
+        return dps;
     }
 
     @Override

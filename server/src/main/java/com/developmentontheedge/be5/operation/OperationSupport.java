@@ -17,7 +17,7 @@ public abstract class OperationSupport implements Operation
     private OperationContext operationContext;
     private OperationInfo meta;
     private OperationResult operationResult;
-    public DynamicPropertySet parameters = new DynamicPropertySetSupport();
+    public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
     @Override
     public final void initialize(ServiceProvider serviceProvider, OperationInfo meta,

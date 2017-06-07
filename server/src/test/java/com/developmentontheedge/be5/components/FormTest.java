@@ -31,9 +31,9 @@ public class FormTest extends AbstractProjectTest
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         Response response = mock(Response.class);
-        String values = new Gson().toJson(ImmutableList.of(
-                ImmutableMap.of("name","name",  "value","test1"),
-                ImmutableMap.of("name","value", "value","test2")));
+        String values = new Gson().toJson(ImmutableMap.of(
+                "name","test1",
+                "value", "test2"));
         component.generate(getSpyMockRequest("", ImmutableMap.of(
                 RestApiConstants.ENTITY,"testtableAdmin",
                 RestApiConstants.QUERY,"All records",

@@ -38,16 +38,16 @@ public class OperationServiceImplTest extends AbstractProjectTest{
         FormPresentation form = generate.getFirst();
 
         assertEquals("{'name':'test1','value':'test2'}",
-                oneQuotes(form.dps.getJsonObject("values").toString()));
+                oneQuotes(form.bean.getJsonObject("values").toString()));
 
         assertEquals("name",
-                form.dps.getJsonObject("meta").getJsonObject("/name").getString("displayName"));
+                form.bean.getJsonObject("meta").getJsonObject("/name").getString("displayName"));
 
         assertEquals("value",
-                form.dps.getJsonObject("meta").getJsonObject("/value").getString("displayName"));
+                form.bean.getJsonObject("meta").getJsonObject("/value").getString("displayName"));
 
         assertEquals("['/name','/value']",
-                oneQuotes(form.dps.getJsonArray("order").toString()));
+                oneQuotes(form.bean.getJsonArray("order").toString()));
 
         assertEquals("Insert", form.title);
 
