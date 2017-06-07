@@ -69,7 +69,8 @@ public class OperationServiceImpl implements OperationService
 
         String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
 
-        return Either.first(new FormPresentation(title, selectedRowsString, JsonFactory.bean(parameters), presetValues));
+        return Either.first(new FormPresentation(entityName, queryName, operationName,
+                title, selectedRowsString, JsonFactory.bean(parameters), presetValues));
     }
 
     @Override

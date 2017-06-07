@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,10 +66,17 @@ public class ModuleLoader2
                 else // war or jar file
                 {
                     String jar = ext.substring(0, ext.indexOf('!'));
-                    FileSystem fs = FileSystems.newFileSystem(URI.create(jar), new HashMap<String, String>());
+                    FileSystem fs;// = FileSystems.getFileSystem(URI.create(jar));
+
+                    try {
+                        fs = FileSystems.newFileSystem(URI.create(jar), Collections.emptyMap());
+                    } catch (FileSystemAlreadyExistsException e) {
+                        fs = FileSystems.getFileSystem(URI.create(jar));
+                        log.info("Get exists FileSystem after exception");
+                    }
+
                     Path path = fs.getPath("./");
                     module = Serialization.load(path, loadContext);
-                    //TODO close if not maven script fs.close();
 
                     log.fine("Load module from " + url.toExternalForm() + ", path=" + path);
                 }
