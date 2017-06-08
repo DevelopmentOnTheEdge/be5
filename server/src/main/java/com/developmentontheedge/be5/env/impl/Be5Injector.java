@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.env;
+package com.developmentontheedge.be5.env.impl;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -15,6 +15,9 @@ import java.util.logging.Logger;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.env.Binder;
+import com.developmentontheedge.be5.env.Configurable;
+import com.developmentontheedge.be5.env.Injector;
 import com.google.gson.Gson;
 
 public class Be5Injector implements Injector
@@ -30,7 +33,7 @@ public class Be5Injector implements Injector
     private final ClassToInstanceMap instantiatedServices = new ClassToInstanceMap();
     //private boolean frozen = false;
     
-    Be5Injector(Binder binder)
+    public Be5Injector(Binder binder)
     {
         binder.configure(loadedClasses, bindings, initializers, configurations);
         //frozen = true;
