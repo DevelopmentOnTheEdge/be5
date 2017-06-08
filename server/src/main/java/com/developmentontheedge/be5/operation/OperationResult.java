@@ -146,4 +146,14 @@ public class OperationResult
         result = 31 * result + (details != null ? details.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString()
+    {
+        return "OperationResult{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", details=" + details +
+                '}';
+    }
 }

@@ -37,14 +37,12 @@ public class OperationsTest extends AbstractProjectTest{
                 operationService.generate(req).getSecond());
 
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"), operationService.execute(req));
-
-        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     @Test
     public void testOperation(){
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-                new Gson().toJson(ImmutableMap.of("name","testName","value", "1")));
+                new Gson().toJson(ImmutableMap.of("name","testName","number", "1")));
 
         Either<FormPresentation, OperationResult> generate = operationService.generate(req);
 
@@ -65,7 +63,26 @@ public class OperationsTest extends AbstractProjectTest{
                 oneQuotes(form.bean.getJsonArray("order").toString()));
 
         OperationResult result = operationService.execute(req);
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=testName/value=1"), result);
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/number=1/name=testName"), result);
+
+
+    }
+
+    @Test
+    public void testOperationParameters(){
+        Either<FormPresentation, OperationResult> generate = operationService.generate(
+                getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0","{}"));
+
+        assertEquals("{'name':'','number':0}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+
+//todo check error and add error msg
+//        Either<FormPresentation, OperationResult> generate1 = operationService.generate(
+//                getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
+//                        doubleQuotes("{'name':'testName','number':'a'}")));
+//
+//        assertEquals("{'name':'testName','number':0}", oneQuotes(generate1.getFirst().getBean().getJsonObject("values").toString()));
+
+
     }
 
 }
