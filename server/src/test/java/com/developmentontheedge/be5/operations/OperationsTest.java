@@ -44,7 +44,7 @@ public class OperationsTest extends AbstractProjectTest{
     @Test
     public void testOperation(){
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-                new Gson().toJson(ImmutableMap.of("name","test1","value", "test2")));
+                new Gson().toJson(ImmutableMap.of("name","testName","value", "1")));
 
         Either<FormPresentation, OperationResult> generate = operationService.generate(req);
 
@@ -65,7 +65,7 @@ public class OperationsTest extends AbstractProjectTest{
                 oneQuotes(form.bean.getJsonArray("order").toString()));
 
         OperationResult result = operationService.execute(req);
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"), result);
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=testName/value=1"), result);
     }
 
 }

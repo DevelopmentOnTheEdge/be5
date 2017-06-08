@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.operationstest.v1.OperationRequest;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
@@ -105,7 +106,7 @@ public class OperationServiceImpl implements OperationService
                     new HashUrl(FrontendConstants.TABLE_ACTION,
                         req.get(RestApiConstants.ENTITY),
                         req.get(RestApiConstants.QUERY))
-                        //TODO .named(new OperationRequest(req).getAll())
+                        .named(new OperationRequest(req).getAll())
                 ));
             }
 
