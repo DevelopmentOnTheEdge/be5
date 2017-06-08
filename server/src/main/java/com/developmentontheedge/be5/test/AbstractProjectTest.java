@@ -4,8 +4,10 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
+import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +56,15 @@ public abstract class AbstractProjectTest
         Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, parameters));
         when(request.getRequestUri()).thenReturn(requestUri);
         return request;
+    }
+
+    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values){
+        return getSpyMockRequest("", ImmutableMap.of(
+                RestApiConstants.ENTITY, entity,
+                RestApiConstants.QUERY, query,
+                RestApiConstants.OPERATION, operation,
+                RestApiConstants.SELECTED_ROWS, selectedRows,
+                RestApiConstants.VALUES, values));
     }
 
     protected static void initUserWithRoles(String... roles)
