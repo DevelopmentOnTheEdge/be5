@@ -2,11 +2,9 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.util.Either;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.junit.BeforeClass;
@@ -39,7 +37,7 @@ public class FormTest extends AbstractProjectTest
                 RestApiConstants.QUERY,"All records",
                 RestApiConstants.OPERATION,"Insert",
                 RestApiConstants.SELECTED_ROWS, "0",
-                RestApiConstants.VALUES, values)), response, sp);
+                RestApiConstants.VALUES, values)), response, injector);
 
         verify(response).sendAsJson(eq("form"), any(Either.class));
 

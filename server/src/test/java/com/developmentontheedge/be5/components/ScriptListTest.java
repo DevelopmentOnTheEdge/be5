@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
@@ -40,7 +39,7 @@ public class ScriptListTest extends AbstractProjectTest
 
         when(req.get("category")).thenReturn("scripts");
 
-        component.generate(req, response, sp);
+        component.generate(req, response, injector);
         List<ActionPaths> actionPathss = Arrays.asList(
                 new ActionPaths("appAction", "actions/appAction"),
                 new ActionPaths("test", "be5:be5/actions/test"),

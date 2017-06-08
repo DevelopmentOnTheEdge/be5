@@ -17,8 +17,8 @@ import static org.mockito.Mockito.mock;
 
 public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
 {
-    private Query query = sp.getProject().getEntity("testtable").getQueries().get("All records");
-    private static SqlService db = sp.getSqlService();
+    private Query query = injector.getProject().getEntity("testtable").getQueries().get("All records");
+    private static SqlService db = injector.getSqlService();
 
     @BeforeClass
     public static void hasOneRow()
@@ -30,7 +30,7 @@ public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
     @Test
     public void testExecute()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), injector);
         List<DynamicPropertySet> dps = be5QueryExecutor.execute();
         assertTrue(dps.size() > 0);
 
@@ -40,7 +40,7 @@ public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
     @Test
     public void testColumnNames()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), injector);
         List<String> columnNames = be5QueryExecutor.getColumnNames();
         assertEquals(2, columnNames.size());
         assertEquals("NAME", columnNames.get(0));
@@ -49,7 +49,7 @@ public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), sp);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), injector);
 
         assertTrue(be5QueryExecutor.count() > 0);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM " + "(" +

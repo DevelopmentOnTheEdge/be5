@@ -22,7 +22,7 @@ public class OperationServiceImplTest extends AbstractProjectTest{
     public void generateInsert(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
-        OperationService operationService = sp.get(OperationService.class);
+        OperationService operationService = injector.get(OperationService.class);
 
         String values = new Gson().toJson(ImmutableList.of(
                 ImmutableMap.of("name","name",  "value","test1"),

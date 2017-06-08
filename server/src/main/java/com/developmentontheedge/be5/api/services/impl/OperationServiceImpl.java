@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.operationstest.v1.OperationRequest;
@@ -27,10 +27,10 @@ public class OperationServiceImpl implements OperationService
 {
     private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(OperationServiceImpl.class.getName());
 
-    private final ServiceProvider serviceProvider;
+    private final Injector injector;
 
-    public OperationServiceImpl(ServiceProvider serviceProvider) {
-        this.serviceProvider = serviceProvider;
+    public OperationServiceImpl(Injector injector) {
+        this.injector = injector;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class OperationServiceImpl implements OperationService
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, String> presetValues = req.getValues(RestApiConstants.VALUES);
-        OperationInfo operationInfo = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = UserAwareMeta.get(injector).getOperation(entityName, queryName, operationName);
 
         return generate(entityName, queryName, operationName, selectedRowsString, operationInfo,
                 presetValues, req);
@@ -50,7 +50,7 @@ public class OperationServiceImpl implements OperationService
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
                                                               String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
     {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
         Operation operation = create(meta);
 
         Object parameters;
@@ -84,7 +84,7 @@ public class OperationServiceImpl implements OperationService
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, String> presetValues = req.getValues(RestApiConstants.VALUES);
 
-        OperationInfo meta = UserAwareMeta.get(serviceProvider).getOperation(entityName, queryName, operationName);
+        OperationInfo meta = UserAwareMeta.get(injector).getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
         Operation operation = create(meta);
@@ -159,7 +159,7 @@ public class OperationServiceImpl implements OperationService
                 break;
         }
 
-        operation.initialize(serviceProvider, meta, OperationResult.progress());
+        operation.initialize(injector, meta, OperationResult.progress());
 
         return operation;
     }

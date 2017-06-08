@@ -3,18 +3,18 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 
 public class DownloadComponent implements Component
 {
 
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
 //        List<String> segments = Urls.extractPath(req.getRequestUri());
 //        String entityName = segments.get(0);
 //        String queryName = segments.get(1);
-//        Query query = serviceProvider.getProject().getEntity(entityName).getQueries().get(queryName);
+//        Query query = injector.getProject().getEntity(entityName).getQueries().get(queryName);
 //        Map<String, String> legacyGetParameters = QueryStrings.extract(query.getQuery());
 //        String entity         = legacyGetParameters.get("_t_");
 //        String name           = legacyGetParameters.get("name");
@@ -28,7 +28,7 @@ public class DownloadComponent implements Component
 //
 //        try
 //        {
-//            record = Utils.getRecordById(serviceProvider.getDbmsConnector(), entity, "name", name, "", null);
+//            record = Utils.getRecordById(injector.getDbmsConnector(), entity, "name", name, "", null);
 //        }
 //        catch (NoRecord e1)
 //        {

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.helpers;
 
 import java.util.Optional;
 
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -26,9 +26,9 @@ public interface UserAwareMeta
 
     }
 
-    static UserAwareMeta get(ServiceProvider serviceProvider)
+    static UserAwareMeta get(Injector injector)
     {
-        return UserAwareMetaImpl.get(serviceProvider);
+        return UserAwareMetaImpl.get(injector);
     }
 
     /**

@@ -13,5 +13,5 @@ public interface Be5Operation
     /**
      * It's called before the legacy operation's initializer.
      */
-    void initialize(Request req, ServiceProvider serviceProvider);
+    void initialize(Request req, ServiceProvider injector);
 }

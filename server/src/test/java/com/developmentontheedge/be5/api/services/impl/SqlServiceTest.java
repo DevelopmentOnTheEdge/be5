@@ -24,7 +24,7 @@ public class SqlServiceTest extends AbstractProjectTest
     @BeforeClass
     public static void setUp()
     {
-        db = sp.getSqlService();
+        db = injector.getSqlService();
         db.update("DROP TABLE IF EXISTS persons;" );
         db.update("CREATE TABLE persons (\n" +
                 "    ID  BIGSERIAL PRIMARY KEY,\n" +

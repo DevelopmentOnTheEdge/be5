@@ -10,14 +10,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -35,15 +34,15 @@ public class TableModel
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
-        private Builder(Query query, Map<String, String> parametersMap, Request req, ServiceProvider serviceProvider, boolean selectable)
+        private Builder(Query query, Map<String, String> parametersMap, Request req, Injector injector, boolean selectable)
         {
             this.query = query;
             this.selectable = selectable;
             int sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
-            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, serviceProvider);
+            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, injector);
             this.queryExecutor.sortOrder(sortColumn, "desc".equals(req.get("order[0][dir]")));
-            this.userAwareMeta = UserAwareMeta.get(serviceProvider);
-            this.cellFormatter = new CellFormatter(query, queryExecutor, serviceProvider);
+            this.userAwareMeta = UserAwareMeta.get(injector);
+            this.cellFormatter = new CellFormatter(query, queryExecutor, injector);
         }
 
         public Builder offset(int offset)
@@ -285,14 +284,14 @@ public class TableModel
 
     }
 
-    public static Builder from(ServiceProvider serviceProvider, Query query, Map<String, String> parametersMap, Request req)
+    public static Builder from(Injector injector, Query query, Map<String, String> parametersMap, Request req)
     {
-        return from(serviceProvider, query, parametersMap, req, false);
+        return from(injector, query, parametersMap, req, false);
     }
 
-    public static Builder from(ServiceProvider serviceProvider, Query query, Map<String, String> parametersMap, Request req, boolean selectable)
+    public static Builder from(Injector injector, Query query, Map<String, String> parametersMap, Request req, boolean selectable)
     {
-        return new Builder(query, parametersMap, req, serviceProvider, selectable);
+        return new Builder(query, parametersMap, req, injector, selectable);
     }
 
     public static class ColumnModel

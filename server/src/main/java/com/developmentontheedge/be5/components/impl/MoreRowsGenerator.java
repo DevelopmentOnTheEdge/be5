@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
@@ -19,10 +19,10 @@ import com.developmentontheedge.be5.metadata.model.Query;
  */
 public class MoreRowsGenerator {
     
-    private final ServiceProvider serviceProvider;
+    private final Injector injector;
 
-    public MoreRowsGenerator(ServiceProvider serviceProvider) {
-        this.serviceProvider = serviceProvider;
+    public MoreRowsGenerator(Injector injector) {
+        this.injector = injector;
     }
     
     /**
@@ -57,7 +57,7 @@ public class MoreRowsGenerator {
         }
         
         boolean selectable = Boolean.parseBoolean(selectableStr);
-        Query query = UserAwareMeta.get(serviceProvider).getQuery(entityName, queryName);
+        Query query = UserAwareMeta.get(injector).getQuery(entityName, queryName);
         
         return generateMoreRows(query, req, parametersMap, selectable, draw, start, length, totalNumberOfRows);
     }
@@ -76,7 +76,7 @@ public class MoreRowsGenerator {
      * @param limit 
      */
     private List<List<Object>> runForMoreRows(Query query, Request req, Map<String, String> parametersMap, boolean selectable, int offset, int limit) {
-        TableModel table = TableModel.from(serviceProvider, query, parametersMap, req, selectable).offset(offset).limit(limit).build();
+        TableModel table = TableModel.from(injector, query, parametersMap, req, selectable).offset(offset).limit(limit).build();
         return new MoreRowsBuilder(selectable).build(table);
     }
     

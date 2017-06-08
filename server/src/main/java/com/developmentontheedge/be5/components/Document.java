@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.components.impl.DocumentGenerator;
 import com.developmentontheedge.be5.components.impl.DocumentResponse;
@@ -17,7 +17,7 @@ public class Document implements Component
     private static final Logger log = Logger.getLogger(Document.class.getName());
 
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
         // TODO verify user roles
         
@@ -28,10 +28,10 @@ public class Document implements Component
             switch (req.getRequestUri())
             {
             case "":
-                DocumentGenerator.generateAndSend(req, res, serviceProvider);
+                DocumentGenerator.generateAndSend(req, res, injector);
                 return;
             case "moreRows":
-                response.send(new MoreRowsGenerator(serviceProvider).generate(req));
+                response.send(new MoreRowsGenerator(injector).generate(req));
                 return;
             default:
                 res.sendUnknownActionError();

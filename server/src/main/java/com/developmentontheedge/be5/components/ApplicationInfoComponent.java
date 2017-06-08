@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 
@@ -38,13 +38,13 @@ public class ApplicationInfoComponent implements Component
     }
 	
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
         final ApplicationInfo appInfo;
         
         try
         {
-            appInfo = getApplicationInfo(req, serviceProvider);
+            appInfo = getApplicationInfo(req, injector);
             res.sendAsRawJson(appInfo);
         }
         catch (Exception e)
@@ -54,9 +54,9 @@ public class ApplicationInfoComponent implements Component
     }
 
     
-    public static ApplicationInfo getApplicationInfo(Request req, ServiceProvider serviceProvider)throws Exception
+    public static ApplicationInfo getApplicationInfo(Request req, Injector injector)throws Exception
     {
-        String title = UserAwareMeta.get(serviceProvider)
+        String title = UserAwareMeta.get(injector)
                 .getColumnTitle("index.jsp", "application", "applicationName")
                 .orElse("Be5 Application");
 

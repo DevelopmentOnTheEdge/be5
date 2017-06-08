@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
@@ -39,7 +38,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, sp);
+        component.generate(getMockRequest(""), response, injector);
 
 
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
@@ -56,7 +55,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
 
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("select"), response, sp);
+        component.generate(getSpyMockRequest("select"), response, injector);
     }
 
     @Test
@@ -66,7 +65,7 @@ public class LanguageSelectorTest extends AbstractProjectTest
 
         Request request = getSpyMockRequest("select", ImmutableMap.of("language", "RU") );
 
-        component.generate(request, response, sp);
+        component.generate(request, response, injector);
 
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
     }

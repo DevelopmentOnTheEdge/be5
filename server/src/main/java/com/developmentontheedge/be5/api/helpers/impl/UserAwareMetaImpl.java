@@ -5,12 +5,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -37,22 +36,22 @@ public class UserAwareMetaImpl implements UserAwareMeta
      */
     private static CompiledLocalizations compiledLocalizations = null;
 
-    public static UserAwareMeta get(ServiceProvider serviceProvider)
+    public static UserAwareMeta get(Injector injector)
     {
         if (compiledLocalizations == null)
         {
-            compiledLocalizations = CompiledLocalizations.from(serviceProvider.getProject());
+            compiledLocalizations = CompiledLocalizations.from(injector.getProject());
         }
 
-        return new UserAwareMetaImpl(serviceProvider, compiledLocalizations);
+        return new UserAwareMetaImpl(injector, compiledLocalizations);
     }
 
     private final CompiledLocalizations localizations;
     private final Meta meta;
 
-    private UserAwareMetaImpl(ServiceProvider serviceProvider, CompiledLocalizations localizations)
+    private UserAwareMetaImpl(Injector injector, CompiledLocalizations localizations)
     {
-        this.meta = serviceProvider.getMeta();
+        this.meta = injector.getMeta();
         this.localizations = localizations;
     }
 

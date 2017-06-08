@@ -22,14 +22,14 @@ package com.developmentontheedge.be5.legacy;
 
 public class LegacyOperationFactory {
     
-//    private final ServiceProvider serviceProvider;
+//    private final ServiceProvider injector;
 //    private final DbmsConnector connector;
 //    private final UserInfo user;
 //	private final HttpServletRequest request;
 //
-//    public LegacyOperationFactory(ServiceProvider serviceProvider, UserInfo user, HttpServletRequest httpServletRequest) {
-//        this.serviceProvider = serviceProvider;
-//        this.connector = serviceProvider.getDbmsConnector();
+//    public LegacyOperationFactory(ServiceProvider injector, UserInfo user, HttpServletRequest httpServletRequest) {
+//        this.injector = injector;
+//        this.connector = injector.getDbmsConnector();
 //        this.user = user;
 //        this.request = httpServletRequest;
 //        // Cache color scheme in session
@@ -120,7 +120,7 @@ public class LegacyOperationFactory {
 //
 //        if (legacyOperation instanceof Be5Operation)
 //        {
-//            ((Be5Operation) legacyOperation).initialize(req, serviceProvider);
+//            ((Be5Operation) legacyOperation).initialize(req, injector);
 //        }
 //
 //        legacyOperation.initialize(platform, safeUserInfo, entityName, primaryKey, records, fromQuery, null, null);

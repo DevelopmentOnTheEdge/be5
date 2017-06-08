@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -267,18 +267,18 @@ public class Menu implements Component {
      * </pre>
      */
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
         switch (req.getRequestUri())
         {
         case "":
-            res.sendAsRawJson(generateSimpleMenu(serviceProvider));
+            res.sendAsRawJson(generateSimpleMenu(injector));
             return;
         case "withIds":
-            res.sendAsRawJson(generateMenuWithIds(serviceProvider));
+            res.sendAsRawJson(generateMenuWithIds(injector));
             return;
         case "defaultAction":
-            res.sendAsRawJson(getDefaultAction(serviceProvider));
+            res.sendAsRawJson(getDefaultAction(injector));
             return;
         default:
             res.sendUnknownActionError();
@@ -286,31 +286,31 @@ public class Menu implements Component {
         }
     }
 
-    MenuResponse generateMenuWithIds(ServiceProvider serviceProvider) {
-        return generateMenu(serviceProvider, true);
+    MenuResponse generateMenuWithIds(Injector injector) {
+        return generateMenu(injector, true);
     }
 
-    MenuResponse generateSimpleMenu(ServiceProvider serviceProvider) {
-        return generateMenu(serviceProvider, false);
+    MenuResponse generateSimpleMenu(Injector injector) {
+        return generateMenu(injector, false);
     }
 
-    private MenuResponse generateMenu(ServiceProvider serviceProvider, boolean withIds) {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
+    private MenuResponse generateMenu(Injector injector, boolean withIds) {
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
         
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
         boolean loggedIn = UserInfoHolder.isLoggedIn();
-        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), userAwareMeta, language, roles, withIds);
+        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, withIds);
         
         return new MenuResponse(loggedIn, entities);
     }
 
-    private Action getDefaultAction(ServiceProvider serviceProvider) {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(serviceProvider);
+    private Action getDefaultAction(Injector injector) {
+        UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
 
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
-        List<RootNode> entities = collectEntities(serviceProvider.getMeta(), userAwareMeta, language, roles, false);
+        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, false);
 
         for (RootNode rootNode: entities)
         {

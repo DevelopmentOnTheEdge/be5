@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.components.RestApiConstants;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
@@ -23,20 +23,19 @@ import static org.mockito.Mockito.when;
 
 public abstract class AbstractProjectTest
 {
-    protected static final Injector injector = Injector.createInjector();
-    protected static final ServiceProvider sp = injector.getServiceProvider();
+    protected static final Injector injector = Be5.createInjector();
 
     private static final LoginServiceImpl loginService;
 
     static {
-        Project project = injector.getServiceProvider().getProject();
+        Project project = injector.getProject();
 
         if(project.getProject().getLanguages().length == 0){
             project.getApplication().getLocalizations().addLocalization( "en", "test", Collections.singletonList("myTopic"), "foo", "bar" );
         }
 
-        loginService = new LoginServiceImpl(null, sp.getProjectProvider());
-        new LoginServiceImpl(null, sp.getProjectProvider()).initGuest(null);
+        loginService = new LoginServiceImpl(null, injector.getProjectProvider());
+        new LoginServiceImpl(null, injector.getProjectProvider()).initGuest(null);
     }
 
     protected Request getMockRequest(String requestUri){

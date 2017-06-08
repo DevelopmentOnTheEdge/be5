@@ -25,8 +25,8 @@ public class MultiThreadedTest extends AbstractProjectTest
     @BeforeClass
     public static void setUp() throws Exception
     {
-        databaseService = sp.getDatabaseService();
-        db = sp.getSqlService();
+        databaseService = injector.getDatabaseService();
+        db = injector.getSqlService();
         db.update("DROP TABLE IF EXISTS Persons" );
         db.update("CREATE TABLE Persons (\n" +
                 "    ID int NOT NULL AUTO_INCREMENT,\n" +

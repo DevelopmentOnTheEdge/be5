@@ -3,9 +3,8 @@ package com.developmentontheedge.be5.modules.core.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class LoginTest extends AbstractProjectTest
         when(request.get("username")).thenReturn(testUser);
         when(request.get("password")).thenReturn(testPass);
 
-        ServiceProvider sp = mock(ServiceProvider.class);
+        Injector sp = mock(Injector.class);
 
         LoginService loginService = mock(LoginService.class);
 
@@ -57,7 +56,7 @@ public class LoginTest extends AbstractProjectTest
         when(request.get("username")).thenReturn(testUser);
         when(request.get("password")).thenReturn(testPass);
 
-        ServiceProvider sp = mock(ServiceProvider.class);
+        Injector sp = mock(Injector.class);
 
         LoginService loginService = mock(LoginService.class);
 
@@ -71,7 +70,7 @@ public class LoginTest extends AbstractProjectTest
     public void error() throws Exception {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, sp);
+        component.generate(getMockRequest(""), response, injector);
 
         verify(response).sendError(eq("Empty username or password"), eq("loginError"));
     }

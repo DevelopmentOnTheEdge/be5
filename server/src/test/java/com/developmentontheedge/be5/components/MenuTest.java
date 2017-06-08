@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -31,7 +30,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, sp);
+        component.generate(getMockRequest(""), response, injector);
 
         verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
     }
@@ -41,7 +40,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("withIds"), response, sp);
+        component.generate(getMockRequest("withIds"), response, injector);
 
         verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
     }
@@ -51,7 +50,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, injector);
 
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtable/All records")));
     }
@@ -62,7 +61,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         Response response = mock(Response.class);
-        component.generate(getMockRequest("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, injector);
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtableAdmin/All records")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
@@ -74,7 +73,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles("User");
 
         Response response = mock(Response.class);
-        component.generate(getMockRequest("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, injector);
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtUser/testtUser")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
@@ -86,7 +85,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles("TestUser2");
 
         Response response = mock(Response.class);
-        component.generate(getMockRequest("defaultAction"), response, sp);
+        component.generate(getMockRequest("defaultAction"), response, injector);
         verify(response).sendAsRawJson(eq(new Action("call", "table/testtUser2/Test1")));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
@@ -97,7 +96,7 @@ public class MenuTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("foo"), response, sp);
+        component.generate(getMockRequest("foo"), response, injector);
 
         verify(response).sendUnknownActionError();
     }
@@ -106,7 +105,7 @@ public class MenuTest extends AbstractProjectTest
     public void testGenerateSimpleMenu()
     {
         Menu menu = (Menu)component;
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(sp);
+        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector);
 
         assertEquals(true, menuResponse.loggedIn);
 
@@ -122,7 +121,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         Menu menu = (Menu)component;
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(sp);
+        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector);
         assertEquals("Insert", menuResponse.root.get(1).operations.get(0).title);
         assertEquals(new Action("call", "form/testtableAdmin/All records/Insert"),
                 menuResponse.root.get(1).operations.get(0).action);

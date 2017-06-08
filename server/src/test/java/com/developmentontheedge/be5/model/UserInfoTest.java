@@ -18,13 +18,13 @@ import static org.junit.Assert.assertEquals;
 public class UserInfoTest extends AbstractProjectTest
 {
     private static UserInfo ui;
-    private static LoginServiceImpl loginService = new LoginServiceImpl(null, sp.getProjectProvider());
+    private static LoginServiceImpl loginService = new LoginServiceImpl(null, injector.getProjectProvider());
 
     @Before
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = sp.getLoginService().saveUser("test", roles, Locale.US);
+        ui = injector.getLoginService().saveUser("test", roles, Locale.US);
 
         assertEquals(roles, ui.getCurrentRoles());
     }

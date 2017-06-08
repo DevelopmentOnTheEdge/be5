@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -63,35 +63,35 @@ public class LanguageSelector implements Component
     }
 
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
         switch( req.getRequestUri() )
         {
         case "":
-            res.sendAsRawJson(getInitialData(serviceProvider));
+            res.sendAsRawJson(getInitialData(injector));
             return;
         case "select":
-            res.sendAsRawJson(selectLanguage(req, serviceProvider));
+            res.sendAsRawJson(selectLanguage(req, injector));
             return;
         default:
             res.sendUnknownActionError();
         }
     }
 
-    private LanguageSelectorResponse getInitialData(ServiceProvider serviceProvider)
+    private LanguageSelectorResponse getInitialData(Injector injector)
     {
-        return getState(serviceProvider);
+        return getState(injector);
     }
 
-    private LanguageSelectorResponse selectLanguage(Request req, ServiceProvider serviceProvider)
+    private LanguageSelectorResponse selectLanguage(Request req, Injector injector)
     {
-        serviceProvider.getLoginService().setLanguage(new Locale(req.getNonEmpty("language")));
-        return getState(serviceProvider);
+        injector.getLoginService().setLanguage(new Locale(req.getNonEmpty("language")));
+        return getState(injector);
     }
 
-    private LanguageSelectorResponse getState(ServiceProvider serviceProvider)
+    private LanguageSelectorResponse getState(Injector injector)
     {
-        Project project = serviceProvider.getProject();
+        Project project = injector.getProject();
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 

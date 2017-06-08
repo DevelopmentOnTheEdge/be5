@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -35,7 +34,7 @@ public class RoleSelectorTest extends AbstractProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, sp);
+        component.generate(getMockRequest(""), response, injector);
 
         RoleSelectorResponse roleSelectorResponse =
                 new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST), ImmutableList.of(RoleType.ROLE_GUEST));
@@ -52,7 +51,7 @@ public class RoleSelectorTest extends AbstractProjectTest
         expectedEx.expect(Be5Exception.class);
         expectedEx.expectMessage(ErrorMessages.formatMessage(Be5ErrorCode.PARAMETER_ABSENT, "roles"));
 
-        component.generate(getSpyMockRequest("select"), mock(Response.class), sp);
+        component.generate(getSpyMockRequest("select"), mock(Response.class), injector);
     }
 
     @Test
@@ -61,7 +60,7 @@ public class RoleSelectorTest extends AbstractProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
-                response, sp);
+                response, injector);
 
         RoleSelectorResponse roleSelectorResponse =
                 new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST),
@@ -78,7 +77,7 @@ public class RoleSelectorTest extends AbstractProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("select",
-                ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, sp);
+                ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, injector);
 
         RoleSelectorResponse roleSelectorResponse =
                 new RoleSelectorResponse(

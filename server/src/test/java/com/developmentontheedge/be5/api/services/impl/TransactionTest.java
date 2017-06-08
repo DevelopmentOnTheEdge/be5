@@ -21,8 +21,8 @@ public class TransactionTest extends AbstractProjectTest
     @BeforeClass
     public static void setUp()
     {
-        databaseService = sp.getDatabaseService();
-        db = sp.getSqlService();
+        databaseService = injector.getDatabaseService();
+        db = injector.getSqlService();
         db.update("DROP TABLE IF EXISTS persons;" );
         db.update("CREATE TABLE persons (\n" +
                 "    ID  BIGSERIAL PRIMARY KEY,\n" +

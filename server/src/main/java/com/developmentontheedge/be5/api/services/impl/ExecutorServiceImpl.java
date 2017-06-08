@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.services.impl;
 import java.util.HashMap;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.ExecutorService;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
@@ -11,11 +11,11 @@ import com.developmentontheedge.be5.metadata.model.Query;
 
 public class ExecutorServiceImpl implements ExecutorService
 {
-    private final ServiceProvider serviceProvider;
+    private final Injector injector;
 
-    public ExecutorServiceImpl(ServiceProvider serviceProvider)
+    public ExecutorServiceImpl(Injector injector)
     {
-        this.serviceProvider = serviceProvider;
+        this.injector = injector;
     }
 
     /**
@@ -24,7 +24,7 @@ public class ExecutorServiceImpl implements ExecutorService
     @Override
     public QueryExecutor createExecutor(Query query, Request req)
     {
-        return new Be5QueryExecutor(query, new HashMap<>(), req, serviceProvider);
+        return new Be5QueryExecutor(query, new HashMap<>(), req, injector);
     }
 
 }

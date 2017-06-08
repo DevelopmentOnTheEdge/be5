@@ -15,7 +15,7 @@ public class ProjectTest extends AbstractProjectTest
     @Test
     public void testGetQuery()
     {
-        Project project = sp.getProject();
+        Project project = injector.getProject();
         assertEquals("    SELECT\n" +
                 "      t.name AS \"Name\",\n" +
                 "      t.value AS \"Value\"\n" +
@@ -27,7 +27,7 @@ public class ProjectTest extends AbstractProjectTest
     @Test
     public void testQueryCompiledValidate() throws ProjectElementException
     {
-        Query testQuery = sp.getProject().getEntity("testtable").getQueries().get("All records");
+        Query testQuery = injector.getProject().getEntity("testtable").getQueries().get("All records");
 
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertNotNull(validatedQuery);

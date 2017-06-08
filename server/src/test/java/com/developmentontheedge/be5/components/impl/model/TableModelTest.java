@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 
 public class TableModelTest extends AbstractProjectIntegrationH2Test
 {
-    private static SqlService db = sp.getSqlService();
+    private static SqlService db = injector.getSqlService();
 
     @Test
     public void testExecuteSubQuery() {
@@ -24,9 +24,9 @@ public class TableModelTest extends AbstractProjectIntegrationH2Test
             db.insert("insert into testtUser (name, value) VALUES (?, ?)","tableModelTest", "user2");
         }
 
-        Query query = sp.getProject().getEntity("testtable").getQueries().get("Sub Query");
+        Query query = injector.getProject().getEntity("testtable").getQueries().get("Sub Query");
         TableModel table = TableModel
-                .from(sp, query, new HashMap<>(), mock(Request.class), false)
+                .from(injector, query, new HashMap<>(), mock(Request.class), false)
                 .limit(20)
                 .build();
 

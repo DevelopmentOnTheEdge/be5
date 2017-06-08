@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.google.common.collect.ComparisonChain;
 
@@ -21,7 +21,7 @@ public class ScriptList implements Component
     private static final String actionsCategory = "actions";
 
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
         List<ActionPaths> result = new ArrayList<>();
 

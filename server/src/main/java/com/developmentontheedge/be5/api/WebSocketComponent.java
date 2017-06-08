@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.api;
 
 
+import com.developmentontheedge.be5.env.Injector;
+
 /**
  * <p>A component representing the websocket service endpoint.</p>
  * 
@@ -21,7 +23,7 @@ package com.developmentontheedge.be5.api;
  * will use the <code>vncproxy</code> component.</p>
  * 
  * @see WebSocketContext
- * @see ServiceProvider
+ * @see Injector
  * @author lan
  */
 public interface WebSocketComponent
@@ -29,15 +31,15 @@ public interface WebSocketComponent
     /**
      * Called when the web socket component has been created and the service has been opened.
      */
-    public void onOpen(WebSocketContext parameters, ServiceProvider serviceProvider);
+    public void onOpen(WebSocketContext parameters, Injector injector);
     
     /**
      * Called on each message.
      */
-    public void onMessage(WebSocketContext parameters, ServiceProvider serviceProvider, byte[] message);
+    public void onMessage(WebSocketContext parameters, Injector injector, byte[] message);
     
     /**
      * Called when the remote socket is closed.
      */
-    public void onClose(WebSocketContext parameters, ServiceProvider serviceProvider);
+    public void onClose(WebSocketContext parameters, Injector injector);
 }

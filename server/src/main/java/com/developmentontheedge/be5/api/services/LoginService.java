@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.services;
 
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
 import com.developmentontheedge.be5.model.UserInfo;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -141,7 +141,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final UserAwareMeta userAwareMeta;
     private final Context context;
     private final ParserContext parserContext;
-    private final ServiceProvider serviceProvider;
+    private final Injector injector;
     private final DpsExecutor dpsExecutor;
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
@@ -149,20 +149,20 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     /**
      * Note that the request is not used to get parameters, so parameters can be formed manually in any way.
      */
-    public Be5QueryExecutor(Query query, Map<String, String> parameters, Request req, ServiceProvider serviceProvider)
+    public Be5QueryExecutor(Query query, Map<String, String> parameters, Request req, Injector injector)
     {
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
-        this.databaseService = serviceProvider.getDatabaseService();
-        this.db = serviceProvider.getSqlService();
-        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
+        this.databaseService = injector.getDatabaseService();
+        this.db = injector.getSqlService();
+        this.userAwareMeta = UserAwareMeta.get(injector);
         this.session = req.getRawSession();
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
-        this.serviceProvider = serviceProvider;
-        this.dpsExecutor = serviceProvider.get(DpsExecutor.class);
+        this.injector = injector;
+        this.dpsExecutor = injector.get(DpsExecutor.class);
         this.extraQuery = ExtraQuery.DEFAULT;
     }
 
@@ -424,7 +424,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //
 //            if (iterator instanceof Be5Query)
 //            {
-//                ((Be5Query) iterator).initialize(serviceProvider);
+//                ((Be5Query) iterator).initialize(injector);
 //            }
 //
 //            @SuppressWarnings("unchecked")

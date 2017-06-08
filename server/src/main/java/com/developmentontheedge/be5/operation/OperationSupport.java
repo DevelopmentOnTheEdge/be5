@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public abstract class OperationSupport implements Operation
 {
-    public ServiceProvider sp;
+    public Injector sp;
 
     public DatabaseService databaseService;
     public SqlService db;
@@ -20,10 +20,10 @@ public abstract class OperationSupport implements Operation
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
     @Override
-    public final void initialize(ServiceProvider serviceProvider, OperationInfo meta,
+    public final void initialize(Injector injector, OperationInfo meta,
                                  OperationResult operationResult)
     {
-        this.sp = serviceProvider;
+        this.sp = injector;
         this.meta = meta;
         this.operationResult = operationResult;
 

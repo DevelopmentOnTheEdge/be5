@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.api;
 
+import com.developmentontheedge.be5.env.Configurable;
+import com.developmentontheedge.be5.env.Injector;
+
 /**
  * <p>This is the general interface for components.</p>
  * 
@@ -22,7 +25,7 @@ package com.developmentontheedge.be5.api;
  * 
  * @see Request
  * @see Response
- * @see ServiceProvider
+ * @see Injector
  * @see Configurable
  * @author asko
  */
@@ -36,10 +39,10 @@ public interface Component {
      * 
      * @param req a request
      * @param res a response
-     * @param serviceProvider a service provider
+     * @param injector a service provider
      * @see Request
      * @see Response
-     * @see ServiceProvider
+     * @see Injector
      */
-    void generate(Request req, Response res, ServiceProvider serviceProvider);
+    void generate(Request req, Response res, Injector injector);
 }

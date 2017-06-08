@@ -22,7 +22,7 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
 
     private static void createTablesInH2()
     {
-        Project project = sp.getProject().getProject();
+        Project project = injector.getProject().getProject();
 
         String profileForIntegrationTests = "profileForIntegrationTests";
 
@@ -39,10 +39,10 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
             log.info("Set connection profile for integration tests: " + profileForIntegrationTests);
         }
 
-        if("profileForIntegrationTests".equals(sp.getDatabaseService().getConnectionProfileName()))
+        if("profileForIntegrationTests".equals(injector.getDatabaseService().getConnectionProfileName()))
         {
-            Module application = sp.getProject().getApplication();
-            SqlService db = sp.getSqlService();
+            Module application = injector.getProject().getApplication();
+            SqlService db = injector.getSqlService();
 
             //todo duplicate code from: be5:create-db, fix it
             log.info("Drop and create application tables.");

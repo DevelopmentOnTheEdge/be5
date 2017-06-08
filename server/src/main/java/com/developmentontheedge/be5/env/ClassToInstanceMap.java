@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.util;
+package com.developmentontheedge.be5.env;
 
 import java.util.HashMap;
 import java.util.Map;

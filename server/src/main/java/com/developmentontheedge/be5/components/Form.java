@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.impl.DocumentResponse;
@@ -16,9 +16,9 @@ public class Form implements Component
     private static final Logger log = Logger.getLogger(Document.class.getName());
 
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
-        OperationService operationService = serviceProvider.get(OperationService.class);
+        OperationService operationService = injector.get(OperationService.class);
         
         DocumentResponse response = DocumentResponse.of(res);
         

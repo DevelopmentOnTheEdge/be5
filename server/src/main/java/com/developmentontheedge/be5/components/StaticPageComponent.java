@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.impl.DocumentResponse;
@@ -11,11 +11,11 @@ import com.developmentontheedge.be5.components.impl.DocumentResponse;
 public class StaticPageComponent implements Component {
 
     @Override
-    public void generate(Request req, Response res, ServiceProvider serviceProvider)
+    public void generate(Request req, Response res, Injector injector)
     {
         String language = UserInfoHolder.getLanguage();
         String page = req.getRequestUri();
-        String staticPageContent = serviceProvider.getProject().getStaticPageContent(language, page);
+        String staticPageContent = injector.getProject().getStaticPageContent(language, page);
 
         if (staticPageContent == null)
         {

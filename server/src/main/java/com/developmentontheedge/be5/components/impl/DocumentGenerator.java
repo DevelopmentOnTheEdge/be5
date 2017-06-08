@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.impl.QueryRouter.Runner;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class DocumentGenerator implements Runner {
@@ -34,20 +33,20 @@ public class DocumentGenerator implements Runner {
      *   <li>values?</li>
      * </ul>
      */
-    public static void generateAndSend(Request req, Response res, ServiceProvider serviceProvider) {
-        QueryRouter.on(req, serviceProvider).run(new DocumentGenerator(req, res, serviceProvider));
+    public static void generateAndSend(Request req, Response res, Injector injector) {
+        QueryRouter.on(req, injector).run(new DocumentGenerator(req, res, injector));
     }
     
     private final Request req;
     private final Response res;
-    private final ServiceProvider serviceProvider;
+    private final Injector injector;
     private final UserAwareMeta userAwareMeta;
     
-    private DocumentGenerator(Request req, Response res, ServiceProvider serviceProvider) {
+    private DocumentGenerator(Request req, Response res, Injector injector) {
         this.req = req;
         this.res = res;
-        this.serviceProvider = serviceProvider;
-        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
+        this.injector = injector;
+        this.userAwareMeta = UserAwareMeta.get(injector);
     }
     
     @Override
@@ -65,7 +64,7 @@ public class DocumentGenerator implements Runner {
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
 //            Operation operation, Map<String, String> presetValues)
 //    {
-//        return new FormGenerator(serviceProvider).generate(entityName, queryName, operationName, operation, presetValues, req);
+//        return new FormGenerator(injector).generate(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
     @Override
@@ -87,7 +86,7 @@ public class DocumentGenerator implements Runner {
         }
         
         TableModel table = TableModel
-                .from(serviceProvider, query, parametersMap, req, selectable)
+                .from(injector, query, parametersMap, req, selectable)
                 .limit(limit)
                 .build();
         List<Object> columns = table.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
@@ -101,7 +100,7 @@ public class DocumentGenerator implements Runner {
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
         if( totalNumberOfRows == null )
-            totalNumberOfRows = TableModel.from(serviceProvider, query, parametersMap, req).count();
+            totalNumberOfRows = TableModel.from(injector, query, parametersMap, req).count();
 
         return new TablePresentation(title, category, page, operations, selectable, columns, rows, limit,
                 parametersMap, totalNumberOfRows, table.isHasAggregate());

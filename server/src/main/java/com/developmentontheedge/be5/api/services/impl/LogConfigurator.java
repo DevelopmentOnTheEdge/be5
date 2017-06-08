@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import com.developmentontheedge.be5.api.Configurable;
+import com.developmentontheedge.be5.env.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 
 /**

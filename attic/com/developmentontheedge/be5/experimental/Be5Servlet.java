@@ -11,5 +11,5 @@ import com.developmentontheedge.be5.components.LegacyServlet;
  */
 public interface Be5Servlet
 {
-    void initialize(ServiceProvider serviceProvider);
+    void initialize(ServiceProvider injector);
 }

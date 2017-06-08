@@ -21,6 +21,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
+import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -44,7 +45,7 @@ public class MainServlet extends HttpServlet
     public void init(ServletConfig config) throws ServletException 
     {
         super.init(config);
-        injector = Injector.createInjector();
+        injector = Be5.createInjector();
     }
 
     public Injector getInjector() {
@@ -98,7 +99,7 @@ public class MainServlet extends HttpServlet
         Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
 
         if(UserInfoHolder.getUserInfo() == null){
-            injector.getServiceProvider().getLoginService().initGuest(req);
+            injector.getLoginService().initGuest(req);
         }
 
         runComponent(uriParts[ind+1], req, res);
@@ -109,8 +110,7 @@ public class MainServlet extends HttpServlet
         try
         {
             Component component = getInjector().getComponent(componentId);
-            getInjector().configureComponentIfConfigurable(component, componentId);
-            component.generate( req, res, getInjector().getServiceProvider() );
+            component.generate( req, res, getInjector() );
         }
         catch ( Be5Exception e )
         {

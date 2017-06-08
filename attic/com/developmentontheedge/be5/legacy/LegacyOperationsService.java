@@ -3,16 +3,16 @@ package com.developmentontheedge.be5.legacy;
 public class LegacyOperationsService
 {
 
-//    private final ServiceProvider serviceProvider;
+//    private final ServiceProvider injector;
 //
-//    public LegacyOperationsService(ServiceProvider serviceProvider)
+//    public LegacyOperationsService(ServiceProvider injector)
 //    {
-//        this.serviceProvider = serviceProvider;
+//        this.injector = injector;
 //    }
 //
 //    public LegacyOperationFactory createFactory(UserInfo user, HttpServletRequest request)
 //    {
-//        return new LegacyOperationFactory(serviceProvider, user, request);
+//        return new LegacyOperationFactory(injector, user, request);
 //    }
     
 }

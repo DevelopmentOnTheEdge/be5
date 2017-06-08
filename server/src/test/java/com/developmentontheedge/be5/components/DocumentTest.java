@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.google.common.collect.ImmutableMap;
@@ -29,7 +28,7 @@ public class DocumentTest extends AbstractProjectTest
 
         component.generate(getSpyMockRequest("", ImmutableMap.of(
                 RestApiConstants.ENTITY,"testtable",
-                RestApiConstants.QUERY,"All records")), response, sp);
+                RestApiConstants.QUERY,"All records")), response, injector);
 
         verify(response).sendAsJson(eq("table"), any(TablePresentation.class));
     }

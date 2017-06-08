@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.ServiceProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.RestApiConstants;
@@ -30,21 +30,21 @@ public class QueryRouter
         void onError(String message);
     }
     
-    public static QueryRouter on(Request req, ServiceProvider serviceProvider)
+    public static QueryRouter on(Request req, Injector injector)
     {
         checkNotNull(req);
-        return new QueryRouter(req, serviceProvider);
+        return new QueryRouter(req, injector);
     }
     
     private final Request req;
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     
-    private QueryRouter(Request req, ServiceProvider serviceProvider)
+    private QueryRouter(Request req, Injector injector)
     {
         this.req = req;
-        this.userAwareMeta = UserAwareMeta.get(serviceProvider);
-        this.meta = serviceProvider.get(Meta.class);
+        this.userAwareMeta = UserAwareMeta.get(injector);
+        this.meta = injector.get(Meta.class);
     }
     
     public void run(Runner runner)

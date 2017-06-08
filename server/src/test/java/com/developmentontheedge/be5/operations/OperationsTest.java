@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class OperationsTest extends AbstractProjectTest{
 
-    private OperationService operationService = sp.get(OperationService.class);
+    private OperationService operationService = injector.get(OperationService.class);
 
     @BeforeClass
     public static void beforeClass(){

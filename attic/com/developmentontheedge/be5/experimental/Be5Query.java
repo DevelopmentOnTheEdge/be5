@@ -9,5 +9,5 @@ import com.developmentontheedge.be5.api.ServiceProvider;
  */
 public interface Be5Query
 {
-    void initialize(ServiceProvider serviceProvider);
+    void initialize(ServiceProvider injector);
 }
