@@ -1,5 +1,9 @@
 language: java
 before_install:
+  - git clone https://github.com/DevelopmentOnTheEdge/xmltest.git
+    && cd xmltest
+    && mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+    && cd ../
   - git clone https://github.com/DevelopmentOnTheEdge/beanexplorer.git
     && cd beanexplorer
     && mvn install -DskipTests=true -Dmaven.javadoc.skip=true
