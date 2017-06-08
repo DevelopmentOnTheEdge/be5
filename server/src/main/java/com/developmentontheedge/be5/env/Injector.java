@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ExecutorService;
@@ -10,8 +11,6 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Project;
-
-import java.util.function.Consumer;
 
 /**
  * <p>The service provider is the general source of the business-logic objects, services.</p>

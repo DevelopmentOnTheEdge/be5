@@ -16,7 +16,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
-import com.developmentontheedge.be5.env.Configurable;
+import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.env.Injector;
 import com.google.gson.Gson;
 
@@ -132,7 +132,7 @@ public class Be5Injector implements Injector
         {
             Class<?> klass = getComponentClass(componentId);
             Component component = (Component) klass.newInstance();
-            configureComponentIfConfigurable(component, componentId);
+            Configurator.configureComponentIfConfigurable(component, componentId, configurations);
             return component;
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
@@ -160,62 +160,6 @@ public class Be5Injector implements Injector
             throw Be5Exception.invalidState("Component redefine forbidden.");
         }
         loadedClasses.put(componentId, value);
-    }
-
-    public void configureComponentIfConfigurable(Component component, String componentId)
-    {
-        configureIfConfigurable(component, "components", componentId);
-    }
-
-    private void configureServiceIfConfigurable(Object service, String serviceId)
-    {
-        configureIfConfigurable(service, "services", serviceId);
-    }
-
-    private <T> void configureIfConfigurable(T object, String collection, String id)
-    {
-        if (object instanceof Configurable)
-        {
-            @SuppressWarnings("unchecked")
-            Configurable<Object> configurable = (Configurable<Object>) object;
-            Object config = getConfiguration(configurable.getConfigurationClass(), collection, id);
-
-            configurable.configure(config);
-        }
-    }
-
-    public <T> T getConfiguration(Class<T> configClass, String collection, String id)
-    {
-        if (configurations == null)
-        {
-            throw Be5ErrorCode.INTERNAL_ERROR.exception("Call loadConfiguration first.");
-        }
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> config = (Map<String, Object>) configurations.get(collection);
-
-        if(config == null){
-            log.warning("Module in " + collection + " '" + id + "' not configured.");
-            return null;
-        }
-
-        Object configObject = config.get(id);
-
-        if (configObject == null)
-        {
-            try
-            {
-                return configClass.newInstance();
-            }
-            catch (InstantiationException | IllegalAccessException e)
-            {
-                throw new RuntimeException();
-            }
-        }
-
-        String componentConfigJson = new Gson().toJson(configObject);
-
-        return new Gson().fromJson(componentConfigJson, configClass);
     }
 
 }

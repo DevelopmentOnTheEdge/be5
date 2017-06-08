@@ -1,10 +1,6 @@
-package com.developmentontheedge.be5.env;
+package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.Initializer;
-import com.developmentontheedge.be5.api.InitializerContext;
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.env.Injector;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

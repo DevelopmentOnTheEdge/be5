@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.env.Configurable;
 import com.developmentontheedge.be5.env.Injector;
 
 /**
