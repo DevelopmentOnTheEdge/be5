@@ -22,7 +22,7 @@ public class YamlBinder implements Binder
     private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
 
     private static final String CONTEXT_FILE = "context.yaml";
-    private static final Map<String, Class<?>> serviceKeys = new HashMap<>();
+    private final Map<String, Class<?>> serviceKeys = new HashMap<>();
 
     @Override
     public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
@@ -30,6 +30,7 @@ public class YamlBinder implements Binder
     {
         try{
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
+
             for (URL url: urls)
             {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
@@ -101,18 +102,6 @@ public class YamlBinder implements Binder
         }
     }
 
-    private Class<?> loadClass(String path){
-        try
-        {
-            return Class.forName(path);
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e,
-                    "ClassNotFoundException by path='"+path+"' in " + CONTEXT_FILE);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private void loadModuleConfiguration(BufferedReader reader, Map<Class<?>, Object> configurations)
     {
@@ -125,6 +114,18 @@ public class YamlBinder implements Binder
                 configurations.put(loadClass(entry.getKey()), entry.getValue());
             }
 
+        }
+    }
+
+    private Class<?> loadClass(String path){
+        try
+        {
+            return Class.forName(path);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e,
+                    "ClassNotFoundException by path='"+path+"' in " + CONTEXT_FILE);
         }
     }
 

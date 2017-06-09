@@ -8,7 +8,7 @@ class ClassToInstanceMap
 
     private final Map<Class<?>, Object> map;
 
-    public ClassToInstanceMap()
+    ClassToInstanceMap()
     {
         this.map = new HashMap<>();
     }

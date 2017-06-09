@@ -151,7 +151,7 @@ public class Be5Injector implements Injector
         return loadedClasses.get(componentId);
     }
 
-    public static <T> void configureIfConfigurable(T object, Map<Class<?>, Object> configurations)
+    private <T> void configureIfConfigurable(T object, Map<Class<?>, Object> configurations)
     {
         if (object instanceof Configurable)
         {
@@ -168,7 +168,7 @@ public class Be5Injector implements Injector
         }
     }
 
-    private static Object getConfiguration(Class<?> klass, Class<Object> configClass, Map<Class<?>, Object> configurations)
+    private Object getConfiguration(Class<?> klass, Class<Object> configClass, Map<Class<?>, Object> configurations)
     {
         Object config = configurations.get(klass);
 
