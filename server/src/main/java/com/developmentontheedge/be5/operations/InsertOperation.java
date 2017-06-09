@@ -35,7 +35,8 @@ public class InsertOperation extends OperationSupport implements Operation
                 .map(DynamicProperty::getName)
                 .collect(Collectors.joining(", "));
 
-        String values = StreamSupport.stream(parameters.spliterator(), false).map(x -> escapeQuotes(x.getType()) ? "'?'" : "?")
+        String values = StreamSupport.stream(parameters.spliterator(), false)
+                .map(x -> "?")
                 .collect(Collectors.joining(", "));
 
         sql.append("INSERT INTO ")
@@ -129,10 +130,6 @@ public class InsertOperation extends OperationSupport implements Operation
 
 
     }
-
-//    public String safeValue( Object value, Class<?> type ){
-//
-//    }
 
     public boolean escapeQuotes(Class<?> type){
         if(type.isAssignableFrom(Integer.class) || type.isAssignableFrom(Long.class)

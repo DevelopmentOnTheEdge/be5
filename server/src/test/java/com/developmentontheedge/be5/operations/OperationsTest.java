@@ -75,7 +75,7 @@ public class OperationsTest extends AbstractProjectTest{
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=test/value=1"),
                 operationService.execute(req));
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES ('?', ?)", "test", 1);
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "test", 1);
     }
 
 }
