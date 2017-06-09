@@ -9,11 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.api.Configurable;
@@ -25,17 +23,16 @@ public class Be5Injector implements Injector
     private static final Logger log = Logger.getLogger(Be5Injector.class.getName());
 
     private final Map<Class<?>, Class<?>> bindings = new HashMap<>();
-    private final Map<Class<?>, Consumer<Object>> initializers = new HashMap<>();
-    Map<String, Object> configurations = new HashMap<>();
+    private final Map<Class<?>, Object> configurations = new HashMap<>();
 
     private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
 
     private final ClassToInstanceMap instantiatedServices = new ClassToInstanceMap();
     //private boolean frozen = false;
-    
+
     public Be5Injector(Binder binder)
     {
-        binder.configure(loadedClasses, bindings, initializers, configurations);
+        binder.configure(loadedClasses, bindings, configurations);
         //frozen = true;
         log.info("Services initialized");
 
@@ -83,7 +80,7 @@ public class Be5Injector implements Injector
         try
         {
             service = instantiate(bindings.get(serviceClass), stack);
-            //initializers.get(serviceClass).accept(service);
+            configureIfConfigurable(service, configurations);
         }
         catch (IllegalStateException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
@@ -132,7 +129,7 @@ public class Be5Injector implements Injector
         {
             Class<?> klass = getComponentClass(componentId);
             Component component = (Component) klass.newInstance();
-            Configurator.configureComponentIfConfigurable(component, componentId, configurations);
+            configureIfConfigurable(component, configurations);
             return component;
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
@@ -154,12 +151,35 @@ public class Be5Injector implements Injector
         return loadedClasses.get(componentId);
     }
 
-    public void putComponent(String componentId, Class<?> value)
+    public static <T> void configureIfConfigurable(T object, Map<Class<?>, Object> configurations)
     {
-        if(loadedClasses.containsKey(componentId)){
-            throw Be5Exception.invalidState("Component redefine forbidden.");
+        if (object instanceof Configurable)
+        {
+            @SuppressWarnings("unchecked")
+            Configurable<Object> configurable = (Configurable<Object>) object;
+            Object config = getConfiguration(object.getClass(), configurable.getConfigurationClass(), configurations);
+
+            if(config != null)
+            {
+                configurable.configure(config);
+            }else{
+                log.warning("Module '" + object.getClass().getName() + "' not configured.");
+            }
         }
-        loadedClasses.put(componentId, value);
+    }
+
+    private static Object getConfiguration(Class<?> klass, Class<Object> configClass, Map<Class<?>, Object> configurations)
+    {
+        Object config = configurations.get(klass);
+
+        if(config == null)
+        {
+            return null;
+        }
+
+        String componentConfigJson = new Gson().toJson(config);
+
+        return new Gson().fromJson(componentConfigJson, configClass);
     }
 
 }

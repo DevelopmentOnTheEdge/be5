@@ -32,10 +32,10 @@ context:
   - executorService:
       interface:      com.developmentontheedge.be5.api.services.ExecutorService
       implementation: com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl
-  - logger:
+  - logConfigurator:
       interface:      com.developmentontheedge.be5.api.services.impl.LogConfigurator
       implementation: com.developmentontheedge.be5.api.services.impl.LogConfigurator
-  - logger:
+  - categoriesService:
       interface:      com.developmentontheedge.be5.api.services.CategoriesService
       implementation: com.developmentontheedge.be5.api.services.impl.CategoriesServiceImpl
   - operationService:

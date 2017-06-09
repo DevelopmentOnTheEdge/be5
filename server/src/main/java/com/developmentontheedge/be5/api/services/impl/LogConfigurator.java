@@ -9,9 +9,6 @@ import java.util.logging.Logger;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 
-/**
- * create initializator module for init on startup? Now it just calls in ServerModuleLoader
- */
 public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPath>
 {
     private Logger log = Logger.getLogger(LogConfigurator.class.getName());

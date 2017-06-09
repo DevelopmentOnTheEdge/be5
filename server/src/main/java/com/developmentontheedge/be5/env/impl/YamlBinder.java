@@ -15,24 +15,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class YamlBinder implements Binder
 {
     private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
+
+    private static final String CONTEXT_FILE = "context.yaml";
     private static final Map<String, Class<?>> serviceKeys = new HashMap<>();
 
     @Override
-    public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings, Map<Class<?>,
-            Consumer<Object>> initializers, Map<String, Object> configurations)
+    public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
+                          Map<Class<?>, Object> configurations)
     {
         try{
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
             for (URL url: urls)
             {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
-                    loadModules(reader, bindings, loadedClasses, initializers);
+                    loadModules(reader, bindings, loadedClasses);
                 }
             }
 
@@ -40,7 +41,7 @@ public class YamlBinder implements Binder
             {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
                 {
-                    loadModuleConfiguration(reader, bindings, initializers, configurations);
+                    loadModuleConfiguration(reader, configurations);
                 }
             }
         }
@@ -51,22 +52,18 @@ public class YamlBinder implements Binder
 
     }
 
-
-    private static final String CONTEXT_FILE = "context.yaml";
-
     @SuppressWarnings("unchecked")
-    void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses, Map<Class<?>,
-            Consumer<Object>> initializers)
+    private void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses)
     {
-        Map<String, Object> module = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
+        Map<String, Object> moduleContext = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
+        if(moduleContext != null)
+        {
+            List<Map<String, String>> components = (List<Map<String, String>>) moduleContext.get("components");
+            List<Map<String, Map<String, String>>> services = (List<Map<String, Map<String, String>>>) moduleContext.get("services");
 
-        List<Map<String, String>> components = ( List<Map<String, String>> ) module.get("components");
-        List<Map<String, Map<String, String>>> services = ( List<Map<String, Map<String, String>>> ) module.get("services");
-
-        if(components != null)loadComponents(loadedClasses, components);
-        if(services != null)bindServices(bindings, services, initializers);
-        //runInitializers( )?;
-
+            if (components != null) loadComponents(loadedClasses, components);
+            if (services != null) bindServices(bindings, services);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -82,8 +79,7 @@ public class YamlBinder implements Binder
     }
 
     @SuppressWarnings("unchecked")
-    private void bindServices(Map<Class<?>, Class<?>> bindings, List<Map<String, Map<String, String>>> services,
-                              Map<Class<?>, Consumer<Object>> initializers)
+    private void bindServices(Map<Class<?>, Class<?>> bindings, List<Map<String, Map<String, String>>> services)
     {
         for (Map<String, Map<String, String>> element: services)
         {
@@ -94,11 +90,12 @@ public class YamlBinder implements Binder
             Class<Object> serviceInterface = (Class<Object>) loadClass(elementOptions.get("interface"));
             Class<Object> serviceImplementation = (Class<Object>) loadClass(elementOptions.get("implementation"));
 
-            serviceKeys.put(key, serviceInterface);
+            if(serviceKeys.containsKey(key))
+            {
+                throw Be5Exception.internal("This name is already in use. Can damage the configurations.");
+            }
 
-//            bindings.bind( serviceInterface, serviceImplementation, service ->
-//                    configureServiceIfConfigurable(service, key)
-//            );
+            serviceKeys.put(key, serviceInterface);
 
             bindings.put(serviceInterface, serviceImplementation);
         }
@@ -117,21 +114,17 @@ public class YamlBinder implements Binder
     }
 
     @SuppressWarnings("unchecked")
-    void loadModuleConfiguration(BufferedReader reader, Map<Class<?>, Class<?>> bindings, Map<Class<?>,
-            Consumer<Object>> initializers, Map<String, Object> configurations)
+    private void loadModuleConfiguration(BufferedReader reader, Map<Class<?>, Object> configurations)
     {
         Object configObject = ((Map<String, Object>) new Yaml().load(reader)).get("config");
         if(configObject != null)
         {
             Map<String, Object> config = (Map<String, Object>) configObject;
+
             for (Map.Entry<String, Object> entry : config.entrySet()){
-                Class<?> serviceInterface = serviceKeys.get(entry.getKey());
-                if(serviceInterface != null){
-                    initializers.put(serviceInterface, service -> Configurator.configureServiceIfConfigurable(service, entry.getKey(), configurations));
-                }else{
-                    configurations.put(entry.getKey(), entry.getValue());
-                }
+                configurations.put(loadClass(entry.getKey()), entry.getValue());
             }
+
         }
     }
 

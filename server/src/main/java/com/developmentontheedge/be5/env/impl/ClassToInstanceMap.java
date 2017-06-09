@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.env.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClassToInstanceMap
+class ClassToInstanceMap
 {
 
     private final Map<Class<?>, Object> map;
