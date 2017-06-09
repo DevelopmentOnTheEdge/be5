@@ -164,8 +164,9 @@ public class OperationServiceImpl implements OperationService
         return operation;
     }
 
-    private long[] selectedRows(String selectedRowsString){
+    long[] selectedRows(String selectedRowsString){
         return Arrays.stream(selectedRowsString.split(","))
+                .filter(x -> !x.trim().isEmpty())
                 .mapToLong(Long::parseLong).toArray();
     }
 }
