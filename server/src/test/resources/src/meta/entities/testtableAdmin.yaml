@@ -12,7 +12,7 @@ testtableAdmin:
     - name:
         type: VARCHAR(20)
     - value:
-        type: VARCHAR(30)
+        type: INT
   queries:
   - All records:
       defaultView: true
