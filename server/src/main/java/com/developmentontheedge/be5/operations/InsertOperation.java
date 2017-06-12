@@ -27,25 +27,20 @@ public class InsertOperation extends OperationSupport implements Operation
         db.insert(getSQL(dps), getValues(dps));
     }
 
-    private String getSQL(DynamicPropertySet parameters) throws Exception
+    private String getSQL(DynamicPropertySet dps) throws Exception
     {
-        StringBuilder sql = new StringBuilder();
-
-        String columns = StreamSupport.stream(parameters.spliterator(), false)
+        String columns = StreamSupport.stream(dps.spliterator(), false)
                 .map(DynamicProperty::getName)
                 .collect(Collectors.joining(", "));
 
-        String values = StreamSupport.stream(parameters.spliterator(), false)
+        String valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .map(x -> "?")
                 .collect(Collectors.joining(", "));
 
-        sql.append("INSERT INTO ")
-                .append(getInfo().getEntity().getName())
-                .append(" (").append(columns).append(")")
-                .append(" VALUES")
-                .append(" (").append(values).append(")");
-
-        return sql.toString();
+        return "INSERT INTO " + getInfo().getEntity().getName() +
+                " (" + columns + ")" +
+                " VALUES" +
+                " (" + valuePlaceholders + ")";
 
             // Oracle trick for auto-generated IDs
 //            if( connector.isOracle() && colName.equalsIgnoreCase( pk ) )
@@ -130,17 +125,6 @@ public class InsertOperation extends OperationSupport implements Operation
 
 
     }
-
-    public boolean escapeQuotes(Class<?> type){
-        if(type.isAssignableFrom(Integer.class) || type.isAssignableFrom(Long.class)
-            || type.isAssignableFrom(Double.class) || type.isAssignableFrom(Float.class)
-            || type.isAssignableFrom(Boolean.class)){
-            return false;
-        }
-
-        return true;
-    }
-
 
 //    public static String safeValue( DatabaseService connector, DynamicProperty prop )
 //    {

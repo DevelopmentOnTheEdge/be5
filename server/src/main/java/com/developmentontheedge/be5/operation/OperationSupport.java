@@ -85,7 +85,7 @@ public abstract class OperationSupport implements Operation
         return operationContext;
     }
 
-    public DynamicPropertySet getTableBean(String entityName) throws Exception
+    protected DynamicPropertySet getTableBean(String entityName) throws Exception
     {
         Project project = injector.getProject();
         Entity entity = project.getEntity(entityName);
@@ -136,7 +136,7 @@ public abstract class OperationSupport implements Operation
         }
     }
 
-    public void setValues(DynamicPropertySet dps, Map<String, String> presetValues)
+    protected void setValues(DynamicPropertySet dps, Map<String, String> presetValues)
     {
         presetValues.forEach((key,value) -> dps.getProperty(key).setValue(getValue(dps.getProperty(key).getType(), value)));
     }
@@ -148,16 +148,16 @@ public abstract class OperationSupport implements Operation
     }
 
     protected Object getValue(Class<?> type, String value){
-        if(type.isAssignableFrom(Integer.class)){
+        if(type == Integer.class){
             return Integer.parseInt(value);
         }
-        if(type.isAssignableFrom(Long.class)){
+        if(type == Long.class){
             return Long.parseLong(value);
         }
-        if(type.isAssignableFrom(Double.class)){
+        if(type == Double.class){
             return Double.parseDouble(value);
         }
-        if(type.isAssignableFrom(Boolean.class)){
+        if(type == Boolean.class){
             return Boolean.parseBoolean(value);
         }
         return value;
