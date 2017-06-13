@@ -9,5 +9,5 @@ public interface OperationService
 {
     Either<FormPresentation, OperationResult> generate(Request req);
 
-    OperationResult execute(Request req);
+    Either<FormPresentation, OperationResult> execute(Request req);
 }

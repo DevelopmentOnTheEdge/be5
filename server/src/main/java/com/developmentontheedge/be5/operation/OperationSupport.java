@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -107,12 +106,9 @@ public abstract class OperationSupport implements Operation
         return bean;
     }
 
-    static DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    private static DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
-        DynamicProperty dynamicProperty = new DynamicProperty(columnDef.getName(), getTypeClass(columnDef.getType()));
-        dynamicProperty.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
-
-        return dynamicProperty;
+        return new DynamicProperty(columnDef.getName(), getTypeClass(columnDef.getType()));
     }
 
     private static Class<?> getTypeClass(SqlColumnType columnType)
@@ -138,7 +134,18 @@ public abstract class OperationSupport implements Operation
 
     protected void setValues(DynamicPropertySet dps, Map<String, String> presetValues)
     {
-        presetValues.forEach((key,value) -> dps.getProperty(key).setValue(getValue(dps.getProperty(key).getType(), value)));
+        StreamSupport.stream(dps.spliterator(), false).forEach(
+                property -> {
+                    property.setValue(presetValues.getOrDefault(property.getName(), getDefault(property.getType())));
+                }
+        );
+    }
+
+    protected String getDefault(Class<?> type){
+        if(type == Long.class ||type == Integer.class ||type == Double.class ||type == Float.class){
+            return "0";
+        }
+        return "";
     }
 
     protected Object[] getValues(DynamicPropertySet dps)
@@ -146,22 +153,5 @@ public abstract class OperationSupport implements Operation
         return StreamSupport.stream(dps.spliterator(), false)
                 .map(DynamicProperty::getValue).toArray();
     }
-
-    protected Object getValue(Class<?> type, String value){
-        if(type == Integer.class){
-            return Integer.parseInt(value);
-        }
-        if(type == Long.class){
-            return Long.parseLong(value);
-        }
-        if(type == Double.class){
-            return Double.parseDouble(value);
-        }
-        if(type == Boolean.class){
-            return Boolean.parseBoolean(value);
-        }
-        return value;
-    }
-
 
 }

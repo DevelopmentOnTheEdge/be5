@@ -57,6 +57,16 @@ public class OperationsTest extends AbstractProjectTest{
     }
 
     @Test
+    public void insertOperationInitValues()
+    {
+        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "1","{}");
+
+        FormPresentation first = operationService.generate(req).getFirst();
+        assertEquals("{'name':'','value':0}",
+                oneQuotes(first.getBean().getJsonObject("values").toString()));
+    }
+
+    @Test
     public void insertOperation(){
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "1",
                 "{'name':'test','value':1}");
@@ -65,15 +75,15 @@ public class OperationsTest extends AbstractProjectTest{
         assertEquals("{" +
                         "'values':{'name':'test','value':1}," +
                         "'meta':{" +
-                            "'/name':{'displayName':'name','columnSize':'20'}," +
-                            "'/value':{'displayName':'value','type':'Integer','columnSize':'255'}}," +
+                            "'/name':{'displayName':'name'}," +
+                            "'/value':{'displayName':'value','type':'Integer'}}," +
                         "'order':['/name','/value']}",
                 oneQuotes(first.getBean().toString()));
 
         //OperationResult execute = operationService.execute(req);
 
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=test/value=1"),
-                operationService.execute(req));
+                operationService.execute(req).getSecond());
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "test", 1);

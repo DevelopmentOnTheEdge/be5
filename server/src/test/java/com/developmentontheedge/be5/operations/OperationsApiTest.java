@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -41,9 +42,9 @@ public class OperationsApiTest extends AbstractProjectTest{
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
-
     @Test
-    public void testOperation(){
+    public void testOperation()
+    {
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
                 new Gson().toJson(ImmutableMap.of("name","testName","number", "1")));
 
@@ -65,26 +66,37 @@ public class OperationsApiTest extends AbstractProjectTest{
         assertEquals("['/name','/number']",
                 oneQuotes(form.bean.getJsonArray("order").toString()));
 
-        OperationResult result = operationService.execute(req);
+        OperationResult result = operationService.execute(req).getSecond();
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records/number=1/name=testName"), result);
 
 
     }
 
     @Test
-    public void testOperationParameters(){
+    public void testOperationParameters()
+    {
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0","{}"));
 
         assertEquals("{'name':'','number':0}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+    }
 
-//todo check error and add error msg
-//        Either<FormPresentation, OperationResult> generate1 = operationService.generate(
-//                getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-//                        doubleQuotes("{'name':'testName','number':'a'}")));
-//
-//        assertEquals("{'name':'testName','number':0}", oneQuotes(generate1.getFirst().getBean().getJsonObject("values").toString()));
+    @Test
+    public void testOperationParametersError()
+    {
+        Request spyMockRecForOp = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
+                doubleQuotes("{'name':'testName','number':'ab'}"));
 
+
+        assertNotNull(operationService.generate(spyMockRecForOp).getFirst());
+
+        Either<FormPresentation, OperationResult> result = operationService.execute(spyMockRecForOp);
+
+        assertNotNull(result.getFirst());
+
+        assertEquals("error", result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("status"));
+        assertEquals("Error, value must be a java.lang.Long",
+                result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("message"));
 
     }
 

@@ -53,8 +53,7 @@ public class DocumentResponse
     public void send(OperationResult result)
     {
         checkNotNull(result);
-        //TODO res.sendJson(JsonFactory.bean()) ?
-        res.sendAsJson("formResult", result);
+        res.sendAsJson(FrontendConstants.OPERATION_RESULT, result);
     }
 
     public void send(FormTable formTable)

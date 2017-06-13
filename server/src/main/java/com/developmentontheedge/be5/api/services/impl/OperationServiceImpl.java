@@ -16,10 +16,14 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.beans.BeanInfoConstants;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Strings.nullToEmpty;
 
@@ -28,9 +32,11 @@ public class OperationServiceImpl implements OperationService
     private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(OperationServiceImpl.class.getName());
 
     private final Injector injector;
+    private final UserAwareMeta userAwareMeta;
 
     public OperationServiceImpl(Injector injector) {
         this.injector = injector;
+        userAwareMeta = UserAwareMeta.get(injector);
     }
 
     @Override
@@ -50,7 +56,6 @@ public class OperationServiceImpl implements OperationService
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
                                                               String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
     {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
         Operation operation = create(meta);
 
         Object parameters;
@@ -66,17 +71,16 @@ public class OperationServiceImpl implements OperationService
         if (parameters == null)
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
-            return Either.second(execute(operation, presetValues, operationContext, req));
+            return execute(operation, null, operationContext, req);
         }
 
-        String title = userAwareMeta.getLocalizedOperationTitle(entityName, operationName);
-
         return Either.first(new FormPresentation(entityName, queryName, operationName,
-                title, selectedRowsString, JsonFactory.bean(parameters), presetValues));
+                userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                selectedRowsString, JsonFactory.bean(parameters), presetValues));
     }
 
     @Override
-    public OperationResult execute(Request req)
+    public Either<FormPresentation, OperationResult> execute(Request req)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -84,21 +88,42 @@ public class OperationServiceImpl implements OperationService
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, String> presetValues = req.getValues(RestApiConstants.VALUES);
 
-        OperationInfo meta = UserAwareMeta.get(injector).getOperation(entityName, queryName, operationName);
+        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
         Operation operation = create(meta);
 
-        execute(operation, presetValues, operationContext, req);
+        Object parameters;
+        try
+        {
+            parameters = operation.getParameters(presetValues);
+        }
+        catch (Exception e)
+        {
+            throw Be5Exception.internalInOperation(e, operation.getInfo());
+        }
 
-        return operation.getResult();
+        if(parameters instanceof DynamicPropertySet &&
+            StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false)
+                .anyMatch(p -> p.getAttribute(BeanInfoConstants.STATUS) != null &&
+                    DynamicProperty.Status.valueOf(((String)p.getAttribute(BeanInfoConstants.STATUS)).toUpperCase()) == DynamicProperty.Status.ERROR))
+        {
+            //TODO localize BeanInfoConstants.MESSAGE
+            return Either.first(new FormPresentation(entityName, queryName, operationName,
+                    userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                    selectedRowsString, JsonFactory.bean(parameters), presetValues));
+        }
+
+        execute(operation, parameters, operationContext, req);
+
+        return Either.second(operation.getResult());
     }
 
-    public OperationResult execute(Operation operation, Map<String, String> presetValues, OperationContext operationContext, Request req)
+    public Either<FormPresentation, OperationResult> execute(Operation operation, Object parameters, OperationContext operationContext, Request req)
     {
         try
         {
-            operation.invoke(operation.getParameters(presetValues), operationContext);
+            operation.invoke(parameters, operationContext);
 
             if(operation.getResult().getStatus() == OperationStatus.IN_PROGRESS)
             {
@@ -110,7 +135,7 @@ public class OperationServiceImpl implements OperationService
                 ));
             }
 
-            return operation.getResult();
+            return Either.second(operation.getResult());
         }
         catch (Exception e)
         {

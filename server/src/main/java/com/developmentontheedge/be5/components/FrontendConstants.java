@@ -15,4 +15,6 @@ public class FrontendConstants
      */
     public static final String FORM_ACTION = "form";
 
+    public static final String OPERATION_RESULT = "operationResult";
+
 }
