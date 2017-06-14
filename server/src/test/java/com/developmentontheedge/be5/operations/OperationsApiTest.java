@@ -100,4 +100,13 @@ public class OperationsApiTest extends AbstractProjectTest{
 
     }
 
+    @Test
+    public void testGroovyOperationParameters()
+    {
+        Either<FormPresentation, OperationResult> generate = operationService.generate(
+                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
+
+        assertEquals("{'name':'','number':0}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+    }
+
 }

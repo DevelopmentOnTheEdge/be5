@@ -20,6 +20,7 @@ testtableAdmin:
       roles: Administrator
       operations:
       - TestOperation
+      - TestGroovyOp
       - Delete
       - Edit
       - Insert
@@ -44,6 +45,10 @@ testtableAdmin:
   - TestOperation:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.TestOperation
+  - TestGroovyOp:
+      type: Groovy
+      roles: Administrator
+      file: TestGroovyOp.groovy
   - Delete:
       records: 2
       roles: Administrator

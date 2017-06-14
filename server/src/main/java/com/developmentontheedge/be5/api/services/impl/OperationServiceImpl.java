@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.operation.databasemodel.groovy.GroovyRegister;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.BeanInfoConstants;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
 
 public class OperationServiceImpl implements OperationService
@@ -145,6 +147,7 @@ public class OperationServiceImpl implements OperationService
 
     public Operation create(OperationInfo meta) {
         Operation operation;
+        String code = meta.getCode();
 
         switch (meta.getType())
         {
@@ -174,14 +177,24 @@ public class OperationServiceImpl implements OperationService
 //            legacyOperation = new MethodWrapperOperation();
 //            ((MethodWrapperOperation) legacyOperation).setCode(code);
 //            break;
+            case OPERATION_TYPE_GROOVY:
+                try
+                {
+//                    code = putPlaceholders( connector, code, ui, null );
+//                    code = putDictionaryValues( connector, code, ui );
+                    operation = ( Operation ) GroovyRegister.parseClass( code ).newInstance();
+                }
+                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+                {
+                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                }
+                break;
             default:
                 try {
-                    Class<?> aClass = Class.forName(meta.getCode());
-                    operation = (Operation)aClass.newInstance();
+                    operation = ( Operation ) Class.forName(code).newInstance();
                 } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                     throw Be5Exception.internalInOperation(e, meta);
                 }
-                break;
         }
 
         operation.initialize(injector, meta, OperationResult.progress());

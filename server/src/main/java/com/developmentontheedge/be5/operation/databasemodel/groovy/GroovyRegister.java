@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.operation.databasemodel.groovy;
 
 import com.developmentontheedge.be5.metadata.Utils;
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -25,9 +24,9 @@ public class GroovyRegister
         return classLoader;
     }
 
-    public static Class parseClass( String name, String text )
+    public static Class parseClass( String text )
     {
-        return classLoader.parseClass( new GroovyCodeSource( text, name, "/groovy/script" ) );
+        return classLoader.parseClass( text );
     }
 
 //    public static Class parseClassWithCache( String name, String text )
