@@ -7,7 +7,9 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import groovy.lang.MissingPropertyException;
 
-import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +17,18 @@ import java.util.logging.Logger;
 
 public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends ExtensionMethodsMetaClass
 {
-    //private static LoggingHandle cat = Logger.getHandle( MethodHandles.lookup().lookupClass() );
     private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
+
+    private static final List<String> beanInfoConstants = new ArrayList<>();
+    static {
+        Field[] fields = BeanInfoConstants.class.getDeclaredFields();
+        for (Field f : fields)
+        {
+            if (Modifier.isStatic(f.getModifiers())) {
+                beanInfoConstants.add(f.getName());//f.get(null).toString()
+            }
+        }
+    }
 
 
     public DynamicPropertySetMetaClass( Class<T> theClass )
@@ -117,7 +129,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
 
     private static List<String> getAllPropertyAttributes()
     {
-        return null;//JSUtils.listAllStringConstants( BeanInfoConstants.class );
+        return beanInfoConstants;
     }
 
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, DynamicProperty property )
@@ -128,7 +140,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
 
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, Map<String, Object> properties )
     {
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.putAll( properties );
         String name = asString( removeFromMap( map, "name" ) );
         if( name == null )

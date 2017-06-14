@@ -199,11 +199,6 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 //        return this.analyzer;
 //    }
 
-    @Override
-    public UserInfo getUserInfo()
-    {
-        return this.userInfo;
-    }
 
 //    @Override
 //    public EntityAccess<EntityModel<RecordModel>> getCache()

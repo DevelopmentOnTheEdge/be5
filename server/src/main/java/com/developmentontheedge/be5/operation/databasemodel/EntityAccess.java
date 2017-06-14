@@ -41,8 +41,6 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
 
     DatabaseService getDatabaseService();
 
-    UserInfo getUserInfo();
-
 //    EntityAccess<E> getCache();
 //
 //    String getTcloneId();
