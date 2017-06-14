@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.api.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -69,7 +71,18 @@ public interface Meta
     Optional<Query> findQuery(String entityName, String queryName);
     
     Optional<Query> findQuery(QueryLink link);
-    
+
+    Map<String, ColumnDef> getColumns(String entityName);
+
+    Map<String, ColumnDef> getColumns(Entity entity);
+
+    ColumnDef getColumn(String entityName, String columnName);
+
+    ColumnDef getColumn(Entity entity, String columnName);
+
+    Class<?> getColumnType(ColumnDef columnDef);
+
+    boolean isNumericColumn(String entityName, String columnName);
     /**
      * Returns a localized title. Takes into consideration its display name.
      */
@@ -84,5 +97,5 @@ public interface Meta
      * Checks only the specified query, doesn't respolve redirects.
      */
     boolean isParametrizedTable(Query query);
-    
+
 }

@@ -1,20 +1,26 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryLink;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.EntityLocalizations;
@@ -27,6 +33,10 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
+import com.developmentontheedge.be5.metadata.model.SqlColumnType;
+import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 
 public class MetaImpl implements Meta
 {
@@ -323,8 +333,8 @@ public class MetaImpl implements Meta
     @Override
     public Optional<Query> findQuery(String entityName, String queryName)
     {
-        Objects.requireNonNull(entityName, "entityName must not be null");
-        Objects.requireNonNull(queryName, "queryName must not be null");
+        Objects.requireNonNull(entityName);
+        Objects.requireNonNull(queryName);
 
         return findEntity(entityName).flatMap(entity -> findQuery(entity, queryName));
     }
@@ -339,6 +349,77 @@ public class MetaImpl implements Meta
     {
         Objects.requireNonNull(link);
         return findQuery(link.getEntityName(), link.getQueryName());
+    }
+
+    @Override
+    public Map<String, ColumnDef> getColumns(String entityName)
+    {
+        Objects.requireNonNull(entityName);
+        return findEntity(entityName).map(this::getColumns).orElse(null);
+    }
+
+    @Override
+    public Map<String, ColumnDef> getColumns(Entity entity)
+    {
+        BeModelElement scheme = entity.getAvailableElement("Scheme");
+        BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
+
+        return StreamSupport.stream(columns.spliterator(), false).collect(
+                Collectors.toMap(ColumnDef::getName, Function.identity() )
+        );
+    }
+
+    @Override
+    public ColumnDef getColumn(String entityName, String columnName)
+    {
+        Objects.requireNonNull(entityName);
+        Objects.requireNonNull(columnName);
+
+        return getColumns(entityName).get(columnName);
+    }
+
+    @Override
+    public ColumnDef getColumn(Entity entity, String columnName)
+    {
+        Objects.requireNonNull(entity);
+        Objects.requireNonNull(columnName);
+
+        return getColumns(entity).get(columnName);
+    }
+
+    @Override
+    public Class<?> getColumnType(ColumnDef columnDef)
+    {
+        switch( columnDef.getType().getTypeName() )
+        {
+            case SqlColumnType.TYPE_BIGINT:
+                return Long.class;
+            case SqlColumnType.TYPE_INT:
+                return Integer.class;
+            case SqlColumnType.TYPE_DECIMAL:
+                return Double.class;
+            case SqlColumnType.TYPE_BOOL:
+                return Boolean.class;
+            case SqlColumnType.TYPE_DATE:
+                return Date.class;
+            case SqlColumnType.TYPE_TIMESTAMP:
+                return Time.class;
+            default:
+                return String.class;
+        }
+    }
+
+    @Override
+    public boolean isNumericColumn(String entityName, String columnName)
+    {
+        Objects.requireNonNull(entityName);
+        Objects.requireNonNull(columnName);
+
+        ColumnDef column = getColumn(entityName, columnName);
+        Class<?> type = getColumnType(column);
+        return type == Long.class ||
+                type == Integer.class ||
+                type == Double.class;
     }
 
     /**

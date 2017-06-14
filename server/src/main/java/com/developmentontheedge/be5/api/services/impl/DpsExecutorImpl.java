@@ -41,8 +41,20 @@ public class DpsExecutorImpl implements DpsExecutor
 
     @Override
     public List<DynamicPropertySet> list(String sql, MetaProcessor metaProcessor) {
-        return db.selectList(sql, rs -> createRow(rs, createSchema(rs.getMetaData()), metaProcessor));
+        return db.selectList(sql, rs -> getDps(rs, metaProcessor));
     }
+
+//    @Override
+//    public DynamicPropertySet get(String sql)
+//    {
+//        return get(sql, (a,b)->{});
+//    }
+//
+//    @Override
+//    public DynamicPropertySet get(String sql, MetaProcessor metaProcessor)
+//    {
+//        return db.select(sql, rs -> getDps(rs, createSchema(rs.getMetaData()), metaProcessor));
+//    }
 
     @Override
     public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
@@ -65,7 +77,7 @@ public class DpsExecutorImpl implements DpsExecutor
                             databaseService.close( finalRs );
                             return false;
                         }
-                        action.accept(createRow( finalRs, createSchema( finalRs.getMetaData() ), metaProcessor ));
+                        action.accept(getDps( finalRs, metaProcessor ));
                         return true;
                     }
                     catch( Throwable t )
@@ -83,9 +95,14 @@ public class DpsExecutorImpl implements DpsExecutor
         }
     }
 
-    private DynamicPropertySet createRow(ResultSet resultSet, DynamicProperty[] schema, MetaProcessor metaProcessor)
+    public DynamicPropertySet getDps(ResultSet resultSet){
+        return getDps(resultSet, (a,b)->{});
+    }
+
+    public DynamicPropertySet getDps(ResultSet resultSet, MetaProcessor metaProcessor)
     {
         try {
+            DynamicProperty[] schema = createSchema(resultSet.getMetaData());
             DynamicPropertySet row = new DynamicPropertySetSupport();
             for( int i = 0; i < schema.length; i++ )
             {

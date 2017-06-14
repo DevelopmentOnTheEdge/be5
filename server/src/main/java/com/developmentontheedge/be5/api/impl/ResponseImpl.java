@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.xml.Jaxb;
+import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.beans.json.JsonFactory;

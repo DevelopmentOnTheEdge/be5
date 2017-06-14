@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
@@ -14,8 +14,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -25,17 +24,19 @@ public abstract class OperationSupport implements Operation
 
     public DatabaseService databaseService;
     public SqlService db;
+    public Meta meta;
     private OperationContext operationContext;
-    private OperationInfo meta;
+    private OperationInfo operationInfo;
     private OperationResult operationResult;
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
     @Override
-    public final void initialize(Injector injector, OperationInfo meta,
+    public final void initialize(Injector injector, OperationInfo operationInfo,
                                  OperationResult operationResult)
     {
         this.injector = injector;
-        this.meta = meta;
+        this.operationInfo = operationInfo;
+        this.meta = injector.getMeta();
         this.operationResult = operationResult;
 
         db = this.injector.getSqlService();
@@ -45,7 +46,7 @@ public abstract class OperationSupport implements Operation
     @Override
     public final OperationInfo getInfo()
     {
-        return meta;
+        return operationInfo;
     }
 
     @Override
@@ -86,50 +87,25 @@ public abstract class OperationSupport implements Operation
 
     protected DynamicPropertySet getTableBean(String entityName) throws Exception
     {
-        Project project = injector.getProject();
-        Entity entity = project.getEntity(entityName);
+        Entity entity = meta.getEntity(entityName);
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
 
-        BeModelElement scheme = entity.getAvailableElement("Scheme");
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
 
-        if(scheme == null)return null;
-
-        BeModelElement columns = ((TableDef) scheme).get("Columns");
-
-        DynamicPropertySet bean = new DynamicPropertySetSupport();
-
-
-        ((BeCaseInsensitiveCollection<ColumnDef>) columns).stream()
-                .filter(x -> !x.getName().equals(entity.getPrimaryKey()))
-                .map(OperationSupport::getDynamicProperty)
-                .forEach(bean::add);
-
-        return bean;
-    }
-
-    private static DynamicProperty getDynamicProperty(ColumnDef columnDef)
-    {
-        return new DynamicProperty(columnDef.getName(), getTypeClass(columnDef.getType()));
-    }
-
-    private static Class<?> getTypeClass(SqlColumnType columnType)
-    {
-        switch( columnType.getTypeName() )
+        for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
         {
-            case SqlColumnType.TYPE_BIGINT:
-                return Long.class;
-            case SqlColumnType.TYPE_INT:
-                return Integer.class;
-            case SqlColumnType.TYPE_DECIMAL:
-                return Double.class;
-            case SqlColumnType.TYPE_BOOL:
-                return Boolean.class;
-            case SqlColumnType.TYPE_DATE:
-                return Date.class;
-            case SqlColumnType.TYPE_TIMESTAMP:
-                return Time.class;
-            default:
-                return String.class;
+            ColumnDef columnDef = entry.getValue();
+            if(!columnDef.getName().equals(entity.getPrimaryKey()))
+            {
+                dps.add(getDynamicProperty(columnDef));
+            }
         }
+        return dps;
+    }
+
+    private DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    {
+        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
     protected void setValues(DynamicPropertySet dps, Map<String, String> presetValues)

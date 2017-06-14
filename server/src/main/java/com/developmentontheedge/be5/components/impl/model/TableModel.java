@@ -78,7 +78,7 @@ public class TableModel
         }
 
         /*
-        * com.beanexplorer.enterprise.query.TabularFragmentBuilder.filterBeanWithRoles()
+        * com.developmentontheedge.enterprise.query.TabularFragmentBuilder.filterBeanWithRoles()
         * */
         void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows){
             if(rows.size() == 0)return;

@@ -56,7 +56,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     /* (non-Javadoc)
-     * @see com.beanexplorer.enterprise.components.Meta#getLocalizedEntityTitle(com.beanexplorer.enterprise.metadata.model.Entity)
+     * @see com.developmentontheedge.enterprise.components.Meta#getLocalizedEntityTitle(com.developmentontheedge.enterprise.metadata.model.Entity)
      */
     @Override
     public String getLocalizedEntityTitle(Entity entity) {
@@ -72,25 +72,16 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localization.get();
     }
 
-    /* (non-Javadoc)
-     * @see com.beanexplorer.enterprise.components.Meta#getLocalizedEntityTitle(java.lang.String)
-     */
     @Override
     public Optional<String> getLocalizedEntityTitle(String entity) {
         return localizations.getEntityTitle(UserInfoHolder.getLanguage(), entity);
     }
 
-    /* (non-Javadoc)
-     * @see com.beanexplorer.enterprise.components.Meta#getLocalizedQueryTitle(java.lang.String, java.lang.String)
-     */
     @Override
     public String getLocalizedQueryTitle(String entity, String query) {
         return localizations.getQueryTitle(UserInfoHolder.getLanguage(), entity, query);
     }
 
-    /* (non-Javadoc)
-     * @see com.beanexplorer.enterprise.components.Meta#getLocalizedOperationTitle(java.lang.String, java.lang.String)
-     */
     @Override
     public String getLocalizedOperationTitle(String entity, String operation) {
         return localizations.getOperationTitle(UserInfoHolder.getLanguage(), entity, operation);
@@ -113,9 +104,6 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localized;
     }
 
-    /* (non-Javadoc)
-     * @see com.beanexplorer.enterprise.components.Meta#getQuerySettings(com.beanexplorer.enterprise.metadata.model.Query)
-     */
     @Override
     public QuerySettings getQuerySettings(Query query) {
         List<String> availableRoles = UserInfoHolder.getCurrentRoles();
