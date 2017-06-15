@@ -97,7 +97,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<String> addAll(Collection<Map<String, String>> c);
+    List<Long> addAll(Collection<Map<String, String>> c);
 
     /** 
      * Returns the record object with the specified id
@@ -259,7 +259,7 @@ public interface EntityModel<R extends RecordModel> {
      * Returns primary key of entity table.
      * @return primary key
      */
-    Long getPrimaryKey();
+    String getPrimaryKeyName();
 
     /**
      * Returns real table name of entity.
@@ -314,12 +314,12 @@ public interface EntityModel<R extends RecordModel> {
      */
     boolean dropClonedTable();
 
-    /**
-     * Returns true if current table exists.
-     * This method allows table cloned post-fix.
-     * @return true if table exists, otherwise false
-     */
-    boolean isTableExists();
+//    /**
+//     * Returns true if current table exists.
+//     * This method allows table cloned post-fix.
+//     * @return true if table exists, otherwise false
+//     */
+//    boolean isTableExists();
 
     /**
      * Returns query model of this entity.

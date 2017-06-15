@@ -28,7 +28,7 @@ public class TestOperation extends OperationSupport implements Operation
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        //String sql = generateSql( connector, false );
+        //String sql = generateInsertSql( connector, false );
         //db.insert(sql);
     }
 

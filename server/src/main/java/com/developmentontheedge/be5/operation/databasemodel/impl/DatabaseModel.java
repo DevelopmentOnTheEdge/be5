@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.Utils;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.operation.databasemodel.EntityAccess;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
@@ -137,24 +138,8 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
     private <T extends EntityModel<RecordModel>> T getEntityModel( String entityName )
     {
-//        DynamicPropertySet entity = loadEntityDeclaration( entityName );
-//        String modelClassName = entity.getValueAsString( "entityModel" );
-//
-//        if( modelClassName != null )
-//        {
-//            Class<?> clazz = loadClass( modelClassName );
-//            if( EntityModel.class.isAssignableFrom( clazz ) )
-//            {
-//                return ( T )getEntityInstance( ( Class<EntityModel> )clazz, this, entityName );
-//            }
-//            else
-//            {
-////                    Logger.error( cat, "Class " + clazz + " is not EntityModel." );
-////                    throw new EntityModelException( modelClassName, new ClassCastException() );
-//                throw Be5Exception.internal(new EntityModelException( modelClassName, new ClassCastException() ), "Constructor not found. Possible: " + Arrays.toString( clazz.getDeclaredConstructors() ));
-//            }
-//        }
-        return ( T )new EntityModelBase( databaseService, db, sqlHelper, this, entityName);
+        Entity entity = meta.getEntity(entityName);
+        return ( T )new EntityModelBase( databaseService, db, sqlHelper, this, entity);
     }
 
 //    /**

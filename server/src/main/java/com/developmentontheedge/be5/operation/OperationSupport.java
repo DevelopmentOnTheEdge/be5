@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -19,6 +20,7 @@ public abstract class OperationSupport implements Operation
 
     public DatabaseService databaseService;
     public SqlService db;
+    public SqlHelper sqlHelper;
     public Meta meta;
     private OperationContext operationContext;
     private OperationInfo operationInfo;
@@ -34,8 +36,10 @@ public abstract class OperationSupport implements Operation
         this.meta = injector.getMeta();
         this.operationResult = operationResult;
 
-        db = this.injector.getSqlService();
+
         databaseService = this.injector.getDatabaseService();
+        db = this.injector.getSqlService();
+        sqlHelper = this.injector.get(SqlHelper.class);
     }
 
     @Override
@@ -78,51 +82,6 @@ public abstract class OperationSupport implements Operation
     public OperationContext getContext()
     {
         return operationContext;
-    }
-
-    protected DynamicPropertySet getTableBean(String entityName) throws Exception
-    {
-        Entity entity = meta.getEntity(entityName);
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
-
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-
-        for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
-        {
-            ColumnDef columnDef = entry.getValue();
-            if(!columnDef.getName().equals(entity.getPrimaryKey()))
-            {
-                dps.add(getDynamicProperty(columnDef));
-            }
-        }
-        return dps;
-    }
-
-    private DynamicProperty getDynamicProperty(ColumnDef columnDef)
-    {
-        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
-    }
-
-    protected void setValues(DynamicPropertySet dps, Map<String, String> presetValues)
-    {
-        StreamSupport.stream(dps.spliterator(), false).forEach(
-                property -> {
-                    property.setValue(presetValues.getOrDefault(property.getName(), getDefault(property.getType())));
-                }
-        );
-    }
-
-    protected String getDefault(Class<?> type){
-        if(type == Long.class ||type == Integer.class ||type == Double.class ||type == Float.class){
-            return "0";
-        }
-        return "";
-    }
-
-    protected Object[] getValues(DynamicPropertySet dps)
-    {
-        return StreamSupport.stream(dps.spliterator(), false)
-                .map(DynamicProperty::getValue).toArray();
     }
 
 }

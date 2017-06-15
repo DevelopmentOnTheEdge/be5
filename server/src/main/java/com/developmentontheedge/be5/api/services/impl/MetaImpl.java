@@ -422,6 +422,19 @@ public class MetaImpl implements Meta
                 type == Double.class;
     }
 
+    @Override
+    public boolean isNumericColumn(Entity entity, String columnName)
+    {
+        Objects.requireNonNull(entity);
+        Objects.requireNonNull(columnName);
+
+        ColumnDef column = getColumn(entity, columnName);
+        Class<?> type = getColumnType(column);
+        return type == Long.class ||
+                type == Integer.class ||
+                type == Double.class;
+    }
+
     /**
      * Tries to find a entity with the specified name.
      */

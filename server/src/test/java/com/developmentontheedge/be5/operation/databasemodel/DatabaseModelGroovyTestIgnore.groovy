@@ -126,20 +126,20 @@ class DatabaseModelGroovyTestIgnore
 //    public void testIsEmptyWithConditions()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.persons;
+//        def entityName = database.persons;
 //
-//        assertTrue entity.empty;
+//        assertTrue entityName.empty;
 //
-//        entity << [
+//        entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"];
 //
-//        assertFalse entity.empty;
-//        assertTrue entity.contains( ["lastname": "Niklaus"] );
-//        assertFalse entity.contains( ["lastname": "Bjarne"] );
+//        assertFalse entityName.empty;
+//        assertTrue entityName.contains( ["lastname": "Niklaus"] );
+//        assertFalse entityName.contains( ["lastname": "Bjarne"] );
 //    }
 //
 //
@@ -148,14 +148,14 @@ class DatabaseModelGroovyTestIgnore
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
 //        def persons = database.persons;
 //
-//        assertEquals "persons", persons.entity
+//        assertEquals "persons", persons.entityName
 //        assertTrue persons.empty
 //    }
 //
 //    public void testDelete()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.persons;
+//        def entityName = database.persons;
 //
 //        String id = database.persons << [
 //                "firstname" : "Wirth",
@@ -165,18 +165,18 @@ class DatabaseModelGroovyTestIgnore
 //                "sex"       : "male"
 //        ];
 //
-//        assertFalse entity.empty;
-//        assertEquals 1, entity.remove( id );
-//        assertTrue entity.empty;
-//        assertEquals 0, entity.remove( id );
+//        assertFalse entityName.empty;
+//        assertEquals 1, entityName.remove( id );
+//        assertTrue entityName.empty;
+//        assertEquals 0, entityName.remove( id );
 //    }
 //
 //    public void testFindRecord() throws SQLException
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.persons;
+//        def entityName = database.persons;
 //
-//        entity << [
+//        entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
@@ -192,9 +192,9 @@ class DatabaseModelGroovyTestIgnore
 //    public void testGetRecord()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.persons;
+//        def entityName = database.persons;
 //
-//        def id = entity << [
+//        def id = entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
@@ -202,7 +202,7 @@ class DatabaseModelGroovyTestIgnore
 //                "sex"       : "male"
 //        ];
 //
-//        def record = entity[ id ];
+//        def record = entityName[ id ];
 //        assertEquals( "Niklaus", record.$lastname );
 //    }
 //
@@ -221,53 +221,53 @@ class DatabaseModelGroovyTestIgnore
 //    public void testGetList()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entity = database.getEntity( "persons" );
+//        EntityModel entityName = database.getEntity( "persons" );
 //
-//        entity << [
+//        entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        entity << [
+//        entityName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
-//        List<RecordModel> list = entity.list;
+//        List<RecordModel> list = entityName.list;
 //
 //        assertTrue( listContains( list, "firstname", "Wirth" ) )
 //        assertTrue( listContains( list, "firstname", "Bjarne" ) )
 //        assertFalse( listContains( list, "firstname", "Rocky" ) )
 //
-//        list = entity.list( sex: "male" )
+//        list = entityName.list( sex: "male" )
 //        assertTrue( listContains( list, "firstname", "Bjarne" ) )
 //
-//        list = entity.list( sex: "female" )
+//        list = entityName.list( sex: "female" )
 //        assertTrue list.empty
 //    }
 //
 //    public void testGetArray()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entity = database.getEntity( "persons" );
+//        EntityModel entityName = database.getEntity( "persons" );
 //
-//        entity << [
+//        entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        entity << [
+//        entityName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
-//        RecordModel[] records = entity.array
+//        RecordModel[] records = entityName.array
 //        List<RecordModel> list = records as List;
 //
 //        assertTrue listContains( list, "firstname", "Wirth" )
@@ -278,23 +278,23 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp();
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entity = database.persons;
+//        EntityModel entityName = database.persons;
 //
-//        entity << [
+//        entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        entity << [
+//        entityName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
 //
-//        List<DynamicPropertySet> list = entity.<DynamicPropertySet> collect( [:], { bean, row -> bean } );
+//        List<DynamicPropertySet> list = entityName.<DynamicPropertySet> collect( [:], { bean, row -> bean } );
 //
 //        assertTrue( listContains( list, "firstname", "Wirth" ) );
 //        assertTrue( listContains( list, "firstname", "Bjarne" ) );
@@ -334,29 +334,29 @@ class DatabaseModelGroovyTestIgnore
 //    public void testSetRecordValue()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entity = database.persons;
+//        EntityModel entityName = database.persons;
 //
-//        entity << [
+//        entityName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        def id = entity << [
+//        def id = entityName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
-//        RecordModel rec = entity[ id ];
+//        RecordModel rec = entityName[ id ];
 //
 //        rec.sex = "female";
-//        assertEquals "female", entity[ id ].$sex
+//        assertEquals "female", entityName[ id ].$sex
 //
 //        rec.update( [ sex : "male", birthday : "01.02.1995" ] );
-//        assertEquals "male", entity[ id ].$sex;
-//        assertEquals "1995-02-01", String.valueOf( entity[ id ].$birthday );
+//        assertEquals "male", entityName[ id ].$sex;
+//        assertEquals "1995-02-01", String.valueOf( entityName[ id ].$birthday );
 //
 //    }
 //
@@ -370,9 +370,9 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.operations;
+//        def entityName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        def list = entity.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).collect();
+//        def list = entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).collect();
 //        assert list.size() == 1;
 //        assert 'Java', list.$Type;
 //    }
@@ -381,9 +381,9 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.operations;
+//        def entityName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        def list = entity.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
+//        def list = entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
 //            dps.Name == 'Clone'
 //        }
 //        assert list.size() == 1;
@@ -394,9 +394,9 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.operations;
+//        def entityName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        def list = entity.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
+//        def list = entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
 //            dps.Name == 'Clone'
 //        }
 //        assert list.size() == 1;
@@ -407,9 +407,9 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.operations;
+//        def entityName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        entity.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).each { dps, rn ->
+//        entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).each { dps, rn ->
 //            assertFalse oneTimeTrigger;
 //            assertEquals 'Java', dps.$Type;
 //            oneTimeTrigger = true;
@@ -421,9 +421,9 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entity = database.operations;
+//        def entityName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        entity.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ) { dps, rn ->
+//        entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ) { dps, rn ->
 //            assertFalse oneTimeTrigger;
 //            assertEquals 'Java', dps.$Type;
 //            oneTimeTrigger = true;
@@ -445,13 +445,13 @@ class DatabaseModelGroovyTestIgnore
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entity = database.entities;
-//        def rec = entity( name : 'operations' );
+//        EntityModel entityName = database.entities;
+//        def rec = entityName( name : 'operations' );
 //        def origin = rec.$origin;
 //        try
 //        {
-//            println entity.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
-//            assertEquals 'test', entity[ rec.$name ].$origin;
+//            println entityName.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
+//            assertEquals 'test', entityName[ rec.$name ].$origin;
 //        }
 //        finally
 //        {

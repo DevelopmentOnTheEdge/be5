@@ -12,6 +12,10 @@ public class SqlServiceMock implements SqlService
 {
     public static SqlService mock = mock(SqlService.class);
 
+    public static void clearMock(){
+        mock = mock(SqlService.class);
+    }
+
     @Override
     public <T> T query(String sql, ResultSetHandler<T> rsh, Object... params)
     {

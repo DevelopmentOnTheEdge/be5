@@ -2,13 +2,10 @@ package com.developmentontheedge.be5.operation.databasemodel.impl;
 
 
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.DpsExecutor;
-import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.Utils;
-import com.developmentontheedge.be5.metadata.model.Operation;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModelAdapter;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModelWithCondition;
@@ -19,23 +16,18 @@ import com.developmentontheedge.be5.operation.databasemodel.RecordModel;
 import com.developmentontheedge.be5.operation.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.operation.databasemodel.groovy.GroovyRegister;
 import com.developmentontheedge.be5.operation.databasemodel.groovy.QueryModelMetaClass;
-import com.developmentontheedge.be5.operation.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetBlocked;
-import com.google.common.collect.ImmutableMap;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-
-import static com.developmentontheedge.be5.api.helpers.UserInfoHolder.getUserInfo;
 
 public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implements EntityModelAdapter<R>
 {
@@ -56,23 +48,15 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         }
     }
 
-    //final private DatabaseConnector connector;
-    //final private DatabaseAnalyzer analyzer;
     private DatabaseService databaseService;
     private SqlService db;
-    private Meta meta;
     private SqlHelper sqlHelper;
-    //final private UserInfo userInfo;
-    final private String entity;
-    //final private Cache cache;
-    //final private boolean forceCache;
+
+    final private Entity entity;
     final private DatabaseModel database;
 
-    private Long primaryKey;
-    private String entityType;
-    private String tcloneId;
 
-    public EntityModelBase(DatabaseService databaseService, SqlService db, SqlHelper sqlHelper, DatabaseModel database, String entity)
+    public EntityModelBase(DatabaseService databaseService, SqlService db, SqlHelper sqlHelper, DatabaseModel database, Entity entity)
     {
         this.databaseService = databaseService;
         this.db = db;
@@ -125,11 +109,11 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         //TODO Check it. Method must provide getAdditionalConditions
 //        Map<String, String> allConditions = new HashMap<>( values );
 //
-//        String tableName = connector.getAnalyzer().quoteIdentifier( getTableName() ) + " " + entity;
+//        String tableName = connector.getAnalyzer().quoteIdentifier( getTableName() ) + " " + entityName;
 //        String conditionsSql = null;
 //        try
 //        {
-//            conditionsSql = Utils.getConditionsSql( connector, entity, primaryKey, allConditions, tcloneId );
+//            conditionsSql = Utils.getConditionsSql( connector, entityName, primaryKey, allConditions, tcloneId );
 //        }
 //        catch( SQLException e )
 //        {
@@ -167,7 +151,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //        {
 //            if( !allConditions.isEmpty() )
 //            {
-//                conditionsSql = " AND " + Utils.getConditionsSql( connector, entity, primaryKey, allConditions, tcloneId );
+//                conditionsSql = " AND " + Utils.getConditionsSql( connector, entityName, primaryKey, allConditions, tcloneId );
 //            }
 //        }
 //        catch( SQLException e )
@@ -266,7 +250,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     {
         String conditionsSql;
 
-        conditionsSql = "";//Utils.getConditionsSql( connector, getEntityName(), getPrimaryKey(), values, getTcloneId() );
+        conditionsSql = "";//Utils.getConditionsSql( connector, getEntityName(), getPrimaryKeyName(), values, getTcloneId() );
 
         return !isSqlResultEmpty( conditionsSql );
     }
@@ -284,24 +268,14 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public List<String> addAll( final Collection<Map<String, String>> c )
+    public List<Long> addAll( final Collection<Map<String, String>> c )
     {
-        try
+        final List<Long> keys = new ArrayList<>( c.size() );
+        for( Map<String, String> values : c )
         {
-//            return connector.transaction( ( ) -> {
-//                final List<String> key = new ArrayList<>( c.size() );
-//                for( Map<String, String> values : c )
-//                {
-//                    key.add( add( values ) );
-//                }
-//                return key;
-//            } );
-            return null;
+            keys.add( add( values ) );
         }
-        catch( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
+        return keys;
     }
 
     @Override
@@ -351,7 +325,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //            try
 //            {
 //                StringBuilder deleteSql = new StringBuilder( DeleteOperation.getDeleteSql( connector, getUserInfo(), getEntityName(), getTcloneId(), false ) );
-//                deleteSql.append( " WHERE " ).append( analyzer.quoteIdentifier( getPrimaryKey() ) ).append( " IN " ).append( Utils.toInClause( keys ) );
+//                deleteSql.append( " WHERE " ).append( analyzer.quoteIdentifier( getPrimaryKeyName() ) ).append( " IN " ).append( Utils.toInClause( keys ) );
 //                deleteSql.append( "AND" ).append( getAdditionalConditions() );
 //                try
 //                {
@@ -429,13 +403,13 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public String getEntityName()
     {
-        return this.entity;
+        return this.entity.getName();
     }
 
     @Override
-    public Long getPrimaryKey()
+    public String getPrimaryKeyName()
     {
-        return this.primaryKey;
+        return entity.getPrimaryKey();
     }
 
     @Override
@@ -482,7 +456,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 
     private boolean isDictionary()
     {
-        return DatabaseConstants.ENTITY_TYPE_DICTIONARY.equals( entityType );
+        return EntityType.DICTIONARY == entity.getType();
     }
 
     @Override
@@ -494,31 +468,11 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     final public Long addForce( Map<String, String> values )
     {
-        return sqlHelper.insert(getEntityName(), values);
-//        String sql;
-//        try
-//        {
-//            sql = Utils.getInsertSQL( connector, getUserInfo(), getEntityName(), values, getTcloneId() );
-//        }
-//        catch( Exception e )
-//        {
-//            String reason = "Error generating insert SQL.";
-//            Logger.error( cat, reason, e );
-//            throw new EntityModelException( reason, e );
-//        }
-//        try
-//        {
-//            String result = connector.executeInsert( sql, getPrimaryKey() );
-//            if( isDictionary() )
-//            {
-//                clearDictionaryCache();
-//            }
-//            return result;
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelSQLException( getEntityName(), sql, e );
-//        }
+        DynamicPropertySet dps = sqlHelper.getTableDps(entity);
+        sqlHelper.setValues(dps, values);
+
+        return db.insert(sqlHelper.generateInsertSql(dps, entity), sqlHelper.getValues(dps));
+        //return db.insert(sql, values.values().toArray());
     }
 
     @Override
@@ -551,7 +505,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //        try
 //        {
 //            Pair<Boolean,String> clobResult = Utils.updateWithCLOBs(
-//                 connector, sql, values, getEntityName(), getPrimaryKey(), false );
+//                 connector, sql, values, getEntityName(), getPrimaryKeyName(), false );
 //            if( !clobResult.getFirst() )
 //            {
 //                connector.executeUpdate( sql );
@@ -572,9 +526,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //    {
 //        final private String conditions;
 //
-//        protected EntityModelBaseWithCondition( DatabaseModel database, UserInfo userInfo, String entity, String tcloneId, boolean forceCache, List<String> conditions )
+//        protected EntityModelBaseWithCondition( DatabaseModel database, UserInfo userInfo, String entityName, String tcloneId, boolean forceCache, List<String> conditions )
 //        {
-//            super( database, userInfo, entity, tcloneId, forceCache );
+//            super( database, userInfo, entityName, tcloneId, forceCache );
 //            StringBuilder sb = new StringBuilder();
 //            for( String condition : conditions )
 //            {
@@ -672,12 +626,12 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     {
         return false;//getTcloneId() != null && analyzer.dropTableIfExists( getTableName() );
     }
-
-    @Override
-    public boolean isTableExists() 
-    {
-        return meta.getEntity(getTableName()) != null;
-    }
+//
+//    @Override
+//    public boolean isTableExists()
+//    {
+//        return meta.getEntity(getTableName()) != null;
+//    }
 
     @Override
     public QueryModel getQuery(String queryName, Map<String, String> params )
@@ -716,10 +670,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
             super( dps );
         }
 
-        //TODO Check it. Method must provide getAdditionalConditions
         protected RecordModelBase(Long id) throws SQLException
         {
-            super( sqlHelper.getRecordById( getEntityName(), getPrimaryKey(), id, Collections.emptyMap() ) );
+            super( sqlHelper.getRecordById( entity, id ) );
         }
 
         @Override
@@ -768,7 +721,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         @Override
         public Long getId()
         {
-            return getPrimaryKey();
+            return (Long) delegateDps.getValue(entity.getPrimaryKey());
         }
 
         @Override
@@ -785,7 +738,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         @Override
         public String toString()
         {
-            return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + getPrimaryKey() + " = " + getId() + " ] }";
+            return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + getPrimaryKeyName() + " = " + getId() + " ] }";
         }
 
         @Override

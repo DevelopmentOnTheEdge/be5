@@ -9,11 +9,14 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.mockito.Mockito.verify;
 
 public class EntityModelAddTest extends AbstractProjectTest
 {
@@ -23,8 +26,11 @@ public class EntityModelAddTest extends AbstractProjectTest
     @BeforeClass
     public static void beforeClass(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-//        TestDB.delete( connector, "persons" );
-//        ReferencesQueriesCache.getInstance().clear();
+    }
+
+    @Before
+    public void before(){
+        SqlServiceMock.clearMock();
     }
 
     @AfterClass
@@ -32,96 +38,46 @@ public class EntityModelAddTest extends AbstractProjectTest
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
+
     @Test
-    @Ignore
-    public void testAdd() throws Exception
+    public void testAdd()
     {
-        EntityModel entity = database.getEntity( "persons" );
+        EntityModel entity = database.getEntity( "testtableAdmin" );
 
         entity.add( ImmutableMap.of(
-            "firstname", "Wirth",
-            "middlename", "Emil",
-            "lastname", "Niklaus",
-            "birthday", "15.02.1934",
-            "sex", "male" )
-        );
+            "name", "Test",
+            "value", "1"
+        ));
 
-//        TestDB.checkTableData( connector, "persons", new String[][]{
-//            { "firstName", "middleName", "lastName", "birthday" ,"sex" },
-//            { "Wirth" ,"Emil", "Niklaus", "1934-02-15", "male" }
-//        } );
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)",
+                "Test", 1);
     }
 
-//    public void testAddWithTcloneId() throws Exception
-//    {
-//        EntityModel entity = database.getEntity( "persons", "11" );
-//        entity.dropClonedTable();
-//        assertFalse( entity.isTableExists() );
-//
-//        entity.makeClonedTable( false );
-//
-//        try
-//        {
-//            assertTrue( entity.isTableExists() );
-//
-//            entity.add( ImmutableMap.of(
-//                "firstname", "Wirth",
-//                "middlename", "Emil",
-//                "lastname", "Niklaus",
-//                "birthday", "15.02.1934",
-//                "sex", "male" )
-//            );
-//
-//            TestDB.checkTableData( connector, "persons11", new String[][]{
-//                { "firstName", "middleName", "lastName", "birthday" ,"sex" },
-//                { "Wirth" ,"Emil", "Niklaus", "1934-02-15", "male" }
-//            } );
-//        }
-//        finally
-//        {
-//            entity.dropClonedTable();
-//        }
-//
-//        assertFalse( entity.isTableExists() );
-//    }
-
-
-    public void testAddAll() throws Exception
+    @Test
+    public void testAddAll()
     {
-        EntityModel entityModel = database.getEntity( "persons");
+        EntityModel entity = database.getEntity( "testtableAdmin" );
 
-        java.util.List<Map<String, String>> listPersons = Arrays.<Map<String, String>>asList(
-            ImmutableMap.of(
-                "firstname", "Wirth",
-                "middlename", "Emil",
-                "lastname", "Niklaus",
-                "birthday", "15.02.1934",
-                "sex", "male"
-            ),
-            ImmutableMap.of(
-                "firstname", "Abakan",
-                "middlename", "Djigurda",
-                "lastname", "Adarbekovich",
-                "birthday", "15.06.2007",
-                "sex", "male"
-            ),
-            ImmutableMap.of(
-                "firstname", "Abakan",
-                "middlename", "Djigurda",
-                "lastname", "Adarbekovich",
-                "birthday", "15.06.2007",
-                "sex", "male"
-            )
+        java.util.List<Map<String, String>> list = Arrays.<Map<String, String>>asList(
+                ImmutableMap.of(
+                        "name", "Test",
+                        "value", "1"
+                ),
+                ImmutableMap.of(
+                        "name", "Test",
+                        "value", "2"
+                ),
+                ImmutableMap.of(
+                        "name", "Test",
+                        "value", "3"
+                )
         );
 
-        entityModel.addAll( listPersons );
+        entity.addAll( list );
 
-//        TestDB.checkTableData( connector, "persons", new String[][]{
-//                { "firstName", "middleName", "lastName", "birthday" ,"sex" },
-//                { "Wirth" ,"Emil", "Niklaus", "1934-02-15", "male" },
-//                { "Abakan", "Djigurda", "Adarbekovich", "2007-06-15", "male" },
-//                { "Abakan", "Djigurda", "Adarbekovich", "2007-06-15", "male" }
-//        } );
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 1);
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 2);
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 3);
     }
 
 }

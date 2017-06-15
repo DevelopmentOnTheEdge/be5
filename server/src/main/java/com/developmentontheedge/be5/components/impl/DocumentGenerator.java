@@ -76,7 +76,7 @@ public class DocumentGenerator implements Runner {
     private TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
-        //&& !Strings2.isNullOrEmpty( query.getEntity().getPrimaryKey() )
+        //&& !Strings2.isNullOrEmpty( query.getEntity().getPrimaryKeyName() )
         final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
         int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
         

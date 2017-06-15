@@ -83,6 +83,8 @@ public interface Meta
     Class<?> getColumnType(ColumnDef columnDef);
 
     boolean isNumericColumn(String entityName, String columnName);
+
+    boolean isNumericColumn(Entity entity, String columnName);
     /**
      * Returns a localized title. Takes into consideration its display name.
      */

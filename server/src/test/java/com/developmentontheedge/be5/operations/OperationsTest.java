@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,6 +31,11 @@ public class OperationsTest extends AbstractProjectTest{
     @AfterClass
     public static void afterClass(){
         initUserWithRoles(RoleType.ROLE_GUEST);
+    }
+
+    @Before
+    public void before(){
+        SqlServiceMock.clearMock();
     }
 
     @Test
