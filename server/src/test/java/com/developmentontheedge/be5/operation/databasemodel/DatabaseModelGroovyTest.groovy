@@ -1,50 +1,56 @@
 package com.developmentontheedge.be5.operation.databasemodel
 
+import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 
 import junit.framework.TestCase
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.junit.Ignore
+import org.junit.Test
 
 import java.sql.SQLException
 
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 
-@Ignore
-class DatabaseModelGroovyTestIgnore
+class DatabaseModelGroovyTest extends AbstractProjectTest
 {
-//
-//    //private final DatabaseConnector connector = TestDB.getDefaultConnector( "postgresql", "be_test" );
-//
-//    public void setUp()
-//    {
-//        TestDB.delete( connector, "persons" );
-//    }
-//
-//    public void testWithCache()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def persons = database.persons;
-//
-//        assert database.persons( ["sex": "male"] ) == null
-//
-//        def id = persons << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"];
-//
-//        assert database.persons( ["sex": "male"] ) != null
-//        assert database.cache.persons[ id ] != null
-//
-//        database.persons[ id ].remove()
-//        assert database.persons[ id ] == null
-//        assert database.cache.persons[ id ] != null
-//
-//    }
+    DatabaseModel database = injector.get(DatabaseModel.class);
+
+    @BeforeClass
+    static void beforeClass(){
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
+
+    @AfterClass
+    static void afterClass(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
+
+    @Test
+    @Ignore
+    void test()
+    {
+        //def testtableAdmin = database.testtableAdmin;
+
+        //assert database.persons( ["sex": "male"] ) == null
+
+        database.testtableAdmin << [
+                "name", "Test",
+                "value", "1"];
+
+        //assert database.persons( ["sex": "male"] ) != null
+        //assert database.cache.persons[ id ] != null
+
+        //database.persons[ id ].remove()
+        //assert database.persons[ id ] == null
+        //assert database.cache.persons[ id ] != null
+    }
 //
 //    public void testGroovyCount()
 //    {

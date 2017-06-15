@@ -1,13 +1,11 @@
 package com.developmentontheedge.be5.operation.databasemodel.groovy;
 
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
-import com.developmentontheedge.be5.operation.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.databasemodel.QueryModel;
 import com.developmentontheedge.be5.operation.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import groovy.lang.Closure;
 
-import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

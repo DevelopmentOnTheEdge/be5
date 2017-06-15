@@ -20,7 +20,7 @@ import static com.developmentontheedge.beans.BeanInfoConstants.*
 
 class DynamicPropertiesGroovyTest extends AbstractProjectTest{
 
-    DatabaseModel databaseModel = injector.get(DatabaseModel.class);
+    DatabaseModel database = injector.get(DatabaseModel.class);
 
     @BeforeClass
     static void beforeClass(){
