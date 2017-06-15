@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class DynamicPropertySetMetaClassTest {
-
+public class DynamicPropertySetMetaClassTest
+{
     @Test
     public void leftShiftTest() throws Exception {
         DynamicPropertySet dps = new DynamicPropertySetSupport();

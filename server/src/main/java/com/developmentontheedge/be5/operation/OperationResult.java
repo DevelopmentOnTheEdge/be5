@@ -61,6 +61,7 @@ public class OperationResult
     ///////////////////////////////////////////////////////////////////
     // OperationResult factory methods
     //
+
     private static final OperationResult finished = new OperationResult(OperationStatus.FINISHED);
     private static final OperationResult cancelled = new OperationResult(OperationStatus.CANCELLED);
     private static final OperationResult progress = new OperationResult(OperationStatus.IN_PROGRESS);

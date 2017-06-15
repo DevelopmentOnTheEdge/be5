@@ -14,19 +14,11 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
     
     /**
      * 
-     * @param entityName
+     * @param entityName entity name
      * @return
      */
     <T extends E> T getEntity(String entityName);
-    
-    /**
-     * Returns an entity with set table cloned id
-     * @param entityName entity name
-     * @param tcloneId table cloned id post-fix
-     * @return
-     */
-    <T extends E> T getEntity(String entityName, String tcloneId);
-    
+
 //    /**
 //     * Returns database connector
 //     * @return database connector

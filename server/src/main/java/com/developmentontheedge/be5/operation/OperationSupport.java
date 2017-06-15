@@ -6,15 +6,10 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.TableDef;
-import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 

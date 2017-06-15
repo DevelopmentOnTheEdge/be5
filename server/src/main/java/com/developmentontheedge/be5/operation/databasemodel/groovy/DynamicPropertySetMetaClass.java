@@ -19,7 +19,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
 {
     private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
 
-    private static final List<String> beanInfoConstants = new ArrayList<>();
+    static final List<String> beanInfoConstants = new ArrayList<>();
     static {
         Field[] fields = BeanInfoConstants.class.getDeclaredFields();
         for (Field f : fields)
@@ -180,6 +180,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
             {
                 try
                 {
+                    //TODO init ones: list -> map
                     dp.setAttribute( ( String )BeanInfoConstants.class.getDeclaredField( key ).get( null ), map.get( key ) );
                 }
                 catch( Exception exc )

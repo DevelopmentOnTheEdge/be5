@@ -41,3 +41,6 @@ context:
   - operationService:
       interface:      com.developmentontheedge.be5.api.services.OperationService
       implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl
+  - databaseModel:
+      interface:      com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel
+      implementation: com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -366,7 +367,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         Connection conn = databaseService.getConnection(true);
 
         try(PreparedStatement ps = conn.prepareStatement(sql)) {
-            return dpsExecutor.createSchema(ps.getMetaData());
+            return DpsHelper.createSchema(ps.getMetaData());
         }
         finally {
             databaseService.releaseConnection(conn);

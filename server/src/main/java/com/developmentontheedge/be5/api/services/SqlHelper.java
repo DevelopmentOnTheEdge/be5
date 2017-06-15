@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -40,11 +41,10 @@ public class SqlHelper
     {
         String tableName = entity;
 
-        String sql =
-                "SELECT * FROM " + tableName + " WHERE 1 = 1 AND " +
-                        getConditionsSql( entity, primaryKey, conditions );
+        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 1 AND "
+                      + getConditionsSql( entity, primaryKey, conditions );
 
-        return db.select(sql, dpsExecutor::getDps);
+        return db.select(sql, DpsHelper::createDps);
     }
 
     public DynamicPropertySet getRecordById( String entity, String primaryKey, Long id ) throws SQLException
@@ -69,7 +69,7 @@ public class SqlHelper
             sql += " AND " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " != 'yes'";
         }
 
-        return db.select(sql, dpsExecutor::getDps, id);
+        return db.select(sql, DpsHelper::createDps, id);
     }
 
     public String paramsToCondition( String entity, Map<?,?> values )

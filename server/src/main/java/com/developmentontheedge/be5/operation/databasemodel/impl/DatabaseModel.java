@@ -1,11 +1,10 @@
 package com.developmentontheedge.be5.operation.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DpsExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.api.services.impl.DpsExecutorImpl;
-import com.developmentontheedge.be5.api.services.impl.SqlServiceImpl;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.operation.databasemodel.EntityAccess;
@@ -43,12 +42,12 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
         }
         catch( NoClassDefFoundError e )
         {
-            // some class has been excluded
+            throw Be5Exception.internal(e);
         }
 
         try
         {
-            // TODO move to beans (having compilation problems) 
+            // TODO move to beans (having compilation problems)
             GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetScriptable.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetLazy.class );
@@ -61,7 +60,7 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
         }
         catch( NoClassDefFoundError e )
         {
-            // some class has been excluded
+            throw Be5Exception.internal(e);
         }
 
     }
@@ -70,25 +69,11 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 //    final private DatabaseConnector connector;
     private DatabaseService databaseService;
     private SqlService db;
-    private DpsExecutor dpsExecutor;
-    final private UserInfo userInfo;
-    final private String tcloneId;
-    final private boolean bForceCache;
 
-    private DatabaseModel( DatabaseService databaseService, UserInfo userInfo )
-    {
-        this( databaseService, userInfo, null, false );
-    }
-
-    private DatabaseModel( DatabaseService databaseService, UserInfo userInfo, String tcloneId, boolean bForceCache )
+    public DatabaseModel(DatabaseService databaseService, SqlService db)
     {
         this.databaseService = databaseService;
-        db = new SqlServiceImpl(databaseService);//TODO inject
-        dpsExecutor = new DpsExecutorImpl(databaseService, db);
-        //this.analyzer = connector.getAnalyzer();
-        this.userInfo = userInfo;
-        this.tcloneId = tcloneId;
-        this.bForceCache = bForceCache;
+        this.db = db;
     }
 
     private static EntityModel getEntityInstance(Class<EntityModel> clazz, DatabaseModel database, UserInfo userInfo, String entityName, String tcloneId, boolean bForceCache )
@@ -122,10 +107,10 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
         }
     }
 
-    public static DatabaseModel makeInstance( DatabaseService databaseService, UserInfo userInfo )
-    {
-        return new DatabaseModel( databaseService, userInfo );
-    }
+//    public static DatabaseModel makeInstance( DatabaseService databaseService, UserInfo userInfo )
+//    {
+//        return new DatabaseModel( databaseService, userInfo );
+//    }
 
     @Override
     public <T extends EntityModel<RecordModel>> T getEntity(String entityName )
@@ -134,23 +119,17 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     }
 
     @Override
-    public <T extends EntityModel<RecordModel>> T getEntity( String entityName, String tcloneId )
-    {
-        return this.<T>getEntityModel( entityName, tcloneId );
-    }
-
-    @Override
     public DatabaseService getDatabaseService()
     {
         return null;
     }
 
-    private <T extends EntityModel<RecordModel>> T getEntityModel( String entityName )
-    {
-        return this.<T>getEntityModel( entityName, tcloneId );
-    }
+//    private <T extends EntityModel<RecordModel>> T getEntityModel( String entityName )
+//    {
+//        return this.<T>getEntityModel( entityName );
+//    }
 
-    private <T extends EntityModel<RecordModel>> T getEntityModel( String entityName, String tcloneId )
+    private <T extends EntityModel<RecordModel>> T getEntityModel( String entityName )
     {
 //            DynamicPropertySet entity = loadEntityDeclaration( entityName );
 //            String modelClassName = entity.getValueAsString( "entityModel" );
@@ -183,7 +162,7 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     private DynamicPropertySet loadEntityDeclaration( String entityName ) throws SQLException
     {
         String sql = "SELECT * FROM entities WHERE name = '" + entityName + "'";
-        return db.select(sql, dpsExecutor::getDps);
+        return db.select(sql, DpsHelper::createDps);
         //return QRec.withCache( connector, sql, ReferencesQueriesCache.getInstance() );
     }
 

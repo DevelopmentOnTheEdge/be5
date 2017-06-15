@@ -8,12 +8,14 @@ import groovy.lang.DelegatingMetaClass;
 import groovy.lang.GroovyObjectSupport;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by ruslan on 26.11.15.
  */
 public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends DelegatingMetaClass
 {
+    private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
 
     public DynamicPropertyMetaClass( Class<T> theClass )
     {
@@ -31,7 +33,7 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Dele
 
         private static List<String> getAllPropertyAttributes()
         {
-            return null;//JSUtils.listAllStringConstants( BeanInfoConstants.class );
+            return DynamicPropertySetMetaClass.beanInfoConstants;
         }
 
         @Override
