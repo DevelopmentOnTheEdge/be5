@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DpsExecutor;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.model.UserInfo;
@@ -69,11 +71,15 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 //    final private DatabaseConnector connector;
     private DatabaseService databaseService;
     private SqlService db;
+    private SqlHelper sqlHelper;
+    private Meta meta;
 
-    public DatabaseModel(DatabaseService databaseService, SqlService db)
+    public DatabaseModel(DatabaseService databaseService, SqlService db, SqlHelper sqlHelper, Meta meta)
     {
         this.databaseService = databaseService;
         this.db = db;
+        this.sqlHelper = sqlHelper;
+        this.meta = meta;
     }
 
     private static EntityModel getEntityInstance(Class<EntityModel> clazz, DatabaseModel database, UserInfo userInfo, String entityName, String tcloneId, boolean bForceCache )
@@ -131,40 +137,39 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
     private <T extends EntityModel<RecordModel>> T getEntityModel( String entityName )
     {
-//            DynamicPropertySet entity = loadEntityDeclaration( entityName );
-//            String modelClassName = entity.getValueAsString( "entityModel" );
+//        DynamicPropertySet entity = loadEntityDeclaration( entityName );
+//        String modelClassName = entity.getValueAsString( "entityModel" );
 //
-//            if( modelClassName != null )
+//        if( modelClassName != null )
+//        {
+//            Class<?> clazz = loadClass( modelClassName );
+//            if( EntityModel.class.isAssignableFrom( clazz ) )
 //            {
-//                Class<?> clazz = loadClass( modelClassName );
-//                if( EntityModel.class.isAssignableFrom( clazz ) )
-//                {
-//                    return ( T )getEntityInstance( ( Class<EntityModel> )clazz, this, entityName );
-//                }
-//                else
-//                {
+//                return ( T )getEntityInstance( ( Class<EntityModel> )clazz, this, entityName );
+//            }
+//            else
+//            {
 ////                    Logger.error( cat, "Class " + clazz + " is not EntityModel." );
 ////                    throw new EntityModelException( modelClassName, new ClassCastException() );
-//                    throw Be5Exception.internal(new EntityModelException( modelClassName, new ClassCastException() ), "Constructor not found. Possible: " + Arrays.toString( clazz.getDeclaredConstructors() ));
-//                }
+//                throw Be5Exception.internal(new EntityModelException( modelClassName, new ClassCastException() ), "Constructor not found. Possible: " + Arrays.toString( clazz.getDeclaredConstructors() ));
 //            }
-//            return ( T )new EntityModelBase( this, entityName);
-        return null;
+//        }
+        return ( T )new EntityModelBase( databaseService, db, sqlHelper, this, entityName);
     }
 
-    /**
-     * Load and obtains the entity declaration from table 'entities'
-     *
-     * @param entityName
-     * @return
-     * @throws SQLException
-     */
-    private DynamicPropertySet loadEntityDeclaration( String entityName ) throws SQLException
-    {
-        String sql = "SELECT * FROM entities WHERE name = '" + entityName + "'";
-        return db.select(sql, DpsHelper::createDps);
-        //return QRec.withCache( connector, sql, ReferencesQueriesCache.getInstance() );
-    }
+//    /**
+//     * Load and obtains the entity declaration from table 'entities'
+//     *
+//     * @param entityName
+//     * @return
+//     * @throws SQLException
+//     */
+//    private DynamicPropertySet loadEntityDeclaration( String entityName ) throws SQLException
+//    {
+//        String sql = "SELECT * FROM entities WHERE name = '" + entityName + "'";
+//        return db.select(sql, DpsHelper::createDps);
+//        //return QRec.withCache( connector, sql, ReferencesQueriesCache.getInstance() );
+//    }
 
 //    @Override
 //    public DatabaseConnector getConnector()

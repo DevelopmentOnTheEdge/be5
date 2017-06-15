@@ -44,7 +44,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return number of records
      * @throws EntityModelSQLException if obtaining the size threw exception
      */
-    int count(Map<String, ? super Object> values);
+    int count(Map<String, String> values);
 
     /**
      * Returns <tt>true</tt> if this table contains no records.
@@ -61,7 +61,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if entity contains record consistent with 
      * conditions, otherwise false
      */
-    boolean contains(Map<String, ? super Object> values);
+    boolean contains(Map<String, String> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -72,7 +72,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values map with column names and values
      * @return generated record identify number
      */
-    String add(Map<String, ? super Object> values);
+    Long add(Map<String, String> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -81,7 +81,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values map with column names and values
      * @return generated record identify number
      */
-    String addForce(Map<String, ? super Object> values);
+    Long addForce(Map<String, String> values);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -90,14 +90,14 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if entity contains record consistent with the  
      * all specified condition 
      */
-    boolean containsAll(Collection<Map<String, ? super Object>> c);
+    boolean containsAll(Collection<Map<String, String>> c);
     
     /**
      * Adds all records from collection into database.
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<String> addAll(Collection<Map<String, ? super Object>> c);
+    List<String> addAll(Collection<Map<String, String>> c);
 
     /** 
      * Returns the record object with the specified id
@@ -112,38 +112,38 @@ public interface EntityModel<R extends RecordModel> {
      * @param values condition values
      * @return the record object with the specified id otherwise null
      */
-    R get(Map<String, ? super Object> values);
+    R get(Map<String, String> values);
     
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( String, String, Object )}
+     * This method calls {@link #setForce( Long, String, String )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
      */
-    void set(String id, String propertyName, Object value);
+    void set(Long id, String propertyName, String value);
 
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( String, Map )}
+     * This method calls {@link #setForce( Long, Map )}
      * @param id identify number of record
      * @param values column names and values
      */
-    void set(String id, Map<String, ? super Object> values);
+    void set(Long id, Map<String, String> values);
     
     /**
      * Sets value to property with a specified name.<br>
      * This method may not contain any checks, it's just the method implementation.
-     * This method calls {@link #setForce( String, Map )}
+     * This method calls {@link #setForce( Long, Map )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
      */
-    void setForce(String id, String propertyName, Object value);
+    void setForce(Long id, String propertyName, String value);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -151,27 +151,27 @@ public interface EntityModel<R extends RecordModel> {
      * @param id identify number of record
      * @param values new column names and values
      */
-    void setForce(String id, Map<String, ? super Object> values);
+    void setForce(Long id, Map<String, String> values);
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(String, String...)}
+     * This method calls {@link #removeForce(Long, Long...)}
      * @param c collection of conditions
      * @return <tt>true</tt> if all conditions has been used otherwise <tt>false</tt>
      */
-    int removeAll(Collection<Map<String, ? super Object>> c);
+    int removeAll(Collection<Map<String, String>> c);
     
     /**
      * Operation removes all the records, consistent with conditions.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(String, String...)} }
+     * This method calls {@link #removeForce(Long, Long...)} }
      * @param values conditions
      * @return count of deleted records
      */
-    int remove(Map<String, ? super Object> values);
+    int remove(Map<String, String> values);
     
 //    /**
 //     * Deletes the record with the specified identifier.
@@ -187,11 +187,11 @@ public interface EntityModel<R extends RecordModel> {
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(String, String...)}
+     * This method calls {@link #removeForce(Long, Long...)}
      * @param id - record identifier numbers
      * @return <tt>true</tt> if the all record has been deleted otherwise <tt>false<tt>
      */
-    int remove(String id, String... otherId);
+    int remove(Long id, Long... otherId);
 
 //    /**
 //     * Deletes the record with the specified identifier.<br>
@@ -207,7 +207,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param firstId first identify number of record
      * @param otherId other identify number of record
      */
-    int removeForce(String firstId, String... otherId);
+    int removeForce(Long firstId, Long... otherId);
 
     /**
      * Returns a list of records of current entity.
@@ -228,14 +228,14 @@ public interface EntityModel<R extends RecordModel> {
      * @param values the filter parameters
      * @return array of records
      */
-    List<R> toList(Map<String, ? super Object> values);
+    List<R> toList(Map<String, String> values);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
      * @param values the filter parameters
      * @return array of records
      */
-    RecordModel[] toArray(Map<String, ? super Object> values);
+    RecordModel[] toArray(Map<String, String> values);
 
     /**
      * Spreads collection and collect elements from function to list.<br>
@@ -247,7 +247,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param lambda handler
      * @return list with the function results
      */
-	<T> List<T> collect(Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda);
+	<T> List<T> collect(Map<String, String> values, BiFunction<R, Integer, T> lambda);
 
     /**
      * Returns entity name.
@@ -259,7 +259,7 @@ public interface EntityModel<R extends RecordModel> {
      * Returns primary key of entity table.
      * @return primary key
      */
-    String getPrimaryKey();
+    Long getPrimaryKey();
 
     /**
      * Returns real table name of entity.
@@ -267,13 +267,13 @@ public interface EntityModel<R extends RecordModel> {
      */
     String getTableName();
 
-    /**
-     * Returns table cloned id post-fix
-     * For example, if entity named persons, 
-     * and table cloned id is 2, table name will be called persons2
-     * @return table cloned id post-fix
-     */
-    String getTcloneId();
+//    /**
+//     * Returns table cloned id post-fix
+//     * For example, if entity named persons,
+//     * and table cloned id is 2, table name will be called persons2
+//     * @return table cloned id post-fix
+//     */
+//    String getTcloneId();
 
     /**
      * Creates cloned table. Cloned table - table with entity name and prefix.
@@ -334,7 +334,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param params
      * @return query model
      */
-    QueryModel getQuery(String queryName, Map<String, ? super Object> params);
+    QueryModel getQuery(String queryName, Map<String, String> params);
 
     /**
      * Returns operation model of this entity.

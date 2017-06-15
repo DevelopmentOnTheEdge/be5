@@ -27,7 +27,7 @@ public class DatabaseModelMetaClass extends ExtensionMethodsMetaClass
     @Override
     public void setProperty( Object object, String entityName, Object values ) 
     {
-        ( ( DatabaseModel )object ).getEntity( entityName ).add( ( Map<String, ? super Object> )values );
+        ( ( DatabaseModel )object ).getEntity( entityName ).add( ( Map<String, String> )values );
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DatabaseModelMetaClass extends ExtensionMethodsMetaClass
         }
         catch( MissingMethodException e )
         {
-            return ( ( DatabaseModel )object ).getEntity( methodName ).get( ( Map<String, ? super Object> )( arguments )[0] );
+            return ( ( DatabaseModel )object ).getEntity( methodName ).get( ( Map<String, String> )( arguments )[0] );
         }
     }
 }

@@ -44,3 +44,6 @@ context:
   - databaseModel:
       interface:      com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel
       implementation: com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel
+  - sqlHelper:
+      interface:      com.developmentontheedge.be5.api.services.SqlHelper
+      implementation: com.developmentontheedge.be5.api.services.SqlHelper

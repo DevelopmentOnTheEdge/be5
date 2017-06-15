@@ -10,6 +10,6 @@ public interface MultipleRecords<T> {
     
     T get(Map<String, ? extends Object> values);
     
-//    T get( String queryName, Map<String, Object> values );
+//    T get( String queryName, Map<String, String> values );
     
 }

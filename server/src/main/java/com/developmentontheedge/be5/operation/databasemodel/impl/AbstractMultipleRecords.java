@@ -22,15 +22,13 @@ public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
     private DatabaseService databaseService;
     private UserInfo userInfo;
     private String entity;
-    private String tcloneId;
     private ResultHandler<T> handler;
     
-    public AbstractMultipleRecords(DatabaseService databaseService, String entity, String tcloneId )
+    public AbstractMultipleRecords(DatabaseService databaseService, String entity )
     {
         this.databaseService = databaseService;
         this.userInfo = userInfo;
         this.entity = entity;
-        this.tcloneId = tcloneId;
     }
     
     public void setHandler( ResultPostHandler<? extends RecordModel,T> handler )
@@ -45,7 +43,7 @@ public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
     }
 
 //    @Override
-//    public T get( String queryName, Map<String, Object> values )
+//    public T get( String queryName, Map<String, String> values )
 //    {
 //        final List<RecordModel> list = new ArrayList<RecordModel>();
 //
@@ -80,7 +78,7 @@ public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
     {
 
         StringBuilder sb = new StringBuilder( "SELECT * FROM " );
-        sb.append( entity ).append( Optional.ofNullable(tcloneId).orElse("") ).append( " " ).append( entity );
+        sb.append( entity ).append( " " ).append( entity );
         sb.append( " WHERE " ).append( getAdditionalConditions() );
         for( String condition : conditions )
         {

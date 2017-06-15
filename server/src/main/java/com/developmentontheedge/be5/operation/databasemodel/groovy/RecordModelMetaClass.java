@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.operation.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 
-public class    RecordModelMetaClass extends DynamicPropertySetMetaClass
+public class RecordModelMetaClass extends DynamicPropertySetMetaClass
 {
 
     public RecordModelMetaClass( Class<? extends RecordModel> theClass )
@@ -21,7 +21,7 @@ public class    RecordModelMetaClass extends DynamicPropertySetMetaClass
 
         if( rec.getProperty( propertyName ) != null )
         {
-            rec.update( propertyName, value );
+            rec.update( propertyName, value.toString() );
         }
         else
         {
@@ -29,7 +29,7 @@ public class    RecordModelMetaClass extends DynamicPropertySetMetaClass
         }
     }
 
-    public static DynamicPropertySet leftShift( RecordModel rec, Map<String, Object> properties )
+    public static DynamicPropertySet leftShift( RecordModel rec, Map<String, String> properties )
     {
         rec.update( properties );
         return rec;

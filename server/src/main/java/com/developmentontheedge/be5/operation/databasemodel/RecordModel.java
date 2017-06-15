@@ -11,11 +11,11 @@ public interface RecordModel extends DynamicPropertySet
     
     void remove();
 
-    void update(String propertyName, Object value);
+    void update(String propertyName, String value);
 
-    void update(Map<String, Object> values);
+    void update(Map<String, String> values);
 
-    String getId();
+    Long getId();
 
     Object invokeMethod(String methodName, Object... arguments);
     

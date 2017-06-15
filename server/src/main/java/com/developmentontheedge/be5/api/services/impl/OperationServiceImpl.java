@@ -145,11 +145,19 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    public Operation create(OperationInfo meta) {
-        Operation operation;
-        String code = meta.getCode();
+    @Override
+    public Operation create(Operation operation) {
+        operation.initialize(injector, null, OperationResult.progress());
 
-        switch (meta.getType())
+        return operation;
+    }
+
+    @Override
+    public Operation create(OperationInfo operationInfo) {
+        Operation operation;
+        String code = operationInfo.getCode();
+
+        switch (operationInfo.getType())
         {
 //        case DatabaseConstants.OP_TYPE_SQL:
 //            if (user.isAdmin())
@@ -193,11 +201,11 @@ public class OperationServiceImpl implements OperationService
                 try {
                     operation = ( Operation ) Class.forName(code).newInstance();
                 } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                    throw Be5Exception.internalInOperation(e, meta);
+                    throw Be5Exception.internalInOperation(e, operationInfo);
                 }
         }
 
-        operation.initialize(injector, meta, OperationResult.progress());
+        operation.initialize(injector, operationInfo, OperationResult.progress());
 
         return operation;
     }

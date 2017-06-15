@@ -17,9 +17,9 @@ import java.util.function.Function;
 class QueryModelBase implements QueryModel
 {
     private String queryName;
-    private Map<String, Object> params;
+    private Map<String, String> params;
 
-    public QueryModelBase( String queryName, Map<String, ? super Object> params)
+    public QueryModelBase( String queryName, Map<String, String> params)
     {
         this.queryName = queryName;
         this.params = new HashMap<>( params );

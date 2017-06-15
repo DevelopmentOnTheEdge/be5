@@ -6,17 +6,19 @@ import com.developmentontheedge.be5.operation.databasemodel.groovy.DynamicProper
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DatabaseModelTest extends AbstractProjectTest
 {
+    private DatabaseModel database = injector.get(DatabaseModel.class);
 
     @BeforeClass
     public static void beforeClass(){
@@ -31,8 +33,6 @@ public class DatabaseModelTest extends AbstractProjectTest
     @Test
     public void databaseModel() throws Exception
     {
-        DatabaseModel databaseModel = injector.get(DatabaseModel.class);
-
         assertEquals(DynamicPropertyMetaClass.class,
                 InvokerHelper.getMetaRegistry().getMetaClass(DynamicProperty.class).getClass());
 
@@ -58,13 +58,13 @@ public class DatabaseModelTest extends AbstractProjectTest
 //        super.setUp();
 //    }
 //
-//    public void testGetEntity()
-//    {
-//        DatabaseModel database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//
-//        EntityModel entity = database.getEntity( "persons" );
-//
-//        assertEquals( "persons", entity.getEntityName() );
-//        assertTrue( entity.isEmpty() );
-//    }
+    @Test
+    @Ignore
+    public void testGetEntity()
+    {
+        EntityModel entity = database.getEntity( "persons" );
+
+        assertEquals( "persons", entity.getEntityName() );
+        assertTrue( entity.isEmpty() );
+    }
 }

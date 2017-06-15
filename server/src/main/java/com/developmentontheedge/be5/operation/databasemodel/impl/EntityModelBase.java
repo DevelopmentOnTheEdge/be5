@@ -60,7 +60,6 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     //final private DatabaseAnalyzer analyzer;
     private DatabaseService databaseService;
     private SqlService db;
-    private DpsExecutor dpsExecutor;
     private Meta meta;
     private SqlHelper sqlHelper;
     //final private UserInfo userInfo;
@@ -69,17 +68,18 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     //final private boolean forceCache;
     final private DatabaseModel database;
 
-    private String primaryKey;
+    private Long primaryKey;
     private String entityType;
     private String tcloneId;
 
-    public EntityModelBase(DatabaseService databaseService, SqlService db, DpsExecutor dpsExecutor, String entity, DatabaseModel database)
+    public EntityModelBase(DatabaseService databaseService, SqlService db, SqlHelper sqlHelper, DatabaseModel database, String entity)
     {
         this.databaseService = databaseService;
         this.db = db;
-        this.dpsExecutor = dpsExecutor;
-        this.entity = entity;
+        this.sqlHelper = sqlHelper;
         this.database = database;
+
+        this.entity = entity;
     }
 
 //    private EntityModelBase(DatabaseModel database, UserInfo userInfo, String entity )
@@ -120,10 +120,10 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //    }
 
     @Override
-    public R get( Map<String, ? super Object> values )
+    public R get( Map<String, String> values )
     {
         //TODO Check it. Method must provide getAdditionalConditions
-//        Map<String, Object> allConditions = new HashMap<>( values );
+//        Map<String, String> allConditions = new HashMap<>( values );
 //
 //        String tableName = connector.getAnalyzer().quoteIdentifier( getTableName() ) + " " + entity;
 //        String conditionsSql = null;
@@ -160,7 +160,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
     
     @Override
-    public int count( Map<String, ? super Object> allConditions )
+    public int count( Map<String, String> allConditions )
     {
 //        String conditionsSql = "";
 //        try
@@ -262,7 +262,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public boolean contains( Map<String, ? super Object> values )
+    public boolean contains( Map<String, String> values )
     {
         String conditionsSql;
 
@@ -272,25 +272,25 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public String add( Map<String, ? super Object> values )
+    public Long add( Map<String, String> values )
     {
         return addForce( values );
     }
 
     @Override
-    public boolean containsAll( Collection<Map<String, ? super Object>> c )
+    public boolean containsAll( Collection<Map<String, String>> c )
     {
         return c.stream().allMatch( this::contains );
     }
 
     @Override
-    public List<String> addAll( final Collection<Map<String, ? super Object>> c )
+    public List<String> addAll( final Collection<Map<String, String>> c )
     {
         try
         {
 //            return connector.transaction( ( ) -> {
 //                final List<String> key = new ArrayList<>( c.size() );
-//                for( Map<String, ? super Object> values : c )
+//                for( Map<String, String> values : c )
 //                {
 //                    key.add( add( values ) );
 //                }
@@ -305,7 +305,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public int removeAll( Collection<Map<String, ? super Object>> c )
+    public int removeAll( Collection<Map<String, String>> c )
     {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException( "not implemented" );
@@ -325,19 +325,19 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public void set( String id, String propertyName, Object value )
+    public void set( Long id, String propertyName, String value )
     {
         setForce( id, propertyName, value );
     }
 
     @Override
-    public int remove( String firstId, final String... otherId )
+    public int remove( Long firstId, final Long... otherId )
     {
         return removeForce( firstId, otherId );
     }
 
     @Override
-    final public int removeForce( String firstId, final String... otherId )
+    final public int removeForce( Long firstId, final Long... otherId )
     {
 //        String[] keys = new String[ otherId.length + 1 ];
 //        if( otherId.length != 0 )
@@ -376,7 +376,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 
     @Override
     // TODO make is deleted column check and handle it
-    public int remove( Map<String, ? super Object> values )
+    public int remove( Map<String, String> values )
     {
 //        String sql = "DELETE FROM " + getEntityName() + Utils.ifNull( getTcloneId(), "" ) + "\n" +
 //                     "WHERE " + getAdditionalConditions();
@@ -410,21 +410,21 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         return getEntityName();
     }
 
-    @Override
-    public String getTcloneId()
-    {
-        return this.tcloneId;
-    }
-
-    /**
-     *
-     * @deprecated class must be immutable
-     */
-    @Deprecated
-    public void setTcloneId( String tcloneId )
-    {
-        this.tcloneId = tcloneId;
-    }
+//    @Override
+//    public String getTcloneId()
+//    {
+//        return this.tcloneId;
+//    }
+//
+//    /**
+//     *
+//     * @deprecated class must be immutable
+//     */
+//    @Deprecated
+//    public void setTcloneId( String tcloneId )
+//    {
+//        this.tcloneId = tcloneId;
+//    }
 
     @Override
     public String getEntityName()
@@ -433,7 +433,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public String getPrimaryKey()
+    public Long getPrimaryKey()
     {
         return this.primaryKey;
     }
@@ -451,15 +451,15 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
     
     @Override
-    public List<R> toList( Map<String, ? super Object> values )
+    public List<R> toList( Map<String, String> values )
     {
-        return new MultipleRecordsBase<List<R>>( databaseService, getEntityName(), getTcloneId() ).get( values );
+        return new MultipleRecordsBase<List<R>>( databaseService, getEntityName() ).get( values );
     }
 
     @Override
-    public RecordModel[] toArray( Map<String, ? super Object> values )
+    public RecordModel[] toArray( Map<String, String> values )
     {
-        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>( databaseService, getEntityName(), getTcloneId() );
+        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>( databaseService, getEntityName() );
         records.setHandler( new AbstractMultipleRecords.ArrayHandler<>() );
         return records.get( values );
     }
@@ -471,9 +471,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public <T> List<T> collect( Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda )
+    public <T> List<T> collect( Map<String, String> values, BiFunction<R, Integer, T> lambda )
     {
-        MultipleRecordsBase<List<T>> records = new MultipleRecordsBase<>( databaseService, getEntityName(), getTcloneId() );
+        MultipleRecordsBase<List<T>> records = new MultipleRecordsBase<>( databaseService, getEntityName() );
         AbstractMultipleRecords.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
         records.setHandler( handler );
         records.get( values );
@@ -492,19 +492,23 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    final public String addForce( Map<String, ? super Object> values )
+    final public Long addForce( Map<String, String> values )
     {
-        //Utils.InsertSQLTextCallback callback = null;
+        return sqlHelper.insert(getEntityName(), values);
+//        String sql;
 //        try
 //        {
-//            String result = Utils.insert( connector, DatabaseConstants.PLATFORM_HTML,
-//                 getUserInfo(), getEntityName(), getPrimaryKey(), values, null, getTcloneId(), values.containsKey( getPrimaryKey() ),
-//            callback = new Utils.InsertSQLTextCallback()
-//            {
-//                 private String text;
-//                 public String getText() { return text; }
-//                 public void setText( String text ) { this.text = text; }
-//            } );
+//            sql = Utils.getInsertSQL( connector, getUserInfo(), getEntityName(), values, getTcloneId() );
+//        }
+//        catch( Exception e )
+//        {
+//            String reason = "Error generating insert SQL.";
+//            Logger.error( cat, reason, e );
+//            throw new EntityModelException( reason, e );
+//        }
+//        try
+//        {
+//            String result = connector.executeInsert( sql, getPrimaryKey() );
 //            if( isDictionary() )
 //            {
 //                clearDictionaryCache();
@@ -513,61 +517,24 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //        }
 //        catch( SQLException e )
 //        {
-//            //throw new EntityModelSQLException( getEntityName(), callback.getText(), e );
-//            throw new EntityModelSQLException( getEntityName(), "", e );
+//            throw new EntityModelSQLException( getEntityName(), sql, e );
 //        }
-//        catch( Exception e )
-//        {
-//            throw new RuntimeException( e );
-//        }
-/*
-        String sql;
-        try
-        {
-            sql = Utils.getInsertSQL( connector, getUserInfo(), getEntityName(), values, getTcloneId() );
-        }
-        catch( Exception e )
-        {
-            String reason = "Error generating insert SQL.";
-            Logger.error( cat, reason, e );
-            throw new EntityModelException( reason, e );
-        }
-        try
-        {
-            String result = connector.executeInsert( sql, getPrimaryKey() );
-            if( isDictionary() )
-            {
-                clearDictionaryCache();
-            }
-            return result;
-        }
-        catch( SQLException e )
-        {
-            throw new EntityModelSQLException( getEntityName(), sql, e );
-        }
-*/
-        return "";
     }
 
-//    private void clearDictionaryCache()
-//    {
-//        DictionaryCache.getInstance().clear();
-//    }
-
     @Override
-    final public void setForce( String id, String propertyName, Object value )
+    final public void setForce( Long id, String propertyName, String value )
     {
         setForce( id, Collections.singletonMap( propertyName, value ) );
     }
 
     @Override
-    public void set( String id, Map<String, ? super Object> values )
+    public void set( Long id, Map<String, String> values )
     {
         setForce( id, values );
     }
 
     @Override
-    final public void setForce( String id, Map<String, ? super Object> values )
+    final public void setForce( Long id, Map<String, String> values )
     {
 //        String sql;
 //        try
@@ -644,9 +611,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
     {
-        public MultipleRecordsBase(DatabaseService databaseService, String tableName, String tcloneId )
+        public MultipleRecordsBase(DatabaseService databaseService, String tableName )
         {
-            super( databaseService, tableName, tcloneId );
+            super( databaseService, tableName );
         }
 
         @Override
@@ -713,7 +680,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public QueryModel getQuery(String queryName, Map<String, ? super Object> params )
+    public QueryModel getQuery(String queryName, Map<String, String> params )
     {
         return new QueryModelBase( queryName, params );
     }
@@ -738,7 +705,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
             return false;
         }
         EntityModel e = ( EntityModel )o;
-        return e.getEntityName().equals( getEntityName() ) && e.getTcloneId().equals( getTcloneId() );
+        return e.getEntityName().equals( getEntityName() );
     }
 
     @SuppressWarnings( "serial" )
@@ -783,7 +750,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //                }
 //                String columnName = tableRef.getString( "columnTo" );
 //                String columnValue = getValueAsString( tableRef.getString( "columnFrom" ) );
-//                Map<String, Object> condition = Collections.singletonMap( columnName, columnValue );
+//                Map<String, String> condition = Collections.singletonMap( columnName, columnValue );
 //                List<String> conditionList = Collections.singletonList( Utils.paramsToCondition( connector, entityName, condition ) );
 //                return new EntityModelBaseWithCondition( database, getUserInfo(), entityName, getTcloneId(), forceCache, conditionList );
 //            }
@@ -799,9 +766,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         }
 
         @Override
-        public String getId()
+        public Long getId()
         {
-            return getValueAsString( getPrimaryKey() );
+            return getPrimaryKey();
         }
 
         @Override
@@ -835,14 +802,14 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         }
 
         @Override
-        public void update( String propertyName, Object value )
+        public void update( String propertyName, String value )
         {
             EntityModelBase.this.set( getId(), propertyName, value );
             super.setValueHidden( propertyName, value );
         }
 
         @Override
-        public void update( Map<String, Object> values )
+        public void update( Map<String, String> values )
         {
             EntityModelBase.this.set( getId(), values );
             for( String propertyName : values.keySet() )

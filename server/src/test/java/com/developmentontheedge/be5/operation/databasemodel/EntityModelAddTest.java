@@ -1,59 +1,56 @@
 package com.developmentontheedge.be5.operation.databasemodel;
 
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 
-import junit.framework.TestCase;
+import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.google.common.collect.ImmutableMap;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Test;
 
-@Ignore
-public class EntityModelAddTest extends TestCase 
+public class EntityModelAddTest extends AbstractProjectTest
 {
+    private DatabaseModel database = injector.get(DatabaseModel.class);
 
-//    private final DatabaseConnector connector = TestDB.getDefaultConnector( "postgresql", "be_test" );
-//
-//    @Override
-//    protected void tearDown() throws Exception
-//    {
-//        super.tearDown();
-//        connector.releaseConnection( null );
-//    }
-//
-//    @Override
-//    protected void setUp() throws Exception
-//    {
-//        super.setUp();
+    @BeforeClass
+    public static void beforeClass(){
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 //        TestDB.delete( connector, "persons" );
 //        ReferencesQueriesCache.getInstance().clear();
-//    }
-//
-//    public void testAdd() throws Exception
-//    {
-//        DatabaseModel database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//
-//        EntityModel entity = database.getEntity( "persons" );
-//
-//        entity.add( Utils.valueMap(
-//            "firstname", "Wirth",
-//            "middlename", "Emil",
-//            "lastname", "Niklaus",
-//            "birthday", "15.02.1934",
-//            "sex", "male" )
-//        );
-//
+    }
+
+    @AfterClass
+    public static void afterClass(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
+
+    @Test
+    @Ignore
+    public void testAdd() throws Exception
+    {
+        EntityModel entity = database.getEntity( "persons" );
+
+        entity.add( ImmutableMap.of(
+            "firstname", "Wirth",
+            "middlename", "Emil",
+            "lastname", "Niklaus",
+            "birthday", "15.02.1934",
+            "sex", "male" )
+        );
+
 //        TestDB.checkTableData( connector, "persons", new String[][]{
 //            { "firstName", "middleName", "lastName", "birthday" ,"sex" },
 //            { "Wirth" ,"Emil", "Niklaus", "1934-02-15", "male" }
 //        } );
-//    }
-//
+    }
+
 //    public void testAddWithTcloneId() throws Exception
 //    {
-//        DatabaseModel database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
 //        EntityModel entity = database.getEntity( "persons", "11" );
 //        entity.dropClonedTable();
 //        assertFalse( entity.isTableExists() );
@@ -64,7 +61,7 @@ public class EntityModelAddTest extends TestCase
 //        {
 //            assertTrue( entity.isTableExists() );
 //
-//            entity.add( Utils.valueMap(
+//            entity.add( ImmutableMap.of(
 //                "firstname", "Wirth",
 //                "middlename", "Emil",
 //                "lastname", "Niklaus",
@@ -84,45 +81,44 @@ public class EntityModelAddTest extends TestCase
 //
 //        assertFalse( entity.isTableExists() );
 //    }
-//
-//    public void testAddAll() throws Exception
-//    {
-//        DatabaseModel databaseModel = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//
-//        EntityModel entityModel = databaseModel.getEntity( "persons");
-//
-//        java.util.List<Map<String, String>> listPersons = Arrays.<Map<String, String>>asList(
-//            Maps.hashMap(
-//                "firstname", "Wirth",
-//                "middlename", "Emil",
-//                "lastname", "Niklaus",
-//                "birthday", "15.02.1934",
-//                "sex", "male"
-//            ),
-//            Maps.hashMap(
-//                "firstname", "Abakan",
-//                "middlename", "Djigurda",
-//                "lastname", "Adarbekovich",
-//                "birthday", "15.06.2007",
-//                "sex", "male"
-//            ),
-//            Maps.hashMap(
-//                "firstname", "Abakan",
-//                "middlename", "Djigurda",
-//                "lastname", "Adarbekovich",
-//                "birthday", "15.06.2007",
-//                "sex", "male"
-//            )
-//        );
-//
-//        entityModel.addAll( listPersons );
-//
+
+
+    public void testAddAll() throws Exception
+    {
+        EntityModel entityModel = database.getEntity( "persons");
+
+        java.util.List<Map<String, String>> listPersons = Arrays.<Map<String, String>>asList(
+            ImmutableMap.of(
+                "firstname", "Wirth",
+                "middlename", "Emil",
+                "lastname", "Niklaus",
+                "birthday", "15.02.1934",
+                "sex", "male"
+            ),
+            ImmutableMap.of(
+                "firstname", "Abakan",
+                "middlename", "Djigurda",
+                "lastname", "Adarbekovich",
+                "birthday", "15.06.2007",
+                "sex", "male"
+            ),
+            ImmutableMap.of(
+                "firstname", "Abakan",
+                "middlename", "Djigurda",
+                "lastname", "Adarbekovich",
+                "birthday", "15.06.2007",
+                "sex", "male"
+            )
+        );
+
+        entityModel.addAll( listPersons );
+
 //        TestDB.checkTableData( connector, "persons", new String[][]{
 //                { "firstName", "middleName", "lastName", "birthday" ,"sex" },
 //                { "Wirth" ,"Emil", "Niklaus", "1934-02-15", "male" },
 //                { "Abakan", "Djigurda", "Adarbekovich", "2007-06-15", "male" },
 //                { "Abakan", "Djigurda", "Adarbekovich", "2007-06-15", "male" }
 //        } );
-//    }
+    }
 
 }

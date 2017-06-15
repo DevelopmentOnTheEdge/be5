@@ -24,10 +24,10 @@ public class InsertOperation extends OperationSupport implements Operation
 
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception {
-        db.insert(getSQL(dps), getValues(dps));
+        db.insert(generateSql(dps), getValues(dps));
     }
 
-    private String getSQL(DynamicPropertySet dps) throws Exception
+    public String generateSql(DynamicPropertySet dps)
     {
         String columns = StreamSupport.stream(dps.spliterator(), false)
                 .map(DynamicProperty::getName)

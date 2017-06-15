@@ -44,7 +44,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
     @SuppressWarnings( "unchecked" )
     public void setProperty( Object object, String entityName, Object values )
     {
-        ( ( EntityModel )object ).add( ( Map<String, Object> )values );
+        ( ( EntityModel )object ).add( ( Map<String, String> )values );
     }
 
     private static Object callClosureWithDelegate( Closure closure, Object delegate )
@@ -80,12 +80,12 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        return operation.invoke();
 //    }
 
-    public static RecordModel call(EntityModel self, Map<String, ? super Object> values ) throws Exception
+    public static RecordModel call(EntityModel self, Map<String, String> values ) throws Exception
     {
         return self.get( values );
     }
 
-    public static QueryModel query(EntityModel self, String queryName, Map<String, ? super Object> values )
+    public static QueryModel query(EntityModel self, String queryName, Map<String, String> values )
     {
         return self.getQuery( queryName, values );
     }
@@ -95,12 +95,12 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return self.getQuery( queryName );
     }
 
-    public static void query( EntityModel self, String queryName, Map<String, ? super Object> values, BiConsumer<DynamicPropertySet, Integer> func )
+    public static void query( EntityModel self, String queryName, Map<String, String> values, BiConsumer<DynamicPropertySet, Integer> func )
     {
         self.getQuery( queryName, values ).each( func );
     }
 
-    public static String leftShift( EntityModel self, Map<String, Object> values )
+    public static Long leftShift( EntityModel self, Map<String, String> values )
     {
         return self.add( values );
     }
@@ -120,7 +120,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return self.toArray();
     }
 
-    public static RecordModel[] toArray( EntityModel self, Map<String, ? super Object> values )
+    public static RecordModel[] toArray( EntityModel self, Map<String, String> values )
     {
         return self.toArray( values );
     }
@@ -129,10 +129,10 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
     @SuppressWarnings( "unchecked" )
     public Object invokeMethod( Object object, String entityName, Object args )
     {
-        return ( ( EntityModel )object ).get( ( Map<String, Object> )( ( Object[] )args )[ 0 ] );
+        return ( ( EntityModel )object ).get( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
     }
 
-    public String leftShift( Object object, Map<String, Object> values )
+    public Long leftShift( Object object, Map<String, String> values )
     {
         return ( ( EntityModel )object ).add( values );
     }
