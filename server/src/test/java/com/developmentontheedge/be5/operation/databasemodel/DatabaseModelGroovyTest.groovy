@@ -41,8 +41,8 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
         //assert database.persons( ["sex": "male"] ) == null
 
         database.testtableAdmin << [
-                "name", "Test",
-                "value", "1"];
+                "name": "Test",
+                "value": "1"];
 
         //assert database.persons( ["sex": "male"] ) != null
         //assert database.cache.persons[ id ] != null
