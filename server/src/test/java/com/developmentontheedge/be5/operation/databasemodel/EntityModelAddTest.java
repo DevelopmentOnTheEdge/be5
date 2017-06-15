@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 
+import com.developmentontheedge.be5.env.Be5;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
@@ -15,7 +17,8 @@ import org.junit.Test;
 
 public class EntityModelAddTest extends AbstractProjectTest
 {
-    private DatabaseModel database = injector.get(DatabaseModel.class);
+    private Injector sqlMockInjector = Be5.createInjector(new AbstractProjectTest.SqlMockBinder());
+    private DatabaseModel database = sqlMockInjector.get(DatabaseModel.class);
 
     @BeforeClass
     public static void beforeClass(){

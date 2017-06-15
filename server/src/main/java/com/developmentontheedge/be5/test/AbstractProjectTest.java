@@ -1,12 +1,16 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.Be5;
+import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
 
@@ -24,6 +28,17 @@ import static org.mockito.Mockito.when;
 public abstract class AbstractProjectTest
 {
     protected static final Injector injector = Be5.createInjector();
+
+    public class SqlMockBinder implements Binder
+    {
+
+        @Override
+        public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings, Map<Class<?>, Object> configurations)
+        {
+            new YamlBinder().configure(loadedClasses, bindings, configurations);
+            bindings.put(SqlService.class, SqlServiceMock.class);
+        }
+    }
 
     private static final LoginServiceImpl loginService;
 

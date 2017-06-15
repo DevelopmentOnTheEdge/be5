@@ -2,36 +2,22 @@ package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Be5;
-import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 public class OperationsTest extends AbstractProjectTest{
-
-    class SqlMockBinder implements Binder{
-
-        @Override
-        public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings, Map<Class<?>, Object> configurations)
-        {
-            new YamlBinder().configure(loadedClasses, bindings, configurations);
-            bindings.put(SqlService.class, SqlServiceMock.class);
-        }
-    }
 
     private Injector sqlMockInjector = Be5.createInjector(new SqlMockBinder());
     private OperationService operationService = sqlMockInjector.get(OperationService.class);

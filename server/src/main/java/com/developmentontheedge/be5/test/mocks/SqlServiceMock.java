@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.mocks;
+package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
