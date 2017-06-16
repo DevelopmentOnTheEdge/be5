@@ -106,7 +106,6 @@ public class SqlHelper
 
     public DynamicPropertySet getRecordById( Entity entity, Long id, Map<String, Object> conditions) throws SQLException
     {
-
         String sql = "SELECT * FROM " + entity.getName()
                 + " WHERE " + entity.getPrimaryKey() + " = ?";
 
@@ -251,6 +250,28 @@ public class SqlHelper
 //                justAddValueToQuery( databaseService, "entity", prop, value, sql );
 //            }
 
+
+    }
+
+    public String generateDeleteSql(Entity entity) {
+        return "DELETE FROM "+entity.getName()+" WHERE " + entity.getPrimaryKey() + " = ?";
+//        if( Utils.columnExists( connector, table, IS_DELETED_COLUMN_NAME ) )
+//        {
+//            delSql = "UPDATE " + tName + " SET " + IS_DELETED_COLUMN_NAME + " = 'yes'";
+//            if( Utils.columnExists( connector, table, WHO_MODIFIED_COLUMN_NAME ) )
+//            {
+//                delSql += ", " + WHO_MODIFIED_COLUMN_NAME + " = " + Utils.safestr( connector, userInfo.getUserName(), true );
+//            }
+//            if( Utils.columnExists( connector, table, MODIFICATION_DATE_COLUMN_NAME ) )
+//            {
+//                delSql += ", " + MODIFICATION_DATE_COLUMN_NAME + " = " + analyzer.getCurrentDateTimeExpr();
+//            }
+//        }
+//
+//        if( dryRun )
+//        {
+//            delSql = "SELECT " + analyzer.quoteIdentifier( Utils.findPrimaryKeyName( connector, table ) ) + " FROM " + tName;
+//        }
 
     }
 

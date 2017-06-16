@@ -121,55 +121,47 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
 
         assertFalse(testtableAdmin.empty)
     }
-//
-//
-//    public void testIsEmptyWithConditions()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.persons;
-//
-//        assertTrue entityName.empty;
-//
-//        entityName << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"];
-//
-//        assertFalse entityName.empty;
-//        assertTrue entityName.contains( ["lastname": "Niklaus"] );
-//        assertFalse entityName.contains( ["lastname": "Bjarne"] );
-//    }
-//
-//
-//    public void testGetEntity()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def persons = database.persons;
-//
-//        assertEquals "persons", persons.entityName
-//        assertTrue persons.empty
-//    }
-//
-//    public void testDelete()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.persons;
-//
-//        String id = database.persons << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"
-//        ];
-//
-//        assertFalse entityName.empty;
-//        assertEquals 1, entityName.remove( id );
-//        assertTrue entityName.empty;
-//        assertEquals 0, entityName.remove( id );
-//    }
+
+
+    @Test
+    void testIsEmptyWithConditions()
+    {
+        def entityName = database.testtableAdmin;
+
+        assertTrue entityName.empty;
+
+        entityName << [
+                "name": "TestName2",
+                "value": "1"];
+
+        assertFalse entityName.empty;
+        assertTrue entityName.contains( ["value": "1"] );
+        assertFalse entityName.contains( ["value": "2"] );
+    }
+
+    @Test
+    void testGetEntity()
+    {
+        def testtableAdmin = database.testtableAdmin;
+
+        assertEquals "testtableAdmin", testtableAdmin.entityName
+        assertTrue testtableAdmin.empty
+    }
+
+    @Test
+    void testDelete()
+    {
+        def entityName = database.testtableAdmin
+
+        def id = entityName << [
+                "name": "TestName2",
+                "value": "1"]
+
+        assertFalse entityName.empty;
+        assertEquals 1, entityName.remove( id )
+        assertTrue entityName.empty;
+        assertEquals 0, entityName.remove( id )
+    }
 //
 //    public void testFindRecord() throws SQLException
 //    {

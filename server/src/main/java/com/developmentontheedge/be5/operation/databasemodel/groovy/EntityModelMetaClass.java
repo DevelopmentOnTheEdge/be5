@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.operation.databasemodel.groovy;
 
+import com.developmentontheedge.be5.annotations.Experimental;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
+import com.developmentontheedge.be5.operation.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.databasemodel.QueryModel;
 import com.developmentontheedge.be5.operation.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -53,13 +55,13 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return closure.call();
     }
 
-//    public static Object runOperation( EntityModel self, String opName, Closure closure ) throws Exception
-//    {
-//        OperationModel operation = self.getOperation( opName );
-//        callClosureWithDelegate( closure, operation );
-//        return operation.invoke();
-//    }
-//
+    public static Object runOperation( EntityModel self, String opName, Closure closure ) throws Exception
+    {
+        OperationModel operation = self.getOperation( opName );
+        callClosureWithDelegate( closure, operation );
+        return operation.invoke();
+    }
+
 //    @Experimental( comment = "Под вопросом имя метода" )
 //    public static Object runOperation( EntityModel self, MessageHandler output, String opName, Closure closure ) throws Exception
 //    {

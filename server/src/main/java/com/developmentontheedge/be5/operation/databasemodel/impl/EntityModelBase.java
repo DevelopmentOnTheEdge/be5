@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implements EntityModelAdapter<R>
@@ -105,6 +106,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public R get( Map<String, String> values )
     {
+        Objects.requireNonNull(values);
         String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, values);
 
         DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, values.values().toArray());
@@ -121,7 +123,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     public long count( Map<String, String> allConditions )
     {
         String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, allConditions);
-        return db.getLong(sql);
+        return db.getLong(sql, allConditions.values().toArray());
     }
 
     @Override
@@ -159,12 +161,14 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public boolean contains( Map<String, String> values )
     {
+        Objects.requireNonNull(values);
         return count(values) != 0;
     }
 
     @Override
     public Long add( Map<String, String> values )
     {
+        Objects.requireNonNull(values);
         return addForce( values );
     }
 
@@ -195,6 +199,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public R get( Long id )
     {
+        Objects.requireNonNull(id);
         try
         {
             return ( R )new RecordModelBase( id );
@@ -214,19 +219,23 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public int remove( Long firstId, final Long... otherId )
     {
+        Objects.requireNonNull(firstId);
         return removeForce( firstId, otherId );
     }
 
     @Override
     final public int removeForce( Long firstId, final Long... otherId )
     {
-//        String[] keys = new String[ otherId.length + 1 ];
-//        if( otherId.length != 0 )
-//        {
-//            System.arraycopy( otherId, 0, keys, 1, keys.length - 1 );
-//        }
-//        keys[ 0 ] = firstId;
+        Objects.requireNonNull(firstId);
+
         int count = 0;
+        String deleteSql = sqlHelper.generateDeleteSql(entity);
+
+        count += db.update(deleteSql, firstId);
+        for (long id : otherId){
+            count += db.update(deleteSql, id);
+        }
+        //TODO replace for: IN (1,2,3)
 //        if( keys.length != 0 )
 //        {
 //            try
@@ -234,24 +243,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //                StringBuilder deleteSql = new StringBuilder( DeleteOperation.getDeleteSql( connector, getUserInfo(), getEntityName(), getTcloneId(), false ) );
 //                deleteSql.append( " WHERE " ).append( analyzer.quoteIdentifier( getPrimaryKeyName() ) ).append( " IN " ).append( Utils.toInClause( keys ) );
 //                deleteSql.append( "AND" ).append( getAdditionalConditions() );
-//                try
-//                {
+
 //                    count = connector.executeUpdate( deleteSql.toString() );
-//                }
-//                catch( SQLException e )
-//                {
-//                    throw new EntityModelSQLException( getEntityName(), deleteSql.toString(), e );
-//                }
-//                if( isDictionary() )
-//                {
-//                    clearDictionaryCache();
-//                }
-//            }
-//            catch( Exception e )
-//            {
-//                throw new RuntimeException( e );
-//            }
-//        }
+
         return count;
     }
 
@@ -259,6 +253,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     // TODO make is deleted column check and handle it
     public int remove( Map<String, String> values )
     {
+        Objects.requireNonNull(values);
 //        String sql = "DELETE FROM " + getEntityName() + Utils.ifNull( getTcloneId(), "" ) + "\n" +
 //                     "WHERE " + getAdditionalConditions();
 //        if( !values.isEmpty() )
