@@ -80,7 +80,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
                 value           : 1,
                 HIDDEN          : true,
                 TYPE            : java.sql.Date.class,
-                TAG_LIST_ATTR   : [['A', 'a'], ['B', 'b'], ['C', 'c'], ['D', 'd']] as Object[][],
+                TAG_LIST_ATTR   : ['A': 'a', 'B': 'b', 'C': 'c', 'D': 'd'],
                 RELOAD_ON_CHANGE: true,
                 RAW_VALUE       : true
         ]
@@ -91,8 +91,8 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
         assertEquals java.sql.Date.class, property.type
         assertTrue property.hidden
 
-        final def tags = [['A', 'a'], ['B', 'b'], ['C', 'c'], ['D', 'd']] as Object[][]
-        assertTrue Arrays.deepEquals( tags, property.getAttribute( TAG_LIST_ATTR ) )
+        final def tags = ['A': 'a', 'B': 'b', 'C': 'c', 'D': 'd']
+        assertEquals tags, property.getAttribute( TAG_LIST_ATTR )
         assertTrue property.getAttribute( RELOAD_ON_CHANGE )
         assertTrue property.getAttribute( RAW_VALUE )
     }

@@ -35,17 +35,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 {
     static
     {
-        //TODO load class via reflection ( Class.forName )
-        try
-        {
-            GroovyRegister.registerMetaClass( EntityModelMetaClass.class, EntityModelBase.class );
-            //GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
-            GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
-        }
-        catch( NoClassDefFoundError e )
-        {
-            // some class has been excluded
-        }
+        GroovyRegister.registerMetaClass( EntityModelMetaClass.class, EntityModelBase.class );
+        //GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
+        GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
     }
 
     private DatabaseService databaseService;

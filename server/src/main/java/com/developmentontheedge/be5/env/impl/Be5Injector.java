@@ -34,7 +34,7 @@ public class Be5Injector implements Injector
     {
         binder.configure(loadedClasses, bindings, configurations);
         //frozen = true;
-        log.info("Services initialized");
+        log.fine("Services initialized");
 
         //config logger first
         getLogger();

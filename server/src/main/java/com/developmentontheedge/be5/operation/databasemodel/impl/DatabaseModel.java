@@ -39,32 +39,17 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
     static
     {
-        try
-        {
-            GroovyRegister.registerMetaClass( DatabaseModelMetaClass.class, DatabaseModel.class );
-        }
-        catch( NoClassDefFoundError e )
-        {
-            throw Be5Exception.internal(e);
-        }
+        GroovyRegister.registerMetaClass( DatabaseModelMetaClass.class, DatabaseModel.class );
 
-        try
-        {
-            // TODO move to beans (having compilation problems)
-            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class );
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetScriptable.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetLazy.class );
-            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetDecorator.class );
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetDecorator.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, JDBCRecordAdapterAsQuery.class );
 //            GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, EntityRecordAdapter.class );
 
-            GroovyRegister.registerMetaClass( DynamicPropertyMetaClass.class, DynamicProperty.class );
-        }
-        catch( NoClassDefFoundError e )
-        {
-            throw Be5Exception.internal(e);
-        }
+        GroovyRegister.registerMetaClass( DynamicPropertyMetaClass.class, DynamicProperty.class );
 
     }
 
