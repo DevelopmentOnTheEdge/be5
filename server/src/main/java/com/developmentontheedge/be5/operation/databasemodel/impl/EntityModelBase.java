@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation.databasemodel.impl;
 
 
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -31,8 +32,6 @@ import java.util.function.BiFunction;
 
 public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implements EntityModelAdapter<R>
 {
-    //private static LoggingHandle cat = Logger.getHandle( MethodHandles.lookup().lookupClass() );
-
     static
     {
         //TODO load class via reflection ( Class.forName )
@@ -106,78 +105,26 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public R get( Map<String, String> values )
     {
-        //TODO Check it. Method must provide getAdditionalConditions
-//        Map<String, String> allConditions = new HashMap<>( values );
-//
-//        String tableName = connector.getAnalyzer().quoteIdentifier( getTableName() ) + " " + entityName;
-//        String conditionsSql = null;
-//        try
-//        {
-//            conditionsSql = Utils.getConditionsSql( connector, entityName, primaryKey, allConditions, tcloneId );
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelException( getEntityName(), e );
-//        }
-//
-//        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 1 " + ( conditionsSql.length() > 0 ? " AND " + conditionsSql : "" );
-//        try
-//        {
-//            DynamicPropertySet dps = getCache() == null ? new QRec( connector, sql ) : QRec.withCache( connector, sql, getCache() );
-//            return ( R )new RecordModelBase( dps );
-//        }
-//        catch( NoRecord e )
-//        {
-//            return null;
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelSQLException( getEntityName(), sql, e );
-//        }
-        return null;
+//        String tableName = entity.getName();
+//        DynamicPropertySet valuesDps = sqlHelper.getTableDps(entity, values);
+
+        String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, values);
+
+        DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, values.values().toArray());
+        return ( R )new RecordModelBase( dps );
     }
 
     @Override
-    public int count()
+    public long count()
     {
         return count( Collections.emptyMap() );
     }
     
     @Override
-    public int count( Map<String, String> allConditions )
+    public long count( Map<String, String> allConditions )
     {
-//        String conditionsSql = "";
-//        try
-//        {
-//            if( !allConditions.isEmpty() )
-//            {
-//                conditionsSql = " AND " + Utils.getConditionsSql( connector, entityName, primaryKey, allConditions, tcloneId );
-//            }
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelException( getEntityName(), e );
-//        }
-//
-//        String query = "SELECT COUNT(1) FROM " + getTableName() + " WHERE " + getAdditionalConditions() + conditionsSql;
-//        try
-//        {
-//            ResultSet rs = connector.executeQuery( query );
-//            try
-//            {
-//                rs.next();
-//                return rs.getInt( 1 );
-//            }
-//            finally
-//            {
-//                connector.close( rs );
-//            }
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelSQLException( getEntityName(), query, e );
-//        }
-        return 0;
+        String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, allConditions);
+        return db.getLong(sql);
     }
 
     @Override
@@ -468,11 +415,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     final public Long addForce( Map<String, String> values )
     {
-        DynamicPropertySet dps = sqlHelper.getTableDps(entity);
-        sqlHelper.setValues(dps, values);
+        DynamicPropertySet dps = sqlHelper.getTableDps(entity, values);
 
         return db.insert(sqlHelper.generateInsertSql(dps, entity), sqlHelper.getValues(dps));
-        //return db.insert(sql, values.values().toArray());
     }
 
     @Override
@@ -648,7 +593,19 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public Long leftShift( Map<String, String> values )
     {
-        return ( ( EntityModel )this ).add( values );
+        return this.add( values );
+    }
+
+    @Override
+    public RecordModel call( Map<String, String> values)
+    {
+        return this.get( values );
+    }
+
+    @Override
+    public RecordModel getAt(Long id)
+    {
+        return null;
     }
 
     @Override

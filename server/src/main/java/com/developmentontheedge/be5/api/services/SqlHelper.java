@@ -45,18 +45,24 @@ public class SqlHelper
         return dps;
     }
 
+    public DynamicPropertySet getTableDps(Entity entity, Map<String, String> values)
+    {
+        return setValues(getTableDps(entity), values);
+    }
+
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
-    public void setValues(DynamicPropertySet dps, Map<String, String> presetValues)
+    private DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, String> presetValues)
     {
         StreamSupport.stream(dps.spliterator(), false).forEach(
                 property -> {
                     property.setValue(presetValues.getOrDefault(property.getName(), getDefault(property.getType())));
                 }
         );
+        return dps;
     }
 
     protected String getDefault(Class<?> type){
@@ -72,27 +78,27 @@ public class SqlHelper
                 .map(DynamicProperty::getValue).toArray();
     }
 
-    public String getConditionsSql(Entity entity, String primaryKey, Map<?, ?> conditions ) throws SQLException
-    {
-        StringBuilder sql = new StringBuilder( paramsToCondition( entity, conditions ) );
-
-        if( meta.getColumn( entity, DatabaseConstants.IS_DELETED_COLUMN_NAME ) != null )
-        {
-            sql.append( " AND " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " != 'yes'" );
-        }
-        return sql.toString();
-    }
-
-    public DynamicPropertySet getRecordByConditions(Entity entity, String primaryKey, Map<?, ?> conditions ) throws SQLException
-    {
-        String tableName = entity.getName();
-
-        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 1 AND "
-                      + getConditionsSql( entity, primaryKey, conditions );
-
-        return db.select(sql, DpsHelper::createDps);
-    }
-
+//    public String getConditionsSql(Entity entity, String primaryKey, Map<?, ?> conditions ) throws SQLException
+//    {
+//        StringBuilder sql = new StringBuilder( paramsToCondition( entity, conditions ) );
+//
+//        if( meta.getColumn( entity, DatabaseConstants.IS_DELETED_COLUMN_NAME ) != null )
+//        {
+//            sql.append( " AND " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " != 'yes'" );
+//        }
+//        return sql.toString();
+//    }
+//
+//    public DynamicPropertySet getRecordByConditions(Entity entity, String primaryKey, Map<?, ?> conditions ) throws SQLException
+//    {
+//        String tableName = entity.getName();
+//
+//        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 1 AND "
+//                      + getConditionsSql( entity, primaryKey, conditions );
+//
+//        return db.select(sql, DpsHelper::createDps);
+//    }
+//
     public DynamicPropertySet getRecordById( Entity entity, Long id ) throws SQLException
     {
         return getRecordById( entity, id, Collections.emptyMap() );
@@ -102,7 +108,7 @@ public class SqlHelper
     {
 
         String sql = "SELECT * FROM " + entity.getName()
-                + " WHERE " + entity.getPrimaryKey() + " = " + id;
+                + " WHERE " + entity.getPrimaryKey() + " = ?";
 
         if( !conditions.isEmpty() )
         {
@@ -117,6 +123,7 @@ public class SqlHelper
         return db.select(sql, DpsHelper::createDps, id);
     }
 
+    @Deprecated
     public String paramsToCondition( Entity entity, Map<?,?> values )
     {
         String cond = "";
@@ -245,6 +252,44 @@ public class SqlHelper
 //            }
 
 
+    }
+
+
+    public String generateConditionsSql( Entity entity, Map<String,String> values )
+    {
+        if(values.size()>0){
+            String cond = "";
+            for( Map.Entry<String,String> entry : values.entrySet() )
+            {
+                if( !"".equals( cond ) )
+                {
+                    cond += " AND ";
+                }
+                String column = entry.getKey();
+                String value = entry.getValue();
+//                if( value instanceof Object[] )
+//                {
+//                    cond += "" + column +
+//                            " IN " + Utils.toInClause(singletonList(value), meta.isNumericColumn( entity, column ) );
+//                    continue;
+//                }
+
+                String op = " = ";
+                if( value.endsWith( "%" ) )
+                {
+                    op = " LIKE ";
+                }
+                cond += "" + column +
+                        ( value.equals("null") ? " IS NULL " :
+                                op + "?" );
+            }
+
+            return cond;
+//            return StreamSupport.stream(dps.spliterator(), false)
+//                    .map(x -> x + " = ?")
+//                    .collect(Collectors.joining(", "));
+        }
+        return "1 = 1";
     }
 
 //    public static String safeValue( DatabaseService connector, DynamicProperty prop )

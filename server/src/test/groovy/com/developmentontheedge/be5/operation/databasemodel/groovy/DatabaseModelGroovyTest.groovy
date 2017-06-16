@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation.databasemodel.groovy
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.operation.databasemodel.impl.EntityModelBase
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
@@ -10,63 +11,76 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 import junit.framework.TestCase
 import org.junit.AfterClass
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
 
 import java.sql.SQLException
 
+import static com.developmentontheedge.be5.api.helpers.DpsHelper.createDps
 import static com.developmentontheedge.beans.BeanInfoConstants.*
+import static org.junit.Assert.assertEquals
 
 class DatabaseModelGroovyTest extends AbstractProjectTest
 {
     DatabaseModel database = injector.get(DatabaseModel.class);
+    def db = injector.getSqlService();
 
     @BeforeClass
     static void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
     }
 
     @AfterClass
     static void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
+        initUserWithRoles(RoleType.ROLE_GUEST)
+    }
+
+    @Before
+    void before(){
+        db.update("DELETE FROM testtableAdmin WHERE true")
     }
 
     @Test
     void test()
     {
-        //def testtableAdmin = database.testtableAdmin;
+        assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
 
-        //assert database.persons( ["sex": "male"] ) == null
+        //assert database.testtableAdmin( ["name": "TestName"] ) == null
 
-        database.testtableAdmin << [
-                "name": "Test",
+        Long id = database.testtableAdmin << [
+                "name": "TestName",
                 "value": "1"];
 
-        //assert database.persons( ["sex": "male"] ) != null
-        //assert database.cache.persons[ id ] != null
+        assertEquals(id, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+        //assertEquals(id, db.getLong("SELECT COUNT(id) FROM testtableAdmin WHERE id = ?", id));
+
+        def testtableAdmin = database.testtableAdmin;
+
+        assert db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
+        assert testtableAdmin( ["name": "TestName"] ) != null
+
+        //assert database.testtableAdmin[ id ] != null
 
         //database.persons[ id ].remove()
         //assert database.persons[ id ] == null
         //assert database.cache.persons[ id ] != null
     }
-//
-//    public void testGroovyCount()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def persons = database.persons;
-//
-//        assertEquals 0, persons.size()
-//
-//        persons << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"];
-//
-//        assertEquals 1, persons.size()
-//    }
+
+    @Test
+    void testGroovyCount()
+    {
+        def testtableAdmin = database.testtableAdmin;
+
+        assertEquals 0, testtableAdmin.size()
+
+        testtableAdmin << [
+                "name": "TestName",
+                "value": "1"];
+
+        assertEquals 1, testtableAdmin.size()
+    }
 //
 //    public void testInsert() throws Exception
 //    {

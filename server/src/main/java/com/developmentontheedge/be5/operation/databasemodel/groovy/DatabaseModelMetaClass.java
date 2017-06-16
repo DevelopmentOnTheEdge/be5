@@ -4,9 +4,10 @@ import java.util.Map;
 
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel;
 
+import groovy.lang.DelegatingMetaClass;
 import groovy.lang.MissingMethodException;
 
-public class DatabaseModelMetaClass extends ExtensionMethodsMetaClass
+public class DatabaseModelMetaClass extends DelegatingMetaClass
 {
 
     public DatabaseModelMetaClass( Class<DatabaseModel> theClass )

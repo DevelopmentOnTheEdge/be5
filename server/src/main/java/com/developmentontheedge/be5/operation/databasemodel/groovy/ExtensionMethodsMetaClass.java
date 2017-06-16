@@ -6,9 +6,7 @@ import groovy.lang.MissingMethodException;
 import com.developmentontheedge.be5.annotations.Experimental;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import java.lang.invoke.MethodHandles;
 
-import java.util.Map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 

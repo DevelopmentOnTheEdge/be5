@@ -28,7 +28,7 @@ public interface EntityModel<R extends RecordModel> {
      * @throws EntityModelSQLException if obtaining the size threw exception
      */
     @Deprecated
-    default int size() { return this.count(); };
+    default long size() { return this.count(); };
 
     /**
      * Returns the number of records a table.
@@ -36,7 +36,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return number of records
      * @throws EntityModelSQLException if obtaining the size threw exception
      */
-    int count();
+    long count();
 
     /**
      * Returns the number of records a table.
@@ -44,7 +44,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return number of records
      * @throws EntityModelSQLException if obtaining the size threw exception
      */
-    int count(Map<String, String> values);
+    long count(Map<String, String> values);
 
     /**
      * Returns <tt>true</tt> if this table contains no records.
@@ -344,5 +344,9 @@ public interface EntityModel<R extends RecordModel> {
     OperationModel getOperation(String operationName);
 
     Long leftShift( Map<String, String> values );
+
+    RecordModel call( Map<String, String> values );
+
+    RecordModel getAt(Long id);
 
 }

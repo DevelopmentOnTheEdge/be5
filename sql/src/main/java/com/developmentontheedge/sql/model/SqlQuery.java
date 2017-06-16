@@ -14,7 +14,7 @@ public class SqlQuery
         parser.parse( query );
         if(!parser.getMessages().isEmpty())
         {
-            throw new IllegalArgumentException( String.join("\n", parser.getMessages() ) );
+            throw new IllegalArgumentException( String.join("\n", parser.getMessages() + "\n" + query) );
         }
         return parser.getStartNode();
     }
