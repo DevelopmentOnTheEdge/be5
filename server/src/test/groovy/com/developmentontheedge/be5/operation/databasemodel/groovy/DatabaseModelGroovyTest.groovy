@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.databasemodel
+package com.developmentontheedge.be5.operation.databasemodel.groovy
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel

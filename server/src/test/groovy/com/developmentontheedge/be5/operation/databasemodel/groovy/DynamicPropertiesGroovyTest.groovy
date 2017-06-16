@@ -20,7 +20,7 @@ import static com.developmentontheedge.beans.BeanInfoConstants.*
 
 class DynamicPropertiesGroovyTest extends AbstractProjectTest{
 
-    DatabaseModel database = injector.get(DatabaseModel.class);
+    def database = injector.get(DatabaseModel.class);
 
     @BeforeClass
     static void beforeClass(){
@@ -124,6 +124,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
         DynamicProperty property = new DynamicProperty( "d", String, "d" );
         assert ( ( dps << property ).hasProperty( "d" ) )
         assert dps.hasProperty( "d" )
+        println 'testAddProperty'
     }
 //
 //    public void testQRec()
@@ -238,7 +239,6 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps.build( "___property", String ).value( "testValue" );
-        println "testGetMissingProperty"
         assert "testValue" == dps."___property"
     }
 //
