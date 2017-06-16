@@ -21,6 +21,8 @@ import java.sql.SQLException
 import static com.developmentontheedge.be5.api.helpers.DpsHelper.createDps
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertTrue
 
 class DatabaseModelGroovyTest extends AbstractProjectTest
 {
@@ -99,47 +101,26 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
 //                ["Wirth", "Emil", "Niklaus", "1934-02-15", "male"]] as String[][] );
 //    }
 //
-//    public void testCount()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def persons = database.persons;
 //
-//        assertEquals 0, persons.size()
-//
-//        persons << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"];
-//
-//        assertEquals 1, persons.size()
-//    }
-//
-//    public void testIsEmpty()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def persons = database.persons;
-//
-//        assertTrue persons.empty
-//
-//        persons << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"];
-//
-//        assertFalse persons.empty
-//
-//        persons << [
-//                "firstname": "Bjarne",
-//                "lastname" : "Stroustrup",
-//                "birthday" : "30.12.1950",
-//                "sex"      : "male"]
-//
-//        assertFalse persons.empty
-//    }
+    @Test
+    void testIsEmpty()
+    {
+        def testtableAdmin = database.testtableAdmin;
+
+        assertTrue(testtableAdmin.empty)
+
+        testtableAdmin << [
+                "name": "TestName",
+                "value": "1"];
+
+        assertFalse(testtableAdmin.empty)
+
+        testtableAdmin << [
+                "name": "TestName2",
+                "value": "2"];
+
+        assertFalse(testtableAdmin.empty)
+    }
 //
 //
 //    public void testIsEmptyWithConditions()

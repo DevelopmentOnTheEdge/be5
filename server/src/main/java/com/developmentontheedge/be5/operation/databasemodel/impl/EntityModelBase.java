@@ -105,9 +105,6 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public R get( Map<String, String> values )
     {
-//        String tableName = entity.getName();
-//        DynamicPropertySet valuesDps = sqlHelper.getTableDps(entity, values);
-
         String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, values);
 
         DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, values.values().toArray());
@@ -156,50 +153,13 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public boolean isEmpty()
     {
-        return isSqlResultEmpty( getAdditionalConditions() );
-    }
-
-    private boolean isSqlResultEmpty( String ... conditions )
-    {
-//        StringBuilder query = new StringBuilder( "SELECT 1 FROM " )
-//                .append( getTableName() )
-//                .append( " WHERE 1 = 1" );
-//
-//        for( String condition : conditions )
-//        {
-//            if( !condition.isEmpty() )
-//            {
-//                query.append( " AND " ).append( condition );
-//            }
-//        }
-//
-//        try
-//        {
-//            ResultSet rs = connector.executeQuery( query.toString() );
-//            try
-//            {
-//                return !rs.next();
-//            }
-//            finally
-//            {
-//                connector.close( rs );
-//            }
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new RuntimeException( e );
-//        }
-        return false;
+        return count() == 0;
     }
 
     @Override
     public boolean contains( Map<String, String> values )
     {
-        String conditionsSql;
-
-        conditionsSql = "";//Utils.getConditionsSql( connector, getEntityName(), getPrimaryKeyName(), values, getTcloneId() );
-
-        return !isSqlResultEmpty( conditionsSql );
+        return count(values) != 0;
     }
 
     @Override
