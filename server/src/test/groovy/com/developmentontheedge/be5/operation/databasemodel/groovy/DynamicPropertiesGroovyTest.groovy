@@ -22,24 +22,6 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
 
     def database = injector.get(DatabaseModel.class);
 
-    @BeforeClass
-    static void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
-    @AfterClass
-    static void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-//
-//    private final DatabaseConnector connector = TestDB.getDefaultConnector( "postgresql", "be_test" );
-//
-//    public void setUp()
-//    {
-//        TestDB.delete( connector, "persons" );
-//    }
-//
     @Test
     void testSetValue() throws Exception
     {
@@ -122,39 +104,40 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
         DynamicProperty property = new DynamicProperty( "d", String, "d" );
         assert ( ( dps << property ).hasProperty( "d" ) )
         assert dps.hasProperty( "d" )
-        println 'testAddProperty'
     }
-//
-//    public void testQRec()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def rec = database.operations( table_name : "operations", name : "Clone" );
-//        def id = rec.id;
-//        try {
-//            assert rec.table_name == "operations";
-//            rec.table_name = "cool";
-//            assert database.operations[ id ].table_name == "cool";
-//        } finally {
-//            rec.table_name = "operations"
-//        }
-//    }
-//
-//    public void testQRecWithLeftShiftAndMap()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def rec = database.operations( table_name : "operations", name : "Clone" );
-//        def id = rec.id;
-//        try {
-//            assert rec.table_name == "operations";
-//            assert rec.name == "Clone";
-//            rec << [ table_name : "newTableName", name: "newName" ];
-//            assert database.operations[ id ].table_name == "newTableName";
-//            assert database.operations[ id ].name == "newName";
-//        } finally {
-//            rec.table_name = "operations"
-//            rec.name = "Clone"
-//        }
-//    }
+
+    @Test
+    @Ignore
+    void testQRec()
+    {
+        def rec = database.operations( table_name : "operations", name : "Clone" );
+        def id = rec.id;
+        try {
+            assert rec.table_name == "operations";
+            rec.table_name = "cool";
+            assert database.operations[ id ].table_name == "cool";
+        } finally {
+            rec.table_name = "operations"
+        }
+    }
+
+    @Test
+    @Ignore
+    void testQRecWithLeftShiftAndMap()
+    {
+        def rec = database.operations( table_name : "operations", name : "Clone" );
+        def id = rec.id;
+        try {
+            assert rec.table_name == "operations";
+            assert rec.name == "Clone";
+            rec << [ table_name : "newTableName", name: "newName" ];
+            assert database.operations[ id ].table_name == "newTableName";
+            assert database.operations[ id ].name == "newName";
+        } finally {
+            rec.table_name = "operations"
+            rec.name = "Clone"
+        }
+    }
 //
     @Test
     void testGetAttribute()
@@ -194,31 +177,29 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
         dps._test.attr[ "INPUT_SIZE_ATTR" ] = "10"
         assertEquals dps._test.getAttribute( BeanInfoConstants.INPUT_SIZE_ATTR ), "10";
     }
-//
-//    public void testGetAt()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def DynamicPropertySet dps = new DynamicPropertySetSupport()
-//        dps << [
-//                name : "testProperty",
-//                value: 1
-//        ]
-//        assertEquals 1, dps[ '$testProperty' ]
-//    }
-//
-//    public void testGetAtWithoutAccessor()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def DynamicPropertySet dps = new DynamicPropertySetSupport()
-//        dps << [
-//                name : "testProperty",
-//                value: 1
-//        ]
-//        assertEquals 1, dps[ "testProperty" ]
-//    }
-//
+
+    @Test
+    void testGetAt()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+        dps << [
+                name : "testProperty",
+                value: 1
+        ]
+        assertEquals 1, dps[ '$testProperty' ]
+    }
+
+    @Test
+    void testGetAtWithoutAccessor()
+    {
+        def dps = new DynamicPropertySetSupport()
+        dps << [
+                name : "testProperty",
+                value: 1
+        ]
+        assertEquals 1, dps[ "testProperty" ]
+    }
+
 
     @Test
     void testDynamicPropertySetPlus()
@@ -257,110 +238,19 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
         dps.build( "___property", String ).value( "testValue" );
         assert "testValue" == dps."___property"
     }
-//
-//    public void testSetWith()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def DynamicPropertySet dps = new DynamicPropertySetSupport()
-//        dps << [ name : "testProperty", value: 1 ]
-//        dps << [ name : "testProperty2", value: 1 ]
-//        dps.with {
-//            testProperty = 2
-//            testProperty2 = 2
-//        }
-//        assertEquals 2, dps.getValue( "testProperty" );
-//        assertEquals 2, dps.getValue( "testProperty2" );
-//    }
-//
-    @Test
-    void testFlexibleDynamicPropertySet()
-    {
-        DynamicPropertySet dps = FlexibleDynamicPropertySet.getInstance();
 
-        dps.hello = "Hi!";
-        assertEquals( dps.getValue( "hello" ), "Hi!" );
-        dps.guess.who = "King";
-        def possible = dps.getValue( "guess" )
-        assertTrue( possible instanceof DynamicPropertySet );
-        assertEquals( possible.getValue( "who" ), "King" );
-        assertEquals( dps.guess.$who, "King" );
+    @Test
+    void testSetWith()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+        dps << [ name : "testProperty", value: 1 ]
+        dps << [ name : "testProperty2", value: 1 ]
+        dps.with {
+            testProperty = 2
+            testProperty2 = 2
+        }
+        assertEquals 2, dps.getValue( "testProperty" );
+        assertEquals 2, dps.getValue( "testProperty2" );
     }
-//
-//    private static void assertException( Class<? extends Throwable> exp, Closure c )
-//    {
-//        try {
-//            c();
-//        } catch( Exception e ) {
-//            assert e.class, exp
-//            return;
-//        }
-//        fail();
-//    }
-//
-//    public void testFlexibleDynamicPropertySetReadWrite()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        DynamicPropertySet instanceOfNativeDps = new DynamicPropertySetSupport();
-//
-//        def dps = FlexibleDynamicPropertySet.getInstance( instanceOfNativeDps );
-//        dps.idps1.idps2.idps3.idps4 = "1";
-//        dps.idps1.idps2.idps3_1.idps4 = "1";
-//        dps.idps1.idps2.idps3_2.idps4 = "1";
-//        dps.iidps1.iidps2.iidps3.iidps4 = "2";
-//        dps.iiidps1.iiidps2.iiidps3.iiidps4 = "3";
-//        assertEquals dps.idps1.idps2.idps3.$idps4, "1"
-//        // STRONG PATH
-//        assertEquals dps.$idps1.$idps2.$idps3.$idps4, "1"
-//
-//        assertException( NullPointerException.class ) {
-//            dps.$idps1.$idpsNONE.$idps3
-//        };
-//
-//        def dps2 = FlexibleDynamicPropertySet.getInstance( new DynamicPropertySetSupport() );
-//        dps2.test1.test2 = dps.idps1.idps2.idps3.$idps4;
-//
-//        assertEquals dps2.test1.$test2, "1"
-//        assertEquals dps2.test1.$test3, null
-//        assertTrue dps2.test1.test3.testSome instanceof FlexibleDynamicPropertySet
-//        assertEquals dps2.test1.test10.test12.$Test, null
-//
-//        assertEquals dps2.$test1.$test2, "1"
-//        assertEquals dps2.$test1.$test10.$test12.$Test, null
-//    }
-//
-//    public void testFlexibleDynamicPropertyWrap()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//
-//        def test = new DynamicPropertySetSupport();
-//        def dps = new DynamicPropertySetSupport();
-//        dps.build( "test", DynamicPropertySet.class ).value( test );
-//        def flex = FlexibleDynamicPropertySet.getInstance( dps );
-//        assert flex.test instanceof FlexibleDynamicPropertySet
-//    }
-//
-//    public void testFlexibleDynamicPropertyUnwrap()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def flex = FlexibleDynamicPropertySet.getInstance();
-//        flex.test.hello.world = "1";
-//        assert flex.test.hello instanceof FlexibleDynamicPropertySet
-//        def dps = FlexibleDynamicPropertySet.unwrap( flex );
-//        assert !( dps.test.hello instanceof FlexibleDynamicPropertySet )
-//    }
-//
-//    public void testFlexibleMap()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def map = new com.developmentontheedge.enterprise.operations.databasemodel.groovy.FlexibleMap();
-//        map.test.node = "1";
-//        assert map[ "test" ] instanceof HashMap;
-//        assert map.test.node == "1";
-//    }
 
 }
