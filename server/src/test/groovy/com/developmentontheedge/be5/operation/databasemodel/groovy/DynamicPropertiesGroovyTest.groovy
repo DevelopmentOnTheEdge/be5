@@ -89,7 +89,6 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
     }
 
     @Test
-    @Ignore
     void testCreateProperty()
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
@@ -117,7 +116,6 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
     }
 
     @Test
-    @Ignore
     void testAddProperty()
     {
         DynamicPropertySet dps = [ a : "a", b : "b" ] as DynamicPropertySetSupport
@@ -221,19 +219,37 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest{
 //        assertEquals 1, dps[ "testProperty" ]
 //    }
 //
-//    @Test
-//    void testDynamicPropertySetPlus()
-//    {
-//        def dps1 = [ a : "a", b : "b", c : "c" ] as DynamicPropertySetSupport;
-//        def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport;
-//        DynamicPropertySetSupport dps3 = dps1 + dps2;
-//        assert dps1.size() == 3;
-//        assert dps2.size() == 3;
-//        [ a : "a", b : "b", c : "c", d : "d", e : "e", f : "f" ].each( { a, b ->
-//            assert dps3.getValue( a ) == b
-//        } );
-//    }
-//
+
+    @Test
+    void testDynamicPropertySetPlus()
+    {
+        def dps1 = [ a : "a", b : "b", c : "c" ] as DynamicPropertySetSupport;
+        def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport;
+
+//Work
+//        DynamicPropertySetSupport.metaClass.plus = { DynamicPropertySet dps ->
+//            DynamicPropertySet clonedDps = new DynamicPropertySetSupport( delegate );
+//            for (DynamicProperty dp : dps2)
+//            {
+//                try
+//                {
+//                    clonedDps.add(DynamicPropertySetSupport.cloneProperty(dp));
+//                } catch (Exception wierd)
+//                {
+//                    log.severe("Unable to clone property " + dp.getName() + ", message = " + wierd.getMessage());
+//                }
+//            }
+//            return clonedDps;
+//        }
+
+        DynamicPropertySetSupport dps3 = dps1 + dps2;
+        assert dps1.size() == 3;
+        assert dps2.size() == 3;
+        [ a : "a", b : "b", c : "c", d : "d", e : "e", f : "f" ].each( { a, b ->
+            assert dps3.getValue( a ) == b
+        } );
+    }
+
     @Test
     void testGetMissingProperty() throws Exception
     {

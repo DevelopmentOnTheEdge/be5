@@ -646,6 +646,12 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
+    public Long leftShift( Map<String, String> values )
+    {
+        return ( ( EntityModel )this ).add( values );
+    }
+
+    @Override
     public QueryModel getQuery( String queryName ) 
     {
         return new QueryModelBase( queryName, Collections.emptyMap() );

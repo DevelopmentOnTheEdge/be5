@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.operation.databasemodel.groovy;
 import com.developmentontheedge.be5.metadata.Utils;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
+import groovy.lang.GroovySystem;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
 

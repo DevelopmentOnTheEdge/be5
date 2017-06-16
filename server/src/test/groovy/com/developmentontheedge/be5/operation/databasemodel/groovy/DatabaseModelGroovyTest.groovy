@@ -33,7 +33,6 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
     }
 
     @Test
-    @Ignore
     void test()
     {
         //def testtableAdmin = database.testtableAdmin;

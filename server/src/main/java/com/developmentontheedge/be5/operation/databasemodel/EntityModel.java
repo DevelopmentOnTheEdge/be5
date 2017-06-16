@@ -343,4 +343,6 @@ public interface EntityModel<R extends RecordModel> {
      */
     OperationModel getOperation(String operationName);
 
+    Long leftShift( Map<String, String> values );
+
 }

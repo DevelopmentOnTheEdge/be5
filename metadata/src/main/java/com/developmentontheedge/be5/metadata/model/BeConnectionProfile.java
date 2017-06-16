@@ -298,7 +298,17 @@ public class BeConnectionProfile extends BeModelElementSupport implements BeElem
             {
                 return properties.size();
             }
-            
+
+            public DynamicPropertySet plus( DynamicPropertySet dps ){return null;}
+            public DynamicPropertySet leftShift(DynamicProperty property)
+            {
+                return null;
+            }
+            public DynamicPropertySet leftShift(Map<String, Object> properties)
+            {
+                return null;
+            }
+
             @Override
             public boolean replaceWith( String name, DynamicProperty prop )
             {
