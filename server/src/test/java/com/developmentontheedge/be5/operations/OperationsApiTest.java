@@ -113,7 +113,7 @@ public class OperationsApiTest extends AbstractProjectTest{
                     "'/number':{" +
                         "'displayName':'Number'," +
                         "'type':'Long'," +
-                        "'tagList':[{'A':1},{'B':2},{'C':3},{'D':4}]," +
+                        "'tagList':{'A':1,'B':2,'C':3,'D':4}," +
                         "'reloadOnChange':true,'status':'error'}}," +
                 "'order':['/name','/number']}",
                 oneQuotes(generate.getFirst().getBean().toString()));
