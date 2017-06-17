@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.operation.databasemodel.impl;
 
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.operation.databasemodel.MultipleRecords;
 import com.developmentontheedge.be5.operation.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -10,19 +9,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BiFunction;
-
 
 
 //@DirtyRealization( comment = "Low type safety, pure logic!" )
 public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
 {
 
-    private String entity;
+    private Entity entity;
     private ResultHandler<T> handler;
     
-    public AbstractMultipleRecords(String entity )
+    public AbstractMultipleRecords(Entity entity )
     {
         this.entity = entity;
     }

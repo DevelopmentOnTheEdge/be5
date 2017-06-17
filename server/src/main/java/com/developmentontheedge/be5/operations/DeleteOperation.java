@@ -18,12 +18,8 @@ public class DeleteOperation extends OperationSupport implements Operation
 
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception {
-        String deleteSql = sqlHelper.generateDeleteSql(getInfo().getEntity());
-
-        for (long id : context.getRecordIDs())
-        {
-            db.update(deleteSql, id);
-        }
+        db.update(sqlHelper.generateDeleteInSql(getInfo().getEntity(), context.getRecordIDs().length),
+                context.getRecordIDs());
     }
 
 }

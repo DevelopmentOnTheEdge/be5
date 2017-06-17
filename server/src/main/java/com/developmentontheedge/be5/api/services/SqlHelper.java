@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 import static java.util.Collections.singletonList;
@@ -154,7 +155,7 @@ public class SqlHelper
         return cond;
     }
 
-    public String generateInsertSql(DynamicPropertySet dps, Entity entity)
+    public String generateInsertSql(Entity entity, DynamicPropertySet dps)
     {
         String columns = StreamSupport.stream(dps.spliterator(), false)
                 .map(DynamicProperty::getName)
@@ -251,6 +252,14 @@ public class SqlHelper
 //            }
 
 
+    }
+
+    public String generateDeleteInSql(Entity entity, int count) {
+        return "DELETE FROM "+entity.getName()+" WHERE " + entity.getPrimaryKey() + " IN " + inClause(count);
+    }
+
+    public String inClause(int count){
+        return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
     }
 
     public String generateDeleteSql(Entity entity) {

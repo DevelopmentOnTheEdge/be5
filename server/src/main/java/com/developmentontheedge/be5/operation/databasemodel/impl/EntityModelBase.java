@@ -249,7 +249,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public List<RecordModel> toList()
+    public List<R> toList()
     {
         return toList( Collections.emptyMap() );
     }
@@ -261,23 +261,23 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
     
     @Override
-    public List<RecordModel> toList( Map<String, String> values )
+    public List<R> toList( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        return new MultipleRecordsBase<List<RecordModel>>( db, getEntityName() ).get( values );
+        return new MultipleRecordsBase<List<R>>().get( values );
     }
 
     @Override
     public RecordModel[] toArray( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>( db, getEntityName() );
-        records.setHandler( new AbstractMultipleRecords.ArrayHandler<>() );
+        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>();
+        records.setHandler( new MultipleRecordsBase.ArrayHandler<>() );
         return records.get( values );
     }
 
     @Override
-    public List<RecordModel> collect()
+    public List<R> collect()
     {
         return toList();
     }
@@ -287,8 +287,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     {
         Objects.requireNonNull(values);
         Objects.requireNonNull(lambda);
-        MultipleRecordsBase<List<T>> records = new MultipleRecordsBase<>( db, getEntityName() );
-        AbstractMultipleRecords.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
+
+        MultipleRecordsBase<List<T>>  records = new MultipleRecordsBase<>();
+        MultipleRecordsBase.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
         records.setHandler( handler );
         records.get( values );
         return handler.getResult();
@@ -311,7 +312,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getTableDps(entity, values);
 
-        return db.insert(sqlHelper.generateInsertSql(dps, entity), sqlHelper.getValues(dps));
+        return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
     }
 
     @Override
@@ -369,9 +370,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
     {
-        public MultipleRecordsBase(SqlService db, String tableName )
+        public MultipleRecordsBase()
         {
-            super( tableName );
+            super(entity);
         }
 
         @Override

@@ -45,7 +45,7 @@ public class OperationsTest extends AbstractProjectTest{
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationService.generate(req).getSecond());
 
-        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID = ?", 1L);
+        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
     }
 
     @Test

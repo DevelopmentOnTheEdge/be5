@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.operation.databasemodel.groovy.GroovyRegister;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
@@ -22,7 +23,6 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -105,15 +105,19 @@ public class OperationServiceImpl implements OperationService
             throw Be5Exception.internalInOperation(e, operation.getInfo());
         }
 
-        if(parameters instanceof DynamicPropertySet &&
-            StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false)
-                .anyMatch(p -> p.getAttribute(BeanInfoConstants.STATUS) != null &&
-                    DynamicProperty.Status.valueOf(((String)p.getAttribute(BeanInfoConstants.STATUS)).toUpperCase()) == DynamicProperty.Status.ERROR))
+        if(parameters instanceof DynamicPropertySet)
         {
-            //TODO localize BeanInfoConstants.MESSAGE
-            return Either.first(new FormPresentation(entityName, queryName, operationName,
-                    userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                    selectedRowsString, JsonFactory.bean(parameters), presetValues));
+            ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
+
+            if(StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false)
+                        .anyMatch(p -> p.getAttribute(BeanInfoConstants.STATUS) != null &&
+                                DynamicProperty.Status.valueOf(((String)p.getAttribute(BeanInfoConstants.STATUS)).toUpperCase()) == DynamicProperty.Status.ERROR))
+            {
+                //TODO localize BeanInfoConstants.MESSAGE
+                return Either.first(new FormPresentation(entityName, queryName, operationName,
+                        userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                        selectedRowsString, JsonFactory.bean(parameters), presetValues));
+            }
         }
 
         execute(operation, parameters, operationContext, req);
@@ -159,37 +163,9 @@ public class OperationServiceImpl implements OperationService
 
         switch (operationInfo.getType())
         {
-//        case DatabaseConstants.OP_TYPE_SQL:
-//            if (user.isAdmin())
-//            {
-//                legacyOperation = new SQLOperation();
-//            }
-//            else
-//            {
-//                legacyOperation = new SilentSqlOperation();
-//            }
-//            ((SQLOperation) legacyOperation).setCode(code);
-//            break;
-//        case DatabaseConstants.OP_TYPE_JAVASCRIPT_SERVER:
-//            if (JavaScriptOperation.canBeOffline(code))
-//            {
-//                legacyOperation = new OfflineJavaScriptOperation();
-//            }
-//            else
-//            {
-//                legacyOperation = new JavaScriptOperation();
-//            }
-//            ((JavaScriptOperation) legacyOperation).setCode(code);
-//            break;
-//        case DatabaseConstants.OP_TYPE_JAVA_FUNCTION:
-//            legacyOperation = new MethodWrapperOperation();
-//            ((MethodWrapperOperation) legacyOperation).setCode(code);
-//            break;
             case OPERATION_TYPE_GROOVY:
                 try
                 {
-//                    code = putPlaceholders( connector, code, ui, null );
-//                    code = putDictionaryValues( connector, code, ui );
                     operation = ( Operation ) GroovyRegister.parseClass( code ).newInstance();
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
@@ -210,9 +186,14 @@ public class OperationServiceImpl implements OperationService
         return operation;
     }
 
-    long[] selectedRows(String selectedRowsString){
-        return Arrays.stream(selectedRowsString.split(","))
-                .filter(x -> !x.trim().isEmpty())
-                .mapToLong(Long::parseLong).toArray();
+    Long[] selectedRows(String selectedRowsString){
+        if(selectedRowsString.trim().isEmpty())return new Long[0];
+
+        String[] split = selectedRowsString.split(",");
+        Long longs[] = new Long[split.length];
+        for (int i=0 ;i < split.length; i++){
+            longs[i] = Long.parseLong(split[i]);
+        }
+        return longs;
     }
 }

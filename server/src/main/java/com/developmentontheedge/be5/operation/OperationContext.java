@@ -1,21 +1,25 @@
 package com.developmentontheedge.be5.operation;
 
+import java.util.Objects;
+
 public class OperationContext
 {
     // ////////////////////////////////////////////////////////////////////////
     // Properties
     //
 
-    public final long[] records;
+    public final Long[] records;
     public final String queryName;
 
-    public OperationContext(long[] records, String queryName)
+    public OperationContext(Long[] records, String queryName)
     {
+        Objects.nonNull(records);
+        Objects.nonNull(queryName);
         this.records = records;
         this.queryName = queryName;
     }
 
-    public long[] getRecordIDs()
+    public Long[] getRecordIDs()
     {
         return records;
     }

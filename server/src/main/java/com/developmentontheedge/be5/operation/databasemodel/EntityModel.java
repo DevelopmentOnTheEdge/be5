@@ -187,9 +187,9 @@ public interface EntityModel<R extends RecordModel> {
      * Returns a list of records of current entity.
      * @return list of records
      */
-    List<RecordModel> toList();
+    List<R> toList();
 
-    List<RecordModel> collect();
+    List<R> collect();
 
     /**
      * Returns a array of records of current entity.
@@ -202,7 +202,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values the filter parameters
      * @return array of records
      */
-    List<RecordModel> toList(Map<String, String> values);
+    List<R> toList(Map<String, String> values);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
