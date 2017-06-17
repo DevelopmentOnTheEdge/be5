@@ -4,6 +4,9 @@ package com.developmentontheedge.sql.model;
 
 public class AstDerivedColumn extends SimpleNode
 {
+    public static final AstDerivedColumn COUNT = new AstDerivedColumn(new AstCount(), "count");
+    public static final AstDerivedColumn ALL = new AstDerivedColumn(new AstIdentifierConstant("*"));
+
     public AstDerivedColumn(int id)
     {
         super( id );

@@ -2,6 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 
 import one.util.streamex.IntStreamEx;
@@ -21,7 +23,7 @@ public class AstSelect extends SimpleNode
         this( SqlParserTreeConstants.JJTSELECT );
         addChild( list );
         addChild( from );
-        addChild( where );
+        if(where != null)addChild( where );
     }
     
     public AstSelect(AstSelectList list, AstFrom from)
@@ -75,7 +77,34 @@ public class AstSelect extends SimpleNode
     {
         return children().select( AstWhere.class ).findFirst().orElse( null );
     }
-    
+
+    public AstSelect where(Map<String, String> conditions){
+        Objects.requireNonNull(conditions);
+        if(conditions.size() > 0 )
+        {
+            Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
+            iterator.hasNext();
+            setWhere(new AstWhere(addAstFunNode(iterator)));
+        }
+
+        return this;
+    }
+
+    private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
+        Map.Entry<String, String> entry = iterator.next();
+        AstFunNode astFunNode = new AstFunNode(
+                new AstFieldReference(entry.getKey()),
+                DefaultParserContext.FUNC_EQ,
+                new AstFieldReference("?")
+        );
+        if(iterator.hasNext()){
+            return new AstBooleanTerm(astFunNode, addAstFunNode(iterator));
+        }else{
+            return astFunNode;
+        }
+
+    }
+
     public void setWhere(AstWhere where)
     {
         Objects.requireNonNull( where );

@@ -9,12 +9,22 @@ public class AstFieldReference extends SimpleNode
         super( id );
         this.childrenDelimiter = ".";
     }
-    
-    public AstFieldReference(String tableName, String fieldName)
+
+    public AstFieldReference(String fieldName)
+    {
+        this(new AstIdentifierConstant( fieldName, false ));
+    }
+
+    public AstFieldReference(AstIdentifierConstant fieldName)
     {
         this(SqlParserTreeConstants.JJTFIELDREFERENCE);
-        addChild( new AstIdentifierConstant( tableName, false ) );
-        addChild( new AstIdentifierConstant( fieldName, false ) );
+        addChild( fieldName );
+    }
+
+    public AstFieldReference(String tableName, String fieldName)
+    {
+        this(new AstIdentifierConstant( tableName, false ),
+             new AstIdentifierConstant( fieldName, false ));
     }
     
     public AstFieldReference(AstIdentifierConstant tableName, AstIdentifierConstant fieldName)

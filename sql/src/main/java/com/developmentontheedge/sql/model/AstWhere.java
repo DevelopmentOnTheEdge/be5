@@ -4,6 +4,12 @@ package com.developmentontheedge.sql.model;
 
 public class AstWhere extends SimpleNode
 {
+    public AstWhere(SimpleNode node)
+    {
+        this(SqlParserTreeConstants.JJTWHERE);
+        addChild( node );
+    }
+
     public AstWhere(int id)
     {
         super( id );

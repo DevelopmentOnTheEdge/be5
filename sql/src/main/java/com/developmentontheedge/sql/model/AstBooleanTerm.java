@@ -4,6 +4,14 @@ package com.developmentontheedge.sql.model;
 
 public class AstBooleanTerm extends AstFunNode implements Squasheable
 {
+    public AstBooleanTerm(SimpleNode a, SimpleNode b)
+    {
+        super( SqlParserTreeConstants.JJTBOOLEANTERM );
+        addChild(a);
+        addChild(b);
+        setFunction( DefaultParserContext.FUNC_AND );
+    }
+
     public AstBooleanTerm(int id)
     {
         super( id );
