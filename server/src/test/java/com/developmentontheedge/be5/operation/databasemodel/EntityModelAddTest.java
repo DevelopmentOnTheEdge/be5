@@ -20,7 +20,6 @@ import static org.mockito.Mockito.verify;
 
 public class EntityModelAddTest extends AbstractProjectTest
 {
-    private Injector sqlMockInjector = Be5.createInjector(new AbstractProjectTest.SqlMockBinder());
     private DatabaseModel database = sqlMockInjector.get(DatabaseModel.class);
 
     @BeforeClass

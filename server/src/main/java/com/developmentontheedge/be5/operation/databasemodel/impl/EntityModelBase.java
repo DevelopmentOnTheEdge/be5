@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModelAdapter;
 import com.developmentontheedge.be5.operation.databasemodel.MethodProvider;
@@ -17,6 +16,10 @@ import com.developmentontheedge.be5.operation.databasemodel.groovy.GroovyRegiste
 import com.developmentontheedge.be5.operation.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetBlocked;
+import com.developmentontheedge.sql.format.Ast;
+import com.developmentontheedge.sql.model.AstDerivedColumn;
+import com.developmentontheedge.sql.model.AstSelect;
+import com.google.common.collect.ObjectArrays;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -56,9 +59,14 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     public RecordModel get( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, values);
 
-        DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, values.values().toArray());
+        //String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(values);
+        AstSelect sql = Ast
+                .select(AstDerivedColumn.ALL)
+                .from(entity.getName())
+                .where(values);
+
+        DynamicPropertySet dps = db.select(sql.format(), DpsHelper::createDps, values.values().toArray());
         return new RecordModelBase( dps );
     }
 
@@ -69,11 +77,16 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
     
     @Override
-    public long count( Map<String, String> conditions )
-    {
+    public long count( Map<String, String> conditions ) {
         Objects.requireNonNull(conditions);
-        String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, conditions);
-        return db.getLong(sql, conditions.values().toArray());
+
+        //String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(conditions);
+        AstSelect sql = Ast
+                .select(AstDerivedColumn.COUNT)
+                .from(entity.getName())
+                .where(conditions);
+
+        return db.getLong(sql.format(), conditions.values().toArray());
     }
 
     @Override
@@ -177,15 +190,8 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     final public int removeForce( Long firstId, final Long... otherId )
     {
         Objects.requireNonNull(firstId);
-
-        int count = 0;
-        String deleteSql = sqlHelper.generateDeleteSql(entity);
-
-        count += db.update(deleteSql, firstId);
-        for (long id : otherId){
-            count += db.update(deleteSql, id);
-        }
-        //TODO replace for: IN (1,2,3)
+        return db.update(sqlHelper.generateDeleteInSql(entity, otherId.length + 1),
+                ObjectArrays.concat(firstId, otherId));
 //        if( keys.length != 0 )
 //        {
 //            try
@@ -195,8 +201,6 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //                deleteSql.append( "AND" ).append( getAdditionalConditions() );
 
 //                    count = connector.executeUpdate( deleteSql.toString() );
-
-        return count;
     }
 
     @Override
@@ -295,10 +299,10 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         return handler.getResult();
     }
 
-    private boolean isDictionary()
-    {
-        return EntityType.DICTIONARY == entity.getType();
-    }
+//    private boolean isDictionary()
+//    {
+//        return EntityType.DICTIONARY == entity.getType();
+//    }
 
     @Override
     public String toString()
@@ -310,7 +314,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     final public Long addForce( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = sqlHelper.getTableDps(entity, values);
+        DynamicPropertySet dps = sqlHelper.getEntityDps(entity, values);
 
         return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
     }
@@ -370,7 +374,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
     {
-        public MultipleRecordsBase()
+        MultipleRecordsBase()
         {
             super(entity);
         }
@@ -439,12 +443,12 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @SuppressWarnings( "serial" )
     class RecordModelBase extends DynamicPropertySetBlocked implements RecordModel
     {
-        public RecordModelBase(DynamicPropertySet dps)
+        RecordModelBase(DynamicPropertySet dps)
         {
             super( dps );
         }
 
-        protected RecordModelBase(Long id) throws SQLException
+        RecordModelBase(Long id) throws SQLException
         {
             super( sqlHelper.getRecordById( entity, id ) );
         }
@@ -515,7 +519,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         {
             protected final Method method;
 
-            protected MethodProviderBase( Method method )
+            MethodProviderBase( Method method )
             {
                 this.method = method;
             }
@@ -533,10 +537,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
                 {
                     Object[] fullArgs = new Object[ args.length + 1 ];
                     fullArgs[ 0 ] = RecordModelBase.this;
-                    for( int i = 0; i < args.length; i++ )
-                    {
-                        fullArgs[ i + 1 ] = args[ i ];
-                    }
+                    System.arraycopy(args, 0, fullArgs, 1, args.length);
                     return method.invoke( EntityModelBase.this, fullArgs );
                 }
                 catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )

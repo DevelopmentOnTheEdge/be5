@@ -18,9 +18,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-public class OperationsTest extends AbstractProjectTest{
-
-    private Injector sqlMockInjector = Be5.createInjector(new SqlMockBinder());
+public class OperationsTest extends AbstractProjectTest
+{
     private OperationService operationService = sqlMockInjector.get(OperationService.class);
 
     @BeforeClass

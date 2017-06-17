@@ -28,10 +28,10 @@ import static org.mockito.Mockito.when;
 public abstract class AbstractProjectTest
 {
     protected static final Injector injector = Be5.createInjector();
+    protected static final Injector sqlMockInjector = Be5.createInjector(new SqlMockBinder());
 
-    public class SqlMockBinder implements Binder
+    public static class SqlMockBinder implements Binder
     {
-
         @Override
         public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings, Map<Class<?>, Object> configurations)
         {

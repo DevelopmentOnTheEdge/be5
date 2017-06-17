@@ -29,7 +29,7 @@ public class SqlHelper
         this.meta = meta;
     }
 
-    public DynamicPropertySet getTableDps(Entity entity)
+    public DynamicPropertySet getEntityDps(Entity entity)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
@@ -46,9 +46,9 @@ public class SqlHelper
         return dps;
     }
 
-    public DynamicPropertySet getTableDps(Entity entity, Map<String, String> values)
+    public DynamicPropertySet getEntityDps(Entity entity, Map<String, String> values)
     {
-        return setValues(getTableDps(entity), values);
+        return setValues(getEntityDps(entity), values);
     }
 
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
@@ -285,7 +285,7 @@ public class SqlHelper
     }
 
 
-    public String generateConditionsSql( Entity entity, Map<String,String> values )
+    public String generateConditionsSql( Map<String,String> values )
     {
         if(values.size()>0){
             String cond = "";

@@ -11,7 +11,7 @@ public class InsertOperation extends OperationSupport implements Operation
     @Override
     public Object getParameters(Map<String, String> presetValues) throws Exception
     {
-        return sqlHelper.getTableDps(getInfo().getEntity(), presetValues);
+        return sqlHelper.getEntityDps(getInfo().getEntity(), presetValues);
     }
 
     @Override

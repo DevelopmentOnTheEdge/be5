@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -663,8 +664,7 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
     
     public Entity getEntity(String name)
     {
-        if ( name == null )
-            throw new NullPointerException();
+        Objects.requireNonNull(name);
         
         Module app = (Module)get(getProjectOrigin());
         Entity entity = app == null ? null : app.getEntity(name);

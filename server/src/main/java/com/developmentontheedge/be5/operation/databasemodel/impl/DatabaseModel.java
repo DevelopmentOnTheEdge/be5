@@ -14,6 +14,8 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import java.util.Objects;
+
 /**
  * Database model based on concept of object-oriented database system
  *
@@ -49,6 +51,7 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     @Override
     public EntityModel getEntity( String entityName )
     {
+        Objects.requireNonNull(entityName);
         return new EntityModelBase(sqlService, sqlHelper, meta.getEntity(entityName));
     }
 
