@@ -8,7 +8,7 @@ public interface MultipleRecords<T> {
     
     T get(String... call);
     
-    T get(Map<String, ? extends Object> values);
+    T get(Map<String, ?> values);
     
 //    T get( String queryName, Map<String, String> values );
     

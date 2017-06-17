@@ -2,14 +2,12 @@ package com.developmentontheedge.be5.operation.databasemodel.impl;
 
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModelAdapter;
-import com.developmentontheedge.be5.operation.databasemodel.EntityModelWithCondition;
 import com.developmentontheedge.be5.operation.databasemodel.MethodProvider;
 import com.developmentontheedge.be5.operation.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.databasemodel.QueryModel;
@@ -40,69 +38,28 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
     }
 
-    private DatabaseService databaseService;
     private SqlService db;
     private SqlHelper sqlHelper;
 
     final private Entity entity;
-    final private DatabaseModel database;
 
 
-    public EntityModelBase(DatabaseService databaseService, SqlService db, SqlHelper sqlHelper, DatabaseModel database, Entity entity)
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, Entity entity)
     {
-        this.databaseService = databaseService;
         this.db = db;
         this.sqlHelper = sqlHelper;
-        this.database = database;
 
         this.entity = entity;
     }
 
-//    private EntityModelBase(DatabaseModel database, UserInfo userInfo, String entity )
-//    {
-//        this( database, userInfo, entity, null );
-//    }
-//
-//    private EntityModelBase( DatabaseModel database, UserInfo userInfo, String entity, String tcloneId )
-//    {
-//        this( database, userInfo, entity, tcloneId, false );
-//    }
-//
-//    protected EntityModelBase(DatabaseModel database, UserInfo userInfo, String entity )
-//    {
-//        this.database = database;
-////        this.connector = database.getConnector();
-////        this.analyzer = connector.getAnalyzer();
-//        this.userInfo = userInfo;
-//        this.entity = entity;
-//        this.tcloneId = tcloneId;
-//        //this.cache = EntityModelLocalCache.getInstance();
-//        this.forceCache = forceCache;
-//
-//        try
-//        {
-////            this.primaryKey = Utils.findPrimaryKeyNameUniversal( connector, entity );
-////            this.entityType = Utils.getEntityType( connector, entity );
-//        }
-//        catch( NullPointerException ignore )
-//        {
-//            // primary key or entity type may not have been found
-//        }
-//        catch( Exception e )
-//        {
-//            throw new RuntimeException( e );
-//        }
-//
-//    }
-
     @Override
-    public R get( Map<String, String> values )
+    public RecordModel get( Map<String, String> values )
     {
         Objects.requireNonNull(values);
         String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, values);
 
         DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, values.values().toArray());
-        return ( R )new RecordModelBase( dps );
+        return new RecordModelBase( dps );
     }
 
     @Override
@@ -112,10 +69,11 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
     
     @Override
-    public long count( Map<String, String> allConditions )
+    public long count( Map<String, String> conditions )
     {
-        String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, allConditions);
-        return db.getLong(sql, allConditions.values().toArray());
+        Objects.requireNonNull(conditions);
+        String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(entity, conditions);
+        return db.getLong(sql, conditions.values().toArray());
     }
 
     @Override
@@ -189,12 +147,12 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public R get( Long id )
+    public RecordModel get( Long id )
     {
         Objects.requireNonNull(id);
         try
         {
-            return ( R )new RecordModelBase( id );
+            return new RecordModelBase( id );
         }
         catch( SQLException e )
         {
@@ -278,22 +236,6 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         return getEntityName();
     }
 
-//    @Override
-//    public String getTcloneId()
-//    {
-//        return this.tcloneId;
-//    }
-//
-//    /**
-//     *
-//     * @deprecated class must be immutable
-//     */
-//    @Deprecated
-//    public void setTcloneId( String tcloneId )
-//    {
-//        this.tcloneId = tcloneId;
-//    }
-
     @Override
     public String getEntityName()
     {
@@ -307,7 +249,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
 
     @Override
-    public List<R> toList()
+    public List<RecordModel> toList()
     {
         return toList( Collections.emptyMap() );
     }
@@ -319,21 +261,23 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     }
     
     @Override
-    public List<R> toList( Map<String, String> values )
+    public List<RecordModel> toList( Map<String, String> values )
     {
-        return new MultipleRecordsBase<List<R>>( databaseService, getEntityName() ).get( values );
+        Objects.requireNonNull(values);
+        return new MultipleRecordsBase<List<RecordModel>>( db, getEntityName() ).get( values );
     }
 
     @Override
     public RecordModel[] toArray( Map<String, String> values )
     {
-        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>( databaseService, getEntityName() );
+        Objects.requireNonNull(values);
+        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>( db, getEntityName() );
         records.setHandler( new AbstractMultipleRecords.ArrayHandler<>() );
         return records.get( values );
     }
 
     @Override
-    public List<R> collect()
+    public List<RecordModel> collect()
     {
         return toList();
     }
@@ -341,7 +285,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public <T> List<T> collect( Map<String, String> values, BiFunction<R, Integer, T> lambda )
     {
-        MultipleRecordsBase<List<T>> records = new MultipleRecordsBase<>( databaseService, getEntityName() );
+        Objects.requireNonNull(values);
+        Objects.requireNonNull(lambda);
+        MultipleRecordsBase<List<T>> records = new MultipleRecordsBase<>( db, getEntityName() );
         AbstractMultipleRecords.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
         records.setHandler( handler );
         records.get( values );
@@ -362,6 +308,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     final public Long addForce( Map<String, String> values )
     {
+        Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getTableDps(entity, values);
 
         return db.insert(sqlHelper.generateInsertSql(dps, entity), sqlHelper.getValues(dps));
@@ -370,18 +317,25 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     final public void setForce( Long id, String propertyName, String value )
     {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(propertyName);
+        Objects.requireNonNull(value);
         setForce( id, Collections.singletonMap( propertyName, value ) );
     }
 
     @Override
     public void set( Long id, Map<String, String> values )
     {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(values);
         setForce( id, values );
     }
 
     @Override
     final public void setForce( Long id, Map<String, String> values )
     {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(values);
 //        String sql;
 //        try
 //        {
@@ -413,53 +367,11 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
 //        }
     }
 
-//    @Deprecated
-//    public static class EntityModelBaseWithCondition extends EntityModelBase implements EntityModelWithCondition
-//    {
-//        final private String conditions;
-//
-//        protected EntityModelBaseWithCondition( DatabaseModel database, UserInfo userInfo, String entityName, String tcloneId, boolean forceCache, List<String> conditions )
-//        {
-//            super( database, userInfo, entityName, tcloneId, forceCache );
-//            StringBuilder sb = new StringBuilder();
-//            for( String condition : conditions )
-//            {
-//                sb.append( " AND " ).append( condition ).append( "\n" );
-//            }
-//            this.conditions = sb.toString();
-//        }
-//
-//        @Override
-//        public String getAdditionalConditions()
-//        {
-//            StringBuilder conditions = new StringBuilder()
-//                    .append( "( " )
-//                    .append( super.getAdditionalConditions() )
-//                    .append( " )" );
-//            conditions.append( this.conditions );
-//
-//            return conditions.toString();
-//        }
-//
-//        @Override
-//        public UserInfo getUserInfo()
-//        {
-//            return null;
-//        }
-//
-//        @Override
-//        public String toString()
-//        {
-//            return super.toString() + "\nconditions: [" + this.conditions + "]";
-//        }
-//
-//    }
-
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
     {
-        public MultipleRecordsBase(DatabaseService databaseService, String tableName )
+        public MultipleRecordsBase(SqlService db, String tableName )
         {
-            super( databaseService, tableName );
+            super( tableName );
         }
 
         @Override
@@ -475,55 +387,6 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         }
 
     }
-
-    @Override
-    public void makeClonedTable( boolean cloneIndexes ) throws TableAlreadyExistsException
-    {
-//        if( getTcloneId() == null )
-//        {
-//            return;
-//        }
-//
-//        if( isTableExists() )
-//        {
-//            throw new TableAlreadyExistsException( getTableName(), "Cloned table already exists" );
-//        }
-//
-//        String sql = analyzer.makeTableLikeExpr( getEntityName(), getTableName() );
-//        try
-//        {
-//            connector.executeUpdate( sql );
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelSQLException( getEntityName(), sql, e );
-//        }
-//
-//        if( cloneIndexes )
-//        {
-//            List<String> sqlList = analyzer.makeIndexesLikeExpr( getEntityName(), getTableName() );
-//            try
-//            {
-//                connector.executeBatch( sqlList );
-//            }
-//            catch( SQLException e )
-//            {
-//                throw new EntityModelSQLException( getEntityName(), sqlList.stream().collect( Collectors.joining( "\n," ) ), e );
-//            }
-//        }
-    }
-
-    @Override
-    public boolean dropClonedTable()
-    {
-        return false;//getTcloneId() != null && analyzer.dropTableIfExists( getTableName() );
-    }
-//
-//    @Override
-//    public boolean isTableExists()
-//    {
-//        return meta.getEntity(getTableName()) != null;
-//    }
 
     @Override
     public QueryModel getQuery(String queryName, Map<String, String> params )
@@ -583,49 +446,6 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         protected RecordModelBase(Long id) throws SQLException
         {
             super( sqlHelper.getRecordById( entity, id ) );
-        }
-
-        @Override
-        public EntityModelWithCondition getEntity(String entityName )
-        {
-//            String sql = "SELECT "
-//                    + "\n   columnsFrom AS columnFrom,"
-//                    + "\n   columnsTo AS columnTo"
-//                    + "\n FROM table_refs"
-//                    + "\n WHERE tableFrom = '" + getEntityName() + "'"
-//                    + "\n AND   tableTo = '" + entityName + "'";
-//            try
-//            {
-//                QRec tableRef;
-//                try
-//                {
-//                    tableRef = new QRec( connector, sql );
-//                }
-//                catch( NoRecord e )
-//                {
-//                    sql = "SELECT "
-//                            + "\n   columnsTo AS columnFrom,"
-//                            + "\n   columnsFrom AS columnTo"
-//                            + "\n FROM table_refs tr1"
-//                            + "\n WHERE tr1.tableFrom = '" + entityName + "' "
-//                            + "\n AND tr1.tableTo = '" + getEntityName() + "'";
-//                    tableRef = new QRec( connector, sql );
-//                }
-//                String columnName = tableRef.getString( "columnTo" );
-//                String columnValue = getValueAsString( tableRef.getString( "columnFrom" ) );
-//                Map<String, String> condition = Collections.singletonMap( columnName, columnValue );
-//                List<String> conditionList = Collections.singletonList( Utils.paramsToCondition( connector, entityName, condition ) );
-//                return new EntityModelBaseWithCondition( database, getUserInfo(), entityName, getTcloneId(), forceCache, conditionList );
-//            }
-//            catch( NoRecord e )
-//            {
-//                throw new ReferenceNotFoundException( getEntityName(), entityName );
-//            }
-//            catch( SQLException e )
-//            {
-//                throw new RuntimeException( e );
-//            }
-            return null;
         }
 
         @Override

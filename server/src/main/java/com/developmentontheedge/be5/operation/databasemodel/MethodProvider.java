@@ -3,8 +3,8 @@ package com.developmentontheedge.be5.operation.databasemodel;
 
 public interface MethodProvider {
 
-    public Object invoke();
+    Object invoke();
     
-    public Object invoke(Object... args);
+    Object invoke(Object... args);
     
 }

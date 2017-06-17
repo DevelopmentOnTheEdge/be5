@@ -27,7 +27,7 @@ public class GroovyRegister
 
     public static Class parseClass( String text )
     {
-        return classLoader.parseClass( text );
+        return getClassLoader().parseClass( text );
     }
 
 //    public static Class parseClassWithCache( String name, String text )
@@ -105,44 +105,44 @@ public class GroovyRegister
 //        }
 //        return false;
 //    }
-
-    public static Object eval( String code, Map<String, ?> params )
-    {
-        GroovyScope scope = new GroovyScope();
-        scope.setVariables( params );
-        return scope.evaluate( code );
-    }
-
-    public static GroovyScope getScope()
-    {
-        return new GroovyScope();
-    }
-
-    public static class GroovyScope
-    {
-        private final GroovyShell shell = new GroovyShell();
-
-        public void setVariable( String name, Object value )
-        {
-            shell.setVariable( name, value );
-        }
-
-        public void setVariables( Map<String, ?> vars )
-        {
-            for( Entry<String, ?> e : vars.entrySet() )
-            {
-                setVariable( e.getKey(), e.getValue() );
-            }
-        }
-
-        public Object getVariable( String name )
-        {
-            return shell.getVariable( name );
-        }
-
-        public Object evaluate( String code )
-        {
-            return shell.evaluate( code );
-        }
-    }
+//
+//    public static Object eval( String code, Map<String, ?> params )
+//    {
+//        GroovyScope scope = new GroovyScope();
+//        scope.setVariables( params );
+//        return scope.evaluate( code );
+//    }
+//
+//    public static GroovyScope getScope()
+//    {
+//        return new GroovyScope();
+//    }
+//
+//    public static class GroovyScope
+//    {
+//        private final GroovyShell shell = new GroovyShell();
+//
+//        public void setVariable( String name, Object value )
+//        {
+//            shell.setVariable( name, value );
+//        }
+//
+//        public void setVariables( Map<String, ?> vars )
+//        {
+//            for( Entry<String, ?> e : vars.entrySet() )
+//            {
+//                setVariable( e.getKey(), e.getValue() );
+//            }
+//        }
+//
+//        public Object getVariable( String name )
+//        {
+//            return shell.getVariable( name );
+//        }
+//
+//        public Object evaluate( String code )
+//        {
+//            return shell.evaluate( code );
+//        }
+//    }
 }

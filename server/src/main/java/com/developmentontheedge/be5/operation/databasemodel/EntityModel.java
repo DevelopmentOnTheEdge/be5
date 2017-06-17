@@ -1,14 +1,9 @@
 package com.developmentontheedge.be5.operation.databasemodel;
 
-import com.developmentontheedge.be5.operation.databasemodel.impl.EntityModelSQLException;
-import com.developmentontheedge.be5.operation.databasemodel.impl.TableAlreadyExistsException;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-
-
 
 /**
  * 
@@ -25,7 +20,6 @@ public interface EntityModel<R extends RecordModel> {
      * Returns the number of records a table.
      * This method never use cache.
      * @return number of records
-     * @throws EntityModelSQLException if obtaining the size threw exception
      */
     @Deprecated
     default long size() { return this.count(); };
@@ -34,7 +28,6 @@ public interface EntityModel<R extends RecordModel> {
      * Returns the number of records a table.
      * This method never use cache.
      * @return number of records
-     * @throws EntityModelSQLException if obtaining the size threw exception
      */
     long count();
 
@@ -42,7 +35,6 @@ public interface EntityModel<R extends RecordModel> {
      * Returns the number of records a table.
      * This method never use cache.
      * @return number of records
-     * @throws EntityModelSQLException if obtaining the size threw exception
      */
     long count(Map<String, String> values);
 
@@ -104,7 +96,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
-    R get(Long id);
+    RecordModel get(Long id);
 
     /** 
      * Returns the record object consistent with the specified condition, 
@@ -112,7 +104,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values condition values
      * @return the record object with the specified id otherwise null
      */
-    R get(Map<String, String> values);
+    RecordModel get(Map<String, String> values);
     
     /**
      * Sets value to property with a specified name.<br>
@@ -173,16 +165,6 @@ public interface EntityModel<R extends RecordModel> {
      */
     int remove(Map<String, String> values);
     
-//    /**
-//     * Deletes the record with the specified identifier.
-//     * The method can check the values on consistency and threw exceptions<br>
-//     * in order to avoid compromising the integrity of the database.
-//     * This method calls {@link #removeForce( String )}
-//     * @param id - record identifier number
-//     * @return <tt>true</tt> if the record has been deleted otherwise <tt>false<tt>
-//     */
-//    int remove( String id );
-    
     /**
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
@@ -192,14 +174,6 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if the all record has been deleted otherwise <tt>false<tt>
      */
     int remove(Long id, Long... otherId);
-
-//    /**
-//     * Deletes the record with the specified identifier.<br>
-//     * This method may not contain any checks, it's just the method implementation.
-//     * @param id identify number of record
-//     * @param values new column names and values
-//     */
-//    int removeForce( String id );
 
     /**
      * Deletes the record with the specified identifiers.<br>
@@ -213,9 +187,9 @@ public interface EntityModel<R extends RecordModel> {
      * Returns a list of records of current entity.
      * @return list of records
      */
-    List<R> toList();
+    List<RecordModel> toList();
 
-    List<R> collect();
+    List<RecordModel> collect();
 
     /**
      * Returns a array of records of current entity.
@@ -228,7 +202,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values the filter parameters
      * @return array of records
      */
-    List<R> toList(Map<String, String> values);
+    List<RecordModel> toList(Map<String, String> values);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
@@ -267,60 +241,6 @@ public interface EntityModel<R extends RecordModel> {
      */
     String getTableName();
 
-//    /**
-//     * Returns table cloned id post-fix
-//     * For example, if entity named persons,
-//     * and table cloned id is 2, table name will be called persons2
-//     * @return table cloned id post-fix
-//     */
-//    String getTcloneId();
-
-    /**
-     * Creates cloned table. Cloned table - table with entity name and prefix.
-     * For example: if entity name is Entity, and tcloneId is 2, table name will be called with Entity2
-     * There will no effect, if tcloneId is empty
-     * @throws TableAlreadyExistsException - if cloned table already exists
-     */
-    default void makeClonedTable() throws TableAlreadyExistsException
-    {
-        makeClonedTable( true );
-    }
-
-    /**
-     * Creates cloned table. Cloned table - table with entity name and prefix.
-     * For example: if entity name is Entity, and tcloneId is 2, table name will be called with Entity2
-     * There will no effect, if tcloneId is empty
-     * @param cloneIndexes - if true - clone original indexes
-     * @throws TableAlreadyExistsException - if cloned table already exists
-     */
-    void makeClonedTable(boolean cloneIndexes) throws TableAlreadyExistsException;
-
-    /**
-     * Drops if exists and creates cloned table. Cloned table - table with entity name and prefix.
-     * For example: if entity name is Entity, and tcloneId is 2, table name will be called with Entity2
-     * There will no effect, if tcloneId is empty
-     */
-    // default void recreateClonedTable() { 
-    //     dropClonedTable();
-    //     makeClonedTable();
-    // }
-
-    /**
-     * Drops cloned table. Cloned table - table with entity name and prefix.
-     * For example: if entity name is Entity, and tcloneId is 2, table name will be called with Entity2
-     * There will no effect, if tcloneId is empty or table is not exists
-     * @return true if table has been dropped by this operation, 
-     * false if table not exists or.tcloneId is null.
-     */
-    boolean dropClonedTable();
-
-//    /**
-//     * Returns true if current table exists.
-//     * This method allows table cloned post-fix.
-//     * @return true if table exists, otherwise false
-//     */
-//    boolean isTableExists();
-
     /**
      * Returns query model of this entity.
      * @param queryName
@@ -343,10 +263,19 @@ public interface EntityModel<R extends RecordModel> {
      */
     OperationModel getOperation(String operationName);
 
+    /**
+     * for Groovy
+     */
     Long leftShift( Map<String, String> values );
 
+    /**
+     * for Groovy
+     */
     RecordModel call( Map<String, String> values );
 
+    /**
+     * for Groovy
+     */
     RecordModel getAt(Long id);
 
 }

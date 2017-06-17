@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.operation.databasemodel.EntityMethod;
 import com.developmentontheedge.be5.operation.databasemodel.EntityModel;
@@ -73,11 +74,11 @@ final public class ExtendedModels {
                 Class<?> paramTypes[] = method.getParameterTypes();
                 if( paramTypes.length == 0 )
                 {
-                    throw new InvalidClassTypeException( "Loaded method have no parameters.", clazz );
+                    throw Be5Exception.internal( "Loaded method have no parameters. " + clazz.getCanonicalName() );
                 }
                 if( !DynamicPropertySet.class.isAssignableFrom( paramTypes[0] ) )
                 {
-                    throw new InvalidClassTypeException( "First parameter must be a string to provide record.", clazz );
+                    throw Be5Exception.internal( "First parameter must be a string to provide record. " + clazz.getCanonicalName() );
                 }
 
                 methods.put( method.getName(), method );

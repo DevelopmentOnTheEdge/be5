@@ -19,15 +19,11 @@ import java.util.function.BiFunction;
 public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
 {
 
-    private DatabaseService databaseService;
-    private UserInfo userInfo;
     private String entity;
     private ResultHandler<T> handler;
     
-    public AbstractMultipleRecords(DatabaseService databaseService, String entity )
+    public AbstractMultipleRecords(String entity )
     {
-        this.databaseService = databaseService;
-        this.userInfo = userInfo;
         this.entity = entity;
     }
     

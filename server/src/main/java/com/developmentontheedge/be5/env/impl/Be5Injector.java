@@ -22,10 +22,9 @@ public class Be5Injector implements Injector
 {
     private static final Logger log = Logger.getLogger(Be5Injector.class.getName());
 
+    private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
     private final Map<Class<?>, Class<?>> bindings = new HashMap<>();
     private final Map<Class<?>, Object> configurations = new HashMap<>();
-
-    private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
 
     private final ClassToInstanceMap instantiatedServices = new ClassToInstanceMap();
     //private boolean frozen = false;

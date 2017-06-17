@@ -17,7 +17,7 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
      * @param entityName entity name
      * @return
      */
-    <T extends E> T getEntity(String entityName);
+    EntityModel getEntity(String entityName);
 
 //    /**
 //     * Returns database connector
@@ -31,7 +31,7 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
 //     */
 //    DatabaseAnalyzer getAnalyzer();
 
-    DatabaseService getDatabaseService();
+    //DatabaseService getDatabaseService();
 
 //    EntityAccess<E> getCache();
 //
