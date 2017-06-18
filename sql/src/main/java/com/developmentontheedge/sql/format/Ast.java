@@ -11,14 +11,11 @@ import com.developmentontheedge.sql.model.AstReplacementParameter;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.developmentontheedge.sql.model.AstSelectList;
 import com.developmentontheedge.sql.model.AstStringConstant;
+import com.developmentontheedge.sql.model.AstTableName;
 import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.SimpleNode;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Ast
 {
@@ -46,32 +43,46 @@ public class Ast
 
     }
 
-    public static class InsertBuilder
+    public static class InsertTable
     {
+        String tableName;
+
+        InsertTable(String tableName) {
+            this.tableName = tableName;
+        }
+
+        public InsertValues fields(Object... columns){
+            return new InsertValues(tableName, columns);
+        }
+    }
+
+    public static class InsertValues
+    {
+        String tableName;
         Object[] columns;
 
-        InsertBuilder(Object[] columns) {
+        InsertValues(String tableName, Object[] columns) {
+            this.tableName = tableName;
             this.columns = columns;
         }
 
         public AstInsert values(Object... values)
         {
-            List<AstFieldReference> columnsNodes = Arrays.stream(columns).map(x ->
+            AstFieldReference[] columnsNodes = Arrays.stream(columns).map(x ->
                     (AstFieldReference) ((x instanceof AstFieldReference) ? x : new AstFieldReference((String) x))
-            ).collect(Collectors.toList());
+            ).toArray(AstFieldReference[]::new);
 
-            List<SimpleNode> valuesNodes = Arrays.stream(values).map(x -> {
+            SimpleNode[] valuesNodes = Arrays.stream(values).map(x -> {
                 if(x instanceof SimpleNode)return (SimpleNode)x;
                 if(x instanceof String) {
                     if("?".equals(x))return new AstReplacementParameter();
                     return new AstStringConstant((String) x);
                 }
                 return new AstNumericConstant((Number) x);
-            }).collect(Collectors.toList());
+            }).toArray(SimpleNode[]::new);
 
-            return new AstInsert(
-                    new AstColumnList(columnsNodes.toArray(new AstFieldReference[columnsNodes.size()])),
-                    new AstInsertValueList(valuesNodes.toArray(new SimpleNode[valuesNodes.size()])));
+            return new AstInsert(new AstTableName(tableName),
+                    new AstColumnList(columnsNodes), new AstInsertValueList(valuesNodes));
         }
     }
 
@@ -80,10 +91,13 @@ public class Ast
         return new ColumnList(columns);
     }
 
-    public static InsertBuilder insert(Object... columns)
+    public static InsertTable insert(String tableName)
     {
-        return new InsertBuilder(columns);
+        return new InsertTable(tableName);
     }
+
+//    Ast.delete("users").where();
+//    Ast.update("users").set(Map<>()).where();
 //
 //    public static AstQuery union(AstSelect... selects){
 //

@@ -4,9 +4,10 @@ package com.developmentontheedge.sql.model;
 
 public class AstInsert extends SimpleNode
 {
-    public AstInsert(AstColumnList columns, AstInsertValueList values)
+    public AstInsert(AstTableName tableName, AstColumnList columns, AstInsertValueList values)
     {
         this( SqlParserTreeConstants.JJTINSERT );
+        addChild(tableName);
         addChild(columns);
         addChild(values);
     }

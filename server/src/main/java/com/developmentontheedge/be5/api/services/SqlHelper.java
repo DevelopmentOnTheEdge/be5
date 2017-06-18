@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.sql.format.Ast;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -157,18 +158,15 @@ public class SqlHelper
 
     public String generateInsertSql(Entity entity, DynamicPropertySet dps)
     {
-        String columns = StreamSupport.stream(dps.spliterator(), false)
+        Object[] columns = StreamSupport.stream(dps.spliterator(), false)
                 .map(DynamicProperty::getName)
-                .collect(Collectors.joining(", "));
+                .toArray(Object[]::new);
 
-        String valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+        Object[] valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .map(x -> "?")
-                .collect(Collectors.joining(", "));
+                .toArray(Object[]::new);
 
-        return "INSERT INTO " + entity.getName() +
-                " (" + columns + ")" +
-                " VALUES" +
-                " (" + valuePlaceholders + ")";
+        return Ast.insert(entity.getName()).fields(columns).values(valuePlaceholders).format();
 
         // Oracle trick for auto-generated IDs
 //            if( connector.isOracle() && colName.equalsIgnoreCase( pk ) )
