@@ -37,14 +37,6 @@ public class AstFunNode extends SimpleNode
         setFunction( fn );
     }
 
-    public AstFunNode(AstFieldReference a, Function fn, AstFieldReference b)
-    {
-        this(SqlParserTreeConstants.JJTFUNNODE);
-        addChild(a);
-        addChild(b);
-        setFunction( fn );
-    }
-
     /////////////////////////////////////////////////////////////////
     // Properties
     //

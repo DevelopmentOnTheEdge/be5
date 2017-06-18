@@ -2,6 +2,7 @@ package com.developmentontheedge.sql.format;
 
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstSelect;
+import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.Test;
@@ -48,6 +49,39 @@ public class AstTest {
         AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name =? AND name2 =?",
                 users.format());
+    }
+
+    @Test
+    public void selectWhereLike()
+    {
+        Map<String, String> names = new HashMap<>();
+        names.put("name", "test%");
+        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name LIKE ?",
+                users.format());
+
+        names.clear();
+        names.put("name", "%test");
+        AstSelect users2 = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name LIKE ?",
+                users2.format());
+    }
+
+    @Test
+    public void selectWhereNotNull()
+    {
+        Map<String, String> names = new HashMap<>();
+        names.put("name", "null");
+        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NULL",
+                users.format());
+
+        names.clear();
+        names.put("name", "notNull");
+
+        AstSelect users2 = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NOT NULL",
+                users2.format());
     }
 
 }

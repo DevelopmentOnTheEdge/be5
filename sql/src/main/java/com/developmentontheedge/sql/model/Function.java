@@ -11,15 +11,15 @@ public interface Function
     // Function and operators priorities
     //
 
-    public static final int LOGICAL_PRIORITY = 1; // and, or, xor
-    public static final int RELATIONAL_PRIORITY = 2; // eq, neq, gt, lt, geq, leq
-    public static final int PLUS_PRIORITY = 3; // plus, minus
-    public static final int TIMES_PRIORITY = 4; // times, divide
-    public static final int UNARY_PRIORITY = 5; // not, unary minus
-    public static final int POWER_PRIORITY = 6; // power
-    public static final int FUNCTION_PRIORITY = 7; // misc: sqrt, sin, cos, ...
-    public static final int ASSIGNMENT_PRIORITY = 8; // =
-    public static final int AGGREGATE_FUNCTION_PRIORITY = 9;
+    int LOGICAL_PRIORITY = 1; // and, or, xor
+    int RELATIONAL_PRIORITY = 2; // eq, neq, gt, lt, geq, leq
+    int PLUS_PRIORITY = 3; // plus, minus
+    int TIMES_PRIORITY = 4; // times, divide
+    int UNARY_PRIORITY = 5; // not, unary minus
+    int POWER_PRIORITY = 6; // power
+    int FUNCTION_PRIORITY = 7; // misc: sqrt, sin, cos, ...
+    int ASSIGNMENT_PRIORITY = 8; // =
+    int AGGREGATE_FUNCTION_PRIORITY = 9;
 
     /////////////////////////////////////////////////////////////////
     // Properties
@@ -29,13 +29,13 @@ public interface Function
      * Returns the name of the node (operator symbol or function name). 
      * @return the name of the node (operator symbol or function name).
      */
-    public String getName();
+    String getName();
 
     /** 
      * Returns the function or operator priority.
      * @return the function or operator priority.
      */
-    public int getPriority();
+    int getPriority();
 
     /**
      * Returns the lowest possible number of required parameters, or -1 if any number of
@@ -43,7 +43,7 @@ public interface Function
      * @return the lowest possible number of required parameters, or -1 if any number of
      * parameters is allowed.
      */
-    public int maxNumberOfParams();
+    int maxNumberOfParams();
     
     
     /**
@@ -52,9 +52,9 @@ public interface Function
      * @return the biggest possible number of required parameters, or -1 if any number of
      * parameters is allowed.
      */
-    public int minNumberOfParams();
+    int minNumberOfParams();
 
-    default public AstFunNode node(SimpleNode... arguments)
+    default AstFunNode node(SimpleNode... arguments)
     {
         if( maxNumberOfParams() >= 0 && ( arguments.length < minNumberOfParams() || arguments.length > maxNumberOfParams() ) )
         {

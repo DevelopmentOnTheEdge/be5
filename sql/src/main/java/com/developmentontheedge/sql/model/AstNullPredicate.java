@@ -4,10 +4,20 @@ package com.developmentontheedge.sql.model;
 
 public class AstNullPredicate extends SimpleNode
 {
+    private static final String isNull = "IS NULL";
+    private static final String isNotNull = "IS NOT NULL";
+
+    public AstNullPredicate(boolean isNullboolean, SimpleNode node)
+    {
+        this( SqlParserTreeConstants.JJTNULLPREDICATE );
+        this.nodeSuffix = isNullboolean ? isNull : isNotNull;
+        addChild(node);
+    }
+
     public AstNullPredicate(int id)
     {
         super( id );
-        this.nodeSuffix = "IS NULL";
+        this.nodeSuffix = isNull;
     }
 
     Token isToken, notToken, nullToken;
@@ -35,7 +45,7 @@ public class AstNullPredicate extends SimpleNode
     public void setNotToken(Token notToken)
     {
         this.notToken = notToken;
-        this.nodeSuffix = notToken == null ? "IS NULL" : "IS NOT NULL";
+        this.nodeSuffix = notToken == null ? isNull : isNotNull;
     }
 
     public Token getNullToken()

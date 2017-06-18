@@ -11,7 +11,7 @@ public class Ast {
     public static class ColumnList{
         AstDerivedColumn[] columns;
 
-        public ColumnList(AstDerivedColumn[] columns) {
+        ColumnList(AstDerivedColumn[] columns) {
             this.columns = columns;
         }
 

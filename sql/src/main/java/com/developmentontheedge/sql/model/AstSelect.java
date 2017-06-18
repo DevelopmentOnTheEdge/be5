@@ -92,11 +92,23 @@ public class AstSelect extends SimpleNode
 
     private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
         Map.Entry<String, String> entry = iterator.next();
-        AstFunNode astFunNode = new AstFunNode(
-                new AstFieldReference(entry.getKey()),
-                DefaultParserContext.FUNC_EQ,
-                new AstFieldReference("?")
-        );
+        String value = entry.getValue();
+        PredefinedFunction function = DefaultParserContext.FUNC_EQ;
+        SimpleNode astFunNode;
+
+        if(value.equals("null") || value.equals("notNull"))
+        {
+            astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
+        }
+        else
+        {
+            if(value.endsWith("%") || value.startsWith("%"))
+            {
+                function = DefaultParserContext.FUNC_LIKE;
+            }
+            astFunNode = function.node(new AstFieldReference(entry.getKey()), new AstReplacementParameter());
+        }
+
         if(iterator.hasNext()){
             return new AstBooleanTerm(astFunNode, addAstFunNode(iterator));
         }else{
