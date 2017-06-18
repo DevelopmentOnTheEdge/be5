@@ -2,9 +2,18 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
-public class AstInsertValues extends SimpleNode
+public class AstInsertValueList extends SimpleNode
 {
-    public AstInsertValues(int id)
+    public AstInsertValueList(SimpleNode... childs)
+    {
+        this( SqlParserTreeConstants.JJTINSERTVALUELIST );
+        for( SimpleNode child : childs )
+        {
+            addChild(child);
+        }
+    }
+
+    public AstInsertValueList(int id)
     {
         super(id);
         this.nodePrefix = "VALUES (";
@@ -12,7 +21,7 @@ public class AstInsertValues extends SimpleNode
         this.childrenDelimiter = ",";
     }
 
-    public AstInsertValues(SqlParser p, int id) {
+    public AstInsertValueList(SqlParser p, int id) {
     super(p, id);
   }
 

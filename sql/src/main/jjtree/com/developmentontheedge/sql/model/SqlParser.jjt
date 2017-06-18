@@ -522,7 +522,7 @@ void InsertColumnList() #ColumnList :
     <LEFT_PAREN> FieldReference() (<COMMA> FieldReference())* <RIGHT_PAREN>
 }
 
-void InsertValues() #InsertValues :
+void InsertValueList() #InsertValueList :
 {}
 {
     <VALUES> <LEFT_PAREN> (RowValuePredicand()) (<COMMA> RowValuePredicand())*   <RIGHT_PAREN>
@@ -531,7 +531,7 @@ void InsertValues() #InsertValues :
 void Insert() #Insert :
 {}
 {
-    <INSERT_INTO> InsertColumnList() InsertValues()
+    <INSERT_INTO> InsertColumnList() InsertValueList()
 }
 
 /***************************************************************

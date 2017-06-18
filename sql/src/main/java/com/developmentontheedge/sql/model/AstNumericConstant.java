@@ -11,7 +11,7 @@ public class AstNumericConstant extends SimpleNode
         super( id );
     }
 
-    private AstNumericConstant(Number value)
+    public AstNumericConstant(Number value)
     {
         this( SqlParserTreeConstants.JJTNUMERICCONSTANT );
         setValue( value );

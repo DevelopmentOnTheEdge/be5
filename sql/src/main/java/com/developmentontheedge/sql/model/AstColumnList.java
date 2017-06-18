@@ -11,7 +11,14 @@ public class AstColumnList extends SimpleNode
         nodeSuffix = ")";
         childrenDelimiter = ",";
     }
-    
+
+    public AstColumnList(AstFieldReference... childs)
+    {
+        this( SqlParserTreeConstants.JJTCOLUMNLIST );
+        for( AstFieldReference child : childs )
+            addChild( child );
+    }
+
     public AstColumnList(AstIdentifierConstant... childs)
     {
         this( SqlParserTreeConstants.JJTCOLUMNLIST );
