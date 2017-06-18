@@ -41,7 +41,19 @@ public class AstTableRef extends SimpleNode
         for( SimpleNode child : childs )
             addChild( child );
     }
-    
+
+    public static AstTableRef as(SimpleNode ... childs)
+    {
+        assert childs.length == 2;
+        return new AstTableRef(true, childs);
+    }
+
+    public static AstTableRef as(String ... childs)
+    {
+        assert childs.length == 2;
+        return new AstTableRef(true, new AstTableName(childs[0]), new AstIdentifierConstant(childs[1], true) );
+    }
+
     private boolean as;
 
     public String getTable()

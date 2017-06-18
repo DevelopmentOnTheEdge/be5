@@ -4,6 +4,19 @@ package com.developmentontheedge.sql.model;
 
 public class AstTableName extends SimpleNode
 {
+    public AstTableName(String name)
+    {
+        this( SqlParserTreeConstants.JJTTABLENAME );
+        addChild(new AstIdentifierConstant( name ));
+    }
+
+    public AstTableName(String schema, String name)
+    {
+        this( SqlParserTreeConstants.JJTTABLENAME );
+        addChild(new AstIdentifierConstant( schema ));
+        addChild(new AstIdentifierConstant( name ));
+    }
+
     public AstTableName(int id)
     {
         super( id );
@@ -15,12 +28,14 @@ public class AstTableName extends SimpleNode
         return format().trim();
     }
 
-    public void setValue(String value)
+    public AstTableName setValue(String value)
     {
         this.removeChildren();
         String[] parts = value.split( "[.]" );
+        assert 1 <= parts.length && parts.length <= 2;
         for( String part : parts )
             addChild( new AstIdentifierConstant( part ) );
+        return this;
     }
 }
 /* JavaCC - OriginalChecksum=029050d4e903c4c166e9af2cb3f75027 (do not edit this line) */

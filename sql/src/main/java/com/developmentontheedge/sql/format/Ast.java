@@ -19,6 +19,12 @@ public class Ast {
             AstFrom from = new AstFrom(new AstTableRef(table));
             return new AstSelect(new AstSelectList(columns), from);
         }
+
+        public AstSelect from(AstTableRef tableRef){
+            AstFrom from = new AstFrom(tableRef);
+            return new AstSelect(new AstSelectList(columns), from);
+        }
+
     }
 
     public static ColumnList select(AstDerivedColumn... columns){

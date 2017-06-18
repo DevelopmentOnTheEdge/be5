@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.ColumnRef;
@@ -267,18 +268,17 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return finalSQL;
     }
 
-    private void countFromQuery(AstQuery query) {
-        AstTableRef tableRef = new AstTableRef(
-                true,
+    private void countFromQuery(AstQuery query)
+    {
+        AstSelect select = Ast.select(AstDerivedColumn.COUNT).from(AstTableRef.as(
                 new AstParenthesis( query.clone() ),
                 new AstIdentifierConstant( "data", true )
-        );
-        AstSelectList count = new AstSelectList(new AstDerivedColumn(new AstCount(), "count"));
-        AstSelect select = new AstSelect( count, new AstFrom( tableRef ) );
+        ));
         query.replaceWith( new AstQuery( select ) );
     }
 
-    private void applyFilters(AstStart ast) {
+    private void applyFilters(AstStart ast)
+    {
         DebugQueryLogger dql = new DebugQueryLogger();
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
