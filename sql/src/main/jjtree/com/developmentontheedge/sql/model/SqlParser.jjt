@@ -123,6 +123,10 @@ TOKEN_MGR_DECLS : {
 |   < UNBOUNDED_PRECEDING: "unbounded preceding" >
 |   < UNBOUNDED_FOLLOWING: "unbounded following" >
 
+|   < INSERT_INTO:  "insert into" >
+|   < VALUES:  "values" >
+
+
 |   < WITH:      "with"     >
 |   < RECURSIVE: "recursive">
 
@@ -330,8 +334,8 @@ AstStart Start() #Start : {}
 {
     (
         Query()
-      |
-        (BeMacro() | BeDbmsTransform())+ [Query()]
+      | (BeMacro() | BeDbmsTransform())+ [Query()]
+      | Insert()
     )
 
     <EOF>
@@ -506,6 +510,28 @@ void PartitionByClause() #PartitionByClause :
 {}
 {
    <PARTITION_BY> ValueExpression() (<COMMA> ValueExpression())*
+}
+
+/***************************************************************
+                   Insert fragment
+***************************************************************/
+
+void InsertColumnList() #ColumnList :
+{}
+{
+    <LEFT_PAREN> FieldReference() (<COMMA> FieldReference())* <RIGHT_PAREN>
+}
+
+void InsertValues() #InsertValues :
+{}
+{
+    <VALUES> <LEFT_PAREN> (RowValuePredicand()) (<COMMA> RowValuePredicand())*   <RIGHT_PAREN>
+}
+
+void Insert() #Insert :
+{}
+{
+    <INSERT_INTO> InsertColumnList() InsertValues()
 }
 
 /***************************************************************

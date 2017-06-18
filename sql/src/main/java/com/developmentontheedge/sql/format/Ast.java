@@ -30,4 +30,8 @@ public class Ast {
     public static ColumnList select(AstDerivedColumn... columns){
         return new ColumnList(columns);
     }
+//
+//    public static AstQuery union(AstSelect... selects){
+//
+//    }
 }

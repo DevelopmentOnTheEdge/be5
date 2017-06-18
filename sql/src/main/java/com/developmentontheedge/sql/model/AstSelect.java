@@ -8,8 +8,6 @@ import java.util.Objects;
 
 import one.util.streamex.IntStreamEx;
 
-
-
 public class AstSelect extends SimpleNode
 {
     public AstSelect(int id)
