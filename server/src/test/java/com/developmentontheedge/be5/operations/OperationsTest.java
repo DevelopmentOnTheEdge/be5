@@ -2,13 +2,12 @@ package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.env.Be5;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.util.Either;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -53,7 +52,7 @@ public class OperationsTest extends AbstractProjectTest
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "1","{}");
 
         FormPresentation first = operationService.generate(req).getFirst();
-        assertEquals("{'name':'','value':0}",
+        assertEquals("{'name':'','value':''}",
                 oneQuotes(first.getBean().getJsonObject("values").toString()));
     }
 
@@ -64,7 +63,7 @@ public class OperationsTest extends AbstractProjectTest
 
         FormPresentation first = operationService.generate(req).getFirst();
         assertEquals("{" +
-                        "'values':{'name':'test','value':1}," +
+                        "'values':{'name':'test','value':'1'}," +
                         "'meta':{" +
                             "'/name':{'displayName':'name'}," +
                             "'/value':{'displayName':'value','type':'Integer'}}," +
@@ -78,6 +77,25 @@ public class OperationsTest extends AbstractProjectTest
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "test", 1);
+    }
+
+    @Test
+    public void testGroovyOperationParameters()
+    {
+        Either<FormPresentation, OperationResult> generate = operationService.generate(
+                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
+
+        assertEquals("{" +
+                        "'values':{'name':'','number':0}," +
+                        "'meta':{" +
+                        "'/name':{'displayName':'Name'}," +
+                        "'/number':{" +
+                        "'displayName':'Number'," +
+                        "'type':'Long'," +
+                        "'tagList':{'A':1,'B':2,'C':3,'D':4}," +
+                        "'reloadOnChange':true}}," +
+                        "'order':['/name','/number']}",
+                oneQuotes(generate.getFirst().getBean().toString()));
     }
 
 }

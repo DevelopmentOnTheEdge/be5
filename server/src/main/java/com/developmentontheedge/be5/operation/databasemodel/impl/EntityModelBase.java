@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation.databasemodel.impl;
 
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -315,6 +316,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     {
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getEntityDps(entity, values);
+        Validator.checkAndCast(dps);
 
         return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
     }

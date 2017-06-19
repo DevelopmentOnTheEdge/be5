@@ -45,6 +45,9 @@ testtableAdmin:
   - TestOperation:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.TestOperation
+  - TestOperationProperty:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.TestOperationProperty
   - TestGroovyOp:
       type: Groovy
       roles: Administrator

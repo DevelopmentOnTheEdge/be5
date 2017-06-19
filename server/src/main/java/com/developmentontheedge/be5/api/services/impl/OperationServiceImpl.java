@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.experimental.OperationRequest;
+import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -18,8 +19,6 @@ import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.operation.databasemodel.groovy.GroovyRegister;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.beans.BeanInfoConstants;
-import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
@@ -31,8 +30,6 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class OperationServiceImpl implements OperationService
 {
-    private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(OperationServiceImpl.class.getName());
-
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
 
@@ -56,7 +53,7 @@ public class OperationServiceImpl implements OperationService
     }
 
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
-                                                              String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
+             String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
     {
         Operation operation = create(meta);
 
@@ -74,6 +71,18 @@ public class OperationServiceImpl implements OperationService
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
             return execute(operation, null, operationContext, req);
+        }
+
+        if(parameters instanceof DynamicPropertySet)
+        {
+            if(presetValues.containsKey(OperationSupport.reloadControl))
+            {
+                Validator.checkAndCast(((OperationSupport)operation).dps);
+            }
+            else
+            {
+                Validator.replaceNullValueToStr((DynamicPropertySet) parameters);
+            }
         }
 
         return Either.first(new FormPresentation(entityName, queryName, operationName,
@@ -109,11 +118,10 @@ public class OperationServiceImpl implements OperationService
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
 
-            if(StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false)
-                        .anyMatch(p -> p.getAttribute(BeanInfoConstants.STATUS) != null &&
-                                DynamicProperty.Status.valueOf(((String)p.getAttribute(BeanInfoConstants.STATUS)).toUpperCase()) == DynamicProperty.Status.ERROR))
+            Validator.checkAndCast((DynamicPropertySet) parameters);
+
+            if(StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false).anyMatch(Validator::isError))
             {
-                //TODO localize BeanInfoConstants.MESSAGE
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                         selectedRowsString, JsonFactory.bean(parameters), presetValues));

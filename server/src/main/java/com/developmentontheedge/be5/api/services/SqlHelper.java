@@ -60,18 +60,9 @@ public class SqlHelper
     private DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, String> presetValues)
     {
         StreamSupport.stream(dps.spliterator(), false).forEach(
-                property -> {
-                    property.setValue(presetValues.getOrDefault(property.getName(), getDefault(property.getType())));
-                }
+                property -> property.setValue(presetValues.getOrDefault(property.getName(), null))
         );
         return dps;
-    }
-
-    protected String getDefault(Class<?> type){
-        if(type == Long.class ||type == Integer.class ||type == Double.class ||type == Float.class){
-            return "0";
-        }
-        return "";
     }
 
     public Object[] getValues(DynamicPropertySet dps)

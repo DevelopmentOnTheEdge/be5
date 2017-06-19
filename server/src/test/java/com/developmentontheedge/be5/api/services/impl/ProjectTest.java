@@ -16,11 +16,11 @@ public class ProjectTest extends AbstractProjectTest
     public void testGetQuery()
     {
         Project project = injector.getProject();
-        assertEquals("    SELECT\n" +
-                "      t.name AS \"Name\",\n" +
-                "      t.value AS \"Value\"\n" +
-                "    FROM\n" +
-                "      testtable t", project.getEntity("testtable").getQueries().get("All records").getQuery());
+        assertEquals("SELECT\n" +
+                "  t.name AS \"Name\",\n" +
+                "  t.value AS \"Value\"\n" +
+                "FROM\n" +
+                "  testtable t", project.getEntity("testtable").getQueries().get("All records").getQuery());
 
     }
 
@@ -32,10 +32,10 @@ public class ProjectTest extends AbstractProjectTest
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertNotNull(validatedQuery);
         assertEquals("SELECT\n" +
-                "      t.name AS \"Name\",\n" +
-                "      t.value AS \"Value\"\n" +
-                "    FROM\n" +
-                "      testtable t", validatedQuery);
+                "  t.name AS \"Name\",\n" +
+                "  t.value AS \"Value\"\n" +
+                "FROM\n" +
+                "  testtable t", validatedQuery);
     }
 
 }

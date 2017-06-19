@@ -13,7 +13,7 @@ class TestGroovyOp extends OperationSupport implements Operation
         dps << [
                 name            : "name",
                 DISPLAY_NAME    : "Name",
-                value           : "",]
+                value           : ""]
 
         dps << [
                 name            : "number",

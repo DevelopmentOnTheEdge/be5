@@ -52,12 +52,10 @@ public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
         Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Request.class), injector);
 
         assertTrue(be5QueryExecutor.count() > 0);
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM " + "(" +
-                "SELECT\n" +
-                "      t.name AS \"Name\",\n" +
-                "      t.value AS \"Value\"\n" +
-                "    FROM\n" +
-                "      testtable t" +
-                ") " +"AS \"data\"", be5QueryExecutor.getFinalSql());
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
+                "  t.name AS \"Name\",\n" +
+                "  t.value AS \"Value\"\n" +
+                "FROM\n" +
+                "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql());
     }
 }

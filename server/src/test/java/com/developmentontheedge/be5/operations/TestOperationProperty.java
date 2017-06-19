@@ -8,17 +8,20 @@ import com.developmentontheedge.beans.DynamicProperty;
 import java.util.Map;
 
 
-public class TestOperation extends OperationSupport implements Operation
+public class TestOperationProperty extends OperationSupport implements Operation
 {
 
     @Override
     public Object getParameters(Map<String, String> presetValues) throws Exception
     {
-        dps.add(new DynamicProperty("name", "Name", String.class,
-                presetValues.getOrDefault("name", "")));
+        dps.add(new DynamicProperty("simple", "Name", String.class));
+        dps.add(new DynamicProperty("simpleNumber", "Number", Long.class));
 
-        dps.add(new DynamicProperty("number", "Number", Long.class,
-                presetValues.getOrDefault("number", "0")));
+        dps.add(new DynamicProperty("getOrDefault", "Name", String.class,
+                presetValues.getOrDefault("key", "defaultValue")));
+
+        dps.add(new DynamicProperty("getOrDefaultNumber", "Name", Long.class,
+                presetValues.getOrDefault("key", "3")));
 
         return dps;
     }

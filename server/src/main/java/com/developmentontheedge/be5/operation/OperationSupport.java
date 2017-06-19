@@ -16,16 +16,19 @@ import java.util.stream.StreamSupport;
 
 public abstract class OperationSupport implements Operation
 {
-    public Injector injector;
+    protected Injector injector;
 
-    public DatabaseService databaseService;
-    public SqlService db;
-    public SqlHelper sqlHelper;
-    public Meta meta;
+    protected DatabaseService databaseService;
+    protected SqlService db;
+    protected SqlHelper sqlHelper;
+    protected Meta meta;
     private OperationContext operationContext;
     private OperationInfo operationInfo;
     private OperationResult operationResult;
+
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
+
+    public static final String reloadControl = "_reloadcontrol_";
 
     @Override
     public final void initialize(Injector injector, OperationInfo operationInfo,

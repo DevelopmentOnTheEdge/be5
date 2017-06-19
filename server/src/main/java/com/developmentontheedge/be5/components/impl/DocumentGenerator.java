@@ -42,7 +42,8 @@ public class DocumentGenerator implements Runner {
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
     
-    private DocumentGenerator(Request req, Response res, Injector injector) {
+    DocumentGenerator(Request req, Response res, Injector injector)
+    {
         this.req = req;
         this.res = res;
         this.injector = injector;
@@ -73,7 +74,7 @@ public class DocumentGenerator implements Runner {
         DocumentResponse.of(res).send(getTablePresentation(query, parametersMap));
     }
 
-    private TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
+    TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
         //&& !Strings2.isNullOrEmpty( query.getEntity().getPrimaryKeyName() )
