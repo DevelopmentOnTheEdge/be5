@@ -124,7 +124,10 @@ TOKEN_MGR_DECLS : {
 |   < UNBOUNDED_FOLLOWING: "unbounded following" >
 
 |   < INSERT_INTO:  "insert into" >
-|   < VALUES:  "values" >
+|   < VALUES:       "values" >
+|   < DELETE_FROM:  "delete from" >
+|   < UPDATE:       "update" >
+|   < SET:          "set" >
 
 
 |   < WITH:      "with"     >
@@ -336,6 +339,8 @@ AstStart Start() #Start : {}
         Query()
       | (BeMacro() | BeDbmsTransform())+ [Query()]
       | Insert()
+      | Delete()
+      | Update()
     )
 
     <EOF>
@@ -513,7 +518,7 @@ void PartitionByClause() #PartitionByClause :
 }
 
 /***************************************************************
-                   Insert fragment
+                   Insert
 ***************************************************************/
 
 void InsertColumnList() #ColumnList :
@@ -532,6 +537,61 @@ void Insert() #Insert :
 {}
 {
     <INSERT_INTO> TableName() InsertColumnList() InsertValueList()
+}
+
+/***************************************************************
+                   Delete
+***************************************************************/
+
+void Delete() #Delete :
+{}
+{
+    <DELETE_FROM> TableName()
+    [LOOKAHEAD( [BeIfStart()] <WHERE> )
+    (WhereClause() |
+     BeIfUnlessChainOptional(Mode.CONDITIONAL_WHERE)
+    )]
+}
+
+/***************************************************************
+                   Update
+***************************************************************/
+
+void UpdateSetComparisonPart() #FunNode(2) : { Token operator; }
+{
+	operator=UpdateSetCompOperator() RowValuePredicand() { setOperator(jjtThis, operator); }
+}
+
+Token UpdateSetCompOperator() : { Token op; }
+{
+  op = <ASSIGNMENT>     { return op; }
+}
+
+void UpdateSetItem() #UpdateSetItem :
+{
+}
+{
+  RowValuePredicand()
+  (
+    UpdateSetComparisonPart()
+  )?
+}
+
+void UpdateSetList() #UpdateSetList :
+{}
+{
+    <SET> UpdateSetItem() (<COMMA> UpdateSetItem())*
+}
+
+void Update() #Update :
+{}
+{
+    <UPDATE> TableName()
+    UpdateSetList()
+    [LOOKAHEAD( [BeIfStart()] <WHERE> )
+    (WhereClause() |
+     BeIfUnlessChainOptional(Mode.CONDITIONAL_WHERE)
+    )]
 }
 
 /***************************************************************
