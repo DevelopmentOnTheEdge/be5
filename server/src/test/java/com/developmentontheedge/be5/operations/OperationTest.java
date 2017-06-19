@@ -64,7 +64,7 @@ public class OperationTest extends AbstractProjectTest{
                 oneQuotes(form.bean.toString()));
 
         OperationResult result = operationService.execute(req).getSecond();
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/number=1/name=testName"), result);
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"), result);
     }
 
     @Test

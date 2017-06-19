@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.operation.databasemodel.groovy
 
-import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.operation.databasemodel.groovy.FlexibleDynamicPropertySet
 import com.developmentontheedge.be5.operation.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
@@ -9,8 +7,6 @@ import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 
-import org.junit.AfterClass
-import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
 

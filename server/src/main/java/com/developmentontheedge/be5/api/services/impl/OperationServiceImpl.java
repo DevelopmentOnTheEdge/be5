@@ -145,7 +145,6 @@ public class OperationServiceImpl implements OperationService
                     new HashUrl(FrontendConstants.TABLE_ACTION,
                         req.get(RestApiConstants.ENTITY),
                         req.get(RestApiConstants.QUERY))
-                        .named(new OperationRequest(req).getAll())
                 ));
             }
 

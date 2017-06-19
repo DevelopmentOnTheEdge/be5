@@ -72,7 +72,7 @@ public class OperationsTest extends AbstractProjectTest
 
         //OperationResult execute = operationService.execute(req);
 
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=test/value=1"),
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationService.execute(req).getSecond());
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
