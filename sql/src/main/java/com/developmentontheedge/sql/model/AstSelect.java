@@ -77,13 +77,7 @@ public class AstSelect extends SimpleNode {
 
     public AstSelect where(Map<String, String> conditions){
         Objects.requireNonNull(conditions);
-        if(conditions.size() > 0 )
-        {
-            Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
-            iterator.hasNext();
-            setWhere(new AstWhere(iterator));
-        }
-
+        setWhere(new AstWhere(conditions));
         return this;
     }
 

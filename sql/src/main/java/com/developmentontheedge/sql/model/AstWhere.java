@@ -7,16 +7,15 @@ import java.util.Map;
 
 public class AstWhere extends SimpleNode
 {
-    public AstWhere(SimpleNode node)
+    public AstWhere(Map<String, String> conditions)
     {
         this(SqlParserTreeConstants.JJTWHERE);
-        addChild( node );
-    }
-
-    public AstWhere(Iterator<Map.Entry<String, String>> iterator)
-    {
-        this(SqlParserTreeConstants.JJTWHERE);
-        addChild(addAstFunNode(iterator));
+        if(conditions.size() > 0 )
+        {
+            Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
+            iterator.hasNext();
+            addChild(addAstFunNode(iterator));
+        }
     }
 
     private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {

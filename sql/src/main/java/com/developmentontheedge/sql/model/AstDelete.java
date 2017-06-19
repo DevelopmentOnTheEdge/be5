@@ -20,34 +20,25 @@ public class AstDelete extends SimpleNode
         this.nodePrefix = "DELETE FROM";
     }
 
-//    public AstDelete where(Map<String, String> conditions){
-//        Objects.requireNonNull(conditions);
-//        if(conditions.size() > 0 )
-//        {
-//            Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
-//            iterator.hasNext();
-//            setWhere(new AstWhere(iterator));
-//        }
-//
-//        return this;
-//    }
-//
-//    public void setWhere(AstWhere where)
-//    {
-//        Objects.requireNonNull( where );
-//        AstWhere oldWhere = getWhere();
-//        if(oldWhere == null)
-//        {
-//            SimpleNode prev = getFrom();
-//            if(prev == null)
-//                prev = getSelectList();
-//            prev.appendSibling( where );
-//        } else
-//        {
-//            oldWhere.replaceWith( where );
-//        }
-//    }
-//
+    public AstDelete where(Map<String, String> conditions){
+        Objects.requireNonNull(conditions);
+        setWhere(new AstWhere(conditions));
+        return this;
+    }
+
+    public void setWhere(AstWhere where)
+    {
+        Objects.requireNonNull( where );
+        AstWhere oldWhere = getWhere();
+        if(oldWhere == null)
+        {
+            addChild(where);
+        } else
+        {
+            oldWhere.replaceWith( where );
+        }
+    }
+
     public AstWhere getWhere()
     {
         return children().select( AstWhere.class ).findFirst().orElse( null );
