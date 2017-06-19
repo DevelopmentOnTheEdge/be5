@@ -86,7 +86,7 @@ public class OperationsTest extends AbstractProjectTest
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
 
         assertEquals("{" +
-                        "'values':{'name':'','number':0}," +
+                        "'values':{'name':'','number':1}," +
                         "'meta':{" +
                         "'/name':{'displayName':'Name'}," +
                         "'/number':{" +
