@@ -2,6 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+
 public class AstDelete extends SimpleNode
 {
     public AstDelete(AstTableName tableName)
@@ -14,6 +18,39 @@ public class AstDelete extends SimpleNode
     {
         super(id);
         this.nodePrefix = "DELETE FROM";
+    }
+
+//    public AstDelete where(Map<String, String> conditions){
+//        Objects.requireNonNull(conditions);
+//        if(conditions.size() > 0 )
+//        {
+//            Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
+//            iterator.hasNext();
+//            setWhere(new AstWhere(iterator));
+//        }
+//
+//        return this;
+//    }
+//
+//    public void setWhere(AstWhere where)
+//    {
+//        Objects.requireNonNull( where );
+//        AstWhere oldWhere = getWhere();
+//        if(oldWhere == null)
+//        {
+//            SimpleNode prev = getFrom();
+//            if(prev == null)
+//                prev = getSelectList();
+//            prev.appendSibling( where );
+//        } else
+//        {
+//            oldWhere.replaceWith( where );
+//        }
+//    }
+//
+    public AstWhere getWhere()
+    {
+        return children().select( AstWhere.class ).findFirst().orElse( null );
     }
 
     public AstDelete(SqlParser p, int id)

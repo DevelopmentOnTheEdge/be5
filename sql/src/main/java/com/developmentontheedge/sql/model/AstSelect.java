@@ -8,8 +8,7 @@ import java.util.Objects;
 
 import one.util.streamex.IntStreamEx;
 
-public class AstSelect extends SimpleNode
-{
+public class AstSelect extends SimpleNode {
     public AstSelect(int id)
     {
         super( id );
@@ -82,37 +81,10 @@ public class AstSelect extends SimpleNode
         {
             Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
             iterator.hasNext();
-            setWhere(new AstWhere(addAstFunNode(iterator)));
+            setWhere(new AstWhere(iterator));
         }
 
         return this;
-    }
-
-    private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
-        Map.Entry<String, String> entry = iterator.next();
-        String value = entry.getValue();
-        PredefinedFunction function = DefaultParserContext.FUNC_EQ;
-        SimpleNode astFunNode;
-
-        if(value.equals("null") || value.equals("notNull"))
-        {
-            astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
-        }
-        else
-        {
-            if(value.endsWith("%") || value.startsWith("%"))
-            {
-                function = DefaultParserContext.FUNC_LIKE;
-            }
-            astFunNode = function.node(new AstFieldReference(entry.getKey()), new AstReplacementParameter());
-        }
-
-        if(iterator.hasNext()){
-            return new AstBooleanTerm(astFunNode, addAstFunNode(iterator));
-        }else{
-            return astFunNode;
-        }
-
     }
 
     public void setWhere(AstWhere where)

@@ -1,6 +1,7 @@
 package com.developmentontheedge.sql.format;
 
 import com.developmentontheedge.sql.model.AstColumnList;
+import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstFieldReference;
 import com.developmentontheedge.sql.model.AstFrom;
@@ -96,7 +97,11 @@ public class Ast
         return new InsertTable(tableName);
     }
 
-//    Ast.delete("users").where();
+    public static AstDelete delete(String tableName)
+    {
+        return new AstDelete(new AstTableName(tableName));
+    }
+
 //    Ast.update("users").set(Map<>()).where();
 //
 //    public static AstQuery union(AstSelect... selects){

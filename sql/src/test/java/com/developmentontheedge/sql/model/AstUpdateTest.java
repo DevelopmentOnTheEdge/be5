@@ -31,4 +31,19 @@ public class AstUpdateTest
                 "WHERE CustomerID = ?";
         assertEquals(query, SqlQuery.parse( query ).format());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testError()
+    {
+        String query = "UPDATE Customers\n" +
+                "SET ContactName > 'Alfred Schmidt', City = 'Frankfurt'";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testError2()
+    {
+        String query = "UPDATE SET ContactName = 'Alfred Schmidt'";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
 }
