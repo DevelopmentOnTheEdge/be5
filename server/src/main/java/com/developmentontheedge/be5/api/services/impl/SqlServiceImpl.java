@@ -90,12 +90,14 @@ public class SqlServiceImpl implements SqlService
 
     private int update(Connection conn, String sql, Object... params) throws SQLException
     {
+        //sql = format(sql); //need delete all drop create in runtime (as in hibernate. only options is a create entity.yaml)
         log.fine(sql);
         return queryRunner.update(conn, sql, params);
     }
 
     private <T> T insert(Connection conn, String sql, Object... params) throws SQLException
     {
+        sql = format(sql);
         log.fine(sql);
         return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
     }

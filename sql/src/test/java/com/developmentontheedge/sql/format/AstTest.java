@@ -41,6 +41,15 @@ public class AstTest {
     }
 
     @Test
+    public void selectWhereEmpty()
+    {
+        Map<String, String> name = new HashMap<>();
+        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(name);
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users",
+                users.format());
+    }
+
+    @Test
     public void selectWhere2()
     {
         Map<String, String> names = new HashMap<>();

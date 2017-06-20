@@ -22,7 +22,7 @@ public class AstDelete extends SimpleNode
 
     public AstDelete where(Map<String, String> conditions){
         Objects.requireNonNull(conditions);
-        setWhere(new AstWhere(conditions));
+        if(!conditions.isEmpty())setWhere(new AstWhere(conditions));
         return this;
     }
 
@@ -33,7 +33,8 @@ public class AstDelete extends SimpleNode
         if(oldWhere == null)
         {
             addChild(where);
-        } else
+        }
+        else
         {
             oldWhere.replaceWith( where );
         }

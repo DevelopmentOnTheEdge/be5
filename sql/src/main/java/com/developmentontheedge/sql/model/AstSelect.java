@@ -77,7 +77,7 @@ public class AstSelect extends SimpleNode {
 
     public AstSelect where(Map<String, String> conditions){
         Objects.requireNonNull(conditions);
-        setWhere(new AstWhere(conditions));
+        if(!conditions.isEmpty())setWhere(new AstWhere(conditions));
         return this;
     }
 
@@ -91,7 +91,8 @@ public class AstSelect extends SimpleNode {
             if(prev == null)
                 prev = getSelectList();
             prev.appendSibling( where );
-        } else
+        }
+        else
         {
             oldWhere.replaceWith( where );
         }
