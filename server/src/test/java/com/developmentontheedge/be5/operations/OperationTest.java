@@ -152,6 +152,26 @@ public class OperationTest extends AbstractProjectTest{
     }
 
     @Test
+    public void testManualAndAutomaticSettingOfParameterValues()
+    {
+        Either<FormPresentation, OperationResult> generate = operationService.generate(
+                getSpyMockRecForOp("testtableAdmin", "All records", "TestOperationProperty", "0",
+                        new Gson().toJson(ImmutableMap.of(
+                                "simpleNumber", "testName",
+                                "simple", "1",
+                                "getOrDefault", "testName2",
+                                "getOrDefaultNumber", "2",
+                                OperationSupport.reloadControl, "name"))));
+
+        assertEquals("{" +
+                        "'simpleNumber':'testName'," +
+                        "'simple':'1'," +
+                        "'getOrDefault':'testName2'," +
+                        "'getOrDefaultNumber':2}",
+                oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+    }
+
+    @Test
     public void testGroovyOperationParameters()
     {
         Either<FormPresentation, OperationResult> generate = operationService.generate(

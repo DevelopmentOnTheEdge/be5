@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.Validator;
+import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -31,10 +32,12 @@ public class OperationServiceImpl implements OperationService
 {
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
+    private final SqlHelper sqlHelper;
 
     public OperationServiceImpl(Injector injector) {
         this.injector = injector;
         userAwareMeta = UserAwareMeta.get(injector);
+        sqlHelper = injector.get(SqlHelper.class);
     }
 
     @Override
@@ -56,15 +59,7 @@ public class OperationServiceImpl implements OperationService
     {
         Operation operation = create(meta);
 
-        Object parameters;
-        try
-        {
-            parameters = operation.getParameters(presetValues);
-        }
-        catch (Exception e)
-        {
-            throw Be5Exception.internalInOperation(e, operation.getInfo());
-        }
+        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
         if (parameters == null)
         {
@@ -103,15 +98,7 @@ public class OperationServiceImpl implements OperationService
 
         Operation operation = create(meta);
 
-        Object parameters;
-        try
-        {
-            parameters = operation.getParameters(presetValues);
-        }
-        catch (Exception e)
-        {
-            throw Be5Exception.internalInOperation(e, operation.getInfo());
-        }
+        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
         if(parameters instanceof DynamicPropertySet)
         {
@@ -155,14 +142,12 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    @Override
     public Operation create(Operation operation) {
         operation.initialize(injector, null, OperationResult.progress());
 
         return operation;
     }
 
-    @Override
     public Operation create(OperationInfo operationInfo) {
         Operation operation;
         String code = operationInfo.getCode();
@@ -190,6 +175,27 @@ public class OperationServiceImpl implements OperationService
         operation.initialize(injector, operationInfo, OperationResult.progress());
 
         return operation;
+    }
+
+    /**
+     * Либо значение не задаётся и оно будет автоматически подставлятся из presetValues после выполнения getParameters,
+     * либо вы задаёте значение и вручную управляете её изменением в getParameters:
+     * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
+     */
+    private Object getParametersAndSetValueIfNull(Operation operation, Map<String, String> presetValues) {
+        try
+        {
+            Object parameters = operation.getParameters(presetValues);
+            if (parameters instanceof DynamicPropertySet)
+            {
+                sqlHelper.setValuesIfNull((DynamicPropertySet)parameters, presetValues);
+            }
+            return parameters;
+        }
+        catch (Exception e)
+        {
+            throw Be5Exception.internalInOperation(e, operation.getInfo());
+        }
     }
 
     Long[] selectedRows(String selectedRowsString){

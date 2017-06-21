@@ -13,7 +13,7 @@ public interface OperationService
 
     Either<FormPresentation, OperationResult> execute(Request req);
 
-    Operation create(Operation operation);
-
-    Operation create(OperationInfo meta);
+//    Operation create(Operation operation);
+//
+//    Operation create(OperationInfo meta);
 }

@@ -315,7 +315,9 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     final public Long addForce( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = sqlHelper.getEntityDps(entity, values);
+        DynamicPropertySet dps = sqlHelper.getEntityDps(entity);
+        sqlHelper.setValuesIfNull(dps, values);
+
         Validator.checkAndCast(dps);
 
         return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));

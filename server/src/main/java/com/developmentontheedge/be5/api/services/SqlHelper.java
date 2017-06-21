@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -47,21 +48,16 @@ public class SqlHelper
         return dps;
     }
 
-    public DynamicPropertySet getEntityDps(Entity entity, Map<String, String> values)
-    {
-        return setValues(getEntityDps(entity), values);
-    }
-
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
-    private DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, String> presetValues)
+    public DynamicPropertySet setValuesIfNull(DynamicPropertySet dps, Map<String, String> presetValues)
     {
-        StreamSupport.stream(dps.spliterator(), false).forEach(
-                property -> property.setValue(presetValues.getOrDefault(property.getName(), null))
-        );
+        StreamSupport.stream(dps.spliterator(), false).forEach(p -> {
+            if(p.getValue() == null)p.setValue(presetValues.getOrDefault(p.getName(), null));
+        });
         return dps;
     }
 
