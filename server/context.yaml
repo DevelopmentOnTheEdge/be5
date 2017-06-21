@@ -47,3 +47,6 @@ context:
   - sqlHelper:
       interface:      com.developmentontheedge.be5.api.services.SqlHelper
       implementation: com.developmentontheedge.be5.api.services.SqlHelper
+  - validator:
+      interface:      com.developmentontheedge.be5.api.services.Validator
+      implementation: com.developmentontheedge.be5.api.services.Validator

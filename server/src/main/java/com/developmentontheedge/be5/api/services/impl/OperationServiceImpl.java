@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.helpers.Validator;
+import com.developmentontheedge.be5.api.services.Validator;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -33,9 +33,11 @@ public class OperationServiceImpl implements OperationService
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
     private final SqlHelper sqlHelper;
+    private final Validator validator;
 
     public OperationServiceImpl(Injector injector) {
         this.injector = injector;
+        this.validator = injector.get(Validator.class);
         userAwareMeta = UserAwareMeta.get(injector);
         sqlHelper = injector.get(SqlHelper.class);
     }
@@ -71,11 +73,11 @@ public class OperationServiceImpl implements OperationService
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
             {
-                Validator.checkAndCast(((OperationSupport)operation).dps);
+                validator.checkAndCast(((OperationSupport)operation).dps);
             }
             else
             {
-                Validator.replaceNullValueToStr((DynamicPropertySet) parameters);
+                validator.replaceNullValueToStr((DynamicPropertySet) parameters);
             }
         }
 
@@ -104,9 +106,9 @@ public class OperationServiceImpl implements OperationService
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
 
-            Validator.checkAndCast((DynamicPropertySet) parameters);
+            validator.checkAndCast((DynamicPropertySet) parameters);
 
-            if(StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false).anyMatch(Validator::isError))
+            if(StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false).anyMatch(validator::isError))
             {
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),

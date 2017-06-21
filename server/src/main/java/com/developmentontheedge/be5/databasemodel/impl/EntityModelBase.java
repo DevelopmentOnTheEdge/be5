@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel.impl;
 
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.api.helpers.Validator;
+import com.developmentontheedge.be5.api.services.Validator;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -42,16 +42,18 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
     }
 
-    private SqlService db;
-    private SqlHelper sqlHelper;
+    private final SqlService db;
+    private final SqlHelper sqlHelper;
+    private final Validator validator;
 
-    final private Entity entity;
+    private final Entity entity;
 
 
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, Entity entity)
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, Validator validator, Entity entity)
     {
         this.db = db;
         this.sqlHelper = sqlHelper;
+        this.validator = validator;
 
         this.entity = entity;
     }
@@ -318,7 +320,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         DynamicPropertySet dps = sqlHelper.getEntityDps(entity);
         sqlHelper.setValuesIfNull(dps, values);
 
-        Validator.checkAndCast(dps);
+        validator.checkAndCast(dps);
 
         return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
     }

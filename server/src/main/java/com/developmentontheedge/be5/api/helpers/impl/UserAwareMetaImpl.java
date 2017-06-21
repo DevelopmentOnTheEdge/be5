@@ -36,6 +36,12 @@ public class UserAwareMetaImpl implements UserAwareMeta
      */
     private static CompiledLocalizations compiledLocalizations = null;
 
+    /**
+     * TODO сделать обычный сервис, добавить перезагрузку compiledLocalizations после перечтения проекта
+     * @param injector
+     * @return
+     */
+    @Deprecated
     public static UserAwareMeta get(Injector injector)
     {
         if (compiledLocalizations == null)

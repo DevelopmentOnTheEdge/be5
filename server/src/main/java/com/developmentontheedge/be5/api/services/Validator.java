@@ -1,5 +1,7 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -8,17 +10,23 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 //TODO localize BeanInfoConstants.MESSAGE
 public class Validator
 {
+    private final UserAwareMeta userAwareMeta;
+
+    public Validator(Injector injector){
+        userAwareMeta = UserAwareMeta.get(injector);
+    }
+
     public enum Status
     {
         SUCCESS, WARNING, ERROR
     }
 
-    public static void checkAndCast(DynamicPropertySet dps)
+    public void checkAndCast(DynamicPropertySet dps)
     {
         for (DynamicProperty property: dps) checkAndCast(property);
     }
 
-    public static void checkAndCast(DynamicProperty property)
+    public void checkAndCast(DynamicProperty property)
     {
         if(property.getValue() instanceof String && property.getType() != String.class)
         {
@@ -40,19 +48,19 @@ public class Validator
         }
     }
 
-    public static void setState(DynamicProperty property, Status status)
+    public void setState(DynamicProperty property, Status status)
     {
         setState(property, status, "");
     }
 
-    public static void setState(DynamicProperty property, Status status, Throwable e)
+    public void setState(DynamicProperty property, Status status, Throwable e)
     {
         if(e.getClass() == NumberFormatException.class)
             setState(property, status, "Error, value must be a " + property.getType().getName());
         else setState(property, status, e.getMessage());
     }
 
-    public static void setState(DynamicProperty property, Status status, String message)
+    public void setState(DynamicProperty property, Status status, String message)
     {
         property.setAttribute( BeanInfoConstants.STATUS, status.toString().toLowerCase() );
         if(message != null && !message.isEmpty())
@@ -61,7 +69,7 @@ public class Validator
         }
     }
 
-    private static Object getTypedValueFromString(DynamicProperty property, String value)
+    private Object getTypedValueFromString(DynamicProperty property, String value)
     {
         Class<?> type = property.getType();
 
@@ -89,14 +97,14 @@ public class Validator
         return value;
     }
 
-    public static boolean isError(DynamicProperty property)
+    public boolean isError(DynamicProperty property)
     {
         return property.getAttribute(BeanInfoConstants.STATUS) != null &&
                 Validator.Status.valueOf(((String) property.getAttribute(BeanInfoConstants.STATUS)).toUpperCase())
                         == Validator.Status.ERROR;
     }
 
-    public static void replaceNullValueToStr(DynamicPropertySet dps)
+    public void replaceNullValueToStr(DynamicPropertySet dps)
     {
         for (DynamicProperty property: dps){
             if(property.getValue() == null){

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.services.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -37,22 +38,25 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 //        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, EntityRecordAdapter.class );
     }
 
-    private SqlService sqlService;
-    private SqlHelper sqlHelper;
-    private Meta meta;
+    private final SqlService sqlService;
+    private final SqlHelper sqlHelper;
+    private final Meta meta;
+    private final Validator validator;
 
-    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, Meta meta)
+
+    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, Meta meta, Validator validator)
     {
         this.sqlService = sqlService;
         this.sqlHelper = sqlHelper;
         this.meta = meta;
+        this.validator = validator;
     }
 
     @Override
     public EntityModel getEntity( String entityName )
     {
         Objects.requireNonNull(entityName);
-        return new EntityModelBase(sqlService, sqlHelper, meta.getEntity(entityName));
+        return new EntityModelBase(sqlService, sqlHelper, validator, meta.getEntity(entityName));
     }
 
 }
