@@ -56,7 +56,7 @@ public class SqlHelper
     public DynamicPropertySet setValuesIfNull(DynamicPropertySet dps, Map<String, String> presetValues)
     {
         StreamSupport.stream(dps.spliterator(), false).forEach(p -> {
-            if(p.getValue() == null)p.setValue(presetValues.getOrDefault(p.getName(), null));
+            if(p.getValue() == null)p.setValue(presetValues.get(p.getName()));
         });
         return dps;
     }

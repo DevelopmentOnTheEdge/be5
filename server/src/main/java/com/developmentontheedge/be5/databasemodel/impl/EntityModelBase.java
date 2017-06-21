@@ -320,7 +320,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         DynamicPropertySet dps = sqlHelper.getEntityDps(entity);
         sqlHelper.setValuesIfNull(dps, values);
 
-        validator.checkAndCast(dps);
+        validator.checkErrorAndCast(dps);
 
         return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
     }

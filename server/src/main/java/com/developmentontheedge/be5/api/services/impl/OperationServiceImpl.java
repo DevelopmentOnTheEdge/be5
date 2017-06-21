@@ -23,7 +23,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Map;
-import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
@@ -73,11 +72,11 @@ public class OperationServiceImpl implements OperationService
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
             {
-                validator.checkAndCast(((OperationSupport)operation).dps);
+                validator.checkErrorAndCast((DynamicPropertySet) parameters);
             }
             else
             {
-                validator.replaceNullValueToStr((DynamicPropertySet) parameters);
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
             }
         }
 
@@ -106,9 +105,7 @@ public class OperationServiceImpl implements OperationService
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
 
-            validator.checkAndCast((DynamicPropertySet) parameters);
-
-            if(StreamSupport.stream(((DynamicPropertySet)parameters).spliterator(), false).anyMatch(validator::isError))
+            if(validator.checkErrorAndCast((DynamicPropertySet) parameters) == Validator.Status.ERROR)
             {
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),

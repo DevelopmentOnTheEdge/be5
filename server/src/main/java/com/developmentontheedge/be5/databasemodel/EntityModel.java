@@ -58,7 +58,7 @@ public interface EntityModel<R extends RecordModel> {
     /**
      * Adds record into database from map, where key is the column name
      * and key value is the column value.<br>
-     * The method can checkAndCast the values on consistency and threw exceptions<br>
+     * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #addForce( Map )}
      * @param values map with column names and values
@@ -108,7 +108,7 @@ public interface EntityModel<R extends RecordModel> {
     
     /**
      * Sets value to property with a specified name.<br>
-     * The method can checkAndCast the values on consistency and threw exceptions<br>
+     * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #setForce( Long, String, String )}
      * @param id identify number of record
@@ -119,7 +119,7 @@ public interface EntityModel<R extends RecordModel> {
 
     /**
      * Sets value to property with a specified name.<br>
-     * The method can checkAndCast the values on consistency and threw exceptions<br>
+     * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #setForce( Long, Map )}
      * @param id identify number of record
@@ -147,7 +147,7 @@ public interface EntityModel<R extends RecordModel> {
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.
-     * The method can checkAndCast the values on consistency and threw exceptions<br>
+     * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #removeForce(Long, Long...)}
      * @param c collection of conditions
@@ -157,7 +157,7 @@ public interface EntityModel<R extends RecordModel> {
     
     /**
      * Operation removes all the records, consistent with conditions.
-     * The method can checkAndCast the values on consistency and threw exceptions<br>
+     * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #removeForce(Long, Long...)} }
      * @param values conditions
@@ -167,7 +167,7 @@ public interface EntityModel<R extends RecordModel> {
     
     /**
      * Deletes the record with the specified identifiers.
-     * The method can checkAndCast the values on consistency and threw exceptions<br>
+     * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #removeForce(Long, Long...)}
      * @param id - record identifier numbers

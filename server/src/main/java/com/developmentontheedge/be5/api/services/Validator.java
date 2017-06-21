@@ -6,6 +6,9 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
+import static com.developmentontheedge.be5.api.services.Validator.Status.SUCCESS;
+import static com.developmentontheedge.be5.api.services.Validator.Status.ERROR;
+
 
 //TODO localize BeanInfoConstants.MESSAGE
 public class Validator
@@ -21,77 +24,87 @@ public class Validator
         SUCCESS, WARNING, ERROR
     }
 
-    public void checkAndCast(DynamicPropertySet dps)
+    public Status checkErrorAndCast(DynamicPropertySet dps)
     {
-        for (DynamicProperty property: dps) checkAndCast(property);
+        for (DynamicProperty property: dps)
+        {
+            if(checkErrorAndCast(property) == ERROR)return ERROR;
+        }
+        return SUCCESS;
     }
 
-    public void checkAndCast(DynamicProperty property)
+    public Status checkErrorAndCast(DynamicProperty property)
     {
         if(property.getValue() instanceof String && property.getType() != String.class)
         {
             try
             {
-                property.setValue(getTypedValueFromString(property, property.getValue().toString()));
+                property.setValue(getTypedValueFromString(property, property.getValue()));
             }
             catch (IllegalArgumentException e)
             {
-                setState(property, Status.ERROR, e);
+                setError(property, e);
+                return ERROR;
             }
         }
         else
         {
             if (property.getValue() == null || property.getType() != property.getValue().getClass())
             {
-                setState(property, Status.ERROR, new IllegalArgumentException());
+                setError(property, new IllegalArgumentException());
+                return ERROR;
             }
         }
+        return SUCCESS;
     }
 
-    public void setState(DynamicProperty property, Status status)
+    public void setSuccess(DynamicProperty property)
     {
-        setState(property, status, "");
+        property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString().toLowerCase() );
     }
 
-    public void setState(DynamicProperty property, Status status, Throwable e)
+    public void setError(DynamicProperty property, Throwable e)
     {
-        if(e.getClass() == NumberFormatException.class)
-            setState(property, status, "Error, value must be a " + property.getType().getName());
-        else setState(property, status, e.getMessage());
+        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString().toLowerCase() );
+
+        String msg = "Error";
+        if(e instanceof IllegalArgumentException)msg = "Error, value must be a " + property.getType().getName();
+
+        property.setAttribute( BeanInfoConstants.MESSAGE, msg);
     }
 
-    public void setState(DynamicProperty property, Status status, String message)
+    public void setError(DynamicProperty property, String message)
     {
-        property.setAttribute( BeanInfoConstants.STATUS, status.toString().toLowerCase() );
-        if(message != null && !message.isEmpty())
-        {
-            property.setAttribute( BeanInfoConstants.MESSAGE, message );
-        }
+        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString().toLowerCase() );
+        property.setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
-    private Object getTypedValueFromString(DynamicProperty property, String value)
+    private Object getTypedValueFromString(DynamicProperty property, Object value)
     {
         Class<?> type = property.getType();
 
-        if (type == Integer.class)
+        if(value instanceof String)
         {
-            return Integer.parseInt(value);
-        }
-        if (type == Long.class)
-        {
-            return Long.parseLong(value);
-        }
-        if (type == Float.class)
-        {
-            return Float.parseFloat(value);
-        }
-        if (type == Double.class)
-        {
-            return Double.parseDouble(value);
-        }
-        if (type == Boolean.class)
-        {
-            return Boolean.parseBoolean(value);
+            if (type == Integer.class)
+            {
+                return Integer.parseInt(value.toString());
+            }
+            if (type == Long.class)
+            {
+                return Long.parseLong(value.toString());
+            }
+            if (type == Float.class)
+            {
+                return Float.parseFloat(value.toString());
+            }
+            if (type == Double.class)
+            {
+                return Double.parseDouble(value.toString());
+            }
+            if (type == Boolean.class)
+            {
+                return Boolean.parseBoolean(value.toString());
+            }
         }
 
         return value;
@@ -104,7 +117,7 @@ public class Validator
                         == Validator.Status.ERROR;
     }
 
-    public void replaceNullValueToStr(DynamicPropertySet dps)
+    public void replaceNullValueToEmptyString(DynamicPropertySet dps)
     {
         for (DynamicProperty property: dps){
             if(property.getValue() == null){

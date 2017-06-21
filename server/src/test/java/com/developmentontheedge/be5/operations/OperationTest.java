@@ -17,8 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 public class OperationTest extends AbstractProjectTest{
@@ -157,18 +156,20 @@ public class OperationTest extends AbstractProjectTest{
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperationProperty", "0",
                         new Gson().toJson(ImmutableMap.of(
-                                "simpleNumber", "testName",
-                                "simple", "1",
+                                "simple", "testName",
+                                "simpleNumber", "1",
                                 "getOrDefault", "testName2",
                                 "getOrDefaultNumber", "2",
                                 OperationSupport.reloadControl, "name"))));
 
         assertEquals("{" +
-                        "'simpleNumber':'testName'," +
-                        "'simple':'1'," +
+                        "'simpleNumber':1," +
+                        "'simple':'testName'," +
                         "'getOrDefault':'testName2'," +
                         "'getOrDefaultNumber':2}",
                 oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+
+        assertFalse(generate.getFirst().toString().contains("error"));
     }
 
     @Test
