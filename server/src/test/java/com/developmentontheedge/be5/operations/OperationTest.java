@@ -126,7 +126,6 @@ public class OperationTest extends AbstractProjectTest{
                 result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("message"));
     }
 
-
     @Test
     public void testOperationInvoke()
     {
@@ -139,7 +138,7 @@ public class OperationTest extends AbstractProjectTest{
     }
 
     @Test
-    public void testTestOperationPropertyInvoke()
+    public void testPropertyInvokeInit()
     {
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperationProperty", "0", "{}"));
@@ -150,6 +149,25 @@ public class OperationTest extends AbstractProjectTest{
                         "'getOrDefault':'defaultValue'," +
                         "'getOrDefaultNumber':'3'}",
                 oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+    }
+
+    @Test
+    public void testGroovyOperationParameters()
+    {
+        Either<FormPresentation, OperationResult> generate = operationService.generate(
+                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
+
+        assertEquals("{" +
+                        "'values':{'name':'','number':1}," +
+                        "'meta':{" +
+                        "'/name':{'displayName':'Name'}," +
+                        "'/number':{" +
+                        "'displayName':'Number'," +
+                        "'type':'Long'," +
+                        "'tagList':{'A':1,'B':2,'C':3,'D':4}," +
+                        "'reloadOnChange':true}}," +
+                        "'order':['/name','/number']}",
+                oneQuotes(generate.getFirst().getBean().toString()));
     }
 
 }

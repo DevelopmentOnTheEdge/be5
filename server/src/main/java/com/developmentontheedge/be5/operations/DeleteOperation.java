@@ -17,7 +17,8 @@ public class DeleteOperation extends OperationSupport implements Operation
     }
 
     @Override
-    public void invoke(Object parameters, OperationContext context) throws Exception {
+    public void invoke(Object parameters, OperationContext context) throws Exception
+    {
         db.update(sqlHelper.generateDeleteInSql(getInfo().getEntity(), context.getRecordIDs().length),
                 context.getRecordIDs());
     }

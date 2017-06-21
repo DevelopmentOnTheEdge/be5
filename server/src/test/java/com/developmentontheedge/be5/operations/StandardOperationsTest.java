@@ -17,7 +17,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-public class OperationsTest extends AbstractProjectTest
+public class StandardOperationsTest extends AbstractProjectTest
 {
     private OperationService operationService = sqlMockInjector.get(OperationService.class);
 
@@ -44,6 +44,10 @@ public class OperationsTest extends AbstractProjectTest
                 operationService.generate(req).getSecond());
 
         verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
+
+        operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records", "Delete",
+                "1,2,3", "")).getSecond();
+        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
     }
 
     @Test
@@ -77,25 +81,6 @@ public class OperationsTest extends AbstractProjectTest
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "test", 1);
-    }
-
-    @Test
-    public void testGroovyOperationParameters()
-    {
-        Either<FormPresentation, OperationResult> generate = operationService.generate(
-                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
-
-        assertEquals("{" +
-                        "'values':{'name':'','number':1}," +
-                        "'meta':{" +
-                        "'/name':{'displayName':'Name'}," +
-                        "'/number':{" +
-                        "'displayName':'Number'," +
-                        "'type':'Long'," +
-                        "'tagList':{'A':1,'B':2,'C':3,'D':4}," +
-                        "'reloadOnChange':true}}," +
-                        "'order':['/name','/number']}",
-                oneQuotes(generate.getFirst().getBean().toString()));
     }
 
 }

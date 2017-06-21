@@ -18,10 +18,10 @@ public class TestOperationProperty extends OperationSupport implements Operation
         dps.add(new DynamicProperty("simpleNumber", "Number", Long.class));
 
         dps.add(new DynamicProperty("getOrDefault", "Name", String.class,
-                presetValues.getOrDefault("key", "defaultValue")));
+                presetValues.getOrDefault("getOrDefault", "defaultValue")));
 
         dps.add(new DynamicProperty("getOrDefaultNumber", "Name", Long.class,
-                presetValues.getOrDefault("key", "3")));
+                presetValues.getOrDefault("getOrDefaultNumber", "3")));
 
         return dps;
     }
