@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.DdlElement;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
+import org.apache.maven.plugin.MojoFailureException;
 
 import java.util.logging.Logger;
 
@@ -17,11 +15,6 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 
     static {
-        createTablesInH2();
-    }
-
-    private static void createTablesInH2()
-    {
         Project project = injector.getProject().getProject();
 
         String profileForIntegrationTests = "profileForIntegrationTests";
@@ -41,25 +34,22 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
 
         if("profileForIntegrationTests".equals(injector.getDatabaseService().getConnectionProfileName()))
         {
-            Module application = injector.getProject().getApplication();
-            SqlService db = injector.getSqlService();
-
-            //todo duplicate code from: be5:create-db, fix it
-            log.info("Drop and create application tables.");
-            for(Entity entity : application.getOrCreateEntityCollection().getAvailableElements())
+            try
             {
-                DdlElement scheme = entity.getScheme();
-                if(scheme instanceof TableDef)
-                {
-                    final String generatedQuery = scheme.getDdl();
-                    db.update( generatedQuery );
-                }
+                AppDb appDb = new AppDb();
+                appDb.setLogger(new JULLogger(Logger.getLogger(AppDb.class.getName())));
+                appDb.setBe5Project(project);
+                appDb.execute();
+            }
+            catch (MojoFailureException e)
+            {
+                throw new RuntimeException(e);
             }
         }
         else
         {
             log.warning("Fail set '"+ profileForIntegrationTests +"' profile, maybe DatabaseService already initialized." );
         }
-
     }
+
 }

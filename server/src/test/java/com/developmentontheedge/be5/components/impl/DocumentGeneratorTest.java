@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.TablePresentation;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public class DocumentGeneratorTest extends AbstractProjectTest
+public class DocumentGeneratorTest extends AbstractProjectIntegrationH2Test
 {
     private Meta meta = injector.getMeta();
     private Response response = mock(Response.class);

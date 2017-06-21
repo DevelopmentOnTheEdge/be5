@@ -32,10 +32,10 @@ import com.developmentontheedge.dbms.SimpleConnector;
 
 public abstract class Be5Mojo extends AbstractMojo
 {
-	protected ProcessController logger = new MavenLogger(getLog());
+    protected ProcessController logger = new MavenLogger(getLog());
 
 	protected DbmsConnector connector;
-    
+
     ///////////////////////////////////////////////////////////////////
     // Properties
     //
@@ -50,7 +50,7 @@ public abstract class Be5Mojo extends AbstractMojo
 
     @Parameter (property = "BE5_LOG_PATH")
     File logPath;
-    
+
     Project be5Project;
 
     String  connectionUrl;
@@ -58,19 +58,23 @@ public abstract class Be5Mojo extends AbstractMojo
     ///////////////////////////////////////////////////////////////////    
     
    
-    protected void init() throws MojoFailureException
+    public void init() throws MojoFailureException
     {
         long startTime = System.nanoTime();
     	initLogging();
-    	
-        if( projectPath == null )
-            throw new MojoFailureException("Please specify projectPath attribute");
 
-        getLog().info("Reading be5 project from '" + projectPath + "'...");
-        be5Project = loadProject(projectPath.toPath());
-        if(debug)
+        if(be5Project == null)
         {
-            be5Project.setDebugStream( System.err );
+            if( projectPath == null )
+                throw new MojoFailureException("Please specify projectPath attribute");
+
+            getLog().info("Reading be5 project from '" + projectPath + "'...");
+
+            be5Project = loadProject(projectPath.toPath());
+            if (debug)
+            {
+                be5Project.setDebugStream(System.err);
+            }
         }
     	
         BeConnectionProfile profile = be5Project.getConnectionProfile();
@@ -235,4 +239,13 @@ public abstract class Be5Mojo extends AbstractMojo
         return result;
     }
 
+    public void setLogger(ProcessController logger)
+    {
+        this.logger = logger;
+    }
+
+    public void setBe5Project(Project be5Project)
+    {
+        this.be5Project = be5Project;
+    }
 }

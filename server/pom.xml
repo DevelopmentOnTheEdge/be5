@@ -97,7 +97,13 @@
 			<version>1.10.19</version>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>com.developmentontheedge.be5</groupId>
+            <artifactId>be5-maven-plugin</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+
+    </dependencies>
 	
 	<build>
 		<resources>
