@@ -133,12 +133,9 @@ public class ModuleLoader2
                 }
             }
         }
-        if(project == null){
-            log.warning("Project is not found in load modules.");
-            //todo loadAllProjects module in current directory (not in jar)
-            for (Map.Entry<String,Project> module: modulesMap.entrySet()){
-                project = module.getValue();
-            }
+        if(project == null && modulesMap.size() > 0){
+            //todo try load Project from directory (not in jar)
+            project = modulesMap.entrySet().iterator().next().getValue();
         }
 
         ModuleLoader2.mergeModules(project, new JULLogger(log));
@@ -277,16 +274,14 @@ public class ModuleLoader2
     public static String logLoadedProject(Project project, long startTime)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n------------------------------------------------------------------------");
         if(project.isModuleProject())
         {
-            sb.append("\nModule loaded:");
+            sb.append(JULLogger.infoBlock("Loaded module:"));
         }
         else
         {
-            sb.append("\nProject loaded:");
+            sb.append(JULLogger.infoBlock("Loaded project:"));
         }
-        sb.append("\n------------------------------------------------------------------------");
 
         sb.append("\nName: ").append(project.getName());
 
@@ -316,9 +311,7 @@ public class ModuleLoader2
             if(modulesSource.isEmpty())return;
 
             StringBuilder sb = new StringBuilder();
-            sb.append("\n------------------------------------------------------------------------");
-            sb.append("\nReplace project path for hot reload (dev.yaml):");
-            sb.append("\n------------------------------------------------------------------------");
+            sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
             boolean started = false;
             for (int i = 0; i < urls.size(); i++)
             {

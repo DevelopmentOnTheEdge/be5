@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedExcepti
 
 public interface ProcessController
 {
-    public void setOperationName(String name);
+    void setOperationName(String name);
     
-    public void setProgress(double progress) throws ProcessInterruptedException;
+    void setProgress(double progress) throws ProcessInterruptedException;
 }

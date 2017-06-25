@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.gson.Gson;
 
 public class Be5Injector implements Injector
@@ -27,13 +28,11 @@ public class Be5Injector implements Injector
     private final Map<Class<?>, Object> configurations = new HashMap<>();
 
     private final ClassToInstanceMap instantiatedServices = new ClassToInstanceMap();
-    //private boolean frozen = false;
 
     public Be5Injector(Binder binder)
     {
         binder.configure(loadedClasses, bindings, configurations);
-        //frozen = true;
-        log.fine("Services initialized");
+        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName()));
 
         //config logger first
         getLogger();

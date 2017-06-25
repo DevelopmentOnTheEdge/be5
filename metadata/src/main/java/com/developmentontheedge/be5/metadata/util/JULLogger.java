@@ -22,4 +22,10 @@ public class JULLogger implements ProcessController
     {
         log.info("  progress: " + progress*100 + "%");
     }
+
+    public static String infoBlock(String info){
+        return "------------------------------------------------------------------" +
+                "\n" + info +
+                "\n------------------------------------------------------------------------";
+    }
 }
