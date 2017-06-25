@@ -28,8 +28,8 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
             profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
             DataElementUtils.save(profile);
             project.setConnectionProfileName(profileForIntegrationTests);
-
-            log.info("Set connection profile for integration tests: " + profileForIntegrationTests);
+            log.info(JULLogger.infoBlock("Add and set connection profile for integration tests: " +
+                    profileForIntegrationTests));
         }
 
         if("profileForIntegrationTests".equals(injector.getDatabaseService().getConnectionProfileName()))
@@ -39,6 +39,7 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
                 AppDb appDb = new AppDb();
                 appDb.setLogger(new JULLogger(Logger.getLogger(AppDb.class.getName())));
                 appDb.setBe5Project(project);
+                log.info(JULLogger.infoBlock("Execute be5:create-db"));
                 appDb.execute();
             }
             catch (MojoFailureException e)

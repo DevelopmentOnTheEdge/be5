@@ -21,7 +21,7 @@ public class YamlBinder implements Binder
 {
     private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
 
-    private static final String CONTEXT_FILE = "context.yaml";
+    static final String CONTEXT_FILE = "context.yaml";
     private final Map<String, Class<?>> serviceKeys = new HashMap<>();
 
     @Override
@@ -54,7 +54,7 @@ public class YamlBinder implements Binder
     }
 
     @SuppressWarnings("unchecked")
-    private void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses)
+    void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses)
     {
         Map<String, Object> moduleContext = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
         if(moduleContext != null)
@@ -75,6 +75,11 @@ public class YamlBinder implements Binder
             Map.Entry<String,String> entry = element.entrySet().iterator().next();
             Class<Object> serviceInterface = (Class<Object>) loadClass(entry.getValue());
 
+            if(loadedClasses.containsKey(entry.getKey()))
+            {
+                throw Be5Exception.internal("Redefining in yaml config not allowed.");
+            }
+
             loadedClasses.put(entry.getKey(), serviceInterface);
         }
     }
@@ -91,19 +96,18 @@ public class YamlBinder implements Binder
             Class<Object> serviceInterface = (Class<Object>) loadClass(elementOptions.get("interface"));
             Class<Object> serviceImplementation = (Class<Object>) loadClass(elementOptions.get("implementation"));
 
-            if(serviceKeys.containsKey(key))
+            if(bindings.containsKey(serviceInterface) || serviceKeys.containsKey(key))
             {
-                throw Be5Exception.internal("This name is already in use. Can damage the configurations.");
+                throw Be5Exception.internal("Redefining in yaml config not allowed.");
             }
 
-            serviceKeys.put(key, serviceInterface);
-
             bindings.put(serviceInterface, serviceImplementation);
+            serviceKeys.put(key, serviceInterface);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void loadModuleConfiguration(BufferedReader reader, Map<Class<?>, Object> configurations)
+    void loadModuleConfiguration(BufferedReader reader, Map<Class<?>, Object> configurations)
     {
         Object configObject = ((Map<String, Object>) new Yaml().load(reader)).get("config");
         if(configObject != null)
