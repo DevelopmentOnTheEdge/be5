@@ -269,44 +269,6 @@ public class SqlHelper
 
     }
 
-
-    public String generateConditionsSql( Map<String,String> values )
-    {
-        if(values.size()>0){
-            String cond = "";
-            for( Map.Entry<String,String> entry : values.entrySet() )
-            {
-                if( !"".equals( cond ) )
-                {
-                    cond += " AND ";
-                }
-                String column = entry.getKey();
-                String value = entry.getValue();
-//                if( value instanceof Object[] )
-//                {
-//                    cond += "" + column +
-//                            " IN " + Utils.toInClause(singletonList(value), meta.isNumericColumn( entity, column ) );
-//                    continue;
-//                }
-
-                String op = " = ";
-                if( value.endsWith( "%" ) )
-                {
-                    op = " LIKE ";
-                }
-                cond += "" + column +
-                        ( value.equals("null") ? " IS NULL " :
-                                op + "?" );
-            }
-
-            return cond;
-//            return StreamSupport.stream(dps.spliterator(), false)
-//                    .map(x -> x + " = ?")
-//                    .collect(Collectors.joining(", "));
-        }
-        return "1 = 1";
-    }
-
 //    public static String safeValue( DatabaseService connector, DynamicProperty prop )
 //    {
 //        Object val = prop.getValue();
