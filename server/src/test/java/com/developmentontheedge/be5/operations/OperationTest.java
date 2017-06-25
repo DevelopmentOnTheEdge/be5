@@ -172,23 +172,4 @@ public class OperationTest extends AbstractProjectTest{
         assertFalse(generate.getFirst().toString().contains("error"));
     }
 
-    @Test
-    public void testGroovyOperationParameters()
-    {
-        Either<FormPresentation, OperationResult> generate = operationService.generate(
-                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
-
-        assertEquals("{" +
-                        "'values':{'name':'','number':1}," +
-                        "'meta':{" +
-                        "'/name':{'displayName':'Name'}," +
-                        "'/number':{" +
-                        "'displayName':'Number'," +
-                        "'type':'Long'," +
-                        "'tagList':{'A':1,'B':2,'C':3,'D':4}," +
-                        "'reloadOnChange':true}}," +
-                        "'order':['/name','/number']}",
-                oneQuotes(generate.getFirst().getBean().toString()));
-    }
-
 }

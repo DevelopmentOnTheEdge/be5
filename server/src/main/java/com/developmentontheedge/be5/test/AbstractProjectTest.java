@@ -33,7 +33,8 @@ public abstract class AbstractProjectTest
     public static class SqlMockBinder implements Binder
     {
         @Override
-        public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings, Map<Class<?>, Object> configurations)
+        public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
+                              Map<Class<?>, Object> configurations)
         {
             new YamlBinder().configure(loadedClasses, bindings, configurations);
             bindings.put(SqlService.class, SqlServiceMock.class);
@@ -46,7 +47,8 @@ public abstract class AbstractProjectTest
         Project project = injector.getProject();
 
         if(project.getProject().getLanguages().length == 0){
-            project.getApplication().getLocalizations().addLocalization( "en", "test", Collections.singletonList("myTopic"), "foo", "bar" );
+            project.getApplication().getLocalizations().addLocalization( "en", "test",
+                    Collections.singletonList("myTopic"), "foo", "bar" );
         }
 
         loginService = new LoginServiceImpl(null, injector.getProjectProvider());

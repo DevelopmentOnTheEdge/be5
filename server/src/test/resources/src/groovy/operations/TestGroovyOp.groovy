@@ -15,7 +15,7 @@ class TestGroovyOp extends OperationSupport implements Operation
         dps << [
                 name            : "number",
                 DISPLAY_NAME    : "Number",
-                value           : 1,
+                value           : presetValues.get("number", "1"),
                 TYPE            : Long,
                 TAG_LIST_ATTR   : ['A': 1, 'B': 2, 'C': 3, 'D': 4],
                 RELOAD_ON_CHANGE: true]
