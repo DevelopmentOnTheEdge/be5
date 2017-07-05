@@ -6,11 +6,9 @@ import com.developmentontheedge.be5.metadata.SessionConstants;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
-import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@WebListener
 public class AuthenticationPropagationListener implements ServletRequestListener
 {
 
