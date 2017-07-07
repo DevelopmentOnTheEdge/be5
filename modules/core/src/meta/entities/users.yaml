@@ -1,6 +1,7 @@
 users:
   type: table
   primaryKey: user_name
+  order: '80'
   scheme:
     columns:
     - user_name:

@@ -1,6 +1,7 @@
 _system_:
   type: table
   displayName: System
+  order: '90'
   primaryKey: _dummy_
   queries:
   - Pool:
