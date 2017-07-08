@@ -24,38 +24,37 @@ public class Validator
         SUCCESS, WARNING, ERROR
     }
 
-    public Status checkErrorAndCast(DynamicPropertySet dps)
+    public void checkErrorAndCast(DynamicPropertySet dps)
     {
         for (DynamicProperty property: dps)
         {
-            if(checkErrorAndCast(property) == ERROR)return ERROR;
+            checkErrorAndCast(property);
         }
-        return SUCCESS;
     }
 
-    public Status checkErrorAndCast(DynamicProperty property)
+    public void checkErrorAndCast(DynamicProperty property)
     {
         if(property.getValue() instanceof String && property.getType() != String.class)
         {
             try
             {
-                property.setValue(getTypedValueFromString(property, property.getValue()));
+                property.setValue(getTypedValueFromString(property));
             }
             catch (IllegalArgumentException e)
             {
                 setError(property, e);
-                return ERROR;
+                throw e;
             }
         }
         else
         {
             if (property.getValue() == null || property.getType() != property.getValue().getClass())
             {
-                setError(property, new IllegalArgumentException());
-                return ERROR;
+                IllegalArgumentException e = new IllegalArgumentException();
+                setError(property, e);
+                throw e;
             }
         }
-        return SUCCESS;
     }
 
     public void setSuccess(DynamicProperty property)
@@ -79,10 +78,10 @@ public class Validator
         property.setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
-    private Object getTypedValueFromString(DynamicProperty property, Object value)
+    private Object getTypedValueFromString(DynamicProperty property)
     {
         Class<?> type = property.getType();
-
+        Object value = property.getValue();
         if(value instanceof String)
         {
             if (type == Integer.class)

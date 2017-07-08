@@ -31,7 +31,7 @@ public class SqlHelper
         this.meta = meta;
     }
 
-    public DynamicPropertySet getEntityDps(Entity entity)
+    public DynamicPropertySet getDps(Entity entity)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 

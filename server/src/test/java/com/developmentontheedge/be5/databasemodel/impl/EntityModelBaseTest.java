@@ -34,11 +34,4 @@ public class EntityModelBaseTest extends AbstractProjectTest
         //SqlServiceMock.clearMock();
     }
 
-    @Test
-    @Ignore
-    public void count() throws Exception {
-        //testTableAdmin.count();
-        //verify(SqlServiceMock.mock).update("");
-    }
-
 }

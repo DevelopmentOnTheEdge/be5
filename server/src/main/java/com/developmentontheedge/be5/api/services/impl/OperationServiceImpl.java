@@ -72,7 +72,14 @@ public class OperationServiceImpl implements OperationService
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
             {
-                validator.checkErrorAndCast((DynamicPropertySet) parameters);
+                try
+                {
+                    validator.checkErrorAndCast((DynamicPropertySet) parameters);
+                }
+                catch (RuntimeException ignore)
+                {
+
+                }
             }
             else
             {
@@ -104,9 +111,9 @@ public class OperationServiceImpl implements OperationService
         if(parameters instanceof DynamicPropertySet)
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
-
-            if(validator.checkErrorAndCast((DynamicPropertySet) parameters) == Validator.Status.ERROR)
-            {
+            try {
+                validator.checkErrorAndCast((DynamicPropertySet) parameters);
+            }catch (RuntimeException e){
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                         selectedRowsString, JsonFactory.bean(parameters), presetValues));

@@ -71,25 +71,27 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
 
         assertEquals 1, testtableAdmin.size()
     }
-//
-//    public void testInsert() throws Exception
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        DynamicPropertySet dps = new DynamicPropertySetSupport();
-//
-//        database.persons = [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"];
-//
-//        TestDB.checkTableData( connector, "persons", [
-//                ["firstName", "middleName", "lastName", "birthday", "sex"],
-//                ["Wirth", "Emil", "Niklaus", "1934-02-15", "male"]] as String[][] );
-//    }
-//
-//
+
+    @Test
+    void testInsert() throws Exception
+    {
+        database.testtableAdmin << [
+                "name": "InsertName",
+                "value": "2"];
+
+        assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+    }
+
+    @Test(expected = NumberFormatException.class)
+    void testInsertError() throws Exception
+    {
+        database.testtableAdmin << [
+                "name": "InsertName",
+                "value": "asd"];
+
+        assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+    }
+
     @Test
     void testIsEmpty()
     {
@@ -167,7 +169,7 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
 //        def rec = database.persons( ["sex": "male"] );
 //        assertEquals( "Niklaus", rec.$lastname );
 //    }
-//
+
 //
 //    public void testGetRecord()
 //    {
