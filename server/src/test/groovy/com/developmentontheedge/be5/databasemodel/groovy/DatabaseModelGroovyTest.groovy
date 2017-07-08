@@ -37,25 +37,23 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
     {
         assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
 
-        //assert database.testtableAdmin( ["name": "TestName"] ) == null
-
         Long id = database.testtableAdmin << [
                 "name": "TestName",
                 "value": "1"];
 
         assertEquals(id, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
-        //assertEquals(id, db.getLong("SELECT COUNT(id) FROM testtableAdmin WHERE id = ?", id));
 
         def testtableAdmin = database.testtableAdmin;
 
         assert db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
         assert testtableAdmin( ["name": "TestName"] ) != null
 
-        //assert database.testtableAdmin[ id ] != null
-
-        //database.persons[ id ].remove()
-        //assert database.persons[ id ] == null
-        //assert database.cache.persons[ id ] != null
+//TODO
+//        assert database.testtableAdmin[ id ] != null
+//
+//        database.testtableAdmin[ id ].remove()
+//        assert database.testtableAdmin[ id ] == null
+        //assert database.cache.testtableAdmin[ id ] != null
     }
 
     @Test
@@ -141,52 +139,44 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
     @Test
     void testDelete()
     {
-        def entityName = database.testtableAdmin
+        def entityName = database.testtableAdmin;
 
         def id = entityName << [
                 "name": "TestName2",
-                "value": "1"]
+                "value": 1]
 
         assertFalse entityName.empty;
         assertEquals 1, entityName.remove( id )
         assertTrue entityName.empty;
         assertEquals 0, entityName.remove( id )
     }
-//
-//    public void testFindRecord() throws SQLException
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.persons;
-//
-//        entityName << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"
-//        ];
-//
-//        def rec = database.persons( ["sex": "male"] );
-//        assertEquals( "Niklaus", rec.$lastname );
-//    }
 
-//
-//    public void testGetRecord()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.persons;
-//
-//        def id = entityName << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"
-//        ];
-//
-//        def record = entityName[ id ];
-//        assertEquals( "Niklaus", record.$lastname );
-//    }
+    @Test
+    void testFindRecord()
+    {
+        def entityName = database.testtableAdmin;
+
+        entityName << [
+            "name": "TestName2",
+            "value": "123"]
+
+        def rec = database.testtableAdmin( ["name": "TestName2"] );
+        assertEquals( 123, rec.$value );
+    }
+
+
+    @Test
+    void testGetRecord()
+    {
+        def entityName = database.testtableAdmin;
+
+        def id = entityName << [
+                "name": "TestName2",
+                "value": "123"]
+
+        def record = entityName[ id ];
+        assertEquals( "TestName2", record.$name );
+    }
 //
 //    private boolean listContains( List<DynamicPropertySet> recs, String propertyName, String value )
 //    {

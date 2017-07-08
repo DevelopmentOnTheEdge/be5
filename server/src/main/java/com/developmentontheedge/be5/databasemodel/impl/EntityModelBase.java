@@ -5,26 +5,23 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Validator;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.EntityModelAdapter;
-import com.developmentontheedge.be5.databasemodel.MethodProvider;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.databasemodel.QueryModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
+import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetBlocked;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.google.common.collect.ObjectArrays;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,12 +30,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implements EntityModelAdapter<R>
+public class EntityModelBase<R extends RecordModelBase> implements EntityModelAdapter<R>
 {
     static
     {
         GroovyRegister.registerMetaClass( EntityModelMetaClass.class, EntityModelBase.class );
-        //GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
+        GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
         GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
     }
 
@@ -63,14 +60,14 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     {
         Objects.requireNonNull(values);
 
-        //String sql = "SELECT * FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(values);
         AstSelect sql = Ast
                 .select(AstDerivedColumn.ALL)
                 .from(entity.getName())
                 .where(values);
 
+        //TODO replace DpsHelper::createDps with a function that used entity info
         DynamicPropertySet dps = db.select(sql.format(), DpsHelper::createDps, values.values().toArray());
-        return new RecordModelBase( dps );
+        return new RecordModelBase( this, entity, dps );
     }
 
     @Override
@@ -165,15 +162,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public RecordModel get( Long id )
     {
-        Objects.requireNonNull(id);
-        try
-        {
-            return new RecordModelBase( id );
-        }
-        catch( SQLException e )
-        {
-            throw new RuntimeException( e );
-        }
+        return get(Collections.singletonMap("id", "" + id));
     }
 
     @Override
@@ -302,10 +291,10 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         return handler.getResult();
     }
 
-//    private boolean isDictionary()
-//    {
-//        return EntityType.DICTIONARY == entity.getType();
-//    }
+    private boolean isDictionary()
+    {
+        return EntityType.DICTIONARY == entity.getType();
+    }
 
     @Override
     public String toString()
@@ -388,7 +377,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         @Override
         public RecordModel createRecord( DynamicPropertySet dps )
         {
-            return new RecordModelBase( dps );
+            return new RecordModelBase( EntityModelBase.this, entity, dps );
         }
 
         @Override
@@ -426,7 +415,7 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
     @Override
     public RecordModel getAt(Long id)
     {
-        return null;
+        return get(id);
     }
 
     @Override
@@ -446,111 +435,4 @@ public class EntityModelBase<R extends EntityModelBase.RecordModelBase> implemen
         return e.getEntityName().equals( getEntityName() );
     }
 
-    @SuppressWarnings( "serial" )
-    class RecordModelBase extends DynamicPropertySetBlocked implements RecordModel
-    {
-        RecordModelBase(DynamicPropertySet dps)
-        {
-            super( dps );
-        }
-
-        RecordModelBase(Long id) throws SQLException
-        {
-            super( sqlHelper.getRecordById( entity, id ) );
-        }
-
-        @Override
-        public Long getId()
-        {
-            return (Long) delegateDps.getValue(entity.getPrimaryKey());
-        }
-
-        @Override
-        public void remove()
-        {
-            int b = EntityModelBase.this.remove( getId() );
-            // TODO check state if record been removed
-            if( b != 1 )
-            {
-                //Logger.error( cat, "Record is missing. ID = " + getId(), new EntityModelException( getEntityName() ) );
-            }
-        }
-
-        @Override
-        public String toString()
-        {
-            return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + getPrimaryKeyName() + " = " + getId() + " ] }";
-        }
-
-        @Override
-        public Object invokeMethod( String methodName, Object... arguments )
-        {
-            Method method = ExtendedModels.getInstance().getMethod( EntityModelBase.this, methodName );
-            return new MethodProviderBase( method ).invoke( arguments );
-        }
-
-        public MethodProvider getMethod(String methodName )
-        {
-            Method method = ExtendedModels.getInstance().getMethod( EntityModelBase.this, methodName );
-            return new MethodProviderBase( method );
-        }
-
-        @Override
-        public void update( String propertyName, String value )
-        {
-            EntityModelBase.this.set( getId(), propertyName, value );
-            super.setValueHidden( propertyName, value );
-        }
-
-        @Override
-        public void update( Map<String, String> values )
-        {
-            EntityModelBase.this.set( getId(), values );
-            for( String propertyName : values.keySet() )
-            {
-                if( super.hasProperty( propertyName ) )
-                {
-                    super.setValueHidden( propertyName, values.get( propertyName ) );
-                }
-            }
-        }
-
-        @Override
-        public void setValue( String propertyName, Object value )
-        {
-            throw new IllegalAccessError( "You can't use this operation. Use EntityModel#set() to update value in database." );
-        }
-
-        public class MethodProviderBase implements MethodProvider
-        {
-            protected final Method method;
-
-            MethodProviderBase( Method method )
-            {
-                this.method = method;
-            }
-
-            @Override
-            public Object invoke()
-            {
-                return invoke( new Object[]{} );
-            }
-
-            @Override
-            public Object invoke( Object... args )
-            {
-                try
-                {
-                    Object[] fullArgs = new Object[ args.length + 1 ];
-                    fullArgs[ 0 ] = RecordModelBase.this;
-                    System.arraycopy(args, 0, fullArgs, 1, args.length);
-                    return method.invoke( EntityModelBase.this, fullArgs );
-                }
-                catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
-                {
-                    throw new RuntimeException( e );
-                }
-            }
-        }
-    }
 }

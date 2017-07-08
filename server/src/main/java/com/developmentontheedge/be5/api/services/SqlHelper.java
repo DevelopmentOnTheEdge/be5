@@ -88,12 +88,12 @@ public class SqlHelper
 //        return db.select(sql, DpsHelper::createDps);
 //    }
 //
-    public DynamicPropertySet getRecordById( Entity entity, Long id ) throws SQLException
+    public DynamicPropertySet getRecordById( Entity entity, Long id )
     {
         return getRecordById( entity, id, Collections.emptyMap() );
     }
 
-    public DynamicPropertySet getRecordById( Entity entity, Long id, Map<String, Object> conditions) throws SQLException
+    public DynamicPropertySet getRecordById( Entity entity, Long id, Map<String, Object> conditions)
     {
         String sql = "SELECT * FROM " + entity.getName()
                 + " WHERE " + entity.getPrimaryKey() + " = ?";

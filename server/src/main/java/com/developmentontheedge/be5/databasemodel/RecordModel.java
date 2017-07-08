@@ -7,8 +7,8 @@ import java.util.Map;
 
 public interface RecordModel extends DynamicPropertySet
 {
-    
-    void remove();
+
+    int remove();
 
     void update(String propertyName, String value);
 
