@@ -29,7 +29,7 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
 
     @Before
     void before(){
-        db.update("DELETE FROM testtableAdmin WHERE true")
+        db.update("DELETE FROM testtableAdmin")
     }
 
     @Test
@@ -47,13 +47,6 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
 
         assert db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
         assert testtableAdmin( ["name": "TestName"] ) != null
-
-//TODO
-//        assert database.testtableAdmin[ id ] != null
-//
-//        database.testtableAdmin[ id ].remove()
-//        assert database.testtableAdmin[ id ] == null
-        //assert database.cache.testtableAdmin[ id ] != null
     }
 
     @Test
@@ -145,9 +138,14 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
                 "name": "TestName2",
                 "value": 1]
 
+        assert database.testtableAdmin[ id ] != null
+
         assertFalse entityName.empty;
         assertEquals 1, entityName.remove( id )
+
+        assert database.testtableAdmin[ id ] == null
         assertTrue entityName.empty;
+
         assertEquals 0, entityName.remove( id )
     }
 

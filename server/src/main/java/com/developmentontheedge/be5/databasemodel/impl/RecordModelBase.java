@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.databasemodel.MethodProvider;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetBlocked;
 
@@ -13,19 +12,17 @@ import java.util.Map;
 public class RecordModelBase extends DynamicPropertySetBlocked implements RecordModel
 {
     private EntityModelBase entityModelBase;
-    private Entity entity;
 
-    RecordModelBase(EntityModelBase entityModelBase, Entity entity, DynamicPropertySet dps)
+    RecordModelBase(EntityModelBase entityModelBase, DynamicPropertySet dps)
     {
         super( dps );
-        this.entity = entity;
         this.entityModelBase = entityModelBase;
     }
 
     @Override
     public Long getId()
     {
-        return (Long) delegateDps.getValue(entity.getPrimaryKey());
+        return (Long) delegateDps.getValue(entityModelBase.getPrimaryKeyName());
     }
 
     @Override

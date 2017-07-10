@@ -61,24 +61,28 @@ public class DpsHelper
         }
     }
 
-    private static Object getSqlValue(Class<?> clazz, ResultSet rs, int idx) throws SQLException
+    public static Object getSqlValue(Class<?> clazz, ResultSet rs, int idx)
     {
-        if( clazz == String.class )
-            return rs.getString( idx );
-        if( clazz == Integer.class )
-            return rs.getInt( idx );
-        if( clazz == Long.class )
-            return rs.getLong( idx );
-        if( clazz == Boolean.class )
-            return rs.getBoolean( idx );
-        if( clazz == Double.class )
-            return rs.getDouble( idx );
-        if( clazz == Float.class )
-            return rs.getFloat( idx );
-        if( clazz == Date.class )
-            return rs.getDate( idx );
-        if( clazz == Time.class )
-            return rs.getTimestamp( idx );
+        try{
+            if( clazz == String.class )
+                return rs.getString( idx );
+            if( clazz == Integer.class )
+                return rs.getInt( idx );
+            if( clazz == Long.class )
+                return rs.getLong( idx );
+            if( clazz == Boolean.class )
+                return rs.getBoolean( idx );
+            if( clazz == Double.class )
+                return rs.getDouble( idx );
+            if( clazz == Float.class )
+                return rs.getFloat( idx );
+            if( clazz == Date.class )
+                return rs.getDate( idx );
+            if( clazz == Time.class )
+                return rs.getTimestamp( idx );
+        }catch (Exception e){
+            throw Be5Exception.internal(e);
+        }
         throw new IllegalArgumentException( clazz.getName() );
     }
 

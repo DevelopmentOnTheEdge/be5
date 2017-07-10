@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Validator;
 import com.developmentontheedge.be5.api.services.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -65,9 +64,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 .from(entity.getName())
                 .where(values);
 
-        //TODO replace DpsHelper::createDps with a function that used entity info
-        DynamicPropertySet dps = db.select(sql.format(), DpsHelper::createDps, values.values().toArray());
-        return new RecordModelBase( this, entity, dps );
+        DynamicPropertySet dps = db.select(sql.format(), rs -> sqlHelper.getDps(entity, rs), values.values().toArray());
+        return dps == null ? null : new RecordModelBase( this, dps );
     }
 
     @Override
@@ -306,7 +304,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public Long addForce( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = sqlHelper.getDps(entity);
+        DynamicPropertySet dps = sqlHelper.getDpsWithoutPrimaryKey(entity);
         sqlHelper.setValuesIfNull(dps, values);
 
         validator.checkErrorAndCast(dps);
@@ -377,7 +375,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         @Override
         public RecordModel createRecord( DynamicPropertySet dps )
         {
-            return new RecordModelBase( EntityModelBase.this, entity, dps );
+            return new RecordModelBase( EntityModelBase.this, dps );
         }
 
         @Override

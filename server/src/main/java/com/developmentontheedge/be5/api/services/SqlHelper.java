@@ -1,34 +1,61 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED_COLUMN_NAME;
 import static java.util.Collections.singletonList;
 
 public class SqlHelper
 {
-    private SqlService db;
     private Meta meta;
 
-    public SqlHelper(SqlService db, Meta meta)
+    public SqlHelper(Meta meta)
     {
-        this.db = db;
         this.meta = meta;
+    }
+
+    public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
+    {
+        DynamicPropertySet dps = getDps(entity);
+
+        try
+        {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            for (int i = 1; i <= metaData.getColumnCount(); i++)
+            {
+                DynamicProperty property = dps.getProperty(metaData.getColumnName(i));
+                property.setValue(DpsHelper.getSqlValue(property.getType(), resultSet, i));
+            }
+        }
+        catch (SQLException e)
+        {
+            throw Be5Exception.internal(e);
+        }
+
+        return dps;
+    }
+
+    public DynamicPropertySet getDpsWithoutPrimaryKey(Entity entity)
+    {
+        DynamicPropertySet dps = getDps(entity);
+        dps.remove(entity.getPrimaryKey());
+        return dps;
     }
 
     public DynamicPropertySet getDps(Entity entity)
@@ -39,11 +66,7 @@ public class SqlHelper
 
         for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
         {
-            ColumnDef columnDef = entry.getValue();
-            if(!columnDef.getName().equals(entity.getPrimaryKey()))
-            {
-                dps.add(getDynamicProperty(columnDef));
-            }
+            dps.add(getDynamicProperty(entry.getValue()));
         }
         return dps;
     }
@@ -88,28 +111,28 @@ public class SqlHelper
 //        return db.select(sql, DpsHelper::createDps);
 //    }
 //
-    public DynamicPropertySet getRecordById( Entity entity, Long id )
-    {
-        return getRecordById( entity, id, Collections.emptyMap() );
-    }
-
-    public DynamicPropertySet getRecordById( Entity entity, Long id, Map<String, Object> conditions)
-    {
-        String sql = "SELECT * FROM " + entity.getName()
-                + " WHERE " + entity.getPrimaryKey() + " = ?";
-
-        if( !conditions.isEmpty() )
-        {
-            sql += " AND " + paramsToCondition( entity, conditions );
-        }
-
-        if( meta.getColumn( entity, DatabaseConstants.IS_DELETED_COLUMN_NAME ) != null )
-        {
-            sql += " AND " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " != 'yes'";
-        }
-
-        return db.select(sql, DpsHelper::createDps, id);
-    }
+//    public DynamicPropertySet getRecordById( Entity entity, Long id )
+//    {
+//        return getRecordById( entity, id, Collections.emptyMap() );
+//    }
+//
+//    public DynamicPropertySet getRecordById( Entity entity, Long id, Map<String, Object> conditions)
+//    {
+//        String sql = "SELECT * FROM " + entity.getName()
+//                + " WHERE " + entity.getPrimaryKey() + " = ?";
+//
+//        if( !conditions.isEmpty() )
+//        {
+//            sql += " AND " + paramsToCondition( entity, conditions );
+//        }
+//
+//        if( meta.getColumn( entity, DatabaseConstants.IS_DELETED_COLUMN_NAME ) != null )
+//        {
+//            sql += " AND " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " != 'yes'";
+//        }
+//
+//        return db.select(sql, DpsHelper::createDps, id);
+//    }
 
     @Deprecated
     public String paramsToCondition( Entity entity, Map<?,?> values )
