@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.test.AbstractProjectTest
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -147,6 +148,27 @@ class DatabaseModelGroovyTest extends AbstractProjectTest
         assertTrue entityName.empty;
 
         assertEquals 0, entityName.remove( id )
+    }
+
+    @Test
+    @Ignore
+    void testUpdate()
+    {
+        def entityName = database.testtableAdmin;
+
+        def id = entityName << [
+                "name": "TestName",
+                "value": 1]
+
+        def record = database.testtableAdmin[id]
+
+        record << [
+                "name": "TestName2",
+        ]
+        assertEquals "TestName2", record.name
+
+        //TODO update
+        assertEquals "TestName3", database.testtableAdmin[id].name
     }
 
     @Test

@@ -12,7 +12,7 @@ public interface RecordModel extends DynamicPropertySet
 
     void update(String propertyName, String value);
 
-    void update(Map<String, String> values);
+    void update(Map<String, Object> values);
 
     Long getId();
 

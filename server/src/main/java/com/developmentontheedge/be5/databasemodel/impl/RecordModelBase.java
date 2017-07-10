@@ -58,7 +58,7 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     }
 
     @Override
-    public void update( Map<String, String> values )
+    public void update( Map<String, Object> values )
     {
         entityModelBase.set( getId(), values );
         for( String propertyName : values.keySet() )
@@ -74,6 +74,12 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     public void setValue( String propertyName, Object value )
     {
         throw new IllegalAccessError( "You can't use this operation. Use EntityModel#set() to update value in database." );
+    }
+
+    public DynamicPropertySet leftShift( Map<String, Object> properties )
+    {
+        update( properties );
+        return this;
     }
 
     public class MethodProviderBase implements MethodProvider
