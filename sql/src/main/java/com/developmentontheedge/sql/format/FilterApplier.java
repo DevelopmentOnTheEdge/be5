@@ -35,12 +35,12 @@ public class FilterApplier
         AstWhere where = new AstWhere();
         addWhere(where, conditions);
         if(query.jjtGetNumChildren() == 1)
-            ( (AstSelect)query.child( 0 ) ).setWhere( where );
+            ( (AstSelect)query.child( 0 ) ).where( where );
         else
         {
             AstTableRef tableRef = new AstTableRef( new AstParenthesis( query.clone() ), new AstIdentifierConstant( "tmp" ) );
             AstSelect select = new AstSelect( new AstSelectList(), new AstFrom( tableRef ) );
-            select.setWhere( where );
+            select.where( where );
             query.replaceWith( new AstQuery( select ) );
         }
     }
@@ -60,13 +60,13 @@ public class FilterApplier
             if( select.getWhere() != null )
                 where = select.getWhere();
             else
-                select.setWhere( where );
+                select.where( where );
         }
         else
         {
             AstTableRef tableRef = new AstTableRef( new AstParenthesis( query.clone() ), new AstIdentifierConstant( "tmp" ) );
             AstSelect select = new AstSelect( new AstSelectList(), new AstFrom( tableRef ) );
-            select.setWhere( where );
+            select.where( where );
             query.replaceWith( new AstQuery( select ) );
         }
         addWhere(where, conditions);

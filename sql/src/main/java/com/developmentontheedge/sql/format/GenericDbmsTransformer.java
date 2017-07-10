@@ -387,7 +387,7 @@ abstract public class GenericDbmsTransformer implements DbmsTransformer
         AstFrom from = select.getFrom();
         if( from == null || from.isDual() )
         {
-            select.setFrom( transformDualFrom( from ) );
+            select.from( transformDualFrom( from ) );
         }
     }
     

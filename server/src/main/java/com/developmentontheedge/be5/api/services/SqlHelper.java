@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -13,12 +14,13 @@ import com.developmentontheedge.sql.format.Ast;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
-import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED_COLUMN_NAME;
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static java.util.Collections.singletonList;
 
 public class SqlHelper
@@ -263,33 +265,35 @@ public class SqlHelper
     }
 
     public String generateDeleteInSql(Entity entity, int count) {
-        return "DELETE FROM "+entity.getName()+" WHERE " + entity.getPrimaryKey() + " IN " + inClause(count);
+        String sql;
+        if(entity.contains(IS_DELETED_COLUMN_NAME))
+        {
+            sql = "UPDATE " + entity.getName() + " SET " + IS_DELETED_COLUMN_NAME + " = 'yes'";
+            if( entity.contains( WHO_MODIFIED_COLUMN_NAME ) )
+            {
+                sql += ", " + WHO_MODIFIED_COLUMN_NAME + " = " + quoteStr(UserInfoHolder.getUserName());
+            }
+            if( entity.contains( MODIFICATION_DATE_COLUMN_NAME ) )
+            {
+                sql += ", " + MODIFICATION_DATE_COLUMN_NAME + " = " + new Date();
+            }
+        }
+        else
+        {
+            sql = "DELETE FROM " + entity.getName();
+        }
+
+        String whereSql = " WHERE " + entity.getPrimaryKey() + " IN " + inClause(count);
+        return sql + whereSql;
+    }
+
+    private String quoteStr(String str)
+    {
+        return "'" + str + "'";
     }
 
     public String inClause(int count){
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
-    }
-
-    public String generateDeleteSql(Entity entity) {
-        return "DELETE FROM "+entity.getName()+" WHERE " + entity.getPrimaryKey() + " = ?";
-//        if( Utils.columnExists( connector, table, IS_DELETED_COLUMN_NAME ) )
-//        {
-//            delSql = "UPDATE " + tName + " SET " + IS_DELETED_COLUMN_NAME + " = 'yes'";
-//            if( Utils.columnExists( connector, table, WHO_MODIFIED_COLUMN_NAME ) )
-//            {
-//                delSql += ", " + WHO_MODIFIED_COLUMN_NAME + " = " + Utils.safestr( connector, userInfo.getUserName(), true );
-//            }
-//            if( Utils.columnExists( connector, table, MODIFICATION_DATE_COLUMN_NAME ) )
-//            {
-//                delSql += ", " + MODIFICATION_DATE_COLUMN_NAME + " = " + analyzer.getCurrentDateTimeExpr();
-//            }
-//        }
-//
-//        if( dryRun )
-//        {
-//            delSql = "SELECT " + analyzer.quoteIdentifier( Utils.findPrimaryKeyName( connector, table ) ) + " FROM " + tName;
-//        }
-
     }
 
 //    public static String safeValue( DatabaseService connector, DynamicProperty prop )
