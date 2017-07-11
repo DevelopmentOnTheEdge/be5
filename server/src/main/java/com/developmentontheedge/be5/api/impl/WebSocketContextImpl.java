@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.api.impl;
 import com.developmentontheedge.be5.api.WebSocketContext;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.metadata.SessionConstants;
-import com.developmentontheedge.be5.util.Delegator;
 import one.util.streamex.EntryStream;
 
 import javax.servlet.http.HttpSession;
@@ -20,7 +19,8 @@ public class WebSocketContextImpl implements WebSocketContext
     public WebSocketContextImpl(Session session)
     {
         this.session = session;
-        this.httpSession = Delegator.on( session.getUserProperties().get( HttpSession.class.getName() ), HttpSession.class );
+        this.httpSession = (HttpSession)session.getUserProperties().get( HttpSession.class.getName() );
+        //this.httpSession = Delegator.on( session.getUserProperties().get( HttpSession.class.getName() ), HttpSession.class );
         this.map = Collections.unmodifiableMap( EntryStream.of( session.getRequestParameterMap() )
                 .mapValues( list -> list.isEmpty() ? "" : list.get( 0 ) ).toMap() );
     }

@@ -1,15 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.annotations.Experimental;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.databasemodel.QueryModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import groovy.lang.Closure;
 
-import javax.websocket.MessageHandler;
-import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +12,6 @@ import java.util.function.BiConsumer;
 
 public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 {
-
     public EntityModelMetaClass( Class<? extends EntityModel> theClass )
     {
         super( theClass );

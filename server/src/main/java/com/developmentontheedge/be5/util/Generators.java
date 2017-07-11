@@ -19,16 +19,16 @@ import com.google.common.collect.ImmutableList;
 public class Generators
 {
     
-    /**
-     * Generates a list in reverse order.
-     * @return an immutable list of the generated elements
-     */
-    public static <T, U> List<U> reverseList(T lastItem, UnaryOperator<T> previous, Function<T, U> get)
-    {
-        List<U> list = StreamEx.iterate(lastItem, previous).takeWhile(Objects::nonNull).map(get).toList();
-        Collections.reverse(list);
-        return Collections.unmodifiableList(list);
-    }
+//    /**
+//     * Generates a list in reverse order.
+//     * @return an immutable list of the generated elements
+//     */
+//    public static <T, U> List<U> reverseList(T lastItem, UnaryOperator<T> previous, Function<T, U> get)
+//    {
+//        List<U> list = StreamEx.iterate(lastItem, previous).takeWhile(Objects::nonNull).map(get).toList();
+//        Collections.reverse(list);
+//        return Collections.unmodifiableList(list);
+//    }
     
     public static <K, T> List<T> forest(
             List<T> items,

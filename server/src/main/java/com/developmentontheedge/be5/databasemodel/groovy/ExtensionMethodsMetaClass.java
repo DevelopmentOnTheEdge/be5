@@ -3,14 +3,12 @@ package com.developmentontheedge.be5.databasemodel.groovy;
 import com.google.common.collect.ObjectArrays;
 import groovy.lang.DelegatingMetaClass;
 import groovy.lang.MissingMethodException;
-import com.developmentontheedge.be5.annotations.Experimental;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 
 /**
  * Created by ruslan on 14.09.16.
  */
-@Experimental
 public class ExtensionMethodsMetaClass extends DelegatingMetaClass
 {
     protected ExtensionMethodsMetaClass(Class classForExtension )

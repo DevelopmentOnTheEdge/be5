@@ -10,13 +10,13 @@ import javax.websocket.server.ServerEndpointConfig;
  */
 public class WebSocketHttpSessionConfigurator extends ServerEndpointConfig.Configurator
 {
-    @Override
-    public void modifyHandshake(ServerEndpointConfig config, 
-                                HandshakeRequest request, 
-                                HandshakeResponse response)
-    {
-        HttpSession httpSession = (HttpSession)request.getHttpSession();
-        if(httpSession != null)
-            config.getUserProperties().put(HttpSession.class.getName(),httpSession);
-    }
+//    @Override
+//    public void modifyHandshake(ServerEndpointConfig config,
+//                                HandshakeRequest request,
+//                                HandshakeResponse response)
+//    {
+//        HttpSession httpSession = (HttpSession)request.getHttpSession();
+//        if(httpSession != null)
+//            config.getUserProperties().put(HttpSession.class.getName(),httpSession);
+//    }
 }
