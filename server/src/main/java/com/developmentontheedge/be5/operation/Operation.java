@@ -13,7 +13,7 @@ public interface Operation extends Serializable
 	//
 
     void initialize(Injector injector, OperationInfo meta,
-                    OperationResult operationResult);
+                    OperationResult operationResult, Long[] records);
 
 	/**
 	 * Returns meta-information from project definition for this operation.
@@ -52,8 +52,6 @@ public interface Operation extends Serializable
      *
      */
     OperationResult getResult();
-
-    OperationContext getContext();
 
     void setResult(OperationResult operationResult);
 }

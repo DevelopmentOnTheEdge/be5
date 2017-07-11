@@ -58,7 +58,7 @@ public class OperationServiceImpl implements OperationService
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
              String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
     {
-        Operation operation = create(meta);
+        Operation operation = create(meta, selectedRows(selectedRowsString));
 
         Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
@@ -104,7 +104,7 @@ public class OperationServiceImpl implements OperationService
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
-        Operation operation = create(meta);
+        Operation operation = create(meta, selectedRows(selectedRowsString));
 
         Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
@@ -147,14 +147,14 @@ public class OperationServiceImpl implements OperationService
             throw Be5Exception.internalInOperation(e, operation.getInfo());
         }
     }
+//
+//    public Operation create(Operation operation) {
+//        operation.initialize(injector, null, OperationResult.progress());
+//
+//        return operation;
+//    }
 
-    public Operation create(Operation operation) {
-        operation.initialize(injector, null, OperationResult.progress());
-
-        return operation;
-    }
-
-    public Operation create(OperationInfo operationInfo) {
+    public Operation create(OperationInfo operationInfo, Long[] records) {
         Operation operation;
         String code = operationInfo.getCode();
 
@@ -178,7 +178,7 @@ public class OperationServiceImpl implements OperationService
                 }
         }
 
-        operation.initialize(injector, operationInfo, OperationResult.progress());
+        operation.initialize(injector, operationInfo, OperationResult.progress(), records);
 
         return operation;
     }

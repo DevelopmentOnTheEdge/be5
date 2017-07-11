@@ -2,6 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
+import java.util.Map;
+import java.util.Objects;
+
 public class AstUpdate extends SimpleNode
 {
 
@@ -16,6 +19,31 @@ public class AstUpdate extends SimpleNode
     {
         super(id);
         this.nodePrefix = "UPDATE";
+    }
+
+    public AstUpdate where(Map<String, String> conditions){
+        Objects.requireNonNull(conditions);
+        if(!conditions.isEmpty()) where(new AstWhere(conditions));
+        return this;
+    }
+
+    public void where(AstWhere where)
+    {
+        Objects.requireNonNull( where );
+        AstWhere oldWhere = getWhere();
+        if(oldWhere == null)
+        {
+            addChild(where);
+        }
+        else
+        {
+            oldWhere.replaceWith( where );
+        }
+    }
+
+    public AstWhere getWhere()
+    {
+        return children().select( AstWhere.class ).findFirst().orElse( null );
     }
 
     public AstUpdate(SqlParser p, int id) {

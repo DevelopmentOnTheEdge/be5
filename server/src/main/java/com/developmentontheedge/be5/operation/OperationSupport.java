@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlHelper;
+import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -19,12 +20,15 @@ public abstract class OperationSupport implements Operation
     protected Injector injector;
 
     protected DatabaseService databaseService;
+    protected DatabaseModel database;
     protected SqlService db;
     protected SqlHelper sqlHelper;
     protected Meta meta;
-    private OperationContext operationContext;
+
     private OperationInfo operationInfo;
     private OperationResult operationResult;
+
+    public Long[] records;
 
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
@@ -32,17 +36,19 @@ public abstract class OperationSupport implements Operation
 
     @Override
     public final void initialize(Injector injector, OperationInfo operationInfo,
-                                 OperationResult operationResult)
+                                 OperationResult operationResult, Long[] records)
     {
         this.injector = injector;
-        this.operationInfo = operationInfo;
+        this.databaseService = injector.getDatabaseService();
+        this.db = injector.getSqlService();
+        this.database = injector.get(DatabaseModel.class);
         this.meta = injector.getMeta();
+        this.sqlHelper = injector.get(SqlHelper.class);
+
+        this.operationInfo = operationInfo;
         this.operationResult = operationResult;
 
-
-        databaseService = this.injector.getDatabaseService();
-        db = this.injector.getSqlService();
-        sqlHelper = this.injector.get(SqlHelper.class);
+        this.records = records;
     }
 
     @Override
@@ -79,12 +85,6 @@ public abstract class OperationSupport implements Operation
     public void setResult(OperationResult operationResult)
     {
         this.operationResult = operationResult;
-    }
-
-    @Override
-    public OperationContext getContext()
-    {
-        return operationContext;
     }
 
 }

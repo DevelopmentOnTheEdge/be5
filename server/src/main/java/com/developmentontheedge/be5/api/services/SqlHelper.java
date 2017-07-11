@@ -14,6 +14,7 @@ import com.developmentontheedge.sql.format.Ast;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,15 +35,21 @@ public class SqlHelper
 
     public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
     {
-        DynamicPropertySet dps = getDps(entity);
+        DynamicPropertySet dps = getDpsWithoutPrimaryKey(entity);
 
+        return setDpsValues(dps, resultSet);
+    }
+
+    public DynamicPropertySet setDpsValues(DynamicPropertySet dps, ResultSet resultSet)
+    {
         try
         {
             ResultSetMetaData metaData = resultSet.getMetaData();
             for (int i = 1; i <= metaData.getColumnCount(); i++)
             {
                 DynamicProperty property = dps.getProperty(metaData.getColumnName(i));
-                property.setValue(DpsHelper.getSqlValue(property.getType(), resultSet, i));
+                if( property!= null)
+                    property.setValue(DpsHelper.getSqlValue(property.getType(), resultSet, i));
             }
         }
         catch (SQLException e)
@@ -262,6 +269,15 @@ public class SqlHelper
 //            }
 
 
+    }
+
+    public String generateUpdateSql(Entity entity, DynamicPropertySet dps)
+    {
+        Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+                .collect(Collectors.toMap(DynamicProperty::getName, x -> "?"));
+
+        return Ast.update(entity.getName()).set(valuePlaceholders)
+                .where(Collections.singletonMap(entity.getPrimaryKey(), "?")).format();
     }
 
     public String generateDeleteInSql(Entity entity, int count) {
