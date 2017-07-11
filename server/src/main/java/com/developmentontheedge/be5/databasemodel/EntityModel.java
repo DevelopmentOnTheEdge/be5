@@ -263,19 +263,4 @@ public interface EntityModel<R extends RecordModel> {
      */
     OperationModel getOperation(String operationName);
 
-//    /**
-//     * for Groovy
-//     */
-//    Long leftShift( Map<String, String> values );
-
-    /**
-     * for Groovy
-     */
-    RecordModel call( Map<String, String> values );
-
-    /**
-     * for Groovy
-     */
-    RecordModel getAt(Long id);
-
 }

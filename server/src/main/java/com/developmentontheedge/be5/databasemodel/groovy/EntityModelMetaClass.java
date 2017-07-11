@@ -82,11 +82,6 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        return operation.invoke();
 //    }
 
-    public static RecordModel call(EntityModel self, Map<String, String> values ) throws Exception
-    {
-        return self.get( values );
-    }
-
     public static QueryModel query(EntityModel self, String queryName, Map<String, String> values )
     {
         return self.getQuery( queryName, values );
@@ -134,9 +129,18 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return ( ( EntityModel )object ).get( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
     }
 
-    public Long leftShift( Object object, Map<String, String> values )
+    public static Long leftShift( Object object, Map<String, String> values )
     {
         return ( ( EntityModel )object ).add( values );
     }
 
+    public static RecordModel call( EntityModel self, Map<String, String> values )
+    {
+        return self.get( values );
+    }
+
+    public static RecordModel getAt( EntityModel self, Long id )
+    {
+        return self.get(id);
+    }
 }

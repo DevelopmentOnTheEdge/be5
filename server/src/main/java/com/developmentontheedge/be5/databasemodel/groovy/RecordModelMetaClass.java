@@ -28,4 +28,10 @@ public class RecordModelMetaClass extends DynamicPropertySetMetaClass
         }
     }
 
+    public static DynamicPropertySet leftShift(RecordModel rec, Map<String, Object> properties )
+    {
+        rec.update( properties );
+        return rec;
+    }
+
 }

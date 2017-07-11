@@ -76,12 +76,6 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
         throw new IllegalAccessError( "You can't use this operation. Use EntityModel#set() to update value in database." );
     }
 
-    public DynamicPropertySet leftShift( Map<String, Object> properties )
-    {
-        update( properties );
-        return this;
-    }
-
     public class MethodProviderBase implements MethodProvider
     {
         protected final Method method;

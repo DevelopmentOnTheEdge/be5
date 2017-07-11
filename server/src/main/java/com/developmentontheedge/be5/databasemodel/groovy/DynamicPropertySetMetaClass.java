@@ -36,23 +36,6 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         super( theClass );
     }
 
-    public static DynamicPropertySet plus( DynamicPropertySet dps, DynamicPropertySet dps2 )
-    {
-        DynamicPropertySet clonedDps = new DynamicPropertySetSupport( dps );
-        dps2.forEach( dp ->
-        {
-            try
-            {
-                clonedDps.add( DynamicPropertySetSupport.cloneProperty( dp ) );
-            }
-            catch( Exception wierd )
-            {
-                log.severe( "Unable to clone property " + dp.getName() + ", message = " + wierd.getMessage() );
-            }
-        } );
-        return clonedDps;
-    }
-
     @Override
     @SuppressWarnings( "unchecked" )
     public Object getProperty( Object object, String property )
@@ -175,8 +158,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         }
         for( String key : map.keySet() )
         {
-            List<String> attributes = getAllPropertyAttributes();
-            if( attributes.contains( key ) )
+            if( beanInfoConstants.contains( key ) )
             {
                 try
                 {
@@ -190,6 +172,22 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
             }
         }
         return dps;
+    }
+
+    public static DynamicPropertySet plus( DynamicPropertySet dps2, DynamicPropertySet dps )
+    {
+        DynamicPropertySet clonedDps = new DynamicPropertySetSupport( dps2 );
+        for (DynamicProperty dp : dps)
+        {
+            try
+            {
+                clonedDps.add(DynamicPropertySetSupport.cloneProperty(dp));
+            } catch (Exception e)
+            {
+                throw new RuntimeException( e );
+            }
+        }
+        return clonedDps;
     }
 
     private static String asString( Object o )
