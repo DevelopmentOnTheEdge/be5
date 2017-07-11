@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
+import com.developmentontheedge.be5.annotations.Experimental;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.databasemodel.QueryModel;
@@ -7,6 +8,8 @@ import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import groovy.lang.Closure;
 
+import javax.websocket.MessageHandler;
+import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,26 +49,26 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         ( ( EntityModel )object ).add( ( Map<String, String> )values );
     }
 
-    private static Object callClosureWithDelegate( Closure closure, Object delegate )
-    {
-        // Ищем сначала у делегата, потом в скопе
-        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
-        closure.setDelegate( delegate );
-        return closure.call();
-    }
+//    private static Object callClosureWithDelegate( Closure closure, Object delegate )
+//    {
+//        // Ищем сначала у делегата, потом в скопе
+//        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
+//        closure.setDelegate( delegate );
+//        return closure.call();
+//    }
 
-    public static Object runOperation( EntityModel self, String opName, Closure closure ) throws Exception
-    {
-        OperationModel operation = self.getOperation( opName );
-        callClosureWithDelegate( closure, operation );
-        return operation.invoke();
-    }
+//    public static Object runOperation( EntityModel self, String opName, Closure closure ) throws Exception
+//    {
+//        OperationModel operation = self.getOperation( opName );
+//        callClosureWithDelegate( closure, operation );
+//        return operation.invoke();
+//    }
 
 //    @Experimental( comment = "Под вопросом имя метода" )
 //    public static Object runOperation( EntityModel self, MessageHandler output, String opName, Closure closure ) throws Exception
 //    {
 //        OperationModel operation = self.getOperation( opName );
-//        operation.setOut( output );
+//        //operation.setOut( output );
 //        callClosureWithDelegate( closure, operation );
 //        return operation.invoke();
 //    }

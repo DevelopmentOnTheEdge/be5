@@ -398,11 +398,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         return new OperationModelBase( operationName );
     }
 
-    @Override
-    public Long leftShift( Map<String, String> values )
-    {
-        return this.add( values );
-    }
+//    @Override
+//    public Long leftShift( Map<String, String> values )
+//    {
+//        return this.add( values );
+//    }
 
     @Override
     public RecordModel call( Map<String, String> values)

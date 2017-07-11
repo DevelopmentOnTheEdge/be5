@@ -1,14 +1,11 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.google.common.collect.Iterables;
+import com.google.common.collect.ObjectArrays;
 import groovy.lang.DelegatingMetaClass;
 import groovy.lang.MissingMethodException;
 import com.developmentontheedge.be5.annotations.Experimental;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 /**
  * Created by ruslan on 14.09.16.
@@ -27,7 +24,7 @@ public class ExtensionMethodsMetaClass extends DelegatingMetaClass
     {
         try
         {
-            return InvokerHelper.invokeMethod( getClass(), methodName, Iterables.concat(singletonList(object), asList(args)));
+            return InvokerHelper.invokeMethod( getClass(), methodName, ObjectArrays.concat(object, args));
         }
         catch( MissingMethodException e ) { /*missing method in meta-class*/ }
 
