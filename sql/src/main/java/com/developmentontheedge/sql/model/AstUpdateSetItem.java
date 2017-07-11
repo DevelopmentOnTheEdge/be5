@@ -4,6 +4,13 @@ package com.developmentontheedge.sql.model;
 
 public class AstUpdateSetItem extends SimpleNode
 {
+    public AstUpdateSetItem(AstFieldReference column, SimpleNode value)
+    {
+        this( SqlParserTreeConstants.JJTUPDATESETITEM );
+
+        addChild(DefaultParserContext.FUNC_EQ.node(column, value));
+    }
+
     public AstUpdateSetItem(int id)
     {
         super(id);

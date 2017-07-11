@@ -27,7 +27,7 @@ public class AstUpdateTest
     public void testWhereReplacementParameter()
     {
         String query = "UPDATE Customers\n" +
-                "SET ContactName = ?, City = 'Frankfurt'\n" +
+                "SET ContactName = ?, CityID = 123\n" +
                 "WHERE CustomerID = ?";
         assertEquals(query, SqlQuery.parse( query ).format());
     }
@@ -44,6 +44,13 @@ public class AstUpdateTest
     public void testError2()
     {
         String query = "UPDATE SET ContactName = 'Alfred Schmidt'";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmptySet()
+    {
+        String query = "UPDATE Customers SET";
         assertEquals(query, SqlQuery.parse( query ).format());
     }
 }

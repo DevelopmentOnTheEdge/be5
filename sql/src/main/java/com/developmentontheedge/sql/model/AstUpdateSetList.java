@@ -2,8 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
-public
-class AstUpdateSetList extends SimpleNode
+public class AstUpdateSetList extends SimpleNode
 {
     public AstUpdateSetList(SimpleNode... childs)
     {

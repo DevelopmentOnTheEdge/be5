@@ -5,10 +5,11 @@ package com.developmentontheedge.sql.model;
 public class AstUpdate extends SimpleNode
 {
 
-    public AstUpdate(AstTableName tableName)
+    public AstUpdate(AstTableName tableName, AstUpdateSetList astUpdateSetList)
     {
         this( SqlParserTreeConstants.JJTUPDATE );
         addChild(tableName);
+        addChild(astUpdateSetList);
     }
 
     public AstUpdate(int id)
