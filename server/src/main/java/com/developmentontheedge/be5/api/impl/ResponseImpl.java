@@ -2,21 +2,20 @@ package com.developmentontheedge.be5.api.impl;
 
 import java.nio.charset.StandardCharsets;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.beans.json.JsonFactory;
 
 public class ResponseImpl implements Response
 {
+    private static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
 
-    /**
-     * Must not be public.
-     * @author asko
-     */
     public static class TypedResponse {
         final String type;
         final Object value;
@@ -38,10 +37,6 @@ public class ResponseImpl implements Response
         }
     }
 
-    /**
-     * Must not be public.
-     * @author asko
-     */
     public static class UntypedResponse {
         final Object value;
 
@@ -56,10 +51,6 @@ public class ResponseImpl implements Response
         }
     }
 
-    /**
-     * Must not be public.
-     * @author asko
-     */
     public static class ErrorResponse
     {
         final String message;
@@ -121,7 +112,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendAsRawJson(Object value)
     {
-        sendJson(JsonFactory.beanValues(value).toString());
+        sendJson(jsonb.toJson(value));
     }
 
     @Override

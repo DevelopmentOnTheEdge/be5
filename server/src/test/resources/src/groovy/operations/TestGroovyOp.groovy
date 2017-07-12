@@ -17,7 +17,7 @@ class TestGroovyOp extends OperationSupport implements Operation
                 DISPLAY_NAME    : "Number",
                 value           : presetValues.get("number", "1"),
                 TYPE            : Long,
-                TAG_LIST_ATTR   : ['A': 1, 'B': 2, 'C': 3, 'D': 4],
+                TAG_LIST_ATTR   : [['A', 'a'], ['B', 'b'], ['C', 'c'], ['D', 'd']] as String[][],
                 RELOAD_ON_CHANGE: true]
 
         return dps;
