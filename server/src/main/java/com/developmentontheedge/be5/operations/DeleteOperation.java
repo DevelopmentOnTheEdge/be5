@@ -20,7 +20,7 @@ public class DeleteOperation extends OperationSupport implements Operation
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
         db.update(sqlHelper.generateDeleteInSql(getInfo().getEntity(), context.getRecordIDs().length),
-                context.getRecordIDs());
+                sqlHelper.getDeleteValuesWithSpecial(getInfo().getEntity(), context.getRecordIDs()));
     }
 
 }

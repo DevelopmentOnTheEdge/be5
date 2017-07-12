@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.test.AbstractProjectTest
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertTrue
 
-class DatabaseModelGroovyTest extends AbstractProjectTest
+class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 {
     DatabaseModel database = injector.get(DatabaseModel.class);
     def db = injector.getSqlService();

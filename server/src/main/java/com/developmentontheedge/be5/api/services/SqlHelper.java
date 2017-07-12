@@ -10,12 +10,17 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
+import com.google.common.collect.ObjectArrays;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -90,7 +95,29 @@ public class SqlHelper
         StreamSupport.stream(dps.spliterator(), false).forEach(p -> {
             if(p.getValue() == null)p.setValue(presetValues.get(p.getName()));
         });
+
+        Timestamp currentTime = new Timestamp(new Date().getTime());
+
+        setValueIfNull(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
+        setValueIfNull(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+
+        setValueIfNull(dps, CREATION_DATE_COLUMN_NAME, currentTime);
+        setValueIfNull(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+
+        setValueIfNull(dps, IS_DELETED_COLUMN_NAME, "no");
+
+        setValueIfNull(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+        setValueIfNull(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+
         return dps;
+    }
+
+    private void setValueIfNull(DynamicPropertySet dps, String name, Object value)
+    {
+        DynamicProperty property = dps.getProperty(name);
+        if(property != null && property.getValue() == null){
+            property.setValue(value);
+        }
     }
 
     public Object[] getValues(DynamicPropertySet dps)
@@ -209,60 +236,6 @@ public class SqlHelper
 //            {
 //                sql.append( OracleDatabaseAnalyzer.makeClobValue( connector, value ) );
 //            }
-//            else if( colName.equalsIgnoreCase( WHO_INSERTED_COLUMN_NAME ) )
-//            {
-//                sql.append( "'" ).append( Utils.safestr( connector, UserInfoHolder.getUserName() ) ).append( "'" );
-//            }
-//            else if( colName.equalsIgnoreCase( WHO_MODIFIED_COLUMN_NAME ) )
-//            {
-//                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getUserName() ) ).append( "'" );
-//            }
-//            if( colName.equalsIgnoreCase( CREATION_DATE_COLUMN_NAME ) )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//            else if( colName.equalsIgnoreCase( MODIFICATION_DATE_COLUMN_NAME ) )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//            else if( colName.equalsIgnoreCase( IS_DELETED_COLUMN_NAME ) )
-//            {
-//                sql.append( "'no'" );
-//            }
-//            else if( DBMS_DATE_PLACEHOLDER.equals( value )  )
-//            {
-//                sql.append( analyzer.getCurrentDateExpr() );
-//            }
-//            else if( DBMS_DATETIME_PLACEHOLDER.equals( value ) )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-//            else if( InsertOperation.FORCE_NULL_PLACEHOLDER.equals( value ) )
-//            {
-//                sql.append( "NULL" );
-//            }
-//
-//            else if( Boolean.TRUE.equals( prop.getAttribute( PUT_DBMS_DATE_PLACEHOLDER_FLAG ) ) &&
-//                     ( value == null || value != null && value.equals( prop.getAttribute( BeanInfoConstants.DEFAULT_VALUE ) ) )
-//                   )
-//            {
-//                sql.append( analyzer.getCurrentDateExpr() );
-//            }
-//            else if( Boolean.TRUE.equals( prop.getAttribute( PUT_DBMS_DATETIME_PLACEHOLDER_FLAG ) ) &&
-//                     ( value == null || value != null && value.equals( prop.getAttribute( BeanInfoConstants.DEFAULT_VALUE ) ) )
-//                   )
-//            {
-//                sql.append( analyzer.getCurrentDateTimeExpr() );
-//            }
-
-//            else if( colName.equalsIgnoreCase( IP_INSERTED_COLUMN_NAME ) && userInfo.getRemoteAddr() != null )
-//            {
-//                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getRemoteAddr() ) ).append( "'" );
-//            }
-//            else if( colName.equalsIgnoreCase( IP_MODIFIED_COLUMN_NAME ) && userInfo.getRemoteAddr() != null )
-//            {
-//                sql.append( "'" ).append( Utils.safestr( connector, userInfo.getRemoteAddr() ) ).append( "'" );
-//            }
         //else
 //            {
 //                justAddValueToQuery( databaseService, "entity", prop, value, sql );
@@ -282,16 +255,21 @@ public class SqlHelper
 
     public String generateDeleteInSql(Entity entity, int count) {
         String sql;
-        if(entity.contains(IS_DELETED_COLUMN_NAME))
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
-            sql = "UPDATE " + entity.getName() + " SET " + IS_DELETED_COLUMN_NAME + " = 'yes'";
-            if( entity.contains( WHO_MODIFIED_COLUMN_NAME ) )
+            sql = "UPDATE " + entity.getName() + " SET " + IS_DELETED_COLUMN_NAME + " = ?";
+            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME ))
             {
-                sql += ", " + WHO_MODIFIED_COLUMN_NAME + " = " + quoteStr(UserInfoHolder.getUserName());
+                sql += ", " + WHO_MODIFIED_COLUMN_NAME + " = ?";
             }
-            if( entity.contains( MODIFICATION_DATE_COLUMN_NAME ) )
+            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))
             {
-                sql += ", " + MODIFICATION_DATE_COLUMN_NAME + " = " + new Date();
+                sql += ", " + MODIFICATION_DATE_COLUMN_NAME + " = ?";
+            }
+            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME ))
+            {
+                sql += ", " + IP_MODIFIED_COLUMN_NAME + " = ?";
             }
         }
         else
@@ -301,6 +279,32 @@ public class SqlHelper
 
         String whereSql = " WHERE " + entity.getPrimaryKey() + " IN " + inClause(count);
         return sql + whereSql;
+    }
+
+    public Object[] getDeleteValuesWithSpecial(Entity entity, Object[] values)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        Timestamp currentTime = new Timestamp(new Date().getTime());
+        List<Object> list = new ArrayList<>();
+
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            list.add("yes");
+            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME ))
+            {
+                list.add(UserInfoHolder.getUserName());
+            }
+            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))
+            {
+                list.add(currentTime);
+            }
+            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME ))
+            {
+                list.add(UserInfoHolder.getRemoteAddr());
+            }
+        }
+
+        return ObjectArrays.concat(list.toArray(),values, Object.class);
     }
 
     private String quoteStr(String str)

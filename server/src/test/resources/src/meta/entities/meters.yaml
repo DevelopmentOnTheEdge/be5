@@ -1,0 +1,35 @@
+meters:
+  type: table
+  displayName: meters
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(50)
+        defaultValue: '''Н/Д'''
+    - value:
+        type: SMALLINT
+    - modificationDate___:
+        type: TIMESTAMP
+    - creationDate___:
+        type: TIMESTAMP
+    - whoModified___:
+        type: VARCHAR(100)
+    - whoInserted___:
+        type: VARCHAR(100)
+    - isDeleted___:
+        type: ENUM('no','yes')
+        defaultValue: '''no'''
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      roles: '@AllRolesExceptGuest'
+      code: |-
+        SELECT
+            m.ID,
+            ${concat( 'm.meterType', ' № '?str, 'm.serialNumber' )} AS name
+        FROM meters m

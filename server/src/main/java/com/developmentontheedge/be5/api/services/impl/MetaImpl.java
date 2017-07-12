@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -396,6 +397,7 @@ public class MetaImpl implements Meta
             case SqlColumnType.TYPE_KEY:
                 return Long.class;
             case SqlColumnType.TYPE_INT:
+            case SqlColumnType.TYPE_SMALLINT:
                 return Integer.class;
             case SqlColumnType.TYPE_DECIMAL:
                 return Double.class;
@@ -404,7 +406,7 @@ public class MetaImpl implements Meta
             case SqlColumnType.TYPE_DATE:
                 return Date.class;
             case SqlColumnType.TYPE_TIMESTAMP:
-                return Time.class;
+                return Timestamp.class;
             default:
                 return String.class;
         }

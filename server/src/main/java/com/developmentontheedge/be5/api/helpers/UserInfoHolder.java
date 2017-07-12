@@ -53,6 +53,11 @@ public class UserInfoHolder
         return getUserInfo().getCurrentRoles();
     }
 
+    public static String getRemoteAddr()
+    {
+        return getUserInfo().getRemoteAddr();
+    }
+
     public static boolean isAdmin(){
         return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR);
     }

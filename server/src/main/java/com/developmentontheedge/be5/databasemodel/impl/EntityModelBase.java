@@ -181,16 +181,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(firstId);
         return db.update(sqlHelper.generateDeleteInSql(entity, otherId.length + 1),
-                ObjectArrays.concat(firstId, otherId));
-//        if( keys.length != 0 )
-//        {
-//            try
-//            {
-//                StringBuilder deleteSql = new StringBuilder( DeleteOperation.getDeleteSql( connector, getUserInfo(), getEntityName(), getTcloneId(), false ) );
-//                deleteSql.append( " WHERE " ).append( analyzer.quoteIdentifier( getPrimaryKeyName() ) ).append( " IN " ).append( Utils.toInClause( keys ) );
-//                deleteSql.append( "AND" ).append( getAdditionalConditions() );
-
-//                    count = connector.executeUpdate( deleteSql.toString() );
+                sqlHelper.getDeleteValuesWithSpecial(entity, ObjectArrays.concat(firstId, otherId)));
     }
 
     @Override

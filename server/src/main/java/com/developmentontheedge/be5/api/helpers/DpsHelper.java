@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.HashSet;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class DpsHelper
                 return rs.getFloat( idx );
             if( clazz == Date.class )
                 return rs.getDate( idx );
-            if( clazz == Time.class )
+            if( clazz == Timestamp.class )
                 return rs.getTimestamp( idx );
         }catch (Exception e){
             throw Be5Exception.internal(e);
@@ -133,6 +134,8 @@ public class DpsHelper
                 return Long.class;
             case Types.INTEGER:
                 return Integer.class;
+            case Types.SMALLINT:
+                return Short.class;
             case Types.DOUBLE:
             case Types.FLOAT:
             case Types.DECIMAL:
@@ -144,8 +147,9 @@ public class DpsHelper
             case Types.DATE:
                 return Date.class;
             case Types.TIME:
-            case Types.TIMESTAMP:
                 return Time.class;
+            case Types.TIMESTAMP:
+                return Timestamp.class;
             default:
                 return String.class;
         }
