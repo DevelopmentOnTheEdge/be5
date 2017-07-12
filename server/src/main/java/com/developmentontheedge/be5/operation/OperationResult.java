@@ -103,7 +103,7 @@ public class OperationResult
     
     public static OperationResult finished(String message)
     {
-        return new OperationResult(OperationStatus.FINISHED, message); 
+        return new OperationResult(OperationStatus.FINISHED, message, null);
     }
 
     public static OperationResult redirect(HashUrl hashUrl)

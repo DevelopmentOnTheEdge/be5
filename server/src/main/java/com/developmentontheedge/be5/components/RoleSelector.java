@@ -11,16 +11,26 @@ import java.util.List;
 
 public class RoleSelector implements Component {
 
-    static class RoleSelectorResponse
+    public static class RoleSelectorResponse
     {
 
-        public final List<String> availableRoles;
-        public final List<String> selectedRoles;
+        final List<String> availableRoles;
+        final List<String> selectedRoles;
 
         public RoleSelectorResponse(List<String> availableRoles, List<String> selectedRoles)
         {
             this.availableRoles = availableRoles;
             this.selectedRoles = selectedRoles;
+        }
+
+        public List<String> getAvailableRoles()
+        {
+            return availableRoles;
+        }
+
+        public List<String> getSelectedRoles()
+        {
+            return selectedRoles;
         }
 
         @Override
@@ -34,6 +44,14 @@ public class RoleSelector implements Component {
             if (availableRoles != null ? !availableRoles.equals(that.availableRoles) : that.availableRoles != null)
                 return false;
             return selectedRoles != null ? selectedRoles.equals(that.selectedRoles) : that.selectedRoles == null;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = availableRoles != null ? availableRoles.hashCode() : 0;
+            result = 31 * result + (selectedRoles != null ? selectedRoles.hashCode() : 0);
+            return result;
         }
     }
     
