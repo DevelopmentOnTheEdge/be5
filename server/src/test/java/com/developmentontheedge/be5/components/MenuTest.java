@@ -110,9 +110,9 @@ public class MenuTest extends AbstractProjectTest
         assertEquals(true, menuResponse.loggedIn);
 
         assertEquals(1, menuResponse.root.size());
-        assertEquals("testtable", menuResponse.root.get(0).title);
-        assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(0).action);
-        assertNull(menuResponse.root.get(0).children);
+        assertEquals("testtable", menuResponse.root.get(0).getTitle());
+        assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(0).getAction());
+        assertNull(menuResponse.root.get(0).getChildren());
     }
 
     @Test
@@ -122,9 +122,9 @@ public class MenuTest extends AbstractProjectTest
 
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector);
-        assertEquals("Insert", menuResponse.root.get(1).operations.get(0).title);
+        assertEquals("Insert", menuResponse.root.get(1).getOperations().get(0).title);
         assertEquals(new Action("call", "form/testtableAdmin/All records/Insert"),
-                menuResponse.root.get(1).operations.get(0).action);
+                menuResponse.root.get(1).getOperations().get(0).action);
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

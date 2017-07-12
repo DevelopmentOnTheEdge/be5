@@ -13,8 +13,8 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
-import com.google.gson.annotations.SerializedName;
 
+import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,13 +48,12 @@ public class Menu implements Component {
 
     public static class RootNode {
         
-        final Id id;
-        final String title;
-        @SerializedName("default")
-        final boolean isDefault;
-        final Action action;
-        final List<QueryNode> children;
-        final List<OperationNode> operations;
+        private final Id id;
+        private final String title;
+        private final boolean isDefault;
+        private final Action action;
+        private final List<QueryNode> children;
+        private final List<OperationNode> operations;
         
         static RootNode action(Id id, String title, boolean isDefault, Action action, List<OperationNode> operations)
         {
@@ -86,6 +85,7 @@ public class Menu implements Component {
             return title;
         }
 
+        //@JsonbProperty("default")
         public boolean isDefault()
         {
             return isDefault;
@@ -131,11 +131,10 @@ public class Menu implements Component {
 
     public static class QueryNode {
 
-        final Id id;
-        final String title;
-        final Action action;
-        @SerializedName("default")
-        final boolean isDefault;
+        private final Id id;
+        private final String title;
+        private final Action action;
+        private final boolean isDefault;
 
         public QueryNode(Id id, String title, Action action, boolean isDefault)
         {
@@ -160,6 +159,7 @@ public class Menu implements Component {
             return action;
         }
 
+        //@JsonbProperty("default")
         public boolean isDefault()
         {
             return isDefault;

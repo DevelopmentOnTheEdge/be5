@@ -37,27 +37,4 @@ public class MoreRows {
         return data;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MoreRows moreRows = (MoreRows) o;
-
-        if (draw != moreRows.draw) return false;
-        if (recordsTotal != moreRows.recordsTotal) return false;
-        if (recordsFiltered != moreRows.recordsFiltered) return false;
-        return data != null ? data.equals(moreRows.data) : moreRows.data == null;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = draw;
-        result = 31 * result + recordsTotal;
-        result = 31 * result + recordsFiltered;
-        result = 31 * result + (data != null ? data.hashCode() : 0);
-        return result;
-    }
 }
