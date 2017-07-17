@@ -40,6 +40,13 @@ public class SqlHelper
 
     public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
     {
+        DynamicPropertySet dps = getDps(entity);
+
+        return setDpsValues(dps, resultSet);
+    }
+
+    public DynamicPropertySet getDpsWithoutPrimaryKey(Entity entity, ResultSet resultSet)
+    {
         DynamicPropertySet dps = getDpsWithoutPrimaryKey(entity);
 
         return setDpsValues(dps, resultSet);

@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
@@ -325,35 +326,19 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
-//        String sql;
-//        try
-//        {
-//            sql = Utils.getUpdateSQL( connector, getUserInfo(), getEntityName(), new String[]{ id }, values );
-//        }
-//        catch( Exception e )
-//        {
-//            String reason = "Error generating update SQL.";
-////            Logger.error( cat, reason, e );
-////            throw new EntityModelException( reason, e );
-//            throw Be5Exception.internal(e, reason);
-//        }
-//        try
-//        {
-//            Pair<Boolean,String> clobResult = Utils.updateWithCLOBs(
-//                 connector, sql, values, getEntityName(), getPrimaryKeyName(), false );
-//            if( !clobResult.getFirst() )
-//            {
-//                connector.executeUpdate( sql );
-//            }
-//            if( isDictionary() )
-//            {
-//                clearDictionaryCache();
-//            }
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new EntityModelSQLException( getEntityName(), sql, e );
-//        }
+
+        DynamicPropertySet parameters = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
+                rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), id);
+
+        for (Map.Entry<String, String> entry: values.entrySet())
+        {
+            DynamicProperty property = parameters.getProperty(entry.getKey());
+            if( property!= null)
+                property.setValue(entry.getValue());
+        }
+
+        db.update(sqlHelper.generateUpdateSql(entity, parameters),
+                ObjectArrays.concat(sqlHelper.getValues(parameters), id));
     }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>

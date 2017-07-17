@@ -151,7 +151,6 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
     }
 
     @Test
-    @Ignore
     void testUpdate()
     {
         def entityName = database.testtableAdmin;
@@ -165,10 +164,11 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
         record << [
                 "name": "TestName2",
         ]
+
         assertEquals "TestName2", record.name
 
         //TODO update
-        assertEquals "TestName3", database.testtableAdmin[id].name
+        assertEquals "TestName2", database.testtableAdmin[id].name
     }
 
     @Test

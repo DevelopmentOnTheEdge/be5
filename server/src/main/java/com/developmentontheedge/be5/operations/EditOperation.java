@@ -18,17 +18,17 @@ public class EditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        DynamicPropertySet dps = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
-                rs -> sqlHelper.getDps(entity, rs), records[0]);
+        parameters = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
+                rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), records[0]);
 
         for (Map.Entry<String, String> entry: presetValues.entrySet())
         {
-            DynamicProperty property = dps.getProperty(entry.getKey());
+            DynamicProperty property = parameters.getProperty(entry.getKey());
             if( property!= null)
                 property.setValue(entry.getValue());
         }
 
-        return dps;
+        return parameters;
     }
 
     @Override
