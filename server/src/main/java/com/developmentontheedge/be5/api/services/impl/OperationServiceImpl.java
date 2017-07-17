@@ -110,7 +110,7 @@ public class OperationServiceImpl implements OperationService
 
         if(parameters instanceof DynamicPropertySet)
         {
-            ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
+            ((OperationSupport)operation).parameters = (DynamicPropertySet) parameters;
             try {
                 validator.checkErrorAndCast((DynamicPropertySet) parameters);
             }catch (RuntimeException e){

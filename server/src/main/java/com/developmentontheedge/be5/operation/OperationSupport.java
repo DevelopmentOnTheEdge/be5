@@ -30,7 +30,7 @@ public abstract class OperationSupport implements Operation
 
     public Long[] records;
 
-    public DynamicPropertySet dps = new DynamicPropertySetSupport();
+    public DynamicPropertySet parameters = new DynamicPropertySetSupport();
 
     public static final String reloadControl = "_reloadcontrol_";
 

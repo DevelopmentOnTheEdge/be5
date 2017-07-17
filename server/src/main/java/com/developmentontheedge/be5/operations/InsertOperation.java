@@ -17,7 +17,8 @@ public class InsertOperation extends OperationSupport implements Operation
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.insert(sqlHelper.generateInsertSql(getInfo().getEntity(), dps), sqlHelper.getValues(dps));
+        db.insert(sqlHelper.generateInsertSql(getInfo().getEntity(), this.parameters),
+                  sqlHelper.getValues(this.parameters));
     }
 
 }

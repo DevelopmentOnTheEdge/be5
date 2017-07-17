@@ -34,7 +34,8 @@ public class EditOperation extends OperationSupport implements Operation
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.update(sqlHelper.generateUpdateSql(getInfo().getEntity(), dps), ObjectArrays.concat(sqlHelper.getValues(dps), records[0]));
+        db.update(sqlHelper.generateUpdateSql(getInfo().getEntity(), this.parameters),
+                ObjectArrays.concat(sqlHelper.getValues(this.parameters), records[0]));
     }
 
 }

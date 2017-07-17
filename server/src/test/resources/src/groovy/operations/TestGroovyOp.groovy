@@ -10,9 +10,9 @@ class TestGroovyOp extends OperationSupport implements Operation
     @Override
     Object getParameters(Map<String, String> presetValues) throws Exception
     {
-        dps << [name: "name", DISPLAY_NAME: "Name"]
+        parameters << [name: "name", DISPLAY_NAME: "Name"]
 
-        dps << [
+        parameters << [
                 name            : "number",
                 DISPLAY_NAME    : "Number",
                 value           : presetValues.get("number", "1"),
@@ -20,7 +20,7 @@ class TestGroovyOp extends OperationSupport implements Operation
                 TAG_LIST_ATTR   : [['A', 'a'], ['B', 'b'], ['C', 'c'], ['D', 'd']] as String[][],
                 RELOAD_ON_CHANGE: true]
 
-        return dps;
+        return parameters;
     }
 
     @Override
