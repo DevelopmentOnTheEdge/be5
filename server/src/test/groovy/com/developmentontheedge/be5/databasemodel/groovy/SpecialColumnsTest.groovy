@@ -13,7 +13,7 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
     DatabaseModel database = injector.get(DatabaseModel.class);
     def db = injector.getSqlService();
     EntityModel table = database.meters;
-    def entityName = table.getEntityName()
+    def tableName = table.getEntityName()
 
     @BeforeClass
     static void beforeClass(){
@@ -27,7 +27,7 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
 
     @Before
     void before(){
-        db.update("DELETE FROM $entityName")
+        db.update("DELETE FROM $tableName")
     }
 
     @Test
@@ -37,7 +37,7 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
                 "name": "test",
                 "value": 1]
 
-        assertEquals 1, db.getLong("select count(*) from $entityName")
+        assertEquals 1, db.getLong("select count(*) from $tableName")
     }
 
     @Test
@@ -64,7 +64,15 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
                 "name": "test",
                 "value": 1]
 
-        table[id]
+        table[id] << [
+                "name": "editName",
+        ]
+
+        assertEquals "editName", table[ id ].name
+
+        assertTrue table[ id ].creationDate___ < table[ id ].modificationDate___
+        assertEquals table[ id ].whoModified___, table[ id ].whoInserted___
+        assertEquals "no", table[ id ].isDeleted___
     }
 
 }

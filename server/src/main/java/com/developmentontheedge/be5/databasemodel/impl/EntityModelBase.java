@@ -15,7 +15,6 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
@@ -297,7 +296,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getDpsWithoutPrimaryKey(entity);
-        sqlHelper.setValuesIfNull(dps, values);
+        sqlHelper.setValuesWithSpecialIfNullValue(dps, values);
 
         validator.checkErrorAndCast(dps);
 
@@ -330,12 +329,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         DynamicPropertySet parameters = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
                 rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), id);
 
-        for (Map.Entry<String, String> entry: values.entrySet())
-        {
-            DynamicProperty property = parameters.getProperty(entry.getKey());
-            if( property!= null)
-                property.setValue(entry.getValue());
-        }
+        sqlHelper.updateValuesWithSpecial(parameters, values);
 
         db.update(sqlHelper.generateUpdateSql(entity, parameters),
                 ObjectArrays.concat(sqlHelper.getValues(parameters), id));

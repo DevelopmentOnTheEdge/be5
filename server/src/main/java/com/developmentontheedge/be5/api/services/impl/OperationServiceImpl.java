@@ -194,7 +194,7 @@ public class OperationServiceImpl implements OperationService
             Object parameters = operation.getParameters(presetValues);
             if (parameters instanceof DynamicPropertySet)
             {
-                sqlHelper.setValuesIfNull((DynamicPropertySet)parameters, presetValues);
+                sqlHelper.setValuesWithSpecialIfNullValue((DynamicPropertySet)parameters, presetValues);
             }
             return parameters;
         }

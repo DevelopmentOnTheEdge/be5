@@ -15,13 +15,15 @@ import com.google.common.collect.ObjectArrays;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
@@ -97,32 +99,64 @@ public class SqlHelper
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
-    public DynamicPropertySet setValuesIfNull(DynamicPropertySet dps, Map<String, String> presetValues)
+    public void setValuesWithSpecialIfNullValue(DynamicPropertySet dps, Map<String, String> values)
     {
         StreamSupport.stream(dps.spliterator(), false).forEach(p -> {
-            if(p.getValue() == null)p.setValue(presetValues.get(p.getName()));
+            if(p.getValue() == null)p.setValue(values.get(p.getName()));
         });
 
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-
-        setValueIfNull(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
-        setValueIfNull(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
-
-        setValueIfNull(dps, CREATION_DATE_COLUMN_NAME, currentTime);
-        setValueIfNull(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
-
-        setValueIfNull(dps, IS_DELETED_COLUMN_NAME, "no");
-
-        setValueIfNull(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-        setValueIfNull(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-
-        return dps;
+        setSpecialColumnsIfNullValue(dps);
     }
 
-    private void setValueIfNull(DynamicPropertySet dps, String name, Object value)
+    public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, String> values)
+    {
+        for (Map.Entry<String, String> entry: values.entrySet())
+        {
+            DynamicProperty property = dps.getProperty(entry.getKey());
+            if( property!= null)
+                property.setValue(entry.getValue());
+        }
+
+        updateSpecialColumns(dps);
+    }
+
+    private void setSpecialColumnsIfNullValue(DynamicPropertySet dps)
+    {
+        Timestamp currentTime = new Timestamp(new Date().getTime());
+
+        setValueIfNullValue(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
+        setValueIfNullValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+
+        setValueIfNullValue(dps, CREATION_DATE_COLUMN_NAME, currentTime);
+        setValueIfNullValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+
+        setValueIfNullValue(dps, IS_DELETED_COLUMN_NAME, "no");
+
+        setValueIfNullValue(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+        setValueIfNullValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+    }
+
+    private void updateSpecialColumns(DynamicPropertySet dps)
+    {
+        Timestamp currentTime = new Timestamp(new Date().getTime());
+
+        setValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+        setValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+        setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+    }
+
+    private void setValueIfNullValue(DynamicPropertySet dps, String name, Object value)
     {
         DynamicProperty property = dps.getProperty(name);
         if(property != null && property.getValue() == null){
+            property.setValue(value);
+        }
+    }
+
+    private void setValue(DynamicPropertySet dps, String name, Object value)
+    {
+        DynamicProperty property = dps.getProperty(name);
+        if(property != null){
             property.setValue(value);
         }
     }
@@ -254,7 +288,7 @@ public class SqlHelper
     public String generateUpdateSql(Entity entity, DynamicPropertySet dps)
     {
         Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .collect(Collectors.toMap(DynamicProperty::getName, x -> "?"));
+                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(entity.getName()).set(valuePlaceholders)
                 .where(Collections.singletonMap(entity.getPrimaryKey(), "?")).format();
@@ -410,4 +444,15 @@ public class SqlHelper
 //
 //        return value;
 //    }
+
+    public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper)
+    {
+        return Collectors.toMap(keyMapper, valueMapper,
+                (u, v) -> {
+                    throw new IllegalStateException(String.format("Duplicate key %s", u));
+                },
+                LinkedHashMap::new);
+    }
 }

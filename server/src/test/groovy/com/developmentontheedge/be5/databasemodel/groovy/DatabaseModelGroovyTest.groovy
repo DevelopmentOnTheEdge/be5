@@ -126,7 +126,7 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
     {
         def testtableAdmin = database.testtableAdmin;
 
-        assertEquals "testtableAdmin", testtableAdmin.entityName
+        assertEquals "testtableAdmin", testtableAdmin.tableName
         assertTrue testtableAdmin.empty
     }
 
@@ -213,53 +213,53 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    public void testGetList()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entityName = database.getEntity( "persons" );
+//        EntityModel tableName = database.getEntity( "persons" );
 //
-//        entityName << [
+//        tableName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        entityName << [
+//        tableName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
-//        List<RecordModel> list = entityName.list;
+//        List<RecordModel> list = tableName.list;
 //
 //        assertTrue( listContains( list, "firstname", "Wirth" ) )
 //        assertTrue( listContains( list, "firstname", "Bjarne" ) )
 //        assertFalse( listContains( list, "firstname", "Rocky" ) )
 //
-//        list = entityName.list( sex: "male" )
+//        list = tableName.list( sex: "male" )
 //        assertTrue( listContains( list, "firstname", "Bjarne" ) )
 //
-//        list = entityName.list( sex: "female" )
+//        list = tableName.list( sex: "female" )
 //        assertTrue list.empty
 //    }
 //
 //    public void testGetArray()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entityName = database.getEntity( "persons" );
+//        EntityModel tableName = database.getEntity( "persons" );
 //
-//        entityName << [
+//        tableName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        entityName << [
+//        tableName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
-//        RecordModel[] records = entityName.array
+//        RecordModel[] records = tableName.array
 //        List<RecordModel> list = records as List;
 //
 //        assertTrue listContains( list, "firstname", "Wirth" )
@@ -270,23 +270,23 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp();
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entityName = database.persons;
+//        EntityModel tableName = database.persons;
 //
-//        entityName << [
+//        tableName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        entityName << [
+//        tableName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
 //
-//        List<DynamicPropertySet> list = entityName.<DynamicPropertySet> collect( [:], { bean, row -> bean } );
+//        List<DynamicPropertySet> list = tableName.<DynamicPropertySet> collect( [:], { bean, row -> bean } );
 //
 //        assertTrue( listContains( list, "firstname", "Wirth" ) );
 //        assertTrue( listContains( list, "firstname", "Bjarne" ) );
@@ -326,29 +326,29 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    public void testSetRecordValue()
 //    {
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entityName = database.persons;
+//        EntityModel tableName = database.persons;
 //
-//        entityName << [
+//        tableName << [
 //                "firstname" : "Wirth",
 //                "middlename": "Emil",
 //                "lastname"  : "Niklaus",
 //                "birthday"  : "15.02.1934",
 //                "sex"       : "male"]
 //
-//        def id = entityName << [
+//        def id = tableName << [
 //                "firstname": "Bjarne",
 //                "lastname" : "Stroustrup",
 //                "birthday" : "30.12.1950",
 //                "sex"      : "male"]
 //
-//        RecordModel rec = entityName[ id ];
+//        RecordModel rec = tableName[ id ];
 //
 //        rec.sex = "female";
-//        assertEquals "female", entityName[ id ].$sex
+//        assertEquals "female", tableName[ id ].$sex
 //
 //        rec.update( [ sex : "male", birthday : "01.02.1995" ] );
-//        assertEquals "male", entityName[ id ].$sex;
-//        assertEquals "1995-02-01", String.valueOf( entityName[ id ].$birthday );
+//        assertEquals "male", tableName[ id ].$sex;
+//        assertEquals "1995-02-01", String.valueOf( tableName[ id ].$birthday );
 //
 //    }
 //
@@ -362,9 +362,9 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.operations;
+//        def tableName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        def list = entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).collect();
+//        def list = tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).collect();
 //        assert list.size() == 1;
 //        assert 'Java', list.$Type;
 //    }
@@ -373,9 +373,9 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.operations;
+//        def tableName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        def list = entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
+//        def list = tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
 //            dps.Name == 'Clone'
 //        }
 //        assert list.size() == 1;
@@ -386,9 +386,9 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.operations;
+//        def tableName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        def list = entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
+//        def list = tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
 //            dps.Name == 'Clone'
 //        }
 //        assert list.size() == 1;
@@ -399,9 +399,9 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.operations;
+//        def tableName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).each { dps, rn ->
+//        tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).each { dps, rn ->
 //            assertFalse oneTimeTrigger;
 //            assertEquals 'Java', dps.$Type;
 //            oneTimeTrigger = true;
@@ -413,9 +413,9 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def entityName = database.operations;
+//        def tableName = database.operations;
 //        boolean oneTimeTrigger = false;
-//        entityName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ) { dps, rn ->
+//        tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ) { dps, rn ->
 //            assertFalse oneTimeTrigger;
 //            assertEquals 'Java', dps.$Type;
 //            oneTimeTrigger = true;
@@ -437,13 +437,13 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel entityName = database.entities;
-//        def rec = entityName( name : 'operations' );
+//        EntityModel tableName = database.entities;
+//        def rec = tableName( name : 'operations' );
 //        def origin = rec.$origin;
 //        try
 //        {
-//            println entityName.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
-//            assertEquals 'test', entityName[ rec.$name ].$origin;
+//            println tableName.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
+//            assertEquals 'test', tableName[ rec.$name ].$origin;
 //        }
 //        finally
 //        {

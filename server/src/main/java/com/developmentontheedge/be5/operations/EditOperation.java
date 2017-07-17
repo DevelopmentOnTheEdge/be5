@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
-import com.developmentontheedge.beans.DynamicProperty;
 import com.google.common.collect.ObjectArrays;
 
 import java.util.Map;
@@ -20,12 +19,7 @@ public class EditOperation extends OperationSupport implements Operation
         dps = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
                 rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), records[0]);
 
-        for (Map.Entry<String, String> entry: presetValues.entrySet())
-        {
-            DynamicProperty property = dps.getProperty(entry.getKey());
-            if( property!= null)
-                property.setValue(entry.getValue());
-        }
+        sqlHelper.updateValuesWithSpecial(dps, presetValues);
 
         return dps;
     }
