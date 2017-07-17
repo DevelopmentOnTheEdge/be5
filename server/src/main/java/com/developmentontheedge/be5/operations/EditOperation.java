@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ObjectArrays;
 
 import java.util.Map;
@@ -18,24 +17,24 @@ public class EditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        parameters = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
+        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
                 rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), records[0]);
 
         for (Map.Entry<String, String> entry: presetValues.entrySet())
         {
-            DynamicProperty property = parameters.getProperty(entry.getKey());
+            DynamicProperty property = dps.getProperty(entry.getKey());
             if( property!= null)
                 property.setValue(entry.getValue());
         }
 
-        return parameters;
+        return dps;
     }
 
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.update(sqlHelper.generateUpdateSql(getInfo().getEntity(), this.parameters),
-                ObjectArrays.concat(sqlHelper.getValues(this.parameters), records[0]));
+        db.update(sqlHelper.generateUpdateSql(getInfo().getEntity(), dps),
+                ObjectArrays.concat(sqlHelper.getValues(dps), records[0]));
     }
 
 }

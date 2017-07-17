@@ -57,4 +57,14 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
         assertEquals table[ id ].whoModified___, table[ id ].whoInserted___
     }
 
+    @Test
+    void testEdit()
+    {
+        def id = table << [
+                "name": "test",
+                "value": 1]
+
+        table[id]
+    }
+
 }
