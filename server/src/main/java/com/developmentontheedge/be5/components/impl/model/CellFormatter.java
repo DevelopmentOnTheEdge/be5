@@ -20,8 +20,7 @@ import java.util.regex.Pattern;
 
 public class CellFormatter
 {
-    private static final Pattern SUBQUERY_PATTERN = Pattern.compile("<sql> SubQuery# [0-9]+</sql>");
-
+    private static final Unzipper unzipper = Unzipper.on(Pattern.compile("<sql> SubQuery# [0-9]+</sql>")).trim();
     private final Query query;
     private final UserAwareMeta userAwareMeta;
     private final QueryExecutor queryExecutor;
@@ -98,7 +97,7 @@ public class CellFormatter
         }
 
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
-        Unzipper.on(SUBQUERY_PATTERN).trim().unzip(cell != null ? cell.content : "", builder::add, subquery ->
+        unzipper.unzip(cell != null ? cell.content : "", builder::add, subquery ->
                 builder.add(toTable(subquery, varResolver))
         );
 
