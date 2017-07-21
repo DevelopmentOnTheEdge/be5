@@ -99,11 +99,13 @@ public class SqlHelper
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
-    public void setValuesWithSpecialIfNullValue(DynamicPropertySet dps, Map<String, String> values)
+    public void setValues(DynamicPropertySet dps, Entity entity, Map<String, String> values)
     {
-        StreamSupport.stream(dps.spliterator(), false).forEach(p -> {
-            if(p.getValue() == null)p.setValue(values.get(p.getName()));
-        });
+        for (DynamicProperty property : dps)
+        {
+            if (property.getValue() == null) property.setValue(values.get(property.getName()));
+            if (property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
+        }
 
         setSpecialColumnsIfNullValue(dps);
     }

@@ -296,7 +296,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getDpsWithoutPrimaryKey(entity);
-        sqlHelper.setValuesWithSpecialIfNullValue(dps, values);
+        sqlHelper.setValues(dps, entity, values);
 
         validator.checkErrorAndCast(dps);
 

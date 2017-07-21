@@ -2,13 +2,16 @@ package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
@@ -20,6 +23,16 @@ import static org.mockito.Mockito.verify;
 public class DateTimeTest extends AbstractProjectTest{
 
     private OperationService operationService = sqlMockInjector.get(OperationService.class);
+
+    @BeforeClass
+    public static void beforeClass(){
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
+
+    @AfterClass
+    public static void afterClass(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
 
     @Before
     public void before()
@@ -48,7 +61,7 @@ public class DateTimeTest extends AbstractProjectTest{
     }
 
     @Test
-    public void testOperationInvoke()
+    public void invoke()
     {
         operationService.execute(
                 getSpyMockRecForOp("dateTime", "All records", "Insert", "0",
@@ -56,6 +69,17 @@ public class DateTimeTest extends AbstractProjectTest{
 
         verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
                 Date.valueOf("1901-02-03"));
+    }
+
+    @Test
+    public void invokeDefaultValue()
+    {
+        Either<FormPresentation, OperationResult> execute = operationService.execute(
+                getSpyMockRecForOp("dateTime", "All records", "Insert", "0",
+                        "{}"));
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
+                Date.valueOf("1900-01-01"));
     }
 
 }

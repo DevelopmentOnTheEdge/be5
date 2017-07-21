@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -34,7 +35,8 @@ public class OperationServiceImpl implements OperationService
     private final SqlHelper sqlHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector) {
+    public OperationServiceImpl(Injector injector)
+    {
         this.injector = injector;
         this.validator = injector.get(Validator.class);
         userAwareMeta = UserAwareMeta.get(injector);
@@ -60,7 +62,7 @@ public class OperationServiceImpl implements OperationService
     {
         Operation operation = create(meta, selectedRows(selectedRowsString));
 
-        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
+        Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
 
         if (parameters == null)
         {
@@ -106,7 +108,7 @@ public class OperationServiceImpl implements OperationService
 
         Operation operation = create(meta, selectedRows(selectedRowsString));
 
-        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
+        Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
 
         if(parameters instanceof DynamicPropertySet)
         {
@@ -188,13 +190,13 @@ public class OperationServiceImpl implements OperationService
      * либо вы задаёте значение и вручную управляете её изменением в getParameters:
      * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
      */
-    private Object getParametersAndSetValueIfNull(Operation operation, Map<String, String> presetValues) {
+    private Object getParametersAndSetValueIfNull(Operation operation, Entity entity, Map<String, String> presetValues) {
         try
         {
             Object parameters = operation.getParameters(presetValues);
             if (parameters instanceof DynamicPropertySet)
             {
-                sqlHelper.setValuesWithSpecialIfNullValue((DynamicPropertySet)parameters, presetValues);
+                sqlHelper.setValues((DynamicPropertySet)parameters, entity, presetValues);
             }
             return parameters;
         }

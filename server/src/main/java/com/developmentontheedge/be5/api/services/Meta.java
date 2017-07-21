@@ -80,6 +80,19 @@ public interface Meta
 
     ColumnDef getColumn(Entity entity, String columnName);
 
+    default String getColumnDefaultValue(Entity entity, String columnName)
+    {
+        ColumnDef column = getColumn(entity, columnName);
+        if(column == null) return null;
+
+        String defaultValue = column.getDefaultValue();
+        if (defaultValue != null && defaultValue.startsWith("'") && defaultValue.endsWith("'"))
+        {
+            defaultValue = defaultValue.substring(1,defaultValue.length()-1);
+        }
+        return defaultValue;
+    }
+
     Class<?> getColumnType(ColumnDef columnDef);
 
     boolean isNumericColumn(String entityName, String columnName);

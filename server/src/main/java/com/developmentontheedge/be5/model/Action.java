@@ -71,4 +71,13 @@ public class Action
         result = 31 * result + (arg != null ? arg.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Action{" +
+                "name='" + name + '\'' +
+                ", arg='" + arg + '\'' +
+                '}';
+    }
 }

@@ -1,6 +1,6 @@
-testtUser2:
+atest:
   type: table
-  displayName: testtUser2
+  displayName: atest
   order: '8'
   primaryKey: ID
   scheme:

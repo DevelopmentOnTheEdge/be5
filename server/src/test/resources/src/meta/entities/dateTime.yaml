@@ -13,7 +13,6 @@ dateTime:
         defaultValue: '''1900-01-01'''
   queries:
   - All records:
-      defaultView: true
       type: 1D
       roles: '@AllRoles'
       operations:
