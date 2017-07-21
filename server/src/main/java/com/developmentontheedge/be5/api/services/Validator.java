@@ -6,6 +6,8 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
+import java.sql.Date;
+
 import static com.developmentontheedge.be5.api.services.Validator.Status.SUCCESS;
 import static com.developmentontheedge.be5.api.services.Validator.Status.ERROR;
 
@@ -103,6 +105,10 @@ public class Validator
             if (type == Boolean.class)
             {
                 return Boolean.parseBoolean(value.toString());
+            }
+            if (type == Date.class)
+            {
+                return Date.valueOf(value.toString());
             }
         }
 

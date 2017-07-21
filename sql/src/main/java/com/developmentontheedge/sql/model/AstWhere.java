@@ -19,6 +19,10 @@ public class AstWhere extends SimpleNode
     }
 
     private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
+//        TODO add !=, NOT LIKE
+//        var udIDs = database.utilityDocuments.ids( {
+//                externalStatus: "!=ok"
+//        } );
         Map.Entry<String, String> entry = iterator.next();
         String value = entry.getValue();
         PredefinedFunction function = DefaultParserContext.FUNC_EQ;

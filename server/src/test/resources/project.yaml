@@ -4,6 +4,7 @@ testProject:
   projectFileStructure: {}
   modules: []
   application:
+  - dateTime
   - testtable
   - testtableAdmin
   - testtUser

@@ -14,6 +14,9 @@ import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
@@ -29,6 +32,8 @@ public abstract class AbstractProjectTest
 {
     protected static final Injector injector = Be5.createInjector();
     protected static final Injector sqlMockInjector = Be5.createInjector(new SqlMockBinder());
+
+    protected static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
 
     public static class SqlMockBinder implements Binder
     {

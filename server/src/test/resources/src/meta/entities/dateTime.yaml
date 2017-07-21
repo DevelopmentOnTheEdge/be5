@@ -1,0 +1,40 @@
+dateTime:
+  type: table
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - activeFrom:
+        type: DATE
+        defaultValue: '''1900-01-01'''
+  queries:
+  - All records:
+      defaultView: true
+      type: 1D
+      roles: '@AllRoles'
+      operations:
+      - Delete
+      - Edit
+      - Insert
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.activeFrom AS "activeFrom",
+            FROM
+              dateTime t
+  operations:
+  - Delete:
+      records: 2
+      roles: '@AllRoles'
+      code: com.developmentontheedge.be5.operations.DeleteOperation
+  - Edit:
+      records: 1
+      roles: '@AllRoles'
+      code: com.developmentontheedge.be5.operations.EditOperation
+  - Insert:
+      roles: '@AllRoles'
+      code: com.developmentontheedge.be5.operations.InsertOperation
