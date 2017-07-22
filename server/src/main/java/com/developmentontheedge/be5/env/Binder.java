@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.env;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 public interface Binder
 {
