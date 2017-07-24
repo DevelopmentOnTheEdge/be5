@@ -1,8 +1,11 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class ValidatorTest extends AbstractProjectTest
 {
@@ -16,6 +19,30 @@ public class ValidatorTest extends AbstractProjectTest
 
         DynamicProperty propertyStr = new DynamicProperty("name", "Name", Long.class, "2");
         validator.checkErrorAndCast(propertyStr);
+    }
+
+    @Test
+    public void testMulti() throws Exception
+    {
+        String[] value = {"val", "val2"};
+        DynamicProperty property = new DynamicProperty("name", "Name", String.class, value);
+        property.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+
+        validator.checkErrorAndCast(property);
+
+        assertArrayEquals(value, (Object[])property.getValue());
+    }
+
+    @Test
+    public void testMultiLong() throws Exception
+    {
+        String[] value = {"1", "3"};
+        DynamicProperty property = new DynamicProperty("name", "Name", Long.class, value);
+        property.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true);
+
+        validator.checkErrorAndCast(property);
+
+        assertArrayEquals(new Object[]{1L, 3L}, (Object[])property.getValue());
     }
 
     @Test(expected = NumberFormatException.class)

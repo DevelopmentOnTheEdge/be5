@@ -36,26 +36,43 @@ public class Validator
 
     public void checkErrorAndCast(DynamicProperty property)
     {
-        if(property.getValue() instanceof String && property.getType() != String.class)
+        try
         {
-            try
+            if(property.getValue() instanceof String && property.getType() != String.class)
             {
-                property.setValue(getTypedValueFromString(property));
+                property.setValue(getTypedValueFromString(property.getType(), property.getValue()));
             }
-            catch (IllegalArgumentException e)
+            else
             {
-                setError(property, e);
-                throw e;
+                if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+                {
+                    if(!(property.getValue() instanceof Object[]))
+                    {
+                        throw new IllegalArgumentException();
+                    }
+
+                    Object[] values = (Object[]) property.getValue();
+                    Object[] resValues = new Object[values.length];
+
+                    for (int i = 0; i < values.length; i++)
+                    {
+                        resValues[i] = getTypedValueFromString(property.getType(), values[i]);
+                    }
+                    property.setValue(resValues);
+                }
+                else
+                {
+                    if (property.getValue() == null || property.getType() != property.getValue().getClass())
+                    {
+                        throw new IllegalArgumentException();
+                    }
+                }
             }
         }
-        else
+        catch (IllegalArgumentException e)
         {
-            if (property.getValue() == null || property.getType() != property.getValue().getClass())
-            {
-                IllegalArgumentException e = new IllegalArgumentException();
-                setError(property, e);
-                throw e;
-            }
+            setError(property, e);
+            throw e;
         }
     }
 
@@ -80,10 +97,8 @@ public class Validator
         property.setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
-    private Object getTypedValueFromString(DynamicProperty property)
+    private Object getTypedValueFromString(Class<?> type, Object value)
     {
-        Class<?> type = property.getType();
-        Object value = property.getValue();
         if(value instanceof String)
         {
             if (type == Integer.class)
