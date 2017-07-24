@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -104,6 +105,7 @@ public class SqlHelper
         for (DynamicProperty property : dps)
         {
             if (property.getValue() == null) property.setValue(values.get(property.getName()));
+            if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
             if (property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
         }
 
