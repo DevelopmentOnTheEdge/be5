@@ -143,8 +143,8 @@ public class OperationTest extends AbstractProjectTest{
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperationProperty", "0", "{}"));
 
         assertEquals("{" +
-                        "'simpleNumber':''," +
                         "'simple':''," +
+                        "'simpleNumber':''," +
                         "'getOrDefault':'defaultValue'," +
                         "'getOrDefaultNumber':'3'}",
                 oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
@@ -163,8 +163,8 @@ public class OperationTest extends AbstractProjectTest{
                                 OperationSupport.reloadControl, "name"))));
 
         assertEquals("{" +
-                        "'simpleNumber':1," +
                         "'simple':'testName'," +
+                        "'simpleNumber':1," +
                         "'getOrDefault':'testName2'," +
                         "'getOrDefaultNumber':2}",
                 oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
