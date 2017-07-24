@@ -26,7 +26,7 @@ public class OperationRequest
     /**
      * Nullable
      */
-    public String get(String parameterName)
+    public Object get(String parameterName)
     {
         return req.getValues(RestApiConstants.VALUES).get(parameterName);
     }
@@ -34,7 +34,7 @@ public class OperationRequest
     /**
      * Returns an unordered map of values.
      */
-    public Map<String, String> getAll()
+    public Map<String, Object> getAll()
     {
         return req.getValues(RestApiConstants.VALUES);
     }

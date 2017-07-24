@@ -25,7 +25,7 @@ public interface Operation extends Serializable
 	 * 
 	 * @param presetValues - map of preset values
 	 */
-    Object getParameters(Map<String, String> presetValues) throws Exception;
+    Object getParameters(Map<String, Object> presetValues) throws Exception;
 
     /**
      * Invokes the operation with the specified parameters.

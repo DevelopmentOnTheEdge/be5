@@ -32,7 +32,7 @@ public class MoreRowsGenerator {
     public MoreRows generate(Request req) {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        Map<String, String> parametersMap = req.getValues(RestApiConstants.VALUES);
+        Map<String, String> parametersMap = req.getStringValues(RestApiConstants.VALUES);
         String startStr = req.getNonEmpty(RestApiConstants.START);
         String lengthStr = req.getNonEmpty(RestApiConstants.LENGTH);
         String drawStr = req.getNonEmpty(RestApiConstants.DRAW);

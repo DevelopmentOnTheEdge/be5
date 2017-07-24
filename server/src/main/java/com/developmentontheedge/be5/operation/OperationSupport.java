@@ -58,7 +58,7 @@ public abstract class OperationSupport implements Operation
     }
 
     @Override
-    public Object getParameters(Map<String, String> presetValues) throws Exception
+    public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         return null;
     }

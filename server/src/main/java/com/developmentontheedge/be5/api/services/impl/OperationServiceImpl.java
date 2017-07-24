@@ -50,7 +50,7 @@ public class OperationServiceImpl implements OperationService
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, String> presetValues = req.getValues(RestApiConstants.VALUES);
+        Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
         OperationInfo operationInfo = UserAwareMeta.get(injector).getOperation(entityName, queryName, operationName);
 
         return generate(entityName, queryName, operationName, selectedRowsString, operationInfo,
@@ -58,7 +58,7 @@ public class OperationServiceImpl implements OperationService
     }
 
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
-             String operationName, String selectedRowsString, OperationInfo meta, Map<String, String> presetValues, Request req)
+             String operationName, String selectedRowsString, OperationInfo meta, Map<String, Object> presetValues, Request req)
     {
         Operation operation = create(meta, selectedRows(selectedRowsString));
 
@@ -101,7 +101,7 @@ public class OperationServiceImpl implements OperationService
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, String> presetValues = req.getValues(RestApiConstants.VALUES);
+        Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
 
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
@@ -190,7 +190,7 @@ public class OperationServiceImpl implements OperationService
      * либо вы задаёте значение и вручную управляете её изменением в getParameters:
      * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
      */
-    private Object getParametersAndSetValueIfNull(Operation operation, Entity entity, Map<String, String> presetValues) {
+    private Object getParametersAndSetValueIfNull(Operation operation, Entity entity, Map<String, Object> presetValues) {
         try
         {
             Object parameters = operation.getParameters(presetValues);

@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -46,9 +47,54 @@ public class RequestImpl implements Request {
     	if(session != null)
     	    session.setAttribute(name, value);
     }
-    
+
     @Override
-    public Map<String, String> getValues(String parameter) throws Be5Exception {
+    public Map<String, Object> getValues(String parameter) throws Be5Exception {
+        String valuesString = get(parameter);
+        if(Strings.isNullOrEmpty(valuesString))
+        {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> fieldValues = new HashMap<>();
+
+        try
+        {
+            JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
+            for (Map.Entry entry: values.entrySet())
+            {
+                if(entry.getValue() instanceof JsonArray)
+                {
+                    JsonArray value = (JsonArray) entry.getValue();
+
+                    String[] arrValues = new String[value.size()];
+                    for (int i = 0; i < value.size(); i++)
+                    {
+                        arrValues[i] = value.get(i).getAsString();
+                    }
+
+                    fieldValues.put(entry.getKey().toString(), arrValues);
+                }
+                else if(entry.getValue() instanceof JsonElement)
+                {
+                    fieldValues.put(entry.getKey().toString(), ((JsonElement)entry.getValue()).getAsString());
+                }
+
+            }
+        }
+        catch (ClassCastException e)
+        {
+            throw Be5ErrorCode.PARAMETER_INVALID.rethrow(log, e, parameter, valuesString);
+        }
+        return fieldValues;
+    }
+
+
+    /**
+     * for query
+     */
+    @Override
+    public Map<String, String> getStringValues(String parameter) throws Be5Exception {
 		String valuesString = get(parameter);
 		if(Strings.isNullOrEmpty(valuesString))
 		{

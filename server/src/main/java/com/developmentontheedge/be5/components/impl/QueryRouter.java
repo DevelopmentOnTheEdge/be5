@@ -53,7 +53,7 @@ public class QueryRouter
         
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        Map<String, String> parametersMap = req.getValues(RestApiConstants.VALUES);
+        Map<String, String> parametersMap = req.getStringValues(RestApiConstants.VALUES);
         
         routeAndRun(entityName, queryName, parametersMap, runner);
     }

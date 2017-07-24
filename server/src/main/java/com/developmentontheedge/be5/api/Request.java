@@ -22,7 +22,9 @@ public interface Request extends SessionAccess, ParametersAccess {
      * @return read map
      * @throws Be5Exception if parameter has invalid format
      */
-    Map<String, String> getValues(String parameterName) throws Be5Exception;
+    Map<String, Object> getValues(String parameterName) throws Be5Exception;
+
+    Map<String, String> getStringValues(String parameterName) throws Be5Exception;
     
 	/**
      * Returns a remaining part of the request URI after the component ID.

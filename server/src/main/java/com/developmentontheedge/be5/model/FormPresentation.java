@@ -12,9 +12,9 @@ public class FormPresentation
     public final String title;
     public final String selectedRows;
     public final JsonObject bean;
-    public final Map<String, String> parameters;
+    public final Map<String, Object> parameters;
 
-    public FormPresentation(String entity, String query, String operation, String title, String selectedRows, JsonObject bean, Map<String, String> parameters)
+    public FormPresentation(String entity, String query, String operation, String title, String selectedRows, JsonObject bean, Map<String, Object> parameters)
     {
         this.entity = entity;
         this.query = query;
@@ -55,7 +55,7 @@ public class FormPresentation
         return bean;
     }
 
-    public Map<String, String> getParameters()
+    public Map<String, Object> getParameters()
     {
         return parameters;
     }

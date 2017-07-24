@@ -99,7 +99,7 @@ public class SqlHelper
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
-    public void setValues(DynamicPropertySet dps, Entity entity, Map<String, String> values)
+    public void setValues(DynamicPropertySet dps, Entity entity, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)
         {
@@ -110,9 +110,9 @@ public class SqlHelper
         setSpecialColumnsIfNullValue(dps);
     }
 
-    public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, String> values)
+    public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, ?> values)
     {
-        for (Map.Entry<String, String> entry: values.entrySet())
+        for (Map.Entry<String, ?> entry: values.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
             if( property!= null)

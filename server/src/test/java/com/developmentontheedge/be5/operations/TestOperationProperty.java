@@ -12,7 +12,7 @@ public class TestOperationProperty extends OperationSupport implements Operation
 {
 
     @Override
-    public Object getParameters(Map<String, String> presetValues) throws Exception
+    public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         dps.add(new DynamicProperty("simple", "Name", String.class));
         dps.add(new DynamicProperty("simpleNumber", "Number", Long.class));
