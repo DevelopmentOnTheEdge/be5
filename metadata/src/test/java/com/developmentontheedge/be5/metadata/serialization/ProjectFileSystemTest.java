@@ -31,6 +31,7 @@ public class ProjectFileSystemTest
         Map<Path, Boolean> map = EntryStream.of( pfs.getPaths() ).mapKeys( root::relativize ).toSortedMap();
         assertTrue( StreamEx
                 .of( "", "src", "src/js/extenders", "src/js/forms", "src/js/operations", "src/js/queries", "src/l10n", "src/meta/data",
+                        "src/groovy/operations",
                         "src/meta/entities", "src/pages" ).map( Paths::get ).noneMatch( map::get ) );
         assertTrue( StreamEx.of( "src/ftl", "src/include", "src/meta/modules" ).map( Paths::get ).allMatch( map::get ) );
     }
