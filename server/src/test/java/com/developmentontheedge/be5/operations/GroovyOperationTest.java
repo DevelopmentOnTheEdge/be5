@@ -47,7 +47,7 @@ public class GroovyOperationTest extends AbstractProjectTest{
                         "'/number':{" +
                         "'displayName':'Number'," +
                         "'type':'Long'," +
-                        "'tagList':[['A','a'],['B','b'],['C','c'],['D','d']]," +
+                        "'tagList':[['value','Label'],['value2','Label 2']]," +
                         "'reloadOnChange':true}}," +
                         "'order':['/name','/number']}",
                 oneQuotes(generate.getFirst().getBean().toString()));
@@ -67,7 +67,7 @@ public class GroovyOperationTest extends AbstractProjectTest{
                         "'/number':{" +
                         "'displayName':'Number'," +
                         "'type':'Long'," +
-                        "'tagList':[['A','a'],['B','b'],['C','c'],['D','d']]," +
+                        "'tagList':[['value','Label'],['value2','Label 2']]," +
                         "'reloadOnChange':true}}," +
                         "'order':['/name','/number']}",
                 oneQuotes(generate.getFirst().getBean().toString()));
