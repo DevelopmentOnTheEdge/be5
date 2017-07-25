@@ -35,41 +35,21 @@ public class GroovyOperationTest extends AbstractProjectTest{
     }
 
     @Test
-    public void test()
+    public void getParametersTest()
     {
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
 
         assertEquals("{" +
-                        "'values':{'name':'','number':'1'}," +
+                        "'values':{'name':'Test','beginDate':'2017-07-01','reason':'vacation','reasonMulti':['vacation','sick']}," +
                         "'meta':{" +
-                        "'/name':{'displayName':'Name'}," +
-                        "'/number':{" +
-                        "'displayName':'Number'," +
-                        "'type':'Long'," +
-                        "'tagList':[['value','Label'],['value2','Label 2']]," +
-                        "'reloadOnChange':true}}," +
-                        "'order':['/name','/number']}",
-                oneQuotes(generate.getFirst().getBean().toString()));
+                            "'/name':{'displayName':'Имя'}," +
+                            "'/beginDate':{'displayName':'Дата начала','type':'Date'}," +
+                            "'/reason':{'displayName':'Причина снятия предыдущего работника'," +
+                            "'tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]}," +
+                            "'/reasonMulti':{'displayName':'Множественный выбор','tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']],'multipleSelectionList':true}}," +
+                        "'order':['/name','/beginDate','/reason','/reasonMulti']" +
+                "}", oneQuotes(generate.getFirst().getBean().toString()));
     }
 
-    @Test
-    public void testParameters()
-    {
-        Either<FormPresentation, OperationResult> generate = operationService.generate(
-                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0",
-                        doubleQuotes("{'name':'testName','number':'2'}")));
-
-        assertEquals("{" +
-                        "'values':{'name':'testName','number':'2'}," +
-                        "'meta':{" +
-                        "'/name':{'displayName':'Name'}," +
-                        "'/number':{" +
-                        "'displayName':'Number'," +
-                        "'type':'Long'," +
-                        "'tagList':[['value','Label'],['value2','Label 2']]," +
-                        "'reloadOnChange':true}}," +
-                        "'order':['/name','/number']}",
-                oneQuotes(generate.getFirst().getBean().toString()));
-    }
 }
