@@ -1,9 +1,14 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public class OperationHelper
 {
@@ -68,26 +73,26 @@ public class OperationHelper
      * @throws IllegalArgumentException when an entity or a query is not defined
      * @throws Error if a found query cannot be compiled
      */
-//    public List<Option> formOptions(String tableName)
-//    {
-//        Optional<Query> foundQuery = meta.findQuery(tableName, DatabaseConstants.SELECTION_VIEW);
-//
-//        if (!foundQuery.isPresent())
-//            throw new IllegalArgumentException();
-//
-//        try
-//        {
-//            return db.selectList(foundQuery.get().getQueryCompiled().validate(), rs ->
-//                    new Option(rs.getString(1), rs.getString(2))
-//            );
-////TODO check and del return db.customSelect(foundQuery.get().getQueryCompiled().validate(), rs ->
-////                  new Option(rs.getString(1), rs.getString(2)));
-//        }
-//        catch (ProjectElementException e)
-//        {
-//            throw new Error();
-//        }
-//    }
+    public String[][] getTagsFromSelectionView(String tableName)
+    {
+        Optional<Query> foundQuery = meta.findQuery(tableName, DatabaseConstants.SELECTION_VIEW);
+
+        if (!foundQuery.isPresent())
+            throw new IllegalArgumentException();
+
+        try
+        {
+            List<String[]> tags = db.selectList(foundQuery.get().getQueryCompiled().validate(), rs ->
+                    new String[]{rs.getString(1), rs.getString(2)}
+            );
+            String[][] stockArr = new String[tags.size()][2];
+            return tags.toArray(stockArr);
+        }
+        catch (ProjectElementException e)
+        {
+            throw Be5Exception.internalInQuery(e, foundQuery.get());
+        }
+    }
 //
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String placeholder)
 //    {
