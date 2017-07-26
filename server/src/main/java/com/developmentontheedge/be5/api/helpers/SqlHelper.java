@@ -107,7 +107,7 @@ public class SqlHelper
         {
             if (property.getValue() == null) property.setValue(values.get(property.getName()));
             if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
-            if (property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
+            if (!entity.getName().startsWith("_") && property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
         }
 
         setSpecialColumnsIfNullValue(dps);
