@@ -45,8 +45,12 @@ context:
       interface:      com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
       implementation: com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
   - sqlHelper:
-      interface:      com.developmentontheedge.be5.api.services.SqlHelper
-      implementation: com.developmentontheedge.be5.api.services.SqlHelper
+      interface:      com.developmentontheedge.be5.api.helpers.SqlHelper
+      implementation: com.developmentontheedge.be5.api.helpers.SqlHelper
   - validator:
-      interface:      com.developmentontheedge.be5.api.services.Validator
-      implementation: com.developmentontheedge.be5.api.services.Validator
+      interface:      com.developmentontheedge.be5.api.helpers.Validator
+      implementation: com.developmentontheedge.be5.api.helpers.Validator
+  - operationHelper:
+      interface:      com.developmentontheedge.be5.api.helpers.OperationHelper
+      implementation: com.developmentontheedge.be5.api.helpers.OperationHelper
+

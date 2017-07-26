@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

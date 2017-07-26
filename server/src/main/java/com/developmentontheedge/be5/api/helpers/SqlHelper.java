@@ -1,8 +1,9 @@
-package com.developmentontheedge.be5.api.services;
+package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;

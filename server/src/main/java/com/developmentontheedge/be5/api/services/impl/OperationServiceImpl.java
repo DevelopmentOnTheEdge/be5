@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.Validator;
-import com.developmentontheedge.be5.api.services.SqlHelper;
+import com.developmentontheedge.be5.api.helpers.Validator;
+import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;

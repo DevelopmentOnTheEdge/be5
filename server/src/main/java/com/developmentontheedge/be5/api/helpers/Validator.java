@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.api.services;
+package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -8,8 +7,8 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.sql.Date;
 
-import static com.developmentontheedge.be5.api.services.Validator.Status.SUCCESS;
-import static com.developmentontheedge.be5.api.services.Validator.Status.ERROR;
+import static com.developmentontheedge.be5.api.helpers.Validator.Status.SUCCESS;
+import static com.developmentontheedge.be5.api.helpers.Validator.Status.ERROR;
 
 
 //TODO localize BeanInfoConstants.MESSAGE

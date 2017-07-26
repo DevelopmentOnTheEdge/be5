@@ -30,6 +30,7 @@ class TestGroovyOp extends OperationSupport implements Operation
                 TAG_LIST_ATTR: [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
                 DEFAULT_VALUE: "vacation"
         ]
+        //TODO add mock test TAG_LIST_ATTR: operationHelper.getTags("testtableAdmin", "value", "name")
 
         dps << [
                 name                   : "reasonMulti",
