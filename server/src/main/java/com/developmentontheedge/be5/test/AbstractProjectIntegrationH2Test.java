@@ -14,10 +14,10 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
 {
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 
+    private static final String profileForIntegrationTests = "profileForIntegrationTests";
+
     static {
         Project project = injector.getProject().getProject();
-
-        String profileForIntegrationTests = "profileForIntegrationTests";
 
         if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
         {
@@ -32,7 +32,7 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
                     profileForIntegrationTests));
         }
 
-        if("profileForIntegrationTests".equals(injector.getDatabaseService().getConnectionProfileName()))
+        if(profileForIntegrationTests.equals(injector.getDatabaseService().getConnectionProfileName()))
         {
             try
             {
