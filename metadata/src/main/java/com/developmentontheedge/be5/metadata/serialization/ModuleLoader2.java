@@ -134,8 +134,11 @@ public class ModuleLoader2
             }
         }
 
-        //todo create new not module project for tests?
-        project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
+        if(project == null)
+        {
+            //todo create new not module project for tests?
+            project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
+        }
 
         ModuleLoader2.mergeModules(project, new JULLogger(log));
 
