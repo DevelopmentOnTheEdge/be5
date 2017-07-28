@@ -133,10 +133,9 @@ public class ModuleLoader2
                 }
             }
         }
-        if(project == null && modulesMap.size() > 0){
-            //todo try load Project from directory (not in jar)
-            project = modulesMap.entrySet().iterator().next().getValue();
-        }
+
+        //todo create new not module project for tests?
+        project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
 
         ModuleLoader2.mergeModules(project, new JULLogger(log));
 
