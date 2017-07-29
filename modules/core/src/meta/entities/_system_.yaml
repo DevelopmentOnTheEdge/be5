@@ -1,10 +1,15 @@
 _system_:
   type: table
   displayName: System
-  order: '90'
+  order: '91'
   primaryKey: _dummy_
   queries:
   - Pool:
-      type: static
+      type: Groovy
       roles: Administrator
-      value: pool
+      file: Pool.groovy
+  - Dictionary Tables:
+      type: Groovy
+      roles: Administrator
+      file: DictionaryTables.groovy
+

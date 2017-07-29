@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model;
 
+@Deprecated
 public class FormTable
 {
 

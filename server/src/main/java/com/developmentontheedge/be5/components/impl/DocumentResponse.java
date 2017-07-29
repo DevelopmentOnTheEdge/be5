@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
@@ -56,11 +55,11 @@ public class DocumentResponse
         res.sendAsJson(FrontendConstants.OPERATION_RESULT, result);
     }
 
-    public void send(FormTable formTable)
-    {
-        checkNotNull(formTable);
-        res.sendAsJson("formTable", formTable);
-    }
+//    public void send(FormTable formTable)
+//    {
+//        checkNotNull(formTable);
+//        res.sendAsJson("formTable", formTable);
+//    }
 
     public void send(MoreRows moreRows)
     {

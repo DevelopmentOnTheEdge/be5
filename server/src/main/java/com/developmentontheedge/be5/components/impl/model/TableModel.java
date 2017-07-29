@@ -34,7 +34,7 @@ public class TableModel
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
-        private Builder(Query query, Map<String, String> parametersMap, Request req, Injector injector, boolean selectable)
+        private Builder(Query query, Map<String, String> parametersMap, Request req, boolean selectable, Injector injector)
         {
             this.query = query;
             this.selectable = selectable;
@@ -74,7 +74,7 @@ public class TableModel
 
             filterWithRoles(columns, rows);
 
-            return new TableModel( selectable, columns, rows, rows.size() < limit ? (long)rows.size() : null , hasAggregate);
+            return new TableModel( columns, rows, selectable, rows.size() < limit ? (long)rows.size() : null , hasAggregate);
         }
 
         /*
@@ -284,14 +284,14 @@ public class TableModel
 
     }
 
-    public static Builder from(Injector injector, Query query, Map<String, String> parametersMap, Request req)
+    public static Builder from(Query query, Map<String, String> parametersMap, Request req, Injector injector)
     {
-        return from(injector, query, parametersMap, req, false);
+        return from(query, parametersMap, req, false, injector);
     }
 
-    public static Builder from(Injector injector, Query query, Map<String, String> parametersMap, Request req, boolean selectable)
+    public static Builder from(Query query, Map<String, String> parametersMap, Request req, boolean selectable, Injector injector)
     {
-        return new Builder(query, parametersMap, req, injector, selectable);
+        return new Builder(query, parametersMap, req, selectable, injector);
     }
 
     public static class ColumnModel
@@ -299,7 +299,7 @@ public class TableModel
         private final String title;
         private final String name;
 
-        ColumnModel(String name, String title)
+        public ColumnModel(String name, String title)
         {
             Objects.requireNonNull( title );
             this.title = title;
@@ -326,7 +326,7 @@ public class TableModel
         /**
          * @param id can be null
          */
-        RowModel(String id, List<CellModel> cells)
+        public RowModel(String id, List<CellModel> cells)
         {
             Objects.requireNonNull( cells );
             this.id = id;
@@ -391,7 +391,7 @@ public class TableModel
         public final Object content;
         public final Map<String, Map<String, String>> options;
 
-        CellModel(Object content, Map<String, Map<String, String>> options)
+        public CellModel(Object content, Map<String, Map<String, String>> options)
         {
             this.content = content;
             this.options = options;
@@ -414,7 +414,7 @@ public class TableModel
     private final Long totalNumberOfRows;
     private final boolean hasAggregate;
 
-    private TableModel(boolean selectable, List<ColumnModel> columns, List<RowModel> rows, Long totalNumberOfRows, boolean hasAggregate)
+    public TableModel(List<ColumnModel> columns, List<RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
         this.selectable = selectable;
         this.columns = Collections.unmodifiableList( columns );

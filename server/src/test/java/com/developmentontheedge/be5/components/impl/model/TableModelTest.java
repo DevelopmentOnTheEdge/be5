@@ -26,7 +26,7 @@ public class TableModelTest extends AbstractProjectIntegrationH2Test
 
         Query query = injector.getProject().getEntity("testtable").getQueries().get("Sub Query");
         TableModel table = TableModel
-                .from(injector, query, new HashMap<>(), mock(Request.class), false)
+                .from(query, new HashMap<>(), mock(Request.class), false, injector)
                 .limit(20)
                 .build();
 

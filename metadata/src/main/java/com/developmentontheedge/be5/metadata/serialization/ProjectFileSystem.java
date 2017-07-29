@@ -156,7 +156,7 @@ public class ProjectFileSystem
         
         List<String> dirs = Arrays.asList( structure.getDataDir(), structure.getEntitiesDir(), structure.getJsExtendersDir(),
                 structure.getJsFormsDir(), structure.getJsOperationsDir(), structure.getJsQueriesDir(), structure.getL10nDir(),
-                structure.getGroovyOperationsDir(),
+                structure.getGroovyOperationsDir(), structure.getGroovyQueriesDir(),
                 structure.getPagesDir());
         StreamEx.of( dirs ).map( path -> resolve( root, path ) ).append( root ).forEach( p -> result.put( p, false ) );
         

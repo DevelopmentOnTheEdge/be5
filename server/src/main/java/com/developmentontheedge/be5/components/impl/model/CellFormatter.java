@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableList;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -80,7 +81,7 @@ public class CellFormatter
                 {
                     url = url.named(EntryStream.zip(cols.split(","), vals.split(",")).mapValues(varResolver::resolve).toMap());
                 }
-                return "<a href=\"#!"+url+"\">"+formattedContent+"</a>";
+                cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
             }
 
         }

@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.developmentontheedge.be5.components.impl.InitialRow;
-import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
 
 public class TablePresentation
 {
-
     public final String title;
     public final String category;
     public final String page;

@@ -74,37 +74,56 @@ public class DocumentGenerator implements Runner {
         DocumentResponse.of(res).send(getTablePresentation(query, parametersMap));
     }
 
-    TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
+    @Override
+    public void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel)
+    {
+        DocumentResponse.of(res).send(getTablePresentation(query, parametersMap, tableModel));
+    }
+
+    private TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap, TableModel table)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
-        //&& !Strings2.isNullOrEmpty( query.getEntity().getPrimaryKeyName() )
-        final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
         int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-        
+
         if (limit == 0)
         {
             limit = 20;
         }
-        
-        TableModel table = TableModel
-                .from(injector, query, parametersMap, req, selectable)
-                .limit(limit)
-                .build();
+
         List<Object> columns = table.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
-        List<InitialRow> rows = new InitialRowsBuilder(selectable).build(table);
+        List<InitialRow> rows = new InitialRowsBuilder(table.isSelectable()).build(table);
         Long totalNumberOfRows = table.getTotalNumberOfRows();
-        
-        String category = query.getEntity().getName();
-        String page = query.getName();
+
+        String entityName = query.getEntity().getName();
+        String queryName = query.getName();
         String localizedEntityTitle = userAwareMeta.getLocalizedEntityTitle(query.getEntity());
-        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(category, page);
+        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
         if( totalNumberOfRows == null )
-            totalNumberOfRows = TableModel.from(injector, query, parametersMap, req).count();
+            totalNumberOfRows = TableModel.from(query, parametersMap, req, injector).count();
 
-        return new TablePresentation(title, category, page, operations, selectable, columns, rows, limit,
+        return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, limit,
                 parametersMap, totalNumberOfRows, table.isHasAggregate());
+    }
+
+    TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
+    {
+        List<TableOperationPresentation> operations = collectOperations(query);
+        final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
+        int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
+
+        if (limit == 0)
+        {
+            limit = 20;
+        }
+
+        TableModel table = TableModel
+                .from(query, parametersMap, req, selectable, injector)
+                .limit(limit)
+                .build();
+
+        return getTablePresentation(query, parametersMap, table);
     }
     
     @Override

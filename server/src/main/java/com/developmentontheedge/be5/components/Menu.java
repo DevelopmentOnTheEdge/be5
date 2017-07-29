@@ -296,7 +296,7 @@ public class Menu implements Component {
         return generateMenu(injector, true, entityType);
     }
 
-    MenuResponse generateSimpleMenu(Injector injector, EntityType entityType) {
+    public MenuResponse generateSimpleMenu(Injector injector, EntityType entityType) {
         return generateMenu(injector, false, entityType);
     }
 

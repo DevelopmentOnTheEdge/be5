@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -8,6 +10,7 @@ import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.Queries;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.TableBuilder;
 
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +27,8 @@ public class QueryRouter
         void onForm(String entityName, Optional<String> queryName, String operationName, Operation operation, Map<String, String> presetValues);
         
         void onTable(Query query, Map<String, String> parametersMap);
+
+        void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel);
         
         void onParametrizedTable(Query query, Map<String, String> parametersMap);
         
@@ -39,9 +44,11 @@ public class QueryRouter
     private final Request req;
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
+    private final Injector injector;
     
     private QueryRouter(Request req, Injector injector)
     {
+        this.injector = injector;
         this.req = req;
         this.userAwareMeta = UserAwareMeta.get(injector);
         this.meta = injector.get(Meta.class);
@@ -87,6 +94,19 @@ public class QueryRouter
             else
             {
                 runner.onTable(query, parametersMap);
+            }
+            return;
+        case GROOVY:
+            String code = query.getQuery();
+            try
+            {
+                TableBuilder tableBuilder = (TableBuilder)GroovyRegister.parseClass(code).newInstance();
+                TableModel tableModel = tableBuilder.get(query, parametersMap, req, injector);
+                runner.onTable(query, parametersMap, tableModel);
+            }
+            catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+            {
+                throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
             }
             return;
         }
