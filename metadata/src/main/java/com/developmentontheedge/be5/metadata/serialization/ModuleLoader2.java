@@ -49,7 +49,7 @@ public class ModuleLoader2
             ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
                     ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
 
-            replaceURLtoSource(urls);
+            replaceAndAddURLtoSource(urls);
 
             for (URL url : urls)
             {
@@ -305,7 +305,7 @@ public class ModuleLoader2
      * For hot reload
      * @param urls projects URL
      */
-    private static void replaceURLtoSource(ArrayList<URL> urls)
+    private static void replaceAndAddURLtoSource(ArrayList<URL> urls)
     {
         try
         {
@@ -315,17 +315,25 @@ public class ModuleLoader2
             StringBuilder sb = new StringBuilder();
             sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
             boolean started = false;
-            for (int i = 0; i < urls.size(); i++)
+
+            for (Map.Entry<String, String> moduleSource : modulesSource.entrySet())
             {
-                for (Map.Entry<String, String> moduleSource : modulesSource.entrySet())
+                boolean used = false;
+                for (int i = 0; i < urls.size(); i++)
                 {
                     String name = getProjectName(urls.get(i));
                     if (name.equals(moduleSource.getKey()))
                     {
-                        started = true;
+                        used = started = true;
                         urls.set(i, Paths.get(moduleSource.getValue()).toUri().toURL());
-                        sb.append("\n - ").append(name).append(": ").append(urls.get(i));
+                        sb.append("\n - ").append(name).append(": ").append(urls.get(i)).append(" - replace");
                     }
+                }
+                if(!used)
+                {
+                    URL url = Paths.get(moduleSource.getValue()).toUri().toURL();
+                    urls.add(url);
+                    sb.append("\n - ").append(moduleSource.getKey()).append(": ").append(url).append(" - add");
                 }
             }
             sb.append("\n");

@@ -65,7 +65,7 @@ public abstract class Be5Mojo extends AbstractMojo
 
         if(be5Project == null)
         {
-            if( projectPath == null )
+            if (projectPath == null)
                 throw new MojoFailureException("Please specify projectPath attribute");
 
             getLog().info("Reading be5 project from '" + projectPath + "'...");
@@ -75,10 +75,20 @@ public abstract class Be5Mojo extends AbstractMojo
             {
                 be5Project.setDebugStream(System.err);
             }
+
+            try
+            {
+                ModuleLoader2.mergeModules(be5Project, logger);
+            }
+            catch (ProjectLoadException e)
+            {
+                e.printStackTrace();
+                throw new MojoFailureException(e.getMessage());
+            }
         }
-    	
+
         BeConnectionProfile profile = be5Project.getConnectionProfile();
-        if ( connectionUrl != null )
+        if (connectionUrl != null)
         {
             getLog().info("Using connection " + connectionUrl);
         }
@@ -86,45 +96,39 @@ public abstract class Be5Mojo extends AbstractMojo
         {
             String user = null;
             String password = null;
-         
-            if ( profile != null )
+
+            if (profile != null)
             {
                 connectionUrl = profile.getConnectionUrl();
                 user = profile.getUsername();
                 password = profile.getPassword();
             }
 
-            if ( connectionUrl == null )
+            if (connectionUrl == null)
             {
                 throw new MojoFailureException(
                         "Please specify connection profile: either create "
-                      + be5Project.getProjectFileStructure().getSelectedProfileFile()
-                      + " file with profile name or use -DBE5_PROFILE=..." );
+                                + be5Project.getProjectFileStructure().getSelectedProfileFile()
+                                + " file with profile name or use -DBE5_PROFILE=...");
             }
 
-            if ( user != null )
+            if (user != null)
             {
                 getLog().info("Using connection " + DatabaseUtils.formatUrl(connectionUrl, user, "xxxxx"));
                 connectionUrl = DatabaseUtils.formatUrl(connectionUrl, user, password);
-            } 
+            }
             else
             {
-                logger.setOperationName("Using connection "+connectionUrl);
+                logger.setOperationName("Using connection " + connectionUrl);
             }
-        } 
-        
-		this.be5Project.setDatabaseSystem( Rdbms.getRdbms(connectionUrl) );
+        }
+
+        this.be5Project.setDatabaseSystem(Rdbms.getRdbms(connectionUrl));
 
         this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
-					                             profile.getConnectionUrl(), 
-												 profile.getUsername(), profile.getPassword());
+                profile.getConnectionUrl(),
+                profile.getUsername(), profile.getPassword());
 
-        try {
-            ModuleLoader2.mergeModules(be5Project, logger);
-        } catch (ProjectLoadException e) {
-            e.printStackTrace();
-            throw new MojoFailureException(e.getMessage());
-        }
         getLog().info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
     

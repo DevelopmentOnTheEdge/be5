@@ -17,7 +17,7 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
     private static final String profileForIntegrationTests = "profileForIntegrationTests";
 
     static {
-        Project project = injector.getProject().getProject();
+        Project project = injector.getProject();
 
         if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
         {
