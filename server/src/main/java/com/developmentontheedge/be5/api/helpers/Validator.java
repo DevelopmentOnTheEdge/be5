@@ -39,7 +39,11 @@ public class Validator
         {
             if(property.getValue() instanceof String && property.getType() != String.class)
             {
-                property.setValue(getTypedValueFromString(property.getType(), property.getValue()));
+                if(property.isCanBeNull() && ((String) property.getValue()).length() == 0){
+                    property.setValue(null);
+                }else{
+                    property.setValue(getTypedValueFromString(property.getType(), property.getValue()));
+                }
             }
             else
             {
