@@ -101,7 +101,10 @@ public class SqlHelper
 
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
-        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+        DynamicProperty dynamicProperty = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+        if(columnDef.isCanBeNull())dynamicProperty.setCanBeNull(true);
+
+        return dynamicProperty;
     }
 
     public void setValues(DynamicPropertySet dps, Entity entity, Map<String, ?> values)
