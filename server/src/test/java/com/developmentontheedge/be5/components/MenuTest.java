@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components;
 
+import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -105,7 +106,7 @@ public class MenuTest extends AbstractProjectTest
     public void testGenerateSimpleMenu()
     {
         Menu menu = (Menu)component;
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector);
+        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
 
         assertEquals(true, menuResponse.loggedIn);
 
@@ -120,7 +121,7 @@ public class MenuTest extends AbstractProjectTest
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
 
         Menu menu = (Menu)component;
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector);
+        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
         assertEquals("Insert", menuResponse.root.get(1).getOperations().get(0).title);
         assertEquals(new Action("call", "form/dateTime/All records/Insert"),
                 menuResponse.root.get(1).getOperations().get(0).action);

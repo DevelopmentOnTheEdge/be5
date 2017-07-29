@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
+import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 
@@ -17,6 +18,8 @@ public interface Meta
      * ...sorted by localized title.
      */
     List<Entity> getOrderedEntities(String language);
+
+    List<Entity> getOrderedEntities(EntityType entityType, String language);
     
     /**
      * Returns an entity with by its name. Throws an exception if there's no entity with this name.

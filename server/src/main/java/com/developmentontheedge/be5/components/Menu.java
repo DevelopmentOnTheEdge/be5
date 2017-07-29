@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.impl.model.Queries;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static com.developmentontheedge.be5.metadata.model.EntityType.DICTIONARY;
 
 public class Menu implements Component {
 
@@ -272,13 +275,16 @@ public class Menu implements Component {
         switch (req.getRequestUri())
         {
         case "":
-            res.sendAsRawJson(generateSimpleMenu(injector));
+            res.sendAsRawJson(generateSimpleMenu(injector, EntityType.TABLE ));
+            return;
+        case "dictionary":
+            res.sendAsRawJson(generateSimpleMenu(injector, EntityType.DICTIONARY));
             return;
         case "withIds":
-            res.sendAsRawJson(generateMenuWithIds(injector));
+            res.sendAsRawJson(generateMenuWithIds(injector, EntityType.TABLE));
             return;
         case "defaultAction":
-            res.sendAsRawJson(getDefaultAction(injector));
+            res.sendAsRawJson(getDefaultAction(injector, EntityType.TABLE));
             return;
         default:
             res.sendUnknownActionError();
@@ -286,31 +292,31 @@ public class Menu implements Component {
         }
     }
 
-    MenuResponse generateMenuWithIds(Injector injector) {
-        return generateMenu(injector, true);
+    MenuResponse generateMenuWithIds(Injector injector, EntityType entityType) {
+        return generateMenu(injector, true, entityType);
     }
 
-    MenuResponse generateSimpleMenu(Injector injector) {
-        return generateMenu(injector, false);
+    MenuResponse generateSimpleMenu(Injector injector, EntityType entityType) {
+        return generateMenu(injector, false, entityType);
     }
 
-    private MenuResponse generateMenu(Injector injector, boolean withIds) {
+    private MenuResponse generateMenu(Injector injector, boolean withIds, EntityType entityType) {
         UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
         
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
         boolean loggedIn = UserInfoHolder.isLoggedIn();
-        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, withIds);
+        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, withIds, entityType);
         
         return new MenuResponse(loggedIn, entities);
     }
 
-    private Action getDefaultAction(Injector injector) {
+    private Action getDefaultAction(Injector injector, EntityType entityType) {
         UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
 
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
-        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, false);
+        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, false, entityType);
 
         for (RootNode rootNode: entities)
         {
@@ -348,14 +354,15 @@ public class Menu implements Component {
     /**
      * Adds all permitted queries to the root array.
      */
-    private List<RootNode> collectEntities(Meta meta, UserAwareMeta userAwareMeta, String language, List<String> roles, boolean withIds) {
+    private List<RootNode> collectEntities(Meta meta, UserAwareMeta userAwareMeta, String language, List<String> roles,
+                                           boolean withIds, EntityType entityType) {
         List<RootNode> out = new ArrayList<>();
         
-        for (Entity entity : meta.getOrderedEntities(language))
+        for (Entity entity : meta.getOrderedEntities(entityType, language))
         {
             collectEntityContent(entity, language, meta, userAwareMeta, roles, withIds, out);
         }
-        
+
         return out;
     }
 

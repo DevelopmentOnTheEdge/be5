@@ -141,6 +141,26 @@ public class MetaImpl implements Meta
         return entities.stream().map(e -> e.entity).collect(Collectors.toList());
     }
 
+    public List<Entity> getOrderedEntities(EntityType entityType, String language)
+    {
+        List<OrderedEntity> entities = new ArrayList<>();
+
+        for (Module module : getProject().getModulesAndApplication())
+        {
+            for (Entity entity : module.getEntities())
+            {
+                if (entity.getType() == entityType)
+                {
+                    entities.add(new OrderedEntity(entity, getTitle(entity, language)));
+                }
+            }
+        }
+
+        Collections.sort(entities);
+
+        return entities.stream().map(e -> e.entity).collect(Collectors.toList());
+    }
+
     /*
      * (non-Javadoc)
      * 
