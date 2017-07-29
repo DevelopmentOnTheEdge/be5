@@ -50,11 +50,11 @@ public class StandardOperationsTest extends AbstractProjectTest
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationService.generate(req).getSecond());
 
-        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", "1");
+        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
 
         operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records", "Delete",
                 "1,2,3", "")).getSecond();
-        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", "1", "2", "3");
+        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class StandardOperationsTest extends AbstractProjectTest
 
         FormPresentation first = operationService.generate(req).getFirst();
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq("1"));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
 
         assertEquals("{'name':'TestName','value':1}",
                 oneQuotes(first.getBean().getJsonObject("values").toString()));
@@ -142,10 +142,10 @@ public class StandardOperationsTest extends AbstractProjectTest
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq("1"));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
 
         verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
-                "EditName", 123, "1");
+                "EditName", 123, 1L);
     }
 
 }

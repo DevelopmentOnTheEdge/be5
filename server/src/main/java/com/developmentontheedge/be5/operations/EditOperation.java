@@ -17,7 +17,7 @@ public class EditOperation extends OperationSupport implements Operation
         Entity entity = getInfo().getEntity();
 
         dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
-                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), records[0]);
+                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), sqlHelper.castToType(entity, records[0]));
 
         sqlHelper.updateValuesWithSpecial(dps, presetValues);
 
@@ -27,8 +27,10 @@ public class EditOperation extends OperationSupport implements Operation
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.update(sqlHelper.generateUpdateSql(getInfo().getEntity(), dps),
-                ObjectArrays.concat(sqlHelper.getValues(dps), records[0]));
+        Entity entity = getInfo().getEntity();
+
+        db.update(sqlHelper.generateUpdateSql(entity, dps),
+                ObjectArrays.concat(sqlHelper.getValues(dps), sqlHelper.castToType(entity, records[0])));
     }
 
 }

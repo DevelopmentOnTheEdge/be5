@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -29,6 +30,7 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY;
 import static java.util.Collections.singletonList;
 
 public class SqlHelper
@@ -328,7 +330,7 @@ public class SqlHelper
         return sql + whereSql;
     }
 
-    public Object[] getDeleteValuesWithSpecial(Entity entity, Object[] values)
+    public Object[] getDeleteValuesWithSpecial(Entity entity, Object[] ids)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
@@ -351,7 +353,33 @@ public class SqlHelper
             }
         }
 
-        return ObjectArrays.concat(list.toArray(),values, Object.class);
+        ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
+
+        return ObjectArrays.concat(list.toArray(), castToType(primaryKeyColumn.getType(), ids), Object.class);
+    }
+
+    private Object[] castToType(SqlColumnType type, Object[] ids)
+    {
+        Object[] arr = new Object[ids.length];
+        for (int i = 0; i < ids.length; i++)
+        {
+            arr[i] = castToType(type, ids[i]);
+        }
+        return arr;
+    }
+
+    private Object castToType(SqlColumnType type, Object id)
+    {
+        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
+            return Long.parseLong(id.toString());
+        }
+        return id;
+    }
+
+    public Object castToType(Entity entity, Object id)
+    {
+        ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
+        return castToType(primaryKeyColumn.getType(), id);
     }
 
     private String quoteStr(String str)
