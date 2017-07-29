@@ -13,17 +13,17 @@ import java.util.Map;
 public class RecordModelBase extends DynamicPropertySetBlocked implements RecordModel
 {
     private final EntityModelBase entityModelBase;
-    private final Long id;
+    private final String id;
 
     RecordModelBase(EntityModelBase entityModelBase, DynamicPropertySet dps)
     {
         super( dps );
-        id = (Long) dps.getProperty(entityModelBase.getPrimaryKeyName()).getValue();
+        id = dps.getProperty(entityModelBase.getPrimaryKeyName()).getValue().toString();
         this.entityModelBase = entityModelBase;
     }
 
     @Override
-    public Long getId()
+    public String getId()
     {
         return id;
     }

@@ -91,7 +91,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         self.getQuery( queryName, values ).each( func );
     }
 
-    public static Long leftShift( EntityModel self, Map<String, String> values )
+    public static String leftShift( EntityModel self, Map<String, String> values )
     {
         return self.add( values );
     }
@@ -123,7 +123,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return ( ( EntityModel )object ).get( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
     }
 
-    public static Long leftShift( Object object, Map<String, String> values )
+    public static String leftShift( Object object, Map<String, String> values )
     {
         return ( ( EntityModel )object ).add( values );
     }
@@ -133,7 +133,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return self.get( values );
     }
 
-    public static RecordModel getAt( EntityModel self, Long id )
+    public static RecordModel getAt( EntityModel self, String id )
     {
         return self.get(id);
     }

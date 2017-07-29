@@ -127,7 +127,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public Long add( Map<String, String> values )
+    public String add( Map<String, String> values )
     {
         Objects.requireNonNull(values);
         return addForce( values );
@@ -140,9 +140,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public List<Long> addAll( final Collection<Map<String, String>> c )
+    public List<String> addAll( final Collection<Map<String, String>> c )
     {
-        final List<Long> keys = new ArrayList<>( c.size() );
+        final List<String> keys = new ArrayList<>( c.size() );
         for( Map<String, String> values : c )
         {
             keys.add( add( values ) );
@@ -158,26 +158,26 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public RecordModel get( Long id )
+    public RecordModel get( String id )
     {
         return get(Collections.singletonMap("id", "" + id));
     }
 
     @Override
-    public void set( Long id, String propertyName, String value )
+    public void set( String id, String propertyName, String value )
     {
         setForce( id, propertyName, value );
     }
 
     @Override
-    public int remove( Long firstId, final Long... otherId )
+    public int remove( String firstId, final String... otherId )
     {
         Objects.requireNonNull(firstId);
         return removeForce( firstId, otherId );
     }
 
     @Override
-    final public int removeForce( Long firstId, final Long... otherId )
+    final public int removeForce( String firstId, final String... otherId )
     {
         Objects.requireNonNull(firstId);
         return db.update(sqlHelper.generateDeleteInSql(entity, otherId.length + 1),
@@ -292,7 +292,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    final public Long addForce( Map<String, String> values )
+    final public String addForce( Map<String, String> values )
     {
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getDpsWithoutAutoIncrement(entity);
@@ -300,11 +300,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         validator.checkErrorAndCast(dps);
 
-        return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
+        return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps)).toString();
     }
 
     @Override
-    final public void setForce( Long id, String propertyName, String value )
+    final public void setForce( String id, String propertyName, String value )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
@@ -313,7 +313,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public void set( Long id, Map<String, String> values )
+    public void set( String id, Map<String, String> values )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
@@ -321,7 +321,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    final public void setForce( Long id, Map<String, String> values )
+    final public void setForce( String id, Map<String, String> values )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);

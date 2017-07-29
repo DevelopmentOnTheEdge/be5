@@ -64,7 +64,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values map with column names and values
      * @return generated record identify number
      */
-    Long add(Map<String, String> values);
+    String add(Map<String, String> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -73,7 +73,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values map with column names and values
      * @return generated record identify number
      */
-    Long addForce(Map<String, String> values);
+    String addForce(Map<String, String> values);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -89,14 +89,14 @@ public interface EntityModel<R extends RecordModel> {
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<Long> addAll(Collection<Map<String, String>> c);
+    List<String> addAll(Collection<Map<String, String>> c);
 
     /** 
      * Returns the record object with the specified id
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(Long id);
+    RecordModel get(String id);
 
     /** 
      * Returns the record object consistent with the specified condition, 
@@ -110,32 +110,32 @@ public interface EntityModel<R extends RecordModel> {
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( Long, String, String )}
+     * This method calls {@link #setForce( String, String, String )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
      */
-    void set(Long id, String propertyName, String value);
+    void set(String id, String propertyName, String value);
 
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( Long, Map )}
+     * This method calls {@link #setForce( String, Map )}
      * @param id identify number of record
      * @param values column names and values
      */
-    void set(Long id, Map<String, String> values);
+    void set(String id, Map<String, String> values);
     
     /**
      * Sets value to property with a specified name.<br>
      * This method may not contain any checks, it's just the method implementation.
-     * This method calls {@link #setForce( Long, Map )}
+     * This method calls {@link #setForce( String, Map )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
      */
-    void setForce(Long id, String propertyName, String value);
+    void setForce(String id, String propertyName, String value);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -143,13 +143,13 @@ public interface EntityModel<R extends RecordModel> {
      * @param id identify number of record
      * @param values new column names and values
      */
-    void setForce(Long id, Map<String, String> values);
+    void setForce(String id, Map<String, String> values);
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(Long, Long...)}
+     * This method calls {@link #removeForce(String, String...)}
      * @param c collection of conditions
      * @return <tt>true</tt> if all conditions has been used otherwise <tt>false</tt>
      */
@@ -159,7 +159,7 @@ public interface EntityModel<R extends RecordModel> {
      * Operation removes all the records, consistent with conditions.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(Long, Long...)} }
+     * This method calls {@link #removeForce(String, String...)} }
      * @param values conditions
      * @return count of deleted records
      */
@@ -169,11 +169,11 @@ public interface EntityModel<R extends RecordModel> {
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(Long, Long...)}
+     * This method calls {@link #removeForce(String, String...)}
      * @param id - record identifier numbers
      * @return <tt>true</tt> if the all record has been deleted otherwise <tt>false<tt>
      */
-    int remove(Long id, Long... otherId);
+    int remove(String id, String... otherId);
 
     /**
      * Deletes the record with the specified identifiers.<br>
@@ -181,7 +181,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param firstId first identify number of record
      * @param otherId other identify number of record
      */
-    int removeForce(Long firstId, Long... otherId);
+    int removeForce(String firstId, String... otherId);
 
     /**
      * Returns a list of records of current entity.

@@ -38,11 +38,16 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
     {
         assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
 
-        Long id = database.testtableAdmin << [
+        def id = database.testtableAdmin << [
                 "name": "TestName",
                 "value": "1"];
 
-        assertEquals(id, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+
+        database.testtableAdmin[id] << [
+                "value": "2"
+        ]
+        assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"));
 
         def testtableAdmin = database.testtableAdmin;
 

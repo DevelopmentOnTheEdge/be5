@@ -30,7 +30,6 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         }
     }
 
-
     public DynamicPropertySetMetaClass( Class<T> theClass )
     {
         super( theClass );
