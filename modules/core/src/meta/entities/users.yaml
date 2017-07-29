@@ -57,15 +57,10 @@ users:
             </if>
         ORDER BY 1
   - All records:
-      type: 1D
+      type: 1D_unknown
       roles: Administrator
-      operations:
-      - Delete
-      - Edit
-      - Insert
       code: |-
         SELECT
-          u.user_name AS "___ID",
           u.user_name AS "User",
           u.emailAddress,
           u.registrationDate,
@@ -77,15 +72,3 @@ users:
       type: static
       roles: Guest
       value: login
-  operations:
-  - Delete:
-      records: 2
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.DeleteOperation
-  - Edit:
-      records: 2
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.EditOperation
-  - Insert:
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.InsertOperation
