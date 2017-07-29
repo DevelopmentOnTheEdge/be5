@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -49,9 +47,9 @@ public class SqlHelper
         return setDpsValues(dps, resultSet);
     }
 
-    public DynamicPropertySet getDpsWithoutPrimaryKey(Entity entity, ResultSet resultSet)
+    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
     {
-        DynamicPropertySet dps = getDpsWithoutPrimaryKey(entity);
+        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
 
         return setDpsValues(dps, resultSet);
     }
@@ -76,10 +74,13 @@ public class SqlHelper
         return dps;
     }
 
-    public DynamicPropertySet getDpsWithoutPrimaryKey(Entity entity)
+    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
     {
         DynamicPropertySet dps = getDps(entity);
-        dps.remove(entity.getPrimaryKey());
+        if(meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
+        {
+            dps.remove(entity.getPrimaryKey());
+        }
         return dps;
     }
 

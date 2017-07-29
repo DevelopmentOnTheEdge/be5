@@ -26,7 +26,7 @@ public abstract class OperationSupport implements Operation
     private OperationInfo operationInfo;
     private OperationResult operationResult;
 
-    public Long[] records;
+    public String[] records;
 
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
@@ -34,7 +34,7 @@ public abstract class OperationSupport implements Operation
 
     @Override
     public final void initialize(Injector injector, OperationInfo operationInfo,
-                                 OperationResult operationResult, Long[] records)
+                                 OperationResult operationResult, String[] records)
     {
         this.injector = injector;
         this.databaseService = injector.getDatabaseService();

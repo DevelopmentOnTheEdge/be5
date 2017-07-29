@@ -8,18 +8,18 @@ public class OperationContext
     // Properties
     //
 
-    public final Long[] records;
+    public final String[] records;
     public final String queryName;
 
-    public OperationContext(Long[] records, String queryName)
+    public OperationContext(String[] records, String queryName)
     {
-        Objects.nonNull(records);
-        Objects.nonNull(queryName);
+        Objects.requireNonNull(records);
+        Objects.requireNonNull(queryName);
         this.records = records;
         this.queryName = queryName;
     }
 
-    public Long[] getRecordIDs()
+    public String[] getRecordIDs()
     {
         return records;
     }

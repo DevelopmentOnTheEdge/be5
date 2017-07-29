@@ -295,7 +295,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public Long addForce( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = sqlHelper.getDpsWithoutPrimaryKey(entity);
+        DynamicPropertySet dps = sqlHelper.getDpsWithoutAutoIncrement(entity);
         sqlHelper.setValues(dps, entity, values);
 
         validator.checkErrorAndCast(dps);
@@ -327,7 +327,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         Objects.requireNonNull(values);
 
         DynamicPropertySet parameters = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
-                rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), id);
+                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), id);
 
         sqlHelper.updateValuesWithSpecial(parameters, values);
 

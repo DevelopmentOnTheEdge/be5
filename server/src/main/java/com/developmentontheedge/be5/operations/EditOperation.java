@@ -16,8 +16,8 @@ public class EditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
-                rs -> sqlHelper.getDpsWithoutPrimaryKey(entity, rs), records[0]);
+        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
+                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), records[0]);
 
         sqlHelper.updateValuesWithSpecial(dps, presetValues);
 

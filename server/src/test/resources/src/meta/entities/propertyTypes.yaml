@@ -1,0 +1,36 @@
+propertyTypes:
+  type: dictionary
+  displayName: Property Types
+  primaryKey: CODE
+  scheme:
+    columns:
+    - CODE:
+        type: VARCHAR(2)
+        primaryKey: true
+    - name:
+        type: VARCHAR(100)
+  queries:
+  - '*** Selection view ***':
+      operations: Filter
+      code: SELECT CODE AS "Code", name AS "Name" FROM propertyTypes
+  - All records:
+      roles: '@AllRolesExceptGuest'
+      operations:
+      - Delete
+      - Edit
+      - Insert
+      code: |-
+        SELECT CODE AS "Code", name AS "Name"
+        FROM propertyTypes
+  operations:
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.DeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.EditOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.InsertOperation

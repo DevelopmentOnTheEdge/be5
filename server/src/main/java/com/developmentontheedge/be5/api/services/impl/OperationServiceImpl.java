@@ -156,7 +156,7 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
-    public Operation create(OperationInfo operationInfo, Long[] records) {
+    public Operation create(OperationInfo operationInfo, String[] records) {
         Operation operation;
         String code = operationInfo.getCode();
 
@@ -206,14 +206,8 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    Long[] selectedRows(String selectedRowsString){
-        if(selectedRowsString.trim().isEmpty())return new Long[0];
-
-        String[] split = selectedRowsString.split(",");
-        Long longs[] = new Long[split.length];
-        for (int i=0 ;i < split.length; i++){
-            longs[i] = Long.parseLong(split[i]);
-        }
-        return longs;
+    String[] selectedRows(String selectedRowsString){
+        if(selectedRowsString.trim().isEmpty())return new String[0];
+        return selectedRowsString.split(",");
     }
 }
