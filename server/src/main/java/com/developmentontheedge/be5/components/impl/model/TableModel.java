@@ -391,6 +391,12 @@ public class TableModel
         public final Object content;
         public final Map<String, Map<String, String>> options;
 
+        public CellModel(Object content)
+        {
+            this.content = content;
+            this.options = new HashMap<>();
+        }
+
         public CellModel(Object content, Map<String, Map<String, String>> options)
         {
             this.content = content;

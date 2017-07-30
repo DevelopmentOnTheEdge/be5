@@ -26,6 +26,7 @@ public interface Meta
      */
     Entity getEntity(String name);
 
+    List<String> getOperationNames(Entity entity);
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
@@ -67,6 +68,8 @@ public interface Meta
      * Throws an exception if there's no such query.
      */
     Query getQueryIgnoringRoles(String entity, String name);
+
+    List<String> getQueryNames(Entity entity);
     
     /**
      * Tries to find a query ignoring roles.

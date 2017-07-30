@@ -79,7 +79,7 @@ public class SqlHelper
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
     {
         DynamicPropertySet dps = getDps(entity);
-        if(meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
+        if(!entity.getPrimaryKey().contains("dummy") && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
         {
             dps.remove(entity.getPrimaryKey());
         }

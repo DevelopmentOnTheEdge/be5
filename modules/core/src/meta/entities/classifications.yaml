@@ -20,10 +20,7 @@ classifications:
         type: KEYTYPE
         canBeNull: true
         extras: module:attributes
-        reference:
-          to: import.ID
-          view: '*** Selection view ***'
-          extras: module:attributes
+        reference: import.ID
     - whoInserted___:
         type: VARCHAR(100)
         canBeNull: true
@@ -42,6 +39,7 @@ classifications:
   queries:
   - All records:
       type: 1D
+      roles: Administrator
       operations:
       - Clone
       - Delete

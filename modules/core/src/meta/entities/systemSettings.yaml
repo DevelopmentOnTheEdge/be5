@@ -17,3 +17,11 @@ systemSettings:
         columns:
         - section_name
         - setting_name
+  queries:
+  - All records:
+      type: 1D
+      roles: Administrator
+      code: |-
+        SELECT *
+        FROM systemSettings
+

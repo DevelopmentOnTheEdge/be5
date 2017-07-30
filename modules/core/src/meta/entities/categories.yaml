@@ -43,6 +43,7 @@ categories:
   queries:
   - '*** Selection view ***':
       type: 1D
+      roles: Administrator
       code: |-
         SELECT
                 c1.ID AS "Code",
@@ -81,6 +82,7 @@ categories:
              '{{{' ,c1.name ,'}}}' )
   - All records:
       type: 1D
+      roles: Administrator
       operations:
       - Clone
       - Delete

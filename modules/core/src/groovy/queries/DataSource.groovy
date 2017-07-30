@@ -2,7 +2,7 @@ import com.developmentontheedge.be5.components.impl.model.TableModel
 import com.developmentontheedge.be5.query.TableSupport
 
 
-class DataSourceParameters extends TableSupport
+class DataSource extends TableSupport
 {
     @Override
     TableModel get()

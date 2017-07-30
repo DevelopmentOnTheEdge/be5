@@ -1,15 +1,41 @@
 user_roles:
-  type: dictionary
-  primaryKey: ''
+  type: metadata
+  displayName: Role assignments
+  primaryKey: dummy
   scheme:
     columns:
     - user_name:
         type: VARCHAR(100)
+        reference: users
     - role_name:
         type: VARCHAR(100)
     indices:
-    - idx_ur_full:
+    - IDX_UR_FULL:
         unique: true
         columns:
         - user_name
         - role_name
+  queries:
+  - All records:
+      type: 1D_unknown
+      roles: Administrator
+      operations:
+      - Delete
+      - Insert
+      - Edit
+      code: |-
+        SELECT user_name, role_name
+        FROM user_roles
+  operations:
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.DeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.EditOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.InsertOperation
+

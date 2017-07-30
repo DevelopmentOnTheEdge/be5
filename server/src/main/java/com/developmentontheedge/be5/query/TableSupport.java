@@ -84,10 +84,5 @@ public abstract class TableSupport implements TableBuilder
     public TableModel getTable(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate){
         return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate);
     }
-//
-//    private final String emptyString = "";
-//    private String nullToStr(String s){
-//        if(s == null)return emptyString;
-//        return s;
-//    }
+
 }

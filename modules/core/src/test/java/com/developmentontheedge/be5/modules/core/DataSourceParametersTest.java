@@ -1,3 +1,5 @@
+package com.developmentontheedge.be5.modules.core;
+
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
@@ -15,7 +17,7 @@ public class DataSourceParametersTest extends AbstractProjectIntegrationH2Test
     {
         Query query = injector.getMeta()
                 .getQueryIgnoringRoles("_system_", "DataSource Parameters");
-//        TableModel tableModel = new DataSourceParameters().initialize(
+//        TableModel tableModel = new DataSource().initialize(
 //                injector.getMeta().getQueryIgnoringRoles("_system_", "DataSource Parameters"),
 //                new HashMap<>(),
 //                getMockRequest(""),

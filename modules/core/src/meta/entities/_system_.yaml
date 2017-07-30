@@ -4,10 +4,15 @@ _system_:
   order: '91'
   primaryKey: _dummy_
   queries:
-  - Dictionary Tables:
+  - Entities:
       type: Groovy
       roles: Administrator
-      file: DictionaryTables.groovy
+      file: Entities.groovy
+  - Queries:
+      type: Groovy
+      invisible: false
+      roles: Administrator
+      file: Queries.groovy
   - Session variables:
       type: Groovy
       roles: Administrator
@@ -24,8 +29,8 @@ _system_:
       type: Groovy
       roles: Administrator
       file: HttpHeaders.groovy
-  - DataSource Parameters:
+  - DataSource:
       type: Groovy
       roles: Administrator
-      file: DataSourceParameters.groovy
+      file: DataSource.groovy
 

@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,6 +39,7 @@ import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 
 public class MetaImpl implements Meta
 {
@@ -123,22 +125,7 @@ public class MetaImpl implements Meta
     @Override
     public List<Entity> getOrderedEntities(String language)
     {
-        List<OrderedEntity> entities = new ArrayList<>();
-
-        for (Module module : getProject().getModulesAndApplication())
-        {
-            for (Entity entity : module.getEntities())
-            {
-                if (entity.getType() == EntityType.TABLE)
-                {
-                    entities.add(new OrderedEntity(entity, getTitle(entity, language)));
-                }
-            }
-        }
-
-        Collections.sort(entities);
-
-        return entities.stream().map(e -> e.entity).collect(Collectors.toList());
+        return  getOrderedEntities(null, language);
     }
 
     public List<Entity> getOrderedEntities(EntityType entityType, String language)
@@ -149,7 +136,7 @@ public class MetaImpl implements Meta
         {
             for (Entity entity : module.getEntities())
             {
-                if (entity.getType() == entityType)
+                if (entityType == null || entity.getType() == entityType)
                 {
                     entities.add(new OrderedEntity(entity, getTitle(entity, language)));
                 }
@@ -245,6 +232,13 @@ public class MetaImpl implements Meta
             return menuName;
 
         return query.getName();
+    }
+
+    @Override
+    public List<String> getOperationNames(Entity entity)
+    {
+        return entity.getOperations().stream()
+                .map(BeModelElementSupport::getName).toList();
     }
 
     /*
@@ -352,6 +346,13 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    public List<String> getQueryNames(Entity entity)
+    {
+        return entity.getQueries().stream()
+                .map(BeModelElementSupport::getName).toList();
+    }
+
+    @Override
     public Optional<Query> findQuery(String entityName, String queryName)
     {
         Objects.requireNonNull(entityName);
@@ -383,6 +384,7 @@ public class MetaImpl implements Meta
     public Map<String, ColumnDef> getColumns(Entity entity)
     {
         BeModelElement scheme = entity.getAvailableElement("Scheme");
+        if(scheme == null) return new HashMap<>();
         BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
 
         return StreamSupport.stream(columns.spliterator(), false).collect(
