@@ -4,10 +4,6 @@ _system_:
   order: '91'
   primaryKey: _dummy_
   queries:
-  - Pool:
-      type: Groovy
-      roles: Administrator
-      file: Pool.groovy
   - Dictionary Tables:
       type: Groovy
       roles: Administrator
@@ -28,4 +24,8 @@ _system_:
       type: Groovy
       roles: Administrator
       file: HttpHeaders.groovy
+  - DataSource Parameters:
+      type: Groovy
+      roles: Administrator
+      file: DataSourceParameters.groovy
 

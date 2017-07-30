@@ -6,6 +6,7 @@ import com.developmentontheedge.dbms.DbmsConnector;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface DatabaseService extends DbmsConnector
 {
@@ -26,4 +27,6 @@ public interface DatabaseService extends DbmsConnector
     String getConnectionProfileName();
 
     String getUsername();
+
+    Map<String, String> getParameters();
 }

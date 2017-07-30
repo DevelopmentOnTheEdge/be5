@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -307,6 +308,22 @@ public class DatabaseServiceImpl implements DatabaseService
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public Map<String, String> getParameters()
+    {
+        Map<String, String> map = new TreeMap<>();
+        map.put("Active/Idle", bds.getNumActive() + " / " + bds.getNumIdle());
+        map.put("Username", bds.getUsername());
+        map.put("DefaultCatalog", bds.getDefaultCatalog());
+        map.put("DriverClassName", bds.getDriverClassName());
+        map.put("Url", bds.getUrl());
+        map.put("JmxName", bds.getJmxName());
+        map.put("ValidationQuery", bds.getValidationQuery());
+        map.put("EvictionPolicyClassName", bds.getEvictionPolicyClassName());
+        map.put("ConnectionInitSqls", bds.getConnectionInitSqls().toString());
+
+        return map;
     }
 
 }

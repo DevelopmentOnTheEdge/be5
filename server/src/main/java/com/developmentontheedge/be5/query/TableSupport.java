@@ -33,9 +33,12 @@ public abstract class TableSupport implements TableBuilder
     {
         List<TableModel.ColumnModel> columns = new ArrayList<>();
         columns.add(new TableModel.ColumnModel(firstName, firstName));
-        for (String columnName : columnNames)
+        if(columnNames != null)
         {
-            columns.add(new TableModel.ColumnModel(columnName, columnName));
+            for (String columnName : columnNames)
+            {
+                columns.add(new TableModel.ColumnModel(columnName, columnName));
+            }
         }
         return columns;
     }
@@ -44,9 +47,12 @@ public abstract class TableSupport implements TableBuilder
     {
         List<TableModel.CellModel> columns = new ArrayList<>();
         columns.add(new TableModel.CellModel(firstContent, Collections.EMPTY_MAP));
-        for (String content : contents)
+        if(contents != null)
         {
-            columns.add(new TableModel.CellModel(content, Collections.EMPTY_MAP));
+            for (String content : contents)
+            {
+                columns.add(new TableModel.CellModel(content, Collections.EMPTY_MAP));
+            }
         }
         return columns;
     }
@@ -78,4 +84,10 @@ public abstract class TableSupport implements TableBuilder
     public TableModel getTable(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate){
         return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate);
     }
+//
+//    private final String emptyString = "";
+//    private String nullToStr(String s){
+//        if(s == null)return emptyString;
+//        return s;
+//    }
 }

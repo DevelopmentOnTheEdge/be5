@@ -83,12 +83,6 @@ public class DocumentGenerator implements Runner {
     private TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap, TableModel table)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
-        int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-
-        if (limit == 0)
-        {
-            limit = 20;
-        }
 
         List<Object> columns = table.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
         List<InitialRow> rows = new InitialRowsBuilder(table.isSelectable()).build(table);
@@ -103,7 +97,7 @@ public class DocumentGenerator implements Runner {
         if( totalNumberOfRows == null )
             totalNumberOfRows = TableModel.from(query, parametersMap, req, injector).count();
 
-        return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, limit,
+        return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, table.getRows().size(),
                 parametersMap, totalNumberOfRows, table.isHasAggregate());
     }
 

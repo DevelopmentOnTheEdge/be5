@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
@@ -109,7 +110,7 @@ public class QueryRouter
             }
             catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
             {
-                throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                throw Be5Exception.internal(e);
             }
             return;
         }
