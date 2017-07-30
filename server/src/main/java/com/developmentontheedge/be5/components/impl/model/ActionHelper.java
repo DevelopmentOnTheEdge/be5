@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.util.HashLink;
 import com.developmentontheedge.be5.util.HashLinks;
 import com.developmentontheedge.be5.util.HashUrl;
 
-final public class Queries 
+final public class ActionHelper
 {
     
     public static Action toAction(Query query) 
@@ -76,7 +76,7 @@ final public class Queries
     
     private static final Pattern ACTION_PATTERN = Pattern.compile("^\\w+$");
     
-    private Queries() 
+    private ActionHelper()
     {
         throw new IllegalStateException("Must not be instantiated");
     }

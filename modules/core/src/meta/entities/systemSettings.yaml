@@ -19,9 +19,9 @@ systemSettings:
         - setting_name
   queries:
   - All records:
-      type: 1D
+      type: 1D_unknown
       roles: Administrator
       code: |-
-        SELECT *
+        SELECT section_name,setting_name,setting_value
         FROM systemSettings
 

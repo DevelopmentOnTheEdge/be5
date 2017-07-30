@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.RestApiConstants;
-import com.developmentontheedge.be5.components.impl.model.Queries;
+import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
@@ -74,7 +74,7 @@ public class QueryRouter
         switch (query.getType())
         {
         case STATIC:
-            if (Queries.isStaticPage(query))
+            if (ActionHelper.isStaticPage(query))
             {
                 runner.onStatic(query);
                 return;
