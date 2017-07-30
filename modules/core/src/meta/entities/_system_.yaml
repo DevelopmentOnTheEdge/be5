@@ -12,4 +12,9 @@ _system_:
       type: Groovy
       roles: Administrator
       file: DictionaryTables.groovy
+  - Session variables:
+      type: Groovy
+      roles: Administrator
+      file: SessionVariables.groovy
+
 

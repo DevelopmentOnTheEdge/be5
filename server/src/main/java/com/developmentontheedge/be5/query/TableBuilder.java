@@ -9,5 +9,7 @@ import java.util.Map;
 
 public interface TableBuilder
 {
-    TableModel get(Query query, Map<String, String> parametersMap, Request req, Injector injector);
+    TableBuilder initialize(Query query, Map<String, String> parametersMap, Request req, Injector injector);
+
+    TableModel get();
 }

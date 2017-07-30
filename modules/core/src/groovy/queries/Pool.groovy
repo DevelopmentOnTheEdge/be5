@@ -1,12 +1,16 @@
-package queries
+import com.developmentontheedge.be5.components.impl.model.TableModel
+import com.developmentontheedge.be5.query.TableSupport
 
-import com.developmentontheedge.be5.metadata.model.Query
-import com.developmentontheedge.be5.model.TablePresentation
-
-class Pool
+class Pool extends TableSupport
 {
-    TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
+    @Override
+    TableModel get()
     {
-        return null;
+        def statistics = injector.getDatabaseService().getConnectionsStatistics()
+
+        columns = getColumns("statistics")
+        rows.add(getRow(getCells(statistics)))
+
+        return getTable(columns, rows)
     }
 }

@@ -129,4 +129,14 @@ public class UserInfo implements Serializable
         currentRoles = StreamEx.of(roles).filter(role -> availableRoles.contains(role)).toList();
     }
 
+    @Override
+    public String toString()
+    {
+        return "UserInfo{" +
+                "userName='" + userName + '\'' +
+                ", locale=" + locale +
+                ", timeZone=" + timeZone +
+                ", remoteAddr='" + remoteAddr + '\'' +
+                '}';
+    }
 }

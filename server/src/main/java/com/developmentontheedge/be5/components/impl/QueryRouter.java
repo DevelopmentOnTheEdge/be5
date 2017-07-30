@@ -101,7 +101,10 @@ public class QueryRouter
             try
             {
                 TableBuilder tableBuilder = (TableBuilder)GroovyRegister.parseClass(code).newInstance();
-                TableModel tableModel = tableBuilder.get(query, parametersMap, req, injector);
+                TableModel tableModel = tableBuilder
+                        .initialize(query, parametersMap, req, injector)
+                        .get();
+
                 runner.onTable(query, parametersMap, tableModel);
             }
             catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
