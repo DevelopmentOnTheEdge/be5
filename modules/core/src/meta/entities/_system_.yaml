@@ -16,5 +16,16 @@ _system_:
       type: Groovy
       roles: Administrator
       file: SessionVariables.groovy
-
+  - Threads:
+      type: Groovy
+      roles: Administrator
+      file: Threads.groovy
+  - System Properties:
+      type: Groovy
+      roles: Administrator
+      file: SystemProperties.groovy
+  - Http Headers:
+      type: Groovy
+      roles: Administrator
+      file: HttpHeaders.groovy
 
