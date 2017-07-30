@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core;
+package com.developmentontheedge.be5.modules.core.groovy;
 
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -10,13 +10,13 @@ import java.util.HashMap;
 import static org.junit.Assert.assertTrue;
 
 
-public class DataSourceParametersTest extends AbstractProjectIntegrationH2Test
+public class DataSourceQueryTest extends AbstractProjectIntegrationH2Test
 {
     @Test
     public void get() throws Exception
     {
         Query query = injector.getMeta()
-                .getQueryIgnoringRoles("_system_", "DataSource Parameters");
+                .getQueryIgnoringRoles("_system_", "DataSource");
 //        TableModel tableModel = new DataSource().initialize(
 //                injector.getMeta().getQueryIgnoringRoles("_system_", "DataSource Parameters"),
 //                new HashMap<>(),

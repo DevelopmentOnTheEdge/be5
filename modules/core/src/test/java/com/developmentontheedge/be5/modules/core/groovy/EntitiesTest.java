@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core;
+package com.developmentontheedge.be5.modules.core.groovy;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
