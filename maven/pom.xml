@@ -39,7 +39,7 @@
 
 		<dependency>
 			<groupId>com.developmentontheedge</groupId>
-			<artifactId>dbms</artifactId>
+			<artifactId>be5-dbms</artifactId>
 			<version>0.1.0</version>
 		</dependency>
 
