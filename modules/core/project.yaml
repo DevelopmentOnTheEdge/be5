@@ -9,9 +9,11 @@ core:
   - _system_
   - categories
   - classifications
+  - countries
   - icons
   - languages
   - mimeTypes
+  - provinces
   - sequences
   - systemSettings
   - table_refs
@@ -20,9 +22,11 @@ core:
   scripts:
   - Post-db
   - Pre-db
+  - dict/countries
   - dict/languages
   - dict/mimeTypes
   - dict/systemSettings
+  - dict/provinces
   - dictionaries
   - procedures_oracle
   - procedures_postgres
