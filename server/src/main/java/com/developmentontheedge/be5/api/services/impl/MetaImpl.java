@@ -423,8 +423,6 @@ public class MetaImpl implements Meta
                 return Integer.class;
             case SqlColumnType.TYPE_DECIMAL:
                 return Double.class;
-            case SqlColumnType.TYPE_BOOL:
-                return Boolean.class;
             case SqlColumnType.TYPE_DATE:
                 return Date.class;
             case SqlColumnType.TYPE_TIMESTAMP:

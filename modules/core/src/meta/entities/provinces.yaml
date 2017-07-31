@@ -1,0 +1,62 @@
+provinces:
+  type: dictionary
+  displayName: Provinces
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: VARCHAR(30)
+        primaryKey: true
+    - countryID:
+        type: CHAR(2)
+        reference:
+          to: countries
+          view: All records
+    - name:
+        type: VARCHAR(255)
+    indices:
+    - IDX_PROVINCES_CID:
+        columns: countryID
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      operations: Filter
+      code: SELECT p.ID AS Code, ${concat( 'p.countryID', ' - '?str, 'p.name' )} AS Name FROM provinces p ORDER BY p.countryID, p.name
+  - All records:
+      type: 1D
+      roles: Administrator
+      operations:
+      - Clone
+      - Delete
+      - Edit
+      - Explain Plan
+      - Filter
+      - Insert
+      code: SELECT p.name AS Name, c.name AS Country FROM provinces p LEFT JOIN countries c ON p.countryID = c.ID
+  operations:
+  - Clone:
+      records: 1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+  - Explain Plan:
+      type: Java and .Net
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.ExplainPlan
+  - Filter:
+      records: -1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+  - Insert:
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+  - PermaLink:
+      records: 1
+      code: com.beanexplorer.enterprise.operations.PermaLink

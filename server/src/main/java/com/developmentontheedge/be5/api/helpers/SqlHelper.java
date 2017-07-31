@@ -298,7 +298,7 @@ public class SqlHelper
 
     public String generateUpdateSql(Entity entity, DynamicPropertySet dps)
     {
-        Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(entity.getName()).set(valuePlaceholders)

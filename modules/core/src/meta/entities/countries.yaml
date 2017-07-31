@@ -1,0 +1,60 @@
+countries:
+  type: dictionary
+  displayName: Countries
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: CHAR(2)
+        primaryKey: true
+    - name:
+        type: VARCHAR(60)
+    - telCode:
+        type: VARCHAR(10)
+        canBeNull: true
+  queries:
+  - '*** Selection view ***':
+      type: 1D
+      operations: Filter
+      code: SELECT ID AS "Code", name AS "Name" FROM countries
+  - All records:
+      type: 1D
+      roles: '@AllRolesExceptGuest'
+      operations:
+      - Clone
+      - Delete
+      - Edit
+      - Explain Plan
+      - Filter
+      - Insert
+      code: |-
+        SELECT ID AS "Code", name AS "Name"
+          , telCode AS "Dial. Code"
+         FROM countries
+  operations:
+  - Clone:
+      records: 1
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentCloneOperation
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentDeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentEditOperation
+  - Explain Plan:
+      type: Java and .Net
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.ExplainPlan
+  - Filter:
+      records: -1
+      roles: '@AllRolesExceptGuest'
+      code: com.beanexplorer.enterprise.operations.HttpSearchOperation
+  - Insert:
+      roles: Administrator
+      code: com.beanexplorer.enterprise.operations.SilentInsertOperation
+  - PermaLink:
+      records: 1
+      code: com.beanexplorer.enterprise.operations.PermaLink
