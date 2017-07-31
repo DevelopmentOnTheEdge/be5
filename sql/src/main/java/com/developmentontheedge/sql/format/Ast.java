@@ -73,13 +73,7 @@ public class Ast
 
         public AstInsert values(Object... values)
         {
-            AstFieldReference[] columnsNodes = Arrays.stream(columns).map(x -> {
-                if(x instanceof AstFieldReference)return x;
-                else {
-                    String column = (String) x;
-                    return new AstFieldReference(column, column.startsWith("_"));
-                }
-            }).toArray(AstFieldReference[]::new);
+            AstFieldReference[] columnsNodes = Arrays.stream(columns).map(Ast::getAstFieldReference).toArray(AstFieldReference[]::new);
 
             SimpleNode[] valuesNodes = Arrays.stream(values).map(Ast::valueMapper).toArray(SimpleNode[]::new);
 
@@ -96,12 +90,12 @@ public class Ast
             this.tableName = tableName;
         }
 
-        public AstUpdate set(Map<String, Object> values)
+        public AstUpdate set(Map<Object, Object> values)
         {
             assert values != null && values.size() > 0;
 
             AstUpdateSetItem[] setItems = values.entrySet().stream().map(x ->
-                    new AstUpdateSetItem(new AstFieldReference(x.getKey()), valueMapper(x.getValue()))
+                    new AstUpdateSetItem(getAstFieldReference(x.getKey()), valueMapper(x.getValue()))
             ).toArray(AstUpdateSetItem[]::new);
 
             return new AstUpdate(new AstTableName(tableName), new AstUpdateSetList(setItems));
@@ -116,6 +110,14 @@ public class Ast
             return new AstStringConstant((String) x);
         }
         return new AstNumericConstant((Number) x);
+    }
+
+    static AstFieldReference getAstFieldReference(Object column){
+        if(column instanceof AstFieldReference)return (AstFieldReference)column;
+        else {
+            String stringColumn = (String) column;
+            return new AstFieldReference(stringColumn, stringColumn.startsWith("_"));
+        }
     }
 
     public static ColumnList select(AstDerivedColumn... columns)

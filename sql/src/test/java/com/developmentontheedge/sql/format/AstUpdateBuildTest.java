@@ -1,5 +1,6 @@
 package com.developmentontheedge.sql.format;
 
+import com.developmentontheedge.sql.model.AstFieldReference;
 import com.developmentontheedge.sql.model.AstUpdate;
 import org.junit.Test;
 
@@ -20,9 +21,25 @@ public class AstUpdateBuildTest
     }
 
     @Test
+    public void testAstFieldReference()
+    {
+        AstUpdate update = Ast.update("users").set(Collections.singletonMap(new AstFieldReference("___name", true), "Test"));
+
+        assertEquals("UPDATE users SET \"___name\"='Test'", update.format());
+    }
+
+    @Test
+    public void testEscapedColumns()
+    {
+        AstUpdate update = Ast.update("users").set(Collections.singletonMap("___name", "Test"));
+
+        assertEquals("UPDATE users SET \"___name\"='Test'", update.format());
+    }
+
+    @Test
     public void testMany()
     {
-        HashMap<String, Object> map = new HashMap<>();
+        HashMap<Object, Object> map = new HashMap<>();
         map.put("count", 4);
         map.put("name", "?");
 
