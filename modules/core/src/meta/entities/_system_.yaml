@@ -10,7 +10,7 @@ _system_:
       file: Entities.groovy
   - Queries:
       type: Groovy
-      invisible: false
+      invisible: true
       roles: Administrator
       file: Queries.groovy
   - Session variables:
