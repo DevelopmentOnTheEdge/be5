@@ -51,7 +51,7 @@ public class Validator
                 {
                     if(!(property.getValue() instanceof Object[]))
                     {
-                        throw new IllegalArgumentException();
+                        throw new IllegalArgumentException(property.toString());
                     }
 
                     Object[] values = (Object[]) property.getValue();
@@ -65,14 +65,21 @@ public class Validator
                 }
                 else
                 {
-                    if (property.getValue() == null || property.getType() != property.getValue().getClass())
+                    if (property.getValue() == null){
+                        if(!property.isCanBeNull())throw new NullPointerException(property.toString() + " - can not be null");
+                    }
+                    else
                     {
-                        throw new IllegalArgumentException();
+                        if (property.getType() != property.getValue().getClass())
+                        {
+                            throw new IllegalArgumentException(property.toString() +
+                                    " type must be " + property.getValue().getClass().toString());
+                        }
                     }
                 }
             }
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
             setError(property, e);
             throw e;
