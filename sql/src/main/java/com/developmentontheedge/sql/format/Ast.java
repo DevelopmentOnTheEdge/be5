@@ -73,9 +73,13 @@ public class Ast
 
         public AstInsert values(Object... values)
         {
-            AstFieldReference[] columnsNodes = Arrays.stream(columns).map(x ->
-                    (AstFieldReference) ((x instanceof AstFieldReference) ? x : new AstFieldReference((String) x))
-            ).toArray(AstFieldReference[]::new);
+            AstFieldReference[] columnsNodes = Arrays.stream(columns).map(x -> {
+                if(x instanceof AstFieldReference)return x;
+                else {
+                    String column = (String) x;
+                    return new AstFieldReference(column, column.startsWith("_"));
+                }
+            }).toArray(AstFieldReference[]::new);
 
             SimpleNode[] valuesNodes = Arrays.stream(values).map(Ast::valueMapper).toArray(SimpleNode[]::new);
 

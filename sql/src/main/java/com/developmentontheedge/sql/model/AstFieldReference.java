@@ -15,6 +15,11 @@ public class AstFieldReference extends SimpleNode
         this(new AstIdentifierConstant( fieldName, false ));
     }
 
+    public AstFieldReference(String fieldName, boolean quote)
+    {
+        this(new AstIdentifierConstant( fieldName, quote ));
+    }
+
     public AstFieldReference(AstIdentifierConstant fieldName)
     {
         this(SqlParserTreeConstants.JJTFIELDREFERENCE);

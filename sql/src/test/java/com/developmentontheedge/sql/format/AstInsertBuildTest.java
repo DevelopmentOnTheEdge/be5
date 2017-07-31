@@ -26,6 +26,14 @@ public class AstInsertBuildTest {
     }
 
     @Test
+    public void testEscapedColumns()
+    {
+        AstInsert insert = Ast.insert("users").fields("___name").values("Test");
+
+        assertEquals("INSERT INTO users (\"___name\") VALUES ('Test')", insert.format());
+    }
+
+    @Test
     public void testStringReplacementParameter()
     {
         AstInsert insert = Ast.insert("users").fields("name", "value").values("?", "?");

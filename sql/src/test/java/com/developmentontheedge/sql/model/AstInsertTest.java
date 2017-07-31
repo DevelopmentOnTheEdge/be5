@@ -21,6 +21,13 @@ public class AstInsertTest
     }
 
     @Test
+    public void testEscapedColumns()
+    {
+        String query = "INSERT INTO users (\"___name\", value) VALUES (\"Test\", 1)";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
+    @Test
     public void testReplacementParameter()
     {
         String query = "INSERT INTO users (name, value) VALUES (?, ?)";
