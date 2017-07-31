@@ -2,11 +2,11 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
 
- <artifactId>dbms</artifactId>
+ <artifactId>be5-dbms</artifactId>
  <version>0.1.0</version>
  <packaging>jar</packaging>
 
- <name>DBMS helpers</name>
+ <name>be5 DBMS helpers</name>
  <description>DOTE DBMS helpers</description>
 
  <parent>

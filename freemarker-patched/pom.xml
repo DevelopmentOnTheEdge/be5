@@ -2,11 +2,11 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
 
- <artifactId>freemarker-patched</artifactId>
+ <artifactId>be5-freemarker-patched</artifactId>
  <version>2.3.20p3</version>
  <packaging>jar</packaging>
 
- <name>Patched Freemarker</name>
+ <name>be5 Patched Freemarker</name>
  <description>Freemarker with DOTE-specific patches</description>
 
  <parent>
