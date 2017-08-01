@@ -3,7 +3,9 @@ package src.groovy.operations
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
-import com.developmentontheedge.be5.util.DateUtils
+
+import java.sql.Date
+import java.text.SimpleDateFormat
 
 class TestGroovyOp extends OperationSupport implements Operation
 {
@@ -17,11 +19,14 @@ class TestGroovyOp extends OperationSupport implements Operation
                 DEFAULT_VALUE: "Test"
         ]
 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
+        java.util.Date utilDate = df.parse("2017-07-01")
+
         dps << [
                 name         : "beginDate",
                 DISPLAY_NAME : "Дата начала",
-                TYPE         : java.sql.Date,
-                DEFAULT_VALUE: DateUtils.curMonthBegin()
+                TYPE         : Date,
+                DEFAULT_VALUE: new Date(utilDate.getTime())
         ]
 
         dps << [
