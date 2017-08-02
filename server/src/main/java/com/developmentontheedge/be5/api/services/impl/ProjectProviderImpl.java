@@ -1,7 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
+import com.developmentontheedge.be5.api.services.CacheInfo;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
@@ -12,11 +15,15 @@ import java.io.IOException;
 public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
+    private Injector injector;
 
     private WatchDir watcher = null;
     private volatile boolean dirty = false;
 
-    public ProjectProviderImpl(LogConfigurator logConfigurator){}
+    public ProjectProviderImpl(LogConfigurator logConfigurator, Injector injector)
+    {
+        this.injector = injector;
+    }
 
     @Override
     synchronized public Project getProject()
@@ -24,7 +31,9 @@ public class ProjectProviderImpl implements ProjectProvider
     	if(dirty || project == null)
     	{
 			project = loadProject();
-    	}
+            CacheInfo.clearAll();
+            UserAwareMetaImpl.reCompileLocalizations(injector);
+        }
 
     	return project;
     }

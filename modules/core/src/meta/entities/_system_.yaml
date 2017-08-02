@@ -4,6 +4,10 @@ _system_:
   order: '91'
   primaryKey: _dummy_
   queries:
+  - Cache:
+      type: Groovy
+      roles: Administrator
+      file: CacheTable.groovy
   - Entities:
       type: Groovy
       roles: Administrator

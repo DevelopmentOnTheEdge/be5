@@ -37,11 +37,10 @@ public class UserAwareMetaImpl implements UserAwareMeta
     private static CompiledLocalizations compiledLocalizations = null;
 
     /**
-     * TODO сделать обычный сервис, добавить перезагрузку compiledLocalizations после перечтения проекта
+     * TODO сделать обычный сервис
      * @param injector
      * @return
      */
-    @Deprecated
     public static UserAwareMeta get(Injector injector)
     {
         if (compiledLocalizations == null)
@@ -51,6 +50,12 @@ public class UserAwareMetaImpl implements UserAwareMeta
 
         return new UserAwareMetaImpl(injector, compiledLocalizations);
     }
+
+    public static void reCompileLocalizations(Injector injector)
+    {
+        compiledLocalizations = CompiledLocalizations.from(injector.getProject());
+    }
+
 
     private final CompiledLocalizations localizations;
     private final Meta meta;

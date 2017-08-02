@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
+import com.developmentontheedge.be5.api.services.CacheInfo;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -32,6 +33,7 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class OperationServiceImpl implements OperationService
 {
+    private final Cache<String, Class> groovyOperationClasses;
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
     private final SqlHelper sqlHelper;
@@ -43,6 +45,12 @@ public class OperationServiceImpl implements OperationService
         this.validator = injector.get(Validator.class);
         userAwareMeta = UserAwareMeta.get(injector);
         sqlHelper = injector.get(SqlHelper.class);
+
+        groovyOperationClasses = Caffeine.newBuilder()
+                .maximumSize(10_000)
+                .recordStats()
+                .build();
+        CacheInfo.registerCache("Groovy operation classes", groovyOperationClasses);
     }
 
     @Override
@@ -158,10 +166,6 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
-    private Cache<String, Class> operationClasses = Caffeine.newBuilder()
-            .maximumSize(10_000)
-            .build();
-
     public Operation create(OperationInfo operationInfo, String[] records) {
         Operation operation;
 
@@ -170,14 +174,17 @@ public class OperationServiceImpl implements OperationService
             case OPERATION_TYPE_GROOVY:
                 try
                 {
-                    String key = operationInfo.getEntity() + operationInfo.getName();
-                    Class aClass = operationClasses.get(key,
-                            k-> GroovyRegister.parseClass( operationInfo.getCode() ));
+                    Class aClass = groovyOperationClasses.get(operationInfo.getEntity() + operationInfo.getName(),
+                            k -> GroovyRegister.parseClass( operationInfo.getCode() ));
                     operation = ( Operation ) aClass.newInstance();
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
                 {
                     throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                }
+                catch (Throwable e)
+                {
+                    throw Be5Exception.internalInOperation(e, operationInfo);
                 }
                 break;
             default:

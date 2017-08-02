@@ -43,13 +43,13 @@ public abstract class TableSupport implements TableBuilder
         return columns;
     }
 
-    public List<TableModel.CellModel> getCells(String firstContent, String... contents)
+    public List<TableModel.CellModel> getCells(Object firstContent, Object... contents)
     {
         List<TableModel.CellModel> columns = new ArrayList<>();
         columns.add(new TableModel.CellModel(firstContent, Collections.EMPTY_MAP));
         if(contents != null)
         {
-            for (String content : contents)
+            for (Object content : contents)
             {
                 columns.add(new TableModel.CellModel(content, Collections.EMPTY_MAP));
             }
