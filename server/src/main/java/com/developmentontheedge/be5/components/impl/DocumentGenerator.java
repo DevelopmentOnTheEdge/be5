@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -14,6 +15,8 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.model.FormPresentation;
+import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
 
@@ -131,6 +134,7 @@ public class DocumentGenerator implements Runner {
 //        FormTable formTable = new FormTable(formPresentation, tablePresentation);
 //
 //        DocumentResponse.of(res).send(formTable);
+        onTable(query, parametersMap);
     }
     
     @Override
