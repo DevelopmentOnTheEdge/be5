@@ -22,6 +22,8 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Map;
 
@@ -156,16 +158,22 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
+    private Cache<String, Class> operationClasses = Caffeine.newBuilder()
+            .maximumSize(10_000)
+            .build();
+
     public Operation create(OperationInfo operationInfo, String[] records) {
         Operation operation;
-        String code = operationInfo.getCode();
 
         switch (operationInfo.getType())
         {
             case OPERATION_TYPE_GROOVY:
                 try
                 {
-                    operation = ( Operation ) GroovyRegister.parseClass( code ).newInstance();
+                    String key = operationInfo.getEntity() + operationInfo.getName();
+                    Class aClass = operationClasses.get(key,
+                            k-> GroovyRegister.parseClass( operationInfo.getCode() ));
+                    operation = ( Operation ) aClass.newInstance();
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
                 {
@@ -174,7 +182,7 @@ public class OperationServiceImpl implements OperationService
                 break;
             default:
                 try {
-                    operation = ( Operation ) Class.forName(code).newInstance();
+                    operation = ( Operation ) Class.forName(operationInfo.getCode()).newInstance();
                 } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                     throw Be5Exception.internalInOperation(e, operationInfo);
                 }
