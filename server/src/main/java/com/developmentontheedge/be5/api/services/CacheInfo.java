@@ -21,8 +21,6 @@ public class CacheInfo
 
     public static void clearAll()
     {
-        caches.forEach((k,v) -> {
-            v.invalidateAll();
-        });
+        caches.forEach((k,v) -> v.invalidateAll());
     }
 }
