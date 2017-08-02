@@ -65,8 +65,9 @@ public class Validator
                 }
                 else
                 {
-                    if (property.getValue() == null){
-                        if(!property.isCanBeNull())throw new NullPointerException(property.toString() + " - can not be null");
+                    if (property.getValue() == null)
+                    {
+                        if(!property.isCanBeNull())throw new IllegalArgumentException(property.toString() + " - can not be null");
                     }
                     else
                     {
