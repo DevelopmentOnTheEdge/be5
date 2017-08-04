@@ -46,6 +46,10 @@ public interface UserAwareMeta
      */
     String getLocalizedOperationTitle(String entity, String operation);
 
+    String getLocalizedOperationField(String entityName, String operationName, String name);
+
+    String getLocalizedOperationField(String entityName, String name);
+
     /**
      * Returns a localized title of an operation in user's preferred language.
      */

@@ -11,3 +11,4 @@ testProject:
   - atest
   - meters
   - propertyTypes
+  - tagFromColumn

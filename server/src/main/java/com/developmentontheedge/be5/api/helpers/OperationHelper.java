@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 import java.util.List;
@@ -14,11 +15,13 @@ public class OperationHelper
 {
     private final SqlService db;
     private final Meta meta;
+    private final UserAwareMeta userAwareMeta;
 
-    public OperationHelper(SqlService db, Meta meta)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta)
     {
         this.db = db;
         this.meta = meta;
+        this.userAwareMeta = userAwareMeta;
     }
     
 //    public OperationRequest getOperationRequest(Request req)
@@ -92,6 +95,32 @@ public class OperationHelper
         {
             throw Be5Exception.internalInQuery(e, foundQuery.get());
         }
+    }
+
+    public String[][] getTagsFromEnum(String tableName, String name)
+    {
+        return getTagsFromEnum(tableName, null, name);
+    }
+
+    public String[][] getTagsFromEnum(String tableName, String operationName, String name)
+    {
+        ColumnDef column = meta.getColumn(tableName, name);
+
+        if (column == null)throw new IllegalArgumentException();
+        String[] enumValues = column.getType().getEnumValues();
+
+        String[][] stockArr = new String[enumValues.length][2];
+
+        for (int i = 0; i < enumValues.length; i++)
+        {
+            if(operationName != null){
+                stockArr[i] = new String[]{enumValues[i], userAwareMeta.getLocalizedOperationField(tableName, operationName, enumValues[i])};
+            }else{
+                stockArr[i] = new String[]{enumValues[i], userAwareMeta.getLocalizedOperationField(tableName, enumValues[i])};
+            }
+        }
+
+        return stockArr;
     }
 //
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String placeholder)

@@ -17,6 +17,7 @@ import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.util.MoreStrings;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 public class UserAwareMetaImpl implements UserAwareMeta
 {
@@ -86,6 +87,22 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localizations.getOperationTitle(UserInfoHolder.getLanguage(), entity, operation);
     }
 
+    public String getLocalizedOperationField(String entityName, String operationName, String name)
+    {
+        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name).orElse(name);
+    }
+
+    public String getLocalizedOperationField(String entityName, String name)
+    {
+        ImmutableList<String> defaultOp = ImmutableList.of("Clone","Edit","Insert","Filter" );
+        for (String operationName : defaultOp)
+        {
+            Optional<String> fieldTitle = localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name);
+            if(fieldTitle.isPresent())return fieldTitle.get();
+        }
+        return name;
+    }
+
     @Override
     public String getLocalizedCell(String content, String entity, String query)
     {
@@ -151,6 +168,11 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public Optional<String> getFieldTitle(String entityName, String operationName, String queryName, String name)
     {
         return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, queryName, name);
+    }
+
+    public CompiledLocalizations getLocalizations()
+    {
+        return localizations;
     }
 
 }

@@ -143,6 +143,13 @@ public class CompiledLocalizations {
         return title;
     }
 
+    public Optional<String> getFieldTitle(String language, String entityName, String operationName, String name)
+    {
+        Optional<String> title = get(language, entityName, operationName, name);
+
+        return title;
+    }
+
     public Optional<String> get(String language, String entityName, String queryName, String content) {
         checkNotNull(language);
         checkNotNull(entityName);

@@ -70,3 +70,14 @@ ru:
     - topics: viewName
       entries:
       - All records For Banks: Все записи
+  - tagFromColumn:
+    - topics:
+      - Clone
+      - Edit
+      - Filter
+      - Insert
+      entries:
+      - Federal: Федеральный
+      - Municipal: Муниципальный
+      - Regional: Региональный
+      - admLevel: Административный уровень
