@@ -64,7 +64,7 @@ public class TableDefTest
             "id BIGINT NOT NULL,\n"+
             "name VARCHAR(20),\n"+
             "type VARCHAR(1) CHECK(type IN ('a', 'b', 'c') ) NOT NULL,\n"+
-            "\"comment\" VARCHAR(5000));\n"+
+            "comment VARCHAR(5000));\n"+
             "CREATE INDEX test_id_idx ON test(id);\n", def.getDdl());
         def.getProject().setDatabaseSystem( Rdbms.ORACLE );
         assertEquals("call drop_if_exists( 'test' );\n"+
@@ -98,7 +98,7 @@ public class TableDefTest
                 "id BIGINT NOT NULL,\n"+
                 "name VARCHAR(20),\n"+
                 "type VARCHAR(1) NOT NULL CHECK(type IN ('a', 'b', 'c') ),\n"+
-                "\"comment\" VARCHAR(5000));\n"+
+                "comment VARCHAR(5000));\n"+
                 "CREATE INDEX test_id_idx ON test(id);\n", def.getDdl());
     }
     
@@ -235,7 +235,7 @@ public class TableDefTest
                 "code BIGINT NOT NULL,\n"+
                 "name VARCHAR(20),\n"+
                 "type VARCHAR(1) CHECK(type IN ('a', 'b', 'c') ) NOT NULL,\n"+
-                "\"comment\" VARCHAR(5000));\n"+
+                "comment VARCHAR(5000));\n"+
                 "CREATE INDEX test_id_idx ON test(code);\n", def.getDdl());
     }
     

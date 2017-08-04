@@ -14,7 +14,7 @@ import java.util.Set;
 public class H2TypeManager extends DefaultTypeManager
 {
     private static Set<String> KEYWORDS = new HashSet<>( Arrays.asList( "SELECT", "KEY", "ORDER", "TABLE", "WHERE", "GROUP", "FROM", "TO",
-            "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "COMMENT", "START", "END", "INDEX", "DATE", "LEVEL", "COLUMN" ) );
+            "BY", "JOIN", "LEFT", "INNER", "OUTER", "NUMBER", "DISTINCT", "START", "END", "INDEX", "DATE", "LEVEL", "COLUMN" ) );
 
     @Override
     public void correctType( SqlColumnType type )
