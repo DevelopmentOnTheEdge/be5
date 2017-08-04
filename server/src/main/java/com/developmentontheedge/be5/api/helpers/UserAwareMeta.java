@@ -26,11 +26,6 @@ public interface UserAwareMeta
 
     }
 
-    static UserAwareMeta get(Injector injector)
-    {
-        return UserAwareMetaImpl.get(injector);
-    }
-
     /**
      * Returns a localized title in user's preferred language.
      */

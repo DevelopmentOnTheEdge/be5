@@ -41,8 +41,8 @@ public class TableModel
             int sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
             this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, injector);
             this.queryExecutor.sortOrder(sortColumn, "desc".equals(req.get("order[0][dir]")));
-            this.userAwareMeta = UserAwareMeta.get(injector);
-            this.cellFormatter = new CellFormatter(query, queryExecutor, injector);
+            this.userAwareMeta = injector.get(UserAwareMeta.class);
+            this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
         }
 
         public Builder offset(int offset)

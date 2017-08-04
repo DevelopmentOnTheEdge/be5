@@ -50,7 +50,7 @@ public class DocumentGenerator implements Runner {
         this.req = req;
         this.res = res;
         this.injector = injector;
-        this.userAwareMeta = UserAwareMeta.get(injector);
+        this.userAwareMeta = injector.get(UserAwareMeta.class);
     }
     
     @Override

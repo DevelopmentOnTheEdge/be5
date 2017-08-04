@@ -298,7 +298,7 @@ public class Menu implements Component {
     }
 
     private MenuResponse generateMenu(Injector injector, boolean withIds, EntityType entityType) {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
+        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
         
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
@@ -309,7 +309,7 @@ public class Menu implements Component {
     }
 
     private Action getDefaultAction(Injector injector, EntityType entityType) {
-        UserAwareMeta userAwareMeta = UserAwareMeta.get(injector);
+        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
 
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();

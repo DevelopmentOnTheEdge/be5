@@ -16,8 +16,8 @@ public class Validator
 {
     private final UserAwareMeta userAwareMeta;
 
-    public Validator(Injector injector){
-        userAwareMeta = UserAwareMeta.get(injector);
+    public Validator(Injector injector, UserAwareMeta userAwareMeta){
+        this.userAwareMeta = userAwareMeta;
     }
 
     public enum Status

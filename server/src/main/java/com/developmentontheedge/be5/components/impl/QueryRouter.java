@@ -63,7 +63,7 @@ public class QueryRouter
     {
         this.injector = injector;
         this.req = req;
-        this.userAwareMeta = UserAwareMeta.get(injector);
+        this.userAwareMeta = injector.get(UserAwareMeta.class);
         this.meta = injector.get(Meta.class);
     }
     

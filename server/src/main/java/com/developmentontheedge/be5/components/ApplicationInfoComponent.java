@@ -44,7 +44,7 @@ public class ApplicationInfoComponent implements Component
         
         try
         {
-            appInfo = getApplicationInfo(req, injector);
+            appInfo = getApplicationInfo(req, injector.get(UserAwareMeta.class));
             res.sendAsRawJson(appInfo);
         }
         catch (Exception e)
@@ -54,9 +54,9 @@ public class ApplicationInfoComponent implements Component
     }
 
     
-    public static ApplicationInfo getApplicationInfo(Request req, Injector injector)throws Exception
+    public static ApplicationInfo getApplicationInfo(Request req, UserAwareMeta userAwareMeta)throws Exception
     {
-        String title = UserAwareMeta.get(injector)
+        String title = userAwareMeta
                 .getColumnTitle("index.jsp", "application", "applicationName")
                 .orElse("Be5 Application");
 

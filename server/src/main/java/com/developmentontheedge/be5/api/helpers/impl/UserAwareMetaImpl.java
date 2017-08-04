@@ -5,11 +5,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -36,34 +38,20 @@ public class UserAwareMetaImpl implements UserAwareMeta
      */
     private static CompiledLocalizations compiledLocalizations = null;
 
-    /**
-     * TODO сделать обычный сервис
-     * @param injector
-     * @return
-     */
-    public static UserAwareMeta get(Injector injector)
-    {
-        if (compiledLocalizations == null)
-        {
-            compiledLocalizations = CompiledLocalizations.from(injector.getProject());
-        }
-
-        return new UserAwareMetaImpl(injector, compiledLocalizations);
-    }
-
     public static void reCompileLocalizations(Injector injector)
     {
         compiledLocalizations = CompiledLocalizations.from(injector.getProject());
     }
 
-
     private final CompiledLocalizations localizations;
     private final Meta meta;
+    private final Project project;
 
-    private UserAwareMetaImpl(Injector injector, CompiledLocalizations localizations)
+    public UserAwareMetaImpl(Meta meta, ProjectProvider projectProvider)
     {
-        this.meta = injector.getMeta();
-        this.localizations = localizations;
+        this.meta = meta;
+        this.project = projectProvider.getProject();
+        localizations = CompiledLocalizations.from(project);
     }
 
     /* (non-Javadoc)

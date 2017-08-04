@@ -43,7 +43,7 @@ public class OperationServiceImpl implements OperationService
     {
         this.injector = injector;
         this.validator = injector.get(Validator.class);
-        userAwareMeta = UserAwareMeta.get(injector);
+        this.userAwareMeta = injector.get(UserAwareMeta.class);
         sqlHelper = injector.get(SqlHelper.class);
 
         groovyOperationClasses = Caffeine.newBuilder()
@@ -61,7 +61,7 @@ public class OperationServiceImpl implements OperationService
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
-        OperationInfo operationInfo = UserAwareMeta.get(injector).getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
 
         return generate(entityName, queryName, operationName, selectedRowsString, operationInfo,
                 presetValues, req);

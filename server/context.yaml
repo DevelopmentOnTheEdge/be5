@@ -23,6 +23,9 @@ context:
   - meta:
       interface:      com.developmentontheedge.be5.api.services.Meta
       implementation: com.developmentontheedge.be5.api.services.impl.MetaImpl
+  - userAwareMeta:
+      interface:      com.developmentontheedge.be5.api.helpers.UserAwareMeta
+      implementation: com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
   - sqlService:
       interface:      com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
