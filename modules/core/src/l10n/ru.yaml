@@ -1,0 +1,29 @@
+ru:
+  entities:
+  - _logout_:
+    - topics:
+      - displayName
+      - viewName
+      entries:
+      - <!--99-->Logout: Выход
+  - _welcome_:
+    - topics: displayName
+      entries:
+      - displayName: Добро пожаловать
+- query.jsp:
+    - topics: page
+      entries:
+      - Active From: Дата начала
+      - Active To: Дата окончания
+      - Class: Класс
+      - Click: Нажмите
+      - Fio: Ф.И.О.
+      - date: Дата
+      - message: Сообщение
+      - number: №
+      - title: Название
+      - total: Итого
+      - 'false': нет
+      - 'true': да
+      - 'no': нет
+      - 'yes': да

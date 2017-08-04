@@ -17,6 +17,9 @@ public class OperationHelper
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
 
+    private static final String[][] tagsYesNo = new String[][]{ {"yes", "да"}, {"no", "нет"} };
+    private static final String[][] tagsNoYes = new String[][]{ {"no", "нет"}, {"yes", "да"} };
+
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta)
     {
         this.db = db;
@@ -121,6 +124,16 @@ public class OperationHelper
         }
 
         return stockArr;
+    }
+
+    public String[][] getTagsYesNo()
+    {
+        return tagsYesNo;
+    }
+
+    public String[][] getTagsNoYes()
+    {
+        return tagsNoYes;
     }
 //
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String placeholder)
