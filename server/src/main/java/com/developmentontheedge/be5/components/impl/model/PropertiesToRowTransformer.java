@@ -64,7 +64,7 @@ class PropertiesToRowTransformer
         for( DynamicProperty property : properties )
         {
             if( !shouldBeSkipped( property ) ) {
-                columns.add(new ColumnModel(property.getName(), userAwareMeta.getColumnTitle(entityName, queryName, property.getName()).orElse(property.getName())));
+                columns.add(new ColumnModel(property.getName(), userAwareMeta.getColumnTitle(entityName, queryName, property.getName())));
             }
         }
 

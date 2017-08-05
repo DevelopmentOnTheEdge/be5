@@ -99,7 +99,7 @@ public class DpsHelper
                 if (columnLabel.startsWith(";")) {
                     String refName = columnLabel.substring(1);
                     int refId = IntStreamEx.ofIndices(schema, dp -> dp != null && dp.getName().equals(refName))
-                            .findAny().orElseThrow(() -> Be5Exception.internal("No previous column with name " + refName));
+                            .findAny().orElseThrow(() -> Be5Exception.internal("no previous column with name " + refName));
                     DynamicProperty dp = new DynamicProperty(columnLabel, String.class);
                     dp.setAttribute(COLUMN_REF_IDX_PROPERTY, refId);
                     dp.setHidden(true);

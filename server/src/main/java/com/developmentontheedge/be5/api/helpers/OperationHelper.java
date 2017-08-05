@@ -17,8 +17,8 @@ public class OperationHelper
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
 
-    private static final String[][] tagsYesNo = new String[][]{ {"yes", "да"}, {"no", "нет"} };
-    private static final String[][] tagsNoYes = new String[][]{ {"no", "нет"}, {"yes", "да"} };
+    public static final String yes = "yes";
+    public static final String no = "no";
 
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta)
     {
@@ -48,10 +48,6 @@ public class OperationHelper
         String[][] stockArr = new String[tags.size()][2];
         return tags.toArray(stockArr);
     }
-
-    //TODO
-    //TAG_LIST_ATTR: [ 'yes', 'no' ]
-    //TAG_LIST_ATTR: [ 'no', 'yes' ]
 
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String valueColumnName, String textColumnName, String placeholder)
 //    {
@@ -128,14 +124,20 @@ public class OperationHelper
 
     public String[][] getTagsYesNo()
     {
-        return tagsYesNo;
+        String[][] arr = new String[2][2];
+        arr[0] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
+        arr[1] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
+        return arr;
     }
 
     public String[][] getTagsNoYes()
     {
-        return tagsNoYes;
+        String[][] arr = new String[2][2];
+        arr[0] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
+        arr[1] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
+        return arr;
     }
-//
+
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String placeholder)
 //    {
 //        ImmutableList.Builder<Option> options = ImmutableList.builder();

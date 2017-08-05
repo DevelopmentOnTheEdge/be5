@@ -10,7 +10,11 @@ ru:
     - topics: displayName
       entries:
       - displayName: Добро пожаловать
-- query.jsp:
+  - index:
+    - topics: page
+      entries:
+      - applicationName: Be5 Application
+  - query.jsp:
     - topics: page
       entries:
       - Active From: Дата начала

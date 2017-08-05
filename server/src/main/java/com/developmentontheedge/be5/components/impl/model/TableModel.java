@@ -207,7 +207,7 @@ public class TableModel
                     if(i==0)
                     {
                         content = userAwareMeta.getColumnTitle(query.getEntity().getName(), query.getName(),
-                                "total").orElse("total");
+                                "total");
                     }
                 }
                 res.add(new CellModel(content, options));

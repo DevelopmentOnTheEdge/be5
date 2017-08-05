@@ -1,9 +1,5 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import java.util.Optional;
-
-import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
@@ -34,7 +30,7 @@ public interface UserAwareMeta
     /**
      * Returns a localized title in user's preferred language. Ignores entity's display name.
      */
-    Optional<String> getLocalizedEntityTitle(String entity);
+    String getLocalizedEntityTitle(String entity);
 
     /**
      * Returns a localized title of a query in user's preferred language.
@@ -87,8 +83,8 @@ public interface UserAwareMeta
     /**
      * Returns a localized title of a column - be4 format.
      */
-    Optional<String> getColumnTitle(String entityName, String queryName, String columnName);
+    String getColumnTitle(String entityName, String queryName, String columnName);
 
-    Optional<String> getFieldTitle(String entityName, String operationName, String queryName, String name);
+    String getFieldTitle(String entityName, String operationName, String queryName, String name);
 
 }

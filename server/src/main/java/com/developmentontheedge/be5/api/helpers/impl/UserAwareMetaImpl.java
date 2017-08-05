@@ -60,21 +60,21 @@ public class UserAwareMetaImpl implements UserAwareMeta
      */
     @Override
     public String getLocalizedEntityTitle(Entity entity) {
-        Optional<String> localization = getLocalizedEntityTitle(entity.getName());
+        String localization = getLocalizedEntityTitle(entity.getName());
 
-        if (!localization.isPresent()) {
+        if (localization == null) {
             if (!Strings.isNullOrEmpty(entity.getDisplayName())) {
                 return entity.getDisplayName();
             }
             return entity.getName();
         }
 
-        return localization.get();
+        return localization;
     }
 
     @Override
-    public Optional<String> getLocalizedEntityTitle(String entity) {
-        return localizations.getEntityTitle(UserInfoHolder.getLanguage(), entity);
+    public String getLocalizedEntityTitle(String entity) {
+        return localizations.getEntityTitle(UserInfoHolder.getLanguage(), entity).orElse(entity);
     }
 
     @Override
@@ -159,15 +159,15 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
-    public Optional<String> getColumnTitle(String entityName, String queryName, String columnName)
+    public String getColumnTitle(String entityName, String queryName, String columnName)
     {
-        return localizations.get(UserInfoHolder.getLanguage(), entityName, queryName, columnName);
+        return localizations.get(UserInfoHolder.getLanguage(), entityName, queryName, columnName).orElse(columnName);
     }
 
     @Override
-    public Optional<String> getFieldTitle(String entityName, String operationName, String queryName, String name)
+    public String getFieldTitle(String entityName, String operationName, String queryName, String name)
     {
-        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, queryName, name);
+        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, queryName, name).orElse(name);
     }
 
     public CompiledLocalizations getLocalizations()
