@@ -32,7 +32,7 @@ public class OperationHelper
         this.userAwareMeta = userAwareMeta;
 
         tagsCache = Caffeine.newBuilder()
-                .maximumSize(10_000)
+                .maximumSize(1_000)
                 .recordStats()
                 .build();
         CacheInfo.registerCache("Tags (dictionary)", tagsCache);

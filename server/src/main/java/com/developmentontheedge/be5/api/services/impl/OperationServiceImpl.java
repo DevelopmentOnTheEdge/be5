@@ -47,7 +47,7 @@ public class OperationServiceImpl implements OperationService
         sqlHelper = injector.get(SqlHelper.class);
 
         groovyOperationClasses = Caffeine.newBuilder()
-                .maximumSize(10_000)
+                .maximumSize(1_000)
                 .recordStats()
                 .build();
         CacheInfo.registerCache("Groovy operation classes", groovyOperationClasses);
