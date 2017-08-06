@@ -54,4 +54,6 @@ public interface Operation extends Serializable
     OperationResult getResult();
 
     void setResult(OperationResult operationResult);
+
+    Object getLayout();
 }

@@ -86,4 +86,8 @@ public abstract class OperationSupport implements Operation
         this.operationResult = operationResult;
     }
 
+    public Object getLayout()
+    {
+        return null;
+    }
 }

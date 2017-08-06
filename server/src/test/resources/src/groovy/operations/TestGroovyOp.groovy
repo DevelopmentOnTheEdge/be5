@@ -55,4 +55,8 @@ class TestGroovyOp extends OperationSupport implements Operation
         //db.insert(sql);
     }
 
+    @Override
+    Object getLayout() {
+        return [type:'custom', name:'addresses']
+    }
 }

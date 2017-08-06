@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
+import com.google.common.collect.ImmutableMap;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -50,6 +51,15 @@ public class GroovyOperationTest extends AbstractProjectTest{
                             "'/reasonMulti':{'displayName':'Множественный выбор','tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']],'multipleSelectionList':true}}," +
                         "'order':['/name','/beginDate','/reason','/reasonMulti']" +
                 "}", oneQuotes(generate.getFirst().getBean().toString()));
+    }
+
+    @Test
+    public void getLayout()
+    {
+        Either<FormPresentation, OperationResult> generate = operationService.generate(
+                getSpyMockRecForOp("testtableAdmin", "All records", "TestGroovyOp", "0","{}"));
+        assertEquals(ImmutableMap.of("type","custom", "name","addresses"),
+                generate.getFirst().getLayout());
     }
 
 }
