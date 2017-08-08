@@ -1,13 +1,15 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.CacheInfo;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
@@ -23,15 +25,17 @@ public class OperationHelper
     private final SqlService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
+    private final Injector injector;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Injector injector)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
+        this.injector = injector;
 
         tagsCache = Caffeine.newBuilder()
                 .maximumSize(1_000)
@@ -90,40 +94,43 @@ public class OperationHelper
      * @throws IllegalArgumentException when an entity or a query is not defined
      * @throws Error if a found query cannot be compiled
      */
-    public String[][] getTagsFromSelectionView(String tableName)
+    public String[][] getTagsFromSelectionView(Request request, String tableName)
     {
-        return getTagsFromQuery(tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
+        return getTagsFromQuery(request, tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
     }
 
-    public String[][] getTagsFromSelectionView(String tableName, Map<String, String> extraParams)
+    public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, String> extraParams)
     {
-        return getTagsFromQuery(tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
+        return getTagsFromQuery(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
     }
 
-    public String[][] getTagsFromQuery(String tableName, String queryName)
+    public String[][] getTagsFromQuery(Request request, String tableName, String queryName)
     {
-        return getTagsFromQuery(tableName, queryName, new HashMap<>());
+        return getTagsFromQuery(request, tableName, queryName, new HashMap<>());
     }
 
-    public String[][] getTagsFromQuery(String tableName, String queryName, Map<String, String> extraParams)
+    public String[][] getTagsFromQuery(Request request, String tableName, String queryName, Map<String, String> extraParams)
     {
-        return tagsCache.get(tableName + "getTagsFromSelectionView" + queryName + UserInfoHolder.getLanguage(), k -> {
-            Optional<Query> foundQuery = meta.findQuery(tableName, queryName);
+        return tagsCache.get(tableName + "getTagsFromSelectionView" + queryName +
+                extraParams.toString() + UserInfoHolder.getLanguage(), k ->
+        {
+            Optional<Query> query = meta.findQuery(tableName, queryName);
 
-            if (!foundQuery.isPresent())
+            if (!query.isPresent())
                 throw new IllegalArgumentException();
 
-            try
+            List<DynamicPropertySet> list = new Be5QueryExecutor(query.get(), extraParams, request, injector).execute();
+            String[][] stockArr = new String[list.size()][2];
+
+            for (int i = 0; i < list.size(); i++)
             {
-                List<String[]> tags = db.selectList(foundQuery.get().getQueryCompiled().validate(), rs ->
-                        new String[]{rs.getString(1), rs.getString(2)}
-                );
-                String[][] stockArr = new String[tags.size()][2];
-                return tags.toArray(stockArr);
-            } catch (ProjectElementException e)
-            {
-                throw Be5Exception.internalInQuery(e, foundQuery.get());
+                stockArr[i] = new String[]{
+                        list.get(i).getValue("CODE").toString(),
+                        list.get(i).getValue("NAME").toString()
+                };
             }
+
+            return stockArr;
         });
     }
 
@@ -134,7 +141,8 @@ public class OperationHelper
 
     public String[][] getTagsFromEnum(String tableName, String operationName, String name)
     {
-        return tagsCache.get(tableName + "getTagsFromEnum" + operationName + "," + name + UserInfoHolder.getLanguage(), k -> {
+        return tagsCache.get(tableName + "getTagsFromEnum" + operationName + "," + name + UserInfoHolder.getLanguage(), k ->
+        {
             ColumnDef column = meta.getColumn(tableName, name);
 
             if (column == null) throw new IllegalArgumentException();
@@ -159,7 +167,8 @@ public class OperationHelper
 
     public String[][] getTagsYesNo()
     {
-        return tagsCache.get("getTagsYesNo" + UserInfoHolder.getLanguage(), k -> {
+        return tagsCache.get("getTagsYesNo" + UserInfoHolder.getLanguage(), k ->
+        {
             String[][] arr = new String[2][2];
             arr[0] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
             arr[1] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
@@ -169,7 +178,8 @@ public class OperationHelper
 
     public String[][] getTagsNoYes()
     {
-        return tagsCache.get("getTagsNoYes" + UserInfoHolder.getLanguage(), k -> {
+        return tagsCache.get("getTagsNoYes" + UserInfoHolder.getLanguage(), k ->
+        {
             String[][] arr = new String[2][2];
             arr[0] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};
             arr[1] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};

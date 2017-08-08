@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
@@ -27,6 +28,7 @@ public abstract class OperationSupport implements Operation
     private OperationResult operationResult;
 
     public String[] records;
+    public Request request;
 
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
@@ -34,7 +36,7 @@ public abstract class OperationSupport implements Operation
 
     @Override
     public final void initialize(Injector injector, OperationInfo operationInfo,
-                                 OperationResult operationResult, String[] records)
+                                 OperationResult operationResult, String[] records, Request request)
     {
         this.injector = injector;
         this.databaseService = injector.getDatabaseService();
@@ -48,6 +50,7 @@ public abstract class OperationSupport implements Operation
         this.operationResult = operationResult;
 
         this.records = records;
+        this.request = request;
     }
 
     @Override

@@ -70,7 +70,7 @@ public class OperationServiceImpl implements OperationService
     private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
              String operationName, String selectedRowsString, OperationInfo meta, Map<String, Object> presetValues, Request req)
     {
-        Operation operation = create(meta, selectedRows(selectedRowsString));
+        Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
         Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
 
@@ -116,7 +116,7 @@ public class OperationServiceImpl implements OperationService
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
-        Operation operation = create(meta, selectedRows(selectedRowsString));
+        Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
         Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
 
@@ -166,7 +166,7 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
-    public Operation create(OperationInfo operationInfo, String[] records) {
+    public Operation create(OperationInfo operationInfo, String[] records, Request request) {
         Operation operation;
 
         switch (operationInfo.getType())
@@ -195,7 +195,7 @@ public class OperationServiceImpl implements OperationService
                 }
         }
 
-        operation.initialize(injector, operationInfo, OperationResult.progress(), records);
+        operation.initialize(injector, operationInfo, OperationResult.progress(), records, request);
 
         return operation;
     }

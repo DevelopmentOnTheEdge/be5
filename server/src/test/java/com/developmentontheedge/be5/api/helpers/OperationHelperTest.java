@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -35,20 +36,31 @@ public class OperationHelperTest extends AbstractProjectIntegrationH2Test
     {
         String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
 
-        String[][] tagsFromEnum = helper.getTagsFromSelectionView("testTags");
+        String[][] tagsFromEnum = helper.getTagsFromSelectionView(getMockRequest(""),"testTags");
 
         assertArrayEquals(strings, tagsFromEnum);
     }
 
-//    @Test
-//    public void getTagsFromQuery() throws Exception
-//    {
-//        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
-//
-//        String[][] tagsFromEnum = helper.getTagsFromQuery("testTags", "With parameter");
-//
-//        assertArrayEquals(strings, tagsFromEnum);
-//    }
+    @Test
+    public void getTagsFromQuery() throws Exception
+    {
+        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
+
+        String[][] tagsFromEnum = helper.getTagsFromQuery(getMockRequest(""),"testTags", "With parameter");
+
+        assertArrayEquals(strings, tagsFromEnum);
+    }
+
+    @Test
+    public void getTagsFromQueryWithParam() throws Exception
+    {
+        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"} };
+
+        String[][] tagsFromEnum = helper.getTagsFromQuery(getMockRequest(""),"testTags", "With parameter",
+                ImmutableMap.of("payable","yes"));
+
+        assertArrayEquals(strings, tagsFromEnum);
+    }
 
     @Test
     public void getTagsYesNo()
