@@ -125,7 +125,12 @@ public class OperationHelper
         {
             Iterator<DynamicProperty> iterator = list.get(i).iterator();
 
-            String first = iterator.hasNext() ? iterator.next().getValue().toString() : "";
+            DynamicProperty firstProperty;
+            do{
+                firstProperty = iterator.next();
+            }while (firstProperty.getName().startsWith("___"));
+
+            String first = iterator.hasNext() ? firstProperty.getValue().toString() : "";
             String second = iterator.hasNext() ? iterator.next().getValue().toString() : "";
             stockArr[i] = new String[]{first, second};
         }

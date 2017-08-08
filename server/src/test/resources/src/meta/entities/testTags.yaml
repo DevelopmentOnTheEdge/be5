@@ -15,7 +15,7 @@ testTags:
         defaultValue: '''Regional'''
   queries:
   - '*** Selection view ***':
-      type: 1D_unknown
+      type: 1D
       invisible: true
       roles: '@AllRoles'
       code: |-
