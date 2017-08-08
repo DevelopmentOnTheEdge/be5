@@ -114,7 +114,7 @@ public class OperationHelper
     public String[][] getTagsFromQuery(Request request, String tableName, String queryName, Map<String, String> extraParams)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
-
+        //TODO query.get().isCacheable();
         if (!query.isPresent())
             throw new IllegalArgumentException();
 
