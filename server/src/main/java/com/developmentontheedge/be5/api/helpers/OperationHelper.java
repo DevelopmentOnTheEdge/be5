@@ -9,11 +9,13 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -111,27 +113,24 @@ public class OperationHelper
 
     public String[][] getTagsFromQuery(Request request, String tableName, String queryName, Map<String, String> extraParams)
     {
-        return tagsCache.get(tableName + "getTagsFromSelectionView" + queryName +
-                extraParams.toString() + UserInfoHolder.getLanguage(), k ->
+        Optional<Query> query = meta.findQuery(tableName, queryName);
+
+        if (!query.isPresent())
+            throw new IllegalArgumentException();
+
+        List<DynamicPropertySet> list = new Be5QueryExecutor(query.get(), extraParams, request, injector).execute();
+        String[][] stockArr = new String[list.size()][2];
+
+        for (int i = 0; i < list.size(); i++)
         {
-            Optional<Query> query = meta.findQuery(tableName, queryName);
+            Iterator<DynamicProperty> iterator = list.get(i).iterator();
 
-            if (!query.isPresent())
-                throw new IllegalArgumentException();
+            String first = iterator.hasNext() ? iterator.next().getValue().toString() : "";
+            String second = iterator.hasNext() ? iterator.next().getValue().toString() : "";
+            stockArr[i] = new String[]{first, second};
+        }
 
-            List<DynamicPropertySet> list = new Be5QueryExecutor(query.get(), extraParams, request, injector).execute();
-            String[][] stockArr = new String[list.size()][2];
-
-            for (int i = 0; i < list.size(); i++)
-            {
-                stockArr[i] = new String[]{
-                        list.get(i).getValue("CODE").toString(),
-                        list.get(i).getValue("NAME").toString()
-                };
-            }
-
-            return stockArr;
-        });
+        return stockArr;
     }
 
     public String[][] getTagsFromEnum(String tableName, String name)
