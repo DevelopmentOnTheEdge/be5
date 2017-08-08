@@ -70,7 +70,7 @@ ru:
     - topics: viewName
       entries:
       - All records For Banks: Все записи
-  - tagFromColumn:
+  - testTags:
     - topics:
       - Clone
       - Edit

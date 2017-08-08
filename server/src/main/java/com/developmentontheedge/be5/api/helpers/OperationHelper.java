@@ -11,7 +11,9 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class OperationHelper
@@ -90,8 +92,23 @@ public class OperationHelper
      */
     public String[][] getTagsFromSelectionView(String tableName)
     {
-        return tagsCache.get(tableName + "getTagsFromSelectionView" + UserInfoHolder.getLanguage(), k -> {
-            Optional<Query> foundQuery = meta.findQuery(tableName, DatabaseConstants.SELECTION_VIEW);
+        return getTagsFromQuery(tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
+    }
+
+    public String[][] getTagsFromSelectionView(String tableName, Map<String, String> extraParams)
+    {
+        return getTagsFromQuery(tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
+    }
+
+    public String[][] getTagsFromQuery(String tableName, String queryName)
+    {
+        return getTagsFromQuery(tableName, queryName, new HashMap<>());
+    }
+
+    public String[][] getTagsFromQuery(String tableName, String queryName, Map<String, String> extraParams)
+    {
+        return tagsCache.get(tableName + "getTagsFromSelectionView" + queryName + UserInfoHolder.getLanguage(), k -> {
+            Optional<Query> foundQuery = meta.findQuery(tableName, queryName);
 
             if (!foundQuery.isPresent())
                 throw new IllegalArgumentException();
