@@ -65,7 +65,9 @@ public class Fields
         new Field( "shortDescription" ),
         new Field( "messageWhenEmpty" ),
         new Field( "parametrizingOperationName", "" ),
-        new Field( "wellKnownName", "" ) ) );
+        new Field( "wellKnownName", "" ),
+        new Field( "layout" )
+    ) );
     private static final List<Field> TABLE_DEF = Collections.unmodifiableList( Arrays.asList(
         new Field( "name" ),
         new Field( "startIdVariable", "" )) );

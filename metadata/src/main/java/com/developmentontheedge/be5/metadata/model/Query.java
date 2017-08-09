@@ -35,7 +35,7 @@ public class Query extends EntityItem implements TemplateElement
     private static final Set<String> CUSTOMIZABLE_PROPERTIES = Collections.unmodifiableSet( new HashSet<>( Arrays.asList( "menuName",
             "titleName", "type", "notSupported", "newDataCheckQuery", "invisible", "secure", "slow", "cacheable", "replicated", "defaultView",
             "contextID", "categoryID", "templateQueryName", "shortDescription", "messageWhenEmpty", "parametrizingOperationName",
-            "wellKnownName", "operationNames", "query", "roles", "icon", "querySettings" ) ) );
+            "wellKnownName", "operationNames", "query", "roles", "icon", "querySettings", "layout" ) ) );
     
     public static String[] getQueryTypes()
     {
@@ -46,6 +46,7 @@ public class Query extends EntityItem implements TemplateElement
     private String titleName;
     private QueryType type;
     private String query = " ";
+    private String layout = "";
     private String newDataCheckQuery;
     private boolean invisible = false;
     private boolean slow = false;
@@ -582,5 +583,15 @@ public class Query extends EntityItem implements TemplateElement
     {
     	QueryType type = getType();
         return type == QueryType.D1 || type == QueryType.D1_UNKNOWN || type == QueryType.D2;
+    }
+
+    public String getLayout()
+    {
+        return layout;
+    }
+
+    public void setLayout(String layout)
+    {
+        this.layout = layout;
     }
 }

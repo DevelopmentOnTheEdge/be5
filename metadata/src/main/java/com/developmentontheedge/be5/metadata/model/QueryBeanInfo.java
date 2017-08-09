@@ -53,5 +53,6 @@ public class QueryBeanInfo extends BeanInfoEx
         addHidden("contextID");
         addHidden("categoryID");
         addHidden(new PropertyDescriptor("icon", beanClass, "getIcon", null));
+        add("layout");
     }
 }
