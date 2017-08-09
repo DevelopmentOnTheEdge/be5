@@ -22,7 +22,7 @@ public abstract class OperationSupport implements Operation
     protected SqlService db;
     protected SqlHelper sqlHelper;
     protected Meta meta;
-    protected OperationHelper operationHelper;
+    protected OperationHelper helper;
 
     private OperationInfo operationInfo;
     private OperationResult operationResult;
@@ -44,7 +44,7 @@ public abstract class OperationSupport implements Operation
         this.database = injector.get(DatabaseModel.class);
         this.meta = injector.getMeta();
         this.sqlHelper = injector.get(SqlHelper.class);
-        this.operationHelper = injector.get(OperationHelper.class);
+        this.helper = injector.get(OperationHelper.class);
 
         this.operationInfo = operationInfo;
         this.operationResult = operationResult;
