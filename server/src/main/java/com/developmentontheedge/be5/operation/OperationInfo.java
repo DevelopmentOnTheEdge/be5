@@ -1,7 +1,11 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.components.FrontendConstants;
+import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
+import com.developmentontheedge.be5.util.HashUrl;
 
 /**
  * Immutable wrapper for {@link com.developmentontheedge.be5.metadata.model.Operation}
@@ -39,4 +43,8 @@ public class OperationInfo
     public boolean isConfirm()                      { return operationModel.isConfirm();  }
     public Long getCategoryID()                     { return operationModel.getCategoryID(); }
     public Entity getEntity()                       { return operationModel.getEntity();  }
+
+    public String getUrl(OperationContext context){
+        return ActionHelper.toAction(context.getQueryName(), operationModel).arg;
+    }
 }
