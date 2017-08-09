@@ -34,7 +34,7 @@ public class OperationHelperTest extends AbstractProjectIntegrationH2Test
     @Test
     public void getTagsFromSelectionView()
     {
-        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
+        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
         String[][] tagsFromEnum = helper.getTagsFromSelectionView(getMockRequest(""),"testTags");
 
@@ -44,7 +44,7 @@ public class OperationHelperTest extends AbstractProjectIntegrationH2Test
     @Test
     public void getTagsFromQuery() throws Exception
     {
-        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
+        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
         String[][] tagsFromEnum = helper.getTagsFromQuery(getMockRequest(""),"testTags", "With parameter");
 
@@ -54,7 +54,7 @@ public class OperationHelperTest extends AbstractProjectIntegrationH2Test
     @Test
     public void getTagsFromQueryWithParam() throws Exception
     {
-        String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"} };
+        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} };
 
         String[][] tagsFromEnum = helper.getTagsFromQuery(getMockRequest(""),"testTags", "With parameter",
                 ImmutableMap.of("payable","yes"));

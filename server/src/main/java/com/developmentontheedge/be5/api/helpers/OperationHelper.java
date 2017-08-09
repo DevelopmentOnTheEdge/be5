@@ -132,7 +132,7 @@ public class OperationHelper
 
             String first = iterator.hasNext() ? firstProperty.getValue().toString() : "";
             String second = iterator.hasNext() ? iterator.next().getValue().toString() : "";
-            stockArr[i] = new String[]{first, second};
+            stockArr[i] = new String[]{first, userAwareMeta.getLocalizedOperationField(tableName, second)};
         }
 
         return stockArr;
