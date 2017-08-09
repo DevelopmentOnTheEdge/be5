@@ -40,7 +40,7 @@ public class Login implements Component
         }
     }
 
-    private void login(Request req, Response res, Injector injector)
+    public void login(Request req, Response res, Injector injector)
     {
         String username = req.get("username");
         String password = req.get("password");
@@ -57,7 +57,13 @@ public class Login implements Component
             return;
         }
 
-        res.sendSuccess();
+        if(extendLogin(req, res, injector)){
+            res.sendSuccess();
+        }
     }
 
+    public boolean extendLogin(Request req, Response res, Injector injector)
+    {
+        return true;
+    }
 }
