@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.api.experimental;
 
-import com.developmentontheedge.be5.api.operation.Option;
-import com.developmentontheedge.be5.api.operation.Options;
-
 /**
  * Attributes that aren't supported in BE3.
  * 
@@ -31,14 +28,5 @@ public class DynamicPropertyAttributes
      * @see <a href="http://v4-alpha.getbootstrap.com/components/forms/#help-text">getbootstrap.com</a>
      */
     public static final String HELP_TEXT = "--be5-hint";
-    
-    /**
-     * Defines a list of options in a "select" field. Can contain a list of
-     * options or a enumeration class.
-     * 
-     * @see Option
-     * @see Options
-     */
-    public static final String SELECT_OPTIONS = "--be5-select-options";
     
 }
