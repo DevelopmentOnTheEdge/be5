@@ -122,7 +122,7 @@ public class MenuTest extends AbstractProjectTest
 
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
-        assertEquals("Insert", menuResponse.root.get(1).getOperations().get(0).title);
+        assertEquals("Добавить", menuResponse.root.get(1).getOperations().get(0).title);
         assertEquals(new Action("call", "form/dateTime/All records/Insert"),
                 menuResponse.root.get(1).getOperations().get(0).action);
 

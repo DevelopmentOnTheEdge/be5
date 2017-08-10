@@ -1,10 +1,12 @@
 package com.developmentontheedge.be5.api.impl;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -61,12 +64,28 @@ public class ResponseTest extends AbstractProjectTest{
     }
 
     @Test
-    public void sendError() {
+    public void sendErrorAdmin() {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
+
         response.sendError(Be5Exception.internal("testMsg"));
 
         verify(rawResponse).setContentType("application/json");
         verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR','message':''}}"));
+        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR'," +
+                "'message':'Internal error occured: testMsg'}}"));
+        verify(writer).flush();
+    }
+
+    @Test
+    public void sendErrorNotAdmin() {
+        initUserWithRoles(RoleType.ROLE_GUEST);
+
+        response.sendError(Be5Exception.internal("testMsg"));
+
+        verify(rawResponse).setContentType("application/json");
+        verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
+        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR'," +
+                "'message':''}}"));
         verify(writer).flush();
     }
 
