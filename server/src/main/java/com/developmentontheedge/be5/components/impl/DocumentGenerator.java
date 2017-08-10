@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -15,15 +14,11 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
-import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.FormTable;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.beans.json.JsonFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DocumentGenerator implements Runner {
@@ -101,7 +96,20 @@ public class DocumentGenerator implements Runner {
             totalNumberOfRows = TableModel.from(query, parametersMap, req, injector).count();
 
         return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, table.getRows().size(),
-                parametersMap, totalNumberOfRows, table.isHasAggregate());
+                parametersMap, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
+    }
+
+    private Object getLayoutObject(Query query)
+    {
+        if (query.getLayout().length() > 0)
+        {
+            return JsonFactory.jsonb.fromJson(query.getLayout(),
+                    new HashMap<String, String>(){}.getClass().getGenericSuperclass());
+        }
+        else
+        {
+            return new HashMap<>();
+        }
     }
 
     TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
