@@ -1,19 +1,42 @@
 ru:
   entities:
-  - _logout_:
-    - topics:
-      - displayName
-      - viewName
+  - frontend.l10n:
+    - topics: page
       entries:
-      - <!--99-->Logout: Выход
+      - fio: Ф.И.О.
+      - no: нет
+      - yes: да
+  - _homepage_:
+    - topics: displayName
+      entries:
+      - homepage: Главная
   - _welcome_:
     - topics: displayName
       entries:
-      - displayName: Добро пожаловать
-  - index:
-    - topics: page
+      - Welcome: Добро пожаловать
+  - _logout_:
+    - topics: displayName
       entries:
-      - applicationName: Be5 Application
+      - Logout: Выход
+  - users:
+    - topics: displayName
+      entries:
+      - Logout: Пользователи
+    - topics: viewName
+      entries:
+      - Login: Вход
+  - default:
+    - topics: operationName
+      entries:
+      - Archive: Архивировать
+      - Browse Archive: Просмотр архива
+      - Clone: Клонировать
+      - Delete: Удалить
+      - Edit: Редактировать
+      - Filter: Фильтр
+      - Insert: Добавить
+      - PermaLink: Постояннная ссылка
+      - Restore from Archive: Восстановить из архива
   - query.jsp:
     - topics: page
       entries:

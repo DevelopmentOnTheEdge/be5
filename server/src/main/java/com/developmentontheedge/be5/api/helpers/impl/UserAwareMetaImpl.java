@@ -34,17 +34,18 @@ public class UserAwareMetaImpl implements UserAwareMeta
     public static final String LOC_MSG_POSTFIX = "}}}";
 
     private static final Pattern MESSAGE_PATTERN = MoreStrings.variablePattern(LOC_MSG_PREFIX, LOC_MSG_POSTFIX);
-    /**
-     * Cache.
-     */
-    private static CompiledLocalizations compiledLocalizations = null;
+//    /**
+//     * Cache.
+//     */
+//    private static CompiledLocalizations compiledLocalizations = null;
 
-    public static void reCompileLocalizations(Injector injector)
+    @Override
+    public void reCompileLocalizations(Injector injector)
     {
-        compiledLocalizations = CompiledLocalizations.from(injector.getProject());
+        localizations = CompiledLocalizations.from(injector.getProject());
     }
 
-    private final CompiledLocalizations localizations;
+    private CompiledLocalizations localizations;
     private final Meta meta;
     private final Project project;
 

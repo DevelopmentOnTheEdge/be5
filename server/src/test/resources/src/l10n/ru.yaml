@@ -1,6 +1,6 @@
 ru:
   entities:
-  - javascript:
+  - frontend.l10n:
     - topics: page
       entries:
       - fio: Ф.И.О.
@@ -14,62 +14,34 @@ ru:
     - topics: displayName
       entries:
       - Welcome: Добро пожаловать
+  - _logout_:
+    - topics: displayName
+      entries:
+      - Logout: Выход
+  - users:
+    - topics: displayName
+      entries:
+      - Logout: Пользователи
+    - topics: viewName
+      entries:
+      - Login: Вход
   - query.jsp:
     - topics: page
       entries:
       - Active From: Дата начала
       - Active To: Дата окончания
-      - Aсtive From: Дата начала
       - Class: Класс
+      - Click: Нажмите
       - Fio: Ф.И.О.
-      - Please select exactly one record for: Пожалуйста выберите ровно одну запись для
-      - Prev: Предыдущая
-      - Processing: Обработка
-      - Recalculating and saving reports: Пересчет и сохранение отчетов
-      - Sort table using default order: Сортировать по умолчанию
-      - The request was: Текст запроса
-      - Waiting for recalculation: Ожидает пересчета
-      - acc.: лс
-      - accNo: № ЛС
-      - algName: Тип начисления
-      - amount: Сумма
-      - apartmentNo: № кв.
-      - billingMonth: Месяц учета
-      - birthDay: Дата рожд.
-      - blockedMeter: заблокировано сч-ком
-      - build.: зд.
-      - buildingAddress: Адрес дома
-      - changeDate: Дата изменения
-      - countAccounts: Кол-во ЛС
       - date: Дата
-      - diff.: разн.
-      - docCount: Кол-во док-тов
-      - docName: Наим. док-та
-      - docType: Тип док.
+      - message: Сообщение
+      - number: №
+      - title: Название
+      - total: Итого
       - 'false': нет
-      - female: жен.
-      - fio: Ф.И.О.
-      - fl.: кв.
-      - floor: Этаж
-      - hhOwner: Собственник Квартиросъемщик
-      - hhResp: Ответственный плательщик
-      - in ascending order: по возрастанию
-      - locality: Город/нас.пункт
-      - male: муж.
-      - managementType: Тип управления
-      - met.: сч.
-      - 'no': нет
       - 'true': да
+      - 'no': нет
       - 'yes': да
-  - testtable:
-    - topics: operationName
-      entries:
-      - Delete4Bank: Удалить
-      - Edit4Bank: Редактировать
-      - Insert4Bank: Добавить
-    - topics: viewName
-      entries:
-      - All records For Banks: Все записи
   - testTags:
     - topics:
       - Clone
@@ -81,3 +53,15 @@ ru:
       - Municipal: Муниципальный
       - Regional: Региональный
       - admLevel: Административный уровень
+  - default:
+    - topics: operationName
+      entries:
+      - Archive: Архивировать
+      - Browse Archive: Просмотр архива
+      - Clone: Клонировать
+      - Delete: Удалить
+      - Edit: Редактировать
+      - Filter: Фильтр
+      - Insert: Добавить
+      - PermaLink: Постояннная ссылка
+      - Restore from Archive: Восстановить из архива

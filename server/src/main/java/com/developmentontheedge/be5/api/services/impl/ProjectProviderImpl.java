@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CacheInfo;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
@@ -32,7 +32,7 @@ public class ProjectProviderImpl implements ProjectProvider
     	{
 			project = loadProject();
             CacheInfo.clearAll();
-            UserAwareMetaImpl.reCompileLocalizations(injector);
+            injector.get(UserAwareMeta.class).reCompileLocalizations(injector);
         }
 
     	return project;

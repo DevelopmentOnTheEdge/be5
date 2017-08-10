@@ -14,6 +14,8 @@ import com.developmentontheedge.be5.metadata.model.LocalizationElement.SpecialTo
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.beans.annot.PropertyName;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.L10N_TOPIC_OPERATION_NAME;
+
 public class EntityLocalizations extends BeModelElementSupport
 {
     public static final String DISPLAY_NAME_TOPIC = "displayName";
@@ -174,14 +176,15 @@ public class EntityLocalizations extends BeModelElementSupport
                     out.add( new LocalizationRow( operationName, element.getKey(), element.getValue() ) );
                 }
             }
-            else if(topic.equals( "operationName" ))
-            {
-                Operation operation = entity == null ? null : entity.getOperations().get( element.getKey() );
-                if(operation != null && operation.isAvailable())
-                {
-                    out.add( new LocalizationRow( topic, element.getKey(), element.getValue() ) );
-                }
-            }
+// for default localization
+//            else if(topic.equals( "operationName" ))
+//            {
+//                Operation operation = entity == null ? null : entity.getOperations().get( element.getKey() );
+//                if(operation != null && operation.isAvailable())
+//                {
+//                    out.add( new LocalizationRow( topic, element.getKey(), element.getValue() ) );
+//                }
+//            }
             // TODO: viewName is not checked in old BE, thus for consistency it's not checked here as well (for a while)
             /*else if(topic.equals( "viewName" ))
             {

@@ -120,16 +120,24 @@ public class CompiledLocalizations {
         checkNotNull(language);
         checkNotNull(entityName);
         checkNotNull(operationName);
-        return findLocalization(language, entityName, operationName,
+        Optional<String> localization = findLocalization(language, entityName,
                 CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_OPERATION_NAME, operationName));
+
+        return localization.orElseGet(() -> findLocalization(language, "default",
+                CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_OPERATION_NAME, operationName))
+                .orElse(operationName));
     }
 
     public String getQueryTitle(String language, String entityName, final String queryName) {
         checkNotNull(language);
         checkNotNull(entityName);
         checkNotNull(queryName);
-        return findLocalization(language, entityName, queryName,
+        Optional<String> localization = findLocalization(language, entityName,
                 CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_VIEW_NAME, queryName));
+
+        return localization.orElseGet(() -> findLocalization(language, "index",
+                CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_VIEW_NAME, queryName))
+                .orElse(queryName));
     }
 
     public Optional<String> getFieldTitle(String language, String entityName, String operationName, String queryName, String name)
@@ -177,25 +185,13 @@ public class CompiledLocalizations {
                     CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
         }
 
-        return localization;
-    }
-
-    /**
-     * Tries to find a localization and apply the given function to it.
-     * Returns the default value if can't find a localization or if the given function returns null.
-     *
-     * @deprecated Use {@link CompiledLocalizations#findLocalization(String, String, Function)} instead.
-     */
-    @Deprecated
-    private String findLocalization(String language, String entityName, String defaultValue, Function<CompiledEntityLocalizations, String> continuation) {
-        CompiledEntityLocalizations entityLocalizations = all.get(language.toLowerCase(Locale.US), entityName);
-
-        if (entityLocalizations == null)
+        if(!localization.isPresent())
         {
-            return defaultValue;
+            localization = findLocalization(language, "index",
+                    CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
         }
 
-        return MoreObjects.firstNonNull(continuation.apply(entityLocalizations), defaultValue);
+        return localization;
     }
 
     private Optional<String> findLocalization(String language, String entityName, Function<CompiledEntityLocalizations, String> continuation) {

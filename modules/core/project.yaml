@@ -1,7 +1,7 @@
 core:
   moduleProject: true
   features: []
-  l10n: []
+  l10n: ru
   projectFileStructure: {}
   modules: []
   application:

@@ -60,6 +60,16 @@ public class LanguageSelector implements Component
         {
             return messages;
         }
+
+        @Override
+        public String toString()
+        {
+            return "LanguageSelectorResponse{" +
+                    "languages=" + languages +
+                    ", selected='" + selected + '\'' +
+                    ", messages=" + messages +
+                    '}';
+        }
     }
 
     @Override
@@ -107,7 +117,7 @@ public class LanguageSelector implements Component
         
         StreamEx.of(project.getModulesAndApplication())
             .map( m -> m.getLocalizations().get( language.toLowerCase() )).nonNull()
-            .map( ll -> ll.get( "javascript" ) ).nonNull()
+            .map( ll -> ll.get( "frontend.l10n" ) ).nonNull()
             .flatMap( el -> el.getRows().stream() )
             .filter( row -> row.getTopic().equals( DatabaseConstants.L10N_TOPIC_PAGE ) )
             .forEach( row -> messages.put( row.getKey(), row.getValue() ) );

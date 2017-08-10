@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
@@ -21,6 +22,8 @@ public interface UserAwareMeta
         }
 
     }
+
+    void reCompileLocalizations(Injector injector);
 
     /**
      * Returns a localized title in user's preferred language.
