@@ -41,6 +41,7 @@ final public class ActionHelper
 
             if( query.getType() == QueryType.STATIC )
             {
+                //todo parse be3 servlet/path
                 return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
 //                if( parser.isLegacy() )
 //                {
