@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -37,11 +39,31 @@ final public class ActionHelper
         }
         else
         {
-            //LegacyUrlParser parser = legacyQueriesService.createParser(query.getQuery());
-
             if( query.getType() == QueryType.STATIC )
             {
-                //todo parse be3 servlet/path
+                //move to static LegacyUrlParser
+                //mspReceiverCategories.redir
+                if(query.getQuery().contains(".redir")){
+                    String[] parts = query.getQuery().split(".redir");
+                    Map<String, String> params = new HashMap<>();
+                    if(parts.length>1)
+                    {
+                        String[] paramsVal = parts[1].replace("?", "").split("&");
+
+                        for (String s : paramsVal)
+                        {
+                            String[] split = s.split("=");
+                            params.put(split[0], split[1].replace("+", " "));
+                        }
+                    }
+                    if(params.size() == 0){
+                        return Action.call(new HashUrl("table", parts[0]));
+                    }
+                    if(params.get("_qn_") != null){
+                        return Action.call(new HashUrl("table", parts[0], params.get("_qn_")));
+                    }
+                }
+
                 return Action.call(new HashUrl("servlet").named("path", query.getQuery()));
 //                if( parser.isLegacy() )
 //                {
