@@ -447,6 +447,13 @@ public class Query extends EntityItem implements TemplateElement
         }
         else if ( !getTitleName().equals( other.getTitleName() ) )
             return debugEquals( "titleName" );
+        if ( getLayout() == null )
+        {
+            if ( other.getLayout() != null )
+                return debugEquals( "layout" );
+        }
+        else if ( !getLayout().equals( other.getLayout() ) )
+            return debugEquals( "layout" );
         if ( getType() == null )
         {
             if ( other.getType() != null )
@@ -587,11 +594,12 @@ public class Query extends EntityItem implements TemplateElement
 
     public String getLayout()
     {
-        return layout;
+        return getValue( "layout", layout, "" );
     }
 
     public void setLayout(String layout)
     {
-        this.layout = layout;
+        this.layout = customizeProperty( "layout", this.layout, Strings2.nullToEmpty( layout ) );
+        fireChanged();
     }
 }
