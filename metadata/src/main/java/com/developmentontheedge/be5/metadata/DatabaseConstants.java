@@ -40,13 +40,6 @@ public interface DatabaseConstants
     String L10N_TOPIC_SCHEME = "scheme";
     String L10N_TOPIC_ATTRIBUTE = "attribute";
     String L10N_TOPIC_INSERT = "Insert";
-
-    String ENTITY_TYPE_TABLE = "table";
-    String ENTITY_TYPE_COLLECTION = "collection";
-    String ENTITY_TYPE_TABLE_AND_COLLECTION = "table-collections";
-    String ENTITY_TYPE_GENERIC_COLLECTION = "genericCollection";
-    String ENTITY_TYPE_DICTIONARY = "dictionary";
-    String ENTITY_TYPE_METADATA = "metadata";
     
     String PLATFORM_HTML = "HTML";
 

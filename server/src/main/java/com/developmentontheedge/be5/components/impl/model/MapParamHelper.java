@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Deprecated
 public class MapParamHelper implements ParamHelper
 {
     private static final String ENC_ENDING = "_enc";

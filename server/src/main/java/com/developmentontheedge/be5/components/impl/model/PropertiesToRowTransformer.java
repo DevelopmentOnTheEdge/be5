@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -48,10 +49,10 @@ class PropertiesToRowTransformer
 
         if( idObject != null )
         {
-            return MapParamHelper.mapNameOut( String.valueOf( idObject ) );
+            return String.valueOf( idObject );//MapParamHelper.mapNameOut( String.valueOf( idObject ) );
         }
 
-        return ""; // error
+        throw Be5Exception.internal(DatabaseConstants.ID_COLUMN_LABEL + " not found.");
     }
 
     /**
