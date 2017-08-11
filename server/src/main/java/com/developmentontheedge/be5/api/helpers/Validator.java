@@ -6,6 +6,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import static com.developmentontheedge.be5.api.helpers.Validator.Status.SUCCESS;
 import static com.developmentontheedge.be5.api.helpers.Validator.Status.ERROR;
@@ -136,6 +137,11 @@ public class Validator
             {
                 return Date.valueOf(value.toString());
             }
+            if (type == Timestamp.class)
+            {
+                return Timestamp.valueOf(value.toString());
+            }
+
         }
 
         return value;
