@@ -61,21 +61,21 @@ public class UserAwareMetaImpl implements UserAwareMeta
      */
     @Override
     public String getLocalizedEntityTitle(Entity entity) {
-        String localization = getLocalizedEntityTitle(entity.getName());
+        Optional<String> localization = getLocalizedEntityTitle(entity.getName());
 
-        if (localization == null) {
+        if (!localization.isPresent()) {
             if (!Strings.isNullOrEmpty(entity.getDisplayName())) {
                 return entity.getDisplayName();
             }
             return entity.getName();
         }
 
-        return localization;
+        return localization.get();
     }
 
     @Override
-    public String getLocalizedEntityTitle(String entity) {
-        return localizations.getEntityTitle(UserInfoHolder.getLanguage(), entity).orElse(entity);
+    public Optional<String> getLocalizedEntityTitle(String entity) {
+        return localizations.getEntityTitle(UserInfoHolder.getLanguage(), entity);
     }
 
     @Override

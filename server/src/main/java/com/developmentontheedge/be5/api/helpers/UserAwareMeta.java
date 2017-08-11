@@ -7,6 +7,8 @@ import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.google.common.annotations.Beta;
 
+import java.util.Optional;
+
 @Beta
 public interface UserAwareMeta
 {
@@ -33,7 +35,7 @@ public interface UserAwareMeta
     /**
      * Returns a localized title in user's preferred language. Ignores entity's display name.
      */
-    String getLocalizedEntityTitle(String entity);
+    Optional<String> getLocalizedEntityTitle(String entity);
 
     /**
      * Returns a localized title of a query in user's preferred language.
