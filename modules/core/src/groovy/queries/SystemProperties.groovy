@@ -5,9 +5,9 @@ import com.developmentontheedge.be5.query.TableSupport
 class SystemProperties extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
-        columns = getColumns("name", "value")
+        columns = columns("name", "value")
 
         Properties p = System.getProperties()
         Enumeration keys = p.keys()
@@ -15,11 +15,11 @@ class SystemProperties extends TableSupport
         {
             String key = (String)keys.nextElement()
 
-            rows.add(getRow(getCells(
+            rows.add(row(cells(
                     key,
                     (String)p.get(key)
             )))
         }
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

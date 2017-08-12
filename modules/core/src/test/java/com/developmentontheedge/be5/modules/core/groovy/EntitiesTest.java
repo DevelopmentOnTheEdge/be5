@@ -24,7 +24,7 @@ public class EntitiesTest extends AbstractProjectTest
             TableBuilder tableBuilder = (TableBuilder) GroovyRegister.parseClass(query.getQuery()).newInstance();
             TableModel tableModel = tableBuilder
                     .initialize(query, new HashMap<>(), getMockRequest(""), injector)
-                    .get();
+                    .getTable();
 
             assertTrue(tableModel.getRows().size() > 0);
         }

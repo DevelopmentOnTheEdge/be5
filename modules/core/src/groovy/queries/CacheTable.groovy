@@ -7,9 +7,9 @@ import com.github.benmanes.caffeine.cache.Cache
 class CacheTable extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
-        columns = getColumns("Name",
+        columns = columns("Name",
                 "Hit rate",
                 "Eviction count",
                 "Average load penalty",
@@ -18,7 +18,7 @@ class CacheTable extends TableSupport
 
         for (Map.Entry<String, Cache> entry : CacheInfo.caches.entrySet())
         {
-            rows.add(getRow(entry.getKey(), getCells(
+            rows.add(row(entry.getKey(), cells(
                     entry.getKey(),
                     String.format("%.4f", entry.getValue().stats().hitRate()),
                     entry.getValue().stats().evictionCount(),
@@ -28,6 +28,6 @@ class CacheTable extends TableSupport
             )))
         }
 
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

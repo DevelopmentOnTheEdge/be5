@@ -14,7 +14,7 @@ public class TableSupportTest extends AbstractProjectTest
     class TestTable extends TableSupport
     {
         @Override
-        public TableModel get()
+        public TableModel getTable()
         {
             return null;
         }
@@ -30,7 +30,7 @@ public class TableSupportTest extends AbstractProjectTest
                 injector
         );
 
-        List<TableModel.ColumnModel> columns = test.getColumns("name", "value");
+        List<TableModel.ColumnModel> columns = test.columns("name", "value");
         assertEquals("name", columns.get(0).getName());
         assertEquals("name", columns.get(0).getTitle());
         assertEquals("value", columns.get(1).getName());

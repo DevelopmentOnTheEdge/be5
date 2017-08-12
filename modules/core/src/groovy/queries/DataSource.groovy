@@ -5,17 +5,17 @@ import com.developmentontheedge.be5.query.TableSupport
 class DataSource extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
-        columns = getColumns("name", "value")
+        columns = columns("name", "value")
 
         for (Map.Entry<String,String> entry : injector.getDatabaseService().getParameters())
         {
-            rows.add(getRow(getCells(
+            rows.add(row(cells(
                     entry.getKey(),
                     entry.getValue() != null ? entry.getValue() : ""
             )))
         }
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

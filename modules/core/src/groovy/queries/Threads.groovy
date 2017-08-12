@@ -5,15 +5,15 @@ import com.developmentontheedge.be5.query.TableSupport
 class Threads extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet()
-        columns = getColumns("name", "groupName",  "state", "alive", "priority", "threadGroup","id")
+        columns = columns("name", "groupName",  "state", "alive", "priority", "threadGroup","id")
 
 
         for (Thread thread : threadSet)
         {
-            rows.add(getRow(getCells(
+            rows.add(row(cells(
                     thread.name.toString(),
                     thread.threadGroup.getName(),
                     thread.state.toString(),
@@ -25,6 +25,6 @@ class Threads extends TableSupport
             //thread.stackTrace
         }
 
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

@@ -5,22 +5,22 @@ import com.developmentontheedge.be5.query.TableSupport
 class HttpHeaders extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
-        columns = getColumns("name", "value")
+        columns = columns("name", "value")
 
         Enumeration<String> keys = req.rawRequest.getHeaderNames();
         if (keys != null) {
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement()
 
-                rows.add(getRow(getCells(
+                rows.add(row(cells(
                         key,
                         req.rawRequest.getHeader(key)
                 )))
 
             }
         }
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

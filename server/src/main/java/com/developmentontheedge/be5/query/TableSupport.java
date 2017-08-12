@@ -29,7 +29,7 @@ public abstract class TableSupport implements TableBuilder
         return this;
     }
 
-    public List<TableModel.ColumnModel> getColumns(String firstName, String... columnNames)
+    public List<TableModel.ColumnModel> columns(String firstName, String... columnNames)
     {
         List<TableModel.ColumnModel> columns = new ArrayList<>();
         columns.add(new TableModel.ColumnModel(firstName, firstName));
@@ -40,10 +40,10 @@ public abstract class TableSupport implements TableBuilder
                 columns.add(new TableModel.ColumnModel(columnName, columnName));
             }
         }
-        return columns;
+        return Collections.unmodifiableList(columns);
     }
 
-    public List<TableModel.CellModel> getCells(Object firstContent, Object... contents)
+    public List<TableModel.CellModel> cells(Object firstContent, Object... contents)
     {
         List<TableModel.CellModel> columns = new ArrayList<>();
         columns.add(new TableModel.CellModel(firstContent, Collections.EMPTY_MAP));
@@ -54,34 +54,38 @@ public abstract class TableSupport implements TableBuilder
                 columns.add(new TableModel.CellModel(content, Collections.EMPTY_MAP));
             }
         }
-        return columns;
+        return Collections.unmodifiableList(columns);
     }
 
-    public List<TableModel.CellModel> getCells(TableModel.CellModel firstCell, TableModel.CellModel... cells)
+    public List<TableModel.CellModel> cells(TableModel.CellModel firstCell, TableModel.CellModel... cells)
     {
         List<TableModel.CellModel> columns = new ArrayList<>();
         columns.add(firstCell);
         Collections.addAll(columns, cells);
-        return columns;
+        return Collections.unmodifiableList(columns);
     }
 
-    public TableModel.RowModel getRow(List<TableModel.CellModel> cells){
-        return getRow("0", cells);
+    public TableModel.RowModel row(List<TableModel.CellModel> cells){
+        return row("0", cells);
     }
 
-    public TableModel.RowModel getRow(Integer id, List<TableModel.CellModel> cells){
-        return getRow(id.toString(), cells);
+    public TableModel.RowModel row(Integer id, List<TableModel.CellModel> cells){
+        return row(id.toString(), cells);
     }
 
-    public TableModel.RowModel getRow(String id, List<TableModel.CellModel> cells){
+    public TableModel.RowModel row(String id, List<TableModel.CellModel> cells){
         return new TableModel.RowModel(id, cells);
     }
 
-    public TableModel getTable(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows){
+    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows){
         return new TableModel(columns, rows, false, (long) rows.size(), false);
     }
 
-    public TableModel getTable(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate){
+    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable){
+        return new TableModel(columns, rows, selectable, (long) rows.size(), false);
+    }
+
+    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate){
         return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate);
     }
 

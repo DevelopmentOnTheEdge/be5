@@ -118,7 +118,7 @@ public class QueryRouter
 
                 TableModel tableModel = tableBuilder
                         .initialize(query, parametersMap, req, injector)
-                        .get();
+                        .getTable();
 
                 runner.onTable(query, parametersMap, tableModel);
             }

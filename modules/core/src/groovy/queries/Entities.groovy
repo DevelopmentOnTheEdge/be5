@@ -12,9 +12,9 @@ import com.developmentontheedge.be5.util.HashUrl
 class Entities extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
-        columns = getColumns("Name","Type",
+        columns = columns("Name","Type",
                 "Columns",
                 "Queries", "Operations")
         Meta meta = injector.getMeta()
@@ -36,9 +36,9 @@ class Entities extends TableSupport
                         .named("entity", entity.getName()).toString()))
             cells.add(new CellModel(meta.getOperationNames(entity).size()))
 
-            rows.add(getRow(cells))
+            rows.add(row(cells))
         }
 
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

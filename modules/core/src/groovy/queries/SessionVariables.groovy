@@ -5,22 +5,22 @@ import com.developmentontheedge.be5.query.TableSupport
 class SessionVariables extends TableSupport
 {
     @Override
-    TableModel get()
+    TableModel getTable()
     {
         def session = req.getRawSession()
-        columns = getColumns("name", "value")
+        columns = columns("name", "value")
 
         Enumeration it = session.getAttributeNames();
         while (it.hasMoreElements())
         {
             String name = (String)it.nextElement()
 
-            rows.add(getRow(getCells(
+            rows.add(row(cells(
                     name,
                     session.getAttribute(name).toString()
             )))
         }
 
-        return getTable(columns, rows)
+        return table(columns, rows)
     }
 }

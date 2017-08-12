@@ -11,5 +11,5 @@ public interface TableBuilder
 {
     TableBuilder initialize(Query query, Map<String, String> parametersMap, Request req, Injector injector);
 
-    TableModel get();
+    TableModel getTable();
 }
