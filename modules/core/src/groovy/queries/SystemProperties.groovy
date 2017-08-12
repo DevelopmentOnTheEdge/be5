@@ -1,13 +1,13 @@
 import com.developmentontheedge.be5.components.impl.model.TableModel
-import com.developmentontheedge.be5.query.TableSupport
+import com.developmentontheedge.be5.query.TableBuilderSupport
 
 
-class SystemProperties extends TableSupport
+class SystemProperties extends TableBuilderSupport
 {
     @Override
     TableModel getTable()
     {
-        columns = columns("name", "value")
+        addColumns("name", "value")
 
         Properties p = System.getProperties()
         Enumeration keys = p.keys()
@@ -15,10 +15,7 @@ class SystemProperties extends TableSupport
         {
             String key = (String)keys.nextElement()
 
-            rows.add(row(cells(
-                    key,
-                    (String)p.get(key)
-            )))
+            addRow(cells( key, p.get(key).toString() ))
         }
         return table(columns, rows)
     }

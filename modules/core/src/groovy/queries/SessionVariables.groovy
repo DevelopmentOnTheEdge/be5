@@ -1,24 +1,24 @@
 import com.developmentontheedge.be5.components.impl.model.TableModel
-import com.developmentontheedge.be5.query.TableSupport
+import com.developmentontheedge.be5.query.TableBuilderSupport
 
 
-class SessionVariables extends TableSupport
+class SessionVariables extends TableBuilderSupport
 {
     @Override
     TableModel getTable()
     {
-        def session = req.getRawSession()
-        columns = columns("name", "value")
+        addColumns("name", "value")
 
+        def session = req.getRawSession()
         Enumeration it = session.getAttributeNames();
         while (it.hasMoreElements())
         {
             String name = (String)it.nextElement()
 
-            rows.add(row(cells(
+            addRow(cells(
                     name,
                     session.getAttribute(name).toString()
-            )))
+            ))
         }
 
         return table(columns, rows)

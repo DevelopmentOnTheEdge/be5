@@ -5,35 +5,38 @@ import com.developmentontheedge.be5.test.AbstractProjectTest;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class TableSupportTest extends AbstractProjectTest
 {
-    class TestTable extends TableSupport
+    class TestTable extends TableBuilderSupport
     {
         @Override
         public TableModel getTable()
         {
-            return null;
+            addColumns("name", "value");
+
+            addRow(cells("a1", "b1"));
+            addRow(cells("a2", "b2"));
+
+            return table(columns, rows);
         }
     }
 
     @Test
     public void getColumnsTest() throws Exception
     {
-        TestTable test = (TestTable)new TestTable().initialize(
+        TableModel table = new TestTable().initialize(
                 injector.getMeta().getQueryIgnoringRoles("testtableAdmin", "All records"),
                 new HashMap<>(),
                 getMockRequest(""),
                 injector
-        );
+        ).getTable();
 
-        List<TableModel.ColumnModel> columns = test.columns("name", "value");
-        assertEquals("name", columns.get(0).getName());
-        assertEquals("name", columns.get(0).getTitle());
-        assertEquals("value", columns.get(1).getName());
+        assertEquals("name", table.getColumns().get(0).getName());
+        assertEquals("name", table.getColumns().get(0).getTitle());
+        assertEquals("value", table.getColumns().get(1).getName());
     }
 
 }

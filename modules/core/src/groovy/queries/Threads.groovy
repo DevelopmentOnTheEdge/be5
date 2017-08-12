@@ -1,19 +1,18 @@
 import com.developmentontheedge.be5.components.impl.model.TableModel
-import com.developmentontheedge.be5.query.TableSupport
+import com.developmentontheedge.be5.query.TableBuilderSupport
 
 
-class Threads extends TableSupport
+class Threads extends TableBuilderSupport
 {
     @Override
     TableModel getTable()
     {
+        addColumns("name", "groupName",  "state", "alive", "priority", "threadGroup", "id")
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet()
-        columns = columns("name", "groupName",  "state", "alive", "priority", "threadGroup","id")
-
 
         for (Thread thread : threadSet)
         {
-            rows.add(row(cells(
+            addRow(cells(
                     thread.name.toString(),
                     thread.threadGroup.getName(),
                     thread.state.toString(),
@@ -21,8 +20,7 @@ class Threads extends TableSupport
                     thread.priority.toString(),
                     thread.threadGroup.toString(),
                     thread.id.toString(),
-            )))
-            //thread.stackTrace
+            ))
         }
 
         return table(columns, rows)

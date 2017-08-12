@@ -6,17 +6,15 @@ import com.developmentontheedge.be5.components.impl.model.TableModel
 import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.model.Entity
-import com.developmentontheedge.be5.query.TableSupport
+import com.developmentontheedge.be5.query.TableBuilderSupport
 import com.developmentontheedge.be5.util.HashUrl
 
-class Entities extends TableSupport
+class Entities extends TableBuilderSupport
 {
     @Override
     TableModel getTable()
     {
-        columns = columns("Name","Type",
-                "Columns",
-                "Queries", "Operations")
+        addColumns("Name","Type", "Columns", "Queries", "Operations")
         Meta meta = injector.getMeta()
 
         def entities = meta.getOrderedEntities(UserInfoHolder.language)
@@ -36,7 +34,7 @@ class Entities extends TableSupport
                         .named("entity", entity.getName()).toString()))
             cells.add(new CellModel(meta.getOperationNames(entity).size()))
 
-            rows.add(row(cells))
+            addRow(cells)
         }
 
         return table(columns, rows)
