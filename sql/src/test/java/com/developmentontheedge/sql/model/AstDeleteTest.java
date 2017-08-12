@@ -29,6 +29,13 @@ public class AstDeleteTest
         assertEquals(query, SqlQuery.parse( query ).format());
     }
 
+    @Test
+    public void testWhereReplacementParameterIn()
+    {
+        String query = "DELETE FROM Customers WHERE CustomerName IN (?)";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testError()
     {

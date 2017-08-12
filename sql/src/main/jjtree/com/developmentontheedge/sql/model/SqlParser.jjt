@@ -1448,7 +1448,7 @@ void InPredicatePart() #InPredicate : {}
 void InValueList() #InValueList :
 {}
 {
-	<LEFT_PAREN> (ValueExpression()) (<COMMA> ValueExpression())*   <RIGHT_PAREN>
+	<LEFT_PAREN> (RowValuePredicand()) (<COMMA> RowValuePredicand())*   <RIGHT_PAREN>
 }
 
 void RowValueExpression() : {}									// @pending
