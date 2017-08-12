@@ -23,13 +23,7 @@ public class TransactionTest extends AbstractProjectTest
     {
         databaseService = injector.getDatabaseService();
         db = injector.getSqlService();
-        db.update("DROP TABLE IF EXISTS persons;" );
-        db.update("CREATE TABLE persons (\n" +
-                "    ID  BIGSERIAL PRIMARY KEY,\n" +
-                "    name varchar(255),\n" +
-                "    password varchar(255),\n" +
-                "    email varchar(255) \n" +
-                ");");
+        db.update("DELETE FROM persons" );
     }
 
     @Test

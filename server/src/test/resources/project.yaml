@@ -10,6 +10,7 @@ testProject:
   - testtUser
   - atest
   - meters
+  - persons
   - propertyTypes
   - testTags
   scripts:

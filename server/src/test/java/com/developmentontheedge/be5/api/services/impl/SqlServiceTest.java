@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class SqlServiceTest extends AbstractProjectTest
+public class SqlServiceTest extends AbstractProjectIntegrationH2Test
 {
     private static SqlService db;
 
@@ -25,13 +25,7 @@ public class SqlServiceTest extends AbstractProjectTest
     public static void setUp()
     {
         db = injector.getSqlService();
-        db.update("DROP TABLE IF EXISTS persons;" );
-        db.update("CREATE TABLE persons (\n" +
-                "    ID  BIGSERIAL PRIMARY KEY,\n" +
-                "    name varchar(255),\n" +
-                "    password varchar(255),\n" +
-                "    email varchar(255) \n" +
-                ");");
+        db.update("DELETE FROM persons" );
 
         int update = db.update("INSERT INTO persons (name, password) VALUES (?,?)",
                 "user1", "pass1");
@@ -139,13 +133,13 @@ public class SqlServiceTest extends AbstractProjectTest
     @Test
     public void testSelectListLambda() {
         List<String> strings = db.selectList("SELECT * FROM persons", rs ->
-                rs.getString("ID") + " "  + rs.getString("name") + " "
+                rs.getString("name") + " "
                         + rs.getString("password")
         );
 
         assertTrue(strings.size() >= 2);
-        assertEquals("1 user1 pass1", strings.get(0));
-        assertEquals("2 user2 pass2", strings.get(1));
+        assertEquals("user1 pass1", strings.get(0));
+        assertEquals("user2 pass2", strings.get(1));
     }
 
     @Test

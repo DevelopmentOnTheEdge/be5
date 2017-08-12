@@ -27,13 +27,7 @@ public class MultiThreadedTest extends AbstractProjectTest
     {
         databaseService = injector.getDatabaseService();
         db = injector.getSqlService();
-        db.update("DROP TABLE IF EXISTS Persons" );
-        db.update("CREATE TABLE Persons (\n" +
-                "    ID int NOT NULL AUTO_INCREMENT,\n" +
-                "    name varchar(255),\n" +
-                "    password varchar(255),\n" +
-                "    email varchar(255) \n" +
-                ")");
+        db.update("DELETE FROM persons" );
     }
 
     @Test

@@ -91,7 +91,7 @@ public class SqlServiceImpl implements SqlService
 
     private int update(Connection conn, String sql, Object... params) throws SQLException
     {
-        //sql = format(sql); //need delete all drop create in runtime (as in hibernate. only options is a create entity.yaml)
+        sql = format(sql);
         log.fine(sql + Arrays.toString(params));
         return queryRunner.update(conn, sql, params);
     }
