@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertEquals;
 
 
-public class MultiThreadedTest extends AbstractProjectTest
+public class MultiThreadedTest extends AbstractProjectIntegrationH2Test
 {
     private static SqlService db;
     private static DatabaseService databaseService;

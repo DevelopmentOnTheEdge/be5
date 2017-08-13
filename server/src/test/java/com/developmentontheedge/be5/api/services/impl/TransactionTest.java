@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -8,11 +8,10 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 import static org.junit.Assert.assertEquals;
 
 
-public class TransactionTest extends AbstractProjectTest
+public class TransactionTest extends AbstractProjectIntegrationH2Test
 {
     private static SqlService db;
 
