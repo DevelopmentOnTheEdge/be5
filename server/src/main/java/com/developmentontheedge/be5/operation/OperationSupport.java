@@ -15,14 +15,14 @@ import java.util.Map;
 
 public abstract class OperationSupport implements Operation
 {
-    protected Injector injector;
+    public Injector injector;
 
-    protected DatabaseService databaseService;
-    protected DatabaseModel database;
-    protected SqlService db;
-    protected SqlHelper sqlHelper;
-    protected Meta meta;
-    protected OperationHelper helper;
+    public DatabaseService databaseService;
+    public DatabaseModel database;
+    public SqlService db;
+    public SqlHelper sqlHelper;
+    public Meta meta;
+    public OperationHelper helper;
 
     private OperationInfo operationInfo;
     private OperationResult operationResult;
