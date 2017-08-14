@@ -18,6 +18,14 @@ ru:
     - topics: displayName
       entries:
       - Logout: Выход
+  - categories:
+    - topics:
+      - '@AllQueries'
+      - Insert
+      - Filter
+      entries:
+      - PublicID: Код категориии
+      - Name: Наименование
   - users:
     - topics: displayName
       entries:
