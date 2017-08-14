@@ -113,7 +113,7 @@ public class UserAwareMetaImpl implements UserAwareMeta
 
         if(localized.startsWith("{{{") && localized.endsWith("}}}"))
         {
-            String clearContent = content.substring(3,localized.length()-3);
+            String clearContent = localized.substring(3,localized.length()-3);
             return localizations.get(UserInfoHolder.getLanguage(), entity, query, clearContent)
                     .orElse(clearContent);
         }
