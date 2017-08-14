@@ -60,5 +60,5 @@ public class ValidatorTest extends AbstractProjectTest
         validator.checkErrorAndCast(property);
     }
 
-
+    //add test setError(DynamicProperty property, String message)
 }

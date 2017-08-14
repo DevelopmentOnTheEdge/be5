@@ -23,7 +23,13 @@ public class Validator
 
     public enum Status
     {
-        SUCCESS, WARNING, ERROR
+        SUCCESS, WARNING, ERROR;
+
+        @Override
+        public String toString()
+        {
+            return this.name().toLowerCase();
+        }
     }
 
     public void checkErrorAndCast(DynamicPropertySet dps)
@@ -90,12 +96,12 @@ public class Validator
 
     public void setSuccess(DynamicProperty property)
     {
-        property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString().toLowerCase() );
+        property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
     }
 
     public void setError(DynamicProperty property, Throwable e)
     {
-        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString().toLowerCase() );
+        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
 
         String msg = "Error";
         if(e instanceof IllegalArgumentException)msg = "Error, value must be a " + property.getType().getName();
@@ -105,7 +111,7 @@ public class Validator
 
     public void setError(DynamicProperty property, String message)
     {
-        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString().toLowerCase() );
+        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
         property.setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 

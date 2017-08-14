@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
@@ -23,6 +24,7 @@ public abstract class OperationSupport implements Operation
     public SqlHelper sqlHelper;
     public Meta meta;
     public OperationHelper helper;
+    public Validator validator;
 
     private OperationInfo operationInfo;
     private OperationResult operationResult;
@@ -45,6 +47,7 @@ public abstract class OperationSupport implements Operation
         this.meta = injector.getMeta();
         this.sqlHelper = injector.get(SqlHelper.class);
         this.helper = injector.get(OperationHelper.class);
+        this.validator = injector.get(Validator.class);
 
         this.operationInfo = operationInfo;
         this.operationResult = operationResult;

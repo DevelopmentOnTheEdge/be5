@@ -77,7 +77,8 @@ public class OperationServiceImpl implements OperationService
         if (parameters == null)
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
-            return execute(operation, null, operationContext, req);
+            return execute(entityName, queryName, operationName, selectedRowsString, meta,
+                    presetValues, operation, null, operationContext, req);
         }
 
         if(parameters instanceof DynamicPropertySet)
@@ -118,6 +119,8 @@ public class OperationServiceImpl implements OperationService
 
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
+        //add TransactionalOperation interface and support all in transaction getParameters and invoke in execute
+
         Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
 
         if(parameters instanceof DynamicPropertySet)
@@ -132,16 +135,24 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        execute(operation, parameters, operationContext, req);
-
-        return Either.second(operation.getResult());
+        return execute(entityName, queryName, operationName, selectedRowsString, meta,
+                presetValues, operation, parameters, operationContext, req);
     }
 
-    public Either<FormPresentation, OperationResult> execute(Operation operation, Object parameters, OperationContext operationContext, Request req)
+    public Either<FormPresentation, OperationResult> execute(String entityName, String queryName, String operationName,
+         String selectedRowsString, OperationInfo meta, Map<String, Object> presetValues, Operation operation,
+                                                             Object parameters, OperationContext operationContext, Request req)
     {
         try
         {
             operation.invoke(parameters, operationContext);
+
+            if(operation.getResult().getStatus() == OperationStatus.ERROR)
+            {
+                return Either.first(new FormPresentation(entityName, queryName, operationName,
+                        userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+            }
 
             if(operation.getResult().getStatus() == OperationStatus.IN_PROGRESS)
             {

@@ -123,6 +123,7 @@ public class OperationResult
 
     public static OperationResult error(Throwable details)
     {
+        //todo сериализуется Throwable в json - зачем?
         return new OperationResult(OperationStatus.ERROR, details); 
     }
 
