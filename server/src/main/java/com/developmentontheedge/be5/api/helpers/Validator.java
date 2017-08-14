@@ -75,7 +75,7 @@ public class Validator
                         if (property.getType() != property.getValue().getClass())
                         {
                             throw new IllegalArgumentException(property.toString() +
-                                    ", type must be " + property.getValue().getClass().toString());
+                                    ", type must be " + property.getType().toString());
                         }
                     }
                 }

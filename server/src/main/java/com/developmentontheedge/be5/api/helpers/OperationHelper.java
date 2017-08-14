@@ -4,18 +4,15 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.CacheInfo;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
+import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -118,21 +115,18 @@ public class OperationHelper
         if (!query.isPresent())
             throw new IllegalArgumentException();
 
-        List<DynamicPropertySet> list = new Be5QueryExecutor(query.get(), extraParams, request, injector).execute();
-        String[][] stockArr = new String[list.size()][2];
+        TableModel table = TableModel
+                .from(query.get(), extraParams, request, false, injector)
+                .limit(Integer.MAX_VALUE)
+                .build();
+        String[][] stockArr = new String[table.getRows().size()][2];
 
-        for (int i = 0; i < list.size(); i++)
+        int i = 0;
+        for (TableModel.RowModel row : table.getRows())
         {
-            Iterator<DynamicProperty> iterator = list.get(i).iterator();
-
-            DynamicProperty firstProperty;
-            do{
-                firstProperty = iterator.next();
-            }while (firstProperty.getName().startsWith("___"));
-
-            String first = iterator.hasNext() ? firstProperty.getValue().toString() : "";
-            String second = iterator.hasNext() ? iterator.next().getValue().toString() : "";
-            stockArr[i] = new String[]{first, userAwareMeta.getLocalizedOperationField(tableName, second)};
+            String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
+            String second = row.getCells().size() >= 2 ? row.getCells().get(1).content.toString() : "";
+            stockArr[i++] = new String[]{first, userAwareMeta.getLocalizedOperationField(tableName, second)};
         }
 
         return stockArr;
