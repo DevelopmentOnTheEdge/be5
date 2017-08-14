@@ -16,20 +16,20 @@ public interface QueryContext
      *            parameter name
      * @return parameter value by name or null if parameter absent
      */
-    public List<String> getListParameter(String name);
+    List<String> getListParameter(String name);
     
-    public String getParameter(String name);
+    String getParameter(String name);
 
     /**
      * @param name
      *            session variable name
      * @return session variable value or null if such variable does not exist
      */
-    public String getSessionVariable(String name);
+    String getSessionVariable(String name);
 
-    public Map<String, String> asMap();
+    Map<String, String> asMap();
     
-    public String resolveQuery(String entity, String name);
+    String resolveQuery(String entity, String name);
 
     /**
      * @return name of the current user

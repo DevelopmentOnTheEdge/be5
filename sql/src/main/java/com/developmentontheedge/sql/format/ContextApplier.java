@@ -270,8 +270,7 @@ public class ContextApplier
                 default:
                     throw new UnsupportedOperationException( "Unsupported placeholder: " + ph );
             }
-            AstStringConstant stringReplacement = new AstStringConstant( rawResult );
-            replacement = stringReplacement;
+            replacement = new AstStringConstant( rawResult );
         }
         replacement.inheritFrom( placeholderNode );
         placeholderNode.replaceWith( replacement );
