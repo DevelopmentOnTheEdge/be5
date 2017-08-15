@@ -181,7 +181,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     @Override
     public RecordModel get( String id )
     {
-        return get(Collections.singletonMap("id", "" + id));
+        return get(Collections.singletonMap(entity.getPrimaryKey(), "" + id));
     }
 
     @Override
@@ -347,10 +347,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
-        String pkName = entity.getPrimaryKey();
         Object pkValue = sqlHelper.castToTypePrimaryKey(entity, id);
 
-        DynamicPropertySet dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + pkName + " =?",
+        DynamicPropertySet dps = db.select("SELECT * FROM " + entity.getName()
+                        + " WHERE " + entity.getPrimaryKey() + " =?",
                 rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), pkValue);
 
         sqlHelper.updateValuesWithSpecial(dps, values);
