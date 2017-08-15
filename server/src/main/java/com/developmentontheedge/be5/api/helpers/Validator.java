@@ -115,7 +115,7 @@ public class Validator
         property.setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
-    private Object getTypedValueFromString(Class<?> type, Object value)
+    public Object getTypedValueFromString(Class<?> type, Object value)
     {
         if(value instanceof String)
         {

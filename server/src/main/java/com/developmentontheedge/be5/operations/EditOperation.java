@@ -17,7 +17,7 @@ public class EditOperation extends OperationSupport implements Operation
         Entity entity = getInfo().getEntity();
 
         dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
-                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), sqlHelper.castToType(entity, records[0]));
+                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), sqlHelper.castToTypePrimaryKey(entity, records[0]));
 
         sqlHelper.updateValuesWithSpecial(dps, presetValues);
 
@@ -30,7 +30,7 @@ public class EditOperation extends OperationSupport implements Operation
         Entity entity = getInfo().getEntity();
 
         db.update(sqlHelper.generateUpdateSql(entity, dps),
-                ObjectArrays.concat(sqlHelper.getValues(dps), sqlHelper.castToType(entity, records[0])));
+                ObjectArrays.concat(sqlHelper.getValues(dps), sqlHelper.castToTypePrimaryKey(entity, records[0])));
     }
 
 }

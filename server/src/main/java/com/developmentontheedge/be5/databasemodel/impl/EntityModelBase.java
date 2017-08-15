@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 
+import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -64,8 +65,28 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 .from(entity.getName())
                 .where(values);
 
-        DynamicPropertySet dps = db.select(sql.format(), rs -> sqlHelper.getDps(entity, rs), values.values().toArray());
+        DynamicPropertySet dps = db.select(sql.format(), rs -> sqlHelper.getDps(entity, rs), castValues(entity, values));
         return dps == null ? null : new RecordModelBase( this, dps );
+    }
+
+    @DirtyRealization(comment="move to sqlHelper, use castToType")
+    private Object[] castValues(Entity entity, Map<String, String> stringValues){
+        DynamicPropertySet dps = sqlHelper.getDps(entity);
+        sqlHelper.getDps(entity);
+
+        Object[] values = new Object[stringValues.size()];
+
+        int i=0;
+        for(Map.Entry<String,String> entry : stringValues.entrySet())
+        {
+            values[i] = castValue(dps, entry.getKey(), entry.getValue());
+        }
+        return values;
+    }
+
+    @DirtyRealization(comment="move to sqlHelper, use castToType")
+    private Object castValue(DynamicPropertySet dps, String name, String value){
+        return validator.getTypedValueFromString(dps.getProperty(name).getType(), value);
     }
 
     @Override
@@ -326,13 +347,16 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
-        DynamicPropertySet parameters = db.select("SELECT * FROM " + entity.getName() + " WHERE ID =?",
-                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), id);
+        String pkName = entity.getPrimaryKey();
+        Object pkValue = sqlHelper.castToTypePrimaryKey(entity, id);
 
-        sqlHelper.updateValuesWithSpecial(parameters, values);
+        DynamicPropertySet dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + pkName + " =?",
+                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), pkValue);
 
-        db.update(sqlHelper.generateUpdateSql(entity, parameters),
-                ObjectArrays.concat(sqlHelper.getValues(parameters), id));
+        sqlHelper.updateValuesWithSpecial(dps, values);
+
+        db.update(sqlHelper.generateUpdateSql(entity, dps),
+                ObjectArrays.concat(sqlHelper.getValues(dps), pkValue));
     }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>

@@ -363,12 +363,12 @@ public class SqlHelper
 
     private Object[] castToType(SqlColumnType type, Object[] ids)
     {
-        Object[] arr = new Object[ids.length];
+        Object[] castedIds = new Object[ids.length];
         for (int i = 0; i < ids.length; i++)
         {
-            arr[i] = castToType(type, ids[i]);
+            castedIds[i] = castToType(type, ids[i]);
         }
-        return arr;
+        return castedIds;
     }
 
     private Object castToType(SqlColumnType type, Object id)
@@ -379,7 +379,9 @@ public class SqlHelper
         return id;
     }
 
-    public Object castToType(Entity entity, Object id)
+    //todo refactoring, castPrimaryKey ? add method for one, for many.
+    // Use meta.getColumns
+    public Object castToTypePrimaryKey(Entity entity, Object id)
     {
         ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
         return castToType(primaryKeyColumn.getType(), id);

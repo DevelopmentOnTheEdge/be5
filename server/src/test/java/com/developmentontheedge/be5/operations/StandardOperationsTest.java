@@ -47,7 +47,7 @@ public class StandardOperationsTest extends AbstractProjectTest
     public void deleteOperation(){
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Delete", "1", "");
 
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
+        assertEquals(OperationResult.finished(),
                 operationService.generate(req).getSecond());
 
         verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
