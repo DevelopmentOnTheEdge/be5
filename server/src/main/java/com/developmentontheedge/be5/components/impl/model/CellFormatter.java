@@ -152,7 +152,7 @@ public class CellFormatter
         return StreamEx.of(dps.spliterator()).map(property -> {
             String name = property.getName();
             Object value = property.getValue();
-            String processedCell = format(new TableModel.RawCellModel(value.toString()), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
+            String processedCell = format(new TableModel.RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return processedCell;
         }).toList();
