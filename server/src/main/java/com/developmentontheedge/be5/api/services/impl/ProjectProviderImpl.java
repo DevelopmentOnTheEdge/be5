@@ -17,6 +17,7 @@ public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
     private Injector injector;
+    private Map<String, Project> initModulesMap;
 
     private WatchDir watcher = null;
 
@@ -45,14 +46,21 @@ public class ProjectProviderImpl implements ProjectProvider
         try
         {
             if(watcher != null)watcher.stop();
+            Project newProject = null;
 
-            Project project = ModuleLoader2.findAndLoadProjectWithModules();
+            try{
+                newProject = ModuleLoader2.findAndLoadProjectWithModules();
+            }catch (RuntimeException e){
+                System.out.println("Can't load project.\n" + e.toString());
+            }
 
-            watcher = new WatchDir(ModuleLoader2.getModulesMap())
+            if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
+
+            watcher = new WatchDir(initModulesMap)
                     .onModify( onModify -> dirty = true)
                     .start();
 
-            return project;
+            return newProject != null ? newProject : project;
         }
         catch(ProjectLoadException | IOException e)
         {
