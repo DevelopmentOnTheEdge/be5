@@ -19,9 +19,12 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.metadata.model.Project;
 
+import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.be5.metadata.util.ProcessController;
 import one.util.streamex.StreamEx;
 
 public class WatchDir
@@ -112,12 +115,31 @@ public class WatchDir
     /**
      * Creates a WatchService and registers the given Project
      */
-    public WatchDir(Project prj) throws IOException {
+    public WatchDir(Project project) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<>();
         this.recursive = true;
         
-        registerAll(new ProjectFileSystem( prj ));
+        registerAll(new ProjectFileSystem( project ));
+    }
+
+    public WatchDir(Map<String, Project> modulesMap) throws IOException {
+        this.watcher = FileSystems.getDefault().newWatchService();
+        this.keys = new HashMap<>();
+        this.recursive = true;
+
+        StringBuilder sb = new StringBuilder("Watch project: \n");
+        for (Map.Entry<String, Project> entry : modulesMap.entrySet()){
+            ProjectFileSystem projectFileSystem = new ProjectFileSystem(entry.getValue());
+
+            if(projectFileSystem.getRoot().toString().length() > 3 &&
+                    Files.exists(projectFileSystem.getRoot()))
+            {
+                sb.append(entry.getKey()).append(": ").append(projectFileSystem.getRoot()).append("\n");
+                registerAll(projectFileSystem);
+            }
+        }
+        System.out.println(sb.toString());
     }
     
     public WatchDir onModify(Consumer<Path> onModify) {

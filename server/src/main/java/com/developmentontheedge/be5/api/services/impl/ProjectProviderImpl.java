@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class ProjectProviderImpl implements ProjectProvider
 {
@@ -47,7 +48,9 @@ public class ProjectProviderImpl implements ProjectProvider
 
             Project project = ModuleLoader2.findAndLoadProjectWithModules();
 
-            watcher = new WatchDir(project).onModify( onModify -> dirty = true).start();
+            watcher = new WatchDir(ModuleLoader2.getModulesMap())
+                    .onModify( onModify -> dirty = true)
+                    .start();
 
             return project;
         }

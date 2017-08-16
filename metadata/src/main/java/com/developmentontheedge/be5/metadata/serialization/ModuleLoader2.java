@@ -36,7 +36,12 @@ public class ModuleLoader2
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
 
     private static Map<String, Project> modulesMap;
-    
+
+    public static Map<String, Project> getModulesMap()
+    {
+        return modulesMap;
+    }
+
     private static synchronized void loadAllProjects(boolean dirty)
     {
         if( modulesMap != null && !dirty)
