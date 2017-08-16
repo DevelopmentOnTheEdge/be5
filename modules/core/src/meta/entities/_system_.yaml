@@ -7,6 +7,8 @@ _system_:
   - Cache:
       type: Groovy
       roles: Administrator
+      operations:
+      - ReloadProject
       file: CacheTable.groovy
   - Entities:
       type: Groovy
@@ -42,5 +44,10 @@ _system_:
   operations:
   - SessionVariablesEdit:
       type: Groovy
+      records: 1
       roles: Administrator
       file: SessionVariablesEdit.groovy
+  - ReloadProject:
+      type: Groovy
+      roles: Administrator
+      file: ReloadProject.groovy

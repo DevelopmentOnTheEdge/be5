@@ -10,5 +10,6 @@ public interface ProjectProvider
      * but the project can be reloaded.
      */
     Project getProject();
-    
+
+    void reloadProject();
 }

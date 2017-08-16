@@ -18,6 +18,7 @@ public class ProjectProviderImpl implements ProjectProvider
     private Injector injector;
 
     private WatchDir watcher = null;
+
     private volatile boolean dirty = false;
 
     public ProjectProviderImpl(LogConfigurator logConfigurator, Injector injector)
@@ -58,6 +59,13 @@ public class ProjectProviderImpl implements ProjectProvider
         {
             dirty = false;
         }
+    }
+
+    @Override
+    public void reloadProject()
+    {
+        this.dirty = true;
+        getProject();
     }
 
 }
