@@ -52,6 +52,10 @@ public class ProjectProviderImpl implements ProjectProvider
                 newProject = ModuleLoader2.findAndLoadProjectWithModules();
             }catch (RuntimeException e){
                 System.out.println("Can't load project.\n" + e.toString());
+                if(project == null){
+                    e.printStackTrace();
+                    System.exit(0);
+                }
             }
 
             if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
