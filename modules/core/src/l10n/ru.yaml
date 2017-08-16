@@ -18,6 +18,21 @@ ru:
     - topics: displayName
       entries:
       - Logout: Выход
+  - _system_:
+    - topics: displayName
+      entries:
+      - displayName: Система
+    - topics: viewName
+      entries:
+      - Session variables: Переменные сессии
+      - Cache: Статистика кэша
+      - DataSource: Характеристики БД
+      - System Properties: Свойства
+      - Threads: Список потоков
+    - topics: operationName
+      entries:
+      - SessionVariablesEdit: Изменить переменную сессии
+      - ReloadProject: Перезагрузить проект и сбросить все кэши
   - classifications:
     - topics:
       - '@AllQueries'
