@@ -117,40 +117,46 @@ public class Validator
 
     public Object getTypedValueFromString(Class<?> type, Object value)
     {
-        if(value instanceof String)
-        {
-            if (type == Integer.class)
-            {
-                return Integer.parseInt(value.toString());
-            }
-            if (type == Long.class)
-            {
-                return Long.parseLong(value.toString());
-            }
-            if (type == Float.class)
-            {
-                return Float.parseFloat(value.toString());
-            }
-            if (type == Double.class)
-            {
-                return Double.parseDouble(value.toString());
-            }
-            if (type == Boolean.class)
-            {
-                return Boolean.parseBoolean(value.toString());
-            }
-            if (type == Date.class)
-            {
-                return Date.valueOf(value.toString());
-            }
-            if (type == Timestamp.class)
-            {
-                return Timestamp.valueOf(value.toString());
-            }
+        assert value instanceof String;
 
+        if (type == Short.class)
+        {
+            return Short.parseShort(value.toString());
+        }
+        if (type == Integer.class)
+        {
+            return Integer.parseInt(value.toString());
+        }
+        if (type == Long.class)
+        {
+            return Long.parseLong(value.toString());
+        }
+        if (type == Float.class)
+        {
+            return Float.parseFloat(value.toString());
+        }
+        if (type == Double.class)
+        {
+            return Double.parseDouble(value.toString());
+        }
+        if (type == Boolean.class)
+        {
+            return Boolean.parseBoolean(value.toString());
+        }
+        if (type == Date.class)
+        {
+            return Date.valueOf(value.toString());
+        }
+        if (type == Timestamp.class)
+        {
+            return Timestamp.valueOf(value.toString());
+        }
+        if (type == String.class)
+        {
+            return value;
         }
 
-        return value;
+        throw new IllegalArgumentException("Unknown type");
     }
 
     public boolean isError(DynamicProperty property)

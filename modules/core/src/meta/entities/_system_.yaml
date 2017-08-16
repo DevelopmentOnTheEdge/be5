@@ -20,6 +20,8 @@ _system_:
   - Session variables:
       type: Groovy
       roles: Administrator
+      operations:
+      - SessionVariablesEdit
       file: SessionVariables.groovy
   - Threads:
       type: Groovy
@@ -37,4 +39,8 @@ _system_:
       type: Groovy
       roles: Administrator
       file: DataSource.groovy
-
+  operations:
+  - SessionVariablesEdit:
+      type: Groovy
+      roles: Administrator
+      file: SessionVariablesEdit.groovy
