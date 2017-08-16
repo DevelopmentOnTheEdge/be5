@@ -18,6 +18,14 @@ ru:
     - topics: displayName
       entries:
       - Logout: Выход
+  - classifications:
+    - topics:
+      - '@AllQueries'
+      - Insert
+      - Filter
+      entries:
+      - Category: Категория
+      - DocumentType: Документ
   - categories:
     - topics:
       - '@AllQueries'
