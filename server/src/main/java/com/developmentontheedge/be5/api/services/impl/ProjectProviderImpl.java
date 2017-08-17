@@ -23,7 +23,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private volatile boolean dirty = false;
 
-    public ProjectProviderImpl(LogConfigurator logConfigurator, Injector injector)
+    public ProjectProviderImpl(Injector injector)
     {
         this.injector = injector;
     }

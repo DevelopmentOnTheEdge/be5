@@ -13,6 +13,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.developmentontheedge.be5.metadata.model.Project;
 
@@ -128,18 +130,18 @@ public class WatchDir
         this.keys = new HashMap<>();
         this.recursive = true;
 
-        StringBuilder sb = new StringBuilder("Watch project: \n");
+        List<String> watchProject = new ArrayList<>();
         for (Map.Entry<String, Project> entry : modulesMap.entrySet()){
             ProjectFileSystem projectFileSystem = new ProjectFileSystem(entry.getValue());
 
             if(projectFileSystem.getRoot().toString().length() > 3 &&
                     Files.exists(projectFileSystem.getRoot()))
             {
-                sb.append(entry.getKey()).append(": ").append(projectFileSystem.getRoot()).append("\n");
+                watchProject.add(entry.getKey());
                 registerAll(projectFileSystem);
             }
         }
-        System.out.println(sb.toString());
+        System.out.println("Watch project: " + watchProject.stream().collect(Collectors.joining(", ")));
     }
     
     public WatchDir onModify(Consumer<Path> onModify) {

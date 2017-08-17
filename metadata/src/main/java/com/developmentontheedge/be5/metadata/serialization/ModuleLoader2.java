@@ -168,10 +168,6 @@ public class ModuleLoader2
         {
             if ( containsModule(module.getName()) )
             {
-                if ( logger != null )
-                {
-                    logger.setOperationName( "Reading module " + module.getName() + "..." );
-                }
                 Project moduleProject = modulesMap.get(module.getName());
                 result.add( moduleProject );
             }
@@ -331,7 +327,7 @@ public class ModuleLoader2
                     {
                         used = started = true;
                         urls.set(i, Paths.get(moduleSource.getValue()).toUri().toURL());
-                        sb.append("\n - ").append(name).append(": ").append(urls.get(i)).append(" - replace");
+                        sb.append("\n - ").append(String.format("%-15s", name)).append(urls.get(i)).append(" - replace");
                     }
                 }
                 if(!used)

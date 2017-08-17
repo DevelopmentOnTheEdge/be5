@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.dbms.DbmsType;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -48,8 +49,10 @@ public class DatabaseServiceImpl implements DatabaseService
 //        //TODO add to Rdbms
 //        bds.setValidationQuery("select 1");
 
-        log.info("Using connection: " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
-                + "\nConnection profile: " + getConnectionProfileName());
+        log.info(JULLogger.infoBlock(
+              "Connection profile: " + getConnectionProfileName() +
+            "\nUsing connection:   " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
+        ));
     }
 
     private DataSource getDataSource() {
