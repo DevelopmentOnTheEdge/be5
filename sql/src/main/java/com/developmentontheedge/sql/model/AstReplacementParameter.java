@@ -5,6 +5,11 @@ package com.developmentontheedge.sql.model;
 public class AstReplacementParameter extends SimpleNode
 {
     private static final String replacementParameter = "?";
+    public static final AstReplacementParameter parameter = new AstReplacementParameter();
+
+    public static AstReplacementParameter get(){
+        return parameter;
+    }
 
     public AstReplacementParameter(){
         super(SqlParserTreeConstants.JJTREPLACEMENTPARAMETER);

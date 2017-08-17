@@ -25,7 +25,7 @@ public class AstDelete extends SimpleNode
         return this;
     }
 
-    public void where(AstWhere where)
+    public AstDelete where(AstWhere where)
     {
         Objects.requireNonNull( where );
         AstWhere oldWhere = getWhere();
@@ -37,6 +37,7 @@ public class AstDelete extends SimpleNode
         {
             oldWhere.replaceWith( where );
         }
+        return this;
     }
 
     public AstWhere getWhere()
@@ -49,5 +50,11 @@ public class AstDelete extends SimpleNode
         super(p, id);
     }
 
+    public AstDelete whereInPredicate(String columnName, int count)
+    {
+        Objects.requireNonNull( columnName );
+        where(AstWhere.ofInPredicate(columnName, count));
+        return this;
+    }
 }
 /* JavaCC - OriginalChecksum=b77107bb8ed6a82b48f5c2c832c3fb70 (do not edit this line) */

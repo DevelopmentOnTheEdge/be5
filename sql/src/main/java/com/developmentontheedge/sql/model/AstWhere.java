@@ -7,9 +7,14 @@ import java.util.Map;
 
 public class AstWhere extends SimpleNode
 {
-//    public static AstWhere getInWhere(){
-//
-//    }
+    public static AstWhere ofInPredicate(String columnName, int count){
+        return new AstWhere(columnName, count);
+    }
+
+    private AstWhere(String columnName, int count){
+        this(SqlParserTreeConstants.JJTWHERE);
+        addChild(AstInPredicate.of(columnName, count));
+    }
 
     public AstWhere(Map<String, String> conditions)
     {
@@ -43,7 +48,7 @@ public class AstWhere extends SimpleNode
             {
                 function = DefaultParserContext.FUNC_LIKE;
             }
-            astFunNode = function.node(new AstFieldReference(entry.getKey()), new AstReplacementParameter());
+            astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
         }
 
         if(iterator.hasNext()){

@@ -106,7 +106,7 @@ public class Ast
     {
         if(x instanceof SimpleNode)return (SimpleNode)x;
         if(x instanceof String) {
-            if("?".equals(x))return new AstReplacementParameter();
+            if("?".equals(x))return AstReplacementParameter.get();
             return new AstStringConstant((String) x);
         }
         return new AstNumericConstant((Number) x);

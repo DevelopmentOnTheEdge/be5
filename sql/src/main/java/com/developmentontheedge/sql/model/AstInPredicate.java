@@ -4,7 +4,22 @@ package com.developmentontheedge.sql.model;
 
 public class AstInPredicate extends SimpleNode 
 {
-    public AstInPredicate(int id) 
+    public static AstInPredicate of(String columnName, int count)
+    {
+        return new AstInPredicate(
+                new AstFieldReference(columnName),
+                AstInValueList.of(count)
+        );
+    }
+
+    private AstInPredicate(AstFieldReference fieldReference, AstInValueList inValueList)
+    {
+        this(SqlParserTreeConstants.JJTINPREDICATE);
+        addChild(fieldReference);
+        addChild(inValueList);
+    }
+
+    public AstInPredicate(int id)
     {
         super(id);
         this.childrenDelimiter = "IN";

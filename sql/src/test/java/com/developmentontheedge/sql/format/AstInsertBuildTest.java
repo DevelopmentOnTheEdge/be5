@@ -12,7 +12,8 @@ public class AstInsertBuildTest {
     @Test
     public void test()
     {
-        AstInsert insert = Ast.insert("users").fields(new AstFieldReference("name")).values(new AstReplacementParameter());
+        AstInsert insert = Ast.insert("users").fields(new AstFieldReference("name"))
+                .values(AstReplacementParameter.get());
 
         assertEquals("INSERT INTO users (name) VALUES (?)", insert.format());
     }
