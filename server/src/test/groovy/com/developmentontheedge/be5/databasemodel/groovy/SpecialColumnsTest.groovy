@@ -58,6 +58,42 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
     }
 
     @Test
+    void testSetMany()
+    {
+        def id1 = table << [ "name": "TestName", "value": 1]
+        def id2 = table << [ "name": "TestName", "value": 2]
+        def id3 = table << [ "name": "TestName2", "value": 2]
+
+        table.setMany(["isDeleted___": "yes"], ["name": "TestName"])
+
+        assertEquals "yes", table[ id1 ].isDeleted___
+        assertEquals "yes", table[ id2 ].isDeleted___
+        assertEquals "no",  table[ id3 ].isDeleted___
+
+//TODO
+//        assertTrue table[ id1 ].creationDate___     <  table[ id1 ].modificationDate___
+//        assertTrue table[ id2 ].creationDate___     <  table[ id2 ].modificationDate___
+//
+//        assertTrue table[ id1 ].modificationDate___ == table[ id2 ].modificationDate___
+    }
+
+    @Test
+    @Ignore
+    void testDeleteAll()
+    {
+        table << [ "name": "TestName", "value": 1]
+        table << [ "name": "TestName", "value": 2]
+        table << [ "name": "TestName2", "value": 2]
+
+        entityName.remove(["name": "TestName"])
+
+        assertEquals 2, db.getLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
+                "yes", "TestName")
+        assertEquals 1, db.getLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
+                "no", "TestName2")
+    }
+
+    @Test
     void testEdit()
     {
         def id = table << [

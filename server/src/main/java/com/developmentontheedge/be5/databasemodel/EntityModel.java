@@ -49,11 +49,11 @@ public interface EntityModel<R extends RecordModel> {
      * Returns <tt>true</tt> if entity contains record consistent with the  
      * specified condition.
      * This method never use caches.
-     * @param values condition values
+     * @param conditions condition values
      * @return <tt>true</tt> if entity contains record consistent with 
      * conditions, otherwise false
      */
-    boolean contains(Map<String, String> values);
+    boolean contains(Map<String, String> conditions);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -101,10 +101,10 @@ public interface EntityModel<R extends RecordModel> {
     /** 
      * Returns the record object consistent with the specified condition, 
      * where key is the column name with the value equals map key value 
-     * @param values condition values
+     * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(Map<String, String> values);
+    RecordModel get(Map<String, String> conditions);
     
     /**
      * Sets value to property with a specified name.<br>
@@ -126,7 +126,11 @@ public interface EntityModel<R extends RecordModel> {
      * @param values column names and values
      */
     void set(String id, Map<String, String> values);
-    
+
+    //void setMany( Map<String, String> values, String id, String... otherId);
+
+    void setMany( Map<String, String> values, Map<String, String> conditions);
+
     /**
      * Sets value to property with a specified name.<br>
      * This method may not contain any checks, it's just the method implementation.
@@ -145,9 +149,9 @@ public interface EntityModel<R extends RecordModel> {
      */
     void setForce(String id, Map<String, String> values);
 
-    void setForce(String propertyName, String value, String id, String... otherId);
+    void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
-    void setForce(Map<String, String> values, String id, String... otherId);
+    void setForceMany(Map<String, String> values, Map<String, String> conditions);
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.

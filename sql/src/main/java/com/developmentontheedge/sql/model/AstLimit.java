@@ -9,14 +9,22 @@ public class AstLimit extends SimpleNode
         super( id );
         this.nodePrefix = "LIMIT";
     }
-    
+
+    public static AstLimit of(int count){
+        return new AstLimit().setLimit(0, count);
+    }
+
+    public static AstLimit of(int offset, int count){
+        return new AstLimit().setLimit(offset, count);
+    }
+
     public AstLimit()
     {
         this(SqlParserTreeConstants.JJTLIMIT);
     }
 
-    Integer limit;
-    Integer offset = 0;
+    int limit;
+    int offset = 0;
 
     public Integer getLimit()
     {
@@ -28,12 +36,13 @@ public class AstLimit extends SimpleNode
         return offset;
     }
     
-    public void setLimit(Integer offset, Integer count)
+    public AstLimit setLimit(int offset, int count)
     {
         this.limit = count;
         this.offset = offset;
         if( offset != 0 )
             this.nodePrefix += " " + String.valueOf( offset ) + ", ";
+        return this;
     }
     
     public void setShape(String prefix, String suffix)

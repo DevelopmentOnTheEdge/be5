@@ -8,7 +8,8 @@ import java.util.Objects;
 
 import one.util.streamex.IntStreamEx;
 
-public class AstSelect extends SimpleNode {
+public class AstSelect extends SimpleNode
+{
     public AstSelect(int id)
     {
         super( id );
@@ -113,6 +114,23 @@ public class AstSelect extends SimpleNode {
     public AstLimit getLimit()
     {
         return children().select( AstLimit.class ).findFirst().orElse( null );
+    }
+
+    public AstSelect limit(int offset, int count)
+    {
+        AstLimit limit = AstLimit.of(offset, count);
+        AstLimit oldLimit = children().select(AstLimit.class).findFirst().orElse(null);
+        if(oldLimit != null){
+            oldLimit.replaceWith(limit);
+        }else{
+            addChild(limit);
+        }
+        return this;
+    }
+
+    public AstSelect limit(int count)
+    {
+        return limit(0, count);
     }
     
     public AstOrderBy getOrderBy()

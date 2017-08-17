@@ -49,6 +49,13 @@ public class SqlHelper
         return setDpsValues(dps, resultSet);
     }
 
+    public DynamicPropertySet getDpsForValues(Entity entity, Map<String, String> values, ResultSet resultSet)
+    {
+        DynamicPropertySet dps = getDpsForValues(entity, values);
+
+        return setDpsValues(dps, resultSet);
+    }
+
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
@@ -95,6 +102,22 @@ public class SqlHelper
         for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
         {
             dps.add(getDynamicProperty(entry.getValue()));
+        }
+        return dps;
+    }
+
+    public DynamicPropertySet getDpsForValues(Entity entity, Map<String, String> values)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+
+        for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
+        {
+            if(values.containsKey(entry.getKey()))
+            {
+                dps.add(getDynamicProperty(entry.getValue()));
+            }
         }
         return dps;
     }
@@ -296,13 +319,31 @@ public class SqlHelper
 
     }
 
-    public String generateUpdateSql(Entity entity, DynamicPropertySet dps)
+    public String generateUpdateSqlForOneKey(Entity entity, DynamicPropertySet dps)
     {
         Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(entity.getName()).set(valuePlaceholders)
                 .where(Collections.singletonMap(entity.getPrimaryKey(), "?")).format();
+    }
+
+    public String generateUpdateSqlForConditions(Entity entity, DynamicPropertySet dps, Map<String, String> conditions)
+    {
+        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
+
+        return Ast.update(entity.getName()).set(valuePlaceholders)
+                .where(conditions).format();
+    }
+
+    public String generateUpdateSqlForManyKeys(Entity entity, DynamicPropertySet dps, int count)
+    {
+        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
+
+        return Ast.update(entity.getName()).set(valuePlaceholders)
+                .whereInPredicate(entity.getPrimaryKey(), count).format();
     }
 
     public String generateDeleteInSql(Entity entity, int count) {

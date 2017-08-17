@@ -29,7 +29,7 @@ public class EditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        db.update(sqlHelper.generateUpdateSql(entity, dps),
+        db.update(sqlHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(sqlHelper.getValues(dps), sqlHelper.castToTypePrimaryKey(entity, records[0])));
     }
 

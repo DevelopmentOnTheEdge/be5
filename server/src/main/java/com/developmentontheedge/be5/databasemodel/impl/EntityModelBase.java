@@ -18,7 +18,6 @@ import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.google.common.collect.ObjectArrays;
 
@@ -57,16 +56,16 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public RecordModel get( Map<String, String> values )
+    public RecordModel get( Map<String, String> conditions )
     {
-        Objects.requireNonNull(values);
+        Objects.requireNonNull(conditions);
 
         AstSelect sql = Ast
                 .selectAll()
                 .from(entity.getName())
-                .where(values);
+                .where(conditions);
 
-        DynamicPropertySet dps = db.select(sql.format(), rs -> sqlHelper.getDps(entity, rs), castValues(entity, values));
+        DynamicPropertySet dps = db.select(sql.format(), rs -> sqlHelper.getDps(entity, rs), castValues(entity, conditions));
         return dps == null ? null : new RecordModelBase( this, dps );
     }
 
@@ -138,10 +137,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public boolean contains( Map<String, String> values )
+    public boolean contains( Map<String, String> conditions )
     {
-        Objects.requireNonNull(values);
-        return count(values) != 0;
+        Objects.requireNonNull(conditions);
+        return count(conditions) != 0;
     }
 
     @Override
@@ -339,6 +338,14 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
+    public void setMany( Map<String, String> values, Map<String, String> conditions )
+    {
+        Objects.requireNonNull(values);
+        Objects.requireNonNull(conditions);
+        setForceMany(values, conditions);
+    }
+
+    @Override
     final public void setForce( String id, Map<String, String> values )
     {
         Objects.requireNonNull(id);
@@ -352,24 +359,33 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         sqlHelper.updateValuesWithSpecial(dps, values);
 
-        db.update(sqlHelper.generateUpdateSql(entity, dps),
+        db.update(sqlHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(sqlHelper.getValues(dps), pkValue));
     }
 
     @Override
-    public void setForce(String propertyName, String value, String id, String... otherId)
+    public void setForceMany(String propertyName, String value, Map<String, String> conditions)
     {
-        Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
         Objects.requireNonNull(value);
-        setForce( Collections.singletonMap( propertyName, value ), id, otherId);
+        Objects.requireNonNull(conditions);
+        setForceMany( Collections.singletonMap( propertyName, value ), conditions);
     }
 
     @Override
-    public void setForce(Map<String, String> values, String id, String... otherId)
+    public void setForceMany(Map<String, String> values, Map<String, String> conditions)
     {
-        Objects.requireNonNull(id);
         Objects.requireNonNull(values);
+        Objects.requireNonNull(conditions);
+
+        DynamicPropertySet dps = db.select(
+                Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
+                rs -> sqlHelper.getDpsForValues(entity, values, rs), castValues(entity, conditions));
+
+        sqlHelper.updateValuesWithSpecial(dps, values);
+
+        db.update(sqlHelper.generateUpdateSqlForConditions(entity, dps, conditions),
+                ObjectArrays.concat(sqlHelper.getValues(dps), castValues(entity, conditions), Object.class));
     }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>

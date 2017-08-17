@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.databasemodel.EntityModel
+import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
@@ -135,25 +137,26 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
         assertTrue testtableAdmin.empty
     }
 
-    @Test
-    @Ignore
-    void testDeleteAll()
-    {
-        def entityName = database.testtableAdmin
-
-        entityName << [ "name": "TestName", "value": 1]
-        entityName << [ "name": "TestName", "value": 2]
-        entityName << [ "name": "TestName2", "value": 2]
-
-        database.testtableAdmin.remove(["name": "TestName"])
-
-        assertEquals 0, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName")
-        assertEquals 1, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName2")
-
-
-        assertEquals 0, database.testtableAdmin.count(["name": "TestName"])
-        assertEquals 1, database.testtableAdmin.count(["name": "TestName2"])
-    }
+//    @Test
+//    @Ignore
+//    void testDeleteAll()
+//    {
+//        def entityName = (EntityModel)database.testtableAdmin
+//
+//        entityName << [ "name": "TestName", "value": 1]
+//        entityName << [ "name": "TestName", "value": 2]
+//        entityName << [ "name": "TestName2", "value": 2]
+//
+//        entityName.setMany(["name": "TestName"], ["name": "TestName"])
+//        //entityName.remove(["name": "TestName"])
+//
+//        assertEquals 0, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName")
+//        assertEquals 1, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName2")
+//
+//
+//        assertEquals 0, database.testtableAdmin.count(["name": "TestName"])
+//        assertEquals 1, database.testtableAdmin.count(["name": "TestName2"])
+//    }
 
     @Test
     void testDelete()
@@ -173,6 +176,22 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
         assertTrue entityName.empty
 
         assertEquals 0, entityName.remove( id )
+    }
+
+    @Test
+    void testDeleteSeveralId()
+    {
+        def entityName = database.testtableAdmin
+
+        def id = entityName << [ "name": "TestName1", "value": 1]
+        def id2 = entityName << [ "name": "TestName2", "value": 1]
+        def id3 = entityName << [ "name": "TestName3", "value": 1]
+
+        assertEquals 2, entityName.remove( id, id2 )
+
+        assert database.testtableAdmin[ id ] == null
+        assert database.testtableAdmin[ id2 ] == null
+        assert database.testtableAdmin[ id3 ] != null
     }
 
     @Test
