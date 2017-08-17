@@ -267,7 +267,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void countFromQuery(AstQuery query)
     {
-        AstSelect select = Ast.select(AstDerivedColumn.COUNT).from(AstTableRef.as(
+        AstSelect select = Ast.selectCount().from(AstTableRef.as(
                 new AstParenthesis( query.clone() ),
                 new AstIdentifierConstant( "data", true )
         ));

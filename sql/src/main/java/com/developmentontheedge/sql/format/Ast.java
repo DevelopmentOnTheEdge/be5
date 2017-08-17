@@ -24,6 +24,8 @@ import java.util.Map;
 
 public class Ast
 {
+    public static final ColumnList COUNT = new ColumnList(new AstDerivedColumn[]{AstDerivedColumn.COUNT});
+    public static final ColumnList ALL = new ColumnList(new AstDerivedColumn[]{AstDerivedColumn.ALL});
 
     public static class ColumnList
     {
@@ -123,6 +125,16 @@ public class Ast
     public static ColumnList select(AstDerivedColumn... columns)
     {
         return new ColumnList(columns);
+    }
+
+    public static ColumnList selectAll()
+    {
+        return ALL;
+    }
+
+    public static ColumnList selectCount()
+    {
+        return COUNT;
     }
 
     public static InsertTable insert(String tableName)

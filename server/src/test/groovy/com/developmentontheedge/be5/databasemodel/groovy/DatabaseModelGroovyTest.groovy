@@ -136,9 +136,29 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
     }
 
     @Test
+    @Ignore
+    void testDeleteAll()
+    {
+        def entityName = database.testtableAdmin
+
+        entityName << [ "name": "TestName", "value": 1]
+        entityName << [ "name": "TestName", "value": 2]
+        entityName << [ "name": "TestName2", "value": 2]
+
+        database.testtableAdmin.remove(["name": "TestName"])
+
+        assertEquals 0, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName")
+        assertEquals 1, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName2")
+
+
+        assertEquals 0, database.testtableAdmin.count(["name": "TestName"])
+        assertEquals 1, database.testtableAdmin.count(["name": "TestName2"])
+    }
+
+    @Test
     void testDelete()
     {
-        def entityName = database.testtableAdmin;
+        def entityName = database.testtableAdmin
 
         def id = entityName << [
                 "name": "TestName2",
@@ -146,11 +166,11 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 
         assert database.testtableAdmin[ id ] != null
 
-        assertFalse entityName.empty;
+        assertFalse entityName.empty
         assertEquals 1, entityName.remove( id )
 
         assert database.testtableAdmin[ id ] == null
-        assertTrue entityName.empty;
+        assertTrue entityName.empty
 
         assertEquals 0, entityName.remove( id )
     }

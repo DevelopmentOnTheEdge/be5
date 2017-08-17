@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
+
 public class EntityModelBase<R extends RecordModelBase> implements EntityModelAdapter<R>
 {
     static
@@ -61,7 +62,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         Objects.requireNonNull(values);
 
         AstSelect sql = Ast
-                .select(AstDerivedColumn.ALL)
+                .selectAll()
                 .from(entity.getName())
                 .where(values);
 
@@ -99,11 +100,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     public long count( Map<String, String> conditions ) {
         Objects.requireNonNull(conditions);
 
-        //String sql = "SELECT COUNT(*) FROM " + entity.getName() + " WHERE " + sqlHelper.generateConditionsSql(conditions);
-        AstSelect sql = Ast
-                .select(AstDerivedColumn.COUNT)
-                .from(entity.getName())
-                .where(conditions);
+        AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
 
         return db.getLong(sql.format(), conditions.values().toArray());
     }
@@ -349,17 +346,30 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = sqlHelper.castToTypePrimaryKey(entity, id);
 
-//        Ast.select(AstDerivedColumn.ALL).from(entity.getName())
-//                .where(Collections.singletonMap(entity.getPrimaryKey(), "?"));
-
-        DynamicPropertySet dps = db.select("SELECT * FROM " + entity.getName()
-                        + " WHERE " + entity.getPrimaryKey() + " =?",
+        DynamicPropertySet dps = db.select(
+                Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
                 rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), pkValue);
 
         sqlHelper.updateValuesWithSpecial(dps, values);
 
         db.update(sqlHelper.generateUpdateSql(entity, dps),
                 ObjectArrays.concat(sqlHelper.getValues(dps), pkValue));
+    }
+
+    @Override
+    public void setForce(String propertyName, String value, String id, String... otherId)
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(propertyName);
+        Objects.requireNonNull(value);
+        setForce( Collections.singletonMap( propertyName, value ), id, otherId);
+    }
+
+    @Override
+    public void setForce(Map<String, String> values, String id, String... otherId)
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(values);
     }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>

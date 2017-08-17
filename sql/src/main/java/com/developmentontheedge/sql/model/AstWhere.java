@@ -28,7 +28,6 @@ public class AstWhere extends SimpleNode
     }
 
     private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
-//        TODO add IN !
 //        TODO add !=, NOT LIKE
 //        var udIDs = database.utilityDocuments.ids( {
 //                externalStatus: "!=ok"

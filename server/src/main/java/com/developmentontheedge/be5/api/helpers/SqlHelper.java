@@ -131,6 +131,15 @@ public class SqlHelper
         updateSpecialColumns(dps);
     }
 
+    private void updateSpecialColumns(DynamicPropertySet dps)
+    {
+        Timestamp currentTime = new Timestamp(new Date().getTime());
+
+        setValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+        setValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+        setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+    }
+
     private void setSpecialColumnsIfNullValue(DynamicPropertySet dps)
     {
         Timestamp currentTime = new Timestamp(new Date().getTime());
@@ -145,15 +154,6 @@ public class SqlHelper
 
         setValueIfNullValue(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
         setValueIfNullValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-    }
-
-    private void updateSpecialColumns(DynamicPropertySet dps)
-    {
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-
-        setValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
-        setValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
-        setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
     }
 
     private void setValueIfNullValue(DynamicPropertySet dps, String name, Object value)
@@ -222,37 +222,37 @@ public class SqlHelper
 //        return db.select(sql, DpsHelper::createDps, id);
 //    }
 
-    @Deprecated
-    public String paramsToCondition( Entity entity, Map<?,?> values )
-    {
-        String cond = "";
-        for( Map.Entry<?,?> entry : values.entrySet() )
-        {
-            if( !"".equals( cond ) )
-            {
-                cond += " AND ";
-            }
-            String column = entry.getKey().toString();
-            Object value = entry.getValue();
-            if( value instanceof Object[] )
-            {
-                cond += "" + column +
-                        " IN " + Utils.toInClause(singletonList(value), meta.isNumericColumn( entity, column ) );
-                continue;
-            }
-
-            String op = " = ";
-            if( value instanceof String && ( ( String )value ).endsWith( "%" ) )
-            {
-                op = " LIKE ";
-            }
-            cond += "" + column +
-                    ( value == null ? " IS NULL " :
-                            op + value );
-        }
-
-        return cond;
-    }
+//    @Deprecated
+//    public String paramsToCondition( Entity entity, Map<?,?> values )
+//    {
+//        String cond = "";
+//        for( Map.Entry<?,?> entry : values.entrySet() )
+//        {
+//            if( !"".equals( cond ) )
+//            {
+//                cond += " AND ";
+//            }
+//            String column = entry.getKey().toString();
+//            Object value = entry.getValue();
+//            if( value instanceof Object[] )
+//            {
+//                cond += "" + column +
+//                        " IN " + Utils.toInClause(singletonList(value), meta.isNumericColumn( entity, column ) );
+//                continue;
+//            }
+//
+//            String op = " = ";
+//            if( value instanceof String && ( ( String )value ).endsWith( "%" ) )
+//            {
+//                op = " LIKE ";
+//            }
+//            cond += "" + column +
+//                    ( value == null ? " IS NULL " :
+//                            op + value );
+//        }
+//
+//        return cond;
+//    }
 
     public String generateInsertSql(Entity entity, DynamicPropertySet dps)
     {

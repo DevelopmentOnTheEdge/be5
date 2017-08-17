@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -72,6 +73,13 @@ public class AstSelect extends SimpleNode {
     public AstWhere getWhere()
     {
         return children().select( AstWhere.class ).findFirst().orElse( null );
+    }
+
+    public AstSelect where(String key, String value){
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(value);
+        where(Collections.singletonMap(key, value));
+        return this;
     }
 
     public AstSelect where(Map<String, String> conditions){

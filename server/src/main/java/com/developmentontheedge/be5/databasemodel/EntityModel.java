@@ -144,6 +144,10 @@ public interface EntityModel<R extends RecordModel> {
      * @param values new column names and values
      */
     void setForce(String id, Map<String, String> values);
+
+    void setForce(String propertyName, String value, String id, String... otherId);
+
+    void setForce(Map<String, String> values, String id, String... otherId);
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.
