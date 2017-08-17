@@ -32,10 +32,8 @@ public class Be5Injector implements Injector
     public Be5Injector(Binder binder)
     {
         binder.configure(loadedClasses, bindings, configurations);
-        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName()));
-
         getLogger();
-        getDatabaseService();
+        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName()));
     }
 
     @Override

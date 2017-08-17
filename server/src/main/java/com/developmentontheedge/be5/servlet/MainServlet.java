@@ -27,10 +27,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 
-/**
- * Servlet implementation class MainServlet
- */
-//@WebServlet(description = "Routing requests", urlPatterns = { "/api/*" }, loadOnStartup = 1)
 public class MainServlet extends HttpServlet 
 {
     private static final Logger log = Logger.getLogger(MainServlet.class.getName());
@@ -46,6 +42,7 @@ public class MainServlet extends HttpServlet
     {
         super.init(config);
         injector = Be5.createInjector();
+        injector.getDatabaseService();
     }
 
     public Injector getInjector() {
