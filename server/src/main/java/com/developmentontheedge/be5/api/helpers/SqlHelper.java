@@ -329,6 +329,10 @@ public class SqlHelper
             sql = "DELETE FROM " + entity.getName();
         }
 
+        //add support sql IN in where
+//        Ast.delete(entity.getName())
+//                .where();
+
         String whereSql = " WHERE " + entity.getPrimaryKey() + " IN " + inClause(count);
         return sql + whereSql;
     }

@@ -349,6 +349,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = sqlHelper.castToTypePrimaryKey(entity, id);
 
+//        Ast.select(AstDerivedColumn.ALL).from(entity.getName())
+//                .where(Collections.singletonMap(entity.getPrimaryKey(), "?"));
+
         DynamicPropertySet dps = db.select("SELECT * FROM " + entity.getName()
                         + " WHERE " + entity.getPrimaryKey() + " =?",
                 rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), pkValue);

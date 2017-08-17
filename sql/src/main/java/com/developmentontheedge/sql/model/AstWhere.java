@@ -7,6 +7,10 @@ import java.util.Map;
 
 public class AstWhere extends SimpleNode
 {
+//    public static AstWhere getInWhere(){
+//
+//    }
+
     public AstWhere(Map<String, String> conditions)
     {
         this(SqlParserTreeConstants.JJTWHERE);
@@ -19,6 +23,7 @@ public class AstWhere extends SimpleNode
     }
 
     private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
+//        TODO add IN !
 //        TODO add !=, NOT LIKE
 //        var udIDs = database.utilityDocuments.ids( {
 //                externalStatus: "!=ok"
