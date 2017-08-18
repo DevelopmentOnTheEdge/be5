@@ -22,9 +22,9 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     @Test
     void testSetValue() throws Exception
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps[ "property" ] = "value";
-        assertEquals "value", dps.getValue( "property" );
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
+        dps[ "property" ] = "value"
+        assertEquals "value", dps.getValue( "property" )
     }
 
     @Test
@@ -37,6 +37,16 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     }
 
     @Test
+    void testGetProperty() throws Exception
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
+        dps.build( "property", String.class ).value( "value" )
+
+        assertTrue dps.property instanceof DynamicProperty
+        assertEquals "value", dps.property.value
+    }
+
+    @Test
     void testGetMissingValue() throws Exception
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
@@ -44,11 +54,11 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     }
 
     @Test
-    void testGetValueWithoutAccessor() throws Exception
+    void testPropertyAccess() throws Exception
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         dps.build( "property", String.class ).value( "value" );
-        assertEquals "value", dps.property;
+        assertEquals "value", dps._property.value
     }
 
     @Test
@@ -194,7 +204,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
                 name : "testProperty",
                 value: 1
         ]
-        assertEquals 1, dps[ "testProperty" ]
+        assertEquals 1, dps[ "testProperty" ].value
     }
 
 
@@ -228,13 +238,6 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
         } );
     }
 
-    @Test
-    void testGetMissingProperty() throws Exception
-    {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.build( "___property", String ).value( "testValue" );
-        assert "testValue" == dps."___property"
-    }
 
     @Test
     void testSetWith()

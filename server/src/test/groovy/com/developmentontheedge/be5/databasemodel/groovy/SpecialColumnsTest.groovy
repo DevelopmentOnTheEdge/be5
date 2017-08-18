@@ -47,14 +47,14 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
                 "name": "test",
                 "value": 1]
 
-        assertEquals "no", table[ id ].isDeleted___
+        assertEquals "no", table[ id ].$isDeleted___
 
         table.remove(id);
 
-        assertEquals "yes", table[ id ].isDeleted___
+        assertEquals "yes", table[ id ].$isDeleted___
 
-        assertTrue table[ id ].creationDate___ < table[ id ].modificationDate___
-        assertEquals table[ id ].whoModified___, table[ id ].whoInserted___
+        assertTrue table[ id ].$creationDate___ < table[ id ].$modificationDate___
+        assertEquals table[ id ].$whoModified___, table[ id ].$whoInserted___
     }
 
     @Test
@@ -66,9 +66,9 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
 
         table.setMany(["isDeleted___": "yes"], ["name": "TestName"])
 
-        assertEquals "yes", table[ id1 ].isDeleted___
-        assertEquals "yes", table[ id2 ].isDeleted___
-        assertEquals "no",  table[ id3 ].isDeleted___
+        assertEquals "yes", table[ id1 ].$isDeleted___
+        assertEquals "yes", table[ id2 ].$isDeleted___
+        assertEquals "no",  table[ id3 ].$isDeleted___
 
 //TODO
 //        assertTrue table[ id1 ].creationDate___     <  table[ id1 ].modificationDate___
@@ -104,11 +104,11 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
                 "name": "editName",
         ]
 
-        assertEquals "editName", table[ id ].name
+        assertEquals "editName", table[ id ].$name
 
-        assertTrue table[ id ].creationDate___ < table[ id ].modificationDate___
-        assertEquals table[ id ].whoModified___, table[ id ].whoInserted___
-        assertEquals "no", table[ id ].isDeleted___
+        assertTrue table[ id ].$creationDate___ < table[ id ].$modificationDate___
+        assertEquals table[ id ].$whoModified___, table[ id ].$whoInserted___
+        assertEquals "no", table[ id ].$isDeleted___
     }
 
 }

@@ -209,10 +209,10 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
                 "name": "TestName2",
         ]
 
-        assertEquals "TestName2", record.name
+        assertEquals "TestName2", record.$name
 
         //TODO update
-        assertEquals "TestName2", database.testtableAdmin[id].name
+        assertEquals "TestName2", database.testtableAdmin[id].$name
     }
 
     @Test

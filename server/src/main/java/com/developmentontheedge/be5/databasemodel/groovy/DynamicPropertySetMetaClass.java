@@ -49,18 +49,18 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         }
         catch( MissingPropertyException e )
         {
-            DynamicProperty prop = ( ( T )object ).getProperty( property );
-            if( prop != null )
-            {
-                return prop.getValue();
-            }
             if( PropertyAccessHelper.isPropertyAccess( property ) )
             {
-                prop = ( ( T )object ).getProperty( property.substring( 1 ) );
+                DynamicProperty prop = ( ( T )object ).getProperty( property.substring( 1 ) );
                 if( prop != null )
                 {
                     return prop;
                 }
+            }
+            DynamicProperty prop = ( ( T )object ).getProperty( property );
+            if( prop != null )
+            {
+                return prop;
             }
             throw e;
         }
