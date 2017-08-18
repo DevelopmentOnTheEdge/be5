@@ -1,12 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import groovy.lang.GroovyObjectSupport;
 
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -31,7 +29,7 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         }
 
 
-        private static List<String> getAllPropertyAttributes()
+        private static Map<String, String> getAllPropertyAttributes()
         {
             return DynamicPropertySetMetaClass.beanInfoConstants;
         }
@@ -39,43 +37,15 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         @Override
         public Object getProperty( String name )
         {
-            List<String> attributes = getAllPropertyAttributes();
-            if( attributes.contains( name ) )
-            {
-                try
-                {
-                    return dp.getAttribute( ( String )BeanInfoConstants.class.getDeclaredField( name ).get( null ) );
-                }
-                catch( IllegalAccessException | NoSuchFieldException  e )
-                {
-                    throw new RuntimeException( e );
-                }
-            }
-            else
-            {
-                return dp.getAttribute( name );
-            }
+            String attributeName = getAllPropertyAttributes().get(name);
+            return dp.getAttribute( attributeName != null ? attributeName : name );
         }
 
         @Override
         public void setProperty( String name, Object value )
         {
-            List<String> attributes = getAllPropertyAttributes( );
-            if( attributes.contains( name ) )
-            {
-                try
-                {
-                    dp.setAttribute( ( String )BeanInfoConstants.class.getDeclaredField( name ).get( null ), value );
-                }
-                catch( IllegalAccessException | NoSuchFieldException  e )
-                {
-                    throw new RuntimeException( e );
-                }
-            }
-            else
-            {
-                dp.setAttribute( name, value );
-            }
+            String attributeName = getAllPropertyAttributes().get(name);
+            dp.setAttribute( attributeName != null ? attributeName : name, value );
         }
     }
 
@@ -91,7 +61,6 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         return super.getProperty( object, property );
     }
 
-    //TODO refactoring
     public static DynamicProperty leftShift( DynamicProperty dp, Map<String, Object> map )
     {
         removeFromMap( map, "name" );
@@ -108,17 +77,10 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
 
         for( String key : map.keySet() )
         {
-            if( DynamicPropertySetMetaClass.beanInfoConstants.contains( key ) )
+            String attributeName = DynamicPropertySetMetaClass.beanInfoConstants.get(key);
+            if( attributeName != null )
             {
-                try
-                {
-                    //TODO init ones: list -> map
-                    dp.setAttribute( ( String )BeanInfoConstants.class.getDeclaredField( key ).get( null ), map.get( key ) );
-                }
-                catch( Exception exc )
-                {
-                    throw new RuntimeException( exc );
-                }
+                dp.setAttribute( attributeName, map.get( key ) );
             }
         }
         return dp;

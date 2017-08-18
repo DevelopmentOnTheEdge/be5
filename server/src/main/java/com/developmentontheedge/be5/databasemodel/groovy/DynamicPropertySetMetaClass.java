@@ -19,13 +19,20 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
 {
     private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
 
-    static final List<String> beanInfoConstants = new ArrayList<>();
+    static final Map<String, String> beanInfoConstants = new HashMap<>();
     static {
         Field[] fields = BeanInfoConstants.class.getDeclaredFields();
         for (Field f : fields)
         {
             if (Modifier.isStatic(f.getModifiers())) {
-                beanInfoConstants.add(f.getName());//f.get(null).toString()
+                try{
+                    beanInfoConstants.put(f.getName(),
+                            BeanInfoConstants.class.getDeclaredField( f.getName() ).get( null ).toString());
+                }
+                catch( Exception exc )
+                {
+                    throw new RuntimeException( exc );
+                }
             }
         }
     }
@@ -109,11 +116,6 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         }
     }
 
-    private static List<String> getAllPropertyAttributes()
-    {
-        return beanInfoConstants;
-    }
-
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, DynamicProperty property )
     {
         dps.add( property );
@@ -145,29 +147,16 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
             dps.add( dp );
         }
 
-        if( isHidden == Boolean.TRUE )
-        {
-            dp.setHidden( true );
-        }
-
         dp.setValue( value );
-        if( displayName != null )
-        {
-            dp.setDisplayName( displayName );
-        }
+        if( displayName != null )dp.setDisplayName( displayName );
+        if( isHidden == Boolean.TRUE )dp.setHidden( true );
+
         for( String key : map.keySet() )
         {
-            if( beanInfoConstants.contains( key ) )
+            String attributeName = beanInfoConstants.get(key);
+            if( attributeName != null )
             {
-                try
-                {
-                    //TODO init ones: list -> map
-                    dp.setAttribute( ( String )BeanInfoConstants.class.getDeclaredField( key ).get( null ), map.get( key ) );
-                }
-                catch( Exception exc )
-                {
-                    throw new RuntimeException( exc );
-                }
+                dp.setAttribute( attributeName, map.get( key ) );
             }
         }
         return dps;
