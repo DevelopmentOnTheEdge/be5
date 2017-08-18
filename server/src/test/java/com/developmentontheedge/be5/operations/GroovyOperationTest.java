@@ -45,10 +45,10 @@ public class GroovyOperationTest extends AbstractProjectTest{
                         "'values':{'name':'Test','beginDate':'2017-07-01','reason':'vacation','reasonMulti':['vacation','sick']}," +
                         "'meta':{" +
                             "'/name':{'displayName':'Имя'}," +
-                            "'/beginDate':{'displayName':'Дата начала','type':'Date'}," +
+                            "'/beginDate':{'displayName':'Дата начала','type':'Date','readOnly':true}," +
                             "'/reason':{'displayName':'Причина снятия предыдущего работника'," +
                             "'tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]}," +
-                            "'/reasonMulti':{'displayName':'Множественный выбор','tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']],'multipleSelectionList':true}}," +
+                            "'/reasonMulti':{'displayName':'Множественный выбор','multipleSelectionList':true,'tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]}}," +
                         "'order':['/name','/beginDate','/reason','/reasonMulti']" +
                 "}", oneQuotes(generate.getFirst().getBean().toString()));
     }

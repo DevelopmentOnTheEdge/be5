@@ -4,16 +4,16 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import groovy.lang.DelegatingMetaClass;
 import groovy.lang.GroovyObjectSupport;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
  * Created by ruslan on 26.11.15.
  */
-public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends DelegatingMetaClass
+public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends ExtensionMethodsMetaClass
 {
     private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
 
@@ -89,5 +89,55 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Dele
             return new AttributeAccessor( dp );
         }
         return super.getProperty( object, property );
+    }
+
+    //TODO refactoring
+    public static DynamicProperty leftShift( DynamicProperty dp, Map<String, Object> map )
+    {
+        removeFromMap( map, "name" );
+
+        Class type = ( Class )removeFromMap( map, "TYPE" );
+        Object value = removeFromMap( map, "value" );
+        Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
+        String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
+
+        if( type != null )dp.setType( type );
+        if( value != null )dp.setValue( value );
+        if( isHidden == Boolean.TRUE )dp.setHidden( true );
+        if( displayName != null )dp.setDisplayName( displayName );
+
+        for( String key : map.keySet() )
+        {
+            if( DynamicPropertySetMetaClass.beanInfoConstants.contains( key ) )
+            {
+                try
+                {
+                    //TODO init ones: list -> map
+                    dp.setAttribute( ( String )BeanInfoConstants.class.getDeclaredField( key ).get( null ), map.get( key ) );
+                }
+                catch( Exception exc )
+                {
+                    throw new RuntimeException( exc );
+                }
+            }
+        }
+        return dp;
+    }
+
+    private static Object removeFromMap( Map map, Object element )
+    {
+        if( map.containsKey( element ) )
+        {
+            return map.remove( element );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private static String asString( Object o )
+    {
+        return o != null ? o.toString() : null;
     }
 }

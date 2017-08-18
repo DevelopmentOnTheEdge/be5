@@ -14,7 +14,8 @@ import org.junit.Test
 import static org.junit.Assert.*;
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 
-class DynamicPropertiesGroovyTest extends AbstractProjectTest{
+class DynamicPropertiesGroovyTest extends AbstractProjectTest
+{
 
     def database = injector.get(DatabaseModel.class);
 

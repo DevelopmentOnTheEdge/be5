@@ -44,6 +44,8 @@ class TestGroovyOp extends OperationSupport implements Operation
                 DEFAULT_VALUE          : ["vacation","sick"] as String[]
         ]
 
+        dps.getProperty("beginDate") << [READ_ONLY: true]
+
         return dps
     }
 
