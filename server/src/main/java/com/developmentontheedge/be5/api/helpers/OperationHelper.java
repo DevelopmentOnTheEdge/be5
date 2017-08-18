@@ -111,12 +111,23 @@ public class OperationHelper
     public String[][] getTagsFromQuery(Request request, String tableName, String queryName, Map<String, String> extraParams)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
-        //TODO query.get().isCacheable();
         if (!query.isPresent())
             throw new IllegalArgumentException();
 
+        if(query.get().isCacheable())
+        {
+            return tagsCache.get(tableName + "getTagsFromQuery" + queryName +
+                    extraParams.toString() + UserInfoHolder.getLanguage(),
+                k -> getTagsFromQuery(request, tableName, query.get(), extraParams)
+            );
+        }
+        return getTagsFromQuery(request, tableName, query.get(), extraParams);
+    }
+
+    private String[][] getTagsFromQuery(Request request, String tableName, Query query, Map<String, String> extraParams)
+    {
         TableModel table = TableModel
-                .from(query.get(), extraParams, request, false, injector)
+                .from(query, extraParams, request, false, injector)
                 .limit(Integer.MAX_VALUE)
                 .build();
         String[][] stockArr = new String[table.getRows().size()][2];
