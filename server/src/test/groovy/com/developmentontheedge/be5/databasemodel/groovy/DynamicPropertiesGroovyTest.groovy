@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectTest
-import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
@@ -11,7 +10,7 @@ import org.junit.Ignore
 import org.junit.Test
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 
 class DynamicPropertiesGroovyTest extends AbstractProjectTest
@@ -150,18 +149,18 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     void testGetAttribute()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class ).attr( BeanInfoConstants.INPUT_SIZE_ATTR, "10" );
+        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" );
 
-        assertEquals dps._test.attr[ BeanInfoConstants.INPUT_SIZE_ATTR ], "10"
+        assertEquals dps._test.attr[ INPUT_SIZE_ATTR ], "10"
     }
 
     @Test
     void testGetAttributeStringConstant()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class ).attr( BeanInfoConstants.INPUT_SIZE_ATTR, "10" );
+        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" );
 
-        assertEquals dps._test.attr[ "INPUT_SIZE_ATTR" ], "10"
+        assertEquals dps._test.attr[ INPUT_SIZE_ATTR ], "10"
         assertEquals dps._test.attr.INPUT_SIZE_ATTR, "10"
     }
 
@@ -171,8 +170,8 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
         def DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build( "test", String.class )
 
-        dps._test.attr[ BeanInfoConstants.INPUT_SIZE_ATTR ] = "10"
-        assertEquals dps._test.getAttribute( BeanInfoConstants.INPUT_SIZE_ATTR ), "10";
+        dps._test.attr[ INPUT_SIZE_ATTR ] = "10"
+        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10";
     }
 
     @Test
@@ -182,7 +181,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
         dps.build( "test", String.class )
 
         dps._test.attr[ "INPUT_SIZE_ATTR" ] = "10"
-        assertEquals dps._test.getAttribute( BeanInfoConstants.INPUT_SIZE_ATTR ), "10";
+        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10";
     }
 
     @Test
@@ -213,22 +212,6 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     {
         def dps1 = [ a : "a", b : "b", c : "c" ] as DynamicPropertySetSupport;
         def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport;
-
-//Work
-//        DynamicPropertySetSupport.metaClass.plus = { DynamicPropertySet dps ->
-//            DynamicPropertySet clonedDps = new DynamicPropertySetSupport( delegate );
-//            for (DynamicProperty dp : dps2)
-//            {
-//                try
-//                {
-//                    clonedDps.add(DynamicPropertySetSupport.cloneProperty(dp));
-//                } catch (Exception wierd)
-//                {
-//                    log.severe("Unable to clone property " + dp.getName() + ", message = " + wierd.getMessage());
-//                }
-//            }
-//            return clonedDps;
-//        }
 
         DynamicPropertySetSupport dps3 = dps1 + dps2;
         assert dps1.size() == 3;
