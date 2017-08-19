@@ -49,6 +49,7 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
 
         assertEquals "no", table[ id ].$isDeleted___
 
+        Thread.sleep(1)
         table.remove(id);
 
         assertEquals "yes", table[ id ].$isDeleted___
@@ -100,6 +101,7 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
                 "name": "test",
                 "value": 1]
 
+        Thread.sleep(1)
         table[id] << [
                 "name": "editName",
         ]
