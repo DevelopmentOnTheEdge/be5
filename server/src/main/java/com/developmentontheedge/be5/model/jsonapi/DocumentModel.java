@@ -32,7 +32,7 @@ public abstract class DocumentModel
 нужно добавить время вызова для предотвращения открытия на фронтенде старых запросов после долгой загрузки.
 static final String TIMESTAMP_PARAM = "_ts_";
 
-ссылку на самого себя
+ссылку на самого себя для разработки
 "links": {
  "self": "http://example.com/articles"
  },

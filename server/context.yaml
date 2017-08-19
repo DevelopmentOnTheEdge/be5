@@ -7,7 +7,6 @@ context:
   - menu:             com.developmentontheedge.be5.components.Menu
   - roleSelector:     com.developmentontheedge.be5.components.RoleSelector
   - static:           com.developmentontheedge.be5.components.StaticPageComponent
-  - pool:             com.developmentontheedge.be5.components.tools.PoolStat
   - categories:       com.developmentontheedge.be5.components.Categories
   services:
   - projectProvider:
