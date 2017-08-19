@@ -19,8 +19,6 @@ public class Document implements Component
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
-        // TODO verify user roles
-        
         try
         {
             DocumentResponse response = DocumentResponse.of(res);

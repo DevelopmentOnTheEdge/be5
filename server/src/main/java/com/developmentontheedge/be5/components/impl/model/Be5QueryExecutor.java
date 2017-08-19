@@ -235,7 +235,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             dql.log("Without ID column", ast);
         }
 
-        // FILTERS TODO учитывать типы полей, далает: WHERE t.value = 1, t.value - строка.
+        // FILTERS TODO использовать prepare statement, далает: WHERE t.value = 1, t.value - строка.
         // использия Entity - формировать фильтр в модуле server
         //applyFilters(ast);
 

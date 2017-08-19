@@ -200,7 +200,7 @@ public class MainServlet extends HttpServlet
 //     */
 //    private Class<?> loadWebSocketComponentClass(String componentId)
 //    {
-//        /** TODO
+//        TO/** DO
 //        IConfigurationElement componentDeclaration = findDeclaration( componentId, "com.developmentontheedge.be5.websocketcomponent", "component" );
 //
 //        if( componentDeclaration == null )

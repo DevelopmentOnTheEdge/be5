@@ -6,7 +6,6 @@ context:
   - languageSelector: com.developmentontheedge.be5.components.LanguageSelector
   - menu:             com.developmentontheedge.be5.components.Menu
   - roleSelector:     com.developmentontheedge.be5.components.RoleSelector
-  - scriptList:       com.developmentontheedge.be5.components.ScriptList
   - static:           com.developmentontheedge.be5.components.StaticPageComponent
   - pool:             com.developmentontheedge.be5.components.tools.PoolStat
   - categories:       com.developmentontheedge.be5.components.Categories

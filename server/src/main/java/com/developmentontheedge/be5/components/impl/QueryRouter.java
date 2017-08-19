@@ -36,9 +36,7 @@ public class QueryRouter
     public static interface Runner
     {
         void onStatic(Query query);
-        
-        void onForm(String entityName, Optional<String> queryName, String operationName, Operation operation, Map<String, String> presetValues);
-        
+
         void onTable(Query query, Map<String, String> parametersMap);
 
         void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel);

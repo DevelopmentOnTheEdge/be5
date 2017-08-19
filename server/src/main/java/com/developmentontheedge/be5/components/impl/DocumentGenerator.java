@@ -53,13 +53,7 @@ public class DocumentGenerator implements Runner {
     {
         DocumentResponse.of(res).sendStaticPage(query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim()));
     }
-    
-    @Override
-    public void onForm(String entityName, Optional<String> queryName, String operationName, Operation operation, Map<String, String> presetValues)
-    {
-        //TODO DocumentResponse.of(res).send(getFormPresentation(entityName, queryName.orElse(""), operationName, operation, presetValues));
-    }
-    
+
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
 //            Operation operation, Map<String, String> presetValues)
 //    {
