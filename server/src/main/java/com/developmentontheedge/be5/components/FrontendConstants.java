@@ -1,20 +1,20 @@
 package com.developmentontheedge.be5.components;
 
-public class FrontendConstants
+public interface FrontendConstants
 {
 
     /**
      * The first part of the link to the table.
      */
-    public static final String TABLE_ACTION = "table";
+    String TABLE_ACTION = "table";
 
-    public static final String STATIC_ACTION = "static";
+    String STATIC_ACTION = "static";
     
     /**
      * The first part of the link to the form.
      */
-    public static final String FORM_ACTION = "form";
+    String FORM_ACTION = "form";
 
-    public static final String OPERATION_RESULT = "operationResult";
+    String OPERATION_RESULT = "operationResult";
 
 }
