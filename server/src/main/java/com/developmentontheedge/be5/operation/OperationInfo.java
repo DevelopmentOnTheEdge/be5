@@ -33,6 +33,7 @@ public class OperationInfo
     //public Icon getIcon()                           { return operationModel.getIcon();  }
     //public BeModelCollection<OperationExtender> getExtenders()
 
+    public Operation getModel()                        { return operationModel;  }
     public String getName()                         { return operationModel.getName();  }
     public String getType()                         { return operationModel.getType();  }
     public String getCode()                         { return operationModel.getCode();  }

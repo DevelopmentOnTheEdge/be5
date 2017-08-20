@@ -39,14 +39,14 @@ public class ResponseTest extends AbstractProjectTest{
         response = new ResponseImpl(rawResponse);
     }
 
-    @Test
-    public void sendAsJson() throws Exception {
-        Action call = new Action("call", "test/path");
-        response.sendAsJson(call);
-
-        verify(writer).append(doubleQuotes("{'value':{'arg':'test/path','name':'call'}}"));
-        verify(writer).flush();
-    }
+//    @Test
+//    public void sendAsJson() throws Exception {
+//        Action call = new Action("call", "test/path");
+//        response.sendAsJson(call);
+//
+//        verify(writer).append(doubleQuotes("{'value':{'arg':'test/path','name':'call'}}"));
+//        verify(writer).flush();
+//    }
 
     @Test
     public void sendAsRawJson() throws Exception {

@@ -51,6 +51,11 @@ public class Either<T, U>
         checkState(second != null);
         return second;
     }
+
+    public Object get()
+    {
+        return isFirst() ? getFirst() : getSecond();
+    }
     
     public <V> V map(Function<T, V> f, Function<U, V> g)
     {

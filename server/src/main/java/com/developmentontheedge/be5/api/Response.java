@@ -3,6 +3,10 @@ package com.developmentontheedge.be5.api;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+
+import java.util.Map;
 
 /**
  * <p>The main interface for sending responses.</p>
@@ -33,14 +37,21 @@ public interface Response
      * @param type type of response
      * @param value will be serialized
      */
+    @Deprecated
     void sendAsJson(String type, Object value);
-    
-    /**
-     * <p>The conventional way to send untyped responses. It is recommended to use typed responses.</p>
-     *
-     * @param value will be serialized
-     */
-    void sendAsJson(Object value);
+
+    void sendAsJson(JsonApiModel jsonApiModel);
+
+    void sendAsJson(ResourceData data, Object meta, Map<String, String> links);
+
+    void sendAsJson(Object[] errors, Object meta, Map<String, String> links);
+
+//    /**
+//     * <p>The conventional way to send untyped responses. It is recommended to use typed responses.</p>
+//     *
+//     * @param value will be serialized
+//     */
+//    void sendAsJson(Object value);
 
     void sendAsRawJson(Object value);
 

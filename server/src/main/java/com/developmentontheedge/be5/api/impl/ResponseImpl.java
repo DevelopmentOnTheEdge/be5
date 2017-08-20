@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -8,6 +9,8 @@ import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -16,6 +19,10 @@ public class ResponseImpl implements Response
 {
     private static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
 
+    /**
+     * use DocumentModel
+     */
+    @Deprecated
     public static class TypedResponse {
         final String type;
         final Object value;
@@ -37,6 +44,10 @@ public class ResponseImpl implements Response
         }
     }
 
+    /**
+     * use DocumentModel
+     */
+    @Deprecated
     public static class UntypedResponse {
         final Object value;
 
@@ -51,6 +62,10 @@ public class ResponseImpl implements Response
         }
     }
 
+    /**
+     * use DocumentModel
+     */
+    @Deprecated
     public static class ErrorResponse
     {
         final String message;
@@ -90,16 +105,35 @@ public class ResponseImpl implements Response
     }
     
     @Override
+    @Deprecated
     public void sendAsJson(String type, Object value)
     {
         sendAsRawJson(typed(type, value));
     }
-    
+
     @Override
-    public void sendAsJson(Object value)
+    public void sendAsJson(JsonApiModel jsonApiModel)
     {
-        sendAsRawJson(untyped(value));
+        sendAsRawJson(jsonApiModel);
     }
+
+    @Override
+    public void sendAsJson(ResourceData data, Object meta, Map<String, String> links)
+    {
+        sendAsRawJson(new JsonApiModel(data, meta, links));
+    }
+
+    @Override
+    public void sendAsJson(Object[] errors, Object meta, Map<String, String> links)
+    {
+        //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
+    }
+    
+//    @Override
+//    public void sendAsJson(Object value)
+//    {
+//        sendAsRawJson(untyped(value));
+//    }
 
     @Override
     public void sendError(Be5Exception e)
