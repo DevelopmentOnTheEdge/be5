@@ -64,7 +64,7 @@ public class Form implements Component
                 ImmutableMap.builder()
                         .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
                         .build(),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(queryName, meta.getModel()).toString())
+                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(queryName, meta.getModel()).arg)
             );
         }
         catch (Be5Exception ex)

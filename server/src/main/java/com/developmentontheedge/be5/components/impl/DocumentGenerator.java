@@ -91,7 +91,7 @@ public class DocumentGenerator implements Runner {
                 ImmutableMap.builder()
                         .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
                         .build(),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).toString())
+                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
         );
     }
 
