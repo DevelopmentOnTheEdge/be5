@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -16,10 +17,16 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.developmentontheedge.be5.components.FrontendConstants.*;
+import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
 public class DocumentGenerator implements Runner {
     /**
@@ -51,7 +58,10 @@ public class DocumentGenerator implements Runner {
     @Override
     public void onStatic(Query query)
     {
-        DocumentResponse.of(res).sendStaticPage(query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim()));
+        String content = query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim());
+        //todo add StaticPagePresentation - title, id, content
+        sendQueryResponse(req, res, query, content);
+        DocumentResponse.of(res).sendStaticPage(content);
     }
 
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
@@ -63,13 +73,26 @@ public class DocumentGenerator implements Runner {
     @Override
     public void onTable(Query query, Map<String, String> parametersMap)
     {
-        DocumentResponse.of(res).send(getTablePresentation(query, parametersMap));
+        sendQueryResponse(req, res, query, getTablePresentation(query, parametersMap));
+        //DocumentResponse.of(res, req).send(getTablePresentation(query, parametersMap));
     }
 
     @Override
     public void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel)
     {
-        DocumentResponse.of(res).send(getTablePresentation(query, parametersMap, tableModel));
+        sendQueryResponse(req, res, query, getTablePresentation(query, parametersMap, tableModel));
+        //DocumentResponse.of(res).send(getTablePresentation(query, parametersMap, tableModel));
+    }
+
+    private void sendQueryResponse(Request req, Response res, Query query, Object data)
+    {
+        res.sendAsJson(
+                new ResourceData(TABLE_ACTION, data),
+                ImmutableMap.builder()
+                        .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                        .build(),
+                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).toString())
+        );
     }
 
     private TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap, TableModel table)
@@ -124,7 +147,7 @@ public class DocumentGenerator implements Runner {
 
         return getTablePresentation(query, parametersMap, table);
     }
-    
+
     @Override
     public void onParametrizedTable(Query query, Map<String, String> parametersMap)
     {

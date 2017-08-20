@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
@@ -11,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -43,8 +45,7 @@ public class FormTest extends AbstractProjectTest
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())
                 .put(RestApiConstants.VALUES, values).build()), response, injector);
 
-        //todo
-        //verify(response).sendAsJson(eq("form"), any(Either.class));
+        verify(response).sendAsJson(any(ResourceData.class), any(Map.class), any(Map.class));
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
