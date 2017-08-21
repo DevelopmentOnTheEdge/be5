@@ -158,6 +158,10 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
             {
                 dp.setAttribute( attributeName, map.get( key ) );
             }
+            else
+            {
+                log.warning("Not found attribute: " + key + " in BeanInfoConstants");
+            }
         }
         return dps;
     }

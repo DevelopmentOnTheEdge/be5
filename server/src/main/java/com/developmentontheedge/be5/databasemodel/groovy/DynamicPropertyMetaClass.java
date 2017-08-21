@@ -80,7 +80,11 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
             String attributeName = DynamicPropertySetMetaClass.beanInfoConstants.get(key);
             if( attributeName != null )
             {
-                dp.setAttribute( attributeName, map.get( key ) );
+                dp.setAttribute(attributeName, map.get(key));
+            }
+            else
+            {
+                log.warning("Not found attribute: " + key + " in BeanInfoConstants");
             }
         }
         return dp;
