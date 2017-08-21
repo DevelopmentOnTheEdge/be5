@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -71,6 +72,18 @@ public class JsonApiModel
     public Map<String, String> getLinks()
     {
         return links;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JsonApiModel{" +
+                (data!=null ? "data=" + data : "") +
+                (errors!=null ? "errors=" + Arrays.toString(errors) : "") +
+                (meta!=null ? ", meta=" + meta : "") +
+                (included!=null ? ", included=" + Arrays.toString(included) : "") +
+                (links!=null ? ", links=" + links : "") +
+        '}';
     }
 }
 

@@ -32,4 +32,15 @@ public class ResourceData
     {
         return relationships;
     }
+
+    @Override
+    public String toString()
+    {
+        return "ResourceData{" +
+                (type!=null ? "type='" + type + '\'' : "") +
+                (id!=null ? ", id='" + id + '\'' : "") +
+                (attributes!=null ? ", attributes=" + attributes : "") +
+                (relationships!=null ? ", relationships=" + relationships : "") +
+        '}';
+    }
 }

@@ -1,12 +1,17 @@
 package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.beans.json.JsonFactory;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +21,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Locale;
 
+import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -127,6 +135,25 @@ public class ResponseTest extends AbstractProjectTest{
                 "    <name>call</name>\n" +
                 "    <arg>test/path</arg>\n" +
                 "</ActionForXml>\n"));
+    }
+
+    //todo remove withNullValues(true), fix frontend
+    @Test
+    @Ignore
+    public void testJsonObject()
+    {
+        JsonApiModel jsonApiModel = new JsonApiModel(new ResourceData("testType", "test"),
+                ImmutableMap.builder()
+                        .put(TIMESTAMP_PARAM, 1503291145939L)
+                        .build(),
+                Collections.singletonMap(SELF_LINK, "url"));
+        response.sendAsJson(jsonApiModel);
+
+        verify(writer).append(doubleQuotes("{" +
+                "'data':{'attributes':'test','type':'testType'}," +
+                "'links':{'self':'url'}," +
+                "'meta':{'_ts_':1503291145939}" +
+        "}"));
     }
 
 }
