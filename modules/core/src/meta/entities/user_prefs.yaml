@@ -1,0 +1,41 @@
+user_prefs:
+  type: metadata
+  displayName: User Preferences
+  primaryKey: _dummy_
+  scheme:
+    columns:
+    - user_name:
+        type: VARCHAR(100)
+    - pref_name:
+        type: VARCHAR(30)
+    - pref_value:
+        type: TEXT
+    indices:
+    - I_USERPREFS_UNAME:
+        unique: true
+        columns:
+        - user_name
+        - pref_name
+  queries:
+  - All records:
+      type: 1D_unknown
+      roles: Administrator
+      operations:
+      - Delete
+      - Insert
+      - Edit
+      code: |-
+        SELECT user_name, pref_name, pref_value
+        FROM user_prefs
+  operations:
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.DeleteOperation
+  - Edit:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.EditOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.InsertOperation

@@ -18,6 +18,7 @@ core:
   - systemSettings
   - table_refs
   - user_roles
+  - user_prefs
   - users
   scripts:
   - Post-db
