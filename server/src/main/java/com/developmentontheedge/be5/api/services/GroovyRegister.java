@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.metadata.Utils;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -10,11 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class GroovyRegister
 {
-
-//    private static LoggingHandle cat = Logger.getHandle( GroovyRegister.class );
-    //private static Map<String, Pair<String, Class>> cache = new ConcurrentHashMap<>();
-
-    private static GroovyClassLoader classLoader = new GroovyClassLoader( Utils.getClassLoader() );
+    private static final GroovyClassLoader classLoader = new GroovyClassLoader();
 
     public static GroovyClassLoader getClassLoader()
     {
