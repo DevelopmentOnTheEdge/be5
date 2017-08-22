@@ -1,9 +1,12 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.modules.core.services;
 
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.util.BlobUtils;
 
+import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,14 +14,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class Utils extends com.developmentontheedge.be5.metadata.Utils
+public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 {
+    private static final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
     private final SqlService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final Injector injector;
 
-    public Utils(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Injector injector)
+    public CoreUtils(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Injector injector)
     {
         this.db = db;
         this.meta = meta;
@@ -26,26 +30,22 @@ public class Utils extends com.developmentontheedge.be5.metadata.Utils
         this.injector = injector;
     }
 
-//    /**
-//     * Retrieving system settings parameter value for specified section and parameter. If there isn't such parameter, or
-//     * executing query throws any exception, then method will return defValue.
-//     * <br/>Results of method call are cached.
-//     *
-//     * <b>Attention!!! In this method:</b>
-//     * <br/> - parameter section is processing by {@link #safestr(DatabaseConnector, String) safestr}
-//     * <br/> - parameter param is not processing by {@link #safestr(DatabaseConnector, String) safestr}
-//     *
-//     * @param connector DB connector
-//     * @param section system settings section name
-//     * @param param parameter name
-//     * @param defValue default value for return, if there isn't such section or parameter
-//     * @return section parameter value
-//     */
-//    // it is deliberately not synchronized!
-//    // it is better to let 2 processes to do the same thing twice than
-//    // to block on network call
-//    public static String getSystemSettingInSection( DatabaseConnector connector, String section, String param, String defValue )
-//    {
+    /**
+     * Retrieving system settings parameter value for specified section and parameter. If there isn't such parameter, or
+     * executing query throws any exception, then method will return defValue.
+     * <br/>Results of method call are cached.
+     *
+     *
+     * @param section system settings section name
+     * @param param parameter name
+     * @param defValue default value for return, if there isn't such section or parameter
+     * @return section parameter value
+     */
+    // it is deliberately not synchronized!
+    // it is better to let 2 processes to do the same thing twice than
+    // to block on network call
+    public String getSystemSettingInSection( String section, String param, String defValue )
+    {
 //        Cache systemSettingsCache = SystemSettingsCache.getInstance();
 //        String key = section + "." + param;
 //        String ret = ( String )systemSettingsCache.get( key );
@@ -59,11 +59,11 @@ public class Utils extends com.developmentontheedge.be5.metadata.Utils
 //        }
 //        try
 //        {
-//            String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = '" + param + "'" +
-//                    " AND section_name =" + safestr( connector, section, true );
-//            ret = new JDBCRecordAdapterAsQuery( connector, sql ).getString();
-//            systemSettingsCache.put( key, ret );
-//            return ret;
+            String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
+            Clob clob = db.getScalar(sql, param, section);
+            //ret = new JDBCRecordAdapterAsQuery( connector, sql ).getString();
+            //systemSettingsCache.put( key, ret );
+            return BlobUtils.getAsString(clob);
 //        }
 //        catch( JDBCRecordAdapterAsQuery.NoRecord ignore )
 //        {
@@ -77,21 +77,19 @@ public class Utils extends com.developmentontheedge.be5.metadata.Utils
 //            systemSettingsCache.put( key, MISSING_SETTING_VALUE );
 //            return defValue;
 //        }
-//    }
+    }
 //
 //    /**
 //     * Set system settings parameter to the specified value, and saves it to the DB.
 //     *
 //     * All of the parameters (section, param, value) must be already passed through the method
-//     * {@link #safestr(DatabaseConnector, String) safestr}
 //     *
-//     * @param connector DB connector
 //     * @param section parameters section
 //     * @param param parameter name
 //     * @param value parameter value
 //     * @throws SQLException
 //     */
-//    public static void setSystemSettingInSection( DatabaseConnector connector, String section, String param, String value ) throws SQLException
+//    public static void setSystemSettingInSection( String section, String param, String value ) throws SQLException
 //    {
 //        String queryUpdate =
 //                "UPDATE systemSettings SET setting_value = " + safestr( connector, value, true ) +

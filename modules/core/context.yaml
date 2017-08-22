@@ -1,0 +1,5 @@
+context:
+  services:
+  - utils:
+      interface:      com.developmentontheedge.be5.modules.core.services.CoreUtils
+      implementation: com.developmentontheedge.be5.modules.core.services.CoreUtils

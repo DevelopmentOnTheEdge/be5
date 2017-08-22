@@ -316,8 +316,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         sqlHelper.setValues(dps, entity, values);
 
         validator.checkErrorAndCast(dps);
+        Object insert = db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
 
-        return db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps)).toString();
+        return insert != null ? insert.toString() : null;
     }
 
     @Override

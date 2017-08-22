@@ -10,6 +10,8 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import one.util.streamex.IntStreamEx;
 
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -150,6 +152,10 @@ public class DpsHelper
                 return Time.class;
             case Types.TIMESTAMP:
                 return Timestamp.class;
+            case Types.CLOB:
+                return Clob.class;
+            case Types.BLOB:
+                return Blob.class;
             default:
                 return String.class;
         }
