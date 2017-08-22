@@ -54,4 +54,7 @@ context:
   - operationHelper:
       interface:      com.developmentontheedge.be5.api.helpers.OperationHelper
       implementation: com.developmentontheedge.be5.api.helpers.OperationHelper
+  - utils:
+      interface:      com.developmentontheedge.be5.api.helpers.Utils
+      implementation: com.developmentontheedge.be5.api.helpers.Utils
 
