@@ -32,7 +32,10 @@ public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPa
                 LogManager.getLogManager().readConfiguration(resourceAsStream);
             }
             log = Logger.getLogger(LogConfigurator.class.getName());
-            log.info("Log configured. Level: " + log.getParent().getLevel().getName() +
+            String level = log.getLevel() != null ? log.getLevel().getName() :
+                    log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
+
+            log.info("Log configured. Level: " + level +
                     " Handlers: " + Arrays.asList(log.getParent().getHandlers()));
         }
         catch (IOException e)
