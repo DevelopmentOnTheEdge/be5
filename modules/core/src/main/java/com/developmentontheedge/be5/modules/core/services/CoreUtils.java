@@ -16,7 +16,8 @@ import java.util.Map;
 
 public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 {
-    private static final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
+    private final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
+
     private final SqlService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
@@ -57,26 +58,17 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //        {
 //            return ret;
 //        }
-//        try
-//        {
-            String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
-            Clob clob = db.getScalar(sql, param, section);
-            //ret = new JDBCRecordAdapterAsQuery( connector, sql ).getString();
-            //systemSettingsCache.put( key, ret );
+
+        String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
+        Clob clob = db.getScalar(sql, param, section);
+        if(clob != null)
+        {
             return BlobUtils.getAsString(clob);
-//        }
-//        catch( JDBCRecordAdapterAsQuery.NoRecord ignore )
-//        {
-//            systemSettingsCache.put( key, MISSING_SETTING_VALUE );
-//            return defValue;
-//        }
-//        catch( Exception e )
-//        {
-//            String details = " Section: " + section + ", setting_name: " + param;
-//            Logger.error( cat, "Could not read system setting from DB. " + details, e );
-//            systemSettingsCache.put( key, MISSING_SETTING_VALUE );
-//            return defValue;
-//        }
+        }
+        else
+        {
+            return defValue;
+        }
     }
 //
 //    /**
@@ -89,41 +81,41 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * @param value parameter value
 //     * @throws SQLException
 //     */
-//    public static void setSystemSettingInSection( String section, String param, String value ) throws SQLException
+//    public void setSystemSettingInSection( String section, String param, String value ) throws SQLException
 //    {
 //        String queryUpdate =
-//                "UPDATE systemSettings SET setting_value = " + safestr( connector, value, true ) +
-//                        " WHERE section_name=" + safestr( connector, section, true ) +
-//                        "   AND setting_name = " + safestr( connector, param, true );
+//                "UPDATE systemSettings SET setting_value = " + safestr( value, true ) +
+//                        " WHERE section_name=" + safestr( section, true ) +
+//                        "   AND setting_name = " + safestr( param, true );
 //        if ( 0 == connector.executeUpdate( queryUpdate ) )
 //        {
 //            String queryInsert = "INSERT INTO systemSettings( section_name, setting_name, setting_value ) VALUES ( "
-//                    + safestr( connector, section, true ) + ", "
-//                    + safestr( connector, param, true ) + ", "
-//                    + safestr( connector, value, true ) + " )";
+//                    + safestr( section, true ) + ", "
+//                    + safestr( param, true ) + ", "
+//                    + safestr( value, true ) + " )";
 //            connector.executeUpdate( queryInsert );
 //        }
 //        String key = section + "." + param;
 //        SystemSettingsCache.getInstance().put( key, value );
-//        SystemSettings.notifyListeners( connector, section, param );
+//        SystemSettings.notifyListeners( section, param );
 //        SystemSettings.notifyOtherHosts( section, param );
 //    }
 //
 //    /**
 //     * Get all settings for given section.
 //     *
-//     * In this method parameter section is passing through the method {@link #safestr(DatabaseConnector, String) safestr}
+//     * In this method parameter section is passing through the method {@link #safestr(DatabaseString) safestr}
 //     *
 //     * @param connector
 //     * @param section
 //     * @return Map in the form parameter name - parameter value
 //     * @throws SQLException
 //     */
-//    public static Map getSystemSettingsInSection(DatabaseConnector connector, String section ) throws SQLException
+//    public Map getSystemSettingsInSection(String section ) throws SQLException
 //    {
 //        String sql = "SELECT setting_name, setting_value ";
-//        sql += " FROM systemSettings WHERE section_name = '" + Utils.safestr( connector, section ) + "'";
-//        Map settingsInSection = readAsMap( connector, sql );
+//        sql += " FROM systemSettings WHERE section_name = '" + Utils.safestr( section ) + "'";
+//        Map settingsInSection = readAsMap( sql );
 //        for(Iterator iter = settingsInSection.entrySet().iterator(); iter.hasNext(); )
 //        {
 //            Map.Entry entry = ( Map.Entry )iter.next();
@@ -133,108 +125,103 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //        return settingsInSection;
 //    }
 //
-//    /**
-//     * Takes parameter param from the section "system", using the method with 4 parameters
-//     * {@link #setSystemSettingInSection(DatabaseConnector, String, String, String) setSystemSettingInSection}(DatabaseConnector, String, String, String)
-//     * Detaiiled information about what passes through {@link #safestr(DatabaseConnector, String) safestr}, describes in
-//     * {@link #setSystemSettingInSection(DatabaseConnector, String, String, String) setSystemSettingInSection} method.
-//     *
-//     * @param connector
-//     * @param param parameter name
-//     * @return
-//     */
-//    public static String getSystemSetting( DatabaseConnector connector, String param )
+    /**
+     * Takes parameter param from the section "system", using the method with 4 parameters
+     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection}(String, String)
+     * Detaiiled information about what passes through {@link #safestr(DatabaseString) safestr}, describes in
+     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
+     *
+     * @param param parameter name
+     * @return
+     */
+    public String getSystemSetting( String param )
+    {
+        return getSystemSettingInSection( "system", param, null );
+    }
+
+    /**
+     * Takes parameter param from the section "system", using the method with 4 parameters
+     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection}(String, String)
+     * Detaiiled information about what passes through {@link #safestr(DatabaseString) safestr}, describes in
+     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
+     *
+     * @param connector
+     * @param param parameter name
+     * @param defValue this value is returned, when such parameter does not exists in DB
+     * @return
+     */
+    public String getSystemSetting( String param, String defValue )
+    {
+        return getSystemSettingInSection( "system", param, defValue );
+    }
+
+    public boolean getBooleanSystemSetting( String param, boolean defValue )
+    {
+        String check = getSystemSetting( param, null );
+        if( check == null )
+        {
+            return defValue;
+        }
+        return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
+    }
+
+    public boolean getBooleanSystemSetting( String param )
+    {
+        return getBooleanSystemSetting( param, false );
+    }
+
+    /**
+     * Takes parameter param from the section "module + '_module'", using the method with 4 parameters
+     * {@link #getModuleSetting(String, String) getModuleSetting}(String, String),
+     * where defValue is null
+     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
+     *
+     * @param module module name
+     * @param param parameter name
+     * @return
+     */
+    public String getModuleSetting( String module, String param )
+    {
+        return getModuleSetting( module, param, null );
+    }
+
+    /**
+     * Takes parameter param from the section "module + '_module'", using the method with 4 parameters
+     * {@link #getModuleSetting(String, String) getModuleSetting}(String, String)
+     * {@link #setSystemSettingInSection( String, String, String) setSystemSettingInSection} method.
+     *
+     * @param module
+     * @param param
+     * @param defValue
+     * @return
+     */
+    public String getModuleSetting( String module, String param, String defValue )
+    {
+        return getSystemSettingInSection( module.toUpperCase() + "_module", param, defValue );
+    }
+
+//    public <T> T getModuleSettingByType( String module, String param, T defValue, Class<T> clazz )
 //    {
-//        return getSystemSettingInSection( connector, "system", param, null );
-//    }
-//
-//    /**
-//     * Takes parameter param from the section "system", using the method with 4 parameters
-//     * {@link #setSystemSettingInSection(DatabaseConnector, String, String, String) setSystemSettingInSection}(DatabaseConnector, String, String, String)
-//     * Detaiiled information about what passes through {@link #safestr(DatabaseConnector, String) safestr}, describes in
-//     * {@link #setSystemSettingInSection(DatabaseConnector, String, String, String) setSystemSettingInSection} method.
-//     *
-//     * @param connector
-//     * @param param parameter name
-//     * @param defValue this value is returned, when such parameter does not exists in DB
-//     * @return
-//     */
-//    public static String getSystemSetting( DatabaseConnector connector, String param, String defValue )
-//    {
-//        return getSystemSettingInSection( connector, "system", param, defValue );
-//    }
-//
-//    public static boolean getBooleanSystemSetting( DatabaseConnector connector, String param, boolean defValue )
-//    {
-//        String check = getSystemSetting( connector, param, null );
-//        if( check == null )
-//        {
-//            return defValue;
-//        }
-//        return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
-//    }
-//
-//    public static boolean getBooleanSystemSetting( DatabaseConnector connector, String param )
-//    {
-//        return getBooleanSystemSetting( connector, param, false );
-//    }
-//
-//    /**
-//     * Takes parameter param from the section "module + '_module'", using the method with 4 parameters
-//     * {@link #getModuleSetting(DatabaseConnector, String, String, String) getModuleSetting}(DatabaseConnector, String, String, String),
-//     * where defValue is null
-//     * Detailed information about what passes through {@link #safestr(DatabaseConnector, String) safestr}, describes in
-//     * {@link #setSystemSettingInSection(DatabaseConnector, String, String, String) setSystemSettingInSection} method.
-//     *
-//     * @param connector DB connector
-//     * @param module module name
-//     * @param param parameter name
-//     * @return
-//     */
-//    public static String getModuleSetting( DatabaseConnector connector, String module, String param )
-//    {
-//        return getModuleSetting( connector, module, param, null );
-//    }
-//
-//    /**
-//     * Takes parameter param from the section "module + '_module'", using the method with 4 parameters
-//     * {@link #getModuleSetting(DatabaseConnector, String, String, String) getModuleSetting}(DatabaseConnector, String, String, String)
-//     * Detailed information about what passes through {@link #safestr(DatabaseConnector, String) safestr}, describes in
-//     * {@link #setSystemSettingInSection(DatabaseConnector, String, String, String) setSystemSettingInSection} method.
-//     *
-//     * @param connector DB connector
-//     * @param module
-//     * @param param
-//     * @param defValue
-//     * @return
-//     */
-//    public static String getModuleSetting( DatabaseConnector connector, String module, String param, String defValue )
-//    {
-//        return getSystemSettingInSection( connector, module.toUpperCase() + "_module", param, defValue );
-//    }
-//
-//    public static <T> T getModuleSettingByType( DatabaseConnector connector, String module, String param, T defValue, Class<T> clazz )
-//    {
-//        String val = getModuleSetting(connector, module, param);
+//        String val = getModuleSetting(module, param);
 //        if( val == null )
 //            return defValue;
 //        return changeType( val, clazz );
 //    }
-//
-//    public static boolean getBooleanModuleSetting( DatabaseConnector connector, String module, String param, boolean defValue )
-//    {
-//        String check = getModuleSetting( connector, module, param, null );
-//        if( check == null )
-//        {
-//            return defValue;
-//        }
-//        return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
-//    }
-//
-//    public static boolean getBooleanModuleSetting( DatabaseConnector connector, String module, String param )
-//    {
-//        return getBooleanModuleSetting( connector, module, param, false );
-//    }
+
+    public boolean getBooleanModuleSetting( String module, String param, boolean defValue )
+    {
+        String check = getModuleSetting( module, param, null );
+        if( check == null )
+        {
+            return defValue;
+        }
+        return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
+    }
+
+    public boolean getBooleanModuleSetting( String module, String param )
+    {
+        return getBooleanModuleSetting( module, param, false );
+    }
 //
 //    /**
 //     * Checks, if specified module is linked to this web site.
@@ -243,9 +230,9 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * @param module module name (case insensitive)
 //     * @return true, if module is linked.
 //     */
-//    public static boolean hasModule( DatabaseConnector connector, String module )
+//    public boolean hasModule( String module )
 //    {
-//        String modules = getSystemSetting( connector, "MODULES", "" );
+//        String modules = getSystemSetting( "MODULES", "" );
 //        List modList = Arrays.asList( modules.split( "," ) );
 //        return modList.contains( module.toLowerCase() ) || modList.contains( module.toUpperCase() );
 //    }
@@ -257,7 +244,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * @return true if so, false otherwise.
 //     */
 //
-//    public static boolean hasFeatureFromCache( String feature )
+//    public boolean hasFeatureFromCache( String feature )
 //    {
 //        Cache systemSettingsCache = SystemSettingsCache.getInstance();
 //        String key = "system." + Features.SETTING_NAME;
@@ -270,10 +257,10 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //        return features.contains( feature );
 //    }
 //
-//    public static boolean hasFeature( DatabaseConnector connector, String feature )
+//    public boolean hasFeature( String feature )
 //    {
 //        Collection features;
-//        String setting = getSystemSetting( connector, Features.SETTING_NAME );
+//        String setting = getSystemSetting( Features.SETTING_NAME );
 //        if( null != setting )
 //        {
 //            features = Arrays.asList( setting.split( "," ) );
@@ -286,7 +273,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //            features = Features.guessByTableExistence( connector );
 //            try
 //            {
-//                setSystemSettingInSection( connector, Features.SECTION_NAME, Features.SETTING_NAME, StringUtils.join( features, "," ) );
+//                setSystemSettingInSection( Features.SECTION_NAME, Features.SETTING_NAME, StringUtils.join( features, "," ) );
 //            }
 //            catch( SQLException e )
 //            {
@@ -296,28 +283,28 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //        return features.contains( feature );
 //    }
 //
-//    public static final String SQL_PREF_START = "SELECT pref_value FROM user_prefs WHERE pref_name = ";
+//    public final String SQL_PREF_START = "SELECT pref_value FROM user_prefs WHERE pref_name = ";
 //
 //    /**
 //     * Retrieves specific user parameter from table user_prefs.
-//     * <b>Attention!!!</b>Before table to be queried,user name is passing through {@link #safestr(DatabaseConnector, String)}. And
-//     * parameter name does not passing method {@link #safestr(DatabaseConnector, String)}
+//     * <b>Attention!!!</b>Before table to be queried,user name is passing through {@link #safestr(DatabaseString)}. And
+//     * parameter name does not passing method {@link #safestr(DatabaseString)}
 //     *
 //     * @param connector
 //     * @param user
 //     * @param param
 //     * @return
 //     */
-//    public static String getUserSetting( DatabaseConnector connector, String user, String param )
+//    public String getUserSetting( String user, String param )
 //    {
 //        if ( user == null )
 //            return null;
 //
-//        String realUser = safestr( connector, user, true );
+//        String realUser = safestr( user, true );
 //        try
 //        {
-//            String sql = SQL_PREF_START + safestr( connector, param, true ) + " AND user_name = " + realUser;
-//            return QRec.withCache( connector, sql, UserSettingsCache.getInstance() ).getString();
+//            String sql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
+//            return QRec.withCache( sql, UserSettingsCache.getInstance() ).getString();
 //        }
 //        catch( QRec.NoRecord exc )
 //        {
@@ -331,8 +318,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //    }
 //
 //    /**
-//     * Set`s up specified user parameter. All of the parameters are passing through {@link #safestr(DatabaseConnector, String)}
-//     * Some of the parameters are passed to {@link #removeUserSetting(DatabaseConnector, String, String)}
+//     * Set`s up specified user parameter. All of the parameters are passing through {@link #safestr(DatabaseString)}
+//     * Some of the parameters are passed to {@link #removeUserSetting(String)}
 //     *
 //     * @param connector DB connector
 //     * @param user user name
@@ -341,16 +328,16 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * @throws Exception
 //     */
 //
-//    public static void setUserSetting( DatabaseConnector connector, String user, String param, String value ) throws Exception
+//    public void setUserSetting( String user, String param, String value ) throws Exception
 //    {
-//        setUserSetting( connector, user, param, value, false );
+//        setUserSetting( user, param, value, false );
 //    }
 //
-//    public static void setUserSetting( DatabaseConnector connector, String user, String param, String value, boolean isQueued ) throws Exception
+//    public void setUserSetting( String user, String param, String value, boolean isQueued ) throws Exception
 //    {
-//        String realUser = safestr( connector, user, true );
+//        String realUser = safestr( user, true );
 //
-//        String cacheSql = SQL_PREF_START + safestr( connector, param, true ) + " AND user_name = " + realUser;
+//        String cacheSql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
 //
 //        Cache cache = UserSettingsCache.getInstance();
 //
@@ -362,10 +349,10 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //
 //        cache.put( cacheSql, new QRec( "pref_value", value ) );
 //
-//        final String sql = "UPDATE user_prefs SET pref_value = " + safestr( connector, value, true ) +
-//                " WHERE pref_name = " + safestr( connector, param, true ) + " AND user_name = " + realUser;
+//        final String sql = "UPDATE user_prefs SET pref_value = " + safestr( value, true ) +
+//                " WHERE pref_name = " + safestr( param, true ) + " AND user_name = " + realUser;
 //
-//        final String sql2 = "INSERT INTO user_prefs VALUES( " + realUser + ", " + safestr( connector, param, true ) + ", " + safestr( connector, value, true ) + " )";
+//        final String sql2 = "INSERT INTO user_prefs VALUES( " + realUser + ", " + safestr( param, true ) + ", " + safestr( value, true ) + " )";
 //
 //        if( !isQueued )
 //        {
@@ -403,20 +390,20 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //
 //    /**
 //     * Removes specified user settings parameter.
-//     * <b>Attention!!!</b> Parameter param doesn't passing through {@link #safestr(DatabaseConnector, String)}
+//     * <b>Attention!!!</b> Parameter param doesn't passing through {@link #safestr(DatabaseString)}
 //     *
 //     * @param connector
 //     * @param user
 //     * @param param
 //     * @throws Exception
 //     */
-//    public static void removeUserSetting( DatabaseConnector connector, String user, String param ) throws Exception
+//    public void removeUserSetting( String user, String param ) throws Exception
 //    {
-//        String realUser = safestr( connector, user, true );
-//        String sql = "DELETE FROM user_prefs WHERE pref_name = " + safestr( connector, param, true ) + " AND user_name = " + realUser;
+//        String realUser = safestr( user, true );
+//        String sql = "DELETE FROM user_prefs WHERE pref_name = " + safestr( param, true ) + " AND user_name = " + realUser;
 //        connector.executeUpdate( sql );
 //
-//        String cacheSql = SQL_PREF_START + safestr( connector, param, true ) + " AND user_name = " + realUser;
+//        String cacheSql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
 //        Cache cache = UserSettingsCache.getInstance();
 //        cache.remove( cacheSql );
 //    }
