@@ -35,13 +35,6 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     }
 
     @Test
-    void getSystemSettingInSectionNull() throws Exception
-    {
-        assertEquals "Be5 Application", utils.
-                getSystemSettingInSection("system", null, "Be5 Application")
-    }
-
-    @Test
     void getSystemSettingInSectionNotFound() throws Exception
     {
         assertEquals "Be5 Application", utils.
@@ -134,5 +127,27 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
 
         utils.setUserSetting("testName", "companyID", "2")
         assertEquals "2", utils.getUserSetting("testName", "companyID")
+    }
+
+    @Test(expected = NullPointerException)
+    void getBooleanModuleSettingNull() throws Exception
+    {
+        assertEquals "error", utils.getBooleanModuleSetting("test", null)
+    }
+
+    @Test(expected = NullPointerException)
+    void getBooleanModuleSettingNull2() throws Exception
+    {
+        assertEquals "error", utils.getBooleanModuleSetting(null, "test")
+    }
+
+    @Test(expected = NullPointerException)
+    void getUserSettingNullParams() throws Exception {
+        assertEquals null, utils.getUserSetting(null, "test")
+    }
+
+    @Test(expected = NullPointerException)
+    void getUserSettingNullParams2() throws Exception {
+        assertEquals null, utils.getUserSetting("test", null)
     }
 }

@@ -22,18 +22,11 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     private final Cache<String, String> systemSettingsCache;
     private final Cache<String, String> userSettingsCache;
 
-
     private final SqlService db;
-//    private final Meta meta;
-//    private final UserAwareMeta userAwareMeta;
-//    private final Injector injector;
 
-    public CoreUtils(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Injector injector)
+    public CoreUtils(SqlService db)
     {
         this.db = db;
-//        this.meta = meta;
-//        this.userAwareMeta = userAwareMeta;
-//        this.injector = injector;
 
         systemSettingsCache = Caffeine.newBuilder()
                 .maximumSize(1_000)
@@ -64,6 +57,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     // to block on network call
     public String getSystemSettingInSection( String section, String param, String defValue )
     {
+        Objects.requireNonNull(section); Objects.requireNonNull(param);
+
         String key = section + "." + param;
 
         Object value = systemSettingsCache.get(key, (k)->{
@@ -96,6 +91,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public void setSystemSettingInSection( String section, String param, String value )
     {
+        Objects.requireNonNull(section); Objects.requireNonNull(param);
+
         String queryUpdate = "UPDATE systemSettings SET setting_value = ?" +
                              " WHERE section_name= ? AND setting_name = ?";
 
@@ -117,6 +114,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public Map<String, String> getSystemSettingsInSection( String section )
     {
+        Objects.requireNonNull(section);
+
         String sql = "SELECT setting_name, setting_value FROM systemSettings WHERE section_name = ?";
         Map<String, String> settingsInSection = new HashMap<>();
         db.selectList(sql, rs -> {
@@ -229,6 +228,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public String getUserSetting( String user, String param )
     {
+        Objects.requireNonNull(user); Objects.requireNonNull(param);
+
         String key = user + "." + param;
         Object value = userSettingsCache.get(key, k -> {
             String sql = "SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?";
@@ -259,6 +260,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public void setUserSetting( String user, String param, String value )
     {
+        Objects.requireNonNull(user); Objects.requireNonNull(param);
+
         final String sql =  "UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?";
         final String sql2 = "INSERT INTO user_prefs VALUES( ?, ?, ? )";
 
@@ -277,6 +280,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public void removeUserSetting( String user, String param )
     {
+        Objects.requireNonNull(user); Objects.requireNonNull(param);
+
         db.update("DELETE FROM user_prefs WHERE pref_name = ? AND user_name = ?", param, user);
         userSettingsCache.invalidate(user + "." + param);
     }
