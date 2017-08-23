@@ -15,7 +15,7 @@ public class BlobUtils
                 Clob clob = (Clob) value;
                 return clob.getSubString(1, (int) clob.length());
             }
-            return value.toString();
+            return (String) value;
         }
         catch (SQLException e)
         {

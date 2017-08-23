@@ -6,13 +6,8 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.util.BlobUtils;
 
-import java.sql.Clob;
-import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+
 
 public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 {
@@ -282,39 +277,28 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //        return features.contains( feature );
 //    }
 //
-//    public final String SQL_PREF_START = "SELECT pref_value FROM user_prefs WHERE pref_name = ";
-//
-//    /**
-//     * Retrieves specific user parameter from table user_prefs.
-//     * <b>Attention!!!</b>Before table to be queried,user name is passing through {@link #safestr(DatabaseString)}. And
-//     * parameter name does not passing method {@link #safestr(DatabaseString)}
-//     *
-//     
-//     * @param user
-//     * @param param
-//     * @return
-//     */
-//    public String getUserSetting( String user, String param )
-//    {
-//        if ( user == null )
-//            return null;
-//
-//        String realUser = safestr( user, true );
-//        try
-//        {
-//            String sql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
-//            return QRec.withCache( sql, UserSettingsCache.getInstance() ).getString();
-//        }
-//        catch( QRec.NoRecord exc )
-//        {
-//            return null;
-//        }
-//        catch( Exception exc )
-//        {
-//            Logger.error( cat, "When getting user pref", exc );
-//            return null;
-//        }
-//    }
+    public final String SQL_PREF_START = "SELECT pref_value FROM user_prefs WHERE pref_name = ?";
+
+    /**
+     * Retrieves specific user parameter from table user_prefs.
+     *
+     * @param user user name
+     * @param param parameter name
+     * @return parameter value
+     */
+    public String getUserSetting( String user, String param )
+    {
+        if ( user == null )
+            return null;
+        //QRec.withCache UserSettingsCache.getInstance()
+
+        Object value = db.getScalar(SQL_PREF_START + " AND user_name = ?", param, user);
+        if(value != null)
+        {
+            return BlobUtils.getAsString(value);
+        }
+        return null;
+    }
 //
 //    /**
 //     * Set`s up specified user parameter. All of the parameters are passing through {@link #safestr(DatabaseString)}

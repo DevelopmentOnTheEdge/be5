@@ -8,7 +8,7 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
-class CoreUtilsSystemSettingTest extends AbstractProjectIntegrationH2Test
+class CoreUtilsTest extends AbstractProjectIntegrationH2Test
 {
     DatabaseModel database = injector.get(DatabaseModel.class)
     SqlService db = injector.getSqlService()
@@ -66,5 +66,15 @@ class CoreUtilsSystemSettingTest extends AbstractProjectIntegrationH2Test
         database.systemSettings << [ section_name: "CORE_module", setting_name: "is_active", setting_value: "true" ]
 
         assertEquals true, utils.getBooleanModuleSetting("core", "is_active")
+    }
+
+    @Test
+    void getUserSetting() throws Exception
+    {
+        assertEquals null, utils.getUserSetting("testName", "companyID")
+
+        database.user_prefs << [ user_name: "testName", pref_name: "companyID", pref_value: "123" ]
+
+        assertEquals "123", utils.getUserSetting("testName", "companyID")
     }
 }
