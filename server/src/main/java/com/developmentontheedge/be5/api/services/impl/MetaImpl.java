@@ -416,9 +416,11 @@ public class MetaImpl implements Meta
         switch( columnDef.getType().getTypeName() )
         {
             case SqlColumnType.TYPE_BIGINT:
+            case SqlColumnType.TYPE_UBIGINT:
             case SqlColumnType.TYPE_KEY:
                 return Long.class;
             case SqlColumnType.TYPE_INT:
+            case SqlColumnType.TYPE_UINT:
             case SqlColumnType.TYPE_SMALLINT:
                 return Integer.class;
             case SqlColumnType.TYPE_DECIMAL:
