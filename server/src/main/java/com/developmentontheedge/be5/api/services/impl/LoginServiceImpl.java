@@ -111,6 +111,7 @@ public class LoginServiceImpl implements LoginService
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
         session.setAttribute(SessionConstants.USER_INFO, ui);
+        session.setAttribute(SessionConstants.CURRENT_USER, ui.getUserName());
 
         log.fine("Login user: " + username);
     }
