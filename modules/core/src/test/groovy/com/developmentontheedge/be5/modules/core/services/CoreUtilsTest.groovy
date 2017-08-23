@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services
 
+import com.developmentontheedge.be5.api.services.CacheInfo
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
@@ -22,6 +23,7 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     void before(){
         db.update("DELETE FROM systemSettings")
         db.update("DELETE FROM user_prefs")
+        CacheInfo.clearAll()
     }
 
     @Test
@@ -30,6 +32,13 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
         database.systemSettings << [ section_name: "system", setting_name: "app_name", setting_value: "Test App" ]
         assertEquals "Test App", utils.
                 getSystemSettingInSection("system", "app_name", "Be5 Application")
+    }
+
+    @Test
+    void getSystemSettingInSectionNull() throws Exception
+    {
+        assertEquals "Be5 Application", utils.
+                getSystemSettingInSection("system", null, "Be5 Application")
     }
 
     @Test
@@ -64,15 +73,21 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
 
         assertEquals "[app_name:App, app_url:Url]",
                 utils.getSystemSettingsInSection("system").toString()
+
+        assertEquals "App", utils.getSystemSetting("app_name")
+        assertEquals "Url", utils.getSystemSetting("app_url")
     }
 
     @Test
     void getBooleanSystemSetting() throws Exception
     {
         assertEquals false, utils.getBooleanSystemSetting("is_active")
+        assertEquals CoreUtils.MISSING_SETTING_VALUE,
+                CacheInfo.getCache("System settings").getIfPresent("system.is_active")
         assertEquals true, utils.getBooleanSystemSetting("is_active", true)
 
         database.systemSettings << [ section_name: "system", setting_name: "is_active", setting_value: "true" ]
+        CacheInfo.clearAll()
 
         assertEquals true, utils.getBooleanSystemSetting("is_active")
     }
@@ -87,6 +102,7 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
         assertEquals "false", utils.getModuleSetting("core", "is_active", "false")
 
         database.systemSettings << [ section_name: "CORE_module", setting_name: "is_active", setting_value: "true" ]
+        CacheInfo.clearAll()
 
         assertEquals true, utils.getBooleanModuleSetting("core", "is_active")
     }
@@ -95,8 +111,13 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     void getUserSetting() throws Exception
     {
         assertEquals null, utils.getUserSetting("testName", "companyID")
+        assertEquals CoreUtils.MISSING_SETTING_VALUE,
+                CacheInfo.getCache("User settings").getIfPresent("testName.companyID")
+
+        assertEquals null, utils.getUserSetting("testName", "companyID")
 
         database.user_prefs << [ user_name: "testName", pref_name: "companyID", pref_value: "123" ]
+        CacheInfo.clearAll()
 
         assertEquals "123", utils.getUserSetting("testName", "companyID")
 

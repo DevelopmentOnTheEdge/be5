@@ -1,31 +1,51 @@
 package com.developmentontheedge.be5.modules.core.services;
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.CacheInfo;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.util.BlobUtils;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 {
-    private final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
+    public static final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
+
+    private final Cache<String, String> systemSettingsCache;
+    private final Cache<String, String> userSettingsCache;
+
 
     private final SqlService db;
-    private final Meta meta;
-    private final UserAwareMeta userAwareMeta;
-    private final Injector injector;
+//    private final Meta meta;
+//    private final UserAwareMeta userAwareMeta;
+//    private final Injector injector;
 
     public CoreUtils(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Injector injector)
     {
         this.db = db;
-        this.meta = meta;
-        this.userAwareMeta = userAwareMeta;
-        this.injector = injector;
+//        this.meta = meta;
+//        this.userAwareMeta = userAwareMeta;
+//        this.injector = injector;
+
+        systemSettingsCache = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .recordStats()
+                .build();
+        CacheInfo.registerCache("System settings", systemSettingsCache);
+
+        userSettingsCache = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .recordStats()
+                .build();
+        CacheInfo.registerCache("User settings", userSettingsCache);
     }
 
     /**
@@ -44,28 +64,25 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     // to block on network call
     public String getSystemSettingInSection( String section, String param, String defValue )
     {
-//        Cache systemSettingsCache = SystemSettingsCache.getInstance();
-//        String key = section + "." + param;
-//        String ret = ( String )systemSettingsCache.get( key );
-//        if( MISSING_SETTING_VALUE.equals( ret ) )
-//        {
-//            return defValue;
-//        }
-//        if( ret != null )
-//        {
-//            return ret;
-//        }
+        String key = section + "." + param;
 
-        String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
-        Object value = db.getScalar(sql, param, section);
-        if(value != null)
-        {
-            return BlobUtils.getAsString(value);
-        }
-        else
+        Object value = systemSettingsCache.get(key, (k)->{
+            String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
+            return BlobUtils.getAsString(db.getScalar(sql, param, section));
+        });
+
+        if( MISSING_SETTING_VALUE.equals( value ) )
         {
             return defValue;
         }
+
+        if(value == null)
+        {
+            systemSettingsCache.put(key, MISSING_SETTING_VALUE);
+            return defValue;
+        }
+
+        return BlobUtils.getAsString(value);
     }
 
     /**
@@ -84,14 +101,12 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 
         if ( 0 == db.update( queryUpdate, value, section, param) )
         {
-            String queryInsert = "INSERT INTO systemSettings( section_name, setting_name, setting_value ) VALUES ( ?, ?, ?)";
+            String queryInsert = "INSERT INTO systemSettings( section_name, setting_name, setting_value )" +
+                    " VALUES ( ?, ?, ?)";
             db.insert( queryInsert, section, param, value );
         }
-//        String key = section + "." + param;
-//        SystemSettingsCache.getInstance().put( key, value );
-
-//        SystemSettings.notifyListeners( section, param );
-//        SystemSettings.notifyOtherHosts( section, param );
+        String key = section + "." + param;
+        systemSettingsCache.put(key, value);
     }
 
     /**
@@ -104,16 +119,12 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     {
         String sql = "SELECT setting_name, setting_value FROM systemSettings WHERE section_name = ?";
         Map<String, String> settingsInSection = new HashMap<>();
-        db.selectList(sql, rs ->
-                settingsInSection.put(rs.getString(1), BlobUtils.getAsString(rs.getObject(2))),
-            section);
-        //Map<String, String> settingsInSection = readAsMap( sql );
-//        for(Iterator iter = settingsInSection.entrySet().iterator(); iter.hasNext(); )
-//        {
-//            Map.Entry entry = ( Map.Entry )iter.next();
-//            String key = section + "." + entry.getKey();
-//            //SystemSettingsCache.getInstance().put( key, entry.getValue() );
-//        }
+        db.selectList(sql, rs -> {
+            String param = rs.getString(1);
+            String value = BlobUtils.getAsString(rs.getObject(2));
+            systemSettingsCache.put(section + "." + param, value);
+            return settingsInSection.put(param, value);
+        }, section);
         return settingsInSection;
     }
 
@@ -218,17 +229,24 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public String getUserSetting( String user, String param )
     {
-        if ( user == null )
-            return null;
-        //QRec.withCache UserSettingsCache.getInstance()
+        String key = user + "." + param;
+        Object value = userSettingsCache.get(key, k -> {
+            String sql = "SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?";
+            return BlobUtils.getAsString(db.getScalar(sql, param, user));
+        });
 
-        Object value = db.getScalar("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?",
-                param, user);
-        if(value != null)
+        if(MISSING_SETTING_VALUE.equals(value))
         {
-            return BlobUtils.getAsString(value);
+            return null;
         }
-        return null;
+
+        if(value == null)
+        {
+            userSettingsCache.put(key, MISSING_SETTING_VALUE);
+            return null;
+        }
+
+        return BlobUtils.getAsString(value);
     }
 
     /**
@@ -241,15 +259,6 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      */
     public void setUserSetting( String user, String param, String value )
     {
-//        String cacheSql = SQL_PREF_START + " AND user_name = ?";
-//        Cache cache = UserSettingsCache.getInstance();
-//        QRec prev = ( QRec )cache.get( cacheSql );
-//        if( prev != null && !prev.isEmpty() && value != null && value.equals( prev.getString() ) )
-//        {
-//            return;
-//        }
-        //cache.put( cacheSql, new QRec( "pref_value", value ) );
-
         final String sql =  "UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?";
         final String sql2 = "INSERT INTO user_prefs VALUES( ?, ?, ? )";
 
@@ -257,6 +266,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
         {
             db.insert( sql2, user, param, value );
         }
+        userSettingsCache.put(user + "." + param, value);
     }
 
     /**
@@ -268,9 +278,6 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     public void removeUserSetting( String user, String param )
     {
         db.update("DELETE FROM user_prefs WHERE pref_name = ? AND user_name = ?", param, user);
-
-        //String cacheSql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
-        //Cache cache = UserSettingsCache.getInstance();
-        //cache.remove( cacheSql );
+        userSettingsCache.invalidate(user + "." + param);
     }
 }

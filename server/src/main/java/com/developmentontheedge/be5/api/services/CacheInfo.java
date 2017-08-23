@@ -19,6 +19,11 @@ public class CacheInfo
         return caches;
     }
 
+    public static Cache getCache(String name)
+    {
+        return caches.get(name);
+    }
+
     public static void clearAll()
     {
         caches.forEach((k,v) -> v.invalidateAll());
