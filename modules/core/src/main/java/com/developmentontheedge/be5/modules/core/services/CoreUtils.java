@@ -7,6 +7,8 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.util.BlobUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
@@ -65,66 +67,59 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
             return defValue;
         }
     }
-//
-//    /**
-//     * Set system settings parameter to the specified value, and saves it to the DB.
-//     *
-//     * All of the parameters (section, param, value) must be already passed through the method
-//     *
-//     * @param section parameters section
-//     * @param param parameter name
-//     * @param value parameter value
-//     * @throws SQLException
-//     */
-//    public void setSystemSettingInSection( String section, String param, String value ) throws SQLException
-//    {
-//        String queryUpdate =
-//                "UPDATE systemSettings SET setting_value = " + safestr( value, true ) +
-//                        " WHERE section_name=" + safestr( section, true ) +
-//                        "   AND setting_name = " + safestr( param, true );
-//        if ( 0 == connector.executeUpdate( queryUpdate ) )
-//        {
-//            String queryInsert = "INSERT INTO systemSettings( section_name, setting_name, setting_value ) VALUES ( "
-//                    + safestr( section, true ) + ", "
-//                    + safestr( param, true ) + ", "
-//                    + safestr( value, true ) + " )";
-//            connector.executeUpdate( queryInsert );
-//        }
+
+    /**
+     * Set system settings parameter to the specified value, and saves it to the DB.
+     *
+     * All of the parameters (section, param, value) must be already passed through the method
+     *
+     * @param section system settings section name
+     * @param param parameter name
+     * @param value parameter value
+     */
+    public void setSystemSettingInSection( String section, String param, String value )
+    {
+        String queryUpdate = "UPDATE systemSettings SET setting_value = ?" +
+                             " WHERE section_name= ? AND setting_name = ?";
+
+        if ( 0 == db.update( queryUpdate, value, section, param) )
+        {
+            String queryInsert = "INSERT INTO systemSettings( section_name, setting_name, setting_value ) VALUES ( ?, ?, ?)";
+            db.insert( queryInsert, section, param, value );
+        }
 //        String key = section + "." + param;
 //        SystemSettingsCache.getInstance().put( key, value );
+
 //        SystemSettings.notifyListeners( section, param );
 //        SystemSettings.notifyOtherHosts( section, param );
-//    }
-//
-//    /**
-//     * Get all settings for given section.
-//     *
-//     * In this method parameter section is passing through the method {@link #safestr(DatabaseString) safestr}
-//     *
-//     
-//     * @param section
-//     * @return Map in the form parameter name - parameter value
-//     * @throws SQLException
-//     */
-//    public Map getSystemSettingsInSection(String section ) throws SQLException
-//    {
-//        String sql = "SELECT setting_name, setting_value ";
-//        sql += " FROM systemSettings WHERE section_name = '" + Utils.safestr( section ) + "'";
-//        Map settingsInSection = readAsMap( sql );
+    }
+
+    /**
+     * Get all settings for given section.
+     *
+     * @param section system settings section name
+     * @return Map in the form parameter name - parameter value
+     */
+    public Map<String, String> getSystemSettingsInSection( String section )
+    {
+        String sql = "SELECT setting_name, setting_value FROM systemSettings WHERE section_name = ?";
+        Map<String, String> settingsInSection = new HashMap<>();
+        db.selectList(sql, rs ->
+                settingsInSection.put(rs.getString(1), BlobUtils.getAsString(rs.getObject(2))),
+            section);
+        //Map<String, String> settingsInSection = readAsMap( sql );
 //        for(Iterator iter = settingsInSection.entrySet().iterator(); iter.hasNext(); )
 //        {
 //            Map.Entry entry = ( Map.Entry )iter.next();
 //            String key = section + "." + entry.getKey();
-//            SystemSettingsCache.getInstance().put( key, entry.getValue() );
+//            //SystemSettingsCache.getInstance().put( key, entry.getValue() );
 //        }
-//        return settingsInSection;
-//    }
-//
+        return settingsInSection;
+    }
+
     /**
-     * Takes parameter param from the section "system", using the method with 4 parameters
-     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection}(String, String)
-     * Detaiiled information about what passes through {@link #safestr(DatabaseString) safestr}, describes in
-     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
+     * Takes parameter param from the section "system", using the method with 3 parameters
+     * {@link #setSystemSettingInSection(String, String, String) setSystemSettingInSection} method.
      *
      * @param param parameter name
      * @return parameter value
@@ -135,10 +130,8 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     }
 
     /**
-     * Takes parameter param from the section "system", using the method with 4 parameters
-     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection}(String, String)
-     * Detaiiled information about what passes through {@link #safestr(DatabaseString) safestr}, describes in
-     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
+     * Takes parameter param from the section "system", using the method with 3 parameters
+     * {@link #setSystemSettingInSection(String, String, String) setSystemSettingInSection} method.
      *
      * @param param parameter name
      * @param defValue this value is returned, when such parameter does not exists in DB
@@ -165,10 +158,10 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     }
 
     /**
-     * Takes parameter param from the section "module + '_module'", using the method with 4 parameters
-     * {@link #getModuleSetting(String, String) getModuleSetting}(String, String),
+     * Takes parameter param from the section "module + '_module'", using the method with 3 parameters
+     * {@link #getModuleSetting(String, String, String) getModuleSetting}(String, String, String),
      * where defValue is null
-     * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
+     * {@link #setSystemSettingInSection(String, String, String) setSystemSettingInSection} method.
      *
      * @param module module name
      * @param param parameter name
@@ -180,8 +173,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     }
 
     /**
-     * Takes parameter param from the section "module + '_module'", using the method with 4 parameters
-     * {@link #getModuleSetting(String, String) getModuleSetting}(String, String)
+     * Takes parameter param from the section "module + '_module'", using the method with 3 parameters
      * {@link #setSystemSettingInSection( String, String, String) setSystemSettingInSection} method.
      *
      * @param module module name
@@ -216,68 +208,6 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
     {
         return getBooleanModuleSetting( module, param, false );
     }
-//
-//    /**
-//     * Checks, if specified module is linked to this web site.
-//     *
-//      DB connector
-//     * @param module module name (case insensitive)
-//     * @return true, if module is linked.
-//     */
-//    public boolean hasModule( String module )
-//    {
-//        String modules = getSystemSetting( "MODULES", "" );
-//        List modList = Arrays.asList( modules.split( "," ) );
-//        return modList.contains( module.toLowerCase() ) || modList.contains( module.toUpperCase() );
-//    }
-//
-//    /**
-//     * Checks whether the specified feature is enabled.
-//     *
-//     * @param feature Feature name.
-//     * @return true if so, false otherwise.
-//     */
-//
-//    public boolean hasFeatureFromCache( String feature )
-//    {
-//        Cache systemSettingsCache = SystemSettingsCache.getInstance();
-//        String key = "system." + Features.SETTING_NAME;
-//        String setting = ( String )systemSettingsCache.get( key );
-//        if( setting == null || MISSING_SETTING_VALUE.equals( setting ) )
-//        {
-//            return false;
-//        }
-//        Collection features = Arrays.asList( setting.split( "," ) );
-//        return features.contains( feature );
-//    }
-//
-//    public boolean hasFeature( String feature )
-//    {
-//        Collection features;
-//        String setting = getSystemSetting( Features.SETTING_NAME );
-//        if( null != setting )
-//        {
-//            features = Arrays.asList( setting.split( "," ) );
-//        }
-//        else
-//        {
-//            // This is needed for backward compatibility only.
-//            // Old projects may not have FEATURES in systemSettings,
-//            // so we add it automatically.
-//            features = Features.guessByTableExistence( connector );
-//            try
-//            {
-//                setSystemSettingInSection( Features.SECTION_NAME, Features.SETTING_NAME, StringUtils.join( features, "," ) );
-//            }
-//            catch( SQLException e )
-//            {
-//                Logger.error( cat, "Cannot put FEATURES into database", e );
-//            }
-//        }
-//        return features.contains( feature );
-//    }
-//
-    public final String SQL_PREF_START = "SELECT pref_value FROM user_prefs WHERE pref_name = ?";
 
     /**
      * Retrieves specific user parameter from table user_prefs.
@@ -292,102 +222,55 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
             return null;
         //QRec.withCache UserSettingsCache.getInstance()
 
-        Object value = db.getScalar(SQL_PREF_START + " AND user_name = ?", param, user);
+        Object value = db.getScalar("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?",
+                param, user);
         if(value != null)
         {
             return BlobUtils.getAsString(value);
         }
         return null;
     }
-//
-//    /**
-//     * Set`s up specified user parameter. All of the parameters are passing through {@link #safestr(DatabaseString)}
-//     * Some of the parameters are passed to {@link #removeUserSetting(String)}
-//     *
-//      DB connector
-//     * @param user user name
-//     * @param param parameter name
-//     * @param value parameter value
-//     * @throws Exception
-//     */
-//
-//    public void setUserSetting( String user, String param, String value ) throws Exception
-//    {
-//        setUserSetting( user, param, value, false );
-//    }
-//
-//    public void setUserSetting( String user, String param, String value, boolean isQueued ) throws Exception
-//    {
-//        String realUser = safestr( user, true );
-//
-//        String cacheSql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
-//
+
+    /**
+     * Set`s up specified user parameter.
+     * Some of the parameters are passed to {@link #removeUserSetting(String, String)}
+     *
+     * @param user user name
+     * @param param parameter name
+     * @param value parameter value
+     */
+    public void setUserSetting( String user, String param, String value )
+    {
+//        String cacheSql = SQL_PREF_START + " AND user_name = ?";
 //        Cache cache = UserSettingsCache.getInstance();
-//
 //        QRec prev = ( QRec )cache.get( cacheSql );
 //        if( prev != null && !prev.isEmpty() && value != null && value.equals( prev.getString() ) )
 //        {
 //            return;
 //        }
-//
-//        cache.put( cacheSql, new QRec( "pref_value", value ) );
-//
-//        final String sql = "UPDATE user_prefs SET pref_value = " + safestr( value, true ) +
-//                " WHERE pref_name = " + safestr( param, true ) + " AND user_name = " + realUser;
-//
-//        final String sql2 = "INSERT INTO user_prefs VALUES( " + realUser + ", " + safestr( param, true ) + ", " + safestr( value, true ) + " )";
-//
-//        if( !isQueued )
-//        {
-//            if( connector.executeUpdate( sql ) == 0 )
-//            {
-//                connector.executeUpdate( sql2 );
-//            }
-//            return;
-//        }
-//
-//        try
-//        {
-//            Utils.queuedUpdate( sql, new QueuedStatement.Callback()
-//            {
-//                @Override
-//                public void run( Object result )
-//                {
-//                    if( ( ( Integer )result ) != 0 )
-//                    {
-//                        return;
-//                    }
-//
-//                    Utils.queuedUpdate( sql2 );
-//                }
-//            } );
-//        }
-//        catch( QueuedStatementExecuterIsDownException exc )
-//        {
-//            if( connector.executeUpdate( sql ) == 0 )
-//            {
-//                connector.executeUpdate( sql2 );
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Removes specified user settings parameter.
-//     * <b>Attention!!!</b> Parameter param doesn't passing through {@link #safestr(DatabaseString)}
-//     *
-//     
-//     * @param user
-//     * @param param
-//     * @throws Exception
-//     */
-//    public void removeUserSetting( String user, String param ) throws Exception
-//    {
-//        String realUser = safestr( user, true );
-//        String sql = "DELETE FROM user_prefs WHERE pref_name = " + safestr( param, true ) + " AND user_name = " + realUser;
-//        connector.executeUpdate( sql );
-//
-//        String cacheSql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
-//        Cache cache = UserSettingsCache.getInstance();
-//        cache.remove( cacheSql );
-//    }
+        //cache.put( cacheSql, new QRec( "pref_value", value ) );
+
+        final String sql =  "UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?";
+        final String sql2 = "INSERT INTO user_prefs VALUES( ?, ?, ? )";
+
+        if( db.update( sql, value, param, user) == 0 )
+        {
+            db.insert( sql2, user, param, value );
+        }
+    }
+
+    /**
+     * Removes specified user settings parameter.
+     *
+     * @param user user name
+     * @param param parameter name
+     */
+    public void removeUserSetting( String user, String param )
+    {
+        db.update("DELETE FROM user_prefs WHERE pref_name = ? AND user_name = ?", param, user);
+
+        //String cacheSql = SQL_PREF_START + safestr( param, true ) + " AND user_name = " + realUser;
+        //Cache cache = UserSettingsCache.getInstance();
+        //cache.remove( cacheSql );
+    }
 }

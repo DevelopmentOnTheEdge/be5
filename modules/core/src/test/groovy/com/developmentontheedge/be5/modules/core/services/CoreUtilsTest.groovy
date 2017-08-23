@@ -21,6 +21,7 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     @Before
     void before(){
         db.update("DELETE FROM systemSettings")
+        db.update("DELETE FROM user_prefs")
     }
 
     @Test
@@ -46,6 +47,26 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     }
 
     @Test
+    void setSystemSettingInSection() throws Exception
+    {
+        utils.setSystemSettingInSection("system", "app_name", "Name 1")
+        assertEquals "Name 1", utils.getSystemSetting("app_name")
+
+        utils.setSystemSettingInSection("system", "app_name", "Name 2")
+        assertEquals "Name 2", utils.getSystemSetting("app_name")
+    }
+
+    @Test
+    void getSystemSettingsInSectionTest() throws Exception
+    {
+        utils.setSystemSettingInSection("system", "app_name", "App")
+        utils.setSystemSettingInSection("system", "app_url", "Url")
+
+        assertEquals "[app_name:App, app_url:Url]",
+                utils.getSystemSettingsInSection("system").toString()
+    }
+
+    @Test
     void getBooleanSystemSetting() throws Exception
     {
         assertEquals false, utils.getBooleanSystemSetting("is_active")
@@ -61,7 +82,9 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     {
         assertEquals false, utils.getBooleanModuleSetting("core", "is_active")
         assertEquals true, utils.getBooleanModuleSetting("core", "is_active", true)
+
         assertEquals null, utils.getModuleSetting("core", "is_active")
+        assertEquals "false", utils.getModuleSetting("core", "is_active", "false")
 
         database.systemSettings << [ section_name: "CORE_module", setting_name: "is_active", setting_value: "true" ]
 
@@ -76,5 +99,19 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
         database.user_prefs << [ user_name: "testName", pref_name: "companyID", pref_value: "123" ]
 
         assertEquals "123", utils.getUserSetting("testName", "companyID")
+
+        utils.removeUserSetting("testName", "companyID")
+
+        assertEquals null, utils.getUserSetting("testName", "companyID")
+    }
+
+    @Test
+    void setUserSettingTest() throws Exception
+    {
+        utils.setUserSetting("testName", "companyID", "1")
+        assertEquals "1", utils.getUserSetting("testName", "companyID")
+
+        utils.setUserSetting("testName", "companyID", "2")
+        assertEquals "2", utils.getUserSetting("testName", "companyID")
     }
 }
