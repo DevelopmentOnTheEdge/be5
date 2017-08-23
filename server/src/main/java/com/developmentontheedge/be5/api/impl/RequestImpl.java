@@ -164,4 +164,13 @@ public class RequestImpl implements Request {
     public String getServletContextRealPath(String s){
         return getRawRequest().getSession().getServletContext().getRealPath(s);
     }
+
+    @Override
+    public String getBaseUrl() {
+        String scheme = rawRequest.getScheme() + "://";
+        String serverName = rawRequest.getServerName();
+        String serverPort = (rawRequest.getServerPort() == 80) ? "" : ":" + rawRequest.getServerPort();
+        String contextPath = rawRequest.getContextPath();
+        return scheme + serverName + serverPort + contextPath;
+    }
 }

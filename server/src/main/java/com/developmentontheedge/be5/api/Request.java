@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
  * @author asko
  */
 public interface Request extends SessionAccess, ParametersAccess {
-    
+
     /**
      * Reads a parameter as JSON array in the form of [{name: 'foo', value: 'bar'},...]
      * 
@@ -47,4 +47,6 @@ public interface Request extends SessionAccess, ParametersAccess {
     HttpSession getRawSession();
 
     String getServletContextRealPath(String s);
+
+    String getBaseUrl();
 }
