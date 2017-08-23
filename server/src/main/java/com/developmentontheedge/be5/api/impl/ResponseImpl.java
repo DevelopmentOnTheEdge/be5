@@ -141,10 +141,17 @@ public class ResponseImpl implements Response
     {
         response.getRawResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         String msg = UserInfoHolder.isAdmin() ? e.getMessage() : "";
-        //TODO localize e.getCode()
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
     }
-        
+
+    @Override
+    public void sendAccessDenied(Be5Exception e)
+    {
+        response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
+        String msg = UserInfoHolder.isAdmin() ? e.getMessage() : "";
+        sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
+    }
+
     @Override
     public void sendAsRawJson(Object value)
     {

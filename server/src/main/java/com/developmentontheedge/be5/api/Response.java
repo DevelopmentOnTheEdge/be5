@@ -107,5 +107,6 @@ public interface Response
      * Returns a raw response. Used only for low-level API. Should not be used in ordinary components.
      */
     HttpServletResponse getRawResponse();
-    
+
+    void sendAccessDenied(Be5Exception ex);
 }

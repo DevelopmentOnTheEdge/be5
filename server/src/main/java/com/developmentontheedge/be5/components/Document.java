@@ -37,9 +37,12 @@ public class Document implements Component
         }
         catch (Be5Exception ex)
         {
-            if(ex.getCode().isInternal()) 
+            if(ex.getCode().isInternal() || ex.getCode().isAccessDenied())
             {
                 log.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+            if(ex.getCode().isAccessDenied()){
+                res.sendAccessDenied(ex);
             }
             res.sendError(ex);
         }
