@@ -536,7 +536,7 @@ void InsertValueList() #InsertValueList :
 void Insert() #Insert :
 {}
 {
-    <INSERT_INTO> TableName() InsertColumnList() InsertValueList()
+    <INSERT_INTO> TableName() [InsertColumnList()] InsertValueList()
 }
 
 /***************************************************************

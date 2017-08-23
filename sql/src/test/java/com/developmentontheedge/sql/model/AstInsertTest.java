@@ -14,6 +14,13 @@ public class AstInsertTest
     }
 
     @Test
+    public void testWithoutColumnNames()
+    {
+        String query = "INSERT INTO user_prefs VALUES ( ?, ?, ? )";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
+    @Test
     public void test2()
     {
         String query = "INSERT INTO users (name, value) VALUES (\"Test\", 1)";
