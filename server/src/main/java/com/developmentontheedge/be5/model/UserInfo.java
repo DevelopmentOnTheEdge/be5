@@ -104,6 +104,11 @@ public class UserInfo implements Serializable
         return remoteAddr;
     }
 
+    public void setRemoteAddr(String remoteAddr)
+    {
+        this.remoteAddr = remoteAddr;
+    }
+
     public Date getCreationTime()
     {
         return creationTime;

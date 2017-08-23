@@ -90,7 +90,7 @@ public abstract class AbstractProjectTest
 
     protected static void initUserWithRoles(String... roles)
     {
-        loginService.saveUser("testUser", Arrays.asList(roles), Locale.US);
+        loginService.saveUser("testUser", Arrays.asList(roles), Locale.US, "");
     }
 
     protected static String oneQuotes(String s)

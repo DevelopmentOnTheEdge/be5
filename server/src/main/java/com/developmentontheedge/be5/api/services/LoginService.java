@@ -19,5 +19,5 @@ public interface LoginService
 
     void saveUser(String username, Request req);
 
-    UserInfo saveUser(String userName, List<String> availableRoles, Locale locale);
+    UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr);
 }

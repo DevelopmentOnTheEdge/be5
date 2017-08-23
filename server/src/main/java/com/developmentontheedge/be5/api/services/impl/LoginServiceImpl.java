@@ -106,7 +106,7 @@ public class LoginServiceImpl implements LoginService
 
     @Override
     public void saveUser(String username, Request req) {
-        UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale());
+        UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale(), req.getRemoteAddr());
 
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
@@ -117,8 +117,10 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public UserInfo saveUser(String userName, List<String> availableRoles, Locale locale){
+    public UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr){
         UserInfo ui = new UserInfo(userName, availableRoles);
+        ui.setRemoteAddr(remoteAddr);
+
         UserInfoHolder.setUserInfo(ui);
         setLanguage(locale);
         return ui;
@@ -153,17 +155,15 @@ public class LoginServiceImpl implements LoginService
     @Override
     public void initGuest(Request req)
     {
-        Locale locale;
+        Locale locale = Locale.US;
+        String remoteAddr = "";
         if(req != null)
         {
             locale = req.getRawRequest().getLocale();
-        }
-        else
-        {
-            locale = Locale.US;
+            remoteAddr = req.getRemoteAddr();
         }
 
-        saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale);
+        saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr);
     }
 
 }

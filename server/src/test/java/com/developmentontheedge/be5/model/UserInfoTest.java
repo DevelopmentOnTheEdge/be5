@@ -24,7 +24,7 @@ public class UserInfoTest extends AbstractProjectTest
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = injector.getLoginService().saveUser("test", roles, Locale.US);
+        ui = injector.getLoginService().saveUser("test", roles, Locale.US, "");
 
         assertEquals(roles, ui.getCurrentRoles());
     }
