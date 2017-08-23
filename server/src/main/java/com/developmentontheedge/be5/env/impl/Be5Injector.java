@@ -41,7 +41,10 @@ public class Be5Injector implements Injector
     {
         return get(serviceClass, new ArrayList<>());
     }
-    
+
+    //todo EgissoLogin egissoLogin = injector.get(EgissoLogin.class); - load component by class?
+    //need refactoring move google Guice - add Module with methods: bind()
+
     private <T> T get(Class<T> serviceClass, List<Class<?>> stack)
     {
         // It is possible to inject service provider too.

@@ -104,14 +104,15 @@ public class LoginServiceImpl implements LoginService
         }
     }
 
-    private void saveUser(String username, Request req) {
+    @Override
+    public void saveUser(String username, Request req) {
         UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale());
 
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
         session.setAttribute(SessionConstants.USER_INFO, ui);
 
-        log.info("Login user: " + username);
+        log.fine("Login user: " + username);
     }
 
     @Override

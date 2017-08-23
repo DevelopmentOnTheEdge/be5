@@ -18,6 +18,8 @@ public enum Be5ErrorCode
      */
     public Be5Exception exception(Object... parameters)
     {
+        String msg = ErrorMessages.formatMessage(this, parameters);
+        log.severe(msg);
         return Be5Exception.create(this, ErrorMessages.formatMessage(this, parameters));
     }
 

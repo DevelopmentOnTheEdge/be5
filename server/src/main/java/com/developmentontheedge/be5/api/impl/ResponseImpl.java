@@ -139,6 +139,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendError(Be5Exception e)
     {
+        response.getRawResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         String msg = UserInfoHolder.isAdmin() ? e.getMessage() : "";
         //TODO localize e.getCode()
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));

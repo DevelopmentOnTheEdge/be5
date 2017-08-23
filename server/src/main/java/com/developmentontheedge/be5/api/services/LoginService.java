@@ -17,5 +17,7 @@ public interface LoginService
 
     void setLanguage(Locale locale);
 
+    void saveUser(String username, Request req);
+
     UserInfo saveUser(String userName, List<String> availableRoles, Locale locale);
 }
