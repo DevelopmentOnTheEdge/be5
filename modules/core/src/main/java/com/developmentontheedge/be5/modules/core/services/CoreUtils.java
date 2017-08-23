@@ -60,10 +60,10 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //        }
 
         String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
-        Clob clob = db.getScalar(sql, param, section);
-        if(clob != null)
+        Object value = db.getScalar(sql, param, section);
+        if(value != null)
         {
-            return BlobUtils.getAsString(clob);
+            return BlobUtils.getAsString(value);
         }
         else
         {
@@ -106,7 +106,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     *
 //     * In this method parameter section is passing through the method {@link #safestr(DatabaseString) safestr}
 //     *
-//     * @param connector
+//     
 //     * @param section
 //     * @return Map in the form parameter name - parameter value
 //     * @throws SQLException
@@ -132,7 +132,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
      *
      * @param param parameter name
-     * @return
+     * @return parameter value
      */
     public String getSystemSetting( String param )
     {
@@ -145,10 +145,9 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      * Detaiiled information about what passes through {@link #safestr(DatabaseString) safestr}, describes in
      * {@link #setSystemSettingInSection(String, String) setSystemSettingInSection} method.
      *
-     * @param connector
      * @param param parameter name
      * @param defValue this value is returned, when such parameter does not exists in DB
-     * @return
+     * @return parameter value
      */
     public String getSystemSetting( String param, String defValue )
     {
@@ -178,7 +177,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      *
      * @param module module name
      * @param param parameter name
-     * @return
+     * @return module parameter value
      */
     public String getModuleSetting( String module, String param )
     {
@@ -190,10 +189,10 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
      * {@link #getModuleSetting(String, String) getModuleSetting}(String, String)
      * {@link #setSystemSettingInSection( String, String, String) setSystemSettingInSection} method.
      *
-     * @param module
-     * @param param
-     * @param defValue
-     * @return
+     * @param module module name
+     * @param param parameter name
+     * @param defValue default value for return, if there isn't such section or parameter
+     * @return module parameter value
      */
     public String getModuleSetting( String module, String param, String defValue )
     {
@@ -226,7 +225,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //    /**
 //     * Checks, if specified module is linked to this web site.
 //     *
-//     * @param connector DB connector
+//      DB connector
 //     * @param module module name (case insensitive)
 //     * @return true, if module is linked.
 //     */
@@ -290,7 +289,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * <b>Attention!!!</b>Before table to be queried,user name is passing through {@link #safestr(DatabaseString)}. And
 //     * parameter name does not passing method {@link #safestr(DatabaseString)}
 //     *
-//     * @param connector
+//     
 //     * @param user
 //     * @param param
 //     * @return
@@ -321,7 +320,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * Set`s up specified user parameter. All of the parameters are passing through {@link #safestr(DatabaseString)}
 //     * Some of the parameters are passed to {@link #removeUserSetting(String)}
 //     *
-//     * @param connector DB connector
+//      DB connector
 //     * @param user user name
 //     * @param param parameter name
 //     * @param value parameter value
@@ -392,7 +391,7 @@ public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
 //     * Removes specified user settings parameter.
 //     * <b>Attention!!!</b> Parameter param doesn't passing through {@link #safestr(DatabaseString)}
 //     *
-//     * @param connector
+//     
 //     * @param user
 //     * @param param
 //     * @throws Exception
