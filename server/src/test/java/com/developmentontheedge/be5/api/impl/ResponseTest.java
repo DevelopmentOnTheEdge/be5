@@ -68,7 +68,7 @@ public class ResponseTest extends AbstractProjectTest{
     public void sendSuccess() throws Exception {
         response.sendSuccess();
 
-        verify(writer).append(doubleQuotes("{'type':'ok','value':null}"));
+        verify(writer).append(doubleQuotes("{'type':'ok'}"));
     }
 
     @Test
