@@ -210,11 +210,11 @@ public class Utils
             }
             if( int.class.equals( valClass ) || Integer.class.equals( valClass ) )
             {
-                return Integer.valueOf( ( ( Number )val ).intValue() );
+                return ((Number) val).intValue();
             }
             if( long.class.equals( valClass ) || Long.class.equals( valClass ) )
             {
-                return Long.valueOf( ( ( Number )val ).longValue() );
+                return ((Number) val).longValue();
             }
             if( BigDecimal.class.equals( valClass ) )
             {
@@ -267,8 +267,8 @@ public class Utils
             if( Boolean.class.equals( valClass ) || boolean.class.equals( valClass ) )
             {
                 String s = ( ( String )val ).toLowerCase();
-                return Boolean.valueOf( "true".equals( s ) || "on".equals( s ) ||
-                        "yes".equals( s ) || "1".equals( s ) );
+                return "true".equals(s) || "on".equals(s) ||
+                        "yes".equals(s) || "1".equals(s);
             }
 
             if( BigDecimal.class.equals( valClass ) )

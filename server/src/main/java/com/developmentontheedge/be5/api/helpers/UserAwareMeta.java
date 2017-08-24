@@ -90,6 +90,8 @@ public interface UserAwareMeta
      */
     String getColumnTitle(String entityName, String queryName, String columnName);
 
+    String getColumnTitle(String entityName, String columnName);
+
     String getFieldTitle(String entityName, String operationName, String queryName, String name);
 
 }

@@ -13,6 +13,10 @@ testTags:
     - admlevel:
         type: ENUM('Federal','Municipal','Regional')
         defaultValue: '''Regional'''
+    - referenceTest:
+        type: VARCHAR(2)
+        canBeNull: true
+        reference: testTags
   queries:
   - '*** Selection view ***':
       type: 1D
@@ -20,6 +24,12 @@ testTags:
       roles: '@AllRoles'
       code: |-
         SELECT code AS "CODE", admlevel AS "NAME"
+        FROM testTags
+  - All records:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |-
+        SELECT *
         FROM testTags
   - With parameter:
       type: 1D_unknown

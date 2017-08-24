@@ -43,6 +43,15 @@ ru:
       - 'no': нет
       - 'yes': да
   - testTags:
+    - topics: viewName
+      entries:
+      - All records: Все записи
+    - topics: All records
+      entries:
+      - CODE: Код
+      - payable: Оплачиваемая
+      - admlevel: Уроверь
+      - referenceTest: Тест выборки
     - topics:
       - Clone
       - Edit

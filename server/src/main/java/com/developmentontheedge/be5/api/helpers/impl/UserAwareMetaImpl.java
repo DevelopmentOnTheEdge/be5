@@ -165,6 +165,17 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localizations.get(UserInfoHolder.getLanguage(), entityName, queryName, columnName).orElse(columnName);
     }
 
+    public String getColumnTitle(String entityName, String columnName)
+    {
+        ImmutableList<String> defaultQueries = ImmutableList.of("All records");
+        for (String queryName : defaultQueries)
+        {
+            Optional<String> columnTitle = localizations.get(UserInfoHolder.getLanguage(), entityName, queryName, columnName);
+            if(columnTitle.isPresent())return columnTitle.get();
+        }
+        return columnName;
+    }
+
     @Override
     public String getFieldTitle(String entityName, String operationName, String queryName, String name)
     {

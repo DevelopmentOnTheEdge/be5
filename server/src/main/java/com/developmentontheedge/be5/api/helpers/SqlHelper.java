@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.impl.EmptyRequest;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -36,11 +37,13 @@ import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY
 public class SqlHelper
 {
     private Meta meta;
+    private UserAwareMeta userAwareMeta;
     private OperationHelper operationHelper;
 
-    public SqlHelper(Meta meta, OperationHelper operationHelper)
+    public SqlHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
+        this.userAwareMeta = userAwareMeta;
         this.operationHelper = operationHelper;
     }
 
@@ -126,29 +129,30 @@ public class SqlHelper
 
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
-        DynamicProperty dynamicProperty = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+        DynamicProperty dp = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+        dp.setDisplayName(userAwareMeta.getColumnTitle(columnDef.getEntity().getName(), columnDef.getName() ));
 
         if(columnDef.getDefaultValue() != null)
         {
-            dynamicProperty.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
+            dp.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
         }
 
-        if(columnDef.isCanBeNull())dynamicProperty.setCanBeNull(true);
+        if(columnDef.isCanBeNull())dp.setCanBeNull(true);
 
         if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
-            dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
         }
         else if(columnDef.getType().getEnumValues() != Strings2.EMPTY)
         {
-            dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
         }
         else if(columnDef.hasReference()){
-//            dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-//                    operationHelper.getTagsFromSelectionView(null, columnDef.getTableTo()));
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
+                    operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
         }
 
 
-        return dynamicProperty;
+        return dp;
     }
 
     public void setValues(DynamicPropertySet dps, Entity entity, Map<String, ?> values)
