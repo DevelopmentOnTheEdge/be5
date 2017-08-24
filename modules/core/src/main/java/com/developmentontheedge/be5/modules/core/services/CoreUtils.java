@@ -1,10 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CacheInfo;
-import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.util.BlobUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -15,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class CoreUtils extends com.developmentontheedge.be5.metadata.Utils
+public class CoreUtils
 {
     public static final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
 

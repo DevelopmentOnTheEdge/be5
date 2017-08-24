@@ -16,7 +16,7 @@ import java.util.TreeSet;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
-import com.developmentontheedge.be5.metadata.Utils;
+import com.developmentontheedge.be5.metadata.MetadataUtils;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
@@ -464,7 +464,7 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             if(!oldType.getTypeName().equals( TYPE_VARCHAR ) && newValues.containsAll( Arrays.asList(oldType.getEnumValues()) ))
                 return true;
             return sql != null && !sql.hasResult( "sql.select.not.in.range", typeManager.normalizeIdentifier( getEntityName() ),
-                    typeManager.normalizeIdentifier( oldColumn.getName() ), Utils.toInClause( newValues ) );
+                    typeManager.normalizeIdentifier( oldColumn.getName() ), MetadataUtils.toInClause( newValues ) );
         }
         
         // Changing ENUM to varchar

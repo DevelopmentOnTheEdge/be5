@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.metadata.Utils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
@@ -425,109 +424,17 @@ public class SqlHelper
     }
 
     //todo refactoring, castPrimaryKey ? add method for one, for many.
-    // Use meta.getColumns
+    //
+    //todo Use Utils.changeType()
     public Object castToTypePrimaryKey(Entity entity, Object id)
     {
         ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
         return castToType(primaryKeyColumn.getType(), id);
     }
 
-    private String quoteStr(String str)
-    {
-        return "'" + str + "'";
-    }
-
     public String inClause(int count){
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
     }
-
-//    public static String safeValue( DatabaseService connector, DynamicProperty prop )
-//    {
-//        Object val = prop.getValue();
-////
-////        if( val instanceof Wrapper )
-////        {
-////             val = ( (Wrapper)val ).unwrap();
-////        }
-////
-//        String value;
-//        if( val == null )
-//        {
-//            value = "";
-//        }
-//        else if( val instanceof java.sql.Timestamp )
-//        {
-//            value = new SimpleDateFormat( connector.getRdbms() == Rdbms.ORACLE ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd HH:mm:ss.SSS" ).format( val );
-//        }
-//        else if( val instanceof java.sql.Time )
-//        {
-//            value = new SimpleDateFormat( "HH:mm:ss" ).format( val );
-//        }
-//        else if( val instanceof Date)
-//        {
-//            java.sql.Date sqlDate = new java.sql.Date( ( ( Date )val ).getTime() );
-//            value = sqlDate.toString();
-//        }
-//        else if( val instanceof Calendar)
-//        {
-//            value = new SimpleDateFormat( connector.getRdbms() == Rdbms.ORACLE ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd HH:mm:ss.SSS" ).format( ( ( Calendar )val ).getTime() );
-//        }
-//        else if( val instanceof Boolean ) // BIT
-//        {
-//            value = Boolean.TRUE.equals( val ) ? "1" : "0";
-//        }
-//        // must be encrypted?
-////        else if( prop.getName().toLowerCase().startsWith( ENCRYPT_COLUMN_PREFIX ) )
-////        {
-////            value = CryptoUtils.encrypt( val.toString() );
-////            prop.setAttribute( PASSWORD_FIELD, Boolean.TRUE );
-////        }
-//        else
-//        {
-//            value = val.toString();
-//
-//            if( Number.class.isAssignableFrom( prop.getType() ) )
-//            {
-//                value = value.replace(",", ".");
-//            }
-//
-///*          String orig = value;
-//            String sizeStr = ( String )prop.getAttribute( COLUMN_SIZE_ATTR );
-//            String encoding = connector.getEncoding();
-//            if( value != null && value.length() > 0 && sizeStr != null && encoding != null )
-//            {
-//                if( connector.isOracle() )
-//                {
-//                    // truncate value since it causes exception
-//                    int size = Integer.parseInt( sizeStr );
-//                    byte bytes[] = value.getBytes( encoding );
-//                    int length = size;
-//                    if( length > bytes.length )
-//                        length = bytes.length;
-//                    value = new String( bytes, 0, length, encoding );
-//
-//                    // in case we got into middle of multi-byte char
-//                    // From Google
-//                    // Unicode 65533 is a substitute character for use when
-//                    // a character is found that can't be output in the selected encoding
-//                    char last = value.charAt( value.length() - 1 );
-//                    if( (int)last == 65533 )
-//                    {
-//                        value = value.substring( 0, value.length() - 1 );
-//                    }
-//                }
-//            }
-//*/
-//        }
-//
-//        if( "".equals( value ) && prop.isCanBeNull() )
-//            value = null;
-//
-//        if( value == null && String.class.equals( prop.getType() ) && !prop.isCanBeNull() )
-//            value = "";
-//
-//        return value;
-//    }
 
     public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
             Function<? super T, ? extends K> keyMapper,
