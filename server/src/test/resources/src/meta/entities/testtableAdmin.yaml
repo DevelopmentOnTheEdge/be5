@@ -59,7 +59,7 @@ testtableAdmin:
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.EditOperation
+      code: com.developmentontheedge.be5.operations.SilentEditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.InsertOperation
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation

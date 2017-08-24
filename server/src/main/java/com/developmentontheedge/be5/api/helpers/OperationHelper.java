@@ -145,29 +145,23 @@ public class OperationHelper
 
     public String[][] getTagsFromEnum(String tableName, String name)
     {
-        return getTagsFromEnum(tableName, null, name);
+        ColumnDef columnDef = meta.getColumn(tableName, name);
+        if (columnDef == null) throw new IllegalArgumentException();
+        return getTagsFromEnum(columnDef);
     }
 
-    public String[][] getTagsFromEnum(String tableName, String operationName, String name)
+    public String[][] getTagsFromEnum(ColumnDef columnDef)
     {
-        return tagsCache.get(tableName + "getTagsFromEnum" + operationName + "," + name + UserInfoHolder.getLanguage(), k ->
+        String tableName = columnDef.getEntity().getName();
+        return tagsCache.get(tableName + "getTagsFromEnum" + columnDef.getName() + UserInfoHolder.getLanguage(), k ->
         {
-            ColumnDef column = meta.getColumn(tableName, name);
-
-            if (column == null) throw new IllegalArgumentException();
-            String[] enumValues = column.getType().getEnumValues();
+            String[] enumValues = columnDef.getType().getEnumValues();
 
             String[][] stockArr = new String[enumValues.length][2];
 
             for (int i = 0; i < enumValues.length; i++)
             {
-                if (operationName != null)
-                {
-                    stockArr[i] = new String[]{enumValues[i], userAwareMeta.getLocalizedOperationField(tableName, operationName, enumValues[i])};
-                } else
-                {
-                    stockArr[i] = new String[]{enumValues[i], userAwareMeta.getLocalizedOperationField(tableName, enumValues[i])};
-                }
+                stockArr[i] = new String[]{enumValues[i], userAwareMeta.getLocalizedOperationField(tableName, enumValues[i])};
             }
 
             return stockArr;

@@ -88,7 +88,11 @@ public interface Meta
 
     default String getColumnDefaultValue(Entity entity, String columnName)
     {
-        ColumnDef column = getColumn(entity, columnName);
+        return getColumnDefaultValue(getColumn(entity, columnName));
+    }
+
+    default String getColumnDefaultValue(ColumnDef column)
+    {
         if(column == null) return null;
 
         String defaultValue = column.getDefaultValue();

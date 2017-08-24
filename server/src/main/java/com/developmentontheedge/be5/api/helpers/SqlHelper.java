@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
+import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -30,15 +31,17 @@ import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY;
-import static java.util.Collections.singletonList;
+
 
 public class SqlHelper
 {
     private Meta meta;
+    private OperationHelper operationHelper;
 
-    public SqlHelper(Meta meta)
+    public SqlHelper(Meta meta, OperationHelper operationHelper)
     {
         this.meta = meta;
+        this.operationHelper = operationHelper;
     }
 
     public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
@@ -85,7 +88,7 @@ public class SqlHelper
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
     {
         DynamicPropertySet dps = getDps(entity);
-        if(!entity.getPrimaryKey().contains("dummy") && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
+        if(meta.getColumn(entity, entity.getPrimaryKey()) != null && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
         {
             dps.remove(entity.getPrimaryKey());
         }
@@ -124,7 +127,26 @@ public class SqlHelper
     private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         DynamicProperty dynamicProperty = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+
+        if(columnDef.getDefaultValue() != null)
+        {
+            dynamicProperty.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
+        }
+
         if(columnDef.isCanBeNull())dynamicProperty.setCanBeNull(true);
+
+        if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
+            dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
+        }
+        else if(columnDef.getType().getEnumValues() != Strings2.EMPTY)
+        {
+            dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
+        }
+        else if(columnDef.hasReference()){
+//            dynamicProperty.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
+//                    operationHelper.getTagsFromSelectionView(null, columnDef.getTableTo()));
+        }
+
 
         return dynamicProperty;
     }
