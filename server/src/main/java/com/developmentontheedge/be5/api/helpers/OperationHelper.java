@@ -112,7 +112,7 @@ public class OperationHelper
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
         if (!query.isPresent())
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Query " + tableName + "." + queryName + " not found.");
 
         if(query.get().isCacheable())
         {

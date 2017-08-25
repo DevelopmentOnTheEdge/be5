@@ -146,7 +146,7 @@ public class SqlHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
         }
-        else if(columnDef.hasReference()){
+        else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null ){
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
         }
@@ -159,12 +159,13 @@ public class SqlHelper
     {
         for (DynamicProperty property : dps)
         {
+            //todo DEFAULT_VALUE -> value - как в be3?
             if (property.getValue() == null) property.setValue(values.get(property.getName()));
             if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
-            if (!entity.getName().startsWith("_") && property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
+            //if (!entity.getName().startsWith("_") && property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
         }
 
-        setSpecialColumnsIfNullValue(dps);
+        setSpecialPropertyIfNull(dps);
     }
 
     public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, ?> values)
@@ -188,23 +189,23 @@ public class SqlHelper
         setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
     }
 
-    private void setSpecialColumnsIfNullValue(DynamicPropertySet dps)
+    private void setSpecialPropertyIfNull(DynamicPropertySet dps)
     {
         Timestamp currentTime = new Timestamp(new Date().getTime());
 
-        setValueIfNullValue(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
-        setValueIfNullValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+        setValueIfNull(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
+        setValueIfNull(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
 
-        setValueIfNullValue(dps, CREATION_DATE_COLUMN_NAME, currentTime);
-        setValueIfNullValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+        setValueIfNull(dps, CREATION_DATE_COLUMN_NAME, currentTime);
+        setValueIfNull(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
 
-        setValueIfNullValue(dps, IS_DELETED_COLUMN_NAME, "no");
+        setValueIfNull(dps, IS_DELETED_COLUMN_NAME, "no");
 
-        setValueIfNullValue(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-        setValueIfNullValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+        setValueIfNull(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+        setValueIfNull(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
     }
 
-    private void setValueIfNullValue(DynamicPropertySet dps, String name, Object value)
+    private void setValueIfNull(DynamicPropertySet dps, String name, Object value)
     {
         DynamicProperty property = dps.getProperty(name);
         if(property != null && property.getValue() == null){

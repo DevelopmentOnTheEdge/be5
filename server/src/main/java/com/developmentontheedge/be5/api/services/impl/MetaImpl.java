@@ -97,10 +97,7 @@ public class MetaImpl implements Meta
     @Override
     public Entity getEntity(String name)
     {
-        Entity entity = getProject().getEntity(name);
-        if (entity == null)
-            throw Be5ErrorCode.UNKNOWN_ENTITY.exception(name);
-        return entity;
+        return getProject().getEntity(name);
     }
 
     private boolean hasAccess(RoleSet roles, List<String> availableRoles)

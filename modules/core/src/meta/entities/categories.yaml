@@ -10,7 +10,7 @@ categories:
         primaryKey: true
     - entity:
         type: VARCHAR(30)
-        reference: entities
+        #todo reference: entities
     - publicID:
         type: VARCHAR(100)
         canBeNull: true
