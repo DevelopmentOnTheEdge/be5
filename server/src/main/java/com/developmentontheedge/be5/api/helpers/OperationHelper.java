@@ -137,7 +137,7 @@ public class OperationHelper
         {
             String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
             String second = row.getCells().size() >= 2 ? row.getCells().get(1).content.toString() : "";
-            stockArr[i++] = new String[]{first, userAwareMeta.getLocalizedOperationField(tableName, second)};
+            stockArr[i++] = new String[]{first, userAwareMeta.getColumnTitle(tableName, second)};
         }
 
         return stockArr;
@@ -161,7 +161,7 @@ public class OperationHelper
 
             for (int i = 0; i < enumValues.length; i++)
             {
-                stockArr[i] = new String[]{enumValues[i], userAwareMeta.getLocalizedOperationField(tableName, enumValues[i])};
+                stockArr[i] = new String[]{enumValues[i], userAwareMeta.getColumnTitle(tableName, enumValues[i])};
             }
 
             return stockArr;

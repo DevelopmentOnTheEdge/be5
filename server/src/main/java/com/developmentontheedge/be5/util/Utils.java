@@ -8,11 +8,41 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+
 public class Utils
 {
+    /**
+     * Check given object for an empty value.
+     * <br/>Value is empty, if it equals null or it is instance of type String and it's value doesn't have any symbols, except spaces.
+     *
+     * @param value value
+     * @return returns true, if value is empty, otherwise value is false
+     */
+    public static boolean isEmpty( Object value )
+    {
+        if( value == null )
+        {
+            return true;
+        }
+        if( value instanceof String && "".equals( ( ( String )value ).trim() ) )
+        {
+            return true;
+        }
+        if( value instanceof Object[] && ( ( Object[] )value ).length == 0 )
+        {
+            return true;
+        }
+        if( value instanceof Collection && ( ( Collection )value ).isEmpty() )
+        {
+            return true;
+        }
+        return false;
+    }
+
     //todo parametrize: <T> T changeType( Object val, T valClass )
     public static Object changeType( Object val, Class valClass )
     {

@@ -93,9 +93,13 @@ public class UserAwareMetaImpl implements UserAwareMeta
         return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name).orElse(name);
     }
 
+    /*
+     * use getColumnTitle(entityName, columnName)
+     */
+    @Deprecated
     public String getLocalizedOperationField(String entityName, String name)
     {
-        ImmutableList<String> defaultOp = ImmutableList.of("Clone","Edit","Insert","Filter" );
+        ImmutableList<String> defaultOp = ImmutableList.of("Insert");
         for (String operationName : defaultOp)
         {
             Optional<String> fieldTitle = localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name);
