@@ -43,37 +43,27 @@ public class Form implements Component
         Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        try
+        Either<FormPresentation, OperationResult> generate;
+        switch (req.getRequestUri())
         {
-            Either<FormPresentation, OperationResult> generate;
-            switch (req.getRequestUri())
-            {
-            case "":
-                generate = operationService.generate(req);
-                break;
-            case "apply":
-                generate = operationService.execute(req);
-                break;
-            default:
-                res.sendUnknownActionError();
-                return;
-            }
+        case "":
+            generate = operationService.generate(req);
+            break;
+        case "apply":
+            generate = operationService.execute(req);
+            break;
+        default:
+            res.sendUnknownActionError();
+            return;
+        }
 
-            res.sendAsJson(
-                new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, generate.get()),
-                ImmutableMap.builder()
-                        .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
-                        .build(),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(queryName, meta.getModel()).arg)
-            );
-        }
-        catch (Be5Exception ex)
-        {
-            if(ex.getCode().isInternal()) {
-                log.log(Level.SEVERE, ex.getMessage(), ex);
-            }
-            res.sendError(ex);
-        }
+        res.sendAsJson(
+            new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, generate.get()),
+            ImmutableMap.builder()
+                    .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                    .build(),
+            Collections.singletonMap(SELF_LINK, ActionHelper.toAction(queryName, meta.getModel()).arg)
+        );
     }
 
 }
