@@ -19,12 +19,10 @@ public class Document implements Component
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
-        try
+        DocumentResponse response = DocumentResponse.of(res);
+
+        switch (req.getRequestUri())
         {
-            DocumentResponse response = DocumentResponse.of(res);
-            
-            switch (req.getRequestUri())
-            {
             case "":
                 DocumentGenerator.generateAndSend(req, res, injector);
                 return;
@@ -33,18 +31,6 @@ public class Document implements Component
                 return;
             default:
                 res.sendUnknownActionError();
-            }
-        }
-        catch (Be5Exception ex)
-        {
-            if(ex.getCode().isInternal() || ex.getCode().isAccessDenied())
-            {
-                log.log(Level.SEVERE, ex.getMessage(), ex);
-            }
-            if(ex.getCode().isAccessDenied()){
-                res.sendAccessDenied(ex);
-            }
-            res.sendError(ex);
         }
     }
 

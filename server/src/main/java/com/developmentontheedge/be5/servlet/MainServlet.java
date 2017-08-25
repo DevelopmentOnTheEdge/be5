@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,9 +110,22 @@ public class MainServlet extends HttpServlet
             Component component = getInjector().getComponent(componentId);
             component.generate( req, res, getInjector() );
         }
-        catch ( Be5Exception e )
+
+        catch ( Be5Exception ex )
         {
-            res.sendError(e);
+            if(ex.getCode().isInternal() || ex.getCode().isAccessDenied())
+            {
+                log.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+
+            if(ex.getCode().isAccessDenied())
+            {
+                res.sendAccessDenied(ex);
+            }
+            else
+            {
+                res.sendError(ex);
+            }
         }
         catch ( RuntimeException | Error e )
         {
