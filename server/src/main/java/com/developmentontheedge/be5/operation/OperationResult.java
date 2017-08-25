@@ -126,6 +126,11 @@ public class OperationResult
         return new OperationResult(OperationStatus.ERROR, details.getMessage());
     }
 
+    public static OperationResult error(String message)
+    {
+        return new OperationResult(OperationStatus.ERROR, message);
+    }
+
     @Override
     public boolean equals(Object o)
     {

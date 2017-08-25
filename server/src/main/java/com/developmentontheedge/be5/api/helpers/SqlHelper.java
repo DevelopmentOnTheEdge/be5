@@ -225,6 +225,7 @@ public class SqlHelper
     public Object[] getValues(DynamicPropertySet dps)
     {
         return StreamSupport.stream(dps.spliterator(), false)
+                .filter(p -> !p.getName().startsWith("___"))
                 .map(DynamicProperty::getValue).toArray();
     }
 
@@ -307,10 +308,12 @@ public class SqlHelper
     public String generateInsertSql(Entity entity, DynamicPropertySet dps)
     {
         Object[] columns = StreamSupport.stream(dps.spliterator(), false)
+                .filter(p -> !p.getName().startsWith("___"))
                 .map(DynamicProperty::getName)
                 .toArray(Object[]::new);
 
         Object[] valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+                .filter(p -> !p.getName().startsWith("___"))
                 .map(x -> "?")
                 .toArray(Object[]::new);
 
