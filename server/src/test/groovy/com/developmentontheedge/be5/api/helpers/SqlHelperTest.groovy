@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
+import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
@@ -56,5 +57,25 @@ class SqlHelperTest extends AbstractProjectTest
         assertEquals String.class, dps.getProperty("CODE").getType()
         assertEquals String.class, dps.getProperty("payable").getType()
     }
+
+    @Test
+    void getValuesTest() throws Exception
+    {
+        DynamicPropertySet dps = sqlHelper.getDps(meta.getEntity("meters"))
+        dps.setValue("name", "TestName")
+        assertArrayEquals( [null,null,"TestName",null,null,null,null,null] as Object[], sqlHelper.getValues(dps))
+    }
+
+    @Test
+    void generateInsertSqlTest() throws Exception
+    {
+        Entity metersEntity = meta.getEntity("meters")
+
+        String sql = sqlHelper.generateInsertSql(metersEntity, sqlHelper.getDps(metersEntity))
+        assertEquals "INSERT INTO meters " +
+                "(whoModified___, whoInserted___, name, ID, modificationDate___, value, creationDate___, isDeleted___) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
+    }
+
 
 }
