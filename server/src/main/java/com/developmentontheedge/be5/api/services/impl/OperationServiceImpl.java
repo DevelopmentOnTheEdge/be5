@@ -127,7 +127,7 @@ public class OperationServiceImpl implements OperationService
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
             try {
-                validator.checkErrorAndCast((DynamicPropertySet) parameters);
+                validator.checkErrorAndCast(((OperationSupport)operation).dps);
             }catch (RuntimeException e){
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),

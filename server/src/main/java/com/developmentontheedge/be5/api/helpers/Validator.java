@@ -36,6 +36,8 @@ public class Validator
     {
         for (DynamicProperty property: dps)
         {
+            //todo refactoring without exception
+            if(isError(property))throw new IllegalArgumentException();
             checkErrorAndCast(property);
         }
     }
