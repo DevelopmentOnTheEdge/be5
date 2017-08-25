@@ -19,6 +19,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -54,7 +55,7 @@ public class SqlHelper
         return setDpsValues(dps, resultSet);
     }
 
-    public DynamicPropertySet getDpsForValues(Entity entity, Map<String, String> values, ResultSet resultSet)
+    public DynamicPropertySet getDpsForValues(Entity entity, Collection<String> values, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsForValues(entity, values);
 
@@ -111,7 +112,7 @@ public class SqlHelper
         return dps;
     }
 
-    public DynamicPropertySet getDpsForValues(Entity entity, Map<String, String> values)
+    public DynamicPropertySet getDpsForValues(Entity entity, Collection<String> values)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
@@ -119,7 +120,7 @@ public class SqlHelper
 
         for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
         {
-            if(values.containsKey(entry.getKey()))
+            if(values.contains(entry.getKey()))
             {
                 dps.add(getDynamicProperty(entry.getValue()));
             }
@@ -127,7 +128,7 @@ public class SqlHelper
         return dps;
     }
 
-    private DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    public DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         DynamicProperty dp = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
         dp.setDisplayName(userAwareMeta.getColumnTitle(columnDef.getEntity().getName(), columnDef.getName() ));

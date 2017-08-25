@@ -2,6 +2,8 @@ package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.test.AbstractProjectTest
+import com.developmentontheedge.beans.DynamicProperty
+import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
 
@@ -23,7 +25,7 @@ class SqlHelperTest extends AbstractProjectTest
     }
 
     @Test
-    void getDpsWithoutAutoIncrement(){
+    void getDpsWithoutAutoIncrementTest(){
         def dps = sqlHelper.getDpsWithoutAutoIncrement(meta.getEntity("testTags"))
         assertEquals "{" +
             "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
@@ -34,6 +36,25 @@ class SqlHelperTest extends AbstractProjectTest
             "'/admlevel':{'displayName':'Уроверь'," +
                 "'tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}" +
         "}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+    }
+
+    @Test
+    void getDynamicPropertyTest()
+    {
+        DynamicProperty property = sqlHelper.getDynamicProperty(meta.getColumn(meta.getEntity("testTags"), "CODE"))
+        assertEquals "CODE", property.getName()
+        assertEquals String.class, property.getType()
+        assertEquals null, property.getValue()
+    }
+
+    @Test
+    void getDpsForValuesTest()
+    {
+        DynamicPropertySet dps = sqlHelper.getDpsForValues(meta.getEntity("testTags"), ["CODE", "payable"])
+
+        assertEquals 2, dps.size()
+        assertEquals String.class, dps.getProperty("CODE").getType()
+        assertEquals String.class, dps.getProperty("payable").getType()
     }
 
 }
