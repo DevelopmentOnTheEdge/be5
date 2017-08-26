@@ -17,15 +17,6 @@ class SqlHelperTest extends AbstractProjectTest
     Meta meta = injector.get(Meta.class)
 
     @Test
-    void inClause() throws Exception
-    {
-        assertEquals "(?, ?, ?, ?, ?)", sqlHelper.inClause(5)
-
-        assertEquals "SELECT code FROM table WHERE id IN (?, ?, ?, ?, ?)",
-                "SELECT code FROM table WHERE id IN " + sqlHelper.inClause(5)
-    }
-
-    @Test
     void getDpsWithoutAutoIncrementTest(){
         def dps = sqlHelper.getDpsWithoutAutoIncrement(meta.getEntity("testTags"))
         assertEquals "{" +
@@ -54,8 +45,13 @@ class SqlHelperTest extends AbstractProjectTest
         DynamicPropertySet dps = sqlHelper.getDpsForValues(meta.getEntity("testTags"), ["CODE", "payable"])
 
         assertEquals 2, dps.size()
-        assertEquals String.class, dps.getProperty("CODE").getType()
-        assertEquals String.class, dps.getProperty("payable").getType()
+        def list = dps.asList()
+        assertEquals "CODE", list.get(0).getName()
+        assertEquals "payable", list.get(1).getName()
+
+        list = sqlHelper.getDpsForValues(meta.getEntity("testTags"), ["payable", "CODE"]).asList()
+        assertEquals "payable", list.get(0).getName()
+        assertEquals "CODE", list.get(1).getName()
     }
 
     @Test

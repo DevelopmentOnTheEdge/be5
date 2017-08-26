@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.impl.EmptyRequest;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -7,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -26,9 +28,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
@@ -37,6 +39,8 @@ import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY
 
 public class SqlHelper
 {
+    private static final Logger log = Logger.getLogger(SqlHelper.class.getName());
+
     private Meta meta;
     private UserAwareMeta userAwareMeta;
     private OperationHelper operationHelper;
@@ -118,13 +122,16 @@ public class SqlHelper
 
         DynamicPropertySet dps = new DynamicPropertySetSupport();
 
-        for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
+        for(String propertyName: values)
         {
-            if(values.contains(entry.getKey()))
-            {
-                dps.add(getDynamicProperty(entry.getValue()));
+            ColumnDef columnDef = columns.get(propertyName);
+            if(columnDef != null){
+                dps.add(getDynamicProperty(columnDef));
+            }else{
+                log.warning("Column " + propertyName + " not found in " + entity.getName());
             }
         }
+
         return dps;
     }
 
@@ -401,7 +408,7 @@ public class SqlHelper
 //        Ast.delete(entity.getName())
 //                .where();
 
-        String whereSql = " WHERE " + entity.getPrimaryKey() + " IN " + inClause(count);
+        String whereSql = " WHERE " + entity.getPrimaryKey() + " IN " + Utils.inClause(count);
         return sql + whereSql;
     }
 
@@ -443,6 +450,7 @@ public class SqlHelper
         return castedIds;
     }
 
+    @DirtyRealization(comment = "Use Utils.changeType")
     private Object castToType(SqlColumnType type, Object id)
     {
         if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
@@ -451,17 +459,11 @@ public class SqlHelper
         return id;
     }
 
-    //todo refactoring, castPrimaryKey ? add method for one, for many.
-    //
-    //todo Use Utils.changeType()
+    @DirtyRealization(comment = "refactoring, castPrimaryKey ? add method for one, for many.")
     public Object castToTypePrimaryKey(Entity entity, Object id)
     {
         ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
         return castToType(primaryKeyColumn.getType(), id);
-    }
-
-    public String inClause(int count){
-        return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
     }
 
     public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(

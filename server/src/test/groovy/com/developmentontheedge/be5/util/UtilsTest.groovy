@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.util
 
-import com.developmentontheedge.be5.api.helpers.SqlHelper
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
@@ -13,7 +12,31 @@ import static org.mockito.Mockito.verify
 class UtilsTest extends AbstractProjectTest
 {
     SqlService db = sqlMockInjector.get(SqlService.class)
-    SqlHelper sqlHelper = sqlMockInjector.get(SqlHelper.class)
+
+    @Test
+    void inClause() throws Exception
+    {
+        assertEquals "(?, ?, ?, ?, ?)", Utils.inClause(5)
+
+        assertEquals "SELECT code FROM table WHERE id IN (?, ?, ?, ?, ?)",
+                "SELECT code FROM table WHERE id IN " + Utils.inClause(5)
+    }
+
+    @Test
+    void isEmptyTest() throws Exception
+    {
+        assertTrue Utils.isEmpty(null)
+        assertTrue Utils.isEmpty("")
+        assertTrue Utils.isEmpty([] as Object[])
+        assertTrue Utils.isEmpty([] as List)
+        assertTrue Utils.isEmpty([] as List<String>)
+
+        assertFalse Utils.isEmpty(1)
+        assertFalse Utils.isEmpty("1")
+        assertFalse Utils.isEmpty([1] as Object[])
+        assertFalse Utils.isEmpty([1] as List)
+        assertFalse Utils.isEmpty(["1"] as List<String>)
+    }
 
     @Test
     void changeType() throws Exception
@@ -35,7 +58,7 @@ class UtilsTest extends AbstractProjectTest
     void testDbUpdateWithChangeType() throws Exception
     {
         String[] records = ["1", "2"]
-        db.update("DELETE users WHERE id IN " + sqlHelper.inClause(records.length),
+        db.update("DELETE users WHERE id IN " + Utils.inClause(records.length),
                 Utils.changeType(records, Long[]))
 
         verify(SqlServiceMock.mock).update(eq("DELETE users WHERE id IN (?, ?)"), eq(1L), eq(2L))

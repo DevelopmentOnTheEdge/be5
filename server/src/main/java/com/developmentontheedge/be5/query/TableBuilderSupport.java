@@ -64,27 +64,34 @@ public abstract class TableBuilderSupport implements TableBuilder
         return Collections.unmodifiableList(columns);
     }
 
-    public void addRow(List<TableModel.CellModel> cells){
+    public void addRow(List<TableModel.CellModel> cells)
+    {
         rows.add(new TableModel.RowModel("0", cells));
     }
 
-    public void addRow(Integer id, List<TableModel.CellModel> cells){
+    public void addRow(Integer id, List<TableModel.CellModel> cells)
+    {
         rows.add(new TableModel.RowModel(id.toString(), cells));
     }
 
-    public void addRow(String id, List<TableModel.CellModel> cells){
+    public void addRow(String id, List<TableModel.CellModel> cells)
+    {
         rows.add(new TableModel.RowModel(id, cells));
     }
 
-    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows){
+    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows)
+    {
         return new TableModel(columns, rows, false, (long) rows.size(), false);
     }
 
-    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable){
+    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable)
+    {
         return new TableModel(columns, rows, selectable, (long) rows.size(), false);
     }
 
-    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate){
+    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows,
+                            boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    {
         return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate);
     }
 

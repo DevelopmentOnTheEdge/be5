@@ -11,10 +11,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class Utils
 {
+
+    public static String inClause(int count){
+        return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
+    }
+
     /**
      * Check given object for an empty value.
      * <br/>Value is empty, if it equals null or it is instance of type String and it's value doesn't have any symbols, except spaces.
