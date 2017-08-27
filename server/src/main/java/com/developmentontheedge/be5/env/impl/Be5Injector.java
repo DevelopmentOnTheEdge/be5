@@ -62,6 +62,7 @@ public class Be5Injector implements Injector
         if (service == null)
         {
             service = resolveService(serviceClass, stack);
+            injectAnnotatedFields(service);
         }
         
         return service;
@@ -84,7 +85,8 @@ public class Be5Injector implements Injector
         }
         catch (IllegalStateException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
-            throw new RuntimeException("Can't instantiate or initialize " + serviceClass.getSimpleName() + " service", e);
+            throw new RuntimeException("Can't instantiate or initialize " + serviceClass.getSimpleName() + " service, " +
+                    "may be constructor is not public", e);
         }
         
         stack.remove(serviceClass);
