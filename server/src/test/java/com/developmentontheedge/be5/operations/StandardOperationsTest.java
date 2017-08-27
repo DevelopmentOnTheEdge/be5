@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.AfterClass;
@@ -22,27 +23,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class StandardOperationsTest extends AbstractProjectTest
+public class StandardOperationsTest extends SqlMockOperationTest
 {
-    private OperationService operationService = sqlMockInjector.get(OperationService.class);
-    private SqlHelper sqlHelper = sqlMockInjector.get(SqlHelper.class);
-    private Meta meta = sqlMockInjector.get(Meta.class);
-
-    @BeforeClass
-    public static void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
-    @AfterClass
-    public static void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Before
-    public void before(){
-        SqlServiceMock.clearMock();
-    }
-
     @Test
     public void deleteOperation(){
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Delete", "1", "");

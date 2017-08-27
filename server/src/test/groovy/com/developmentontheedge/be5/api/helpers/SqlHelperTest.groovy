@@ -42,14 +42,14 @@ class SqlHelperTest extends AbstractProjectTest
     @Test
     void getDpsForValuesTest()
     {
-        DynamicPropertySet dps = sqlHelper.getDpsForValues(meta.getEntity("testTags"), ["CODE", "payable"])
+        DynamicPropertySet dps = sqlHelper.getDpsForColumns(meta.getEntity("testTags"), ["CODE", "payable"])
 
         assertEquals 2, dps.size()
         def list = dps.asList()
         assertEquals "CODE", list.get(0).getName()
         assertEquals "payable", list.get(1).getName()
 
-        list = sqlHelper.getDpsForValues(meta.getEntity("testTags"), ["payable", "CODE"]).asList()
+        list = sqlHelper.getDpsForColumns(meta.getEntity("testTags"), ["payable", "CODE"]).asList()
         assertEquals "payable", list.get(0).getName()
         assertEquals "CODE", list.get(1).getName()
     }

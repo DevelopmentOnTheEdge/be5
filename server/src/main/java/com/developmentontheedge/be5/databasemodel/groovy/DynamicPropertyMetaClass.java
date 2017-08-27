@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -65,8 +66,13 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
     {
         removeFromMap( map, "name" );
 
-        Class type = ( Class )removeFromMap( map, "TYPE" );
         Object value = removeFromMap( map, "value" );
+        Class type = ( Class )removeFromMap( map, "TYPE" );
+        if( type == java.sql.Date.class && value != null )
+        {
+            value = Utils.changeType( value, java.sql.Date.class );
+        }
+
         Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
         String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
 

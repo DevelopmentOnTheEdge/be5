@@ -59,9 +59,9 @@ public class SqlHelper
         return setDpsValues(dps, resultSet);
     }
 
-    public DynamicPropertySet getDpsForValues(Entity entity, Collection<String> values, ResultSet resultSet)
+    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> values, ResultSet resultSet)
     {
-        DynamicPropertySet dps = getDpsForValues(entity, values);
+        DynamicPropertySet dps = getDpsForColumns(entity, values);
 
         return setDpsValues(dps, resultSet);
     }
@@ -116,7 +116,7 @@ public class SqlHelper
         return dps;
     }
 
-    public DynamicPropertySet getDpsForValues(Entity entity, Collection<String> values)
+    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> values)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 

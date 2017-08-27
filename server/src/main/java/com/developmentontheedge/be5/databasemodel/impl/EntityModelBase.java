@@ -381,7 +381,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         DynamicPropertySet dps = db.select(
                 Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
-                rs -> sqlHelper.getDpsForValues(entity, values.keySet(), rs), castValues(entity, conditions));
+                rs -> sqlHelper.getDpsForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
 
         sqlHelper.updateValuesWithSpecial(dps, values);
 
