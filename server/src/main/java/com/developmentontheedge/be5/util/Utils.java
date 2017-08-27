@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.util;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -7,16 +9,45 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
 public class Utils
 {
+    private static final int DATE_PARSING_MODE_DATE = 0;
+    private static final int DATE_PARSING_MODE_TIME = 1;
+    private static final int DATE_PARSING_MODE_DATETIME = 2;
+
+    private static Locale[] POPULAR_LOCALES = new Locale[]
+    {
+            Locale.US,
+            new Locale( "ru_RU" ),
+            Locale.UK,
+            Locale.CANADA,
+            Locale.ENGLISH,
+            Locale.FRANCE,
+            Locale.FRENCH,
+            Locale.GERMAN,
+            Locale.GERMANY,
+            Locale.ITALIAN,
+            Locale.ITALY,
+            Locale.JAPAN,
+            Locale.JAPANESE
+    };
+
+    private static final String[] dateFormats = new String[]{ "yyyy-MM-dd" };
+    private static final String[] timeFormats = new String[]{ "HH:mm:ss" };
+    private static final String[] dateTimeFormats = new String[]{ "yyyy-MM-dd HH:mm:ss" };
 
     public static String inClause(int count){
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
@@ -317,94 +348,94 @@ public class Utils
                 return new BigInteger( fixNumber( ( String )val, false ) );
             }
 
-//            if( java.util.Date.class.equals( valClass ) )
-//            {
-//                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT, userInfo.getLocale() );
-//                df.setLenient( false );
-//                java.util.Date parsed = null;
-//                try
-//                {
-//                    parsed = df.parse( ( String )val );
-//                }
-//                catch( ParseException pe )
-//                {
-//                    parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATE );
-//                }
-//                return parsed;
-//            }
-//            if( java.sql.Date.class.equals( valClass ) )
-//            {
-//                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT, userInfo.getLocale() );
-//                df.setLenient( false );
-//                java.util.Date parsed = null;
-//                try
-//                {
-//                    parsed = df.parse( ( String )val );
-//                }
-//                catch( ParseException pe )
-//                {
-//                    parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATE );
-//                }
-//
-//                //System.out.println( "parsed = " + parsed );
-//
-//                return new java.sql.Date( parsed.getTime() );
-//            }
-//            if( java.sql.Time.class.equals( valClass ) )
-//            {
-//                DateFormat df = DateFormat.getTimeInstance( DateFormat.DEFAULT, userInfo.getLocale() );
-//                df.setLenient( false );
-//                java.util.Date parsed = null;
-//                try
-//                {
-//                    parsed = df.parse( ( String )val );
-//                }
-//                catch( ParseException pe )
-//                {
-//                    parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_TIME );
-//                }
-//
-//                return new java.sql.Time( parsed.getTime() );
-//            }
-//            if( java.sql.Timestamp.class.equals( valClass ) )
-//            {
-//                String str = ( String )val;
-//
-//                boolean isHtml5 = str.length() == 16 && str.charAt(10) == 'T';
-//                if( isHtml5 )
-//                {
-//                    val = Utils.subst( str, "T", " " ) + ":00";
-//                }
-//
-//                java.util.Date parsed = null;
-//                DateFormat df = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, userInfo.getLocale() );
-//                df.setLenient( false );
-//                try
-//                {
-//                    parsed = df.parse( ( String )val );
-//                }
-//                catch( ParseException pe )
-//                {
-//                    try
-//                    {
-//                        parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATETIME );
-//                    }
-//                    catch( ParseException pe2 )
-//                    {
-//                        df = DateFormat.getDateInstance( DateFormat.DEFAULT, userInfo.getLocale() );
-//                        try
-//                        {
-//                            parsed = df.parse( ( String )val );
-//                        }
-//                        catch( ParseException pe3 )
-//                        {
-//                            parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATE );
-//                        }
-//                    }
-//                }
-//
-//                return new java.sql.Timestamp( parsed.getTime() );
-//            }
+            if( java.util.Date.class.equals( valClass ) )
+            {
+                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                df.setLenient( false );
+                java.util.Date parsed;
+                try
+                {
+                    parsed = df.parse( ( String )val );
+                }
+                catch( ParseException pe )
+                {
+                    parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATE );
+                }
+                return parsed;
+            }
+            if( java.sql.Date.class.equals( valClass ) )
+            {
+                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                df.setLenient( false );
+                java.util.Date parsed;
+                try
+                {
+                    parsed = df.parse( ( String )val );
+                }
+                catch( ParseException pe )
+                {
+                    parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATE );
+                }
+
+                //System.out.println( "parsed = " + parsed );
+
+                return new java.sql.Date( parsed.getTime() );
+            }
+            if( java.sql.Time.class.equals( valClass ) )
+            {
+                DateFormat df = DateFormat.getTimeInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                df.setLenient( false );
+                java.util.Date parsed;
+                try
+                {
+                    parsed = df.parse( ( String )val );
+                }
+                catch( ParseException pe )
+                {
+                    parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_TIME );
+                }
+
+                return new java.sql.Time( parsed.getTime() );
+            }
+            if( java.sql.Timestamp.class.equals( valClass ) )
+            {
+                String str = ( String )val;
+
+                boolean isHtml5 = str.length() == 16 && str.charAt(10) == 'T';
+                if( isHtml5 )
+                {
+                    val = Utils.subst( str, "T", " " ) + ":00";
+                }
+
+                java.util.Date parsed;
+                DateFormat df = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                df.setLenient( false );
+                try
+                {
+                    parsed = df.parse( ( String )val );
+                }
+                catch( ParseException pe )
+                {
+                    try
+                    {
+                        parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATETIME );
+                    }
+                    catch( ParseException pe2 )
+                    {
+                        df = DateFormat.getDateInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                        try
+                        {
+                            parsed = df.parse( ( String )val );
+                        }
+                        catch( ParseException pe3 )
+                        {
+                            parsed = parseDateWithOtherLocales( ( String )val, DATE_PARSING_MODE_DATE );
+                        }
+                    }
+                }
+
+                return new java.sql.Timestamp( parsed.getTime() );
+            }
 //            if ( javax.xml.datatype.XMLGregorianCalendar.class.equals( valClass )  )
 //            {
 //                GregorianCalendar gc = new GregorianCalendar();
@@ -427,17 +458,93 @@ public class Utils
             {
                 return new File( ( String )val );
             }
-//        }
-//        catch( ParseException ignore )
-//        {
         }
-        catch( NumberFormatException ignore )
+        catch( ParseException | NumberFormatException ignore )
         {
-//        }
-//        catch( DatatypeConfigurationException ignore )
-//        {
+
         }
         return val;
+    }
+
+
+    /**
+     * Parse date using popular locales.
+     * When failed, throws ParseException.
+     * It is needed to try all locales when the date could not
+     * be parsed with user's locale.
+     *
+     * @param val
+     * @return parsed date
+     * @throws ParseException when none of the locales helps.
+     */
+    private static Date parseDateWithOtherLocales(String val, int parsingMode ) throws ParseException
+    {
+        ParseException lastException = null;
+        for( int i = 0; i < POPULAR_LOCALES.length; i++ )
+        {
+            try
+            {
+                DateFormat df = null;
+                //dates and times are handled differently
+                switch( parsingMode )
+                {
+                    case DATE_PARSING_MODE_DATE:
+                        df = DateFormat.getDateInstance( DateFormat.DEFAULT, POPULAR_LOCALES[ i ] );
+                        break;
+                    case DATE_PARSING_MODE_TIME:
+                        df = DateFormat.getTimeInstance( DateFormat.DEFAULT, POPULAR_LOCALES[ i ] );
+                        break;
+                    case DATE_PARSING_MODE_DATETIME:
+                        df = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, POPULAR_LOCALES[ i ] );
+                        break;
+                    default:
+                        df = DateFormat.getDateInstance( DateFormat.DEFAULT, POPULAR_LOCALES[ i ] );
+                }
+                //return when parsed successfully
+                java.util.Date parsed = df.parse( val );
+                return parsed;
+            }
+            catch( ParseException pe )
+            {
+                //could not parse, continue with other locales.
+                lastException = pe;
+            }
+        }
+
+        //now try other specific date/time patterns
+        String[] formats = null;
+        switch( parsingMode )
+        {
+            case DATE_PARSING_MODE_DATE:
+                formats = dateFormats;
+                break;
+            case DATE_PARSING_MODE_TIME:
+                formats = timeFormats;
+                break;
+            case DATE_PARSING_MODE_DATETIME:
+                formats = dateTimeFormats;
+                break;
+            default:
+                formats = dateFormats;
+        }
+
+        for( int i = 0; i < formats.length; i++ )
+        {
+            String pattern = formats[ i ];
+            SimpleDateFormat sdf = new SimpleDateFormat( pattern );
+            try
+            {
+                return sdf.parse( val );
+            }
+            catch( ParseException pe )
+            {
+                //could not parse, continue with other patterns.
+                lastException = pe;
+            }
+        }
+
+        //the string was not parsed, throw an exception.
+        throw lastException;
     }
 
     public static String fixNumber( String number, boolean isInt )

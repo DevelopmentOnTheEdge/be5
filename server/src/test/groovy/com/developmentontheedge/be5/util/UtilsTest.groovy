@@ -2,8 +2,12 @@ package com.developmentontheedge.be5.util
 
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.test.AbstractProjectTest
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import org.junit.Test
+
+import java.sql.Time
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
 
 import static org.junit.Assert.*
 import static org.mockito.Matchers.eq
@@ -12,6 +16,10 @@ import static org.mockito.Mockito.verify
 class UtilsTest extends AbstractProjectTest
 {
     SqlService db = sqlMockInjector.get(SqlService.class)
+
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat( "yyyy-MM-dd" )
+    private SimpleDateFormat timeFormatter = new SimpleDateFormat( "HH:mm:ss" )
+    private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" )
 
     @Test
     void inClause() throws Exception
@@ -43,6 +51,18 @@ class UtilsTest extends AbstractProjectTest
     {
         assertEquals 3L, Utils.changeType("3", Long)
         assertEquals 3, Utils.changeType("3", Integer)
+    }
+
+    @Test
+    void changeTypeDateTime() throws Exception
+    {
+        assertEquals dateFormatter.parse("2017-08-27"), Utils.changeType( "2017-08-27", java.sql.Date.class)
+        assertEquals dateFormatter.parse("2017-08-27"), Utils.changeType( "2017-08-27", Date.class)
+
+        assertEquals timeFormatter.parse("20:49:01"), Utils.changeType( "20:49:01", Time.class)
+
+        assertEquals dateTimeFormatter.parse("2017-08-27 20:49:01"),
+                Utils.changeType( "2017-08-27 20:49:01", Timestamp.class)
     }
 
     @Test
