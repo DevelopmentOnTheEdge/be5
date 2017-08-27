@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
-
 import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
@@ -312,8 +311,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public String addForce( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = sqlHelper.getDpsWithoutAutoIncrement(entity);
-        sqlHelper.setValues(dps, entity, values);
+        DynamicPropertySet dps = sqlHelper.getDpsForColumns(entity, values.keySet());
+        sqlHelper.setValuesWithSpecial(dps, entity, values);
 
         validator.checkErrorAndCast(dps);
         Object insert = db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));

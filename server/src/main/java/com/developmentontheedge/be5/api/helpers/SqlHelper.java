@@ -14,6 +14,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
 
 import java.sql.ResultSet;
@@ -41,6 +42,16 @@ public class SqlHelper
 {
     private static final Logger log = Logger.getLogger(SqlHelper.class.getName());
 
+    private static final List<String> specialColumns = ImmutableList.<String>builder()
+            .add(WHO_INSERTED_COLUMN_NAME)
+            .add(WHO_MODIFIED_COLUMN_NAME)
+            .add(CREATION_DATE_COLUMN_NAME)
+            .add(MODIFICATION_DATE_COLUMN_NAME)
+            .add(IP_INSERTED_COLUMN_NAME)
+            .add(IP_MODIFIED_COLUMN_NAME)
+            .add(IS_DELETED_COLUMN_NAME)
+            .build();
+
     private Meta meta;
     private UserAwareMeta userAwareMeta;
     private OperationHelper operationHelper;
@@ -59,9 +70,9 @@ public class SqlHelper
         return setDpsValues(dps, resultSet);
     }
 
-    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> values, ResultSet resultSet)
+    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, ResultSet resultSet)
     {
-        DynamicPropertySet dps = getDpsForColumns(entity, values);
+        DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
 
         return setDpsValues(dps, resultSet);
     }
@@ -116,19 +127,24 @@ public class SqlHelper
         return dps;
     }
 
-    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> values)
+    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames)
     {
+        ArrayList<String> columnNamesWithSpecial = new ArrayList<>(columnNames);
+        columnNamesWithSpecial.addAll(specialColumns);
+
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-
-        for(String propertyName: values)
+        for(String propertyName: columnNamesWithSpecial)
         {
             ColumnDef columnDef = columns.get(propertyName);
             if(columnDef != null){
                 dps.add(getDynamicProperty(columnDef));
             }else{
-                log.warning("Column " + propertyName + " not found in " + entity.getName());
+                if(!specialColumns.contains(propertyName))
+                {
+                    log.warning("Column " + propertyName + " not found in " + entity.getName());
+                }
             }
         }
 
@@ -163,7 +179,7 @@ public class SqlHelper
         return dp;
     }
 
-    public void setValues(DynamicPropertySet dps, Entity entity, Map<String, ?> values)
+    public void setValuesWithSpecial(DynamicPropertySet dps, Entity entity, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)
         {
