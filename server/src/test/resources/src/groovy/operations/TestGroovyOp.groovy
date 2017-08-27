@@ -1,5 +1,8 @@
 package src.groovy.operations
 
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta
+import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
@@ -9,13 +12,16 @@ import java.text.SimpleDateFormat
 
 class TestGroovyOp extends OperationSupport implements Operation
 {
+    @Inject private UserAwareMeta userAwareMeta
 
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
+        if(!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
+
         dps << [
-                name        : "name",
-                DISPLAY_NAME: "Имя",
+                name         : "name",
+                DISPLAY_NAME : "Имя",
                 DEFAULT_VALUE: "Test"
         ]
 

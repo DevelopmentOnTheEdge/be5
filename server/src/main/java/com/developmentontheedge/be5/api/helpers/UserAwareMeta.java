@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
@@ -13,19 +12,7 @@ import java.util.Optional;
 public interface UserAwareMeta
 {
 
-    class Column {
-
-        public final String name;
-        public final String localizedName;
-
-        public Column(String name, String localizedName) {
-            this.name = name;
-            this.localizedName = localizedName;
-        }
-
-    }
-
-    void reCompileLocalizations(Injector injector);
+    void reCompileLocalizations();
 
     /**
      * Returns a localized title in user's preferred language.

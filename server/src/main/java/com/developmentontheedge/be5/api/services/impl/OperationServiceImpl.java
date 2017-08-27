@@ -31,6 +31,7 @@ import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
 
+
 public class OperationServiceImpl implements OperationService
 {
     private final Cache<String, Class> groovyOperationClasses;
@@ -39,12 +40,12 @@ public class OperationServiceImpl implements OperationService
     private final SqlHelper sqlHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector)
+    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
-        this.validator = injector.get(Validator.class);
-        this.userAwareMeta = injector.get(UserAwareMeta.class);
-        sqlHelper = injector.get(SqlHelper.class);
+        this.validator = validator;
+        this.userAwareMeta = userAwareMeta;
+        this.sqlHelper = sqlHelper;
 
         groovyOperationClasses = Caffeine.newBuilder()
                 .maximumSize(1_000)
@@ -207,6 +208,7 @@ public class OperationServiceImpl implements OperationService
         }
 
         operation.initialize(injector, operationInfo, OperationResult.progress(), records, request);
+        injector.injectAnnotatedFields(operation);
 
         return operation;
     }
@@ -232,7 +234,7 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    String[] selectedRows(String selectedRowsString){
+    static String[] selectedRows(String selectedRowsString){
         if(selectedRowsString.trim().isEmpty())return new String[0];
         return selectedRowsString.split(",");
     }

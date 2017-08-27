@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.env.impl;
 import static com.google.common.base.Preconditions.*;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.api.Configurable;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.gson.Gson;
@@ -43,7 +45,7 @@ public class Be5Injector implements Injector
     }
 
     //todo EgissoLogin egissoLogin = injector.get(EgissoLogin.class); - load component by class?
-    //need refactoring move google Guice - add Module with methods: bind()
+    //need refactoring add Module as in Guice with methods: bind()
 
     private <T> T get(Class<T> serviceClass, List<Class<?>> stack)
     {
@@ -87,7 +89,7 @@ public class Be5Injector implements Injector
         
         stack.remove(serviceClass);
         instantiatedServices.put(serviceClass, service);
-        
+
         return service;
     }
     
@@ -178,6 +180,31 @@ public class Be5Injector implements Injector
         String componentConfigJson = new Gson().toJson(config);
 
         return new Gson().fromJson(componentConfigJson, configClass);
+    }
+
+    @Override
+    public void injectAnnotatedFields(Object obj)
+    {
+        Class<?> cls = obj.getClass();
+        for (Class<?> c = cls; c != null; c = c.getSuperclass())
+        {
+            Field[] fields = c.getDeclaredFields();
+            for (Field field : fields)
+            {
+                if(field.getAnnotation(Inject.class) != null)
+                {
+                    field.setAccessible(true);
+                    try
+                    {
+                        field.set(obj, get(field.getType()));
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        throw Be5Exception.internal(e);
+                    }
+                }
+            }
+        }
     }
 
 }

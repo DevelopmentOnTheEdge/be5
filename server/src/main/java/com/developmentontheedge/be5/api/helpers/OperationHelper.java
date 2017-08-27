@@ -12,9 +12,11 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class OperationHelper
@@ -123,6 +125,12 @@ public class OperationHelper
         }
         return getTagsFromQuery(request, tableName, query.get(), extraParams);
     }
+
+//    todo - 2 варианта - простой sql + String[] params для SqlService
+//     или be-sql - полный аналог обработки be-sql из yaml
+//    public String[][] getTagsFromQuery(Request request, String sql, String[] params)
+//    {
+//    }
 
     private String[][] getTagsFromQuery(Request request, String tableName, Query query, Map<String, String> extraParams)
     {

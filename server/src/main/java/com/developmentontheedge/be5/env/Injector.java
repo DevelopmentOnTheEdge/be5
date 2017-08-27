@@ -133,4 +133,5 @@ public interface Injector
 
     Component getComponent(String componentId);
 
+    void injectAnnotatedFields(Object obj);
 }

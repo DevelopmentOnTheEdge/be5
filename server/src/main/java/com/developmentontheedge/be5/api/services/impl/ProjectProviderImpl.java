@@ -35,7 +35,7 @@ public class ProjectProviderImpl implements ProjectProvider
     	{
 			project = loadProject();
             CacheInfo.clearAll();
-            injector.get(UserAwareMeta.class).reCompileLocalizations(injector);
+            injector.get(UserAwareMeta.class).reCompileLocalizations();
         }
 
     	return project;

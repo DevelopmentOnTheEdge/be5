@@ -42,12 +42,12 @@ public abstract class OperationSupport implements Operation
     {
         this.injector = injector;
         this.databaseService = injector.getDatabaseService();
-        this.db = injector.getSqlService();
-        this.database = injector.get(DatabaseModel.class);
-        this.meta = injector.getMeta();
-        this.sqlHelper = injector.get(SqlHelper.class);
-        this.helper = injector.get(OperationHelper.class);
-        this.validator = injector.get(Validator.class);
+        this.db              = injector.getSqlService();
+        this.database        = injector.get(DatabaseModel.class);
+        this.meta            = injector.getMeta();
+        this.sqlHelper       = injector.get(SqlHelper.class);
+        this.helper          = injector.get(OperationHelper.class);
+        this.validator       = injector.get(Validator.class);
 
         this.operationInfo = operationInfo;
         this.operationResult = operationResult;

@@ -7,18 +7,15 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class OperationServiceImplTest extends AbstractProjectTest{
-
+public class OperationServiceImplTest extends AbstractProjectTest
+{
     @Test
     public void selectedRowsTest(){
-        OperationServiceImpl operationService = new OperationServiceImpl(injector);
+        assertTrue( Arrays.equals(new String[]{"1","2","3"}, OperationServiceImpl.selectedRows("1,2,3")));
 
-        assertTrue( Arrays.equals(new String[]{"1","2","3"}, operationService.selectedRows("1,2,3")));
+        assertTrue( Arrays.equals(new String[]{"1"}, OperationServiceImpl.selectedRows("1")));
 
-        assertTrue( Arrays.equals(new String[]{"1"}, operationService.selectedRows("1")));
-
-        assertTrue( Arrays.equals(new String[]{}, operationService.selectedRows("")));
+        assertTrue( Arrays.equals(new String[]{}, OperationServiceImpl.selectedRows("")));
     }
-
 
 }
