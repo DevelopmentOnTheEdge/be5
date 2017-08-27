@@ -1,11 +1,7 @@
 context:
   services:
-  - aService:
-      interface:      com.developmentontheedge.be5.env.impl.testServices.AService
-      implementation: com.developmentontheedge.be5.env.impl.testServices.AService
-  - bService:
-      interface:      com.developmentontheedge.be5.env.impl.testServices.BService
-      implementation: com.developmentontheedge.be5.env.impl.testServices.BService
+  - com.developmentontheedge.be5.env.impl.testServices.AService
+  - com.developmentontheedge.be5.env.impl.testServices.BService
 config:
   com.developmentontheedge.be5.api.services.impl.LogConfigurator:
     path: '/logging.properties'

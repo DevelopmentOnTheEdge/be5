@@ -60,7 +60,7 @@ public class YamlBinder implements Binder
         if(moduleContext != null)
         {
             List<Map<String, String>> components = (List<Map<String, String>>) moduleContext.get("components");
-            List<Map<String, Map<String, String>>> services = (List<Map<String, Map<String, String>>>) moduleContext.get("services");
+            List<Object> services = (List<Object>) moduleContext.get("services");
 
             if (components != null) loadComponents(loadedClasses, components);
             if (services != null) bindServices(bindings, services);
@@ -85,24 +85,41 @@ public class YamlBinder implements Binder
     }
 
     @SuppressWarnings("unchecked")
-    private void bindServices(Map<Class<?>, Class<?>> bindings, List<Map<String, Map<String, String>>> services)
+    private void bindServices(Map<Class<?>, Class<?>> bindings, List<Object> services)
     {
-        for (Map<String, Map<String, String>> element: services)
+        for (Object element: services)
         {
-            Map.Entry<String,Map<String, String>> entry = element.entrySet().iterator().next();
-            String key = entry.getKey();
-            Map<String, String> elementOptions = entry.getValue();
+            String key;
+            Class<Object> serviceKeyClass, serviceImplementation;
 
-            Class<Object> serviceInterface = (Class<Object>) loadClass(elementOptions.get("interface"));
-            Class<Object> serviceImplementation = (Class<Object>) loadClass(elementOptions.get("implementation"));
+            if(element instanceof Map)
+            {
+                Map.Entry<String, Map<String, String>> entry = ((Map<String, Map<String, String>>)element).entrySet().iterator().next();
+                key = entry.getKey();
+                Map<String, String> elementOptions = entry.getValue();
 
-            if(bindings.containsKey(serviceInterface) || serviceKeys.containsKey(key))
+                serviceKeyClass = (Class<Object>) loadClass(elementOptions.get("interface"));
+                serviceImplementation = (Class<Object>) loadClass(elementOptions.get("implementation"));
+
+                if (serviceKeys.containsKey(key))
+                {
+                    throw Be5Exception.internal("Equals key not allowed.");
+                }
+            }
+            else
+            {
+                key = (String) element;
+                serviceKeyClass = (Class<Object>) loadClass(key);
+                serviceImplementation = serviceKeyClass;
+            }
+
+            if (bindings.containsKey(serviceKeyClass))
             {
                 throw Be5Exception.internal("Redefining in yaml config not allowed.");
             }
 
-            bindings.put(serviceInterface, serviceImplementation);
-            serviceKeys.put(key, serviceInterface);
+            bindings.put(serviceKeyClass, serviceImplementation);
+            serviceKeys.put(key, serviceKeyClass);
         }
     }
 

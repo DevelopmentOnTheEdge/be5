@@ -9,6 +9,11 @@ context:
   - static:           com.developmentontheedge.be5.components.StaticPageComponent
   - categories:       com.developmentontheedge.be5.components.Categories
   services:
+  - com.developmentontheedge.be5.api.services.impl.LogConfigurator
+  - com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+  - com.developmentontheedge.be5.api.helpers.SqlHelper
+  - com.developmentontheedge.be5.api.helpers.Validator
+  - com.developmentontheedge.be5.api.helpers.OperationHelper
   - projectProvider:
       interface:      com.developmentontheedge.be5.api.services.ProjectProvider
       implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl
@@ -33,26 +38,9 @@ context:
   - executorService:
       interface:      com.developmentontheedge.be5.api.services.ExecutorService
       implementation: com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl
-  - logConfigurator:
-      interface:      com.developmentontheedge.be5.api.services.impl.LogConfigurator
-      implementation: com.developmentontheedge.be5.api.services.impl.LogConfigurator
   - categoriesService:
       interface:      com.developmentontheedge.be5.api.services.CategoriesService
       implementation: com.developmentontheedge.be5.api.services.impl.CategoriesServiceImpl
   - operationService:
       interface:      com.developmentontheedge.be5.api.services.OperationService
       implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl
-  - databaseModel:
-      interface:      com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-      implementation: com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-  - sqlHelper:
-      interface:      com.developmentontheedge.be5.api.helpers.SqlHelper
-      implementation: com.developmentontheedge.be5.api.helpers.SqlHelper
-  - validator:
-      interface:      com.developmentontheedge.be5.api.helpers.Validator
-      implementation: com.developmentontheedge.be5.api.helpers.Validator
-  - operationHelper:
-      interface:      com.developmentontheedge.be5.api.helpers.OperationHelper
-      implementation: com.developmentontheedge.be5.api.helpers.OperationHelper
-
-
