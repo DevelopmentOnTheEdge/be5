@@ -68,7 +68,7 @@ class SqlHelperTest extends AbstractProjectTest
         DynamicPropertySet dps = sqlHelper.getDps(meta.getEntity("meters"))
         assertNotNull dps.getProperty("value")
 
-        dps = sqlHelper.getDps(meta.getEntity("meters"), Collections.singletonList("value"))
+        dps = sqlHelper.getDpsWithoutColumns(meta.getEntity("meters"), Collections.singletonList("value"))
         assertNull dps.getProperty("value")
     }
 

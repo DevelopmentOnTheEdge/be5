@@ -312,7 +312,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getDpsForColumns(entity, values.keySet());
-        sqlHelper.setValuesWithSpecial(dps, entity, values);
+        sqlHelper.setValues(dps, values);
+
+        sqlHelper.addSpecialIfNotExists(dps, entity);
+        sqlHelper.setSpecialPropertyIfNull(dps);
 
         validator.checkErrorAndCast(dps);
         Object insert = db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
@@ -372,6 +375,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         setForceMany( Collections.singletonMap( propertyName, value ), conditions);
     }
 
+    /**
+     * in process
+     */
     @Override
     public void setForceMany(Map<String, String> values, Map<String, String> conditions)
     {

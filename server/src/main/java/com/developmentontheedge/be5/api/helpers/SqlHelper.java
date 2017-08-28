@@ -108,17 +108,17 @@ public class SqlHelper
     {
         if(meta.getColumn(entity, entity.getPrimaryKey()) != null && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
         {
-            return getDps(entity, Collections.singletonList(entity.getPrimaryKey()));
+            return getDpsWithoutColumns(entity, Collections.singletonList(entity.getPrimaryKey()));
         }
         return getDps(entity);
     }
 
     public DynamicPropertySet getDps(Entity entity)
     {
-        return getDps(entity, Collections.emptyList());
+        return getDpsWithoutColumns(entity, Collections.emptyList());
     }
 
-    public DynamicPropertySet getDps(Entity entity, Collection<String> excludedColumns)
+    public DynamicPropertySet getDpsWithoutColumns(Entity entity, Collection<String> excludedColumns)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         DynamicPropertySet dps = new DynamicPropertySetSupport();
@@ -142,22 +142,16 @@ public class SqlHelper
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames)
     {
-        ArrayList<String> columnNamesWithSpecial = new ArrayList<>(columnNames);
-        columnNamesWithSpecial.addAll(specialColumns);
-
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        for(String propertyName: columnNamesWithSpecial)
+        for(String propertyName: columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
             if(columnDef != null){
                 dps.add(getDynamicProperty(columnDef));
             }else{
-                if(!specialColumns.contains(propertyName))
-                {
-                    log.warning("Column " + propertyName + " not found in " + entity.getName());
-                }
+                log.warning("Column " + propertyName + " not found in " + entity.getName());
             }
         }
 
@@ -173,6 +167,8 @@ public class SqlHelper
         {
             dp.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
         }
+
+        if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
 
         if(columnDef.isCanBeNull())dp.setCanBeNull(true);
 
@@ -191,17 +187,28 @@ public class SqlHelper
         return dp;
     }
 
-    public void setValuesWithSpecial(DynamicPropertySet dps, Entity entity, Map<String, ?> values)
+    public void setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)
         {
             //todo DEFAULT_VALUE -> value - как в be3?
             if (property.getValue() == null) property.setValue(values.get(property.getName()));
             if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
-            //if (!entity.getName().startsWith("_") && property.getValue() == null) property.setValue(meta.getColumnDefaultValue(entity, property.getName()));
         }
+    }
 
-        setSpecialPropertyIfNull(dps);
+    public void addSpecialIfNotExists(DynamicPropertySet dps, Entity entity)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
+        for(String propertyName: specialColumns)
+        {
+            if(dps.getProperty(propertyName) == null)
+            {
+                ColumnDef columnDef = columns.get(propertyName);
+                if (columnDef != null) dps.add(getDynamicProperty(columnDef));
+            }
+        }
     }
 
     public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, ?> values)
@@ -216,7 +223,7 @@ public class SqlHelper
         updateSpecialColumns(dps);
     }
 
-    private void updateSpecialColumns(DynamicPropertySet dps)
+    public void updateSpecialColumns(DynamicPropertySet dps)
     {
         Timestamp currentTime = new Timestamp(new Date().getTime());
 
@@ -225,7 +232,7 @@ public class SqlHelper
         setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
     }
 
-    private void setSpecialPropertyIfNull(DynamicPropertySet dps)
+    public void setSpecialPropertyIfNull(DynamicPropertySet dps)
     {
         Timestamp currentTime = new Timestamp(new Date().getTime());
 

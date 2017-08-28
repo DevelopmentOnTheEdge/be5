@@ -124,6 +124,14 @@ public class OperationServiceImpl implements OperationService
 
         Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
 
+        //todo add tests
+        if (parameters instanceof DynamicPropertySet)
+        {
+            DynamicPropertySet dps = (DynamicPropertySet)parameters;
+            sqlHelper.addSpecialIfNotExists(dps, meta.getEntity());
+            sqlHelper.setSpecialPropertyIfNull(dps);
+        }
+
         if(parameters instanceof DynamicPropertySet)
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
@@ -224,7 +232,7 @@ public class OperationServiceImpl implements OperationService
             Object parameters = operation.getParameters(presetValues);
             if (parameters instanceof DynamicPropertySet)
             {
-                sqlHelper.setValuesWithSpecial((DynamicPropertySet)parameters, entity, presetValues);
+                sqlHelper.setValues((DynamicPropertySet)parameters, presetValues);
             }
             return parameters;
         }
