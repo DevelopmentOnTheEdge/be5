@@ -218,7 +218,7 @@ public class DatabaseServiceImpl implements DatabaseService
     @Override
     public DbmsType getType()
     {
-        return type.getType();
+        return getRdbms().getType();
     }
 
     @Override

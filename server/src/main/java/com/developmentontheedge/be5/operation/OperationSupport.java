@@ -16,8 +16,6 @@ import java.util.Map;
 
 public abstract class OperationSupport implements Operation
 {
-    public Injector injector;
-
     public DatabaseService databaseService;
     public DatabaseModel database;
     public SqlService db;
@@ -40,7 +38,6 @@ public abstract class OperationSupport implements Operation
     public final void initialize(Injector injector, OperationInfo operationInfo,
                                  OperationResult operationResult, String[] records, Request request)
     {
-        this.injector = injector;
         this.databaseService = injector.getDatabaseService();
         this.db              = injector.getSqlService();
         this.database        = injector.get(DatabaseModel.class);
