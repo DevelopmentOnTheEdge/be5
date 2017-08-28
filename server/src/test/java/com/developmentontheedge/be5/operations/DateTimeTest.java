@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 
 public class DateTimeTest extends AbstractProjectTest{
 
-    private OperationService operationService = sqlMockInjector.get(OperationService.class);
+    private OperationService operationService = injector.get(OperationService.class);
 
     @BeforeClass
     public static void beforeClass(){

@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class GroovyOperationTest extends AbstractProjectTest{
 
-    private OperationService operationService = sqlMockInjector.get(OperationService.class);
+    private OperationService operationService = injector.get(OperationService.class);
 
     @BeforeClass
     public static void beforeClass(){

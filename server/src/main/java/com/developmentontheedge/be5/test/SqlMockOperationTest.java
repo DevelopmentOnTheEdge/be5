@@ -12,9 +12,9 @@ import org.junit.BeforeClass;
 
 public abstract class SqlMockOperationTest extends AbstractProjectTest
 {
-    protected static OperationService operationService = sqlMockInjector.get(OperationService.class);
-    protected static SqlHelper sqlHelper = sqlMockInjector.get(SqlHelper.class);
-    protected static Meta meta = sqlMockInjector.get(Meta.class);
+    protected static OperationService operationService = injector.get(OperationService.class);
+    protected static SqlHelper sqlHelper = injector.get(SqlHelper.class);
+    protected static Meta meta = injector.get(Meta.class);
 
     @BeforeClass
     public static void beforeClass(){

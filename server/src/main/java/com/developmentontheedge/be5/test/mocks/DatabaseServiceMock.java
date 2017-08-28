@@ -50,7 +50,7 @@ public class DatabaseServiceMock implements DatabaseService
 
     @Override
     public Rdbms getRdbms() {
-        return Rdbms.POSTGRESQL;
+        return Rdbms.H2;
     }
 
     @Override

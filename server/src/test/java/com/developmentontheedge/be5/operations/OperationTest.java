@@ -2,17 +2,13 @@ package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.junit.AfterClass;
@@ -21,19 +17,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-import java.util.Collections;
-import java.util.Date;
-
-import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 public class OperationTest extends AbstractProjectTest{
 
-    private OperationService operationService = sqlMockInjector.get(OperationService.class);
+    private OperationService operationService = injector.get(OperationService.class);
 
     @BeforeClass
     public static void beforeClass(){

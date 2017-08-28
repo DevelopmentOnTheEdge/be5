@@ -6,14 +6,12 @@ import com.developmentontheedge.be5.test.AbstractProjectTest;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import static org.mockito.Mockito.verify;
 
 public class EntityModelBaseTest extends AbstractProjectTest
 {
-    private DatabaseModel database = sqlMockInjector.get(DatabaseModel.class);
+    private DatabaseModel database = injector.get(DatabaseModel.class);
     private EntityModel testTableAdmin = database.getEntity("testtableAdmin");
 
     @BeforeClass

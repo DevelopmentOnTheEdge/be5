@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 public class EntityModelAddTest extends AbstractProjectTest
 {
-    private DatabaseModel database = sqlMockInjector.get(DatabaseModel.class);
+    private DatabaseModel database = injector.get(DatabaseModel.class);
 
     @BeforeClass
     public static void beforeClass(){

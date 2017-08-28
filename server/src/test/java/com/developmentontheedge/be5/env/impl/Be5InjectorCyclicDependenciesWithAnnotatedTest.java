@@ -22,10 +22,10 @@ public class Be5InjectorCyclicDependenciesWithAnnotatedTest extends AbstractProj
     @Test
     public void injectWithAnnotatedAServiceFirst() throws Exception
     {
-        sqlMockInjector.get(AService.class).aMethodUseBService();
+        injector.get(AService.class).aMethodUseBService();
         verify(SqlServiceMock.mock).update("bMethod sql");
 
-        sqlMockInjector.get(BService.class).bMethodUseAService();
+        injector.get(BService.class).bMethodUseAService();
         verify(SqlServiceMock.mock).update("aMethod sql");
     }
 

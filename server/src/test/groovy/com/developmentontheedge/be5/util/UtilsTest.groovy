@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify
 
 class UtilsTest extends AbstractProjectTest
 {
-    SqlService db = sqlMockInjector.get(SqlService.class)
+    SqlService db = injector.get(SqlService.class)
 
     private SimpleDateFormat dateFormatter = new SimpleDateFormat( "yyyy-MM-dd" )
     private SimpleDateFormat timeFormatter = new SimpleDateFormat( "HH:mm:ss" )

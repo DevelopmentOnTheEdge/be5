@@ -10,7 +10,10 @@ import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
@@ -32,10 +35,10 @@ import static org.mockito.Mockito.when;
 
 public abstract class AbstractProjectTest
 {
-    protected static final Injector injector = Be5.createInjector();
-    protected static final Injector sqlMockInjector = Be5.createInjector(new SqlMockBinder());
+    protected static final Injector injector = Be5.createInjector(new SqlMockBinder());
+    private static final LoginServiceImpl loginService;
 
-    protected static final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withNullValues(true));
+    protected static final Jsonb jsonb = JsonbBuilder.create();
 
     public static class SqlMockBinder implements Binder
     {
@@ -45,14 +48,15 @@ public abstract class AbstractProjectTest
         {
             new YamlBinder().configure(loadedClasses, bindings, configurations);
             bindings.put(SqlService.class, SqlServiceMock.class);
-            //bindings.put(DatabaseService.class, DatabaseServiceMock.class);
+            bindings.put(DatabaseService.class, DatabaseServiceMock.class);
         }
     }
 
-    private static final LoginServiceImpl loginService;
+    static final String profileForIntegrationTests = "profileForIntegrationTests";
 
     static {
         Project project = injector.getProject();
+        initProfile(project);
 
         if(project.getProject().getLanguages().length == 0){
             project.getApplication().getLocalizations().addLocalization( "en", "test",
@@ -61,6 +65,19 @@ public abstract class AbstractProjectTest
 
         loginService = new LoginServiceImpl(null, injector.getProjectProvider());
         new LoginServiceImpl(null, injector.getProjectProvider()).initGuest(null);
+    }
+
+    static void initProfile(Project project){
+        if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
+        {
+            BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
+            profile.setConnectionUrl("jdbc:h2:~/"+ profileForIntegrationTests);
+            profile.setUsername("sa");
+            profile.setPassword("");
+            profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
+            DataElementUtils.save(profile);
+            project.setConnectionProfileName(profileForIntegrationTests);
+        }
     }
 
     protected Request getMockRequest(String requestUri){
