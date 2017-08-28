@@ -23,7 +23,7 @@ class SqlHelperTest extends AbstractProjectTest
             "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
                 "'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
             "'/CODE':{'displayName':'Код'}," +
-            "'/payable':{'displayName':'Оплачиваемая'," +
+            "'/payable':{'displayName':'Оплачиваемая','canBeNull':true," +
                 "'tagList':[['yes','да'],['no','нет']]}," +
             "'/admlevel':{'displayName':'Уроверь'," +
                 "'tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}" +

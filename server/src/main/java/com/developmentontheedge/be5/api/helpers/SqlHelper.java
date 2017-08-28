@@ -168,9 +168,13 @@ public class SqlHelper
             dp.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
         }
 
-        if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
+        if(columnDef.isCanBeNull() ||
+            (columnDef.getTypeString().equals(SqlColumnType.TYPE_BOOL) && columnDef.getDefaultValue() != null) )
+        {
+            dp.setCanBeNull(true);
+        }
 
-        if(columnDef.isCanBeNull())dp.setCanBeNull(true);
+        if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
 
         if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
