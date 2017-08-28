@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.test;
 
+import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
@@ -16,10 +17,9 @@ import java.util.logging.Logger;
 
 public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTest
 {
-    protected static final Injector injector = Be5.createInjector();
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 
-    private static final LoginServiceImpl loginService;
+    protected static final Injector injector = Be5.createInjector();
 
     static {
         Project project = injector.getProject();
@@ -59,13 +59,7 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
 
         initProfile(injector.getProject());
 
-        if(project.getProject().getLanguages().length == 0){
-            project.getApplication().getLocalizations().addLocalization( "en", "test",
-                    Collections.singletonList("myTopic"), "foo", "bar" );
-        }
-
-        loginService = new LoginServiceImpl(null, injector.getProjectProvider());
-        new LoginServiceImpl(null, injector.getProjectProvider()).initGuest(null);
+        injector.get(LoginService.class).initGuest(null);
     }
 
 }

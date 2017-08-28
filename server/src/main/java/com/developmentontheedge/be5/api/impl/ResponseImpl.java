@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;

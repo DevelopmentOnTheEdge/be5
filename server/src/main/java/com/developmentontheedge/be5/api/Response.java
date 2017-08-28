@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -56,7 +58,7 @@ public interface Response
     void sendAsRawJson(Object value);
 
     /**
-     * Sends a serialized json. It is recommended to use {@link Response#sendAsJson(String, Object)} or  {@link Response#sendAsJson(Object)} instead.
+     * Sends a serialized json. It is recommended to use {@link Response#sendAsJson(String, Object)} or  {@link Response#sendAsJson(JsonApiModel)} instead.
      */
     void sendJson(String json);
 

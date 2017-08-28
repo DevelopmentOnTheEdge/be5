@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
@@ -36,8 +37,6 @@ import static org.mockito.Mockito.when;
 public abstract class AbstractProjectTest
 {
     protected static final Injector injector = Be5.createInjector(new SqlMockBinder());
-    private static final LoginServiceImpl loginService;
-
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
     public static class SqlMockBinder implements Binder
@@ -58,13 +57,7 @@ public abstract class AbstractProjectTest
         Project project = injector.getProject();
         initProfile(project);
 
-        if(project.getProject().getLanguages().length == 0){
-            project.getApplication().getLocalizations().addLocalization( "en", "test",
-                    Collections.singletonList("myTopic"), "foo", "bar" );
-        }
-
-        loginService = new LoginServiceImpl(null, injector.getProjectProvider());
-        new LoginServiceImpl(null, injector.getProjectProvider()).initGuest(null);
+        injector.get(LoginService.class).initGuest(null);
     }
 
     static void initProfile(Project project){
@@ -110,7 +103,7 @@ public abstract class AbstractProjectTest
 
     protected static void initUserWithRoles(String... roles)
     {
-        loginService.saveUser("testUser", Arrays.asList(roles), Locale.US, "");
+        injector.get(LoginService.class).saveUser("testUser", Arrays.asList(roles), Locale.US, "");
     }
 
     protected static String oneQuotes(String s)
