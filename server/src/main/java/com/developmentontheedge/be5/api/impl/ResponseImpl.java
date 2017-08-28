@@ -17,7 +17,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
 public class ResponseImpl implements Response
 {
-    //todo remove withNullValues(true), fix frontend
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     /**

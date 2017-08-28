@@ -63,6 +63,16 @@ class SqlHelperTest extends AbstractProjectTest
     }
 
     @Test
+    void getDpsTest() throws Exception
+    {
+        DynamicPropertySet dps = sqlHelper.getDps(meta.getEntity("meters"))
+        assertNotNull dps.getProperty("value")
+
+        dps = sqlHelper.getDps(meta.getEntity("meters"), Collections.singletonList("value"))
+        assertNull dps.getProperty("value")
+    }
+
+    @Test
     void generateInsertSqlTest() throws Exception
     {
         Entity metersEntity = meta.getEntity("meters")

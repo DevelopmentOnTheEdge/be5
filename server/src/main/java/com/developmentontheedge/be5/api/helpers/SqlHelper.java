@@ -106,23 +106,36 @@ public class SqlHelper
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
     {
-        DynamicPropertySet dps = getDps(entity);
         if(meta.getColumn(entity, entity.getPrimaryKey()) != null && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
         {
-            dps.remove(entity.getPrimaryKey());
+            return getDps(entity, Collections.singletonList(entity.getPrimaryKey()));
         }
-        return dps;
+        return getDps(entity);
     }
 
     public DynamicPropertySet getDps(Entity entity)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        return getDps(entity, Collections.emptyList());
+    }
 
+    public DynamicPropertySet getDps(Entity entity, Collection<String> excludedColumns)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
         DynamicPropertySet dps = new DynamicPropertySetSupport();
 
+        ArrayList<String> excludedColumnsList = new ArrayList<>(excludedColumns);
         for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
         {
-            dps.add(getDynamicProperty(entry.getValue()));
+            if(!excludedColumnsList.contains(entry.getKey()))
+            {
+                dps.add(getDynamicProperty(entry.getValue()));
+                excludedColumnsList.remove(entry.getKey());
+            }
+        }
+
+        for(String propertyName: excludedColumnsList)
+        {
+            log.warning("Column " + propertyName + " not found in " + entity.getName());
         }
         return dps;
     }
@@ -174,7 +187,6 @@ public class SqlHelper
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
         }
-
 
         return dp;
     }
