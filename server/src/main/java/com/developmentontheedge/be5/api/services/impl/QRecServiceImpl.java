@@ -17,7 +17,7 @@ public class QRecServiceImpl implements QRecService
     }
 
     @Override
-    public QRec select(String sql, Object... params)
+    public QRec of(String sql, Object... params)
     {
         DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, params);
 

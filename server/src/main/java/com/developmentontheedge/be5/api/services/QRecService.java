@@ -5,5 +5,5 @@ import com.developmentontheedge.be5.beans.QRec;
 
 public interface QRecService
 {
-    QRec select(String sql, Object... params);
+    QRec of(String sql, Object... params);
 }
