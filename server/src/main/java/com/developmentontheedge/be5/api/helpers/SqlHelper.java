@@ -15,8 +15,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ObjectArrays;
-import com.google.inject.internal.util.ImmutableMap;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

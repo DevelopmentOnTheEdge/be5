@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.databasemodel.EntityModel
-import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
 import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
