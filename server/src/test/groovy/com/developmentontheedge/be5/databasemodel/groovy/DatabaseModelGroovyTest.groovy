@@ -13,6 +13,8 @@ import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertNotNull
+import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 
 class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
@@ -159,7 +161,7 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 //    }
 
     @Test
-    void testDelete()
+    void testDeleteIn()
     {
         def entityName = database.testtableAdmin
 
@@ -176,6 +178,20 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
         assertTrue entityName.empty
 
         assertEquals 0, entityName.remove( id )
+    }
+
+    @Test
+    void testDelete()
+    {
+        EntityModel entityName = database.testtableAdmin
+
+        def id = entityName << [ "name": "TestName", "value": 1]
+        def id2 = entityName << [ "name": "TestName2", "value": 1]
+
+        assertFalse entityName.empty
+        assertEquals 1, entityName.remove( ["name": "TestName2"] )
+        assertNotNull database.testtableAdmin[ id ]
+        assertNull database.testtableAdmin[ id2 ]
     }
 
     @Test

@@ -16,6 +16,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
+import com.google.inject.internal.util.ImmutableMap;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -410,13 +411,32 @@ public class SqlHelper
                 .where(conditions).format();
     }
 
-    public String generateUpdateSqlForManyKeys(Entity entity, DynamicPropertySet dps, int count)
-    {
-        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
+//    public String generateUpdateSqlForManyKeys(Entity entity, DynamicPropertySet dps, int count)
+//    {
+//        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+//                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
+//
+//        return Ast.update(entity.getName()).set(valuePlaceholders)
+//                .whereInPredicate(entity.getPrimaryKey(), count).format();
+//    }
 
-        return Ast.update(entity.getName()).set(valuePlaceholders)
-                .whereInPredicate(entity.getPrimaryKey(), count).format();
+    public String generateDelete(Entity entity, Map<String, String> conditions)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
+            values.put(IS_DELETED_COLUMN_NAME, "?");
+            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))values.put(WHO_MODIFIED_COLUMN_NAME, "?");
+            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))values.put(MODIFICATION_DATE_COLUMN_NAME, "?");
+            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))values.put(IP_MODIFIED_COLUMN_NAME, "?");
+
+            return Ast.update(entity.getName()).set(values).where(conditions).format();
+        }
+        else
+        {
+            return Ast.delete(entity.getName()).where(conditions).format();
+        }
     }
 
     public String generateDeleteInSql(Entity entity, int count) {
@@ -451,7 +471,7 @@ public class SqlHelper
         return sql + whereSql;
     }
 
-    public Object[] getDeleteValuesWithSpecial(Entity entity, Object[] ids)
+    public Object[] getDeleteSpecialValues(Entity entity)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
@@ -460,49 +480,49 @@ public class SqlHelper
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
             list.add("yes");
-            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME ))
-            {
-                list.add(UserInfoHolder.getUserName());
-            }
-            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))
-            {
-                list.add(currentTime);
-            }
-            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME ))
-            {
-                list.add(UserInfoHolder.getRemoteAddr());
-            }
+            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))list.add(UserInfoHolder.getUserName());
+            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))list.add(currentTime);
+            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))list.add(UserInfoHolder.getRemoteAddr());
         }
-
-        ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
-
-        return ObjectArrays.concat(list.toArray(), castToType(primaryKeyColumn.getType(), ids), Object.class);
+        return list.toArray();
     }
 
-    private Object[] castToType(SqlColumnType type, Object[] ids)
-    {
-        Object[] castedIds = new Object[ids.length];
-        for (int i = 0; i < ids.length; i++)
-        {
-            castedIds[i] = castToType(type, ids[i]);
-        }
-        return castedIds;
-    }
-
-    @DirtyRealization(comment = "Use Utils.changeType")
-    private Object castToType(SqlColumnType type, Object id)
-    {
-        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
-            return Long.parseLong(id.toString());
-        }
-        return id;
-    }
+//    private Object[] castToType(SqlColumnType type, Object[] ids)
+//    {
+//        Object[] castedIds = new Object[ids.length];
+//        for (int i = 0; i < ids.length; i++)
+//        {
+//            castedIds[i] = castToType(type, ids[i]);
+//        }
+//        return castedIds;
+//    }
+//
+//    @DirtyRealization(comment = "Use Utils.changeType")
+//    private Object castToType(SqlColumnType type, Object id)
+//    {
+//        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
+//            return Long.parseLong(id.toString());
+//        }
+//        return id;
+//    }
 
     @DirtyRealization(comment = "refactoring, castPrimaryKey ? add method for one, for many.")
+    public Object[] castToTypePrimaryKey(Entity entity, Object[] ids)
+    {
+        SqlColumnType type = meta.getColumn(entity, entity.getPrimaryKey()).getType();
+        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
+            return (Object[])Utils.changeType(ids, Long[].class);
+        }
+        return ids;
+    }
+
     public Object castToTypePrimaryKey(Entity entity, Object id)
     {
-        ColumnDef primaryKeyColumn = meta.getColumn(entity, entity.getPrimaryKey());
-        return castToType(primaryKeyColumn.getType(), id);
+        SqlColumnType type = meta.getColumn(entity, entity.getPrimaryKey()).getType();
+        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
+            return Utils.changeType(id, Long.class);
+        }
+        return id;
     }
 
     public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(

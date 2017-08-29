@@ -162,7 +162,12 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if all conditions has been used otherwise <tt>false</tt>
      */
     int removeAll(Collection<Map<String, String>> c);
-    
+
+    /**
+     * Operation removes all the records
+     * @return count of deleted records
+     */
+    int removeAll();
     /**
      * Operation removes all the records, consistent with conditions.
      * The method can check the values on consistency and threw exceptions<br>

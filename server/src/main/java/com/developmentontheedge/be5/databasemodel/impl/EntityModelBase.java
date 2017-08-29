@@ -197,38 +197,24 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(firstId);
         return db.update(sqlHelper.generateDeleteInSql(entity, otherId.length + 1),
-                sqlHelper.getDeleteValuesWithSpecial(entity, ObjectArrays.concat(firstId, otherId)));
+                ObjectArrays.concat(sqlHelper.getDeleteSpecialValues(entity),
+                        sqlHelper.castToTypePrimaryKey(entity, ObjectArrays.concat(firstId, otherId)), Object.class)
+        );
     }
 
     @Override
-    // TODO make is deleted column check and handle it
+    public int removeAll(){
+        return remove(Collections.emptyMap());
+    }
+
+    @Override
     public int remove( Map<String, String> values )
     {
         Objects.requireNonNull(values);
-//        String sql = "DELETE FROM " + getEntityName() + Utils.ifNull( getTcloneId(), "" ) + "\n" +
-//                     "WHERE " + getAdditionalConditions();
-//        if( !values.isEmpty() )
-//        {
-//            sql += "\nAND " + Utils.paramsToCondition( connector, getEntityName(), values );
-//        }
-//        else
-//        {
-//            throw new EntityModelException( "Value map can't be empty!", getEntityName() );
-//        }
-//        try
-//        {
-//            int result = connector.executeUpdate( sql );
-//            if( isDictionary() )
-//            {
-//                clearDictionaryCache();
-//            }
-//            return result;
-//        }
-//        catch( SQLException e )
-//        {
-//            throw new RuntimeException( e );
-//        }
-        return 0;
+        return db.update(sqlHelper.generateDelete(entity, values),
+                ObjectArrays.concat(sqlHelper.getDeleteSpecialValues(entity),
+                                    values.values().toArray(), Object.class)
+        );
     }
 
     @Override
