@@ -1,9 +1,12 @@
 package com.developmentontheedge.be5.api.services.impl
 
+import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.api.services.QRecService
 import com.developmentontheedge.be5.api.services.SqlService
+import com.developmentontheedge.be5.beans.QRec
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before
 import org.junit.Test
 
@@ -38,7 +41,7 @@ class QRecServiceImplTest extends AbstractProjectIntegrationH2Test
     {
         String id = database.testtableAdmin << [ "name": "TestName", "value": 123]
 
-        def rec = qRec.of("SELECT name, value FROM testtableAdmin WHERE id = ?", id)
+        QRec rec = qRec.of("SELECT * FROM testtableAdmin WHERE id = ?", id)
 
         if(rec != null)//Can easily check there is no record, when the field can be null
         {
@@ -47,8 +50,16 @@ class QRecServiceImplTest extends AbstractProjectIntegrationH2Test
             assertEquals 123, rec.getInt("value")
         }
 
+        //use db and DpsHelper.createDps
         assertEquals "TestName", db.getString("SELECT name FROM testtableAdmin WHERE id = ?", id)
         assertEquals 123, db.getInteger("SELECT value FROM testtableAdmin WHERE id = ?", id)
+
+        DynamicPropertySet dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", { rs -> DpsHelper.createDps(rs) }, id)
+        if(dps != null)
+        {
+            assertEquals "TestName", dps.getValue("name")
+            assertEquals 123, Integer.parseInt(dps.getValue("value").toString())
+        }
     }
 
     @Test

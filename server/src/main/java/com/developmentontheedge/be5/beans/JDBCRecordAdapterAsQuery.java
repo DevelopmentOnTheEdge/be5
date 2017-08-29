@@ -20,15 +20,15 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
 {
     // used only once, during initialization
     //transient private ResultSet rs;
-    
+
     // for clone
-    protected JDBCRecordAdapterAsQuery() { initialized = true; }
+//    protected JDBCRecordAdapterAsQuery() { initialized = true; }
 
 //    boolean keepRS4Blob;
 
     /**
      * Reads the first record of thsq SQL query as Dynamic Property Set
-     * 
+     *
      * <br><br>To get record values, you can use:
      * <br/>{@link #getString(String) getString(String)}
      * <br/>{@link #getInt(String) getInt(String)}
@@ -37,17 +37,17 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
      * @param sql sql query
      * @throws SQLException
      */
-    public JDBCRecordAdapterAsQuery(String sql)
-    {
-        //StringBuffer query = new StringBuffer( sql );
-        //connector.getAnalyzer().optimizeRecordRange( query, 0, 1 );
+//    public JDBCRecordAdapterAsQuery(String sql)
+//    {
+    //StringBuffer query = new StringBuffer( sql );
+    //connector.getAnalyzer().optimizeRecordRange( query, 0, 1 );
 
-            //System.out.println( "before query.toString() = " + query.toString() );
-            //rs = null;//connector.executeQuery( query.toString() );
-            //System.out.println( "after query.toString() = " + query.toString() );
+    //System.out.println( "before query.toString() = " + query.toString() );
+    //rs = null;//connector.executeQuery( query.toString() );
+    //System.out.println( "after query.toString() = " + query.toString() );
 //            if( !rs.next() )
 //                throw new NoRecord( "No record produced by JDBCRecordAdapterAsQuery, SQL query is " + query );
-            //initialize();
+    //initialize();
 //            if( connector.isDb2() )
 //            {
 //                /* temporary code to change settings - convert Blobs or not */
@@ -68,41 +68,40 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
 //                    }
 //                }
 //            }
-
-    }
+//
+//    }
 
     /**
      * Retrieves first value. Useful when we need only one column
-     * 
+     *
      * @return value of column
      */
     public Object getValue()
-    { 
-        return properties.get( 0 ).getValue(); 
+    {
+        return properties.get(0).getValue();
     }
 
     /**
-     * Retrieves first value as a string. 
-     * 
-     * @return value of column 
+     * Retrieves first value as a string.
+     *
+     * @return value of column
      */
     public String getString()
     {
-        return valToString( getValue() );
+        return valToString(getValue());
     }
 
-    private static String valToString( Object val )
+    private static String valToString(Object val)
     {
         try
         {
-            if( val == null )
+            if (val == null)
                 return null;
-            if( val instanceof Blob )
-                return new String( ( ( Blob )val ).getBytes( 1, ( int )( ( Blob )val ).length() ) );
-            if( val instanceof byte[] )
-                return new String( ( byte[] )val, "UTF-8" );
-        }
-        catch( UnsupportedEncodingException | SQLException e )
+            if (val instanceof Blob)
+                return new String(((Blob) val).getBytes(1, (int) ((Blob) val).length()));
+            if (val instanceof byte[])
+                return new String((byte[]) val, "UTF-8");
+        } catch (UnsupportedEncodingException | SQLException e)
         {
             return null;
         }
@@ -111,222 +110,226 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
 
     /**
      * Retrieves first value as an int.
-     * 
+     *
      * @return integer value of column or <code>null</code> if it's <code>null</code>.
      */
-    public Integer getInt() { return ( null == getValue() ) ? null : Integer.valueOf( getValue().toString() ); }
-    
+    public Integer getInt()
+    {
+        return (null == getValue()) ? null : Integer.valueOf(getValue().toString());
+    }
+
     /**
      * Retrieves first value as a long.
-     *  
+     *
      * @return long value of column or <code>null</code> if it's <code>null</code>.
      */
-    public Long getLong() { return ( null == getValue() ) ? null : Long.valueOf( getValue().toString() ); }
+    public Long getLong()
+    {
+        return (null == getValue()) ? null : Long.valueOf(getValue().toString());
+    }
 
     /**
-     * Retrieves value of the specified column name as string. 
-     * 
+     * Retrieves value of the specified column name as string.
+     *
      * @param name column
-     * @return value of column 
+     * @return value of column
      */
-    public String getString( String name )
+    public String getString(String name)
     {
-        return valToString( getValue( name ) );
+        return valToString(getValue(name));
     }
-    
+
     /**
      * Retrieves value of the specified column name as int.
-     * 
+     *
      * @param name column
-     * @return value of column 
+     * @return value of column
      */
-    public int getInt( String name )
+    public int getInt(String name)
     {
-        return Integer.parseInt( getValue( name ).toString() );
+        return Integer.parseInt(getValue(name).toString());
     }
-    
+
     /**
      * Retrieves value of the specified column name as long.
-     *  
+     *
      * @param name column
-     * @return value of column 
+     * @return value of column
      */
-    public long getLong( String name ) { return Long.parseLong( getValue( name ).toString() ); }
-
-    public java.sql.Date getDate( String name )
+    public long getLong(String name)
     {
-        java.util.Date date = ( java.util.Date )getValue( name );
-        if( date == null )
+        return Long.parseLong(getValue(name).toString());
+    }
+
+    public java.sql.Date getDate(String name)
+    {
+        java.util.Date date = (java.util.Date) getValue(name);
+        if (date == null)
         {
             return null;
-        } 
-        return new java.sql.Date( date.getTime() );
+        }
+        return new java.sql.Date(date.getTime());
     }
 
     public java.sql.Date getDate()
     {
-        java.util.Date date = ( java.util.Date )getValue();
-        if( date == null )
+        java.util.Date date = (java.util.Date) getValue();
+        if (date == null)
         {
             return null;
-        } 
-        return new java.sql.Date( date.getTime() );
+        }
+        return new java.sql.Date(date.getTime());
     }
-    
+
     public InputStream getBinaryStream() throws SQLException
     {
-        Object val = getValue(); 
-        if( val == null )
+        Object val = getValue();
+        if (val == null)
         {
             return null;
-        }
-        else if( val instanceof byte[] )
+        } else if (val instanceof byte[])
         {
-            return new ByteArrayInputStream( ( byte[] )val );
+            return new ByteArrayInputStream((byte[]) val);
         }
-        return new BlobInputStream( ( Blob )val, properties.get( 0 ).getName() );
+        return new BlobInputStream((Blob) val, properties.get(0).getName());
     }
 
-    public InputStream getBinaryStream( String name ) throws SQLException
+    public InputStream getBinaryStream(String name) throws SQLException
     {
-        Object val = getValue( name ); 
+        Object val = getValue(name);
 
-        if( val == null )
+        if (val == null)
         {
             return null;
-        }
-        else if( val instanceof byte[] )
+        } else if (val instanceof byte[])
         {
-            return new ByteArrayInputStream( ( byte[] )val );
+            return new ByteArrayInputStream((byte[]) val);
         }
-        return new BlobInputStream( ( Blob )val, name );
+        return new BlobInputStream((Blob) val, name);
     }
 
     public static final class BlobInputStream extends InputStream
     {
-         Blob blob;
-         InputStream is; 
-         String name; 
+        Blob blob;
+        InputStream is;
+        String name;
 
-         boolean isClosed;
+        boolean isClosed;
 
-         public BlobInputStream( Blob blob, String name ) throws SQLException
-         {
-             this.blob = blob;
-             this.name = name;
-             is = blob.getBinaryStream();
-         }
-
-         @Override
-        public int read() throws IOException 
-         {
-             int ret = is.read();
-             if( ret == -1 )
-             {
-                 //System.out.println( "autoclose: " + name );
-                 close(); 
-             }
-             return ret;
-         }
-
-         @Override
-        public int read( byte[] b ) throws IOException 
-         {
-             int ret = is.read( b );  
-             if( ret < 1 )
-             {
-                 //System.out.println( "autoclose: " + name );
-                 close(); 
-             }
-             return ret;
-         }
-
-         @Override
-        public int read( byte[] b, int off, int len ) throws IOException 
-         {
-             int ret = is.read( b, off, len );  
-             if( ret < 1 )
-             {
-                 //System.out.println( "autoclose: " + name );
-                 close(); 
-             }
-             return ret;
+        public BlobInputStream(Blob blob, String name) throws SQLException
+        {
+            this.blob = blob;
+            this.name = name;
+            is = blob.getBinaryStream();
         }
 
-         @Override
-        public long skip( long n ) throws IOException 
-         {
-             return is.skip( n );  
-         }
+        @Override
+        public int read() throws IOException
+        {
+            int ret = is.read();
+            if (ret == -1)
+            {
+                //System.out.println( "autoclose: " + name );
+                close();
+            }
+            return ret;
+        }
 
-         @Override
+        @Override
+        public int read(byte[] b) throws IOException
+        {
+            int ret = is.read(b);
+            if (ret < 1)
+            {
+                //System.out.println( "autoclose: " + name );
+                close();
+            }
+            return ret;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException
+        {
+            int ret = is.read(b, off, len);
+            if (ret < 1)
+            {
+                //System.out.println( "autoclose: " + name );
+                close();
+            }
+            return ret;
+        }
+
+        @Override
+        public long skip(long n) throws IOException
+        {
+            return is.skip(n);
+        }
+
+        @Override
         public int available() throws IOException
-         {
-             return is.available();  
-         }
+        {
+            return is.available();
+        }
 
-         @Override
+        @Override
         public void close() throws IOException
-         {
-             if( isClosed )
-             {
-                 return;
-             }
+        {
+            if (isClosed)
+            {
+                return;
+            }
 
-             try
-             {
-                 is.close();
-                 is = null; 
-                 Method pmeth = blob.getClass().getMethod( "isTemporary", new Class[ 0 ] );
-                 if( pmeth != null )
-                 {
-                     boolean isTemporary = ( Boolean )pmeth.invoke( blob, new Object[ 0 ] );
-                     if( isTemporary )
-                     {
-                         pmeth = blob.getClass().getMethod( "freeTemporary", new Class[ 0 ] );
-                         if( pmeth != null )
-                         {
-                             pmeth.invoke( blob, new Object[ 0 ] ); 
-                         }
-                     }
-                 }
-             }
-             catch( NoSuchMethodException ignore )
-             {
-             }
-             catch( Exception exc )
-             {
-                 throw new IOException( exc.getMessage(), exc );
-             }
-             finally
-             {
-                 isClosed = true;
-                 blob = null;
-             } 
-         }
+            try
+            {
+                is.close();
+                is = null;
+                Method pmeth = blob.getClass().getMethod("isTemporary", new Class[0]);
+                if (pmeth != null)
+                {
+                    boolean isTemporary = (Boolean) pmeth.invoke(blob, new Object[0]);
+                    if (isTemporary)
+                    {
+                        pmeth = blob.getClass().getMethod("freeTemporary", new Class[0]);
+                        if (pmeth != null)
+                        {
+                            pmeth.invoke(blob, new Object[0]);
+                        }
+                    }
+                }
+            } catch (NoSuchMethodException ignore)
+            {
+            } catch (Exception exc)
+            {
+                throw new IOException(exc.getMessage(), exc);
+            } finally
+            {
+                isClosed = true;
+                blob = null;
+            }
+        }
 
-         @Override
-        public void mark( int readlimit )
-         {
-             is.mark( readlimit );  
-         }
+        @Override
+        public void mark(int readlimit)
+        {
+            is.mark(readlimit);
+        }
 
-         @Override
+        @Override
         public void reset() throws IOException
-         {
-             is.reset();  
-         }
+        {
+            is.reset();
+        }
 
-         @Override
+        @Override
         public boolean markSupported()
-         {
-             return is.markSupported();  
-         }
+        {
+            return is.markSupported();
+        }
 
-         @Override
+        @Override
         protected void finalize() throws Throwable
-         {
-             close();
-         }                 
+        {
+            close();
+        }
     }
 }

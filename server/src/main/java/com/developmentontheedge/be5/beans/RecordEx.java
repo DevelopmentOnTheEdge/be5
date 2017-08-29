@@ -98,11 +98,11 @@ abstract public class RecordEx extends JDBCRecordAdapter
 //    }
 
     //private ResultSetQueryIterator queryIterator;
-
-    public RecordEx()
-    {
-        super( true /*bAddAlways*/ );
-    }
+//
+//    public RecordEx()
+//    {
+//        super( true /*bAddAlways*/ );
+//    }
 
 //    public RecordEx(ResultSetQueryIterator queryIterator )
 //    {
@@ -110,16 +110,16 @@ abstract public class RecordEx extends JDBCRecordAdapter
 //        this.queryIterator = queryIterator;
 //    }
 //
-    @Override
-    protected void initialize()
-    {
-        super.initialize();
+//    @Override
+//    protected void initialize()
+//    {
+//        super.initialize();
 //        preprocessProperties( queryIterator != null ? queryIterator.getConnector() : null,
 //                              properties, propHash );
 //        //This is for serializability, affects clustered environment.
 //        //(ResultSetQueryIterator is not serializable itself)
 //        queryIterator = null;
-    }
+//    }
 //
 //    /**
 //     * Make actions dpending on field names:

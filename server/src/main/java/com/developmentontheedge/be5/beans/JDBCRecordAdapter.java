@@ -28,115 +28,87 @@ import java.lang.reflect.Method;
  */
 abstract public class JDBCRecordAdapter extends DynamicPropertySetSupport
 {
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static final String TIME_FORMAT = "HH:mm:ss";
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+//    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+//    public static final String TIME_FORMAT = "HH:mm:ss";
+//    public static final String DATE_FORMAT = "yyyy-MM-dd";
+//
+//    public static final String DATABASE_COLUMN_NAME = "database-column-index";
+//    public static final String DATABASE_COLUMN_LABEL = "database-column-label";
+//    public static final String DATABASE_TYPE = "database-type";
+//    public static final String DATABASE_TYPE_NAME = "database-type-name";
+//    public static final String DATABASE_COLUMN_INDEX = "database-column-index";
+//
+//    public static final String AUTO_IDENTITY = "auto-identity";
+//
+//    public static final String NUMERIC_COLUMN = "numeric-column";
+//    public static final String COMPUTED_COLUMN = "computed-column";
+//    public static final String DECIMAL_DIGITS = "decimal-digits";
+//
+//    public static final String DEFAULT_EXPR = "default-expr";
 
-    public static final String DATABASE_COLUMN_NAME = "database-column-index";
-    public static final String DATABASE_COLUMN_LABEL = "database-column-label";
-    public static final String DATABASE_TYPE = "database-type";
-    public static final String DATABASE_TYPE_NAME = "database-type-name";
-    public static final String DATABASE_COLUMN_INDEX = "database-column-index";
+//    /**
+//     * Used to pass a BlobReader object that can read a BLOB on demand
+//     */
+//    public static final String BLOB_READER = "blob-reader";
+//
+//    protected boolean initialized;
+//
+//    public boolean isInitialized()
+//    {
+//        return initialized;
+//    }
+//
+//    public JDBCRecordAdapter()
+//    {
+//    }
+//
+//    public JDBCRecordAdapter( boolean bAddAlways )
+//    {
+//        this.bAddAlways = bAddAlways;
+//    }
+//
+//    @Override
+//    public Object getValue( String name )
+//    {
+//        return super.getValue( name );
+//    }
+//
+//    @Override
+//    public void setValue( String name, Object value )
+//    {
+//        super.setValue( name, value );
+//    }
 
-    public static final String AUTO_IDENTITY = "auto-identity";
-
-    public static final String NUMERIC_COLUMN = "numeric-column";
-    public static final String COMPUTED_COLUMN = "computed-column";
-    public static final String DECIMAL_DIGITS = "decimal-digits";
-
-    public static final String DEFAULT_EXPR = "default-expr";
-
-    /**
-     * Used to pass a BlobReader object that can read a BLOB on demand
-     */
-    public static final String BLOB_READER = "blob-reader";
-
-    protected boolean initialized;
-
-    public boolean isInitialized()
-    {
-        return initialized;
-    }
-
-    public JDBCRecordAdapter()
-    {
-    }
-
-    public JDBCRecordAdapter( boolean bAddAlways )
-    {
-        this.bAddAlways = bAddAlways;
-    }
-
-    @Override
-    public Object getValue( String name )
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        return super.getValue( name );
-    }
-
-    @Override
-    public void setValue( String name, Object value )
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        super.setValue( name, value );
-    }
-
-    /** @return type for the property with specified name. */
-    public String getDatabaseType( String name )
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        DynamicProperty property = findProperty( name );
-        return property != null ? ( String )property.getAttribute( DATABASE_TYPE_NAME ) : null;
-    }
-
-    public int getColumnIndex( String name )
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        DynamicProperty property = findProperty( name );
-        return property != null ? ( ( Integer )property.getAttribute( DATABASE_COLUMN_INDEX ) ).intValue() : -1;
-    }
-
-    @Override
-    public void add( DynamicProperty property )
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        super.add( property );
-    }
-
-    @Override
-    public Iterator<String> nameIterator()
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        return super.nameIterator();
-    }
-
-    @Override
-    public Iterator<DynamicProperty> propertyIterator()
-    {
-        if( !isInitialized() )
-        {
-            initialize();
-        }
-        return super.propertyIterator();
-    }
+//    /** @return type for the property with specified name. */
+//    public String getDatabaseType( String name )
+//    {
+//        DynamicProperty property = findProperty( name );
+//        return property != null ? ( String )property.getAttribute( DATABASE_TYPE_NAME ) : null;
+//    }
+//
+//    public int getColumnIndex( String name )
+//    {
+//        DynamicProperty property = findProperty( name );
+//        return property != null ? ( ( Integer )property.getAttribute( DATABASE_COLUMN_INDEX ) ).intValue() : -1;
+//    }
+//
+//    @Override
+//    public void add( DynamicProperty property )
+//    {
+//        super.add( property );
+//    }
+//
+//    @Override
+//    public Iterator<String> nameIterator()
+//    {
+//        return super.nameIterator();
+//    }
+//
+//    @Override
+//    public Iterator<DynamicProperty> propertyIterator()
+//    {
+//        return super.propertyIterator();
+//    }
 //
 //    public abstract ResultSet getResultSet();
 //
@@ -151,8 +123,8 @@ abstract public class JDBCRecordAdapter extends DynamicPropertySetSupport
 //        return colTypeInt;
 //    }
 
-    protected void initialize()
-    {
+//    protected void initialize()
+//    {
 //        if (initialized)
 //            return;
 //
@@ -230,8 +202,8 @@ abstract public class JDBCRecordAdapter extends DynamicPropertySetSupport
 //            }
 //        }
 //        initialized = true;
-    }
-
+//    }
+//
 //    public static DynamicProperty makeProperty(
 //            ResultSet rs, String colName, int colTypeInt, String colTypeName, int fieldNo, boolean bSetNull, int decimalScale )
 //            throws SQLException
