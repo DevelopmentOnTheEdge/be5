@@ -13,95 +13,89 @@ import java.util.StringTokenizer;
 
 abstract public class RecordEx extends JDBCRecordAdapter
 {
-    public static final String ORIG_LABEL = "orig-column-label";
-
-    public static final String HIDDEN_COLUMN_PREFIX = "___";
-    public static final String GLUE_COLUMN_PREFIX = "+";
-    public static final String EXTRA_HEADER_COLUMN_PREFIX = ";";
-
-    public static final String REF_TABLE = "ref-table-attribute";
-    public static final String REF_COLUMN = "ref-column-attribute";
-    public static final String REF_VALUE = "ref-value-attribute";
-    public static final String REF_COMMENT = "ref-comment-attribute";
-
-    public static final String PROPERTY_INFO_LIST = "property-info-list";
-
-    @Override
-    protected PropertyDescriptor getDescriptor( String colName ) throws IntrospectionException
-    {
-        return null;
-    }
-
-    public static void extractPropertyInfos( DynamicProperty prop )
-    {
-        String label = prop.getName();
-        if( label.indexOf( ";<" ) < 0 )
-        {
-            return;
-        }
-        StringTokenizer st = new StringTokenizer( label, ";" );
-        if( st.countTokens() > 1 )
-        {
-            String name = st.nextToken(); // ignore label itself
-            prop.setName( name );
-            prop.setDisplayName( name );
-
-            Hashtable list = new Hashtable();
-            while( st.hasMoreTokens() )
-            {
-                PropertyInfo pi = PropertyInfo.withCache( st.nextToken() );
-                list.put( pi.getType(), pi );
-            }
-            prop.setAttribute( PROPERTY_INFO_LIST, list );
-        }
-    }
-
-    public static Map assignPropertyInfos( DynamicProperty prop, String piStr )
-    {
-        StringTokenizer st = new StringTokenizer( piStr, ";" );
-        if( st.countTokens() > 0 )
-        {
-            Hashtable list = new Hashtable();
-            while( st.hasMoreTokens() )
-            {
-                PropertyInfo pi = PropertyInfo.withCache( st.nextToken() );
-                list.put( pi.getType(), pi );
-            }
-            prop.setAttribute( PROPERTY_INFO_LIST, list );
-            return list; 
-        }
-        return null;
-    }
-
-    public static void addLink( DynamicProperty prop, String table, String queryName, String using, String columns )
-    {
-        Map piList = ( Map )prop.getAttribute( RecordEx.PROPERTY_INFO_LIST );
-        if( piList == null )
-        {
-            prop.setAttribute( RecordEx.PROPERTY_INFO_LIST, piList = new Hashtable() );
-        } 
-        using = Utils.subst( using, "'", "%27" );
-        String links = "<link";
-        links += " table=\"" + table + "\"";
-        links += " queryName=\"" + queryName + "\"";
-        links += " using=\"" + using + "\"";
-        links += " columns=\"" + columns + "\"";
-        links += " />";
-        PropertyInfo pi = PropertyInfo.withCache( links );
-        piList.put( pi.getType(), pi );
-    }
-
-    public static void addGrouping( DynamicProperty prop )
-    {
-        Map piList = ( Map )prop.getAttribute( RecordEx.PROPERTY_INFO_LIST );
-        if( piList == null )
-        {
-            prop.setAttribute( RecordEx.PROPERTY_INFO_LIST, piList = new Hashtable() );
-        } 
-        String links = "<grouping />";
-        PropertyInfo pi = PropertyInfo.withCache( links );
-        piList.put( pi.getType(), pi );
-    }
+//    public static final String ORIG_LABEL = "orig-column-label";
+//
+//    public static final String HIDDEN_COLUMN_PREFIX = "___";
+//    public static final String GLUE_COLUMN_PREFIX = "+";
+//    public static final String EXTRA_HEADER_COLUMN_PREFIX = ";";
+//
+//    public static final String REF_TABLE = "ref-table-attribute";
+//    public static final String REF_COLUMN = "ref-column-attribute";
+//    public static final String REF_VALUE = "ref-value-attribute";
+//    public static final String REF_COMMENT = "ref-comment-attribute";
+//
+//    public static final String PROPERTY_INFO_LIST = "property-info-list";
+//
+//    public static void extractPropertyInfos( DynamicProperty prop )
+//    {
+//        String label = prop.getName();
+//        if( label.indexOf( ";<" ) < 0 )
+//        {
+//            return;
+//        }
+//        StringTokenizer st = new StringTokenizer( label, ";" );
+//        if( st.countTokens() > 1 )
+//        {
+//            String name = st.nextToken(); // ignore label itself
+//            prop.setName( name );
+//            prop.setDisplayName( name );
+//
+//            Hashtable list = new Hashtable();
+//            while( st.hasMoreTokens() )
+//            {
+//                PropertyInfo pi = PropertyInfo.withCache( st.nextToken() );
+//                list.put( pi.getType(), pi );
+//            }
+//            prop.setAttribute( PROPERTY_INFO_LIST, list );
+//        }
+//    }
+//
+//    public static Map assignPropertyInfos( DynamicProperty prop, String piStr )
+//    {
+//        StringTokenizer st = new StringTokenizer( piStr, ";" );
+//        if( st.countTokens() > 0 )
+//        {
+//            Hashtable list = new Hashtable();
+//            while( st.hasMoreTokens() )
+//            {
+//                PropertyInfo pi = PropertyInfo.withCache( st.nextToken() );
+//                list.put( pi.getType(), pi );
+//            }
+//            prop.setAttribute( PROPERTY_INFO_LIST, list );
+//            return list;
+//        }
+//        return null;
+//    }
+//
+//    public static void addLink( DynamicProperty prop, String table, String queryName, String using, String columns )
+//    {
+//        Map piList = ( Map )prop.getAttribute( RecordEx.PROPERTY_INFO_LIST );
+//        if( piList == null )
+//        {
+//            prop.setAttribute( RecordEx.PROPERTY_INFO_LIST, piList = new Hashtable() );
+//        }
+//        using = Utils.subst( using, "'", "%27" );
+//        String links = "<link";
+//        links += " table=\"" + table + "\"";
+//        links += " queryName=\"" + queryName + "\"";
+//        links += " using=\"" + using + "\"";
+//        links += " columns=\"" + columns + "\"";
+//        links += " />";
+//        PropertyInfo pi = PropertyInfo.withCache( links );
+//        piList.put( pi.getType(), pi );
+//    }
+//
+//    public static void addGrouping( DynamicProperty prop )
+//    {
+//        Map piList = ( Map )prop.getAttribute( RecordEx.PROPERTY_INFO_LIST );
+//        if( piList == null )
+//        {
+//            prop.setAttribute( RecordEx.PROPERTY_INFO_LIST, piList = new Hashtable() );
+//        }
+//        String links = "<grouping />";
+//        PropertyInfo pi = PropertyInfo.withCache( links );
+//        piList.put( pi.getType(), pi );
+//    }
 
     //private ResultSetQueryIterator queryIterator;
 

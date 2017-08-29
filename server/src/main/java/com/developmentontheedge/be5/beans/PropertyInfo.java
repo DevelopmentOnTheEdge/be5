@@ -175,17 +175,17 @@ public class PropertyInfo extends DynamicPropertySetSupport
         return null;                  
     }
 
-    public static PropertyInfo withCache( String initializer )
-    {
-//        Cache cache = PropertyInfoCache.getInstance();
-//        PropertyInfo ret = ( PropertyInfo )cache.get( initializer );
-//        if( ret != null )
-//        {
-//            return ret;
-//        }
-
-        return new PropertyInfo( initializer, false );
-    } 
+//    public static PropertyInfo withCache( String initializer )
+//    {
+////        Cache cache = PropertyInfoCache.getInstance();
+////        PropertyInfo ret = ( PropertyInfo )cache.get( initializer );
+////        if( ret != null )
+////        {
+////            return ret;
+////        }
+//
+//        return new PropertyInfo( initializer, false );
+//    }
 
     public static PropertyInfo getEmpty()
     {

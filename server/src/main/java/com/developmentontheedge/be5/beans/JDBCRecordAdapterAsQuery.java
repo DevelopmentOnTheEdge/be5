@@ -35,20 +35,19 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
      * <br/>{@link #getLong(String) getLong(String)}.  
      *
      * @param sql sql query
-     * @throws NoRecord if records is empty
      * @throws SQLException
      */
-    public JDBCRecordAdapterAsQuery(String sql) throws NoRecord, SQLException
+    public JDBCRecordAdapterAsQuery(String sql)
     {
         //StringBuffer query = new StringBuffer( sql );
         //connector.getAnalyzer().optimizeRecordRange( query, 0, 1 );
 
             //System.out.println( "before query.toString() = " + query.toString() );
-            rs = null;//connector.executeQuery( query.toString() );
+            //rs = null;//connector.executeQuery( query.toString() );
             //System.out.println( "after query.toString() = " + query.toString() );
 //            if( !rs.next() )
 //                throw new NoRecord( "No record produced by JDBCRecordAdapterAsQuery, SQL query is " + query );
-            initialize();
+            //initialize();
 //            if( connector.isDb2() )
 //            {
 //                /* temporary code to change settings - convert Blobs or not */
@@ -70,17 +69,6 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
 //                }
 //            }
 
-    }
-   
-    /**
-     * Should never be invoked from outside
-     *
-     * @return result set
-     */
-    @Override
-    public ResultSet getResultSet()
-    {
-        return rs;
     }
 
     /**
@@ -212,14 +200,6 @@ public class JDBCRecordAdapterAsQuery extends RecordEx
             return new ByteArrayInputStream( ( byte[] )val );
         }
         return new BlobInputStream( ( Blob )val, name );
-    }
-
-    /**
-     * Exception for no record in the query.
-     */
-    public static final class NoRecord extends Exception 
-    {
-        public NoRecord( String message ) { super( message ); }
     }
 
     public static final class BlobInputStream extends InputStream

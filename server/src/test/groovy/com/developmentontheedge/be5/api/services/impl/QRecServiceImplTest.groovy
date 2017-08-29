@@ -38,8 +38,17 @@ class QRecServiceImplTest extends AbstractProjectIntegrationH2Test
     {
         String id = database.testtableAdmin << [ "name": "TestName", "value": 123]
 
-        assertEquals "TestName", qRec.of("SELECT name FROM testtableAdmin WHERE id = ?", id).getString()
-        assertEquals 123, qRec.of("SELECT value FROM testtableAdmin WHERE id = ?", id).getInt()
+        def rec = qRec.of("SELECT name, value FROM testtableAdmin WHERE id = ?", id)
+
+        if(rec != null)//Can easily check there is no record, when the field can be null
+        {
+            //One request to the database for several fields
+            assertEquals "TestName", rec.getString("name")
+            assertEquals 123, rec.getInt("value")
+        }
+
+        assertEquals "TestName", db.getString("SELECT name FROM testtableAdmin WHERE id = ?", id)
+        assertEquals 123, db.getInteger("SELECT value FROM testtableAdmin WHERE id = ?", id)
     }
 
     @Test
