@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.CacheInfo;
+import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
@@ -10,14 +10,12 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
-import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,12 +23,13 @@ public class QueryRouter
 {
     private static Cache<String, Class> groovyQueryClasses;
 
+    //todo refactoring - remove static initialization, use be5MainSettings.getCacheSize() for fast test
     static {
         groovyQueryClasses = Caffeine.newBuilder()
                 .maximumSize(1_000)
                 .recordStats()
                 .build();
-        CacheInfo.registerCache("Groovy query classes", groovyQueryClasses);
+        Be5Caches.registerCache("Groovy query classes", groovyQueryClasses);
     }
 
     public static interface Runner

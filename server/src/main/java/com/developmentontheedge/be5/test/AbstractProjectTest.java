@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -15,6 +16,7 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
@@ -48,6 +50,7 @@ public abstract class AbstractProjectTest
             new YamlBinder().configure(loadedClasses, bindings, configurations);
             bindings.put(SqlService.class, SqlServiceMock.class);
             bindings.put(DatabaseService.class, DatabaseServiceMock.class);
+            bindings.put(Be5MainSettings.class, Be5MainSettingsForTest.class);
         }
     }
 

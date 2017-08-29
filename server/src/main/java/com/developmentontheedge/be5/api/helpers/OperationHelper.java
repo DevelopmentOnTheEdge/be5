@@ -1,7 +1,8 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.CacheInfo;
+import com.developmentontheedge.be5.api.services.Be5MainSettings;
+import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
@@ -30,7 +31,7 @@ public class OperationHelper
     public static final String yes = "yes";
     public static final String no = "no";
 
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Injector injector)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5MainSettings be5MainSettings, Injector injector)
     {
         this.db = db;
         this.meta = meta;
@@ -38,10 +39,10 @@ public class OperationHelper
         this.injector = injector;
 
         tagsCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
+                .maximumSize(be5MainSettings.getCacheSize())
                 .recordStats()
                 .build();
-        CacheInfo.registerCache("Tags (dictionary)", tagsCache);
+        Be5Caches.registerCache("Tags (dictionary)", tagsCache);
     }
 
 //    public OperationRequest getOperationRequest(Request req)

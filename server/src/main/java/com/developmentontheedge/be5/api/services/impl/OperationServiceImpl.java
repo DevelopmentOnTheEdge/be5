@@ -3,7 +3,8 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
-import com.developmentontheedge.be5.api.services.CacheInfo;
+import com.developmentontheedge.be5.api.services.Be5MainSettings;
+import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -40,7 +41,7 @@ public class OperationServiceImpl implements OperationService
     private final SqlHelper sqlHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, Be5MainSettings be5MainSettings, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.validator = validator;
@@ -48,10 +49,10 @@ public class OperationServiceImpl implements OperationService
         this.sqlHelper = sqlHelper;
 
         groovyOperationClasses = Caffeine.newBuilder()
-                .maximumSize(1_000)
+                .maximumSize(be5MainSettings.getCacheSize())
                 .recordStats()
                 .build();
-        CacheInfo.registerCache("Groovy operation classes", groovyOperationClasses);
+        Be5Caches.registerCache("Groovy operation classes", groovyOperationClasses);
     }
 
     @Override

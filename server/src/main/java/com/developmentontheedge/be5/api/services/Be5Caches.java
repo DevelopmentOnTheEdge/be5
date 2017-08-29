@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class CacheInfo
+public class Be5Caches
 {
     private static Map<String, Cache> caches = new ConcurrentHashMap<>();
 
