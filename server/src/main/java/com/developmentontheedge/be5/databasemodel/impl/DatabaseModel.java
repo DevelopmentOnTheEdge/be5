@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.beans.JDBCRecordAdapterAsQuery;
+import com.developmentontheedge.be5.beans.QRec;
 import com.developmentontheedge.be5.databasemodel.EntityAccess;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
@@ -33,8 +35,8 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
 //        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetScriptable.class );
 //        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetLazy.class );
-//        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
-//        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, JDBCRecordAdapterAsQuery.class );
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, JDBCRecordAdapterAsQuery.class );
 //        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, EntityRecordAdapter.class );
     }
 

@@ -38,6 +38,9 @@ context:
   - dpsExecutor:
       interface:      com.developmentontheedge.be5.api.services.DpsExecutor
       implementation: com.developmentontheedge.be5.api.services.impl.DpsExecutorImpl
+  - qRecServiceImpl:
+      interface:      com.developmentontheedge.be5.api.services.QRecService
+      implementation: com.developmentontheedge.be5.api.services.impl.QRecServiceImpl
   - executorService:
       interface:      com.developmentontheedge.be5.api.services.ExecutorService
       implementation: com.developmentontheedge.be5.api.services.impl.ExecutorServiceImpl
