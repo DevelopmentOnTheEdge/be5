@@ -19,12 +19,12 @@ import java.util.List;
 public class JDBCRecordAdapterAsQuery extends RecordEx
 {
     // used only once, during initialization
-    transient private ResultSet rs;
+    //transient private ResultSet rs;
     
     // for clone
     protected JDBCRecordAdapterAsQuery() { initialized = true; }
 
-    boolean keepRS4Blob;
+//    boolean keepRS4Blob;
 
     /**
      * Reads the first record of thsq SQL query as Dynamic Property Set
