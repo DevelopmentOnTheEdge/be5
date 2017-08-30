@@ -6,8 +6,8 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class AbstractProjectTestTest extends AbstractProjectTest{
-
+class AbstractProjectTestTest extends AbstractProjectTest
+{
     @Test
     void name() throws Exception {
         Request request = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",

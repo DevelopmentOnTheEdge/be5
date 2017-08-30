@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.metadata.util;
 
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class JULLogger implements ProcessController
 {
@@ -28,4 +30,11 @@ public class JULLogger implements ProcessController
                 "\n" + info +
                 "\n------------------------------------------------------------------------";
     }
+
+//    public static String infoBlock(String level, String info)
+//    {
+//        return "[" + level + "] " + IntStream.range(0,72 - level.length() - 3).map(ch -> "-").collect(Collectors.joining()) +
+//                "\n" + info +
+//                "\n------------------------------------------------------------------------";
+//    }
 }
