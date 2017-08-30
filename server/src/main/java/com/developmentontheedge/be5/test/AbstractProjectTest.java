@@ -83,25 +83,38 @@ public abstract class AbstractProjectTest
     }
 
     protected Request getSpyMockRequest(String requestUri){
-        return getSpyMockRequest(requestUri, new HashMap<>());
+        return getSpyMockRequest(requestUri, new HashMap<>(), new HashMap<>());
     }
 
-    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters){
+    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters, Map<String, Object> sessionValues){
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
         Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, parameters));
         when(request.getRequestUri()).thenReturn(requestUri);
+
+        for (Map.Entry<String, Object> entry: sessionValues.entrySet())
+        {
+            when(request.getAttribute(entry.getKey())).thenReturn(entry.getValue());
+        }
+
         return request;
     }
 
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values){
+    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values, Map<String, Object> sessionValues)
+    {
         return getSpyMockRequest("", ImmutableMap.of(
                 RestApiConstants.ENTITY, entity,
                 RestApiConstants.QUERY, query,
                 RestApiConstants.OPERATION, operation,
                 RestApiConstants.SELECTED_ROWS, selectedRows,
-                RestApiConstants.VALUES, values));
+                RestApiConstants.VALUES, values),
+                sessionValues
+        );
+    }
+
+    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values){
+        return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
     }
 
     protected static void initUserWithRoles(String... roles)
