@@ -56,14 +56,16 @@ public abstract class AbstractProjectTest
 
     static final String profileForIntegrationTests = "profileForIntegrationTests";
 
-    static {
+    static
+    {
         Project project = injector.getProject();
         initProfile(project);
 
         injector.get(LoginService.class).initGuest(null);
     }
 
-    static void initProfile(Project project){
+    static void initProfile(Project project)
+    {
         if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
         {
             BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
@@ -76,17 +78,25 @@ public abstract class AbstractProjectTest
         }
     }
 
-    protected Request getMockRequest(String requestUri){
+    protected Request getMockRequest(String requestUri)
+    {
         Request request = mock(Request.class);
         when(request.getRequestUri()).thenReturn(requestUri);
         return request;
     }
 
-    protected Request getSpyMockRequest(String requestUri){
+    protected Request getSpyMockRequest(String requestUri)
+    {
         return getSpyMockRequest(requestUri, new HashMap<>(), new HashMap<>());
     }
 
-    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters, Map<String, Object> sessionValues){
+    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters)
+    {
+        return getSpyMockRequest(requestUri, parameters, new HashMap<>());
+    }
+
+    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters, Map<String, Object> sessionValues)
+    {
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
@@ -113,7 +123,8 @@ public abstract class AbstractProjectTest
         );
     }
 
-    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values){
+    protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values)
+    {
         return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
     }
 
