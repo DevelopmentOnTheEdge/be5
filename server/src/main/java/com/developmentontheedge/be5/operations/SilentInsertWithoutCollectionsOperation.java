@@ -32,7 +32,8 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
         dps = (DynamicPropertySet)parameters;
 
         String errorMsg = meta.getColumns(getInfo().getEntity()).values().stream()
-                .filter(column -> !column.isCanBeNull() && !column.isAutoIncrement() && !dps.hasProperty(column.getName()))
+                .filter(column -> !column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
+                        && !dps.hasProperty(column.getName()))
                 .map(column -> "Dps not contain notNull column '" + column.getName()
                              + "' in entity '" + column.getEntity().getName()+ "'")
                 .collect(Collectors.joining("\n"));
