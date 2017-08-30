@@ -1,7 +1,7 @@
-package com.developmentontheedge.be5.beans;
+package com.developmentontheedge.be5.model;
 
-import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.be5.util.Utils;
+
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -9,68 +9,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
-/**
- * Record adapter, that uses query as the query for single record result.
- */
-public class JDBCRecordAdapterAsQuery extends RecordEx
+
+public class QRec extends DynamicPropertySetSupport
 {
-    // used only once, during initialization
-    //transient private ResultSet rs;
-
-    // for clone
-//    protected JDBCRecordAdapterAsQuery() { initialized = true; }
-
-//    boolean keepRS4Blob;
-
-    /**
-     * Reads the first record of thsq SQL query as Dynamic Property Set
-     *
-     * <br><br>To get record values, you can use:
-     * <br/>{@link #getString(String) getString(String)}
-     * <br/>{@link #getInt(String) getInt(String)}
-     * <br/>{@link #getLong(String) getLong(String)}.  
-     *
-     * @param sql sql query
-     * @throws SQLException
-     */
-//    public JDBCRecordAdapterAsQuery(String sql)
-//    {
-    //StringBuffer query = new StringBuffer( sql );
-    //connector.getAnalyzer().optimizeRecordRange( query, 0, 1 );
-
-    //System.out.println( "before query.toString() = " + query.toString() );
-    //rs = null;//connector.executeQuery( query.toString() );
-    //System.out.println( "after query.toString() = " + query.toString() );
-//            if( !rs.next() )
-//                throw new NoRecord( "No record produced by JDBCRecordAdapterAsQuery, SQL query is " + query );
-    //initialize();
-//            if( connector.isDb2() )
-//            {
-//                /* temporary code to change settings - convert Blobs or not */
-//                Cache systemSettingsCache = SystemSettingsCache.getInstance();
-//                String ssSql = "SELECT setting_value FROM systemSettings WHERE setting_name = 'fullyMaterializeLobData'" +
-//                        " AND section_name = 'system'";
-//                List vals = Utils.readAsList( connector, ssSql, systemSettingsCache );
-//                if( vals.size() > 0 && ( "yes".equals(  vals.get(0) ) || "true".equals(  vals.get(0) ) ) )
-//                {
-//                    for( DynamicProperty prop : this )
-//                    {
-//                        if( prop.getValue() instanceof Blob )
-//                        {
-//                            prop.setType( byte[].class );
-//                            Blob val = ( Blob )prop.getValue();
-//                            prop.setValue( val.getBytes( 1l, ( int )val.length() ) );
-//                        }
-//                    }
-//                }
-//            }
-//
-//    }
-
     /**
      * Retrieves first value. Useful when we need only one column
      *

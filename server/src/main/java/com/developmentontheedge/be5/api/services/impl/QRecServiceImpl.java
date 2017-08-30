@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.beans.QRec;
+import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -36,10 +37,11 @@ public class QRecServiceImpl implements QRecService
         }
     }
 
-//    public static QRec withCache( String sql ) throws SQLException, NoRecord
-//    {
-//       return withCache( sql, null );
-//    }
+    public QRec withCache( String sql, Object... params )
+    {
+        throw Be5Exception.internal("not implemented");
+        //return withCache( sql, null );
+    }
 //
 //    public static QRec withCache( String sql, String key ) throws SQLException, NoRecord
 //    {

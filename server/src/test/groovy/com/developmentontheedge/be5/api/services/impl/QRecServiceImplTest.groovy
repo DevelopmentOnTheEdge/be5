@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.services.impl
 import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.api.services.QRecService
 import com.developmentontheedge.be5.api.services.SqlService
-import com.developmentontheedge.be5.beans.QRec
+import com.developmentontheedge.be5.model.QRec
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
 import com.developmentontheedge.beans.DynamicPropertySet
