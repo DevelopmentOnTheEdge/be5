@@ -127,6 +127,18 @@ public class UserAwareMetaImpl implements UserAwareMeta
     }
 
     @Override
+    public String getLocalizedValidationMessage(String message)
+    {
+        return localizations.get(UserInfoHolder.getLanguage(), "messages.l10n", "validation", message).orElse(message);
+    }
+
+    @Override
+    public String getLocalizedExceptionMessage(String message)
+    {
+        return localizations.get(UserInfoHolder.getLanguage(), "messages.l10n", "exception", message).orElse(message);
+    }
+
+    @Override
     public QuerySettings getQuerySettings(Query query) {
         List<String> availableRoles = UserInfoHolder.getCurrentRoles();
         for(QuerySettings settings: query.getQuerySettings()) {

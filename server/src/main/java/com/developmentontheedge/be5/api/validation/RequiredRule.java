@@ -10,20 +10,20 @@ import com.developmentontheedge.beans.model.Property;
  *
  * @author Andrey Anisimov <andrey@developmentontheedge.com>
  */
-public class RequiredRule extends AbstractRule
+public class RequiredRule// extends AbstractRule
 {
-    public RequiredRule()
-    {
-        super( Validation.REQUIRED, Validation.MESSAGE_REQUIRED );
-    }
-
-    public boolean isApplicable( Property property )
-    {
-        throw new RuntimeException("todo");
+//    public RequiredRule()
+//    {
+//        super( Validation.REQUIRED, Validation.MESSAGE_REQUIRED );
+//    }
+//
+//    public boolean isApplicable( Property property )
+//    {
 //        String[] tags = WebFormPropertyInspector.getTags( property );
-//        return !property.getBooleanAttribute( BeanInfoConstants.CAN_BE_NULL ) &&
-//               !Boolean.class.equals( property.getValueClass() ) &&
-//               !boolean.class.equals( property.getValueClass() ) &&
-//               ( ( tags == null ) || !WebFormPropertyInspector.isBooleanTags( tags ) );
-    }
+//        if (!property.getBooleanAttribute(BeanInfoConstants.CAN_BE_NULL))
+//            if (!Boolean.class.equals(property.getValueClass()))
+//                if (!boolean.class.equals(property.getValueClass()))
+//                    if ((tags == null) || !WebFormPropertyInspector.isBooleanTags(tags)) return true;
+//        return false;
+//    }
 }

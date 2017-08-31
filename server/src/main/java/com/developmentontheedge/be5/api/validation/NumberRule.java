@@ -2,6 +2,7 @@
 package com.developmentontheedge.be5.api.validation;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.model.Property;
 
 /**
@@ -16,17 +17,31 @@ public class NumberRule extends AbstractRule
         super( Validation.NUMBER, Validation.MESSAGE_NUMBER );
     }
 
-    @Override
-    public boolean isApplicable( Property property )
-    {
-        Class<?> clazz = getClassByOwner( property );
+//    @Override
+//    public boolean isApplicable( Property property )
+//    {
+//        Class<?> clazz = getClassByOwner( property );
+//
+//        return !property.getBooleanAttribute( BeanInfoConstants.MULTIPLE_SELECTION_LIST ) && (
+//               Number.class.isAssignableFrom( clazz ) ||
+//               short.class.isAssignableFrom( clazz ) ||
+//               int.class.isAssignableFrom( clazz ) ||
+//               long.class.isAssignableFrom( clazz ) ||
+//               float.class.isAssignableFrom( clazz ) ||
+//               double.class.isAssignableFrom( clazz ) );
+//    }
 
-        return !property.getBooleanAttribute( BeanInfoConstants.MULTIPLE_SELECTION_LIST ) && ( 
-               Number.class.isAssignableFrom( clazz ) ||
-               short.class.isAssignableFrom( clazz ) ||
-               int.class.isAssignableFrom( clazz ) ||
-               long.class.isAssignableFrom( clazz ) ||
-               float.class.isAssignableFrom( clazz ) ||
-               double.class.isAssignableFrom( clazz ) );
+    @Override
+    public boolean isApplicable( DynamicProperty property )
+    {
+        Class<?> clazz = property.getType();
+
+        return !property.getBooleanAttribute( BeanInfoConstants.MULTIPLE_SELECTION_LIST ) && (
+                Number.class.isAssignableFrom( clazz ) ||
+                        short.class.isAssignableFrom( clazz ) ||
+                        int.class.isAssignableFrom( clazz ) ||
+                        long.class.isAssignableFrom( clazz ) ||
+                        float.class.isAssignableFrom( clazz ) ||
+                        double.class.isAssignableFrom( clazz ) );
     }
 }

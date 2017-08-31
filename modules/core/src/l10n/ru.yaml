@@ -6,6 +6,22 @@ ru:
       - fio: Ф.И.О.
       - no: нет
       - yes: да
+  - messages.l10n:
+    - topics: exception
+      entries:
+      - 'Entity not found: $1': 'Объект не найден: $1'
+      - 'Access denied': В доступе отказано
+    - topics: validation
+      entries:
+      - Please enter only digits.: Здесь должны быть только цифры.
+      - Please enter a valid email address.: Здесь должен быть email-адрес.
+      - Please enter a valid number.: Здесь должно быть число.
+      - This field is required.: Это поле должно быть заполнено.
+      - Please enter a valid URL.: Здесь должен быть URL.
+      - Please specify an integer number.: Здесь должно быть целое число.
+      - Please enter a valid date.: Здесь должна быть корректная дата.
+      - Please enter a valid time.: Здесь должно быть указано время (часы:минуты:секунды).
+      - Must be monetary amount: Здесь должна быть денежная сумма.
   - _homepage_:
     - topics: displayName
       entries:

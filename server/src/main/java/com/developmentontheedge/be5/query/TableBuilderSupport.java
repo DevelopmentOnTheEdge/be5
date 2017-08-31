@@ -3,14 +3,13 @@ package com.developmentontheedge.be5.query;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
-import com.developmentontheedge.be5.api.helpers.Validator;
+import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 import java.util.ArrayList;

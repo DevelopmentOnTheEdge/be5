@@ -12,7 +12,7 @@ context:
   - com.developmentontheedge.be5.api.services.impl.LogConfigurator
   - com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
   - com.developmentontheedge.be5.api.helpers.SqlHelper
-  - com.developmentontheedge.be5.api.helpers.Validator
+  - com.developmentontheedge.be5.api.validation.Validator
   - com.developmentontheedge.be5.api.helpers.OperationHelper
   - be5MainSettings:
       interface:      com.developmentontheedge.be5.api.services.Be5MainSettings

@@ -1,15 +1,18 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.api.validation;
 
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import static com.developmentontheedge.be5.api.helpers.Validator.Status.SUCCESS;
-import static com.developmentontheedge.be5.api.helpers.Validator.Status.ERROR;
+import static com.developmentontheedge.be5.api.validation.Validation.Status.SUCCESS;
+import static com.developmentontheedge.be5.api.validation.Validation.Status.ERROR;
+import static com.developmentontheedge.be5.api.validation.Validation.defaultRules;
 
 
 //TODO localize BeanInfoConstants.MESSAGE
@@ -17,26 +20,28 @@ public class Validator
 {
     private final UserAwareMeta userAwareMeta;
 
-    public Validator(Injector injector, UserAwareMeta userAwareMeta){
+    public Validator(UserAwareMeta userAwareMeta)
+    {
         this.userAwareMeta = userAwareMeta;
     }
 
-    public enum Status
+    private Map<String, String> getValidationAttributes(DynamicProperty property)
     {
-        SUCCESS, WARNING, ERROR;
-
-        @Override
-        public String toString()
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        for( AbstractRule rule : defaultRules )
         {
-            return this.name().toLowerCase();
+            if( rule.isApplicable( property ) )
+            {
+                result.put( rule.getRule(), userAwareMeta.getLocalizedValidationMessage( rule.getMessage() ) );
+            }
         }
+        return result;
     }
 
     public void checkErrorAndCast(DynamicPropertySet dps)
     {
         for (DynamicProperty property: dps)
         {
-            //todo refactoring without exception
             if(isError(property))throw new IllegalArgumentException();
             checkErrorAndCast(property);
         }
@@ -48,10 +53,14 @@ public class Validator
         {
             if(property.getValue() instanceof String && property.getType() != String.class)
             {
-                if(property.isCanBeNull() && ((String) property.getValue()).length() == 0){
+                String stringValue = (String)property.getValue();
+                if(stringValue.isEmpty() && property.isCanBeNull())
+                {
                     property.setValue(null);
-                }else{
-                    property.setValue(getTypedValueFromString(property.getType(), property.getValue()));
+                }
+                else
+                {
+                    property.setValue(parseFrom(property.getType(), stringValue));
                 }
             }
             else
@@ -68,7 +77,7 @@ public class Validator
 
                     for (int i = 0; i < values.length; i++)
                     {
-                        resValues[i] = getTypedValueFromString(property.getType(), values[i]);
+                        resValues[i] = parseFrom(property.getType(), (String) values[i]);
                     }
                     property.setValue(resValues);
                 }
@@ -101,6 +110,7 @@ public class Validator
         property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
     }
 
+    @Deprecated
     public void setError(DynamicProperty property, Throwable e)
     {
         property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
@@ -117,46 +127,18 @@ public class Validator
         property.setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
-    public Object getTypedValueFromString(Class<?> type, Object value)
+    @Deprecated
+    public Object parseFrom(Class<?> type, String value)
     {
-        assert value instanceof String;
-
-        if (type == Short.class)
-        {
-            return Short.parseShort(value.toString());
-        }
-        if (type == Integer.class)
-        {
-            return Integer.parseInt(value.toString());
-        }
-        if (type == Long.class)
-        {
-            return Long.parseLong(value.toString());
-        }
-        if (type == Float.class)
-        {
-            return Float.parseFloat(value.toString());
-        }
-        if (type == Double.class)
-        {
-            return Double.parseDouble(value.toString());
-        }
-        if (type == Boolean.class)
-        {
-            return Boolean.parseBoolean(value.toString());
-        }
-        if (type == Date.class)
-        {
-            return Date.valueOf(value.toString());
-        }
-        if (type == Timestamp.class)
-        {
-            return Timestamp.valueOf(value.toString());
-        }
-        if (type == String.class)
-        {
-            return value;
-        }
+        if (type == Short.class)    return Short.parseShort(value);
+        if (type == Integer.class)  return Integer.parseInt(value);
+        if (type == Long.class)     return Long.parseLong(value);
+        if (type == Float.class)    return Float.parseFloat(value);
+        if (type == Double.class)   return Double.parseDouble(value);
+        if (type == Boolean.class)  return Boolean.parseBoolean(value);
+        if (type == Date.class)     return Date.valueOf(value);
+        if (type == Timestamp.class)return Timestamp.valueOf(value);
+        if (type == String.class)   return value;        
 
         throw new IllegalArgumentException("Unknown type");
     }
@@ -164,8 +146,8 @@ public class Validator
     public boolean isError(DynamicProperty property)
     {
         return property.getAttribute(BeanInfoConstants.STATUS) != null &&
-                Validator.Status.valueOf(((String) property.getAttribute(BeanInfoConstants.STATUS)).toUpperCase())
-                        == Validator.Status.ERROR;
+                Validation.Status.valueOf(((String) property.getAttribute(BeanInfoConstants.STATUS)).toUpperCase())
+                        == Validation.Status.ERROR;
     }
 
     public void replaceNullValueToEmptyString(DynamicPropertySet dps)

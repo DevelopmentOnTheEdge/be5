@@ -55,4 +55,6 @@ public interface Operation extends Serializable
     void setResult(OperationResult operationResult);
 
     Object getLayout();
+
+    //todo Map<String, String> validate( Object parameters );
 }

@@ -2,6 +2,7 @@
 package com.developmentontheedge.be5.api.validation;
 
 import com.developmentontheedge.beans.BeanInfoConstants;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.model.Property;
 
 /**
@@ -16,10 +17,17 @@ public class UrlRule extends AbstractRule
         super( Validation.URL, Validation.MESSAGE_URL );
     }
 
-    public boolean isApplicable( Property property )
+//    public boolean isApplicable( Property property )
+//    {
+//        String name = property.getName().toLowerCase();
+//        return !property.getBooleanAttribute( BeanInfoConstants.MULTIPLE_SELECTION_LIST ) &&
+//                ( name.endsWith( "url" ) && String.class.equals( property.getValueClass() ) );
+//    }
+
+    public boolean isApplicable( DynamicProperty property )
     {
         String name = property.getName().toLowerCase();
-        return !property.getBooleanAttribute( BeanInfoConstants.MULTIPLE_SELECTION_LIST ) && 
-                ( name.endsWith( "url" ) && String.class.equals( property.getValueClass() ) );
+        return !property.getBooleanAttribute( BeanInfoConstants.MULTIPLE_SELECTION_LIST ) &&
+                ( name.endsWith( "url" ) && String.class.equals( property.getType() ) );
     }
 }

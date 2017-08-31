@@ -43,6 +43,10 @@ public interface UserAwareMeta
      */
     String getLocalizedCell(String content, String entity, String query);
 
+    String getLocalizedValidationMessage(String message);
+
+    String getLocalizedExceptionMessage(String message);
+
     /**
      * Returns a query.
      * Throws an exception if there's no such query or it is not awailable due to lack of rights.

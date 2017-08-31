@@ -2,6 +2,7 @@
 
 package com.developmentontheedge.be5.api.validation;
 
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.model.Property;
 
@@ -56,13 +57,16 @@ public abstract class AbstractRule
         return message;
     }
 
+
+    //public abstract boolean isApplicable( Property property );
+
     /**
      * Checks whether the rule is applicable to the specified property.
      *
-     * @param property Property to apply the rule
+     * @param dynamicProperty DynamicProperty to apply the rule
      * @return true if the rule can be applied to the given property, false otherwise.
      */
-    public abstract boolean isApplicable( Property property );
+    public abstract boolean isApplicable( DynamicProperty dynamicProperty );
     
     public static Class<?> getClassByOwner( Property property )
     {
