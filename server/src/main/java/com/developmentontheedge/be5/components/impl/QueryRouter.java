@@ -111,13 +111,18 @@ public class QueryRouter
             {
                 Class aClass = groovyQueryClasses.get(query.getEntity() + query.getName(),
                         k -> GroovyRegister.parseClass( query.getQuery() ));
-                TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
+                if(aClass != null) {
+                    TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 
-                TableModel tableModel = tableBuilder
-                        .initialize(query, parametersMap, req, injector)
-                        .getTable();
+                    tableBuilder.initialize(query, parametersMap, req);
+                    injector.injectAnnotatedFields(tableBuilder);
 
-                runner.onTable(query, parametersMap, tableModel);
+                    runner.onTable(query, parametersMap, tableBuilder.getTable());
+                }
+                else
+                {
+                    throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
+                }
             }
             catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
             {

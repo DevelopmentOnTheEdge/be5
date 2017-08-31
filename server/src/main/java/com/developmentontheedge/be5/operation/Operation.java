@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.env.Injector;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -13,8 +12,7 @@ public interface Operation extends Serializable
 	// Main interface
 	//
 
-    void initialize(Injector injector, OperationInfo meta,
-                    OperationResult operationResult, String[] records, Request request);
+    void initialize(OperationInfo meta, OperationResult operationResult, String[] records, Request request);
 
 	/**
 	 * Returns meta-information from project definition for this operation.

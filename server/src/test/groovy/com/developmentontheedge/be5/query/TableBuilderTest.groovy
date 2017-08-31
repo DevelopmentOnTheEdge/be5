@@ -26,12 +26,12 @@ class TableBuilderTest extends AbstractProjectTest
     @Test
     void getColumnsTest() throws Exception
     {
-        TableModel table = new TestTable().initialize(
+        def tableBuilder = new TestTable().initialize(
                 injector.getMeta().getQueryIgnoringRoles("testtableAdmin", "All records"),
                 new HashMap<>(),
-                getMockRequest(""),
-                injector
-        ).getTable()
+                getMockRequest("")
+        )
+        TableModel table = tableBuilder.getTable()
 
         assertEquals"name", table.getColumns().get(0).getName()
         assertEquals"name", table.getColumns().get(0).getTitle()

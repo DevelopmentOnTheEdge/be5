@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
-import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -74,12 +73,12 @@ public class OperationServiceImpl implements OperationService
     {
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
+        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
         if (parameters == null)
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
-            return execute(entityName, queryName, operationName, selectedRowsString, meta,
+            return execute(entityName, queryName, operationName, selectedRowsString,
                     presetValues, operation, null, operationContext, req);
         }
 
@@ -123,7 +122,7 @@ public class OperationServiceImpl implements OperationService
 
         //add TransactionalOperation interface and support all in transaction getParameters and invoke in execute
 
-        Object parameters = getParametersAndSetValueIfNull(operation, meta.getEntity(), presetValues);
+        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
         //todo add tests
         if (parameters instanceof DynamicPropertySet)
@@ -145,12 +144,12 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        return execute(entityName, queryName, operationName, selectedRowsString, meta,
+        return execute(entityName, queryName, operationName, selectedRowsString,
                 presetValues, operation, parameters, operationContext, req);
     }
 
     public Either<FormPresentation, OperationResult> execute(String entityName, String queryName, String operationName,
-         String selectedRowsString, OperationInfo meta, Map<String, Object> presetValues, Operation operation,
+         String selectedRowsString, Map<String, Object> presetValues, Operation operation,
                                                              Object parameters, OperationContext operationContext, Request req)
     {
         try
@@ -197,15 +196,18 @@ public class OperationServiceImpl implements OperationService
                 {
                     Class aClass = groovyOperationClasses.get(operationInfo.getEntity() + operationInfo.getName(),
                             k -> GroovyRegister.parseClass( operationInfo.getCode() ));
-                    operation = ( Operation ) aClass.newInstance();
+                    if(aClass != null)
+                    {
+                        operation = ( Operation ) aClass.newInstance();
+                    }
+                    else
+                    {
+                        throw Be5Exception.internal("Class " + operationInfo.getCode() + " is null." );
+                    }
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
                 {
                     throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
-                }
-                catch (Throwable e)
-                {
-                    throw Be5Exception.internalInOperation(e, operationInfo);
                 }
                 break;
             default:
@@ -216,7 +218,7 @@ public class OperationServiceImpl implements OperationService
                 }
         }
 
-        operation.initialize(injector, operationInfo, OperationResult.progress(), records, request);
+        operation.initialize(operationInfo, OperationResult.progress(), records, request);
         injector.injectAnnotatedFields(operation);
 
         return operation;
@@ -227,7 +229,7 @@ public class OperationServiceImpl implements OperationService
      * либо вы задаёте значение и вручную управляете её изменением в getParameters:
      * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
      */
-    private Object getParametersAndSetValueIfNull(Operation operation, Entity entity, Map<String, Object> presetValues) {
+    private Object getParametersAndSetValueIfNull(Operation operation, Map<String, Object> presetValues) {
         try
         {
             Object parameters = operation.getParameters(presetValues);

@@ -1,5 +1,4 @@
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
-import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.components.FrontendConstants
 import com.developmentontheedge.be5.components.impl.model.ActionHelper
 import com.developmentontheedge.be5.components.impl.model.TableModel
@@ -15,7 +14,7 @@ class Entities extends TableBuilderSupport
     TableModel getTable()
     {
         addColumns("Name","Type", "Columns", "Queries", "Operations")
-        Meta meta = injector.getMeta()
+
 
         def entities = meta.getOrderedEntities(UserInfoHolder.language)
         for (Entity entity : entities) {

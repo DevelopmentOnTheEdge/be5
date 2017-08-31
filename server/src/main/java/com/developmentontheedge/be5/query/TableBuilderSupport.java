@@ -1,7 +1,15 @@
 package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.helpers.SqlHelper;
+import com.developmentontheedge.be5.api.helpers.Validator;
+import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
+import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
 
@@ -13,20 +21,26 @@ import java.util.Map;
 
 public abstract class TableBuilderSupport implements TableBuilder
 {
+    @Inject public DatabaseService databaseService;
+    @Inject public DatabaseModel database;
+    @Inject public SqlService db;
+    @Inject public SqlHelper sqlHelper;
+    @Inject public Meta meta;
+    @Inject public OperationHelper helper;
+    @Inject public Validator validator;
+
     protected Query query;
     protected Map<String, String> parametersMap;
     protected Request req;
-    protected Injector injector;
 
     protected List<TableModel.ColumnModel> columns = new ArrayList<>();
     protected List<TableModel.RowModel> rows = new ArrayList<>();
 
-    public TableBuilder initialize(Query query, Map<String, String> parametersMap, Request req, Injector injector)
+    public TableBuilder initialize(Query query, Map<String, String> parametersMap, Request req)
     {
         this.query = query;
         this.parametersMap = parametersMap;
         this.req = req;
-        this.injector = injector;
         return this;
     }
 

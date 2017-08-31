@@ -1,4 +1,3 @@
-import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.components.impl.model.ActionHelper
 import com.developmentontheedge.be5.components.impl.model.TableModel
 import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel
@@ -11,7 +10,6 @@ class Queries extends TableBuilderSupport
     TableModel getTable()
     {
         addColumns("Name","Type", "Roles", "Operations")
-        Meta meta = injector.getMeta()
 
         def queries = meta.getQueryNames(meta.getEntity(parametersMap.get("entity")))
 

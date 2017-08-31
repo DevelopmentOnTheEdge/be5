@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.helpers.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -16,13 +16,13 @@ import java.util.Map;
 
 public abstract class OperationSupport implements Operation
 {
-    public DatabaseService databaseService;
-    public DatabaseModel database;
-    public SqlService db;
-    public SqlHelper sqlHelper;
-    public Meta meta;
-    public OperationHelper helper;
-    public Validator validator;
+    @Inject public DatabaseService databaseService;
+    @Inject public DatabaseModel database;
+    @Inject public SqlService db;
+    @Inject public SqlHelper sqlHelper;
+    @Inject public Meta meta;
+    @Inject public OperationHelper helper;
+    @Inject public Validator validator;
 
     private OperationInfo operationInfo;
     private OperationResult operationResult;
@@ -35,17 +35,9 @@ public abstract class OperationSupport implements Operation
     public static final String reloadControl = "_reloadcontrol_";
 
     @Override
-    public final void initialize(Injector injector, OperationInfo operationInfo,
+    public final void initialize(OperationInfo operationInfo,
                                  OperationResult operationResult, String[] records, Request request)
     {
-        this.databaseService = injector.getDatabaseService();
-        this.db              = injector.getSqlService();
-        this.database        = injector.get(DatabaseModel.class);
-        this.meta            = injector.getMeta();
-        this.sqlHelper       = injector.get(SqlHelper.class);
-        this.helper          = injector.get(OperationHelper.class);
-        this.validator       = injector.get(Validator.class);
-
         this.operationInfo = operationInfo;
         this.operationResult = operationResult;
 

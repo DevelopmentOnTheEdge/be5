@@ -9,7 +9,7 @@ class DataSource extends TableBuilderSupport
     {
         addColumns("name", "value")
 
-        for (Map.Entry<String,String> entry : injector.getDatabaseService().getParameters())
+        for (Map.Entry<String,String> entry : databaseService.getParameters())
         {
             addRow(cells(
                     entry.getKey(),
