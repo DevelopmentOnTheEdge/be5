@@ -6,9 +6,8 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
-import org.junit.AfterClass
+import org.junit.After
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -22,14 +21,14 @@ class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
     @Inject private DatabaseModel database
     @Inject private SqlService db
 
-    @BeforeClass
-    static void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+    @Before
+    void beforeClass(){
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
-    @AfterClass
-    static void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST)
+    @After
+    void afterClass(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     @Before

@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,13 +26,13 @@ public class OperationTest extends AbstractProjectTest
 {
     @Inject private OperationService operationService;
 
-    @BeforeClass
-    public static void beforeClass(){
+    @Before
+    public void beforeClass(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
-    @AfterClass
-    public static void afterClass(){
+    @After
+    public void afterClass(){
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
 

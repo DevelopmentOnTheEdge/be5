@@ -22,22 +22,18 @@ import java.util.Map;
 public abstract class AbstractProjectTest extends TestUtils
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
-    private static Injector injector = null;
+
+    private static final Injector injector = initInjector(new SqlMockBinder());
 
     @Before
     public void injectMembers() {
         injector.injectAnnotatedFields(this);
     }
 
-    protected static void initUserWithRoles(String... roles)
+    protected void initUserWithRoles(String... roles)
     {
         LoginService loginService = injector.get(LoginService.class);
         loginService.saveUser("testUser", Arrays.asList(roles), Locale.US, "");
-    }
-
-    static
-    {
-        injector = initInjector(new SqlMockBinder());
     }
 
     public static class SqlMockBinder implements Binder

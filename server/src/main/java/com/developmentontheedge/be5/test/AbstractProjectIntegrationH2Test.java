@@ -21,14 +21,14 @@ public abstract class AbstractProjectIntegrationH2Test extends TestUtils
 {
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 
-    private static Injector injector = null;
+    private static final Injector injector = initInjector(new YamlBinder());
 
     @Before
     public void injectMembers() {
         injector.injectAnnotatedFields(this);
     }
 
-    protected static void initUserWithRoles(String... roles)
+    protected void initUserWithRoles(String... roles)
     {
         LoginService loginService = injector.get(LoginService.class);
         loginService.saveUser("testUser", Arrays.asList(roles), Locale.US, "");
@@ -36,8 +36,6 @@ public abstract class AbstractProjectIntegrationH2Test extends TestUtils
 
     static
     {
-        injector = initInjector(new YamlBinder());
-
         Project project = injector.getProject();
 
         if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))

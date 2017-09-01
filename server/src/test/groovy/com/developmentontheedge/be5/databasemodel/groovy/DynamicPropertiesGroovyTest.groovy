@@ -29,10 +29,10 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     @Test
     void testGetValue() throws Exception
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.build( "property", String.class ).value( "value" );
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
+        dps.build( "property", String.class ).value( "value" )
 
-        assertEquals "value", dps.$property;
+        assertEquals "value", dps.$property
     }
 
     @Test
@@ -48,32 +48,32 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     @Test
     void testGetMissingValue() throws Exception
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        assertNull dps.$property;
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
+        assertNull dps.$property
     }
 
     @Test
     void testPropertyAccess() throws Exception
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps.build( "property", String.class ).value( "value" );
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
+        dps.build( "property", String.class ).value( "value" )
         assertEquals "value", dps._property.value
     }
 
     @Test
     void testGetMissingValueWithoutAccessor() throws Exception
     {
-        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        boolean assertException = false;
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
+        boolean assertException = false
         try
         {
-            dps.property;
+            dps.property
         }
         catch( MissingPropertyException e )
         {
-            assertException = true;
+            assertException = true
         }
-        assertTrue assertException;
+        assertTrue assertException
     }
 
     @Test
@@ -90,7 +90,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
                 RELOAD_ON_CHANGE: true,
                 RAW_VALUE       : true
         ]
-        DynamicProperty property = dps._testProperty;
+        DynamicProperty property = dps._testProperty
         assertEquals 1, property.value
         assertEquals "testProperty", property.name
         assertEquals "Тестовое свойство", property.displayName
@@ -107,7 +107,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     void testAddProperty()
     {
         DynamicPropertySet dps = [ a : "a", b : "b" ] as DynamicPropertySetSupport
-        DynamicProperty property = new DynamicProperty( "d", String, "d" );
+        DynamicProperty property = new DynamicProperty( "d", String, "d" )
         assert ( ( dps << property ).hasProperty( "d" ) )
         assert dps.hasProperty( "d" )
     }
@@ -116,12 +116,12 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     @Ignore
     void testQRec()
     {
-        def rec = database.operations( table_name : "operations", name : "Clone" );
-        def id = rec.id;
+        def rec = database.operations( table_name : "operations", name : "Clone" )
+        def id = rec.id
         try {
-            assert rec.table_name == "operations";
-            rec.table_name = "cool";
-            assert database.operations[ id ].table_name == "cool";
+            assert rec.table_name == "operations"
+            rec.table_name = "cool"
+            assert database.operations[ id ].table_name == "cool"
         } finally {
             rec.table_name = "operations"
         }
@@ -131,14 +131,14 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     @Ignore
     void testQRecWithLeftShiftAndMap()
     {
-        def rec = database.operations( table_name : "operations", name : "Clone" );
-        def id = rec.id;
+        def rec = database.operations( table_name : "operations", name : "Clone" )
+        def id = rec.id
         try {
-            assert rec.table_name == "operations";
-            assert rec.name == "Clone";
-            rec << [ table_name : "newTableName", name: "newName" ];
-            assert database.operations[ id ].table_name == "newTableName";
-            assert database.operations[ id ].name == "newName";
+            assert rec.table_name == "operations"
+            assert rec.name == "Clone"
+            rec << [ table_name : "newTableName", name: "newName" ]
+            assert database.operations[ id ].table_name == "newTableName"
+            assert database.operations[ id ].name == "newName"
         } finally {
             rec.table_name = "operations"
             rec.name = "Clone"
@@ -149,7 +149,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     void testGetAttribute()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" );
+        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" )
 
         assertEquals dps._test.attr[ INPUT_SIZE_ATTR ], "10"
     }
@@ -158,7 +158,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     void testGetAttributeStringConstant()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
-        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" );
+        dps.build( "test", String.class ).attr( INPUT_SIZE_ATTR, "10" )
 
         assertEquals dps._test.attr[ INPUT_SIZE_ATTR ], "10"
         assertEquals dps._test.attr.INPUT_SIZE_ATTR, "10"
@@ -171,7 +171,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
         dps.build( "test", String.class )
 
         dps._test.attr[ INPUT_SIZE_ATTR ] = "10"
-        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10";
+        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10"
     }
 
     @Test
@@ -181,7 +181,7 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
         dps.build( "test", String.class )
 
         dps._test.attr[ "INPUT_SIZE_ATTR" ] = "10"
-        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10";
+        assertEquals dps._test.getAttribute( INPUT_SIZE_ATTR ), "10"
     }
 
     @Test
@@ -210,15 +210,15 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
     @Test
     void testDynamicPropertySetPlus()
     {
-        def dps1 = [ a : "a", b : "b", c : "c" ] as DynamicPropertySetSupport;
-        def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport;
+        def dps1 = [ a : "a", b : "b", c : "c" ] as DynamicPropertySetSupport
+        def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport
 
-        DynamicPropertySetSupport dps3 = dps1 + dps2;
-        assert dps1.size() == 3;
-        assert dps2.size() == 3;
+        DynamicPropertySetSupport dps3 = dps1 + dps2
+        assert dps1.size() == 3
+        assert dps2.size() == 3
         [ a : "a", b : "b", c : "c", d : "d", e : "e", f : "f" ].each( { a, b ->
             assert dps3.getValue( a ) == b
-        } );
+        } )
     }
 
 
@@ -232,8 +232,8 @@ class DynamicPropertiesGroovyTest extends AbstractProjectTest
             testProperty = 2
             testProperty2 = 2
         }
-        assertEquals 2, dps.getValue( "testProperty" );
-        assertEquals 2, dps.getValue( "testProperty2" );
+        assertEquals 2, dps.getValue( "testProperty" )
+        assertEquals 2, dps.getValue( "testProperty2" )
     }
 
 }

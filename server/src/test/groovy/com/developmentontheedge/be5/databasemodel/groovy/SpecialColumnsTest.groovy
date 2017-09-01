@@ -6,7 +6,10 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Ignore
+import org.junit.Test
 
 import static org.junit.Assert.*
 
@@ -18,14 +21,14 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
     EntityModel table
     String tableName
 
-    @BeforeClass
-    static void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+    @Before
+    void beforeClass(){
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
-    @AfterClass
-    static void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST)
+    @After
+    void afterClass(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     @Before
@@ -84,14 +87,13 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
     }
 
     @Test
-    @Ignore
     void testDeleteAll()
     {
         table << [ "name": "TestName", "value": 1]
         table << [ "name": "TestName", "value": 2]
         table << [ "name": "TestName2", "value": 2]
 
-        entityName.remove(["name": "TestName"])
+        table.remove(["name": "TestName"])
 
         assertEquals 2, db.getLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
                 "yes", "TestName")

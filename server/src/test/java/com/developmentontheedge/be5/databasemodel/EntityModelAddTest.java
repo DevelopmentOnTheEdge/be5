@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,21 +27,20 @@ public class EntityModelAddTest extends AbstractProjectTest
 {
     @Inject private DatabaseModel database;
 
-    @BeforeClass
-    public static void beforeClass(){
+    @Before
+    public void beforeClass(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
+
+    @After
+    public void afterClass(){
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     @Before
     public void before(){
         SqlServiceMock.clearMock();
     }
-
-    @AfterClass
-    public static void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
 
     @Test
     public void testAdd()
