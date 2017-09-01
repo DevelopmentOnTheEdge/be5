@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.services.LoginService;
-import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
-import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -12,16 +11,27 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import org.apache.maven.plugin.MojoFailureException;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.logging.Logger;
 
-public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTest
+
+public abstract class AbstractProjectIntegrationH2Test extends TestUtils implements MockUtils
 {
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 
-    protected static final Injector injector = Be5.createInjector();
+    protected static Injector injector = null;
 
-    static {
+    protected static void initUserWithRoles(String... roles)
+    {
+        LoginService loginService = injector.get(LoginService.class);
+        loginService.saveUser("testUser", Arrays.asList(roles), Locale.US, "");
+    }
+
+    static
+    {
+        injector = initInjector(new YamlBinder());
+
         Project project = injector.getProject();
 
         if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
@@ -56,10 +66,6 @@ public abstract class AbstractProjectIntegrationH2Test extends AbstractProjectTe
         {
             log.warning("Fail set '"+ profileForIntegrationTests +"' profile, maybe DatabaseService already initialized." );
         }
-
-        initProfile(injector.getProject());
-
-        injector.get(LoginService.class).initGuest(null);
     }
 
 }
