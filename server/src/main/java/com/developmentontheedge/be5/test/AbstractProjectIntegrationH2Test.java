@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 
-public abstract class AbstractProjectIntegrationH2Test extends TestUtils implements MockUtils
+public abstract class AbstractProjectIntegrationH2Test extends TestUtils
 {
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 

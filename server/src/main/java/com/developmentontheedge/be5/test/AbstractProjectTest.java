@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public abstract class AbstractProjectTest extends TestUtils implements MockUtils
+public abstract class AbstractProjectTest extends TestUtils
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
