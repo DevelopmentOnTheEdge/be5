@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 
-class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
+class DatabaseModelGroovyTest extends Be5ProjectDBTest
 {
     @Inject private DatabaseModel database
     @Inject private SqlService db

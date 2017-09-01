@@ -1,18 +1,9 @@
-package com.developmentontheedge.be5.modules.core.groovy;
+package com.developmentontheedge.be5.modules.core.groovy
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
-import com.developmentontheedge.be5.components.impl.model.TableModel;
-import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.TableBuilder;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
-import org.junit.Test;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
+import org.junit.Test
 
-import java.util.HashMap;
-
-import static org.junit.Assert.*;
-
-public class EntitiesTest extends AbstractProjectTest
+public class EntitiesTest extends Be5ProjectTest
 {
     @Test
     public void get() throws Exception

@@ -2,14 +2,14 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
-public class ValidatorTest extends AbstractProjectTest
+public class ValidatorTest extends Be5ProjectTest
 {
     @Inject private Validator validator;
 

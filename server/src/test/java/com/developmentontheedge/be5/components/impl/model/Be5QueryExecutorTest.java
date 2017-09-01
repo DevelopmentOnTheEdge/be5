@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
+import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
+public class Be5QueryExecutorTest extends Be5ProjectDBTest
 {
     @Inject private ProjectProvider projectProvider;
     @Inject private SqlService db;

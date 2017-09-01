@@ -3,15 +3,12 @@ package com.developmentontheedge.be5.api.impl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
-import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +19,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.Locale;
 
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
@@ -31,7 +27,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ResponseTest extends AbstractProjectTest{
+public class ResponseTest extends Be5ProjectTest
+{
 
     private Response response;
     private HttpServletResponse rawResponse;

@@ -19,14 +19,14 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public abstract class AbstractProjectTest extends TestUtils
+public abstract class Be5ProjectTest extends TestUtils
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
     private static final Injector injector = initInjector(new SqlMockBinder());
 
     @Before
-    public void injectMembers() {
+    public void injectAnnotatedFields() {
         injector.injectAnnotatedFields(this);
     }
 

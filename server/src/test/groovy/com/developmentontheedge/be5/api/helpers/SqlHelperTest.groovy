@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.helpers
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.json.JsonFactory
@@ -12,7 +12,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class SqlHelperTest extends AbstractProjectIntegrationH2Test
+class SqlHelperTest extends Be5ProjectDBTest
 {
     @Inject private SqlHelper sqlHelper
     @Inject private Meta meta

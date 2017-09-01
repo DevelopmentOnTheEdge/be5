@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
+import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
 
 
-public class OperationHelperTest extends AbstractProjectIntegrationH2Test
+public class OperationHelperTest extends Be5ProjectDBTest
 {
     @Inject private OperationHelper helper;
 

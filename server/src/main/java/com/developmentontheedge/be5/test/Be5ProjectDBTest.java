@@ -17,14 +17,14 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 
-public abstract class AbstractProjectIntegrationH2Test extends TestUtils
+public abstract class Be5ProjectDBTest extends TestUtils
 {
-    private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
+    private static final Logger log = Logger.getLogger(Be5ProjectDBTest.class.getName());
 
     private static final Injector injector = initInjector(new YamlBinder());
 
     @Before
-    public void injectMembers() {
+    public void injectAnnotatedFields() {
         injector.injectAnnotatedFields(this);
     }
 

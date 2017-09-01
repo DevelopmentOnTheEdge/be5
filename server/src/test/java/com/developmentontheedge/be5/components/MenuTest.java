@@ -3,13 +3,12 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +18,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class MenuTest extends AbstractProjectTest
+public class MenuTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
     private Component component;

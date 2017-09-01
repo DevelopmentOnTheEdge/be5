@@ -5,13 +5,13 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException
 import com.developmentontheedge.be5.metadata.model.Module
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 
 
-class LoadTest extends AbstractProjectIntegrationH2Test
+class LoadTest extends Be5ProjectDBTest
 {
     @Inject ProjectProvider projectProvider
 

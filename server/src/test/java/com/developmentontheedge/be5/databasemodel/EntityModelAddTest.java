@@ -7,13 +7,11 @@ import java.util.Map;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableMap;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.mockito.Matchers.anyString;
@@ -23,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 import static org.junit.Assert.assertEquals;
 
-public class EntityModelAddTest extends AbstractProjectTest
+public class EntityModelAddTest extends Be5ProjectTest
 {
     @Inject private DatabaseModel database;
 

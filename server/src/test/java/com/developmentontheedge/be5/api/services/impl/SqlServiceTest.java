@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
+import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class SqlServiceTest extends AbstractProjectIntegrationH2Test
+public class SqlServiceTest extends Be5ProjectDBTest
 {
     @Inject private SqlService db;
 

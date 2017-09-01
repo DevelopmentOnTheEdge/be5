@@ -1,18 +1,11 @@
 package com.developmentontheedge.be5.modules.core.groovy
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.metadata.model.Query
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Test
 
-import java.util.HashMap
-
-import static org.junit.Assert.assertTrue
-
-
-class DataSourceQueryTest extends AbstractProjectIntegrationH2Test
+class DataSourceQueryTest extends Be5ProjectDBTest
 {
     @Inject Meta meta
 

@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class OperationServiceImplTest extends AbstractProjectTest
+public class OperationServiceImplTest extends Be5ProjectTest
 {
     @Test
     public void selectedRowsTest(){

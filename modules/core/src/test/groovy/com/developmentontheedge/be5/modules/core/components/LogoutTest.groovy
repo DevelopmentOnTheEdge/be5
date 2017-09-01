@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.Response
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.env.Injector
 import com.developmentontheedge.be5.api.services.LoginService
-import com.developmentontheedge.be5.test.AbstractProjectTest
+import com.developmentontheedge.be5.test.Be5ProjectTest
 import org.junit.Before
 import org.junit.Test
 
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
-class LogoutTest extends AbstractProjectTest
+class LogoutTest extends Be5ProjectTest
 {
     @Inject Injector injector
     private static Component component

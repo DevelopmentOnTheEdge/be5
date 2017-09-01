@@ -3,13 +3,13 @@ package com.developmentontheedge.be5.query
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.components.impl.model.TableModel
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.test.AbstractProjectTest
+import com.developmentontheedge.be5.test.Be5ProjectTest
 import org.junit.Test
 
 
 import static org.junit.Assert.assertEquals
 
-class TableBuilderTest extends AbstractProjectTest
+class TableBuilderTest extends Be5ProjectTest
 {
     @Inject Meta meta
 

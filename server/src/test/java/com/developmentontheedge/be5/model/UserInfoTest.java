@@ -2,13 +2,10 @@ package com.developmentontheedge.be5.model;
 
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -18,7 +15,7 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserInfoTest extends AbstractProjectTest
+public class UserInfoTest extends Be5ProjectTest
 {
     private static UserInfo ui;
     @Inject private LoginService loginService;

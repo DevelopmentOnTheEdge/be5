@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.model.TablePresentation;
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
+import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public class DocumentGeneratorTest extends AbstractProjectIntegrationH2Test
+public class DocumentGeneratorTest extends Be5ProjectDBTest
 {
     @Inject private Meta meta;
     @Inject private Injector injector;

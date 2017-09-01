@@ -7,22 +7,20 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class OperationTest extends AbstractProjectTest
+public class OperationTest extends Be5ProjectTest
 {
     @Inject private OperationService operationService;
 

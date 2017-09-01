@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.test.AbstractProjectTest
+import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
@@ -14,7 +14,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 
-class DynamicPropertiesGroovyTest extends AbstractProjectTest
+class DynamicPropertiesGroovyTest extends Be5ProjectTest
 {
     @Inject private DatabaseModel database
 

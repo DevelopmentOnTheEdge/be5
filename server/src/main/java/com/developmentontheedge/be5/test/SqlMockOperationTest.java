@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 
 
-public abstract class SqlMockOperationTest extends AbstractProjectTest
+public abstract class SqlMockOperationTest extends Be5ProjectTest
 {
     @Inject protected OperationService operationService;
     @Inject protected SqlHelper sqlHelper;

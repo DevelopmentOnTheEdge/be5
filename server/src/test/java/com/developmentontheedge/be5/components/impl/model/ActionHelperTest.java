@@ -5,12 +5,12 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ActionHelperTest extends AbstractProjectTest
+public class ActionHelperTest extends Be5ProjectTest
 {
     @Inject private Meta meta;
 

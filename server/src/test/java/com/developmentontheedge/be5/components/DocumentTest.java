@@ -5,11 +5,9 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
-import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Date;
@@ -21,7 +19,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class DocumentTest extends AbstractProjectTest
+public class DocumentTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
     private Component component;

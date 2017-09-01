@@ -5,16 +5,15 @@ import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 
-class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
+class SpecialColumnsTest extends Be5ProjectDBTest
 {
     @Inject private DatabaseModel database
     @Inject private SqlService db

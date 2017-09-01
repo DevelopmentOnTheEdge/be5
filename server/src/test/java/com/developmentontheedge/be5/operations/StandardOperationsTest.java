@@ -1,19 +1,11 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 

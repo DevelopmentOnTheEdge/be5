@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
+import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-public class TableModelTest extends AbstractProjectIntegrationH2Test
+public class TableModelTest extends Be5ProjectDBTest
 {
     @Inject private SqlService db;
     @Inject private ProjectProvider projectProvider;

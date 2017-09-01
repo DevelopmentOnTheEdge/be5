@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
@@ -14,7 +13,6 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,7 +21,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class RoleSelectorTest extends AbstractProjectTest
+public class RoleSelectorTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
     private static Component component;

@@ -2,12 +2,12 @@ package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.validation.Validator
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.test.AbstractProjectTest
+import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import org.junit.Test
 
 
-class ValidatorServiceTest extends AbstractProjectTest
+class ValidatorServiceTest extends Be5ProjectTest
 {
     @Inject Validator validator
 

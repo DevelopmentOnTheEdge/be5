@@ -1,14 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import com.developmentontheedge.be5.api.services.SqlService;
 
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -20,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertEquals;
 
 
-public class MultiThreadedTest extends AbstractProjectIntegrationH2Test
+public class MultiThreadedTest extends Be5ProjectDBTest
 {
     @Inject private SqlService db;
 

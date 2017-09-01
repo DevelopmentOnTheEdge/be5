@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
+import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MainServletTest extends AbstractProjectTest
+public class MainServletTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
 

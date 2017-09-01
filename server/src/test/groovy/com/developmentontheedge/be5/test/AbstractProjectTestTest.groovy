@@ -6,7 +6,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class AbstractProjectTestTest extends AbstractProjectTest
+class AbstractProjectTestTest extends Be5ProjectTest
 {
     @Test
     void name() throws Exception {

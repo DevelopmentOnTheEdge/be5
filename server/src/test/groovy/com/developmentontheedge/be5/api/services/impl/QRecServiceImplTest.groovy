@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.QRec
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
+import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +14,7 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
-class QRecServiceImplTest extends AbstractProjectIntegrationH2Test
+class QRecServiceImplTest extends Be5ProjectDBTest
 {
     @Inject private SqlService db
     @Inject private QRecService qRec
