@@ -80,12 +80,17 @@ public class Be5Injector implements Injector
         
         try
         {
+            Class<?> clazz = bindings.get(serviceClass);
+            if(clazz == null)
+            {
+                throw new RuntimeException("Class not binded " + serviceClass.getName() + ", may be has been used implimentation instead interface.");
+            }
             service = instantiate(bindings.get(serviceClass), stack);
             configureIfConfigurable(service, configurations);
         }
         catch (IllegalStateException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
-            throw new RuntimeException("Can't instantiate or initialize " + serviceClass.getSimpleName() + " service, " +
+            throw new RuntimeException("Can't instantiate or initialize " + serviceClass.getName() + " service, " +
                     "may be constructor is not public", e);
         }
         

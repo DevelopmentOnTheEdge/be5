@@ -14,6 +14,7 @@ context:
   - com.developmentontheedge.be5.api.helpers.SqlHelper
   - com.developmentontheedge.be5.api.validation.Validator
   - com.developmentontheedge.be5.api.helpers.OperationHelper
+  - com.developmentontheedge.be5.api.services.Be5Caches
   - be5MainSettings:
       interface:      com.developmentontheedge.be5.api.services.Be5MainSettings
       implementation: com.developmentontheedge.be5.api.services.impl.Be5MainSettingsImpl

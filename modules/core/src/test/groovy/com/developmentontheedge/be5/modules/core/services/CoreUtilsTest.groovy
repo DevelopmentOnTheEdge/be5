@@ -14,16 +14,15 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     DatabaseModel database = injector.get(DatabaseModel.class)
     SqlService db = injector.getSqlService()
 
-    CoreUtils utils = injector.get(CoreUtils.class)
-
     //todo Inject annotation
-    //@Inject CoreUtils utils
+    CoreUtils utils = injector.get(CoreUtils.class)
+    Be5Caches be5Caches = injector.get(Be5Caches.class)
 
     @Before
     void before(){
         db.update("DELETE FROM systemSettings")
         db.update("DELETE FROM user_prefs")
-        Be5Caches.clearAll()
+        be5Caches.clearAll()
     }
 
     @Test
@@ -76,11 +75,11 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     {
         assertEquals false, utils.getBooleanSystemSetting("is_active")
         assertEquals CoreUtils.MISSING_SETTING_VALUE,
-                Be5Caches.getCache("System settings").getIfPresent("system.is_active")
+                be5Caches.getCache("System settings").getIfPresent("system.is_active")
         assertEquals true, utils.getBooleanSystemSetting("is_active", true)
 
         database.systemSettings << [ section_name: "system", setting_name: "is_active", setting_value: "true" ]
-        Be5Caches.clearAll()
+        be5Caches.clearAll()
 
         assertEquals true, utils.getBooleanSystemSetting("is_active")
     }
@@ -95,7 +94,7 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
         assertEquals "false", utils.getModuleSetting("core", "is_active", "false")
 
         database.systemSettings << [ section_name: "CORE_module", setting_name: "is_active", setting_value: "true" ]
-        Be5Caches.clearAll()
+        be5Caches.clearAll()
 
         assertEquals true, utils.getBooleanModuleSetting("core", "is_active")
     }
@@ -105,12 +104,12 @@ class CoreUtilsTest extends AbstractProjectIntegrationH2Test
     {
         assertEquals null, utils.getUserSetting("testName", "companyID")
         assertEquals CoreUtils.MISSING_SETTING_VALUE,
-                Be5Caches.getCache("User settings").getIfPresent("testName.companyID")
+                be5Caches.getCache("User settings").getIfPresent("testName.companyID")
 
         assertEquals null, utils.getUserSetting("testName", "companyID")
 
         database.user_prefs << [ user_name: "testName", pref_name: "companyID", pref_value: "123" ]
-        Be5Caches.clearAll()
+        be5Caches.clearAll()
 
         assertEquals "123", utils.getUserSetting("testName", "companyID")
 

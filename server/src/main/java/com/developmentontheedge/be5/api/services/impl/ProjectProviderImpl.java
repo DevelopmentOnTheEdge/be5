@@ -16,6 +16,7 @@ import java.util.Map;
 public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
+    private Be5Caches be5Caches;
     private Injector injector;
     private Map<String, Project> initModulesMap;
 
@@ -23,9 +24,10 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private volatile boolean dirty = false;
 
-    public ProjectProviderImpl(Injector injector)
+    public ProjectProviderImpl(Injector injector, Be5Caches be5Caches)
     {
         this.injector = injector;
+        this.be5Caches = be5Caches;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class ProjectProviderImpl implements ProjectProvider
     	if(dirty || project == null)
     	{
 			project = loadProject();
-            Be5Caches.clearAll();
+            be5Caches.clearAll();
             injector.get(UserAwareMeta.class).reCompileLocalizations();
         }
 

@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.modules.core.services;
 
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.util.BlobUtils;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,21 +20,12 @@ public class CoreUtils
 
     private final SqlService db;
 
-    public CoreUtils(SqlService db, Be5MainSettings be5MainSettings)
+    public CoreUtils(SqlService db, Be5Caches be5Caches)
     {
         this.db = db;
 
-        systemSettingsCache = Caffeine.newBuilder()
-                .maximumSize(be5MainSettings.getCacheSize())
-                .recordStats()
-                .build();
-        Be5Caches.registerCache("System settings", systemSettingsCache);
-
-        userSettingsCache = Caffeine.newBuilder()
-                .maximumSize(be5MainSettings.getCacheSize())
-                .recordStats()
-                .build();
-        Be5Caches.registerCache("User settings", userSettingsCache);
+        systemSettingsCache = be5Caches.createCache("System settings");
+        userSettingsCache = be5Caches.createCache("User settings");
     }
 
     /**

@@ -40,18 +40,14 @@ public class OperationServiceImpl implements OperationService
     private final SqlHelper sqlHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, Be5MainSettings be5MainSettings, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
         this.sqlHelper = sqlHelper;
 
-        groovyOperationClasses = Caffeine.newBuilder()
-                .maximumSize(be5MainSettings.getCacheSize())
-                .recordStats()
-                .build();
-        Be5Caches.registerCache("Groovy operation classes", groovyOperationClasses);
+        groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
     }
 
     @Override

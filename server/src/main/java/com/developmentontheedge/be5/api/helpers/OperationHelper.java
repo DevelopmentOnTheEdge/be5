@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,18 +30,14 @@ public class OperationHelper
     public static final String yes = "yes";
     public static final String no = "no";
 
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5MainSettings be5MainSettings, Injector injector)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,Injector injector)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.injector = injector;
 
-        tagsCache = Caffeine.newBuilder()
-                .maximumSize(be5MainSettings.getCacheSize())
-                .recordStats()
-                .build();
-        Be5Caches.registerCache("Tags (dictionary)", tagsCache);
+        tagsCache = be5Caches.createCache("Tags");
     }
 
 //    public OperationRequest getOperationRequest(Request req)

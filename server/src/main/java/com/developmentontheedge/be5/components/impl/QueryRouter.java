@@ -29,7 +29,7 @@ public class QueryRouter
                 .maximumSize(1_000)
                 .recordStats()
                 .build();
-        Be5Caches.registerCache("Groovy query classes", groovyQueryClasses);
+        //Be5Caches.registerCache("Groovy query classes", groovyQueryClasses);
     }
 
     public static interface Runner
