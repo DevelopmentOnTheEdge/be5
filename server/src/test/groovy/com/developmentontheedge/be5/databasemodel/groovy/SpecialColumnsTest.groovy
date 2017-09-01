@@ -1,19 +1,22 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
 import org.junit.*
 
 import static org.junit.Assert.*
 
+
 class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
 {
-    DatabaseModel database = injector.get(DatabaseModel.class);
-    def db = injector.getSqlService();
-    EntityModel table = database.meters;
-    def tableName = table.getEntityName()
+    @Inject private DatabaseModel database
+    @Inject private SqlService db
+    EntityModel table
+    String tableName
 
     @BeforeClass
     static void beforeClass(){
@@ -27,6 +30,8 @@ class SpecialColumnsTest extends AbstractProjectIntegrationH2Test
 
     @Before
     void before(){
+        table = database.meters
+        tableName = table.getEntityName()
         db.update("DELETE FROM $tableName")
     }
 

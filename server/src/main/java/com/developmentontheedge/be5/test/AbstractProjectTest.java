@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import org.junit.Before;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -21,8 +22,12 @@ import java.util.Map;
 public abstract class AbstractProjectTest extends TestUtils
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
-
     protected static Injector injector = null;
+
+    @Before
+    public void injectMembers() {
+        injector.injectAnnotatedFields(this);
+    }
 
     protected static void initUserWithRoles(String... roles)
     {

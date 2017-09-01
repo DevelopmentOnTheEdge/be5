@@ -137,9 +137,7 @@ public class ResponseTest extends AbstractProjectTest{
                 "</ActionForXml>\n"));
     }
 
-    //todo remove withNullValues(true), fix frontend
     @Test
-    @Ignore
     public void testJsonObject()
     {
         JsonApiModel jsonApiModel = new JsonApiModel(new ResourceData("testType", "test"),

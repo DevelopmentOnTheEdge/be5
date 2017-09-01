@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.services
 import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
 import org.junit.Before
 import org.junit.Test
@@ -11,12 +12,10 @@ import static org.junit.Assert.*
 
 class CoreUtilsTest extends AbstractProjectIntegrationH2Test
 {
-    DatabaseModel database = injector.get(DatabaseModel.class)
-    SqlService db = injector.getSqlService()
-
-    //todo Inject annotation
-    CoreUtils utils = injector.get(CoreUtils.class)
-    Be5Caches be5Caches = injector.get(Be5Caches.class)
+    @Inject DatabaseModel database
+    @Inject SqlService db
+    @Inject CoreUtils utils
+    @Inject Be5Caches be5Caches
 
     @Before
     void before(){

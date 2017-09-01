@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import org.apache.maven.plugin.MojoFailureException;
+import org.junit.Before;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -20,7 +21,12 @@ public abstract class AbstractProjectIntegrationH2Test extends TestUtils
 {
     private static final Logger log = Logger.getLogger(AbstractProjectIntegrationH2Test.class.getName());
 
-    protected static Injector injector = null;
+    private static Injector injector = null;
+
+    @Before
+    public void injectMembers() {
+        injector.injectAnnotatedFields(this);
+    }
 
     protected static void initUserWithRoles(String... roles)
     {

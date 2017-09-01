@@ -1,7 +1,10 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import org.junit.Test;
@@ -13,7 +16,9 @@ import static org.mockito.Mockito.mock;
 
 public class TableModelTest extends AbstractProjectIntegrationH2Test
 {
-    private static SqlService db = injector.getSqlService();
+    @Inject private SqlService db;
+    @Inject private ProjectProvider projectProvider;
+    @Inject private Injector injector;
 
     @Test
     public void testExecuteSubQuery() {
@@ -24,7 +29,7 @@ public class TableModelTest extends AbstractProjectIntegrationH2Test
             db.insert("insert into testtUser (name, value) VALUES (?, ?)","tableModelTest", "user2");
         }
 
-        Query query = injector.getProject().getEntity("testtable").getQueries().get("Sub Query");
+        Query query = projectProvider.getProject().getEntity("testtable").getQueries().get("Sub Query");
         TableModel table = TableModel
                 .from(query, new HashMap<>(), mock(Request.class), false, injector)
                 .limit(20)

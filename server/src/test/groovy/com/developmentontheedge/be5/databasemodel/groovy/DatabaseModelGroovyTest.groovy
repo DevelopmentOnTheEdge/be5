@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
@@ -17,8 +19,8 @@ import static org.junit.Assert.assertTrue
 
 class DatabaseModelGroovyTest extends AbstractProjectIntegrationH2Test
 {
-    DatabaseModel database = injector.get(DatabaseModel.class);
-    def db = injector.getSqlService();
+    @Inject private DatabaseModel database
+    @Inject private SqlService db
 
     @BeforeClass
     static void beforeClass(){

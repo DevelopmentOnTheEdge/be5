@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.google.common.collect.ImmutableMap;
@@ -17,7 +19,8 @@ import static org.mockito.Mockito.mock;
 
 public class DocumentGeneratorTest extends AbstractProjectIntegrationH2Test
 {
-    private Meta meta = injector.getMeta();
+    @Inject private Meta meta;
+    @Inject private Injector injector;
     private Response response = mock(Response.class);
     private Request request = getSpyMockRequest("",
                 ImmutableMap.of(RestApiConstants.ENTITY, "testtable", RestApiConstants.QUERY, "All records"));

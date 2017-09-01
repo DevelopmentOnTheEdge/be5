@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
 import com.developmentontheedge.beans.DynamicProperty
@@ -13,8 +14,8 @@ import static org.junit.Assert.*
 
 class SqlHelperTest extends AbstractProjectIntegrationH2Test
 {
-    SqlHelper sqlHelper = injector.get(SqlHelper.class)
-    Meta meta = injector.get(Meta.class)
+    @Inject private SqlHelper sqlHelper
+    @Inject private Meta meta
 
     @Test
     void getDpsWithoutAutoIncrementTest(){

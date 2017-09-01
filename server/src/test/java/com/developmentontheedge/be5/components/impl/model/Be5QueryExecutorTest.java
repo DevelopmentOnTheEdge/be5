@@ -1,11 +1,14 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -17,12 +20,17 @@ import static org.mockito.Mockito.mock;
 
 public class Be5QueryExecutorTest extends AbstractProjectIntegrationH2Test
 {
-    private Query query = injector.getProject().getEntity("testtable").getQueries().get("All records");
-    private static SqlService db = injector.getSqlService();
+    @Inject private ProjectProvider projectProvider;
+    @Inject private SqlService db;
+    @Inject private Injector injector;
 
-    @BeforeClass
-    public static void hasOneRow()
+    private Query query;
+
+    @Before
+    public void hasOneRow()
     {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("All records");
+        db.update("delete from testtable");
         db.insert("insert into testtable (name, value) VALUES (?, ?)",
                 "testBe5QueryExecutor", "1");
     }

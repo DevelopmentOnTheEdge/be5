@@ -1,10 +1,13 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,14 +22,13 @@ import static junit.framework.TestCase.assertEquals;
 
 public class MultiThreadedTest extends AbstractProjectIntegrationH2Test
 {
-    private static SqlService db;
-    private static DatabaseService databaseService;
+    @Inject private Injector injector;
+    @Inject private SqlService db;
+    @Inject private DatabaseService databaseService;
 
-    @BeforeClass
-    public static void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        databaseService = injector.getDatabaseService();
-        db = injector.getSqlService();
         db.update("DELETE FROM persons" );
     }
 
@@ -57,16 +59,16 @@ public class MultiThreadedTest extends AbstractProjectIntegrationH2Test
         }
     }
 
-    @AfterClass
-    public static void after(){
-        while(databaseService.getNumActive() > 0) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(databaseService.getConnectionsStatistics());
-    }
+//    @AfterClass
+//    public static void after(){
+//        while(databaseService.getNumActive() > 0) {
+//            try {
+//                Thread.sleep(50);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        System.out.println(databaseService.getConnectionsStatistics());
+//    }
 
 }

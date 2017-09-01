@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services.impl
 import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.api.services.QRecService
 import com.developmentontheedge.be5.api.services.SqlService
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.QRec
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.AbstractProjectIntegrationH2Test
@@ -15,9 +16,9 @@ import static org.junit.Assert.assertNotNull
 
 class QRecServiceImplTest extends AbstractProjectIntegrationH2Test
 {
-    SqlService db = injector.getSqlService()
-    QRecService qRec = injector.get(QRecService.class)
-    DatabaseModel database = injector.get(DatabaseModel.class)
+    @Inject private SqlService db
+    @Inject private QRecService qRec
+    @Inject private DatabaseModel database
 
     @Before
     void before(){
