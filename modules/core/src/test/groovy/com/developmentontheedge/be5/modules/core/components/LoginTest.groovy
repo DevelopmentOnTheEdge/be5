@@ -1,78 +1,80 @@
-package com.developmentontheedge.be5.modules.core.components;
+package com.developmentontheedge.be5.modules.core.components
 
-import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.api.services.LoginService;
-import com.developmentontheedge.be5.test.AbstractProjectTest;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.developmentontheedge.be5.api.Component
+import com.developmentontheedge.be5.api.Request
+import com.developmentontheedge.be5.api.Response
+import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.env.Injector
+import com.developmentontheedge.be5.api.services.LoginService
+import com.developmentontheedge.be5.test.AbstractProjectTest
+import org.junit.Before
+import org.junit.Test
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any
+import static org.mockito.Matchers.eq
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.verify
+import static org.mockito.Mockito.when
 
-public class LoginTest extends AbstractProjectTest
+class LoginTest extends AbstractProjectTest
 {
-    private static Component component;
-
-    @BeforeClass
-    public static void init(){
-        component = injector.getComponent("login");
+    @Inject Injector injector
+    private static Component component
+    
+    @Before
+    void init(){
+        component = injector.getComponent("login")
     }
 
     @Test
-    public void login() throws Exception {
-        String testUser = "testUser";
-        String testPass = "testPass";
-        Response response = mock(Response.class);
-        Request request = getMockRequest("");
-        when(request.get("username")).thenReturn(testUser);
-        when(request.get("password")).thenReturn(testPass);
+    void login() throws Exception {
+        String testUser = "testUser"
+        String testPass = "testPass"
+        Response response = mock(Response.class)
+        Request request = getMockRequest("")
+        when(request.get("username")).thenReturn(testUser)
+        when(request.get("password")).thenReturn(testPass)
 
-        Injector sp = mock(Injector.class);
+        Injector sp = mock(Injector.class)
 
-        LoginService loginService = mock(LoginService.class);
+        LoginService loginService = mock(LoginService.class)
 
-        when(loginService.login(any(),any(),any())).thenReturn(true);
+        when(loginService.login(any(),any(),any())).thenReturn(true)
 
-        when(sp.getLoginService()).thenReturn(loginService);
-        component.generate(request, response, sp);
+        when(sp.getLoginService()).thenReturn(loginService)
+        component.generate(request, response, sp)
 
-        verify(loginService).login(eq(request), eq(testUser), eq(testPass));
+        verify(loginService).login(eq(request), eq(testUser), eq(testPass))
 
-        verify(response).sendSuccess();
+        verify(response).sendSuccess()
     }
 
     @Test
-    public void loginAccessDenied() throws Exception {
-        String testUser = "testUser";
-        String testPass = "testPass";
-        Response response = mock(Response.class);
-        Request request = getMockRequest("");
-        when(request.get("username")).thenReturn(testUser);
-        when(request.get("password")).thenReturn(testPass);
+    void loginAccessDenied() throws Exception {
+        String testUser = "testUser"
+        String testPass = "testPass"
+        Response response = mock(Response.class)
+        Request request = getMockRequest("")
+        when(request.get("username")).thenReturn(testUser)
+        when(request.get("password")).thenReturn(testPass)
 
-        Injector sp = mock(Injector.class);
+        Injector sp = mock(Injector.class)
 
-        LoginService loginService = mock(LoginService.class);
+        LoginService loginService = mock(LoginService.class)
 
-        when(sp.getLoginService()).thenReturn(loginService);
-        component.generate(request, response, sp);
+        when(sp.getLoginService()).thenReturn(loginService)
+        component.generate(request, response, sp)
 
-        verify(response).sendError(eq("Access denied"), eq("loginError"));
+        verify(response).sendError(eq("Access denied"), eq("loginError"))
     }
 
     @Test
-    public void error() throws Exception {
-        Response response = mock(Response.class);
+    void error() throws Exception {
+        Response response = mock(Response.class)
 
-        component.generate(getMockRequest(""), response, injector);
+        component.generate(getMockRequest(""), response, injector)
 
-        verify(response).sendError(eq("Empty username or password"), eq("loginError"));
+        verify(response).sendError(eq("Empty username or password"), eq("loginError"))
     }
 
 }

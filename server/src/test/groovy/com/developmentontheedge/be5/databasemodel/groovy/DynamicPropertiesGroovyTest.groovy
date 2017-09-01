@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
@@ -15,8 +16,7 @@ import static com.developmentontheedge.beans.BeanInfoConstants.*
 
 class DynamicPropertiesGroovyTest extends AbstractProjectTest
 {
-
-    def database = injector.get(DatabaseModel.class);
+    @Inject private DatabaseModel database
 
     @Test
     void testSetValue() throws Exception

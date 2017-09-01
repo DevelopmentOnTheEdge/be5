@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.components;
 
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
@@ -8,6 +10,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,10 +24,11 @@ import static org.mockito.Mockito.verify;
 
 public class LanguageSelectorTest extends AbstractProjectTest
 {
-    private static Component component;
+    @Inject private Injector injector;
+    private Component component;
 
-    @BeforeClass
-    public static void init(){
+    @Before
+    public void init(){
         component = injector.getComponent("languageSelector");
     }
 

@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -11,11 +13,11 @@ import static org.junit.Assert.assertNotNull;
 
 public class ProjectTest extends AbstractProjectTest
 {
-
+    @Inject private ProjectProvider projectProvider;
     @Test
     public void testGetQuery()
     {
-        Project project = injector.getProject();
+        Project project = projectProvider.getProject();
         assertEquals("SELECT\n" +
                 "  t.name AS \"Name\",\n" +
                 "  t.value AS \"Value\"\n" +
@@ -27,7 +29,7 @@ public class ProjectTest extends AbstractProjectTest
     @Test
     public void testQueryCompiledValidate() throws ProjectElementException
     {
-        Query testQuery = injector.getProject().getEntity("testtable").getQueries().get("All records");
+        Query testQuery = projectProvider.getProject().getEntity("testtable").getQueries().get("All records");
 
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertNotNull(validatedQuery);

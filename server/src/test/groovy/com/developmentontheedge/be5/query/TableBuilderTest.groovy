@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.query
 
+import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.components.impl.model.TableModel
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import org.junit.Test
 
@@ -9,6 +11,8 @@ import static org.junit.Assert.assertEquals
 
 class TableBuilderTest extends AbstractProjectTest
 {
+    @Inject Meta meta
+
     class TestTable extends TableBuilderSupport
     {
         @Override
@@ -27,7 +31,7 @@ class TableBuilderTest extends AbstractProjectTest
     void getColumnsTest() throws Exception
     {
         def tableBuilder = new TestTable().initialize(
-                injector.getMeta().getQueryIgnoringRoles("testtableAdmin", "All records"),
+                meta.getQueryIgnoringRoles("testtableAdmin", "All records"),
                 new HashMap<>(),
                 getMockRequest("")
         )

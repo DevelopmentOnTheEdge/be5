@@ -2,12 +2,15 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -22,10 +25,11 @@ import static org.mockito.Mockito.verify;
 
 public class FormTest extends AbstractProjectTest
 {
-    private static Component component;
+    @Inject private Injector injector;
+    private Component component;
 
-    @BeforeClass
-    public static void init(){
+    @Before
+    public void init(){
         component = injector.getComponent("form");
     }
 

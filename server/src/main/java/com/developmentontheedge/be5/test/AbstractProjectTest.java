@@ -22,7 +22,7 @@ import java.util.Map;
 public abstract class AbstractProjectTest extends TestUtils
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
-    protected static Injector injector = null;
+    private static Injector injector = null;
 
     @Before
     public void injectMembers() {

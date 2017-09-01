@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 public class EntityModelAddTest extends AbstractProjectTest
 {
-    private DatabaseModel database = injector.get(DatabaseModel.class);
+    @Inject private DatabaseModel database;
 
     @BeforeClass
     public static void beforeClass(){

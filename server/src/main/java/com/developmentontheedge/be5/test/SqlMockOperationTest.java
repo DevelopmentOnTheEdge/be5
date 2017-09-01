@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import org.junit.AfterClass;
@@ -12,9 +14,9 @@ import org.junit.BeforeClass;
 
 public abstract class SqlMockOperationTest extends AbstractProjectTest
 {
-    protected static OperationService operationService = injector.get(OperationService.class);
-    protected static SqlHelper sqlHelper = injector.get(SqlHelper.class);
-    protected static Meta meta = injector.get(Meta.class);
+    @Inject protected OperationService operationService;
+    @Inject protected SqlHelper sqlHelper;
+    @Inject protected Meta meta;
 
     @BeforeClass
     public static void beforeClass(){
@@ -30,6 +32,5 @@ public abstract class SqlMockOperationTest extends AbstractProjectTest
     public void before(){
         SqlServiceMock.clearMock();
     }
-
 
 }

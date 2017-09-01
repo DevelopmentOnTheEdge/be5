@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.model;
 
+import com.developmentontheedge.be5.api.services.LoginService;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.impl.LoginServiceImpl;
@@ -18,13 +21,13 @@ import static org.junit.Assert.assertEquals;
 public class UserInfoTest extends AbstractProjectTest
 {
     private static UserInfo ui;
-    private static LoginServiceImpl loginService = new LoginServiceImpl(null, injector.getProjectProvider());
+    @Inject private LoginService loginService;
 
     @Before
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = injector.getLoginService().saveUser("test", roles, Locale.US, "");
+        ui = loginService.saveUser("test", roles, Locale.US, "");
 
         assertEquals(roles, ui.getCurrentRoles());
     }

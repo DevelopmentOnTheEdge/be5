@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.util
 
 import com.developmentontheedge.be5.api.services.SqlService
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import org.junit.Test
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.verify
 
 class UtilsTest extends AbstractProjectTest
 {
-    SqlService db = injector.get(SqlService.class)
+    @Inject SqlService db
 
     private SimpleDateFormat dateFormatter = new SimpleDateFormat( "yyyy-MM-dd" )
     private SimpleDateFormat timeFormatter = new SimpleDateFormat( "HH:mm:ss" )

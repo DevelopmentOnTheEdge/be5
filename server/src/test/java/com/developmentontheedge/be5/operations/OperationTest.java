@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -20,9 +21,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class OperationTest extends AbstractProjectTest{
-
-    private OperationService operationService = injector.get(OperationService.class);
+public class OperationTest extends AbstractProjectTest
+{
+    @Inject private OperationService operationService;
 
     @BeforeClass
     public static void beforeClass(){

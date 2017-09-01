@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.env.impl;
 
 import com.developmentontheedge.be5.env.Be5;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.impl.testServices.AService;
 import com.developmentontheedge.be5.env.impl.testServices.BService;
@@ -14,6 +15,8 @@ import static org.mockito.Mockito.verify;
 
 public class Be5InjectorCyclicDependenciesWithAnnotatedTest extends AbstractProjectTest
 {
+    @Inject private Injector injector;
+
     @Before
     public void before(){
         SqlServiceMock.clearMock();

@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.components;
 
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -10,6 +13,7 @@ import com.developmentontheedge.be5.components.RoleSelector.RoleSelectorResponse
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,10 +25,11 @@ import static org.mockito.Mockito.verify;
 
 public class RoleSelectorTest extends AbstractProjectTest
 {
+    @Inject private Injector injector;
     private static Component component;
 
-    @BeforeClass
-    public static void init(){
+    @Before
+    public void init(){
         component = injector.getComponent("roleSelector");
     }
 

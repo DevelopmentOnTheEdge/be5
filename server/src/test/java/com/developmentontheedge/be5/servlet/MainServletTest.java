@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +27,8 @@ import static org.mockito.Mockito.when;
 
 public class MainServletTest extends AbstractProjectTest
 {
+    @Inject private Injector injector;
+
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private PrintWriter writer = mock(PrintWriter.class);

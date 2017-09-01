@@ -22,9 +22,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class MultiThreadedTest extends AbstractProjectIntegrationH2Test
 {
-    @Inject private Injector injector;
     @Inject private SqlService db;
-    @Inject private DatabaseService databaseService;
 
     @Before
     public void setUp() throws Exception

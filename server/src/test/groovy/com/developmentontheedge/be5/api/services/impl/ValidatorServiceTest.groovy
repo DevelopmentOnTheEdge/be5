@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.validation.Validator
+import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.AbstractProjectTest
 import com.developmentontheedge.beans.DynamicProperty
 import org.junit.Test
@@ -8,7 +9,7 @@ import org.junit.Test
 
 class ValidatorServiceTest extends AbstractProjectTest
 {
-    private static final Validator validator = injector.get(Validator.class);
+    @Inject Validator validator
 
     @Test
     void name()

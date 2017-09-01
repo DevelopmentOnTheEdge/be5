@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.AbstractProjectTest;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class ValidatorTest extends AbstractProjectTest
 {
-    private static final Validator validator = injector.get(Validator.class);
+    @Inject private Validator validator;
 
     @Test
     public void test() throws Exception

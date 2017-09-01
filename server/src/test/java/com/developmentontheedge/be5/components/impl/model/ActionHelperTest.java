@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -10,6 +12,8 @@ import static org.junit.Assert.*;
 
 public class ActionHelperTest extends AbstractProjectTest
 {
+    @Inject private Meta meta;
+
     @Test
     public void legacyUrlTest() throws Exception
     {
@@ -29,7 +33,7 @@ public class ActionHelperTest extends AbstractProjectTest
 
     private Query getQuery(QueryType type, String queryCode)
     {
-        Entity entity = injector.getMeta().getEntity("testtable");
+        Entity entity = meta.getEntity("testtable");
         Query query = new Query("ActionHelperTest", entity);
 
         query.setType(type);
