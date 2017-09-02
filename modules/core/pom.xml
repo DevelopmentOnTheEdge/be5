@@ -56,6 +56,14 @@
 				<configuration>
 					<projectPath>./</projectPath>
 				</configuration>
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<phase>generate-sources</phase>-->
+						<!--<goals>-->
+							<!--<goal>validate</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.gmaven</groupId>
@@ -76,7 +84,22 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<!--<plugin>-->
+				<!--<groupId>org.codehaus.mojo</groupId>-->
+				<!--<artifactId>exec-maven-plugin</artifactId>-->
+				<!--<version>1.5.0</version>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<phase>generate-sources</phase>-->
+						<!--<goals>-->
+							<!--<goal>java</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+				<!--<configuration>-->
+					<!--<mainClass>com.developmentontheedge.be5.modules.core.gen.EntityModelsGen</mainClass>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 		</plugins>
 	</build>
 

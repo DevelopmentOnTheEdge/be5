@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.modules.core.entity.genegate.CoreEntityModels
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Before
 import org.junit.Test
@@ -17,6 +18,8 @@ class CoreUtilsTest extends Be5ProjectDBTest
     @Inject CoreUtils utils
     @Inject Be5Caches be5Caches
 
+    @Inject CoreEntityModels entities
+
     @Before
     void before(){
         db.update("DELETE FROM systemSettings")
@@ -27,6 +30,8 @@ class CoreUtilsTest extends Be5ProjectDBTest
     @Test
     void getSystemSettingInSection() throws Exception
     {
+        entities.user_roles.add(["user_name": "user1", "role_name":"role1"])
+
         database.systemSettings << [ section_name: "system", setting_name: "app_name", setting_value: "Test App" ]
         assertEquals "Test App", utils.
                 getSystemSettingInSection("system", "app_name", "Be5 Application")
