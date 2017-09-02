@@ -9,49 +9,43 @@ import com.developmentontheedge.be5.metadata.model.Entity
 
 class Users extends EntityModelBase
 {
-    class UsersModel
+    class UsersModel extends HashMap<String,String>
     {
-        private String user_name
-        private String user_pass
-        private String emailAddress
-        private Date registrationDate
-        private int attempt
-        private Object data
-
         void user_name(String user_name) {
-            this.user_name = user_name
+            this.put("user_name", user_name)
         }
 
         void user_pass(String user_pass) {
-            this.user_pass = user_pass
+            this.put("user_pass", user_pass)
         }
 
         void emailAddress(String emailAddress) {
-            this.emailAddress = emailAddress
+            this.put("emailAddress", emailAddress)
         }
 
-        void registrationDate(Date registrationDate) {
-            this.registrationDate = registrationDate
+        void registrationDate(java.sql.Date registrationDate) {
+            this.put("registrationDate", registrationDate.toString())
         }
 
-        void attempt(int attempt) {
-            this.attempt = attempt
+        void attempt(Integer attempt) {
+            this.put("attempt", attempt.toString())
         }
 
         void data(Object data) {
-            this.data = data
+            this.put("data", data.toString())
         }
     }
 
-    Users(SqlService db, SqlHelper sqlHelper, Validator validator, Entity entity) {
+    Users(SqlService db, SqlHelper sqlHelper, Validator validator, Entity entity)
+    {
         super(db, sqlHelper, validator, entity)
     }
 
-    String insert(@DelegatesTo(UsersModel.class) final Closure config) {
+    String insert(@DelegatesTo(UsersModel.class) final Closure config)
+    {
         final UsersModel model = new UsersModel()
         model.with config
-        
-        return "123"
-        //return super.a
+
+        return add(model)
     }
 }
