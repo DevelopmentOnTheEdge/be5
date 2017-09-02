@@ -1,4 +1,4 @@
 context:
   services:
-  - com.developmentontheedge.be5.modules.core.entity.genegate.CoreEntityModels
+  - com.developmentontheedge.be5.modules.core.genegate.CoreEntityModels
   - com.developmentontheedge.be5.modules.core.services.CoreUtils
