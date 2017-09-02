@@ -90,6 +90,10 @@ public class Be5Injector implements Injector
         }
         catch (IllegalStateException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
+            if(e instanceof InvocationTargetException)
+            {
+                e.getCause().printStackTrace();
+            }
             throw new RuntimeException("Can't instantiate or initialize " + serviceClass.getName() + " service, " +
                     "may be constructor is not public", e);
         }
