@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
@@ -85,4 +86,9 @@ public abstract class OperationSupport implements Operation
     {
         return null;
     }
+
+    public final String RELOAD_ON_CHANGE = BeanInfoConstants.RELOAD_ON_CHANGE;
+    public final String MULTIPLE_SELECTION_LIST = BeanInfoConstants.MULTIPLE_SELECTION_LIST;
+
+    public final String VALIDATION_RULES = BeanInfoConstants.VALIDATION_RULES;
 }

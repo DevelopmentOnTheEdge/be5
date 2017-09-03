@@ -5,20 +5,22 @@ import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
 
 
-class TestOperation extends OperationSupport
+class TestOperation extends OperationSupport implements CoreEntityFields.DocTypesFields
 {
     @Inject CoreEntityModels entities
 
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        entities.fields.docTypes.with {
-            dps = sqlHelper.getDpsForColumns(getInfo().getEntity(), [CODE, Name])
+        dps = sqlHelper.getDpsForColumns(getInfo().getEntity(), [CODE, Name])
 
-            dps[CODE] << [ RELOAD_ON_CHANGE : true ]
+        dps[CODE] << [
+                RELOAD_ON_CHANGE, true,
+                VALIDATION_RULES, ["sf","dsf"],
+                MULTIPLE_SELECTION_LIST, true,
+        ]
 
-            dps[Name] << [ CAN_BE_NULL : false ]
-        }
+        dps[Name] << [CAN_BE_NULL: false]
 
         return dps
     }
