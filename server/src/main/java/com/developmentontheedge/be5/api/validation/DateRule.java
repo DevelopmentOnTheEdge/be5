@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.validation;
 
+import com.developmentontheedge.be5.api.validation.rule.SimpleRule;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 
@@ -13,7 +14,7 @@ public class DateRule extends AbstractRule
 {
     public DateRule()
     {
-        super( Validation.DATE, Validation.MESSAGE_DATE );
+        super(SimpleRule.date.name());
     }
 
 //    @Override
