@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.DateUtils
+import com.developmentontheedge.beans.DynamicPropertySetSupport
 import groovy.transform.TypeChecked
 import org.junit.Test
 

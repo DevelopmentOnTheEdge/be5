@@ -16,4 +16,5 @@ public class CoreEntityModels
     public Users users;
     //public UserRoles user_roles;
 
+    public CoreEntityFields fields = new CoreEntityFields();
 }
