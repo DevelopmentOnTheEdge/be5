@@ -27,7 +27,8 @@ public abstract class SqlMockOperationTest extends Be5ProjectTest
     }
 
     @Before
-    public void before(){
+    public void clearSqlServiceMock()
+    {
         SqlServiceMock.clearMock();
     }
 
