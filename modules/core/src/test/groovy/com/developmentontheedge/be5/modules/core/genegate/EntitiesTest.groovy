@@ -27,8 +27,14 @@ class EntitiesTest extends Be5ProjectTest
             attempt          345
         }
 
-//        verify(SqlServiceMock.mock).insert(eq("INSERT INTO users (user_name, registrationDate, attempt) VALUES (?, ?, ?)"),
-//                eq("test"), eq(day), eq(345))
+        //db.select("", {rs -> Long.parseLong(((ResultSet)rs).getString(0))})
+
+        verify(SqlServiceMock.mock).insert(
+                eq("INSERT INTO users (user_name, registrationDate, attempt) VALUES (?, ?, ?)"),
+                eq("test"),
+                refEq(day),
+                eq(345)
+        )
 
         assertEquals "123", id
     }
