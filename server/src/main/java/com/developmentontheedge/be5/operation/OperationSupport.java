@@ -87,6 +87,9 @@ public abstract class OperationSupport implements Operation
         return null;
     }
 
+
+    public final String name = "name";
+    public final String CAN_BE_NULL = BeanInfoConstants.CAN_BE_NULL;
     public final String RELOAD_ON_CHANGE = BeanInfoConstants.RELOAD_ON_CHANGE;
     public final String MULTIPLE_SELECTION_LIST = BeanInfoConstants.MULTIPLE_SELECTION_LIST;
 
