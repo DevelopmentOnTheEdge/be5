@@ -36,7 +36,7 @@ public interface EntityModel<R extends RecordModel> {
      * This method never use cache.
      * @return number of records
      */
-    long count(Map<String, String> values);
+    long count(Map<String, ? super Object> values);
 
     /**
      * Returns <tt>true</tt> if this table contains no records.
@@ -53,7 +53,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if entity contains record consistent with 
      * conditions, otherwise false
      */
-    boolean contains(Map<String, String> conditions);
+    boolean contains(Map<String, ? super Object> conditions);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -82,7 +82,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if entity contains record consistent with the  
      * all specified condition 
      */
-    boolean containsAll(Collection<Map<String, String>> c);
+    boolean containsAll(Collection<Map<String, ? super Object>> c);
     
     /**
      * Adds all records from collection into database.
@@ -104,7 +104,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(Map<String, String> conditions);
+    RecordModel get( Map<String, ? super Object> conditions );
     
     /**
      * Sets value to property with a specified name.<br>
@@ -129,7 +129,7 @@ public interface EntityModel<R extends RecordModel> {
 
     //void setMany( Map<String, String> values, String id, String... otherId);
 
-    void setMany( Map<String, String> values, Map<String, String> conditions);
+//    void setMany( Map<String, ? super Object> values, Map<String, ? super Object> conditions);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -149,9 +149,9 @@ public interface EntityModel<R extends RecordModel> {
      */
     void setForce(String id, Map<String, String> values);
 
-    void setForceMany(String propertyName, String value, Map<String, String> conditions);
+    //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
-    void setForceMany(Map<String, String> values, Map<String, String> conditions);
+//    void setForceMany(Map<String, String> values, Map<String, String> conditions);
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.
@@ -176,7 +176,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values conditions
      * @return count of deleted records
      */
-    int remove(Map<String, String> values);
+    int remove(Map<String, ? super Object> values);
     
     /**
      * Deletes the record with the specified identifiers.

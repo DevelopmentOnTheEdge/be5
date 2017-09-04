@@ -16,38 +16,41 @@ public class AstWhere extends SimpleNode
         addChild(AstInPredicate.of(columnName, count));
     }
 
-    public AstWhere(Map<String, String> conditions)
+    public AstWhere(Map<String, ? super Object> conditions)
     {
         this(SqlParserTreeConstants.JJTWHERE);
         if(conditions.size() > 0 )
         {
-            Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
+            Iterator<? extends Map.Entry<String, ? super Object>> iterator = conditions.entrySet().iterator();
             iterator.hasNext();
             addChild(addAstFunNode(iterator));
         }
     }
 
-    private SimpleNode addAstFunNode(Iterator<Map.Entry<String, String>> iterator) {
+    private SimpleNode addAstFunNode(Iterator<? extends Map.Entry<String, ? super Object>> iterator) {
 //        TODO add !=, NOT LIKE
 //        var udIDs = database.utilityDocuments.ids( {
 //                externalStatus: "!=ok"
 //        } );
-        Map.Entry<String, String> entry = iterator.next();
-        String value = entry.getValue();
+        Map.Entry<String, ? super Object> entry = iterator.next();
+        Object valueObj = entry.getValue();
         PredefinedFunction function = DefaultParserContext.FUNC_EQ;
-        SimpleNode astFunNode;
+        SimpleNode astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
 
-        if(value.equals("null") || value.equals("notNull"))
-        {
-            astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
-        }
-        else
-        {
-            if(value.endsWith("%") || value.startsWith("%"))
-            {
-                function = DefaultParserContext.FUNC_LIKE;
+        if(valueObj instanceof String) {
+            String value = (String)valueObj;
+            if (value.equals("null") || value.equals("notNull")) {
+                astFunNode = new AstNullPredicate(value.equals("null"), new AstFieldReference(entry.getKey()));
+            } else {
+                if (value.endsWith("%") || value.startsWith("%")) {
+                    function = DefaultParserContext.FUNC_LIKE;
+                }
+                astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
             }
-            astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
+        }else{
+            if(valueObj == null){
+                astFunNode = new AstNullPredicate(true, new AstFieldReference(entry.getKey()));
+            }
         }
 
         if(iterator.hasNext()){

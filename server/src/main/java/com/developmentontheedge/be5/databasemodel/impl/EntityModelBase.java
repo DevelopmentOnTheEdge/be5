@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
+
+import static java.util.Collections.emptyMap;
 
 
 public class EntityModelBase<R extends RecordModelBase> implements EntityModelAdapter<R>
@@ -56,7 +59,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public RecordModel get( Map<String, String> conditions )
+    public RecordModel get( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
@@ -65,12 +68,14 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 .from(entity.getName())
                 .where(conditions);
 
-        DynamicPropertySet dps = db.select(sql.format(), DpsRecordAdapter::createDps, castValues(entity, conditions));
+        //castValues(entity, conditions) -> sqlHelper.getDps(entity) - fix
+        DynamicPropertySet dps = db.select(sql.format(), DpsRecordAdapter::createDps, conditions.values().toArray());
         return dps == null ? null : new RecordModelBase( this, dps );
     }
 
     @DirtyRealization(comment="move to sqlHelper, use castToType")
-    private Object[] castValues(Entity entity, Map<String, String> stringValues){
+    private Object[] castValues(Entity entity, Map<String, String> stringValues)
+    {
         DynamicPropertySet dps = sqlHelper.getDps(entity);
         sqlHelper.getDps(entity);
 
@@ -96,7 +101,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
     
     @Override
-    public long count( Map<String, String> conditions ) {
+    public long count( Map<String, ? super Object> conditions ) {
         Objects.requireNonNull(conditions);
 
         AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
@@ -137,7 +142,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public boolean contains( Map<String, String> conditions )
+    public boolean contains( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
         return count(conditions) != 0;
@@ -151,7 +156,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public boolean containsAll( Collection<Map<String, String>> c )
+    public boolean containsAll( Collection<Map<String, ? super Object>> c )
     {
         return c.stream().allMatch( this::contains );
     }
@@ -177,7 +182,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     @Override
     public RecordModel get( String id )
     {
-        return get(Collections.singletonMap(entity.getPrimaryKey(), "" + id));
+        return get(Collections.singletonMap(entity.getPrimaryKey(), sqlHelper.castToTypePrimaryKey(entity, id)));
     }
 
     @Override
@@ -205,11 +210,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
     @Override
     public int removeAll(){
-        return remove(Collections.emptyMap());
+        return remove(emptyMap());
     }
 
     @Override
-    public int remove( Map<String, String> values )
+    public int remove( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
         return db.update(sqlHelper.generateDelete(entity, values),
@@ -239,13 +244,13 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     @Override
     public List<R> toList()
     {
-        return toList( Collections.emptyMap() );
+        return toList( emptyMap() );
     }
 
     @Override
     public RecordModel[] toArray()
     {
-        return toArray( Collections.emptyMap() );
+        return toArray( emptyMap() );
     }
     
     @Override
@@ -327,13 +332,13 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         setForce( id, values );
     }
 
-    @Override
-    public void setMany( Map<String, String> values, Map<String, String> conditions )
-    {
-        Objects.requireNonNull(values);
-        Objects.requireNonNull(conditions);
-        setForceMany(values, conditions);
-    }
+//    @Override
+//    public void setMany( Map<String, String> values, Map<String, String> conditions )
+//    {
+//        Objects.requireNonNull(values);
+//        Objects.requireNonNull(conditions);
+//        setForceMany(values, conditions);
+//    }
 
     @Override
     final public void setForce( String id, Map<String, String> values )
@@ -352,34 +357,34 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         db.update(sqlHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(sqlHelper.getValues(dps), pkValue));
     }
+//
+//    @Override
+//    public void setForceMany(String propertyName, String value, Map<String, String> conditions)
+//    {
+//        Objects.requireNonNull(propertyName);
+//        Objects.requireNonNull(value);
+//        Objects.requireNonNull(conditions);
+//        setForceMany( Collections.singletonMap( propertyName, value ), conditions);
+//    }
 
-    @Override
-    public void setForceMany(String propertyName, String value, Map<String, String> conditions)
-    {
-        Objects.requireNonNull(propertyName);
-        Objects.requireNonNull(value);
-        Objects.requireNonNull(conditions);
-        setForceMany( Collections.singletonMap( propertyName, value ), conditions);
-    }
-
-    /**
-     * in process
-     */
-    @Override
-    public void setForceMany(Map<String, String> values, Map<String, String> conditions)
-    {
-        Objects.requireNonNull(values);
-        Objects.requireNonNull(conditions);
-
-        DynamicPropertySet dps = db.select(
-                Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
-                rs -> sqlHelper.getDpsForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
-
-        sqlHelper.updateValuesWithSpecial(dps, values);
-
-        db.update(sqlHelper.generateUpdateSqlForConditions(entity, dps, conditions),
-                ObjectArrays.concat(sqlHelper.getValues(dps), castValues(entity, conditions), Object.class));
-    }
+//    /**
+//     * in process
+//     */
+//    @Override
+//    public void setForceMany(Map<String, ? super Object> values, Map<String, ? super Object> conditions)
+//    {
+//        Objects.requireNonNull(values);
+//        Objects.requireNonNull(conditions);
+//
+//        DynamicPropertySet dps = db.select(
+//                Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
+//                rs -> sqlHelper.getDpsForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
+//
+//        sqlHelper.updateValuesWithSpecial(dps, values);
+//
+//        db.update(sqlHelper.generateUpdateSqlForConditions(entity, dps, conditions),
+//                ObjectArrays.concat(sqlHelper.getValues(dps), castValues(entity, conditions), Object.class));
+//    }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
     {
@@ -417,7 +422,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     @Override
     public QueryModel getQuery( String queryName ) 
     {
-        return new QueryModelBase( queryName, Collections.emptyMap() );
+        return new QueryModelBase( queryName, emptyMap() );
     }
 
     @Override

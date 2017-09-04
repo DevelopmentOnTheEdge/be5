@@ -400,7 +400,7 @@ public class SqlHelper
                 .where(Collections.singletonMap(entity.getPrimaryKey(), "?")).format();
     }
 
-    public String generateUpdateSqlForConditions(Entity entity, DynamicPropertySet dps, Map<String, String> conditions)
+    public String generateUpdateSqlForConditions(Entity entity, DynamicPropertySet dps, Map<String, ? super Object> conditions)
     {
         Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
@@ -418,7 +418,7 @@ public class SqlHelper
 //                .whereInPredicate(entity.getPrimaryKey(), count).format();
 //    }
 
-    public String generateDelete(Entity entity, Map<String, String> conditions)
+    public String generateDelete(Entity entity, Map<String, ? super Object> conditions)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
