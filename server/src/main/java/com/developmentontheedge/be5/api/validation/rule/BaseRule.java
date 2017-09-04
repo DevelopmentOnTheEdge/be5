@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.validation.rule;
 
-public enum SimpleRule
+public enum BaseRule
 {
     digits,
     phone,

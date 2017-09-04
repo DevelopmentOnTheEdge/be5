@@ -19,10 +19,6 @@ public interface Validation
         }
     }
 
-    /**
-     * List of default validation rules. You can extend this list
-     * in your app by simply adding new rules into it.
-     */
     List<AbstractRule> defaultRules = Arrays.asList(
             //new RequiredRule(),
             new IntegerRule(),
