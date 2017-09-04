@@ -348,11 +348,13 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = sqlHelper.castToTypePrimaryKey(entity, id);
 
+        Collection<String> columns = sqlHelper.addUpdateSpecialColumns(entity, values.keySet());
         DynamicPropertySet dps = db.select(
                 Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
-                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), pkValue);
+                rs -> sqlHelper.getDpsForColumns(entity, columns, rs), pkValue);
 
-        sqlHelper.updateValuesWithSpecial(dps, values);
+        sqlHelper.setValues(dps, values);
+        sqlHelper.updateSpecialColumns(dps);
 
         db.update(sqlHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(sqlHelper.getValues(dps), pkValue));

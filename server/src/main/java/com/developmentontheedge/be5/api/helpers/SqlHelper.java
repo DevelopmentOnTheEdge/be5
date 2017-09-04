@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collector;
@@ -47,6 +49,13 @@ public class SqlHelper
             .add(CREATION_DATE_COLUMN_NAME)
             .add(MODIFICATION_DATE_COLUMN_NAME)
             .add(IP_INSERTED_COLUMN_NAME)
+            .add(IP_MODIFIED_COLUMN_NAME)
+            .add(IS_DELETED_COLUMN_NAME)
+            .build();
+
+    private static final List<String> updateSpecialColumns = ImmutableList.<String>builder()
+            .add(WHO_MODIFIED_COLUMN_NAME)
+            .add(MODIFICATION_DATE_COLUMN_NAME)
             .add(IP_MODIFIED_COLUMN_NAME)
             .add(IS_DELETED_COLUMN_NAME)
             .build();
@@ -190,14 +199,32 @@ public class SqlHelper
         return dp;
     }
 
+    /**
+     * todo DEFAULT_VALUE -> value - как в be3?
+     */
     public void setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)
         {
-            //todo DEFAULT_VALUE -> value - как в be3?
-            if (property.getValue() == null) property.setValue(values.get(property.getName()));
+            if(values.containsKey(property.getName()))property.setValue(values.get(property.getName()));
             if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
         }
+    }
+
+    public Collection<String> addUpdateSpecialColumns(Entity entity, Set<String> set)
+    {
+        Set<String> newCollections = new HashSet<>(set);
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
+        for(String propertyName: updateSpecialColumns)
+        {
+            if(!newCollections.contains(propertyName))
+            {
+                ColumnDef columnDef = columns.get(propertyName);
+                if (columnDef != null) newCollections.add(propertyName);
+            }
+        }
+        return newCollections;
     }
 
     public void addSpecialIfNotExists(DynamicPropertySet dps, Entity entity)
@@ -214,17 +241,17 @@ public class SqlHelper
         }
     }
 
-    public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, ?> values)
-    {
-        for (Map.Entry<String, ?> entry: values.entrySet())
-        {
-            DynamicProperty property = dps.getProperty(entry.getKey());
-            if( property!= null)
-                property.setValue(entry.getValue());
-        }
-
-        updateSpecialColumns(dps);
-    }
+//    public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, ?> values)
+//    {
+//        for (Map.Entry<String, ?> entry: values.entrySet())
+//        {
+//            DynamicProperty property = dps.getProperty(entry.getKey());
+//            if( property!= null)
+//                property.setValue(entry.getValue());
+//        }
+//
+//        updateSpecialColumns(dps);
+//    }
 
     public void updateSpecialColumns(DynamicPropertySet dps)
     {

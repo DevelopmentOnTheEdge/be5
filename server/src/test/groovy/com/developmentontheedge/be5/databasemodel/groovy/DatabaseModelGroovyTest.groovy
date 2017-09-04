@@ -22,18 +22,16 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Inject private SqlService db
 
     @Before
-    void beforeClass(){
+    void before()
+    {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        db.update("DELETE FROM testtableAdmin")
     }
 
     @After
-    void afterClass(){
+    void after()
+    {
         initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Before
-    void before(){
-        db.update("DELETE FROM testtableAdmin")
     }
 
     @Test

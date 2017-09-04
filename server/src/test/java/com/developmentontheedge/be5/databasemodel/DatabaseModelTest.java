@@ -12,15 +12,15 @@ import static org.junit.Assert.assertEquals;
 public class DatabaseModelTest
 {
 
-    @Test
-    public void databaseModel() throws Exception
-    {
-        assertEquals(DynamicPropertyMetaClass.class,
-                InvokerHelper.getMetaRegistry().getMetaClass(DynamicProperty.class).getClass());
-
-        assertEquals(DynamicPropertySetMetaClass.class,
-                InvokerHelper.getMetaRegistry().getMetaClass(DynamicPropertySetSupport.class).getClass());
-
-    }
+//    @Test
+//    public void databaseModel() throws Exception
+//    {
+//        assertEquals(DynamicPropertyMetaClass.class,
+//                InvokerHelper.getMetaRegistry().getMetaClass(DynamicProperty.class).getClass());
+//
+//        assertEquals(DynamicPropertySetMetaClass.class,
+//                InvokerHelper.getMetaRegistry().getMetaClass(DynamicPropertySetSupport.class).getClass());
+//
+//    }
 
 }
