@@ -13,9 +13,9 @@ import java.util.function.BiFunction;
 class QueryModelBase implements QueryModel
 {
     private String queryName;
-    private Map<String, String> params;
+    private Map<String, ? super Object> params;
 
-    public QueryModelBase( String queryName, Map<String, String> params)
+    public QueryModelBase( String queryName, Map<String, ? super Object> params)
     {
         this.queryName = queryName;
         this.params = new HashMap<>( params );

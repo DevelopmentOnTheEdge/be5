@@ -149,7 +149,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public String add( Map<String, String> values )
+    public String add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
         return addForce( values );
@@ -162,10 +162,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public List<String> addAll( final Collection<Map<String, String>> c )
+    public List<String> addAll( final Collection<Map<String, ? super Object>> c )
     {
         final List<String> keys = new ArrayList<>( c.size() );
-        for( Map<String, String> values : c )
+        for( Map<String, ? super Object> values : c )
         {
             keys.add( add( values ) );
         }
@@ -173,7 +173,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public int removeAll( Collection<Map<String, String>> c )
+    public int removeAll( Collection<Map<String, ? super Object>> c )
     {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException( "not implemented" );
@@ -254,14 +254,14 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
     
     @Override
-    public List<R> toList( Map<String, String> values )
+    public List<R> toList( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
         return new MultipleRecordsBase<List<R>>().get( values );
     }
 
     @Override
-    public RecordModel[] toArray( Map<String, String> values )
+    public RecordModel[] toArray( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
         MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>();
@@ -276,7 +276,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public <T> List<T> collect( Map<String, String> values, BiFunction<R, Integer, T> lambda )
+    public <T> List<T> collect( Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda )
     {
         Objects.requireNonNull(values);
         Objects.requireNonNull(lambda);
@@ -300,7 +300,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    final public String addForce( Map<String, String> values )
+    final public String addForce( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
         DynamicPropertySet dps = sqlHelper.getDpsForColumns(entity, values.keySet());
@@ -325,7 +325,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public void set( String id, Map<String, String> values )
+    public void set( String id, Map<String, ? super Object> values )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
@@ -341,7 +341,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 //    }
 
     @Override
-    final public void setForce( String id, Map<String, String> values )
+    final public void setForce( String id, Map<String, ? super Object> values )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
@@ -408,7 +408,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public QueryModel getQuery(String queryName, Map<String, String> params )
+    public QueryModel getQuery(String queryName, Map<String, ? super Object> params )
     {
         return new QueryModelBase( queryName, params );
     }
