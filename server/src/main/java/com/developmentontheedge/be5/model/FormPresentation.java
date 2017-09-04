@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class FormPresentation
 {
-
     public final String entity;
     public final String query;
     public final String operation;
@@ -14,8 +13,10 @@ public class FormPresentation
     public final JsonObject bean;
     public final Object layout;
     public final Map<String, Object> parameters;
+    public final String errorMsg;
 
-    public FormPresentation(String entity, String query, String operation, String title, String selectedRows, JsonObject bean, Object layout, Map<String, Object> parameters)
+    public FormPresentation(String entity, String query, String operation, String title, String selectedRows,
+                            JsonObject bean, Object layout, Map<String, Object> parameters, String errorMsg)
     {
         this.entity = entity;
         this.query = query;
@@ -25,6 +26,7 @@ public class FormPresentation
         this.bean = bean;
         this.layout = layout;
         this.parameters = parameters;
+        this.errorMsg = errorMsg;
     }
 
     public String getEntity()
@@ -65,5 +67,10 @@ public class FormPresentation
     public Map<String, Object> getParameters()
     {
         return parameters;
+    }
+
+    public String getErrorMsg()
+    {
+        return errorMsg;
     }
 }

@@ -78,6 +78,7 @@ public class OperationServiceImpl implements OperationService
                     presetValues, operation, null, operationContext, req);
         }
 
+        String errorMsg = "";
         if(parameters instanceof DynamicPropertySet)
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
@@ -86,9 +87,9 @@ public class OperationServiceImpl implements OperationService
                 {
                     validator.checkErrorAndCast((DynamicPropertySet) parameters);
                 }
-                catch (RuntimeException ignore)
+                catch (RuntimeException e)
                 {
-
+                    errorMsg = e.getMessage() + " - " + e.toString();
                 }
             }
             else
@@ -99,7 +100,7 @@ public class OperationServiceImpl implements OperationService
 
         return Either.first(new FormPresentation(entityName, queryName, operationName,
                 userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, errorMsg));
     }
 
     @Override
@@ -120,14 +121,6 @@ public class OperationServiceImpl implements OperationService
 
         Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
 
-        //todo add tests
-        if (parameters instanceof DynamicPropertySet)
-        {
-            DynamicPropertySet dps = (DynamicPropertySet)parameters;
-            sqlHelper.addSpecialIfNotExists(dps, meta.getEntity());
-            sqlHelper.setSpecialPropertyIfNull(dps);
-        }
-
         if(parameters instanceof DynamicPropertySet)
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
@@ -136,8 +129,17 @@ public class OperationServiceImpl implements OperationService
             }catch (RuntimeException e){
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        e.getMessage() + " - " + e.toString()));
             }
+        }
+
+        //todo add tests
+        if (parameters instanceof DynamicPropertySet)
+        {
+            DynamicPropertySet dps = (DynamicPropertySet)parameters;
+            sqlHelper.addSpecialIfNotExists(dps, meta.getEntity());
+            sqlHelper.setSpecialPropertyIfNull(dps);
         }
 
         return execute(entityName, queryName, operationName, selectedRowsString,
@@ -156,7 +158,19 @@ public class OperationServiceImpl implements OperationService
             {
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        operation.getResult().getMessage() + " " + operation.getResult().getDetails().toString()));
+            }
+
+            if (parameters instanceof DynamicPropertySet) {
+                try {
+                    validator.isError((DynamicPropertySet) parameters);
+                } catch (RuntimeException e) {
+                    return Either.first(new FormPresentation(entityName, queryName, operationName,
+                            userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                            e.getMessage() + " - " + e.toString()));
+                }
             }
 
             if(operation.getResult().getStatus() == OperationStatus.IN_PROGRESS)

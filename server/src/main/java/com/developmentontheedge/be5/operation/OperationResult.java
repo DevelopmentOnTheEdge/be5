@@ -25,12 +25,12 @@ public class OperationResult
     
     private OperationResult(OperationStatus status, Object details)
     {
-        this(status, getLocalisedMessage(status), details);
+        this(status, status.name(), details);
     }
 
     private OperationResult(OperationStatus status)
     {
-        this(status, getLocalisedMessage(status), null);
+        this(status, status.name(), "");
     }
 
     public OperationStatus getStatus()
@@ -48,15 +48,15 @@ public class OperationResult
         return details;
     }
 
-    private static String getLocalisedMessage(OperationStatus status)
-    {
-        return null;
-    }
-
-    private String getLocalisedMessage(String message, Object ... params)
-    {
-        return null;
-    }
+//    private static String getLocalisedMessage(OperationStatus status)
+//    {
+//        return null;
+//    }
+//
+//    private String getLocalisedMessage(String message, Object ... params)
+//    {
+//        return null;
+//    }
 
     ///////////////////////////////////////////////////////////////////
     // OperationResult factory methods
@@ -123,7 +123,7 @@ public class OperationResult
 
     public static OperationResult error(Throwable details)
     {
-        return new OperationResult(OperationStatus.ERROR, details.getMessage());
+        return new OperationResult(OperationStatus.ERROR, details.getMessage() == null ? "" : details.getMessage());
     }
 
     public static OperationResult error(String message)

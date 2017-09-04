@@ -85,7 +85,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
     @DirtyRealization(comment="move to sqlHelper, use castToType")
     private Object castValue(DynamicPropertySet dps, String name, String value){
-        return validator.parseFrom(dps.getProperty(name).getType(), value);
+        return validator.parseFrom(dps.getProperty(name), value);
     }
 
     @Override
