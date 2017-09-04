@@ -69,6 +69,8 @@ public class DpsRecordAdapter
         try{
             if( clazz == String.class )
                 return rs.getString( idx );
+            if( clazz == Short.class )
+                return rs.getShort( idx );
             if( clazz == Integer.class )
                 return rs.getInt( idx );
             if( clazz == Long.class )
