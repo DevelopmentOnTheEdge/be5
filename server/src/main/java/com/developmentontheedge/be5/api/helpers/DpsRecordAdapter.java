@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class DpsHelper
+public class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 

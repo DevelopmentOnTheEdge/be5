@@ -92,7 +92,7 @@ public class SqlHelper
             {
                 DynamicProperty property = dps.getProperty(metaData.getColumnName(i));
                 if( property!= null)
-                    property.setValue(DpsHelper.getSqlValue(property.getType(), resultSet, i));
+                    property.setValue(DpsRecordAdapter.getSqlValue(property.getType(), resultSet, i));
             }
         }
         catch (SQLException e)
@@ -291,7 +291,7 @@ public class SqlHelper
 //        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 1 AND "
 //                      + getConditionsSql( entity, primaryKey, conditions );
 //
-//        return db.select(sql, DpsHelper::createDps);
+//        return db.select(sql, DpsRecordAdapter::createDps);
 //    }
 //
 //    public DynamicPropertySet getRecordById( Entity entity, Long id )
@@ -314,7 +314,7 @@ public class SqlHelper
 //            sql += " AND " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " != 'yes'";
 //        }
 //
-//        return db.select(sql, DpsHelper::createDps, id);
+//        return db.select(sql, DpsRecordAdapter::createDps, id);
 //    }
 
 //    @Deprecated

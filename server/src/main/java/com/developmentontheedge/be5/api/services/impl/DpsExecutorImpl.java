@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DpsExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.Spliterators.AbstractSpliterator;
 import java.util.function.Consumer;
 
-import static com.developmentontheedge.be5.api.helpers.DpsHelper.createDps;
+import static com.developmentontheedge.be5.api.helpers.DpsRecordAdapter.createDps;
 
 public class DpsExecutorImpl implements DpsExecutor
 {
@@ -70,7 +70,7 @@ public class DpsExecutorImpl implements DpsExecutor
                             databaseService.close( finalRs );
                             return false;
                         }
-                        action.accept(DpsHelper.createDps( finalRs, metaProcessor ));
+                        action.accept(DpsRecordAdapter.createDps( finalRs, metaProcessor ));
                         return true;
                     }
                     catch( Throwable t )

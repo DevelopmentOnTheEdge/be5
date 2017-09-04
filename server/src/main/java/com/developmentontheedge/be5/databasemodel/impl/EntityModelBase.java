@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.annotations.DirtyRealization;
+import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -64,7 +65,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 .from(entity.getName())
                 .where(conditions);
 
-        DynamicPropertySet dps = db.select(sql.format(), rs -> sqlHelper.getDps(entity, rs), castValues(entity, conditions));
+        DynamicPropertySet dps = db.select(sql.format(), DpsRecordAdapter::createDps, castValues(entity, conditions));
         return dps == null ? null : new RecordModelBase( this, dps );
     }
 

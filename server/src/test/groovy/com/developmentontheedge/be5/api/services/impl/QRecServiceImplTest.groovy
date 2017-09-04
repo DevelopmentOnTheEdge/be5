@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl
 
-import com.developmentontheedge.be5.api.helpers.DpsHelper
+import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter
 import com.developmentontheedge.be5.api.services.QRecService
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.env.Inject
@@ -51,11 +51,11 @@ class QRecServiceImplTest extends Be5ProjectDBTest
             assertEquals 123, rec.getInt("value")
         }
 
-        //use db and DpsHelper.createDps
+        //use db and DpsRecordAdapter.createDps
         assertEquals "TestName", db.getString("SELECT name FROM testtableAdmin WHERE id = ?", id)
         assertEquals 123, db.getInteger("SELECT value FROM testtableAdmin WHERE id = ?", id)
 
-        DynamicPropertySet dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", { rs -> DpsHelper.createDps(rs) }, id)
+        DynamicPropertySet dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", { rs -> DpsRecordAdapter.createDps(rs) }, id)
         if(dps != null)
         {
             assertEquals "TestName", dps.getValue("name")
