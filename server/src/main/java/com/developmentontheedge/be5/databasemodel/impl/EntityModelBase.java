@@ -351,7 +351,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
                 rs -> dpsHelper.getDpsForColumns(entity, columns, rs), pkValue);
 
-        dpsHelper.setValues(entity, dps, values);
+        dpsHelper.setValuesAndAddColumns(entity, dps, values);
         dpsHelper.updateSpecialColumns(dps);
 
         db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),

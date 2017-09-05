@@ -76,30 +76,30 @@ public class DpsHelper
     {
         DynamicPropertySet dps = getDps(entity);
 
-        return setValues(dps, resultSet);
+        return setValuesAndAddColumns(dps, resultSet);
     }
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
-        return setValues(dps, resultSet);
+        return setValuesAndAddColumns(dps, resultSet);
     }
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ?> values)
     {
         DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
-        return setValues(entity, dps, values);
+        return setValuesAndAddColumns(entity, dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-        return setValues(dps, resultSet);
+        return setValuesAndAddColumns(dps, resultSet);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ?> values){
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-        return setValues(entity, dps, values);
+        return setValuesAndAddColumns(entity, dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
@@ -163,6 +163,7 @@ public class DpsHelper
 
         if(columnDef.getDefaultValue() != null)
         {
+            //todo DEFAULT_VALUE  - не использовать или продумать присвоение, проверить работу в be3
             dp.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
         }
 
@@ -189,7 +190,17 @@ public class DpsHelper
         return dp;
     }
 
-    public DynamicPropertySet setValues(Entity entity, DynamicPropertySet dps, Map<String, ?> values)
+    public void setValues(DynamicPropertySet dps, Map<String, ?> values)
+    {
+        for (DynamicProperty property : dps)
+        {
+            Object value = values.get(property.getName());
+            if(value != null)property.setValue(value);
+            if(property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
+        }
+    }
+
+    public DynamicPropertySet setValuesAndAddColumns(Entity entity, DynamicPropertySet dps, Map<String, ?> values)
     {
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
@@ -223,7 +234,9 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicPropertySet setValues(DynamicPropertySet dps, ResultSet resultSet)
+    @DirtyRealization(comment = "в некоторых местах нужно использовать более простые функции:" +
+            "- просто setValuesAndAddColumns(DynamicPropertySet dps, Map<String, ?> values) например")
+    public DynamicPropertySet setValuesAndAddColumns(DynamicPropertySet dps, ResultSet resultSet)
     {
         try
         {
@@ -426,6 +439,9 @@ public class DpsHelper
 
     public String generateInsertSql(Entity entity, DynamicPropertySet dps)
     {
+        //todo remove property not contain in entity and log warning, as in checkDpsContainNotNullColumns
+        //and add to generateUpdateSqlForOneKey
+
         Object[] columns = StreamSupport.stream(dps.spliterator(), false)
                 .map(DynamicProperty::getName)
                 .toArray(Object[]::new);

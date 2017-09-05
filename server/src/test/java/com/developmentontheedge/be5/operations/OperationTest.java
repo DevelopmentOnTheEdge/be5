@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
@@ -19,26 +20,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class OperationTest extends Be5ProjectTest
+public class OperationTest extends SqlMockOperationTest
 {
-    @Inject private OperationService operationService;
-
-    @Before
-    public void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
-    @After
-    public void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Before
-    public void before()
-    {
-        SqlServiceMock.clearMock();
-    }
-
     @Test
     public void testOperation()
     {

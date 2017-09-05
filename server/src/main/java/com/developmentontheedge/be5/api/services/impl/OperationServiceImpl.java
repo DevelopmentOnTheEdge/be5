@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
-import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -68,7 +67,7 @@ public class OperationServiceImpl implements OperationService
     {
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        Object parameters = getParametersAndSetValueIfNull(meta.getEntity(), operation, presetValues);
+        Object parameters = getParametersFromOperation(operation, presetValues);
 
         if (parameters == null)
         {
@@ -116,9 +115,9 @@ public class OperationServiceImpl implements OperationService
 
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        //add TransactionalOperation interface and support all in transaction getParameters and invoke in execute
+        //add TransactionalOperation interface and support all in transaction getParametersFromOperation and invoke in execute
 
-        Object parameters = getParametersAndSetValueIfNull(meta.getEntity(), operation, presetValues);
+        Object parameters = getParametersFromOperation(operation, presetValues);
 
         if(parameters instanceof DynamicPropertySet)
         {
@@ -195,7 +194,8 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
-    public Operation create(OperationInfo operationInfo, String[] records, Request request) {
+    public Operation create(OperationInfo operationInfo, String[] records, Request request)
+    {
         Operation operation;
 
         switch (operationInfo.getType())
@@ -233,19 +233,15 @@ public class OperationServiceImpl implements OperationService
         return operation;
     }
 
-    /**
-     * Либо значение не задаётся и оно будет автоматически подставлятся из presetValues после выполнения getParameters,
-     * либо вы задаёте значение и вручную управляете её изменением в getParameters:
-     * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
-     */
-    private Object getParametersAndSetValueIfNull(Entity entity, Operation operation, Map<String, Object> presetValues) {
+    private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)
+    {
         try
         {
             Object parameters = operation.getParameters(presetValues);
-            if (parameters instanceof DynamicPropertySet)
-            {
-                dpsHelper.setValues(entity, (DynamicPropertySet)parameters, presetValues);
-            }
+//            if (parameters instanceof DynamicPropertySet)
+//            {
+//                dpsHelper.setValuesAndAddColumns(operation.getInfo().getEntity(), (DynamicPropertySet)parameters, presetValues);
+//            }
             return parameters;
         }
         catch (Exception e)
@@ -254,7 +250,8 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    static String[] selectedRows(String selectedRowsString){
+    static String[] selectedRows(String selectedRowsString)
+    {
         if(selectedRowsString.trim().isEmpty())return new String[0];
         return selectedRowsString.split(",");
     }

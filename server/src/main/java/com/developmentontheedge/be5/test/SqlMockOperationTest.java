@@ -17,19 +17,14 @@ public abstract class SqlMockOperationTest extends Be5ProjectTest
     @Inject protected Meta meta;
 
     @Before
-    public void beforeClass(){
+    public void beforeSqlMockOperationTest(){
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        SqlServiceMock.clearMock();
     }
 
     @After
-    public void afterClass(){
+    public void afterSqlMockOperationTest(){
         initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Before
-    public void clearSqlServiceMock()
-    {
-        SqlServiceMock.clearMock();
     }
 
 }
