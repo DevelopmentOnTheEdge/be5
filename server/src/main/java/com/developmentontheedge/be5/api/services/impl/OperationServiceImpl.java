@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -24,7 +23,6 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Map;
 
@@ -37,15 +35,15 @@ public class OperationServiceImpl implements OperationService
     private final Cache<String, Class> groovyOperationClasses;
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
-    private final SqlHelper sqlHelper;
+    private final DpsHelper dpsHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, DpsHelper dpsHelper, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
-        this.sqlHelper = sqlHelper;
+        this.dpsHelper = dpsHelper;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
     }
@@ -138,8 +136,8 @@ public class OperationServiceImpl implements OperationService
         if (parameters instanceof DynamicPropertySet)
         {
             DynamicPropertySet dps = (DynamicPropertySet)parameters;
-            sqlHelper.addSpecialIfNotExists(dps, meta.getEntity());
-            sqlHelper.setSpecialPropertyIfNull(dps);
+            dpsHelper.addSpecialIfNotExists(dps, meta.getEntity());
+            dpsHelper.setSpecialPropertyIfNull(dps);
         }
 
         return execute(entityName, queryName, operationName, selectedRowsString,
@@ -245,7 +243,7 @@ public class OperationServiceImpl implements OperationService
             Object parameters = operation.getParameters(presetValues);
             if (parameters instanceof DynamicPropertySet)
             {
-                sqlHelper.setValues((DynamicPropertySet)parameters, presetValues);
+                dpsHelper.setValues((DynamicPropertySet)parameters, presetValues);
             }
             return parameters;
         }

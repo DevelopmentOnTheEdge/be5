@@ -1,12 +1,10 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.log.Logger;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,7 +14,7 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = sqlHelper.getDpsWithoutAutoIncrement(getInfo().getEntity(), presetValues);//todo test
+        dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity(), presetValues);//todo test
         return dps;
     }
 
@@ -25,8 +23,8 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     {
         checkDpsContainNotNullColumns(parameters);
 
-        db.insert(sqlHelper.generateInsertSql(getInfo().getEntity(), dps),
-                sqlHelper.getValues(dps));
+        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps),
+                dpsHelper.getValues(dps));
     }
 
     private void checkDpsContainNotNullColumns(Object parameters){

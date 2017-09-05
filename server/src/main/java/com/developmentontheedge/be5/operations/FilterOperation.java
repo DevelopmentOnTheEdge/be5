@@ -18,7 +18,7 @@ public class FilterOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        DynamicPropertySet dps = sqlHelper.getDpsWithoutAutoIncrement(getInfo().getEntity());
+        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity());
 
         for (DynamicProperty property : dps)
         {

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.env.Inject;
@@ -13,7 +13,7 @@ import org.junit.Before;
 public abstract class SqlMockOperationTest extends Be5ProjectTest
 {
     @Inject protected OperationService operationService;
-    @Inject protected SqlHelper sqlHelper;
+    @Inject protected DpsHelper dpsHelper;
     @Inject protected Meta meta;
 
     @Before

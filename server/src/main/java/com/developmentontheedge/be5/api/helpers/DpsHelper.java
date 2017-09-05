@@ -39,9 +39,9 @@ import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY;
 
 
-public class SqlHelper
+public class DpsHelper
 {
-    private static final Logger log = Logger.getLogger(SqlHelper.class.getName());
+    private static final Logger log = Logger.getLogger(DpsHelper.class.getName());
 
     private static final List<String> specialColumns = ImmutableList.<String>builder()
             .add(WHO_INSERTED_COLUMN_NAME)
@@ -64,7 +64,7 @@ public class SqlHelper
     private UserAwareMeta userAwareMeta;
     private OperationHelper operationHelper;
 
-    public SqlHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
+    public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;

@@ -12,9 +12,9 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class SqlHelperTest extends Be5ProjectDBTest
+class DpsHelperTest extends Be5ProjectDBTest
 {
-    @Inject private SqlHelper sqlHelper
+    @Inject private DpsHelper sqlHelper
     @Inject private Meta meta
 
     @Test

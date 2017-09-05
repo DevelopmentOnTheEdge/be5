@@ -18,9 +18,9 @@ public class SilentDeleteOperation extends OperationSupport implements Operation
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.update(sqlHelper.generateDeleteInSql(getInfo().getEntity(), context.getRecordIDs().length),
-            ObjectArrays.concat(sqlHelper.getDeleteSpecialValues(getInfo().getEntity()),
-                    sqlHelper.castToTypePrimaryKey(getInfo().getEntity(), context.getRecordIDs()), Object.class)
+        db.update(dpsHelper.generateDeleteInSql(getInfo().getEntity(), context.getRecordIDs().length),
+            ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(getInfo().getEntity()),
+                    dpsHelper.castToTypePrimaryKey(getInfo().getEntity(), context.getRecordIDs()), Object.class)
         );
     }
 }

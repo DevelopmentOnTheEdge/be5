@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.databasemodel.impl;
 import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
@@ -43,16 +42,16 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     private final SqlService db;
-    private final SqlHelper sqlHelper;
+    private final DpsHelper dpsHelper;
     private final Validator validator;
 
     private final Entity entity;
 
 
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, Validator validator, Entity entity)
+    public EntityModelBase(SqlService db, DpsHelper dpsHelper, Validator validator, Entity entity)
     {
         this.db = db;
-        this.sqlHelper = sqlHelper;
+        this.dpsHelper = dpsHelper;
         this.validator = validator;
 
         this.entity = entity;
@@ -68,16 +67,16 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 .from(entity.getName())
                 .where(conditions);
 
-        //castValues(entity, conditions) -> sqlHelper.getDps(entity) - fix
+        //castValues(entity, conditions) -> dpsHelper.getDps(entity) - fix
         DynamicPropertySet dps = db.select(sql.format(), DpsRecordAdapter::createDps, conditions.values().toArray());
         return dps == null ? null : new RecordModelBase( this, dps );
     }
 
-    @DirtyRealization(comment="move to sqlHelper, use castToType")
+    @DirtyRealization(comment="move to dpsHelper, use castToType")
     private Object[] castValues(Entity entity, Map<String, String> stringValues)
     {
-        DynamicPropertySet dps = sqlHelper.getDps(entity);
-        sqlHelper.getDps(entity);
+        DynamicPropertySet dps = dpsHelper.getDps(entity);
+        dpsHelper.getDps(entity);
 
         Object[] values = new Object[stringValues.size()];
 
@@ -89,7 +88,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         return values;
     }
 
-    @DirtyRealization(comment="move to sqlHelper, use castToType")
+    @DirtyRealization(comment="move to dpsHelper, use castToType")
     private Object castValue(DynamicPropertySet dps, String name, String value){
         return validator.parseFrom(dps.getProperty(name), value);
     }
@@ -182,7 +181,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     @Override
     public RecordModel get( String id )
     {
-        return get(Collections.singletonMap(entity.getPrimaryKey(), sqlHelper.castToTypePrimaryKey(entity, id)));
+        return get(Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
     }
 
     @Override
@@ -202,9 +201,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public int removeForce( String firstId, final String... otherId )
     {
         Objects.requireNonNull(firstId);
-        return db.update(sqlHelper.generateDeleteInSql(entity, otherId.length + 1),
-                ObjectArrays.concat(sqlHelper.getDeleteSpecialValues(entity),
-                        sqlHelper.castToTypePrimaryKey(entity, ObjectArrays.concat(firstId, otherId)), Object.class)
+        return db.update(dpsHelper.generateDeleteInSql(entity, otherId.length + 1),
+                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
+                        dpsHelper.castToTypePrimaryKey(entity, ObjectArrays.concat(firstId, otherId)), Object.class)
         );
     }
 
@@ -217,8 +216,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     public int remove( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
-        return db.update(sqlHelper.generateDelete(entity, values),
-                ObjectArrays.concat(sqlHelper.getDeleteSpecialValues(entity),
+        return db.update(dpsHelper.generateDelete(entity, values),
+                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
                                     values.values().toArray(), Object.class)
         );
     }
@@ -303,14 +302,14 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public String addForce( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = sqlHelper.getDpsForColumns(entity, values.keySet());
-        sqlHelper.setValues(dps, values);
+        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entity, values.keySet());
+        dpsHelper.setValues(dps, values);
 
-        sqlHelper.addSpecialIfNotExists(dps, entity);
-        sqlHelper.setSpecialPropertyIfNull(dps);
+        dpsHelper.addSpecialIfNotExists(dps, entity);
+        dpsHelper.setSpecialPropertyIfNull(dps);
 
         validator.checkErrorAndCast(dps);
-        Object insert = db.insert(sqlHelper.generateInsertSql(entity, dps), sqlHelper.getValues(dps));
+        Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
 
         return insert != null ? insert.toString() : null;
     }
@@ -346,18 +345,18 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
-        Object pkValue = sqlHelper.castToTypePrimaryKey(entity, id);
+        Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
 
-        Collection<String> columns = sqlHelper.addUpdateSpecialColumns(entity, values.keySet());
+        Collection<String> columns = dpsHelper.addUpdateSpecialColumns(entity, values.keySet());
         DynamicPropertySet dps = db.select(
                 Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
-                rs -> sqlHelper.getDpsForColumns(entity, columns, rs), pkValue);
+                rs -> dpsHelper.getDpsForColumns(entity, columns, rs), pkValue);
 
-        sqlHelper.setValues(dps, values);
-        sqlHelper.updateSpecialColumns(dps);
+        dpsHelper.setValues(dps, values);
+        dpsHelper.updateSpecialColumns(dps);
 
-        db.update(sqlHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(sqlHelper.getValues(dps), pkValue));
+        db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+                ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));
     }
 //
 //    @Override
@@ -380,12 +379,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 //
 //        DynamicPropertySet dps = db.select(
 //                Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
-//                rs -> sqlHelper.getDpsForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
+//                rs -> dpsHelper.getDpsForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
 //
-//        sqlHelper.updateValuesWithSpecial(dps, values);
+//        dpsHelper.updateValuesWithSpecial(dps, values);
 //
-//        db.update(sqlHelper.generateUpdateSqlForConditions(entity, dps, conditions),
-//                ObjectArrays.concat(sqlHelper.getValues(dps), castValues(entity, conditions), Object.class));
+//        db.update(dpsHelper.generateUpdateSqlForConditions(entity, dps, conditions),
+//                ObjectArrays.concat(dpsHelper.getValues(dps), castValues(entity, conditions), Object.class));
 //    }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>

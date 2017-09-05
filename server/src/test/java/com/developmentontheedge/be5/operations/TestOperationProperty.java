@@ -29,7 +29,7 @@ public class TestOperationProperty extends OperationSupport implements Operation
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.insert(sqlHelper.generateInsertSql(getInfo().getEntity(), dps), sqlHelper.getValues(dps));
+        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));
     }
 
 }
