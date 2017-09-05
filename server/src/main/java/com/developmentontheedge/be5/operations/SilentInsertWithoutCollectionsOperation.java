@@ -16,7 +16,8 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        return sqlHelper.getDpsWithoutAutoIncrement(getInfo().getEntity());
+        dps = sqlHelper.getDpsWithoutAutoIncrement(getInfo().getEntity(), presetValues);//todo test
+        return dps;
     }
 
     @Override

@@ -75,41 +75,30 @@ public class SqlHelper
     {
         DynamicPropertySet dps = getDps(entity);
 
-        return setDpsValues(dps, resultSet);
+        return setValues(dps, resultSet);
     }
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
+        return setValues(dps, resultSet);
+    }
 
-        return setDpsValues(dps, resultSet);
+    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ?> values)
+    {
+        DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
+        return setValues(dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-
-        return setDpsValues(dps, resultSet);
+        return setValues(dps, resultSet);
     }
 
-    public DynamicPropertySet setDpsValues(DynamicPropertySet dps, ResultSet resultSet)
-    {
-        try
-        {
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            for (int i = 1; i <= metaData.getColumnCount(); i++)
-            {
-                DynamicProperty property = dps.getProperty(metaData.getColumnName(i));
-                if( property!= null)
-                    property.setValue(DpsRecordAdapter.getSqlValue(property.getType(), resultSet, i));
-            }
-        }
-        catch (SQLException e)
-        {
-            throw Be5Exception.internal(e);
-        }
-
-        return dps;
+    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ?> values){
+        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
+        return setValues(dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
@@ -202,13 +191,34 @@ public class SqlHelper
     /**
      * todo DEFAULT_VALUE -> value - как в be3?
      */
-    public void setValues(DynamicPropertySet dps, Map<String, ?> values)
+    public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)
         {
             if(values.containsKey(property.getName()))property.setValue(values.get(property.getName()));
             if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
         }
+        return dps;
+    }
+
+    public DynamicPropertySet setValues(DynamicPropertySet dps, ResultSet resultSet)
+    {
+        try
+        {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            for (int i = 1; i <= metaData.getColumnCount(); i++)
+            {
+                DynamicProperty property = dps.getProperty(metaData.getColumnName(i));
+                if( property!= null)
+                    property.setValue(DpsRecordAdapter.getSqlValue(property.getType(), resultSet, i));
+            }
+        }
+        catch (SQLException e)
+        {
+            throw Be5Exception.internal(e);
+        }
+
+        return dps;
     }
 
     public Collection<String> addUpdateSpecialColumns(Entity entity, Set<String> set)
