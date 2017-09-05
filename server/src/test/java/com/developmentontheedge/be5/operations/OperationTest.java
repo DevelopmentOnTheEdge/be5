@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class OperationTest extends Be5ProjectTest
     public void testOperation()
     {
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-                new Gson().toJson(ImmutableMap.of("name","testName","number", "1")));
+                jsonb.toJson(ImmutableMap.of("name","testName","number", "1")));
 
         Either<FormPresentation, OperationResult> generate = operationService.generate(req);
 
@@ -80,7 +79,7 @@ public class OperationTest extends Be5ProjectTest
     {
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-                        new Gson().toJson(ImmutableMap.of(
+                        jsonb.toJson(ImmutableMap.of(
                                 "name", "",
                                 "number", "0",
                                 OperationSupport.reloadControl, "name"))));
@@ -92,7 +91,7 @@ public class OperationTest extends Be5ProjectTest
     public void testReloadOnChangeError()
     {
         Request spyMockRecForOp = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-                new Gson().toJson(ImmutableMap.of(
+                jsonb.toJson(ImmutableMap.of(
                         "name", "testName",
                         "number", "ab",
                         OperationSupport.reloadControl, "name")));
@@ -155,7 +154,7 @@ public class OperationTest extends Be5ProjectTest
     {
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperationProperty", "0",
-                        new Gson().toJson(ImmutableMap.of(
+                        jsonb.toJson(ImmutableMap.of(
                                 "simple", "testName",
                                 "simpleNumber", "1",
                                 "getOrDefault", "testName2",

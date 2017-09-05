@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -188,16 +189,28 @@ public class DpsHelper
         return dp;
     }
 
-    /**
-     * todo DEFAULT_VALUE -> value - как в be3?
-     */
     public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
+        for (Map.Entry<String, ?> entry : values.entrySet())
+        {
+            if(dps.getProperty(entry.getKey()) != null)
+            {
+                dps.setValue(entry.getKey(), entry.getValue());
+            }
+            else
+            {
+                if(OperationSupport.reloadControl.equals(entry.getKey()))continue;
+                DynamicProperty newProperty = new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue());
+                newProperty.setHidden(true);
+                dps.add(newProperty);
+            }
+        }
+
         for (DynamicProperty property : dps)
         {
-            if(values.containsKey(property.getName()))property.setValue(values.get(property.getName()));
-            if (property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
+            if(property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
         }
+
         return dps;
     }
 
@@ -208,14 +221,30 @@ public class DpsHelper
             ResultSetMetaData metaData = resultSet.getMetaData();
             for (int i = 1; i <= metaData.getColumnCount(); i++)
             {
-                DynamicProperty property = dps.getProperty(metaData.getColumnName(i));
-                if( property!= null)
+                String name = metaData.getColumnName(i);
+
+                DynamicProperty property = dps.getProperty(name);
+                if(property != null) {
                     property.setValue(DpsRecordAdapter.getSqlValue(property.getType(), resultSet, i));
+                }
+                else
+                {
+                    Class<?> aClass = DpsRecordAdapter.getTypeClass(metaData.getColumnType(i));
+                    DynamicProperty newProperty = new DynamicProperty(name, aClass,
+                            DpsRecordAdapter.getSqlValue(aClass, resultSet, i));
+                    newProperty.setHidden(true);
+                    dps.add(newProperty);
+                }
             }
         }
         catch (SQLException e)
         {
             throw Be5Exception.internal(e);
+        }
+
+        for (DynamicProperty property : dps)
+        {
+            if(property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
         }
 
         return dps;

@@ -130,7 +130,7 @@ public class DpsRecordAdapter
         }
     }
 
-    private static Class<?> getTypeClass(int columnType)
+    public static Class<?> getTypeClass(int columnType)
     {
         switch( columnType )
         {
