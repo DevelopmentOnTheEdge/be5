@@ -14,7 +14,7 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity(), presetValues);//todo test
+        dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity(), presetValues);
         return dps;
     }
 
@@ -23,8 +23,7 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     {
         checkDpsContainNotNullColumns(parameters);
 
-        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps),
-                dpsHelper.getValues(dps));
+        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));
     }
 
     private void checkDpsContainNotNullColumns(Object parameters){

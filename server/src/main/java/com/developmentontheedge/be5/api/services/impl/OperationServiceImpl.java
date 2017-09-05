@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -67,7 +68,7 @@ public class OperationServiceImpl implements OperationService
     {
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
+        Object parameters = getParametersAndSetValueIfNull(meta.getEntity(), operation, presetValues);
 
         if (parameters == null)
         {
@@ -117,7 +118,7 @@ public class OperationServiceImpl implements OperationService
 
         //add TransactionalOperation interface and support all in transaction getParameters and invoke in execute
 
-        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
+        Object parameters = getParametersAndSetValueIfNull(meta.getEntity(), operation, presetValues);
 
         if(parameters instanceof DynamicPropertySet)
         {
@@ -237,13 +238,13 @@ public class OperationServiceImpl implements OperationService
      * либо вы задаёте значение и вручную управляете её изменением в getParameters:
      * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
      */
-    private Object getParametersAndSetValueIfNull(Operation operation, Map<String, Object> presetValues) {
+    private Object getParametersAndSetValueIfNull(Entity entity, Operation operation, Map<String, Object> presetValues) {
         try
         {
             Object parameters = operation.getParameters(presetValues);
             if (parameters instanceof DynamicPropertySet)
             {
-                dpsHelper.setValues((DynamicPropertySet)parameters, presetValues);
+                dpsHelper.setValues(entity, (DynamicPropertySet)parameters, presetValues);
             }
             return parameters;
         }

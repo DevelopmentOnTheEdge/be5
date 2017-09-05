@@ -302,8 +302,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public String addForce( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entity, values.keySet());
-        dpsHelper.setValues(dps, values);
+        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entity, values.keySet(), values);
 
         dpsHelper.addSpecialIfNotExists(dps, entity);
         dpsHelper.setSpecialPropertyIfNull(dps);
@@ -352,7 +351,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
                 rs -> dpsHelper.getDpsForColumns(entity, columns, rs), pkValue);
 
-        dpsHelper.setValues(dps, values);
+        dpsHelper.setValues(entity, dps, values);
         dpsHelper.updateSpecialColumns(dps);
 
         db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),

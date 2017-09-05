@@ -88,7 +88,7 @@ public class DpsHelper
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ?> values)
     {
         DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
-        return setValues(dps, values);
+        return setValues(entity, dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
@@ -99,7 +99,7 @@ public class DpsHelper
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ?> values){
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-        return setValues(dps, values);
+        return setValues(entity, dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
@@ -189,7 +189,7 @@ public class DpsHelper
         return dp;
     }
 
-    public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
+    public DynamicPropertySet setValues(Entity entity, DynamicPropertySet dps, Map<String, ?> values)
     {
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
@@ -200,7 +200,16 @@ public class DpsHelper
             else
             {
                 if(OperationSupport.reloadControl.equals(entry.getKey()))continue;
-                DynamicProperty newProperty = new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue());
+
+                ColumnDef column = meta.getColumn(entity, entry.getKey());
+                Class<?> clazz;
+                if(column != null) {
+                    clazz = meta.getColumnType(entity, entry.getKey());
+                }else{
+                    clazz = entry.getValue().getClass();
+                }
+
+                DynamicProperty newProperty = new DynamicProperty(entry.getKey(), clazz, entry.getValue());
                 newProperty.setHidden(true);
                 dps.add(newProperty);
             }

@@ -17,6 +17,9 @@ testTags:
         type: VARCHAR(2)
         canBeNull: true
         reference: testTags
+    - testLong:
+        type: BIGINT
+        canBeNull: true
   queries:
   - '*** Selection view ***':
       type: 1D
