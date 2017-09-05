@@ -9,16 +9,16 @@ class SessionVariablesEdit extends OperationSupport implements Operation
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         dps << [
-                name         : "label",
-                value        : "Тип: " + request.getAttribute(records[0]).getClass().getName(),
-                LABEL_FIELD  : true
+                name        : "label",
+                value       : "Тип: " + request.getAttribute(records[0]).getClass().getName(),
+                LABEL_FIELD : true
         ]
 
         dps << [
-                name         : "newValue",
-                TYPE         : request.getAttribute(records[0]).getClass(),
-                DISPLAY_NAME : "Новое значение:",
-                DEFAULT_VALUE: request.getAttribute(records[0])
+                name        : "newValue",
+                TYPE        : request.getAttribute(records[0]).getClass(),
+                DISPLAY_NAME: "Новое значение:",
+                value       : presetValues.getOrDefault("newValue", request.getAttribute(records[0]))
         ]
 
         return dps
