@@ -60,6 +60,7 @@ public class RequestImpl implements Request {
 
         try
         {
+            //todo gson -> json-b
             JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
             for (Map.Entry entry: values.entrySet())
             {
