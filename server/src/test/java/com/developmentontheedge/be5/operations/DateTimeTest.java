@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
@@ -20,26 +21,8 @@ import java.sql.Date;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class DateTimeTest extends Be5ProjectTest
+public class DateTimeTest extends SqlMockOperationTest
 {
-    @Inject private  OperationService operationService;
-
-    @Before
-    public void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
-    @After
-    public void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Before
-    public void before()
-    {
-        SqlServiceMock.clearMock();
-    }
-
     @Test
     public void testOperation()
     {
@@ -69,6 +52,17 @@ public class DateTimeTest extends Be5ProjectTest
 
         verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
                 Date.valueOf("1901-02-03"));
+    }
+
+    @Test
+    public void invokeEmptyValue()
+    {
+        operationService.execute(
+                getSpyMockRecForOp("dateTime", "All records", "Insert", "0",
+                        jsonb.toJson(ImmutableMap.of("activeFrom",""))));
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
+                Date.valueOf("1900-01-01"));
     }
 
     @Test

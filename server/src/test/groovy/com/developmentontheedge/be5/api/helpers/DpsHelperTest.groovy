@@ -57,12 +57,12 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void getDpsForValuesTestWithValues()
+    void getDpsForColumnsTestWithValues()
     {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
         DynamicPropertySet dps = dpsHelper.getDpsForColumns(meta.getEntity("testTags"), ["CODE", "payable"], presetValues)
 
-        assertEquals 3, dps.size()
+        assertEquals 2, dps.size()
         def list = dps.asList()
         assertEquals "CODE", list.get(0).getName()
 
@@ -73,9 +73,16 @@ class DpsHelperTest extends Be5ProjectDBTest
 //        assertEquals String, dps.getProperty("notContainColumn").getType()
 //        assertEquals "2", dps.getProperty("notContainColumn").getValue()
 
-        assertEquals "testLong", list.get(2).getName()
-        assertEquals Long, dps.getProperty("testLong").getType()
-        assertEquals "3", dps.getProperty("testLong").getValue()
+//        assertEquals "testLong", list.get(2).getName()
+//        assertEquals Long, dps.getProperty("testLong").getType()
+//        assertEquals "3", dps.getProperty("testLong").getValue()
+    }
+
+    @Test
+    void getDpsForColumnsTestSpecial() {
+        def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
+        DynamicPropertySet dps = dpsHelper.getDpsForColumns(meta.getEntity("meters"), ["name"], presetValues)
+
     }
 
     @Test
@@ -83,7 +90,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         DynamicPropertySet dps = dpsHelper.getDps(meta.getEntity("meters"))
         dps.setValue("name", "TestName")
-        assertArrayEquals( [null,null,"TestName",null,null,null,null,null] as Object[], dpsHelper.getValues(dps))
+        assertArrayEquals( [null,null,"TestName",null,null,null,null,"no"] as Object[], dpsHelper.getValues(dps))
     }
 
     @Test

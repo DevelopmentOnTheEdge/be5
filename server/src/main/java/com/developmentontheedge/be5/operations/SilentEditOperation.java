@@ -16,13 +16,12 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        dpsHelper.withUpdateSpecialColumns(entity, presetValues);
+        //dpsHelper.withUpdateSpecialColumns(entity, presetValues);
 
-//        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
-//                rs -> dpsHelper.getDpsForColumns(entity, columns, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
+        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
+                rs -> dpsHelper.getDpsWithoutAutoIncrement(entity, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
 
-        //dpsHelper.setValuesAndAddColumns(entity, dps, presetValues);
-        //dpsHelper.updateSpecialColumns(dps);
+        dpsHelper.setValues(dps, presetValues);
 
         return dps;
     }
@@ -31,6 +30,8 @@ public class SilentEditOperation extends OperationSupport implements Operation
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
         Entity entity = getInfo().getEntity();
+
+        dpsHelper.addInsertSpecialColumns(entity, dps);
 
         db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(dpsHelper.getValues(dps), dpsHelper.castToTypePrimaryKey(entity, records[0])));

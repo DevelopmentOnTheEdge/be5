@@ -302,10 +302,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(values);
 
-        Map<String, ? super Object> valuesWithSpecial = dpsHelper.withSpecialColumns(entity, values);
-        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, valuesWithSpecial);
+        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
 
+        dpsHelper.addInsertSpecialColumns(entity, dps);
         validator.checkErrorAndCast(dps);
+
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
 
         return insert != null ? insert.toString() : null;
@@ -344,14 +345,14 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
 
-        Map<String, ? super Object> valuesWithSpecial = dpsHelper.withUpdateSpecialColumns(entity, values);
-        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, valuesWithSpecial);
+        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
 
+        dpsHelper.addUpdateSpecialColumns(entity, dps);
         validator.checkErrorAndCast(dps);
 
-        db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+        int count = db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));
-        //todo return
+        //todo return count;
     }
 //
 //    @Override

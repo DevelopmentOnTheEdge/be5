@@ -20,11 +20,6 @@ public class FilterOperation extends OperationSupport
     {
         DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity());
 
-        for (DynamicProperty property : dps)
-        {
-            property.setAttribute(BeanInfoConstants.DEFAULT_VALUE, "");//todo
-            property.setCanBeNull(true);
-        }
         //getInfo().getModel()
         return dps;
     }

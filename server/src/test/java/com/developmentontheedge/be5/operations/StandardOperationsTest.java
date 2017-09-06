@@ -63,63 +63,63 @@ public class StandardOperationsTest extends SqlMockOperationTest
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "test", 1);
     }
-//
-//    @Test
-//    public void editOperationGenerate()
-//    {
-//        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "1","{}");
-//
-//        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testtableAdmin"));
-//        dps.setValue("name", "TestName");
-//        dps.setValue("value", 1);
-//        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
-//
-//        FormPresentation first = operationService.generate(req).getFirst();
-//
-//        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
-//
-//        assertEquals("{'name':'TestName','value':1}",
-//                oneQuotes(first.getBean().getJsonObject("values").toString()));
-//    }
-//
-//    @Test
-//    public void editOperationGenerateStringPrimaryKey()
-//    {
-//        Request req = getSpyMockRecForOp("propertyTypes", "All records", "Edit", "01","{}");
-//
-//        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("propertyTypes"));
-//        dps.setValue("name", "TestName");
-//        dps.setValue("CODE", "02");
-//        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
-//
-//        FormPresentation first = operationService.generate(req).getFirst();
-//
-//        verify(SqlServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE =?"),any(),eq("01"));
-//
-//        assertEquals("{'CODE':'02','name':'TestName'}",
-//                oneQuotes(first.getBean().getJsonObject("values").toString()));
-//    }
-//
-//    @Test
-//    public void editInvoke()
-//    {
-//        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "1",
-//                "{'name':'EditName','value':123}");
-//
-//        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testtableAdmin"));
-//        dps.setValue("name", "TestName");
-//        dps.setValue("value", 1);
-//        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
-//
-//        OperationResult operationResult = operationService.execute(req).getSecond();
-//
-//        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
-//                operationResult);
-//
-//        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
-//
-//        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
-//                "EditName", 123, 1L);
-//    }
+
+    @Test
+    public void editOperationGenerate()
+    {
+        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "1","{}");
+
+        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testtableAdmin"));
+        dps.setValue("name", "TestName");
+        dps.setValue("value", 1);
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+
+        FormPresentation first = operationService.generate(req).getFirst();
+
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
+
+        assertEquals("{'name':'TestName','value':1}",
+                oneQuotes(first.getBean().getJsonObject("values").toString()));
+    }
+
+    @Test
+    public void editOperationGenerateStringPrimaryKey()
+    {
+        Request req = getSpyMockRecForOp("propertyTypes", "All records", "Edit", "01","{}");
+
+        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("propertyTypes"));
+        dps.setValue("name", "TestName");
+        dps.setValue("CODE", "02");
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+
+        FormPresentation first = operationService.generate(req).getFirst();
+
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE =?"),any(),eq("01"));
+
+        assertEquals("{'CODE':'02','name':'TestName'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString()));
+    }
+
+    @Test
+    public void editInvoke()
+    {
+        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "1",
+                "{'name':'EditName','value':123}");
+
+        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testtableAdmin"));
+        dps.setValue("name", "TestName");
+        dps.setValue("value", 1);
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+
+        OperationResult operationResult = operationService.execute(req).getSecond();
+
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
+                operationResult);
+
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
+
+        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
+                "EditName", 123, 1L);
+    }
 
 }

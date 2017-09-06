@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
@@ -26,12 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collector;
@@ -46,7 +42,7 @@ public class DpsHelper
 {
     private static final Logger log = Logger.getLogger(DpsHelper.class.getName());
 
-    private static final List<String> specialColumns = ImmutableList.<String>builder()
+    private static final List<String> insertSpecialColumns = ImmutableList.<String>builder()
             .add(WHO_INSERTED_COLUMN_NAME)
             .add(WHO_MODIFIED_COLUMN_NAME)
             .add(CREATION_DATE_COLUMN_NAME)
@@ -86,27 +82,16 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-    public DynamicPropertySet getDpsForColumns(Entity entity, Map<String, ? super Object> values)
+    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
     {
-        return getDpsForColumns(entity, values.keySet(), withSpecialColumns(entity, values));
+        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
+        return setValues(dps, resultSet);
     }
-
-    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ? super Object> values)
-    {
-        DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
-        return setValuesAndAddColumns(entity, dps, withSpecialColumns(entity, values));
-    }
-
-//    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
-//    {
-//        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-//        return setValuesAndAddColumns(entity, dps, resultSet);
-//    }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ? super Object> values)
     {
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-        return setValuesAndAddColumns(entity, dps, withSpecialColumns(entity, values));
+        return setValues(dps, values);
     }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
@@ -145,6 +130,12 @@ public class DpsHelper
         return dps;
     }
 
+    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ? super Object> presetValues)
+    {
+        DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
+        return setValues(dps, presetValues);
+    }
+
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
@@ -170,8 +161,7 @@ public class DpsHelper
 
         if(columnDef.getDefaultValue() != null)
         {
-            //todo DEFAULT_VALUE  - не использовать или продумать присвоение, проверить работу в be3
-            dp.setAttribute(BeanInfoConstants.DEFAULT_VALUE, meta.getColumnDefaultValue(columnDef));
+            dp.setValue(meta.getColumnDefaultValue(columnDef));
         }
 
         if(columnDef.isCanBeNull() ||
@@ -197,14 +187,14 @@ public class DpsHelper
         return dp;
     }
 
-    public void setValues(DynamicPropertySet dps, Map<String, ?> values)
+    public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)
         {
             Object value = values.get(property.getName());
-            if(value != null)property.setValue(value);
-            if(property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
+            if(!Utils.isEmpty(value))property.setValue(value);
         }
+        return dps;
     }
 
     public DynamicPropertySet getSimpleDpsForColumns(Entity entity, Map<String, ? super Object> values)
@@ -228,36 +218,31 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicPropertySet setValuesAndAddColumns(Entity entity, DynamicPropertySet dps, Map<String, ?> values)
-    {
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
-
-        for (Map.Entry<String, ?> entry : values.entrySet())
-        {
-            if(dps.getProperty(entry.getKey()) != null)
-            {
-                dps.setValue(entry.getKey(), entry.getValue());
-            }
-            else
-            {
-                if(OperationSupport.reloadControl.equals(entry.getKey()))continue;
-                if(columns.get(entry.getKey()) != null)
-                {
-                    DynamicProperty newProperty = new DynamicProperty(entry.getKey(),
-                            meta.getColumnType(columns.get(entry.getKey())), entry.getValue());
-                    newProperty.setHidden(true);
-                    dps.add(newProperty);
-                }
-            }
-        }
-
-        for (DynamicProperty property : dps)
-        {
-            if(property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
-        }
-
-        return dps;
-    }
+//    public DynamicPropertySet setValues(Entity entity, DynamicPropertySet dps, Map<String, ?> values)
+//    {
+//        Map<String, ColumnDef> columns = meta.getColumns(entity);
+//
+//        for (Map.Entry<String, ?> entry : values.entrySet())
+//        {
+//            if(dps.getProperty(entry.getKey()) != null)
+//            {
+//                dps.setValue(entry.getKey(), entry.getValue());
+//            }
+////            else
+////            {
+////                if(OperationSupport.reloadControl.equals(entry.getKey()))continue;
+////                if(columns.get(entry.getKey()) != null)
+////                {
+////                    DynamicProperty newProperty = new DynamicProperty(entry.getKey(),
+////                            meta.getColumnType(columns.get(entry.getKey())), entry.getValue());
+////                    newProperty.setHidden(true);
+////                    dps.add(newProperty);
+////                }
+////            }
+//        }
+//
+//        return dps;
+//    }
 
     public DynamicPropertySet setValues(DynamicPropertySet dps, ResultSet resultSet)
     {
@@ -272,14 +257,6 @@ public class DpsHelper
                 if(property != null) {
                     property.setValue(DpsRecordAdapter.getSqlValue(property.getType(), resultSet, i));
                 }
-//                else
-//                {
-//                    Class<?> aClass = DpsRecordAdapter.getTypeClass(metaData.getColumnType(i));
-//                    DynamicProperty newProperty = new DynamicProperty(name, aClass,
-//                            DpsRecordAdapter.getSqlValue(aClass, resultSet, i));
-//                    newProperty.setHidden(true);
-//                    dps.add(newProperty);
-//                }
             }
         }
         catch (SQLException e)
@@ -287,88 +264,75 @@ public class DpsHelper
             throw Be5Exception.internal(e);
         }
 
-        for (DynamicProperty property : dps)
-        {
-            if(property.getValue() == null) property.setValue(property.getAttribute(BeanInfoConstants.DEFAULT_VALUE));
-        }
-
         return dps;
     }
 
-    public Map<String, ? super Object> withUpdateSpecialColumns(Entity entity, Map<String, ? super Object> values)
+    public void addUpdateSpecialColumns(Entity entity, DynamicPropertySet dps)
     {
-        HashMap<String, Object> newValues = new HashMap<>(values);
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-
-        for(String propertyName: updateSpecialColumns)
-        {
-            if (!newValues.containsKey(propertyName))
-            {
-                ColumnDef columnDef = columns.get(propertyName);
-                if (columnDef != null) newValues.put(propertyName, getSpecialColumnsValue(propertyName, currentTime));
-            }
-        }
-        return newValues;
+        addSpecialColumns(entity, dps, updateSpecialColumns);
     }
 
-    public Map<String, ? super Object> withSpecialColumns(Entity entity, Map<String, ? super Object> values)
+    public void addInsertSpecialColumns(Entity entity, DynamicPropertySet dps)
     {
-        HashMap<String, Object> newValues = new HashMap<>(values);
+        addSpecialColumns(entity, dps, insertSpecialColumns);
+    }
+
+    private void addSpecialColumns(Entity entity, DynamicPropertySet dps, List<String> specialColumns)
+    {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
 
         for(String propertyName: specialColumns)
         {
-            if (!newValues.containsKey(propertyName))
+            ColumnDef columnDef = columns.get(propertyName);
+            if (columnDef != null)
             {
-                ColumnDef columnDef = columns.get(propertyName);
-                if (columnDef != null) newValues.put(propertyName, getSpecialColumnsValue(propertyName, currentTime));
+                Object value = getSpecialColumnsValue(propertyName, currentTime);
+                if (dps.getProperty(propertyName) == null)
+                {
+                    DynamicProperty newProperty = new DynamicProperty(propertyName, value.getClass(), value);
+                    newProperty.setHidden(true);
+                    dps.add(newProperty);
+                }
+                else
+                {
+                    dps.setValue(propertyName, value);
+                }
             }
         }
-        return newValues;
     }
 
     private Object getSpecialColumnsValue(String propertyName, Timestamp currentTime)
     {
-        if(WHO_INSERTED_COLUMN_NAME.equals(propertyName) || WHO_MODIFIED_COLUMN_NAME.equals(propertyName))
-        {
-            return UserInfoHolder.getUserName();
-        }
+        if(CREATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
+        if(MODIFICATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
 
-        if(CREATION_DATE_COLUMN_NAME.equals(propertyName) || MODIFICATION_DATE_COLUMN_NAME.equals(propertyName))
-        {
-            return currentTime;
-        }
+        if(WHO_INSERTED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getUserName();
+        if(WHO_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getUserName();
 
-        if(IS_DELETED_COLUMN_NAME.equals(propertyName))
-        {
-            return "no";
-        }
+        if(IS_DELETED_COLUMN_NAME.equals(propertyName))return "no";
 
-        if(IP_INSERTED_COLUMN_NAME.equals(propertyName) || IP_MODIFIED_COLUMN_NAME.equals(propertyName))
-        {
-            return UserInfoHolder.getRemoteAddr();
-        }
+        if(IP_INSERTED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
+        if(IP_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
 
         throw Be5Exception.internal("Not support: " + propertyName);
     }
 
-    @Deprecated
-    public void addSpecialIfNotExists(DynamicPropertySet dps, Entity entity)
-    {
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
-
-        for(String propertyName: specialColumns)
-        {
-            if(dps.getProperty(propertyName) == null)
-            {
-                ColumnDef columnDef = columns.get(propertyName);
-                if (columnDef != null) dps.add(getDynamicProperty(columnDef));
-            }
-        }
-    }
-
+//    @Deprecated
+//    public void addSpecialIfNotExists(DynamicPropertySet dps, Entity entity)
+//    {
+//        Map<String, ColumnDef> columns = meta.getColumns(entity);
+//
+//        for(String propertyName: specialColumns)
+//        {
+//            if(dps.getProperty(propertyName) == null)
+//            {
+//                ColumnDef columnDef = columns.get(propertyName);
+//                if (columnDef != null) dps.add(getDynamicProperty(columnDef));
+//            }
+//        }
+//    }
+//
 //    public void updateValuesWithSpecial(DynamicPropertySet dps, Map<String, ?> values)
 //    {
 //        for (Map.Entry<String, ?> entry: values.entrySet())
@@ -381,50 +345,50 @@ public class DpsHelper
 //        updateSpecialColumns(dps);
 //    }
 
-    @Deprecated
-    public void updateSpecialColumns(DynamicPropertySet dps)
-    {
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-
-        setValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
-        setValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
-        setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-    }
-
-    @Deprecated
-    public void setSpecialPropertyIfNull(DynamicPropertySet dps)
-    {
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-
-        setValueIfNull(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
-        setValueIfNull(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
-
-        setValueIfNull(dps, CREATION_DATE_COLUMN_NAME, currentTime);
-        setValueIfNull(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
-
-        setValueIfNull(dps, IS_DELETED_COLUMN_NAME, "no");
-
-        setValueIfNull(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-        setValueIfNull(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
-    }
-
-    @Deprecated
-    private void setValueIfNull(DynamicPropertySet dps, String name, Object value)
-    {
-        DynamicProperty property = dps.getProperty(name);
-        if(property != null && property.getValue() == null){
-            property.setValue(value);
-        }
-    }
-
-    @Deprecated
-    private void setValue(DynamicPropertySet dps, String name, Object value)
-    {
-        DynamicProperty property = dps.getProperty(name);
-        if(property != null){
-            property.setValue(value);
-        }
-    }
+//    @Deprecated
+//    public void updateSpecialColumns(DynamicPropertySet dps)
+//    {
+//        Timestamp currentTime = new Timestamp(new Date().getTime());
+//
+//        setValue(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+//        setValue(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+//        setValue(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+//    }
+//
+//    @Deprecated
+//    public void setSpecialPropertyIfNull(DynamicPropertySet dps)
+//    {
+//        Timestamp currentTime = new Timestamp(new Date().getTime());
+//
+//        setValueIfNull(dps, WHO_INSERTED_COLUMN_NAME, UserInfoHolder.getUserName());
+//        setValueIfNull(dps, WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+//
+//        setValueIfNull(dps, CREATION_DATE_COLUMN_NAME, currentTime);
+//        setValueIfNull(dps, MODIFICATION_DATE_COLUMN_NAME, currentTime);
+//
+//        setValueIfNull(dps, IS_DELETED_COLUMN_NAME, "no");
+//
+//        setValueIfNull(dps, IP_INSERTED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+//        setValueIfNull(dps, IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+//    }
+//
+//    @Deprecated
+//    private void setValueIfNull(DynamicPropertySet dps, String name, Object value)
+//    {
+//        DynamicProperty property = dps.getProperty(name);
+//        if(property != null && property.getValue() == null){
+//            property.setValue(value);
+//        }
+//    }
+//
+//    @Deprecated
+//    private void setValue(DynamicPropertySet dps, String name, Object value)
+//    {
+//        DynamicProperty property = dps.getProperty(name);
+//        if(property != null){
+//            property.setValue(value);
+//        }
+//    }
 
     public Object[] getValues(DynamicPropertySet dps)
     {
