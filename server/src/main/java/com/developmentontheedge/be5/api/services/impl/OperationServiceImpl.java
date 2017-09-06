@@ -35,15 +35,15 @@ public class OperationServiceImpl implements OperationService
     private final Cache<String, Class> groovyOperationClasses;
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
-    private final DpsHelper dpsHelper;
+    //private final DpsHelper dpsHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, DpsHelper dpsHelper, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
-        this.dpsHelper = dpsHelper;
+        //this.dpsHelper = dpsHelper;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
     }
@@ -133,12 +133,12 @@ public class OperationServiceImpl implements OperationService
         }
 
         //todo add tests
-        if (parameters instanceof DynamicPropertySet)
-        {
-            DynamicPropertySet dps = (DynamicPropertySet)parameters;
-            dpsHelper.addSpecialIfNotExists(dps, meta.getEntity());
-            dpsHelper.setSpecialPropertyIfNull(dps);
-        }
+//        if (parameters instanceof DynamicPropertySet)
+//        {
+//            DynamicPropertySet dps = (DynamicPropertySet)parameters;
+//            dpsHelper.addSpecialIfNotExists(dps, meta.getEntity());
+//            dpsHelper.setSpecialPropertyIfNull(dps);
+//        }
 
         return execute(entityName, queryName, operationName, selectedRowsString,
                 presetValues, operation, parameters, operationContext, req);

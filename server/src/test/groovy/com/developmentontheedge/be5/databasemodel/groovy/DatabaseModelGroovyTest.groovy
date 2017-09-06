@@ -216,14 +216,21 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
                 "name": "TestName",
                 "value": 1]
 
-        def record = database.testtableAdmin[id]
-
-        record << [
+        entityName[id] = [//setAt(id, map)
                 "name": "TestName2",
         ]
 
+        def record = entityName[id]
+
         assertEquals "TestName2", record.$name
         assertEquals "TestName2", database.testtableAdmin[id].$name
+
+        record << [
+                "name": "TestName3",
+        ]
+
+        assertEquals "TestName3", record.$name
+        assertEquals "TestName3", database.testtableAdmin[id].$name
     }
 
     @Test

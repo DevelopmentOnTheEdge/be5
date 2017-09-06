@@ -16,13 +16,13 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        Collection<String> columns = dpsHelper.withUpdateSpecialColumns(entity, presetValues.keySet());
+        dpsHelper.withUpdateSpecialColumns(entity, presetValues);
 
-        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
-                rs -> dpsHelper.getDpsForColumns(entity, columns, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
+//        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
+//                rs -> dpsHelper.getDpsForColumns(entity, columns, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
 
-        dpsHelper.setValuesAndAddColumns(entity, dps, presetValues);
-        dpsHelper.updateSpecialColumns(dps);
+        //dpsHelper.setValuesAndAddColumns(entity, dps, presetValues);
+        //dpsHelper.updateSpecialColumns(dps);
 
         return dps;
     }

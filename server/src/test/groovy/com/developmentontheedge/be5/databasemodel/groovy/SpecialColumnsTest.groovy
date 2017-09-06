@@ -108,7 +108,8 @@ class SpecialColumnsTest extends Be5ProjectDBTest
                 "value": 1]
 
         Thread.sleep(1)
-        table[id] << [
+
+        table[id] = [
                 "name": "editName",
         ]
 

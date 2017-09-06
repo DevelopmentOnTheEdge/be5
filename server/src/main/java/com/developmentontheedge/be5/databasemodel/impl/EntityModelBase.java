@@ -67,7 +67,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
                 .from(entity.getName())
                 .where(conditions);
 
-        //castValues(entity, conditions) -> dpsHelper.getDps(entity) - fix
         DynamicPropertySet dps = db.select(sql.format(), DpsRecordAdapter::createDps, conditions.values().toArray());
         return dps == null ? null : new RecordModelBase( this, dps );
     }
@@ -302,10 +301,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     final public String addForce( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entity, values.keySet(), values);
 
-        dpsHelper.addSpecialIfNotExists(dps, entity);
-        dpsHelper.setSpecialPropertyIfNull(dps);
+        Map<String, ? super Object> valuesWithSpecial = dpsHelper.withSpecialColumns(entity, values);
+        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, valuesWithSpecial);
 
         validator.checkErrorAndCast(dps);
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
@@ -346,16 +344,14 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
 
-        Collection<String> columns = dpsHelper.withUpdateSpecialColumns(entity, values.keySet());
-        DynamicPropertySet dps = db.select(
-                Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
-                rs -> dpsHelper.getDpsForColumns(entity, columns, rs), pkValue);
+        Map<String, ? super Object> valuesWithSpecial = dpsHelper.withUpdateSpecialColumns(entity, values);
+        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, valuesWithSpecial);
 
-        dpsHelper.setValuesAndAddColumns(entity, dps, values);
-        dpsHelper.updateSpecialColumns(dps);
+        validator.checkErrorAndCast(dps);
 
         db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));
+        //todo return
     }
 //
 //    @Override
