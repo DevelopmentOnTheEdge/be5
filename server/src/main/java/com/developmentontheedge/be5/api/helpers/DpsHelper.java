@@ -72,17 +72,17 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-    public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
-    {
-        DynamicPropertySet dps = getDps(entity);
-
-        return setValuesAndAddColumns(dps, resultSet);
-    }
+//    public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
+//    {
+//        DynamicPropertySet dps = getDps(entity);
+//
+//        return setValuesAndAddColumns(entity, dps, resultSet);
+//    }
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
-        return setValuesAndAddColumns(dps, resultSet);
+        return setValuesAndAddColumns(entity, dps, resultSet);
     }
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ?> values)
@@ -91,11 +91,11 @@ public class DpsHelper
         return setValuesAndAddColumns(entity, dps, values);
     }
 
-    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
-    {
-        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-        return setValuesAndAddColumns(dps, resultSet);
-    }
+//    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
+//    {
+//        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
+//        return setValuesAndAddColumns(entity, dps, resultSet);
+//    }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ?> values){
         DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
@@ -202,6 +202,8 @@ public class DpsHelper
 
     public DynamicPropertySet setValuesAndAddColumns(Entity entity, DynamicPropertySet dps, Map<String, ?> values)
     {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
             if(dps.getProperty(entry.getKey()) != null)
@@ -211,18 +213,13 @@ public class DpsHelper
             else
             {
                 if(OperationSupport.reloadControl.equals(entry.getKey()))continue;
-
-                ColumnDef column = meta.getColumn(entity, entry.getKey());
-                Class<?> clazz;
-                if(column != null) {
-                    clazz = meta.getColumnType(entity, entry.getKey());
-                }else{
-                    clazz = entry.getValue().getClass();
+                if(columns.get(entry.getKey()) != null)
+                {
+                    DynamicProperty newProperty = new DynamicProperty(entry.getKey(),
+                            meta.getColumnType(columns.get(entry.getKey())), entry.getValue());
+                    newProperty.setHidden(true);
+                    dps.add(newProperty);
                 }
-
-                DynamicProperty newProperty = new DynamicProperty(entry.getKey(), clazz, entry.getValue());
-                newProperty.setHidden(true);
-                dps.add(newProperty);
             }
         }
 
@@ -235,8 +232,8 @@ public class DpsHelper
     }
 
     @DirtyRealization(comment = "в некоторых местах нужно использовать более простые функции:" +
-            "- просто setValuesAndAddColumns(DynamicPropertySet dps, Map<String, ?> values) например")
-    public DynamicPropertySet setValuesAndAddColumns(DynamicPropertySet dps, ResultSet resultSet)
+            "- просто setValues(DynamicPropertySet dps, Map<String, ?> values) например")
+    public DynamicPropertySet setValuesAndAddColumns(Entity entity, DynamicPropertySet dps, ResultSet resultSet)
     {
         try
         {
@@ -272,7 +269,7 @@ public class DpsHelper
         return dps;
     }
 
-    public Collection<String> addUpdateSpecialColumns(Entity entity, Set<String> set)
+    public Collection<String> withUpdateSpecialColumns(Entity entity, Set<String> set)
     {
         Set<String> newCollections = new HashSet<>(set);
         Map<String, ColumnDef> columns = meta.getColumns(entity);

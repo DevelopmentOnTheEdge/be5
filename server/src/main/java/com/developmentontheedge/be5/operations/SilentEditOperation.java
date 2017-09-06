@@ -16,7 +16,7 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        Collection<String> columns = dpsHelper.addUpdateSpecialColumns(entity, presetValues.keySet());
+        Collection<String> columns = dpsHelper.withUpdateSpecialColumns(entity, presetValues.keySet());
 
         dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
                 rs -> dpsHelper.getDpsForColumns(entity, columns, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));

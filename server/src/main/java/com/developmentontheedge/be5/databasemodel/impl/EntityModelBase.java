@@ -346,7 +346,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
 
-        Collection<String> columns = dpsHelper.addUpdateSpecialColumns(entity, values.keySet());
+        Collection<String> columns = dpsHelper.withUpdateSpecialColumns(entity, values.keySet());
         DynamicPropertySet dps = db.select(
                 Ast.selectAll().from(entity.getName()).where(entity.getPrimaryKey(), id).format(),
                 rs -> dpsHelper.getDpsForColumns(entity, columns, rs), pkValue);
