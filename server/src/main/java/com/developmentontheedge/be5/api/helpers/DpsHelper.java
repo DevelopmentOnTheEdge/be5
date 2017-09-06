@@ -118,7 +118,9 @@ public class DpsHelper
         {
             if(!excludedColumnsList.contains(entry.getKey()))
             {
-                dps.add(getDynamicProperty(entry.getValue()));
+                DynamicProperty dynamicProperty = getDynamicProperty(entry.getValue());
+                addTags(dynamicProperty, entry.getValue());
+                dps.add(dynamicProperty);
                 excludedColumnsList.remove(entry.getKey());
             }
         }
@@ -144,9 +146,14 @@ public class DpsHelper
         for(String propertyName: columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
-            if(columnDef != null){
-                dps.add(getDynamicProperty(columnDef));
-            }else{
+            if(columnDef != null)
+            {
+                DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
+                addTags(dynamicProperty, columnDef);
+                dps.add(dynamicProperty);
+            }
+            else
+            {
                 log.warning("Column " + propertyName + " not found in " + entity.getName());
             }
         }
@@ -172,6 +179,11 @@ public class DpsHelper
 
         if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
 
+        return dp;
+    }
+
+    public void addTags(DynamicProperty dp, ColumnDef columnDef)
+    {
         if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
         }
@@ -183,8 +195,6 @@ public class DpsHelper
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
         }
-
-        return dp;
     }
 
     public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
@@ -205,10 +215,13 @@ public class DpsHelper
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
             if(OperationSupport.reloadControl.equals(entry.getKey()))continue;
-            if(columns.get(entry.getKey()) != null)
+            ColumnDef columnDef = columns.get(entry.getKey());
+            if(columnDef != null)
             {
-                dps.add(new DynamicProperty(entry.getKey(),
-                        meta.getColumnType(columns.get(entry.getKey())), entry.getValue()));
+                DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
+                if(entry.getValue() != null)dynamicProperty.setValue(entry.getValue());
+
+                dps.add(dynamicProperty);
             }
             else
             {

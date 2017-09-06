@@ -16,8 +16,13 @@ import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -108,5 +113,21 @@ public abstract class TestUtils
     protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values)
     {
         return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
+    }
+
+    public static String resultSetToString(ResultSet rs) {
+        List<String> list = new ArrayList<>();
+        try {
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                if(rs.getObject(i) != null)
+                    list.add(rs.getObject(i).toString());
+                else{
+                    list.add("null");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list.stream().collect(Collectors.joining(","));
     }
 }

@@ -71,13 +71,28 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     }
 
     @Test
-    void testInsert() throws Exception
+    void testInsert()
     {
         database.testtableAdmin << [
                 "name": "InsertName",
                 "value": "2"];
 
         assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+    }
+
+    @Test
+    void testInsertWithCanBeNullOrDefaultValue()
+    {
+        database.testTags << [
+                CODE         : "12",
+                payable      : null,
+                admlevel     : null,
+                referenceTest: null,
+                testLong     : null,
+        ]
+
+        assertEquals "12,yes,Regional,null,null",
+                db.select("SELECT * FROM testTags WHERE CODE = ?", {rs -> resultSetToString(rs)}, "12")
     }
 
     @Test(expected = NumberFormatException.class)
