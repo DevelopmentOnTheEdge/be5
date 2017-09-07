@@ -25,6 +25,11 @@ class ErrorProcessing extends OperationSupport implements Operation
             setResult(OperationResult.error("The operation can not be performed."))
         }
 
+        if(name.getValue() == "generateDeveloperError")
+        {
+            throw new IllegalArgumentException()
+        }
+
         return dps
     }
 
@@ -41,6 +46,11 @@ class ErrorProcessing extends OperationSupport implements Operation
         if(name.getValue() == "executeErrorStatus")
         {
             setResult(OperationResult.error("An error occurred while performing operations."))
+        }
+
+        if(name.getValue() == "executeDeveloperError")
+        {
+            throw new IllegalArgumentException()
         }
     }
 

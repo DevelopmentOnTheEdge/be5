@@ -1,11 +1,13 @@
 package com.developmentontheedge.be5.api.services
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.model.FormPresentation
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import org.junit.Test
 
 import static org.junit.Assert.*
+
 
 class OperationServiceTest extends SqlMockOperationTest
 {
@@ -69,6 +71,20 @@ class OperationServiceTest extends SqlMockOperationTest
 
         assertEquals "{'details':'message','message':'An error occurred while performing operations.','status':'error'}",
                 oneQuotes(jsonb.toJson(first.getOperationResult()))
+    }
+
+    @Test(expected = Be5Exception)
+    void generateDeveloperError()
+    {
+        operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateDeveloperError'}"))
+    }
+
+    @Test(expected = Be5Exception)
+    void executeDeveloperError()
+    {
+        operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeDeveloperError'}"))
     }
 
 }
