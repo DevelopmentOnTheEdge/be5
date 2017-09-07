@@ -87,4 +87,29 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeDeveloperError'}"))
     }
 
+    @Test
+    void errorHandlingCycles()
+    {
+        FormPresentation first = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateErrorInProperty'}")).getFirst()
+
+        assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+
+
+        //call callGetParameters and add OperationResult from invoke to FormPresentation
+        first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeErrorStatus'}")).getFirst()
+
+        assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+
+
+        //just return FormPresentation with current parameters
+        first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeErrorInProperty'}")).getFirst()
+
+        assertEquals "{'name':'executeErrorInProperty'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+    }
 }

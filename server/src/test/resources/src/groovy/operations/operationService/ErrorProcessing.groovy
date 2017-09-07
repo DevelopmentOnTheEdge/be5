@@ -13,6 +13,11 @@ class ErrorProcessing extends OperationSupport implements Operation
     {
         dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), ["name"], presetValues)
 
+        dps << [
+                name: "propertyForAnotherEntity",
+                value: "text"
+        ]
+        
         def name = dps.getProperty("name")
 
         if(name.getValue() == "generateErrorInProperty")
@@ -36,6 +41,8 @@ class ErrorProcessing extends OperationSupport implements Operation
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
+        dps.remove("propertyForAnotherEntity")
+
         def name = dps.getProperty("name")
 
         if(name.getValue() == "executeErrorInProperty")
