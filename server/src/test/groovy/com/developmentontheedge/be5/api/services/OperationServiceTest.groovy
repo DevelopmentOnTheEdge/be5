@@ -22,9 +22,9 @@ class OperationServiceTest extends SqlMockOperationTest
     void generatePropertyError()
     {
         FormPresentation first = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'errorInProperty'}")).getFirst()
+                "ErrorProcessing", "", "{'name':'generateErrorInProperty'}")).getFirst()
 
-        assertEquals "{'displayName':'name','status':'error','message':'Error in property'}",
+        assertEquals "{'displayName':'name','status':'error','message':'Error in property (generate)'}",
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
     }
 
@@ -42,9 +42,9 @@ class OperationServiceTest extends SqlMockOperationTest
     void executeErrorStatus()
     {
         FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'invokeErrorStatus'}")).getFirst()
+                "ErrorProcessing", "", "{'name':'executeErrorStatus'}")).getFirst()
 
-        assertEquals "Error in invoke.",
+        assertEquals "An error occurred while performing operations.",
                 oneQuotes(first.getErrorMsg().toString())
     }
 

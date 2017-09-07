@@ -14,9 +14,10 @@ class ErrorProcessing extends OperationSupport implements Operation
         dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), ["name"], presetValues)
 
         def name = dps.getProperty("name")
-        if(name.getValue() == "errorInProperty")
+
+        if(name.getValue() == "generateErrorInProperty")
         {
-            validator.setError(name, "Error in property")
+            validator.setError(name, "Error in property (generate)")
         }
 
         if(name.getValue() == "generateErrorStatus")
@@ -30,9 +31,11 @@ class ErrorProcessing extends OperationSupport implements Operation
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
-        if(dps.getValue("name") == "invokeErrorStatus")
+        def name = dps.getProperty("name")
+
+        if(name.getValue() == "executeErrorStatus")
         {
-            setResult(OperationResult.error("Error in invoke."))
+            setResult(OperationResult.error("An error occurred while performing operations."))
         }
     }
 
