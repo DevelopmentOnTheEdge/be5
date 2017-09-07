@@ -24,19 +24,29 @@ class OperationServiceTest extends SqlMockOperationTest
         FormPresentation first = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorInProperty'}")).getFirst()
 
-        assertEquals "{'displayName':'name','status':'error','message':'Error in property (generate)'}",
+        assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+
+        assertEquals "{" +
+                "'details':'java.lang.IllegalArgumentException: name: name, type:class java.lang.String, value: generateErrorInProperty'," +
+                "'message':'name: name, type:class java.lang.String, value: generateErrorInProperty'," +
+                "'status':'error'}", oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 
-//    @Test
-//    void executePropertyError()
-//    {
-//        FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
-//                "ErrorProcessing", "", "{'name':'executeErrorInProperty'}")).getFirst()
-//
-//        assertEquals "Error in execute.",
-//                oneQuotes(first.getErrorMsg().toString())
-//    }
+    @Test
+    void executePropertyError()
+    {
+        FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeErrorInProperty'}")).getFirst()
+
+        assertEquals "{'displayName':'name','status':'error','message':'Error in property (invoke)'}",
+                oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+
+        assertEquals "{" +
+                "'details':'java.lang.IllegalArgumentException: name: name, type:class java.lang.String, value: executeErrorInProperty'," +
+                "'message':'name: name, type:class java.lang.String, value: executeErrorInProperty'," +
+                "'status':'error'}", oneQuotes(jsonb.toJson(first.getOperationResult()))
+    }
 
     @Test
     void generateErrorStatus()
@@ -53,6 +63,9 @@ class OperationServiceTest extends SqlMockOperationTest
     {
         FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'executeErrorStatus'}")).getFirst()
+
+        assertEquals "{'displayName':'name'}",
+                oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals "{'details':'message','message':'An error occurred while performing operations.','status':'error'}",
                 oneQuotes(jsonb.toJson(first.getOperationResult()))

@@ -17,7 +17,7 @@ class ErrorProcessing extends OperationSupport implements Operation
 
         if(name.getValue() == "generateErrorInProperty")
         {
-            validator.setError(name, "Error in property (generate)")
+            validator.setError(name, "Error in property (getParameters)")
         }
 
         if(name.getValue() == "generateErrorStatus")
@@ -35,7 +35,7 @@ class ErrorProcessing extends OperationSupport implements Operation
 
         if(name.getValue() == "executeErrorInProperty")
         {
-            validator.setError(name, "Error in property (generate)")
+            validator.setError(name, "Error in property (invoke)")
         }
 
         if(name.getValue() == "executeErrorStatus")
