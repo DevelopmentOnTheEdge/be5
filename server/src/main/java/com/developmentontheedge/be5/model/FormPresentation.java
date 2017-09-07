@@ -10,7 +10,8 @@ public class FormPresentation
     public final String entity;
     public final String query;
     public final String operation;
-    public final String title;
+    public final String title;//todo change to 'Здания - Добавить'
+    // add public final String operationName;
     public final String selectedRows;
     public final JsonObject bean;
     public final Object layout;

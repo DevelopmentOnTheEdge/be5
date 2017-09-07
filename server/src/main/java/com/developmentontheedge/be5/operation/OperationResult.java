@@ -30,7 +30,7 @@ public class OperationResult
 
     private OperationResult(OperationStatus status)
     {
-        this(status, status.name(), "");
+        this(status, null, null);
     }
 
     public OperationStatus getStatus()

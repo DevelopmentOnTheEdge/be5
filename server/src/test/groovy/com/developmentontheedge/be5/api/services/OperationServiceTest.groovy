@@ -16,8 +16,11 @@ class OperationServiceTest extends SqlMockOperationTest
     {
         FormPresentation first = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
                 "ErrorProcessing", "", "")).getFirst()
+
         assertEquals "{'displayName':'name'}",
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+
+        assertEquals "{'status':'open'}", oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 
     @Test

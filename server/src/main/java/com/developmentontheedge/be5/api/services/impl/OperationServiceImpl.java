@@ -117,7 +117,7 @@ public class OperationServiceImpl implements OperationService
                     presetValues, operation, meta, null, operationContext, req);
         }
 
-        String errorMsg = "";
+        OperationResult operationResult = OperationResult.open();
         if(parameters instanceof DynamicPropertySet)
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
@@ -128,7 +128,7 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
-                    errorMsg = e.getMessage() + " - " + e.toString();
+                    operationResult = OperationResult.error(e);
                 }
             }
             else
@@ -139,7 +139,7 @@ public class OperationServiceImpl implements OperationService
 
         return Either.first(new FormPresentation(entityName, queryName, operationName,
                 userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, OperationResult.error(errorMsg)));
+                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, operationResult));
     }
 
     @Override
