@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.model.FormPresentation
+import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import org.junit.Test
 
@@ -27,7 +28,24 @@ class OperationServiceTest extends SqlMockOperationTest
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
     }
 
+    @Test
+    void generateErrorStatus()
+    {
+        OperationResult second = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateErrorStatus'}")).getSecond()
 
+        assertEquals "{'message':'The operation can not be performed.','status':'error'}",
+                oneQuotes(jsonb.toJson(second))
+    }
 
+    @Test
+    void executeErrorStatus()
+    {
+        FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'invokeErrorStatus'}")).getFirst()
+
+        assertEquals "Error in invoke.",
+                oneQuotes(first.getErrorMsg().toString())
+    }
 
 }

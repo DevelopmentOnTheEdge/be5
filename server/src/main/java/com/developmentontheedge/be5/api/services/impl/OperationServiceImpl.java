@@ -55,16 +55,60 @@ public class OperationServiceImpl implements OperationService
         Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
         OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        return callGetParameters(entityName, queryName, operationName, selectedRowsString, operationInfo,
+        return callGetParameters(entityName, queryName, operationName, selectedRowsString, null, operationInfo,
                 presetValues, req);
     }
 
     private Either<FormPresentation, OperationResult> callGetParameters(String entityName, String queryName,
-             String operationName, String selectedRowsString, OperationInfo meta, Map<String, Object> presetValues, Request req)
+             String operationName, String selectedRowsString, Operation operation, OperationInfo meta, Map<String, Object> presetValues, Request req)
     {
-        Operation operation = create(meta, selectedRows(selectedRowsString), req);
+        OperationResult invokeResult = null;
+        if(operation == null)
+        {
+            operation = create(meta, selectedRows(selectedRowsString), req);
+        }
+        else
+        {
+            if(OperationStatus.ERROR == operation.getStatus())
+            {
+                invokeResult = operation.getResult();
+                operation.setResult(OperationResult.open());
+            }
+        }
 
         Object parameters = getParametersFromOperation(operation, presetValues);
+
+        if(OperationStatus.ERROR == operation.getStatus())
+        {
+            return Either.second(operation.getResult());
+        }
+
+        if(invokeResult != null && invokeResult.getStatus() == OperationStatus.ERROR)
+        {
+            validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+            return Either.first(new FormPresentation(entityName, queryName, operationName,
+                    userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                    selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                    invokeResult.getMessage()));
+        }
+
+        if (parameters instanceof DynamicPropertySet)
+        {
+            try
+            {
+                validator.isError((DynamicPropertySet) parameters);
+            }
+            catch (RuntimeException e)
+            {
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+                return Either.first(new FormPresentation(entityName, queryName, operationName,
+                        userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        e.getMessage() + " - " + e.toString()));
+            }
+        }
 
         if (parameters == null)
         {
@@ -138,19 +182,20 @@ public class OperationServiceImpl implements OperationService
                 presetValues, operation, meta, parameters, operationContext, req);
     }
 
-    public Either<FormPresentation, OperationResult> callInvoke(String entityName, String queryName, String operationName,
+    private Either<FormPresentation, OperationResult> callInvoke(String entityName, String queryName, String operationName,
          String selectedRowsString, Map<String, Object> presetValues, Operation operation, OperationInfo meta,
                                                              Object parameters, OperationContext operationContext, Request req)
     {
         try
         {
+            operation.setResult(OperationResult.progress());
             operation.invoke(parameters, operationContext);
 
-            if(OperationStatus.ERROR == operation.getResult().getStatus() && parameters != null)
+            if(OperationStatus.ERROR == operation.getStatus() && parameters != null)
             {
                 validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
 
-                return callGetParameters(entityName, queryName, operationName, selectedRowsString, meta,
+                return callGetParameters(entityName, queryName, operationName, selectedRowsString, operation, meta,
                         presetValues, req);
             }
 
@@ -171,7 +216,7 @@ public class OperationServiceImpl implements OperationService
                 }
             }
 
-            if(OperationStatus.IN_PROGRESS == operation.getResult().getStatus())
+            if(OperationStatus.IN_PROGRESS == operation.getStatus())
             {
                 operation.setResult(OperationResult.redirect(
                     new HashUrl(FrontendConstants.TABLE_ACTION,
@@ -194,7 +239,7 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
-    public Operation create(OperationInfo operationInfo, String[] records, Request request)
+    private Operation create(OperationInfo operationInfo, String[] records, Request request)
     {
         Operation operation;
 
@@ -227,7 +272,7 @@ public class OperationServiceImpl implements OperationService
                 }
         }
 
-        operation.initialize(operationInfo, OperationResult.progress(), records, request);
+        operation.initialize(operationInfo, OperationResult.open(), records, request);
         injector.injectAnnotatedFields(operation);
 
         return operation;

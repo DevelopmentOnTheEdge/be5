@@ -19,7 +19,7 @@ class ErrorProcessing extends OperationSupport implements Operation
             validator.setError(name, "Error in property")
         }
 
-        if(name.getValue() == "errorStatus")
+        if(name.getValue() == "generateErrorStatus")
         {
             setResult(OperationResult.error("The operation can not be performed."))
         }
@@ -30,8 +30,10 @@ class ErrorProcessing extends OperationSupport implements Operation
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
-        //String sql = generateSql( connector, false );
-        //db.insert(sql);
+        if(dps.getValue("name") == "invokeErrorStatus")
+        {
+            setResult(OperationResult.error("Error in invoke."))
+        }
     }
 
 }

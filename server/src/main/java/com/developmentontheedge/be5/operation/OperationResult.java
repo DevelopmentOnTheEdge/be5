@@ -62,9 +62,15 @@ public class OperationResult
     // OperationResult factory methods
     //
 
+    private static final OperationResult open = new OperationResult(OperationStatus.OPEN);
     private static final OperationResult finished = new OperationResult(OperationStatus.FINISHED);
     private static final OperationResult cancelled = new OperationResult(OperationStatus.CANCELLED);
     private static final OperationResult progress = new OperationResult(OperationStatus.IN_PROGRESS);
+
+    public static OperationResult open()
+    {
+        return open;
+    }
 
     public static OperationResult cancelled()
     {
@@ -78,12 +84,12 @@ public class OperationResult
     
     public static OperationResult progress(String message)
     {
-        return new OperationResult(OperationStatus.IN_PROGRESS, message); 
+        return new OperationResult(OperationStatus.IN_PROGRESS, message, "");
     }
 
     public static OperationResult progress(double preparedness)
     {
-        return new OperationResult(OperationStatus.IN_PROGRESS, new Double(preparedness));
+        return new OperationResult(OperationStatus.IN_PROGRESS, preparedness);
     }
 
     public static OperationResult interrupting()
@@ -123,12 +129,12 @@ public class OperationResult
 
     public static OperationResult error(Throwable details)
     {
-        return new OperationResult(OperationStatus.ERROR, details.getMessage() == null ? "" : details.getMessage());
+        return new OperationResult(OperationStatus.ERROR, "Throwable", details.getMessage() == null ? "" : details.getMessage());
     }
 
     public static OperationResult error(String message)
     {
-        return new OperationResult(OperationStatus.ERROR, message);
+        return new OperationResult(OperationStatus.ERROR, message, null);
     }
 
     @Override
