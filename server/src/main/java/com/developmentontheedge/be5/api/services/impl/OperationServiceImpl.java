@@ -90,7 +90,7 @@ public class OperationServiceImpl implements OperationService
             return Either.first(new FormPresentation(entityName, queryName, operationName,
                     userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                     selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
-                    invokeResult.getMessage()));
+                    invokeResult));
         }
 
         if (parameters instanceof DynamicPropertySet)
@@ -106,7 +106,7 @@ public class OperationServiceImpl implements OperationService
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                         selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
-                        e.getMessage() + " - " + e.toString()));
+                        OperationResult.error(e)));
             }
         }
 
@@ -139,7 +139,7 @@ public class OperationServiceImpl implements OperationService
 
         return Either.first(new FormPresentation(entityName, queryName, operationName,
                 userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, errorMsg));
+                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, OperationResult.error(errorMsg)));
     }
 
     @Override
@@ -174,7 +174,7 @@ public class OperationServiceImpl implements OperationService
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                         selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
-                        e.getMessage() + " - " + e.toString()));
+                        OperationResult.error(e)));
             }
         }
 
@@ -212,7 +212,7 @@ public class OperationServiceImpl implements OperationService
                     return Either.first(new FormPresentation(entityName, queryName, operationName,
                             userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                             selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
-                            e.getMessage() + " - " + e.toString()));
+                            OperationResult.error(e)));
                 }
             }
 

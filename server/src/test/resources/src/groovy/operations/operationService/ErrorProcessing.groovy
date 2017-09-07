@@ -33,6 +33,11 @@ class ErrorProcessing extends OperationSupport implements Operation
     {
         def name = dps.getProperty("name")
 
+        if(name.getValue() == "executeErrorInProperty")
+        {
+            validator.setError(name, "Error in property (generate)")
+        }
+
         if(name.getValue() == "executeErrorStatus")
         {
             setResult(OperationResult.error("An error occurred while performing operations."))

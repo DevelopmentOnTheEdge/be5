@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.model;
 
+import com.developmentontheedge.be5.operation.OperationResult;
+
 import javax.json.JsonObject;
 import java.util.Map;
 
@@ -13,10 +15,10 @@ public class FormPresentation
     public final JsonObject bean;
     public final Object layout;
     public final Map<String, Object> parameters;
-    public final String errorMsg;
+    public final OperationResult operationResult;
 
     public FormPresentation(String entity, String query, String operation, String title, String selectedRows,
-                            JsonObject bean, Object layout, Map<String, Object> parameters, String errorMsg)
+                            JsonObject bean, Object layout, Map<String, Object> parameters, OperationResult operationResult)
     {
         this.entity = entity;
         this.query = query;
@@ -26,7 +28,7 @@ public class FormPresentation
         this.bean = bean;
         this.layout = layout;
         this.parameters = parameters;
-        this.errorMsg = errorMsg;
+        this.operationResult = operationResult;
     }
 
     public String getEntity()
@@ -69,8 +71,7 @@ public class FormPresentation
         return parameters;
     }
 
-    public String getErrorMsg()
-    {
-        return errorMsg;
+    public OperationResult getOperationResult() {
+        return operationResult;
     }
 }

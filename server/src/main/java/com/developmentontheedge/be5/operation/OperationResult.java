@@ -129,12 +129,12 @@ public class OperationResult
 
     public static OperationResult error(Throwable details)
     {
-        return new OperationResult(OperationStatus.ERROR, "Throwable", details.getMessage() == null ? "" : details.getMessage());
+        return new OperationResult(OperationStatus.ERROR, details.getMessage(), details.toString());
     }
 
     public static OperationResult error(String message)
     {
-        return new OperationResult(OperationStatus.ERROR, message, null);
+        return new OperationResult(OperationStatus.ERROR, message, "message");
     }
 
     @Override

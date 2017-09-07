@@ -28,13 +28,23 @@ class OperationServiceTest extends SqlMockOperationTest
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
     }
 
+//    @Test
+//    void executePropertyError()
+//    {
+//        FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+//                "ErrorProcessing", "", "{'name':'executeErrorInProperty'}")).getFirst()
+//
+//        assertEquals "Error in execute.",
+//                oneQuotes(first.getErrorMsg().toString())
+//    }
+
     @Test
     void generateErrorStatus()
     {
         OperationResult second = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorStatus'}")).getSecond()
 
-        assertEquals "{'message':'The operation can not be performed.','status':'error'}",
+        assertEquals "{'details':'message','message':'The operation can not be performed.','status':'error'}",
                 oneQuotes(jsonb.toJson(second))
     }
 
@@ -44,8 +54,8 @@ class OperationServiceTest extends SqlMockOperationTest
         FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'executeErrorStatus'}")).getFirst()
 
-        assertEquals "An error occurred while performing operations.",
-                oneQuotes(first.getErrorMsg().toString())
+        assertEquals "{'details':'message','message':'An error occurred while performing operations.','status':'error'}",
+                oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 
 }
