@@ -20,8 +20,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Inject private Meta meta
 
     private Response response = mock(Response.class)
-    private Request request = getSpyMockRequest("",
-                ImmutableMap.of(RestApiConstants.ENTITY, "testtable", RestApiConstants.QUERY, "All records"))
+    private Request request = getSpyMockRecForQuery("testtable", "All records", "")
 
     @Test
     void getTablePresentation()
@@ -30,6 +29,11 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
 
         assertEquals("testtable: All records", testtable.getTitle())
+
+        assertEquals("[{'cells':[" +
+                "{'content':'tableModelTest','options':{}}," +
+                "{'content':'1','options':{}}" +
+            "]}]",  oneQuotes(jsonb.toJson(testtable.getRows())))
     }
 
     @Test
@@ -39,6 +43,13 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 meta.getQuery("testtable", "LinkQuick", Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
         assertEquals("testtable: LinkQuick", testtable.getTitle())
+
+        assertEquals("{'cells':[{" +
+                "'content':'tableModelTest'," +
+                "'options':{" +
+                    "'link':{'url':'table/testtable/Test 1D unknown/ID=1'}," +
+                    "'quick':{'visible':'true'}" +
+                "}}]}", oneQuotes(jsonb.toJson(testtable.getRows().get(0))))
     }
 
 }

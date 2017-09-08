@@ -12,8 +12,6 @@ import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import org.junit.Before;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
@@ -21,8 +19,6 @@ import java.util.Map;
 
 public abstract class Be5ProjectTest extends TestUtils
 {
-    protected static final Jsonb jsonb = JsonbBuilder.create();
-
     private static final Injector injector = initInjector(new SqlMockBinder());
 
     @Before

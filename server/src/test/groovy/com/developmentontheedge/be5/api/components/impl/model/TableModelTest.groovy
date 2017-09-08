@@ -20,7 +20,8 @@ class TableModelTest extends TestTableQueryDBTest
                 .limit(20)
                 .build()
 
-        assertEquals("user1; user2", table.getRows().get(0).getCells().get(2).content)
+        assertEquals("{'content':'user1; user2','options':{'sql':{}}}",
+                oneQuotes(jsonb.toJson(table.getRows().get(0).getCells().get(2))))
     }
 
 

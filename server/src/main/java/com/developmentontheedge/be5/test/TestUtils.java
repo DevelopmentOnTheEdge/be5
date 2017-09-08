@@ -14,6 +14,8 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.ResultSet;
@@ -29,6 +31,8 @@ import static org.mockito.Mockito.when;
 
 public abstract class TestUtils
 {
+    protected static final Jsonb jsonb = JsonbBuilder.create();
+
     static final String profileForIntegrationTests = "profileForIntegrationTests";
 
     static Injector initInjector(Binder binder)
@@ -105,6 +109,21 @@ public abstract class TestUtils
                 RestApiConstants.QUERY, query,
                 RestApiConstants.OPERATION, operation,
                 RestApiConstants.SELECTED_ROWS, selectedRows,
+                RestApiConstants.VALUES, values),
+                sessionValues
+        );
+    }
+
+    protected Request getSpyMockRecForQuery(String entity, String query, String values)
+    {
+        return getSpyMockRecForQuery(entity, query, values, new HashMap<>());
+    }
+
+    protected Request getSpyMockRecForQuery(String entity, String query, String values, Map<String, Object> sessionValues)
+    {
+        return getSpyMockRequest("", ImmutableMap.of(
+                RestApiConstants.ENTITY, entity,
+                RestApiConstants.QUERY, query,
                 RestApiConstants.VALUES, values),
                 sessionValues
         );
