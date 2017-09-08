@@ -64,6 +64,7 @@ public class RequestImpl implements Request {
             JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
             for (Map.Entry entry: values.entrySet())
             {
+                String name = entry.getKey().toString();
                 if(entry.getValue() instanceof JsonArray)
                 {
                     JsonArray value = (JsonArray) entry.getValue();
@@ -74,11 +75,15 @@ public class RequestImpl implements Request {
                         arrValues[i] = value.get(i).getAsString();
                     }
 
-                    fieldValues.put(entry.getKey().toString(), arrValues);
+                    fieldValues.put(name, arrValues);
                 }
                 else if(entry.getValue() instanceof JsonElement)
                 {
-                    fieldValues.put(entry.getKey().toString(), ((JsonElement)entry.getValue()).getAsString());
+                    String value = ((JsonElement)entry.getValue()).getAsString();
+                    if( !"".equals(value) )
+                    {
+                        fieldValues.put(name, value);
+                    }
                 }
 
             }

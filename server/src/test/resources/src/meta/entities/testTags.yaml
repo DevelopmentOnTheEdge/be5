@@ -31,6 +31,11 @@ testTags:
   - All records:
       type: 1D_unknown
       roles: '@AllRoles'
+      operations:
+      - Delete
+      - Edit
+      - Insert
+      - OperationWithCanBeNull
       code: |-
         SELECT *
         FROM testTags
@@ -47,3 +52,19 @@ testTags:
         <if parameter="payable">
           AND payable = <parameter:payable/>
         </if>
+  operations:
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.DeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.SilentEditOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - OperationWithCanBeNull:
+      type: Groovy
+      roles: Administrator
+      file: testTags/OperationWithCanBeNull.groovy

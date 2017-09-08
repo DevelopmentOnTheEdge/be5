@@ -1,19 +1,13 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -152,6 +146,52 @@ public class OperationTest extends SqlMockOperationTest
                 oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
 
         assertFalse(generate.getFirst().toString().contains("error"));
+    }
+
+    @Test
+    public void testOperationInvokeNullInsteadEmptyString()
+    {
+        operationService.execute(
+                getSpyMockRecForOp("testTags", "All records", "Insert", "",
+                        doubleQuotes("{'CODE':'01','referenceTest':'','payable':'','admlevel':'','testLong':''}")));
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (referenceTest, CODE, payable, admlevel, testLong) VALUES (?, ?, ?, ?, ?)",
+                null, "01", "yes", "Regional", null
+        );
+    }
+
+    @Test
+    public void testOperationInvokeNullInsteadEmptyStringCustomOp()
+    {
+        OperationResult second = operationService.execute(
+                getSpyMockRecForOp("testTags", "All records", "OperationWithCanBeNull", "",
+                        doubleQuotes("{'CODE':'01','referenceTest':'','testLong':''}"))).getSecond();
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, referenceTest, testLong) VALUES (?, ?, ?)",
+                "01", null, null
+        );
+    }
+
+    @Test
+    public void testOperationInvokeNullInsteadEmptyStringCustomOpSpace()
+    {
+        OperationResult second = operationService.execute(
+                getSpyMockRecForOp("testTags", "All records", "OperationWithCanBeNull", "",
+                        doubleQuotes("{'CODE':'01','referenceTest':' ','testLong':''}"))).getSecond();
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, referenceTest, testLong) VALUES (?, ?, ?)",
+                "01", " ", null
+        );
+    }
+
+    @Test
+    public void testOperationInvokeNullInsteadEmptyStringCustomOpSpaceOnLong()
+    {
+        FormPresentation first = operationService.execute(
+                getSpyMockRecForOp("testTags", "All records", "OperationWithCanBeNull", "",
+                        doubleQuotes("{'CODE':'01','referenceTest':'','testLong':' '}"))).getFirst();
+
+        assertEquals("error", first.getBean().getJsonObject("meta").getJsonObject("/testLong").getString("status")) ;
     }
 
 }

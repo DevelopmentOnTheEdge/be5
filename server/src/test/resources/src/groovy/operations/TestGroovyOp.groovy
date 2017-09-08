@@ -60,8 +60,7 @@ class TestGroovyOp extends OperationSupport implements Operation
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
-        //String sql = generateSql( connector, false );
-        //db.insert(sql);
+
     }
 
     @Override
