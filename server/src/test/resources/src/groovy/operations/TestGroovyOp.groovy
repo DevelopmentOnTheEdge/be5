@@ -52,9 +52,7 @@ class TestGroovyOp extends OperationSupport implements Operation
 
         dps["beginDate"] << [READ_ONLY: true]
 
-        dpsHelper.setValues(dps, presetValues)
-
-        return dps
+        return dpsHelper.setValues(dps, presetValues)
     }
 
     @Override
