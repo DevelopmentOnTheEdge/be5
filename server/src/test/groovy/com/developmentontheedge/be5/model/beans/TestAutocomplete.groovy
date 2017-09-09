@@ -4,21 +4,21 @@ import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
+import groovy.transform.TypeChecked
 import org.junit.Test
 
+import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
 import static org.junit.Assert.assertEquals
 
+@TypeChecked
 class TestAutocomplete extends Be5ProjectTest
 {
-
     @Test
-    void testPOGOMetaClassInterception()
+    void test()
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
-        def gBuilder = new DynamicPropertyGBuilder()
-
-        dps.add gBuilder.add{
+        add (dps) {
             name          = "reasonMulti"
             DISPLAY_NAME  = "Множественный выбор"
             TAG_LIST_ATTR = [["fired", "Уволен"], ["other", "Иная причина"]] as String[][]
@@ -31,7 +31,6 @@ class TestAutocomplete extends Be5ProjectTest
                     "'tagList':[['fired','Уволен'],['other','Иная причина']]}}," +
                 "'order':['/reasonMulti']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
-
     }
 
 }
