@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.genegate;
 
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
@@ -8,9 +8,9 @@ import com.developmentontheedge.be5.modules.core.genegate.entities.Users;
 
 public class CoreEntityModels
 {
-    public CoreEntityModels(SqlService sqlService, SqlHelper sqlHelper, Meta meta, Validator validator)
+    public CoreEntityModels(SqlService sqlService, DpsHelper dpsHelper, Meta meta, Validator validator)
     {
-        users = new Users(sqlService, sqlHelper, validator, meta.getEntity("users"));
+        users = new Users(sqlService, dpsHelper, validator, meta.getEntity("users"));
     }
 
     public Users users;
