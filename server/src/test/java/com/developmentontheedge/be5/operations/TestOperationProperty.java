@@ -23,13 +23,15 @@ public class TestOperationProperty extends OperationSupport implements Operation
         dps.add(new DynamicProperty("getOrDefaultNumber", "Name", Long.class,
                 presetValues.getOrDefault("getOrDefaultNumber", "3")));
 
+        dpsHelper.setValues(dps, presetValues);
+
         return dps;
     }
 
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        db.insert(sqlHelper.generateInsertSql(getInfo().getEntity(), dps), sqlHelper.getValues(dps));
+        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));
     }
 
 }

@@ -14,16 +14,25 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public abstract class TestUtils
 {
+    protected static final Jsonb jsonb = JsonbBuilder.create();
+
     static final String profileForIntegrationTests = "profileForIntegrationTests";
 
     static Injector initInjector(Binder binder)
@@ -105,8 +114,39 @@ public abstract class TestUtils
         );
     }
 
+    protected Request getSpyMockRecForQuery(String entity, String query, String values)
+    {
+        return getSpyMockRecForQuery(entity, query, values, new HashMap<>());
+    }
+
+    protected Request getSpyMockRecForQuery(String entity, String query, String values, Map<String, Object> sessionValues)
+    {
+        return getSpyMockRequest("", ImmutableMap.of(
+                RestApiConstants.ENTITY, entity,
+                RestApiConstants.QUERY, query,
+                RestApiConstants.VALUES, values),
+                sessionValues
+        );
+    }
+
     protected Request getSpyMockRecForOp(String entity, String query, String operation, String selectedRows, String values)
     {
         return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
+    }
+
+    public static String resultSetToString(ResultSet rs) {
+        List<String> list = new ArrayList<>();
+        try {
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                if(rs.getObject(i) != null)
+                    list.add(rs.getObject(i).toString());
+                else{
+                    list.add("null");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list.stream().collect(Collectors.joining(","));
     }
 }

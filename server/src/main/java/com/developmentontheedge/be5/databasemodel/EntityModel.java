@@ -36,7 +36,7 @@ public interface EntityModel<R extends RecordModel> {
      * This method never use cache.
      * @return number of records
      */
-    long count(Map<String, String> values);
+    long count(Map<String, ? super Object> values);
 
     /**
      * Returns <tt>true</tt> if this table contains no records.
@@ -53,7 +53,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if entity contains record consistent with 
      * conditions, otherwise false
      */
-    boolean contains(Map<String, String> conditions);
+    boolean contains(Map<String, ? super Object> conditions);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -64,7 +64,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values map with column names and values
      * @return generated record identify number
      */
-    String add(Map<String, String> values);
+    String add(Map<String, ? super Object> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -73,7 +73,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values map with column names and values
      * @return generated record identify number
      */
-    String addForce(Map<String, String> values);
+    String addForce(Map<String, ? super Object> values);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -82,14 +82,14 @@ public interface EntityModel<R extends RecordModel> {
      * @return <tt>true</tt> if entity contains record consistent with the  
      * all specified condition 
      */
-    boolean containsAll(Collection<Map<String, String>> c);
+    boolean containsAll(Collection<Map<String, ? super Object>> c);
     
     /**
      * Adds all records from collection into database.
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<String> addAll(Collection<Map<String, String>> c);
+    List<String> addAll(Collection<Map<String, ? super Object>> c);
 
     /** 
      * Returns the record object with the specified id
@@ -104,7 +104,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(Map<String, String> conditions);
+    RecordModel get( Map<String, ? super Object> conditions );
     
     /**
      * Sets value to property with a specified name.<br>
@@ -125,11 +125,11 @@ public interface EntityModel<R extends RecordModel> {
      * @param id identify number of record
      * @param values column names and values
      */
-    void set(String id, Map<String, String> values);
+    void set(String id, Map<String, ? super Object> values);
 
     //void setMany( Map<String, String> values, String id, String... otherId);
 
-    void setMany( Map<String, String> values, Map<String, String> conditions);
+//    void setMany( Map<String, ? super Object> values, Map<String, ? super Object> conditions);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -147,11 +147,11 @@ public interface EntityModel<R extends RecordModel> {
      * @param id identify number of record
      * @param values new column names and values
      */
-    void setForce(String id, Map<String, String> values);
+    void setForce(String id, Map<String, ? super Object> values);
 
-    void setForceMany(String propertyName, String value, Map<String, String> conditions);
+    //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
-    void setForceMany(Map<String, String> values, Map<String, String> conditions);
+//    void setForceMany(Map<String, String> values, Map<String, String> conditions);
     
     /**
      * Operation removes all the records consistent with any of conditions in collection.
@@ -161,7 +161,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param c collection of conditions
      * @return <tt>true</tt> if all conditions has been used otherwise <tt>false</tt>
      */
-    int removeAll(Collection<Map<String, String>> c);
+    int removeAll(Collection<Map<String, ? super Object>> c);
 
     /**
      * Operation removes all the records
@@ -176,7 +176,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param values conditions
      * @return count of deleted records
      */
-    int remove(Map<String, String> values);
+    int remove(Map<String, ? super Object> values);
     
     /**
      * Deletes the record with the specified identifiers.
@@ -215,14 +215,14 @@ public interface EntityModel<R extends RecordModel> {
      * @param values the filter parameters
      * @return array of records
      */
-    List<R> toList(Map<String, String> values);
+    List<R> toList(Map<String, ? super Object> values);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
      * @param values the filter parameters
      * @return array of records
      */
-    RecordModel[] toArray(Map<String, String> values);
+    RecordModel[] toArray(Map<String, ? super Object> values);
 
     /**
      * Spreads collection and collect elements from function to list.<br>
@@ -234,7 +234,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param lambda handler
      * @return list with the function results
      */
-	<T> List<T> collect(Map<String, String> values, BiFunction<R, Integer, T> lambda);
+	<T> List<T> collect(Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda);
 
     /**
      * Returns entity name.
@@ -267,7 +267,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param params
      * @return query model
      */
-    QueryModel getQuery(String queryName, Map<String, String> params);
+    QueryModel getQuery(String queryName, Map<String, ? super Object> params);
 
     /**
      * Returns operation model of this entity.

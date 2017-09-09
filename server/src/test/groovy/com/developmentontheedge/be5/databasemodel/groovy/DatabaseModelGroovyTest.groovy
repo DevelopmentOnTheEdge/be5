@@ -22,18 +22,16 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Inject private SqlService db
 
     @Before
-    void beforeClass(){
+    void before()
+    {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        db.update("DELETE FROM testtableAdmin")
     }
 
     @After
-    void afterClass(){
+    void after()
+    {
         initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Before
-    void before(){
-        db.update("DELETE FROM testtableAdmin")
     }
 
     @Test
@@ -73,13 +71,28 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     }
 
     @Test
-    void testInsert() throws Exception
+    void testInsert()
     {
         database.testtableAdmin << [
                 "name": "InsertName",
                 "value": "2"];
 
         assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+    }
+
+    @Test
+    void testInsertWithCanBeNullOrDefaultValue()
+    {
+        database.testTags << [
+                CODE         : "12",
+                payable      : null,
+                admlevel     : null,
+                referenceTest: null,
+                testLong     : null,
+        ]
+
+        assertEquals "12,yes,Regional,null,null",
+                db.select("SELECT * FROM testTags WHERE CODE = ?", {rs -> resultSetToString(rs)}, "12")
     }
 
     @Test(expected = NumberFormatException.class)
@@ -218,14 +231,21 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
                 "name": "TestName",
                 "value": 1]
 
-        def record = database.testtableAdmin[id]
-
-        record << [
+        entityName[id] = [//setAt(id, map)
                 "name": "TestName2",
         ]
 
+        def record = entityName[id]
+
         assertEquals "TestName2", record.$name
         assertEquals "TestName2", database.testtableAdmin[id].$name
+
+        record << [
+                "name": "TestName3",
+        ]
+
+        assertEquals "TestName3", record.$name
+        assertEquals "TestName3", database.testtableAdmin[id].$name
     }
 
     @Test

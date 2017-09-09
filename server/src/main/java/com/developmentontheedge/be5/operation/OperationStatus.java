@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.operation;
 
 public enum OperationStatus
 {
+    OPEN        ("open"),
     SCHEDULED   ("scheduled"),
     CANCELLED   ("cancelled"),
     IN_PROGRESS ("in progress"),

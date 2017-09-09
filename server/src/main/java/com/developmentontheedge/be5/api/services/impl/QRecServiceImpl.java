@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.model.QRec;
@@ -20,7 +20,7 @@ public class QRecServiceImpl implements QRecService
     @Override
     public QRec of(String sql, Object... params)
     {
-        DynamicPropertySet dps = db.select(sql, DpsHelper::createDps, params);
+        DynamicPropertySet dps = db.select(sql, DpsRecordAdapter::createDps, params);
 
         if(dps == null)
         {

@@ -21,6 +21,8 @@ testtableAdmin:
       operations:
       - TestOperation
       - TestGroovyOp
+      - ErrorProcessing
+      - CustomOperation
       - Delete
       - Edit
       - Insert
@@ -52,6 +54,10 @@ testtableAdmin:
       type: Groovy
       roles: Administrator
       file: TestGroovyOp.groovy
+  - ErrorProcessing:
+      type: Groovy
+      roles: Administrator
+      file: operationService/ErrorProcessing.groovy
   - Delete:
       records: 2
       roles: Administrator
@@ -63,3 +69,7 @@ testtableAdmin:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - CustomOperation:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/CustomOperation.groovy

@@ -47,7 +47,7 @@ public class DocumentGenerator implements Runner {
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
     
-    DocumentGenerator(Request req, Response res, Injector injector)
+    public DocumentGenerator(Request req, Response res, Injector injector)
     {
         this.req = req;
         this.res = res;
@@ -129,7 +129,7 @@ public class DocumentGenerator implements Runner {
         }
     }
 
-    TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
+    public TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
         final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;

@@ -22,7 +22,7 @@ class TestGroovyOp extends OperationSupport implements Operation
         dps << [
                 name         : "name",
                 DISPLAY_NAME : "Имя",
-                DEFAULT_VALUE: "Test"
+                value        : "Test"
         ]
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
@@ -32,14 +32,14 @@ class TestGroovyOp extends OperationSupport implements Operation
                 name         : "beginDate",
                 DISPLAY_NAME : "Дата начала",
                 TYPE         : Date,
-                DEFAULT_VALUE: new Date(utilDate.getTime())
+                value        : new Date(utilDate.getTime())
         ]
 
         dps << [
                 name         : "reason",
                 DISPLAY_NAME : "Причина снятия предыдущего работника",
                 TAG_LIST_ATTR: [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
-                DEFAULT_VALUE: "vacation"
+                value        : "vacation"
         ]
 
         dps << [
@@ -47,10 +47,12 @@ class TestGroovyOp extends OperationSupport implements Operation
                 DISPLAY_NAME           : "Множественный выбор",
                 MULTIPLE_SELECTION_LIST: true,
                 TAG_LIST_ATTR          : [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
-                DEFAULT_VALUE          : ["vacation","sick"] as String[]
+                value                  : ["vacation","sick"] as String[]
         ]
 
-        dps.getProperty("beginDate") << [READ_ONLY: true]
+        dps["beginDate"] << [READ_ONLY: true]
+
+        dpsHelper.setValues(dps, presetValues)
 
         return dps
     }

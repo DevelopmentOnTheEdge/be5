@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -24,7 +22,6 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Map;
 
@@ -37,15 +34,13 @@ public class OperationServiceImpl implements OperationService
     private final Cache<String, Class> groovyOperationClasses;
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
-    private final SqlHelper sqlHelper;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, SqlHelper sqlHelper, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
-        this.sqlHelper = sqlHelper;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
     }
@@ -60,24 +55,69 @@ public class OperationServiceImpl implements OperationService
         Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
         OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        return generate(entityName, queryName, operationName, selectedRowsString, operationInfo,
+        return callGetParameters(entityName, queryName, operationName, selectedRowsString, null, operationInfo,
                 presetValues, req);
     }
 
-    private Either<FormPresentation, OperationResult> generate(String entityName, String queryName,
-             String operationName, String selectedRowsString, OperationInfo meta, Map<String, Object> presetValues, Request req)
+    private Either<FormPresentation, OperationResult> callGetParameters(String entityName, String queryName,
+             String operationName, String selectedRowsString, Operation operation, OperationInfo meta, Map<String, Object> presetValues, Request req)
     {
-        Operation operation = create(meta, selectedRows(selectedRowsString), req);
+        OperationResult invokeResult = null;
+        if(operation == null)
+        {
+            operation = create(meta, selectedRows(selectedRowsString), req);
+        }
+        else
+        {
+            if(OperationStatus.ERROR == operation.getStatus())
+            {
+                invokeResult = operation.getResult();
+                operation.setResult(OperationResult.open());
+            }
+        }
 
-        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
+        Object parameters = getParametersFromOperation(operation, presetValues);
+
+        if(OperationStatus.ERROR == operation.getStatus())
+        {
+            return Either.second(operation.getResult());
+        }
+
+        if(invokeResult != null && invokeResult.getStatus() == OperationStatus.ERROR)
+        {
+            validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+            return Either.first(new FormPresentation(entityName, queryName, operationName,
+                    userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                    selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                    invokeResult));
+        }
+
+        if (parameters instanceof DynamicPropertySet)
+        {
+            try
+            {
+                validator.isError((DynamicPropertySet) parameters);
+            }
+            catch (RuntimeException e)
+            {
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+                return Either.first(new FormPresentation(entityName, queryName, operationName,
+                        userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        OperationResult.error(e)));
+            }
+        }
 
         if (parameters == null)
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
-            return execute(entityName, queryName, operationName, selectedRowsString,
-                    presetValues, operation, null, operationContext, req);
+            return callInvoke(entityName, queryName, operationName, selectedRowsString,
+                    presetValues, operation, meta, null, operationContext, req);
         }
 
+        OperationResult operationResult = OperationResult.open();
         if(parameters instanceof DynamicPropertySet)
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
@@ -86,9 +126,9 @@ public class OperationServiceImpl implements OperationService
                 {
                     validator.checkErrorAndCast((DynamicPropertySet) parameters);
                 }
-                catch (RuntimeException ignore)
+                catch (RuntimeException e)
                 {
-
+                    operationResult = OperationResult.error(e);
                 }
             }
             else
@@ -99,7 +139,7 @@ public class OperationServiceImpl implements OperationService
 
         return Either.first(new FormPresentation(entityName, queryName, operationName,
                 userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, operationResult));
     }
 
     @Override
@@ -116,50 +156,67 @@ public class OperationServiceImpl implements OperationService
 
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        //add TransactionalOperation interface and support all in transaction getParameters and invoke in execute
+        //add TransactionalOperation interface and support all in transaction getParametersFromOperation and invoke in execute
 
-        Object parameters = getParametersAndSetValueIfNull(operation, presetValues);
-
-        //todo add tests
-        if (parameters instanceof DynamicPropertySet)
-        {
-            DynamicPropertySet dps = (DynamicPropertySet)parameters;
-            sqlHelper.addSpecialIfNotExists(dps, meta.getEntity());
-            sqlHelper.setSpecialPropertyIfNull(dps);
-        }
+        Object parameters = getParametersFromOperation(operation, presetValues);
 
         if(parameters instanceof DynamicPropertySet)
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
-            try {
+            try
+            {
                 validator.checkErrorAndCast(((OperationSupport)operation).dps);
-            }catch (RuntimeException e){
+            }
+            catch (RuntimeException e)
+            {
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        OperationResult.error(e)));
             }
         }
 
-        return execute(entityName, queryName, operationName, selectedRowsString,
-                presetValues, operation, parameters, operationContext, req);
+        return callInvoke(entityName, queryName, operationName, selectedRowsString,
+                presetValues, operation, meta, parameters, operationContext, req);
     }
 
-    public Either<FormPresentation, OperationResult> execute(String entityName, String queryName, String operationName,
-         String selectedRowsString, Map<String, Object> presetValues, Operation operation,
+    private Either<FormPresentation, OperationResult> callInvoke(String entityName, String queryName, String operationName,
+         String selectedRowsString, Map<String, Object> presetValues, Operation operation, OperationInfo meta,
                                                              Object parameters, OperationContext operationContext, Request req)
     {
         try
         {
+            operation.setResult(OperationResult.progress());
             operation.invoke(parameters, operationContext);
 
-            if(operation.getResult().getStatus() == OperationStatus.ERROR)
+            if(OperationStatus.ERROR == operation.getStatus() && parameters != null)
             {
-                return Either.first(new FormPresentation(entityName, queryName, operationName,
-                        userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues));
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+                return callGetParameters(entityName, queryName, operationName, selectedRowsString, operation, meta,
+                        presetValues, req);
             }
 
-            if(operation.getResult().getStatus() == OperationStatus.IN_PROGRESS)
+            if (parameters instanceof DynamicPropertySet)
+            {
+                try
+                {
+                    validator.isError((DynamicPropertySet) parameters);
+                }
+                catch (RuntimeException e)
+                {
+                    validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+                    return Either.first(new FormPresentation(entityName, queryName, operationName,
+                            userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
+                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                            OperationResult.error(e)));
+                }
+            }
+
+            if(OperationStatus.IN_PROGRESS == operation.getStatus())
             {
                 operation.setResult(OperationResult.redirect(
                     new HashUrl(FrontendConstants.TABLE_ACTION,
@@ -182,7 +239,8 @@ public class OperationServiceImpl implements OperationService
 //        return operation;
 //    }
 
-    public Operation create(OperationInfo operationInfo, String[] records, Request request) {
+    private Operation create(OperationInfo operationInfo, String[] records, Request request)
+    {
         Operation operation;
 
         switch (operationInfo.getType())
@@ -214,26 +272,17 @@ public class OperationServiceImpl implements OperationService
                 }
         }
 
-        operation.initialize(operationInfo, OperationResult.progress(), records, request);
+        operation.initialize(operationInfo, OperationResult.open(), records, request);
         injector.injectAnnotatedFields(operation);
 
         return operation;
     }
 
-    /**
-     * Либо значение не задаётся и оно будет автоматически подставлятся из presetValues после выполнения getParameters,
-     * либо вы задаёте значение и вручную управляете её изменением в getParameters:
-     * see com.developmentontheedge.be5.operations.TestOperationProperty in tests
-     */
-    private Object getParametersAndSetValueIfNull(Operation operation, Map<String, Object> presetValues) {
+    private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)
+    {
         try
         {
-            Object parameters = operation.getParameters(presetValues);
-            if (parameters instanceof DynamicPropertySet)
-            {
-                sqlHelper.setValues((DynamicPropertySet)parameters, presetValues);
-            }
-            return parameters;
+            return operation.getParameters(presetValues);
         }
         catch (Exception e)
         {
@@ -241,7 +290,8 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    static String[] selectedRows(String selectedRowsString){
+    static String[] selectedRows(String selectedRowsString)
+    {
         if(selectedRowsString.trim().isEmpty())return new String[0];
         return selectedRowsString.split(",");
     }

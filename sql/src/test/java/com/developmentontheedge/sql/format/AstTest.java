@@ -34,7 +34,7 @@ public class AstTest {
     @Test
     public void selectWhere()
     {
-        Map<String, String> name = Collections.singletonMap("name", "test");
+        Map<String, ? super Object> name = Collections.singletonMap("name", "test");
         AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(name);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name =?",
                 users.format());
@@ -43,7 +43,7 @@ public class AstTest {
     @Test
     public void selectWhereEmpty()
     {
-        Map<String, String> name = new HashMap<>();
+        Map<String, ? super Object> name = new HashMap<>();
         AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(name);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users",
                 users.format());
@@ -52,7 +52,7 @@ public class AstTest {
     @Test
     public void selectWhere2()
     {
-        Map<String, String> names = new HashMap<>();
+        Map<String, ? super Object> names = new HashMap<>();
         names.put("name", "test");
         names.put("name2", "test2");
         AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
@@ -63,7 +63,7 @@ public class AstTest {
     @Test
     public void selectWhereLike()
     {
-        Map<String, String> names = new HashMap<>();
+        Map<String, ? super Object> names = new HashMap<>();
         names.put("name", "test%");
         AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name LIKE ?",
@@ -79,7 +79,7 @@ public class AstTest {
     @Test
     public void selectWhereNotNull()
     {
-        Map<String, String> names = new HashMap<>();
+        Map<String, ? super Object> names = new HashMap<>();
         names.put("name", "null");
         AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NULL",

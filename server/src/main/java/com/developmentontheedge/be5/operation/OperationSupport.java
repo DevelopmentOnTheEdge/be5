@@ -1,10 +1,11 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.helpers.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.api.services.DatabaseService;
@@ -20,7 +21,8 @@ public abstract class OperationSupport implements Operation
     @Inject public DatabaseService databaseService;
     @Inject public DatabaseModel database;
     @Inject public SqlService db;
-    @Inject public SqlHelper sqlHelper;
+    @Inject public QRecService qRec;
+    @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
     @Inject public OperationHelper helper;
     @Inject public Validator validator;

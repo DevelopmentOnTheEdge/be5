@@ -64,26 +64,26 @@ class SpecialColumnsTest extends Be5ProjectDBTest
         assertTrue table[ id ].$creationDate___ < table[ id ].$modificationDate___
         assertEquals table[ id ].$whoModified___, table[ id ].$whoInserted___
     }
-
-    @Test
-    void testSetMany()
-    {
-        def id1 = table << [ "name": "TestName", "value": 1]
-        def id2 = table << [ "name": "TestName", "value": 2]
-        def id3 = table << [ "name": "TestName2", "value": 2]
-
-        table.setMany(["isDeleted___": "yes"], ["name": "TestName"])
-
-        assertEquals "yes", table[ id1 ].$isDeleted___
-        assertEquals "yes", table[ id2 ].$isDeleted___
-        assertEquals "no",  table[ id3 ].$isDeleted___
+//
+//    @Test
+//    void testSetMany()
+//    {
+//        def id1 = table << [ "name": "TestName", "value": 1]
+//        def id2 = table << [ "name": "TestName", "value": 2]
+//        def id3 = table << [ "name": "TestName2", "value": 2]
+//
+//        table.setMany(["isDeleted___": "yes"], ["name": "TestName"])
+//
+//        assertEquals "yes", table[ id1 ].$isDeleted___
+//        assertEquals "yes", table[ id2 ].$isDeleted___
+//        assertEquals "no",  table[ id3 ].$isDeleted___
 
 //TODO
 //        assertTrue table[ id1 ].creationDate___     <  table[ id1 ].modificationDate___
 //        assertTrue table[ id2 ].creationDate___     <  table[ id2 ].modificationDate___
 //
 //        assertTrue table[ id1 ].modificationDate___ == table[ id2 ].modificationDate___
-    }
+//    }
 
     @Test
     void testDeleteAll()
@@ -108,7 +108,8 @@ class SpecialColumnsTest extends Be5ProjectDBTest
                 "value": 1]
 
         Thread.sleep(1)
-        table[id] << [
+
+        table[id] = [
                 "name": "editName",
         ]
 

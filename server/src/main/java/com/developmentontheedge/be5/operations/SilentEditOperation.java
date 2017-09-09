@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.google.common.collect.ObjectArrays;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class SilentEditOperation extends OperationSupport implements Operation
@@ -15,10 +16,12 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
-                rs -> sqlHelper.getDpsWithoutAutoIncrement(entity, rs), sqlHelper.castToTypePrimaryKey(entity, records[0]));
+        //dpsHelper.withUpdateSpecialColumns(entity, presetValues);
 
-        sqlHelper.updateValuesWithSpecial(dps, presetValues);
+        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
+                rs -> dpsHelper.getDpsWithoutAutoIncrement(entity, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
+
+        dpsHelper.setValues(dps, presetValues);
 
         return dps;
     }
@@ -28,7 +31,9 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        db.update(sqlHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(sqlHelper.getValues(dps), sqlHelper.castToTypePrimaryKey(entity, records[0])));
+        dpsHelper.addInsertSpecialColumns(entity, dps);
+
+        db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+                ObjectArrays.concat(dpsHelper.getValues(dps), dpsHelper.castToTypePrimaryKey(entity, records[0])));
     }
 }

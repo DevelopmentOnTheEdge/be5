@@ -24,7 +24,7 @@ testtable:
             FROM
               testtable t
   - LinkQuick:
-      type: 1D_unknown
+      type: 1D
       roles: SystemDeveloper
       code: |-
          SELECT

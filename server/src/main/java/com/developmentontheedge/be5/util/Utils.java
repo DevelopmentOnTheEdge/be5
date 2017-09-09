@@ -627,4 +627,13 @@ public class Utils
         return text;
     }
 
+    public static <T> T ifNull( Object val, T def )
+    {
+        if( val != null )
+        {
+            return ( T )val;
+        }
+        return def;
+    }
+
 }

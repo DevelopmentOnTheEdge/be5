@@ -83,7 +83,7 @@ public class AstSelect extends SimpleNode
         return this;
     }
 
-    public AstSelect where(Map<String, String> conditions){
+    public AstSelect where(Map<String, ? super Object> conditions){
         Objects.requireNonNull(conditions);
         if(!conditions.isEmpty()) where(new AstWhere(conditions));
         return this;

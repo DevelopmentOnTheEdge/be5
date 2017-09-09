@@ -17,12 +17,19 @@ public abstract class AbstractRule
 
     private String rule;
 
+    @Deprecated
     private String message;
 
+    @Deprecated
     protected AbstractRule( String rule, String message )
     {
         this.rule = rule;
         this.message = message;
+    }
+
+    protected AbstractRule( String rule )
+    {
+        this.rule = rule;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.validation;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -40,85 +41,71 @@ public class Validator
 
     public void checkErrorAndCast(DynamicPropertySet dps)
     {
+        isError(dps);
         for (DynamicProperty property: dps)
         {
-            if(isError(property))throw new IllegalArgumentException();
             checkErrorAndCast(property);
         }
     }
 
     public void checkErrorAndCast(DynamicProperty property)
     {
-        try
+        if(property.getValue() instanceof String && property.getType() != String.class)
         {
-            if(property.getValue() instanceof String && property.getType() != String.class)
+            String stringValue = (String)property.getValue();
+            if(stringValue.isEmpty() && property.isCanBeNull())
             {
-                String stringValue = (String)property.getValue();
-                if(stringValue.isEmpty() && property.isCanBeNull())
-                {
-                    property.setValue(null);
-                }
-                else
-                {
-                    property.setValue(parseFrom(property.getType(), stringValue));
-                }
+                property.setValue(null);
             }
             else
             {
-                if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+                property.setValue(parseFrom(property, stringValue));
+            }
+        }
+        else
+        {
+            if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+            {
+                if(!(property.getValue() instanceof Object[]))
                 {
-                    if(!(property.getValue() instanceof Object[]))
-                    {
-                        throw new IllegalArgumentException(property.toString());
-                    }
+                    setError(property, "Value bast be array (MULTIPLE_SELECTION_LIST)");
+                    throw Be5Exception.internal("Value bast be array (MULTIPLE_SELECTION_LIST) - " + property.toString());
+                }
 
-                    Object[] values = (Object[]) property.getValue();
-                    Object[] resValues = new Object[values.length];
+                Object[] values = (Object[]) property.getValue();
+                Object[] resValues = new Object[values.length];
 
-                    for (int i = 0; i < values.length; i++)
-                    {
-                        resValues[i] = parseFrom(property.getType(), (String) values[i]);
+                for (int i = 0; i < values.length; i++)
+                {
+                    resValues[i] = parseFrom(property, (String) values[i]);
+                }
+                property.setValue(resValues);
+            }
+            else
+            {
+                if (property.getValue() == null)
+                {
+                    if(!property.isCanBeNull()){
+                        setError(property, "Can not be null");
+                        throw new IllegalArgumentException("Can not be null - " + property.toString());
                     }
-                    property.setValue(resValues);
                 }
                 else
                 {
-                    if (property.getValue() == null)
+                    if (property.getType() != property.getValue().getClass())
                     {
-                        if(!property.isCanBeNull())throw new IllegalArgumentException(property.toString() + " - can not be null");
-                    }
-                    else
-                    {
-                        if (property.getType() != property.getValue().getClass())
-                        {
-                            throw new IllegalArgumentException(property.toString() +
-                                    ", type must be " + property.getType().toString());
-                        }
+                        String msg = "Error, value must be a " + property.getType().getName();
+                        setError(property, msg);
+                        throw new IllegalArgumentException(msg + " - " + property.toString());
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            setError(property, e);
-            throw e;
         }
     }
 
     public void setSuccess(DynamicProperty property)
     {
         property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
-    }
-
-    @Deprecated
-    public void setError(DynamicProperty property, Throwable e)
-    {
-        property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
-
-        String msg = "Error";
-        if(e instanceof IllegalArgumentException)msg = "Error, value must be a " + property.getType().getName();
-
-        property.setAttribute( BeanInfoConstants.MESSAGE, msg);
     }
 
     public void setError(DynamicProperty property, String message)
@@ -128,19 +115,51 @@ public class Validator
     }
 
     @Deprecated
-    public Object parseFrom(Class<?> type, String value)
+    public Object parseFrom(DynamicProperty property, String value)
     {
-        if (type == Short.class)    return Short.parseShort(value);
-        if (type == Integer.class)  return Integer.parseInt(value);
-        if (type == Long.class)     return Long.parseLong(value);
-        if (type == Float.class)    return Float.parseFloat(value);
-        if (type == Double.class)   return Double.parseDouble(value);
+        Class<?> type = property.getType();
+
+        //todo move to IntegerRule, NumberRule
+        try
+        {
+            if (type == Short.class) return Short.parseShort(value);
+            if (type == Integer.class) return Integer.parseInt(value);
+            if (type == Long.class) return Long.parseLong(value);
+            if (type == Float.class) return Float.parseFloat(value);
+            if (type == Double.class) return Double.parseDouble(value);
+        }
+        catch (NumberFormatException e)
+        {
+            String msg = "Error, value must be a " + type.getName();
+            setError(property, msg);
+            throw new NumberFormatException(msg + " - " + property.toString());
+        }
+
         if (type == Boolean.class)  return Boolean.parseBoolean(value);
-        if (type == Date.class)     return Date.valueOf(value);
-        if (type == Timestamp.class)return Timestamp.valueOf(value);
-        if (type == String.class)   return value;        
+
+        //todo move to DateRule
+        try{
+            if (type == Date.class)     return Date.valueOf(value);
+            if (type == Timestamp.class)return Timestamp.valueOf(value);
+        }
+        catch (IllegalArgumentException e)
+        {
+            String msg = "Error, value must be a " + type.getName();
+            setError(property, msg);
+            throw new IllegalArgumentException(msg + " - " + property.toString());
+        }
+
+        if (type == String.class)return value;
 
         throw new IllegalArgumentException("Unknown type");
+    }
+
+    public void isError(DynamicPropertySet dps)
+    {
+        for (DynamicProperty property: dps)
+        {
+            if(isError(property))throw new IllegalArgumentException(property.toString());
+        }
     }
 
     public boolean isError(DynamicProperty property)
