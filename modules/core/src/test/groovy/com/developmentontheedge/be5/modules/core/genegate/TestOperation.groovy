@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.genegate
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
+import com.developmentontheedge.beans.DynamicPropertySet
 
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.add
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.edit
@@ -39,6 +40,7 @@ class TestOperation extends OperationSupport
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
+        //DynamicPropertySet.metaClass.$ = { String name -> delegate.getValue(name) }
         entities.users.insert{
             user_name        = dps.$user_name
             registrationDate = dps.$registrationDate
