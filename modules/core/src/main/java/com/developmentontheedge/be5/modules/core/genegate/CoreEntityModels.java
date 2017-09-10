@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.modules.core.genegate.entities.Users;
 
 public class CoreEntityModels
 {

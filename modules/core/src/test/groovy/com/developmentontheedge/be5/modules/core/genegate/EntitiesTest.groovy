@@ -23,9 +23,9 @@ class EntitiesTest extends Be5ProjectTest
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
         String id = entities.users.insert{
-            user_name        "test"
-            registrationDate day
-            attempt          345
+            user_name        = "test"
+            registrationDate = day
+            attempt          = 345
         }
 
         verify(SqlServiceMock.mock).insert(
