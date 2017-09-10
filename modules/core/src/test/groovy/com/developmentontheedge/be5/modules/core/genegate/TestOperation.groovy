@@ -4,7 +4,8 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
 
-import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
+import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.add
+import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.edit
 import static com.developmentontheedge.be5.modules.core.genegate.CoreEntityFields.UsersFields.*
 
 
@@ -25,12 +26,12 @@ class TestOperation extends OperationSupport
             READ_ONLY        = true
         }
 
-        dps[registrationDate] << [
-                RELOAD_ON_CHANGE: true,
-                MULTIPLE_SELECTION_LIST: true,
-        ]
+        edit(dps, registrationDate) {
+            RELOAD_ON_CHANGE = true
+            MULTIPLE_SELECTION_LIST = true
+        }
 
-        dps[attempt] << [CAN_BE_NULL: false]
+        edit(dps, attempt) {CAN_BE_NULL = false}
 
         return dps
     }

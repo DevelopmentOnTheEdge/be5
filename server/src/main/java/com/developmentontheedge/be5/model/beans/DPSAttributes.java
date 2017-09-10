@@ -52,6 +52,11 @@ public class DPSAttributes
         map.put("GROUP_ID", value);
     }
 
+    public void setCAN_BE_NULL(Object value)
+    {
+        map.put("CAN_BE_NULL", value);
+    }
+
     public void setMULTIPLE_SELECTION_LIST(boolean value)
     {
         map.put("MULTIPLE_SELECTION_LIST", value);
