@@ -184,6 +184,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
+    public RecordModel get( Long id )
+    {
+        return get(Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
+    }
+
+    @Override
     public void set( String id, String propertyName, String value )
     {
         setForce( id, propertyName, value );

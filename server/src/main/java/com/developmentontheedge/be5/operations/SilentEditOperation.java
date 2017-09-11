@@ -21,9 +21,7 @@ public class SilentEditOperation extends OperationSupport implements Operation
         dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
                 rs -> dpsHelper.getDpsWithoutAutoIncrement(entity, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
 
-        dpsHelper.setValues(dps, presetValues);
-
-        return dps;
+        return dpsHelper.setValues(dps, presetValues);
     }
 
     @Override

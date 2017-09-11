@@ -59,7 +59,7 @@ class OperationServiceTest extends SqlMockOperationTest
         OperationResult second = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorStatus'}")).getSecond()
 
-        assertEquals "{'details':'message','message':'The operation can not be performed.','status':'error'}",
+        assertEquals "{'message':'The operation can not be performed.','status':'error'}",
                 oneQuotes(jsonb.toJson(second))
     }
 
@@ -72,7 +72,7 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals "{'displayName':'name'}",
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{'details':'message','message':'An error occurred while performing operations.','status':'error'}",
+        assertEquals "{'message':'An error occurred while performing operations.','status':'error'}",
                 oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 

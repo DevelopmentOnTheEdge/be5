@@ -97,6 +97,7 @@ public interface EntityModel<R extends RecordModel> {
      * @return the record object with the specified id otherwise null
      */
     RecordModel get(String id);
+    RecordModel get(Long id);
 
     /** 
      * Returns the record object consistent with the specified condition, 

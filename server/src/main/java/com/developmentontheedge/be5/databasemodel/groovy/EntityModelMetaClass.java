@@ -138,6 +138,11 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return self.get(id);
     }
 
+    public static RecordModel getAt( EntityModel self, Long id )
+    {
+        return self.get(id);
+    }
+
     public static void putAt( EntityModel self, String id, Map<String, ? super Object> values )
     {
         self.set(id, values);
