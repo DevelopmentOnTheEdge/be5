@@ -11,6 +11,9 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableMap;
 import org.mockito.Mockito;
 
@@ -148,5 +151,14 @@ public abstract class TestUtils
             e.printStackTrace();
         }
         return list.stream().collect(Collectors.joining(","));
+    }
+
+    public DynamicPropertySet dpsRecord(Map<String, Object> nameValues)
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        for(Map.Entry<String, Object> entry : nameValues.entrySet()){
+            dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
+        }
+        return dps;
     }
 }
