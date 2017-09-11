@@ -647,8 +647,13 @@ public class DpsHelper
     public Object[] castToTypePrimaryKey(Entity entity, Object[] ids)
     {
         SqlColumnType type = meta.getColumn(entity, entity.getPrimaryKey()).getType();
-        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
+        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY))
+        {
             return (Object[])Utils.changeType(ids, Long[].class);
+        }
+        else
+        {
+            if(ids instanceof Number[])throw Be5Exception.internal("Type should not be a Number");
         }
         return ids;
     }
@@ -656,9 +661,15 @@ public class DpsHelper
     public Object castToTypePrimaryKey(Entity entity, Object id)
     {
         SqlColumnType type = meta.getColumn(entity, entity.getPrimaryKey()).getType();
-        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
+        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY))
+        {
             return Utils.changeType(id, Long.class);
         }
+        else
+        {
+            if(id instanceof Number)throw Be5Exception.internal("Type should not be a Number");
+        }
+
         return id;
     }
 
