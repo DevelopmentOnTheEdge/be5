@@ -153,7 +153,7 @@ public abstract class TestUtils
         return list.stream().collect(Collectors.joining(","));
     }
 
-    public DynamicPropertySet dpsRecord(Map<String, Object> nameValues)
+    public DynamicPropertySet getDps(Map<String, Object> nameValues)
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         for(Map.Entry<String, Object> entry : nameValues.entrySet()){
@@ -161,4 +161,5 @@ public abstract class TestUtils
         }
         return dps;
     }
+
 }
