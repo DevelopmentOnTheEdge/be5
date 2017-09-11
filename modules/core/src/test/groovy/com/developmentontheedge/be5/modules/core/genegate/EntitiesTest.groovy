@@ -7,14 +7,16 @@ import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.DateUtils
 import com.developmentontheedge.beans.DynamicPropertySet
+import groovy.transform.TypeChecked
 import org.junit.Test
+import java.sql.Date
 
 import static org.junit.Assert.*
 import static org.mockito.Mockito.*
 
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
 
-
+@TypeChecked
 class EntitiesTest extends Be5ProjectTest
 {
     @Inject CoreEntityModels entities
@@ -27,7 +29,7 @@ class EntitiesTest extends Be5ProjectTest
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
         DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.users.getEntity(), [u.user_name, u.user_pass,
-                                         u.emailAddress, u.attempt, u.registrationDate])
+                                         u.emailAddress, u.registrationDate])
 
         add(dps) {
             name        = u.attempt
@@ -41,9 +43,9 @@ class EntitiesTest extends Be5ProjectTest
 
 
         String id = entities.users.insert{
-            user_name        = dps.$user_name
-            registrationDate = dps.$registrationDate
-            attempt          = dps.$attempt
+            user_name        = dps.getValue(u.user_name)
+            registrationDate = (Date)dps.getValue(u.registrationDate)
+            attempt          = (Integer)dps.getValue(u.attempt)
         }
 
         verify(SqlServiceMock.mock).insert(
