@@ -12,8 +12,8 @@ public class CoreEntityModels
         users = new Users(sqlService, dpsHelper, validator, meta.getEntity("users"));
     }
 
-    public Users users;
+    public final Users users;
     //public UserRoles user_roles;
 
-    public CoreEntityFields fields = new CoreEntityFields();
+    public final CoreEntityFields fields = new CoreEntityFields();
 }

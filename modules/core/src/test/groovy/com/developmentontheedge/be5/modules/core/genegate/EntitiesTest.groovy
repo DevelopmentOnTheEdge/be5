@@ -1,24 +1,24 @@
 package com.developmentontheedge.be5.modules.core.genegate
 
+import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.modules.core.genegate.fields.UsersFields as u
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.DateUtils
 import com.developmentontheedge.beans.DynamicPropertySet
-import com.developmentontheedge.beans.DynamicPropertySetSupport
-import groovy.transform.TypeChecked
 import org.junit.Test
 
 import static org.junit.Assert.*
 import static org.mockito.Mockito.*
 
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
-//import static com.developmentontheedge.be5.modules.core.genegate.CoreEntityFields.UsersFields.*
-//
+
 
 class EntitiesTest extends Be5ProjectTest
 {
     @Inject CoreEntityModels entities
+    @Inject DpsHelper dpsHelper
 
     @Test
     void name()
@@ -26,18 +26,19 @@ class EntitiesTest extends Be5ProjectTest
         def day = DateUtils.curDay()
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
-//        DynamicPropertySet.metaClass.$ = { String name -> delegate.getValue(name) }
-        DynamicPropertySet dps = new DynamicPropertySetSupport()
-
-        add(dps) { name = "user_name"; value = "test" }
-        add(dps) { name = "registrationDate"; TYPE = Date; value = day }
+        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.users.getEntity(), [u.user_name, u.user_pass,
+                                         u.emailAddress, u.attempt, u.registrationDate])
 
         add(dps) {
-            name        = "attempt"
+            name        = u.attempt
             TYPE        = Integer
             value       = 345
             CAN_BE_NULL = false
         }
+
+        edit(dps, u.user_name) { value = "test"}
+        edit(dps, u.registrationDate) { value = day}
+
 
         String id = entities.users.insert{
             user_name        = dps.$user_name

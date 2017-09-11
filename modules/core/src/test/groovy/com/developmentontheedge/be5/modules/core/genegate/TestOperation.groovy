@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.modules.core.genegate
 
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.modules.core.genegate.fields.UsersFields as u
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
-import com.developmentontheedge.beans.DynamicPropertySet
 
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.add
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.edit
-import static com.developmentontheedge.be5.modules.core.genegate.CoreEntityFields.UsersFields.*
+//import static com.developmentontheedge.be5.modules.core.genegate.CoreEntityFields.UsersFields.*
 
 
 class TestOperation extends OperationSupport
@@ -17,22 +17,22 @@ class TestOperation extends OperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), [user_name, user_pass, attempt, registrationDate])
+        dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), [u.user_name, u.user_pass, u.attempt, u.registrationDate])
 
         add(dps) {
-            name             = user_name
+            name             = u.user_name
             DISPLAY_NAME     = "Test"
             RELOAD_ON_CHANGE = true
             MULTIPLE_SELECTION_LIST = true
             READ_ONLY        = true
         }
 
-        edit(dps, registrationDate) {
+        edit(dps, u.registrationDate) {
             RELOAD_ON_CHANGE = true
             MULTIPLE_SELECTION_LIST = true
         }
 
-        edit(dps, attempt) {CAN_BE_NULL = false}
+        edit(dps, u.attempt) {CAN_BE_NULL = false}
 
         return dps
     }
