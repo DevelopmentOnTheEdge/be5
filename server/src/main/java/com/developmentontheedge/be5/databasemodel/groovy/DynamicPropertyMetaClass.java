@@ -5,6 +5,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import groovy.lang.GroovyObjectSupport;
+import org.codehaus.groovy.runtime.GStringImpl;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -67,6 +68,11 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         removeFromMap( map, "name" );
 
         Object value = removeFromMap( map, "value" );
+        if(value != null && value.getClass() == GStringImpl.class)
+        {
+            value =  value.toString();
+        }
+
         Class type = ( Class )removeFromMap( map, "TYPE" );
         if( type == java.sql.Date.class && value != null )
         {

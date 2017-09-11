@@ -6,7 +6,9 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import groovy.lang.GString;
 import groovy.lang.MissingPropertyException;
+import org.codehaus.groovy.runtime.GStringImpl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -133,6 +135,10 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
             name = "null";
         }
         Object value = removeFromMap( map, "value" );
+        if(value != null && value.getClass() == GStringImpl.class)
+        {
+            value =  value.toString();
+        }
         String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
         Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
         Class type = ( Class )removeFromMap( map, "TYPE" );
