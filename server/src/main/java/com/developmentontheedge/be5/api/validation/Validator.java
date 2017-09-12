@@ -151,7 +151,8 @@ public class Validator
 
         if (type == String.class)return value;
 
-        throw new IllegalArgumentException("Unknown type");
+        //todo проверить в be3
+        throw new IllegalArgumentException("Unknown type, Возможно тип был автоматически определён из массива(при MULTIPLE_SELECTION_LIST) - тогда вручную укажите тип этемента." + property.toString());
     }
 
     public void isError(DynamicPropertySet dps)
