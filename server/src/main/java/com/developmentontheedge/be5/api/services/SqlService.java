@@ -19,8 +19,19 @@ public interface SqlService
 
     <T> T insert(String sql, Object... params);
 
-    default Long getLong(String sql, Object... params){
-        return getScalar(sql, params);
+    default Long getLong(String sql, Object... params)
+    {
+        Object number = getScalar(sql, params);
+        Long res;
+        if(!(number instanceof Long))
+        {
+            res = Long.parseLong(number.toString());
+        }
+        else
+        {
+            res = (Long)number;
+        }
+        return res;
     }
 
     default String getString(String sql, Object... params){
