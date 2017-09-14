@@ -22,6 +22,8 @@ public interface SqlService
     default Long getLong(String sql, Object... params)
     {
         Object number = getScalar(sql, params);
+        if(number == null) return null;
+
         Long res;
         if(!(number instanceof Long))
         {
