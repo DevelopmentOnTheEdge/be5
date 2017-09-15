@@ -4,8 +4,11 @@ import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.OperationSupport
+import groovy.transform.TypeChecked
 
+import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
 
+@TypeChecked
 class ErrorProcessing extends OperationSupport implements Operation
 {
     @Override
@@ -13,10 +16,20 @@ class ErrorProcessing extends OperationSupport implements Operation
     {
         dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), ["name"], presetValues)
 
-        dps << [
-                name: "propertyForAnotherEntity",
-                value: "text"
-        ]
+        add(dps) {
+            name  = "propertyForAnotherEntity"
+            value = "text"
+        }
+
+        if(presetValues.containsKey("booleanProperty"))
+        {
+            add(dps) {
+                name  = "booleanProperty"
+                TYPE  = Boolean
+                value = presetValues.getOrDefault("booleanProperty", false)
+            }
+        }
+
         
         def name = dps.getProperty("name")
 

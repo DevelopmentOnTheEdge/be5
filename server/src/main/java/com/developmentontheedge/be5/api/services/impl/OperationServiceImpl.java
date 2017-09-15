@@ -78,11 +78,6 @@ public class OperationServiceImpl implements OperationService
 
         Object parameters = getParametersFromOperation(operation, presetValues);
 
-        if(OperationStatus.ERROR == operation.getStatus())
-        {
-            return Either.second(operation.getResult());
-        }
-
         if(invokeResult != null && invokeResult.getStatus() == OperationStatus.ERROR)
         {
             validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
@@ -91,6 +86,11 @@ public class OperationServiceImpl implements OperationService
                     userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
                     selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
                     invokeResult));
+        }
+
+        if(OperationStatus.ERROR == operation.getStatus())
+        {
+            return Either.second(operation.getResult());
         }
 
         if (parameters instanceof DynamicPropertySet)

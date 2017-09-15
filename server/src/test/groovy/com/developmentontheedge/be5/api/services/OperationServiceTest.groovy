@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.model.FormPresentation
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -123,6 +124,68 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeErrorInProperty'}")).getFirst()
 
         assertEquals "{'name':'executeErrorInProperty'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+    }
+
+    /**
+     * возможно на фронтенд лучше всегда отправлять прошедшие валидатор значения для boolean и чисел, вместо строк.
+     * Меньше логики на фронтенде.
+     */
+    @Test
+    @Ignore
+    void errorHandlingCyclesCastTypesString()
+    {
+        FormPresentation first = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateErrorInProperty','booleanProperty':'false'}")).getFirst()
+
+        assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text','booleanProperty':'false'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+
+
+        //call callGetParameters and add OperationResult from invoke to FormPresentation
+        first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeErrorStatus','booleanProperty':'false'}")).getFirst()
+
+        assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text','booleanProperty':false}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+
+
+        //just return FormPresentation with current parameters
+        first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeErrorInProperty','booleanProperty':'false'}")).getFirst()
+
+        assertEquals "{'name':'executeErrorInProperty','booleanProperty':false}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+    }
+
+    /**
+     * возможно на фронтенд лучше всегда отправлять прошедшие валидатор значения для boolean и чисел, вместо строк.
+     * Меньше логики на фронтенде.
+     */
+    @Test
+    @Ignore
+    void errorHandlingCyclesCastTypesBoolean()
+    {
+        FormPresentation first = operationService.generate(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateErrorInProperty','booleanProperty':false}")).getFirst()
+
+        assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text','booleanProperty':'false'}",
+                oneQuotes(first.getBean().getJsonObject("values").toString())
+
+
+//        //call callGetParameters and add OperationResult from invoke to FormPresentation
+//        first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+//                "ErrorProcessing", "", "{'name':'executeErrorStatus','booleanProperty':false}")).getFirst()
+//
+//        assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text','booleanProperty':false}",
+//                oneQuotes(first.getBean().getJsonObject("values").toString())
+
+
+        //just return FormPresentation with current parameters
+        first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'executeErrorInProperty','booleanProperty':false}")).getFirst()
+
+        assertEquals "{'name':'executeErrorInProperty','booleanProperty':false}",
                 oneQuotes(first.getBean().getJsonObject("values").toString())
     }
 }
