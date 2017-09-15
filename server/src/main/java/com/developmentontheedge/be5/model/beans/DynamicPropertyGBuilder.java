@@ -9,8 +9,9 @@ import groovy.lang.DelegatesTo;
 
 public class DynamicPropertyGBuilder
 {
-    public static DynamicProperty add(DynamicPropertySet dynamicPropertySet, @DelegatesTo(strategy = Closure.DELEGATE_FIRST,
-            value = DPSAttributes.class) Closure cl){
+    public static DynamicProperty add(DynamicPropertySet dynamicPropertySet,
+                               @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
+    {
         DPSAttributes builder = new DPSAttributes();
         Closure code = cl.rehydrate(builder, builder, builder);
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
@@ -22,7 +23,8 @@ public class DynamicPropertyGBuilder
     }
 
     public static DynamicProperty edit(DynamicPropertySet dynamicPropertySet, String propertyName,
-                                       @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl){
+                               @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
+    {
         DPSAttributes builder = new DPSAttributes();
         Closure code = cl.rehydrate(builder, builder, builder);
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
