@@ -160,6 +160,11 @@ public class OperationServiceImpl implements OperationService
 
         Object parameters = getParametersFromOperation(operation, presetValues);
 
+        if(OperationStatus.ERROR == operation.getStatus())
+        {
+            return Either.second(operation.getResult());
+        }
+
         if(parameters instanceof DynamicPropertySet)
         {
             ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;

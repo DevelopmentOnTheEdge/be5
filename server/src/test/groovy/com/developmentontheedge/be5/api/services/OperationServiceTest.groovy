@@ -64,6 +64,16 @@ class OperationServiceTest extends SqlMockOperationTest
     }
 
     @Test
+    void generateErrorStatusOnExecute()
+    {
+        OperationResult second = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateErrorStatus'}")).getSecond()
+
+        assertEquals "{'message':'The operation can not be performed.','status':'error'}",
+                oneQuotes(jsonb.toJson(second))
+    }
+
+    @Test
     void executeErrorStatus()
     {
         FormPresentation first = operationService.execute(getSpyMockRecForOp("testtableAdmin", "All records",
