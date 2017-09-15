@@ -174,10 +174,10 @@ public interface EntityModel<R extends RecordModel> {
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #removeForce(String, String...)} }
-     * @param values conditions
+     * @param conditions conditions
      * @return count of deleted records
      */
-    int remove(Map<String, ? super Object> values);
+    int remove(Map<String, ? super Object> conditions);
     
     /**
      * Deletes the record with the specified identifiers.

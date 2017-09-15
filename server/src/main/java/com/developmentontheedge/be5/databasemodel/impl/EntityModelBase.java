@@ -218,12 +218,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public int remove( Map<String, ? super Object> values )
+    public int remove( Map<String, ? super Object> conditions )
     {
-        Objects.requireNonNull(values);
-        return db.update(dpsHelper.generateDelete(entity, values),
+        Objects.requireNonNull(conditions);
+        return db.update(dpsHelper.generateDelete(entity, conditions),
                 ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                                    values.values().toArray(), Object.class)
+                        conditions.values().toArray(), Object.class)
         );
     }
 
