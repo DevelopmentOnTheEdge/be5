@@ -73,6 +73,14 @@ public class DPSAttributes
     {
         map.put("EXTRA_ATTRS", value);
     }
+    public void setVALIDATION_RULES(Object value)
+    {
+        map.put("VALIDATION_RULES", value);
+    }
+    public void setCOLUMN_SIZE_ATTR(Object value)
+    {
+        map.put("COLUMN_SIZE_ATTR", value);
+    }
 
     public void setGROUP_NAME(String value)
     {
@@ -81,15 +89,6 @@ public class DPSAttributes
     public void setGROUP_ID(Object value)
     {
         map.put("GROUP_ID", value);
-    }
-
-    public void setVALIDATION_RULES(Object value)
-    {
-        map.put("VALIDATION_RULES", value);
-    }
-    public void setCOLUMN_SIZE_ATTR(Object value)
-    {
-        map.put("COLUMN_SIZE_ATTR", value);
     }
 
     public void setCSS_CLASSES(String value)

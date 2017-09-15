@@ -30,6 +30,7 @@ class TestAutocomplete extends Be5ProjectTest
             RELOAD_ON_CHANGE = true
             RELOAD_ON_FOCUS_OUT = true
             MULTIPLE_SELECTION_LIST = true
+            CAN_BE_NULL      = true
             READ_ONLY        = true
             HIDDEN           = true
             RAW_VALUE        = true
@@ -40,6 +41,7 @@ class TestAutocomplete extends Be5ProjectTest
             VALIDATION_RULES = baseRule(digits)
             EXTRA_ATTRS      = [["search":"all"]]
             COLUMN_SIZE_ATTR = 10
+            CSS_CLASSES      = "col-lg-6"
             MESSAGE          = "Can't be null"
             STATUS           = Validation.Status.ERROR
         }
