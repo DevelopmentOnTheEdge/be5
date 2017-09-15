@@ -24,7 +24,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import java.util.Map;
-
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
 
@@ -60,7 +59,8 @@ public class OperationServiceImpl implements OperationService
     }
 
     private Either<FormPresentation, OperationResult> callGetParameters(String entityName, String queryName,
-             String operationName, String selectedRowsString, Operation operation, OperationInfo meta, Map<String, Object> presetValues, Request req)
+             String operationName, String selectedRowsString, Operation operation, OperationInfo meta,
+                                                                        Map<String, Object> presetValues, Request req)
     {
         OperationResult invokeResult = null;
         if(operation == null)
@@ -89,7 +89,7 @@ public class OperationServiceImpl implements OperationService
 
             return Either.first(new FormPresentation(entityName, queryName, operationName,
                     userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                    selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                    selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
                     invokeResult));
         }
 
@@ -105,7 +105,7 @@ public class OperationServiceImpl implements OperationService
 
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
                         OperationResult.error(e)));
             }
         }
@@ -139,7 +139,7 @@ public class OperationServiceImpl implements OperationService
 
         return Either.first(new FormPresentation(entityName, queryName, operationName,
                 userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues, operationResult));
+                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), operationResult));
     }
 
     @Override
@@ -178,7 +178,7 @@ public class OperationServiceImpl implements OperationService
 
                 return Either.first(new FormPresentation(entityName, queryName, operationName,
                         userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
                         OperationResult.error(e)));
             }
         }
@@ -216,7 +216,7 @@ public class OperationServiceImpl implements OperationService
 
                     return Either.first(new FormPresentation(entityName, queryName, operationName,
                             userAwareMeta.getLocalizedOperationTitle(entityName, operationName),
-                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), presetValues,
+                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
                             OperationResult.error(e)));
                 }
             }

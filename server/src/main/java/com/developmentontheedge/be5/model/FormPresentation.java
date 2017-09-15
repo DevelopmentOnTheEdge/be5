@@ -15,11 +15,10 @@ public class FormPresentation
     public final String selectedRows;
     public final JsonObject bean;
     public final Object layout;
-    public final Map<String, Object> parameters;
     public final OperationResult operationResult;
 
     public FormPresentation(String entity, String query, String operation, String title, String selectedRows,
-                            JsonObject bean, Object layout, Map<String, Object> parameters, OperationResult operationResult)
+                            JsonObject bean, Object layout, OperationResult operationResult)
     {
         this.entity = entity;
         this.query = query;
@@ -28,7 +27,6 @@ public class FormPresentation
         this.selectedRows = selectedRows;
         this.bean = bean;
         this.layout = layout;
-        this.parameters = parameters;
         this.operationResult = operationResult;
     }
 
@@ -65,11 +63,6 @@ public class FormPresentation
     public Object getLayout()
     {
         return layout;
-    }
-
-    public Map<String, Object> getParameters()
-    {
-        return parameters;
     }
 
     public OperationResult getOperationResult() {
