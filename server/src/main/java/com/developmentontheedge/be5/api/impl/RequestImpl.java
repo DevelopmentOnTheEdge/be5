@@ -68,6 +68,13 @@ public class RequestImpl implements Request {
         try
         {
             //todo gson -> json-b
+            //            InputStream stream = new ByteArrayInputStream(valuesString.getBytes(StandardCharsets.UTF_8.name()));
+//            javax.json.stream.JsonParser parser = Json.createParser(stream);
+//
+//            javax.json.JsonObject object = parser.getObject();
+//            Set<Map.Entry<String, JsonValue>> entries = object.entrySet();
+
+
             JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
             for (Map.Entry entry: values.entrySet())
             {
