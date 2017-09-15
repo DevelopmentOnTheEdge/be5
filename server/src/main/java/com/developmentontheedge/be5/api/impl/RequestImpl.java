@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+
 public class RequestImpl implements Request {
 
     public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
@@ -47,6 +48,12 @@ public class RequestImpl implements Request {
     	if(session != null)
     	    session.setAttribute(name, value);
     }
+//
+//    @Override
+//    public <T> T getValues(String parameterName, Class<T> clazz) throws Be5Exception
+//    {
+//        return jsonb.fromJson(get(parameterName), clazz);
+//    }
 
     @Override
     public Map<String, Object> getValues(String parameter) throws Be5Exception {
@@ -94,7 +101,6 @@ public class RequestImpl implements Request {
         }
         return fieldValues;
     }
-
 
     /**
      * for query

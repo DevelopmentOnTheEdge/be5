@@ -1,10 +1,10 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.api;
 
+import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
 import com.google.common.collect.ImmutableMap;
