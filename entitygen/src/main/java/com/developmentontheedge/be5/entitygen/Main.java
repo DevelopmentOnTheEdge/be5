@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.google.inject.internal.util.Strings;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -30,7 +29,6 @@ public class Main
     public static void main(String[] args) throws Exception
     {
         new Main(args);
-        System.exit(0);
     }
 
     public Main(String[] args) throws IOException
@@ -46,11 +44,13 @@ public class Main
             generatedSourcesPath = "C:\\java\\dote\\github\\be5\\entitygen\\target\\generated-sources\\java\\";
         }
         String packageName = "com.developmentontheedge.be5.modules.core.generate.entities.".replace(".", "\\");
+
         if(!Paths.get(generatedSourcesPath + packageName).toFile().isDirectory()){
             injector = Be5.createInjector();
             createClass(generatedSourcesPath,"","package-info.java",cfg.getTemplate("root.ftl"), Collections.emptyMap());
             createEntities(generatedSourcesPath, cfg);
             createService(generatedSourcesPath, cfg);
+            System.exit(0);
         }else{
             System.out.println("Skip generate - com.developmentontheedge.be5.modules.core.generate.entities exists");
         }

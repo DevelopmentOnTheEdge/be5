@@ -65,21 +65,25 @@
 					<!--</execution>-->
 				<!--</executions>-->
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generateStubs</goal>
-							<goal>compile</goal>
-							<goal>testGenerateStubs</goal>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>compileTests</goal>
+                            <goal>removeStubs</goal>
+                            <goal>removeTestStubs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<!--<plugin>-->
 				<!--<groupId>org.codehaus.mojo</groupId>-->
 				<!--<artifactId>exec-maven-plugin</artifactId>-->
