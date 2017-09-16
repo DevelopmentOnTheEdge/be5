@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
 
 public class Main
 {
-    private static Injector injector = Be5.createInjector();
+    private Injector injector;
 
     public static void main(String[] args) throws Exception
     {
@@ -44,8 +45,15 @@ public class Main
         }else{
             generatedSourcesPath = "C:\\java\\dote\\github\\be5\\entitygen\\target\\generated-sources\\java\\";
         }
-
-        createEntities(generatedSourcesPath, cfg);
+        String packageName = "com.developmentontheedge.be5.modules.core.generate.entities.".replace(".", "\\");
+        if(!Paths.get(generatedSourcesPath + packageName).toFile().isDirectory()){
+            injector = Be5.createInjector();
+            createClass(generatedSourcesPath,"","package-info.java",cfg.getTemplate("root.ftl"), Collections.emptyMap());
+            createEntities(generatedSourcesPath, cfg);
+            createService(generatedSourcesPath, cfg);
+        }else{
+            System.out.println("Skip generate - com.developmentontheedge.be5.modules.core.generate.entities exists");
+        }
     }
 
     private void createEntities(String generatedSourcesPath, Configuration cfg) throws IOException
@@ -72,6 +80,31 @@ public class Main
             input.put("columns", columnsInfos);
             createClass(generatedSourcesPath, packageName, entityClassName + ".java", entityTpl, input);
         }
+    }
+
+    private void createService(String generatedSourcesPath, Configuration cfg) throws IOException
+    {
+        Template serviceTpl = cfg.getTemplate("service.ftl");
+        String packageName = "com.developmentontheedge.be5.modules.core.generate.".replace(".", "\\");
+
+        Meta meta = injector.getMeta();
+        List<Entity> entities = meta.getOrderedEntities("ru");
+
+        Map<String, Object> input = new HashMap<>();
+        String projectName = Strings.capitalize(injector.getProject().getName()) + "EntityModels";
+        input.put("projectName", projectName);
+
+        List<String> entityNames = new ArrayList<>();
+        for(Entity entity : entities)
+        {
+            if(entity.getName().startsWith("_"))continue;
+            entityNames.add(entity.getName());
+        }
+        input.put("entityNames", entityNames);
+        createClass(generatedSourcesPath, packageName, projectName + ".java", serviceTpl, input);
+
+        System.out.println("Generate successful - " +
+                "com.developmentontheedge.be5.modules.core.generate." + projectName);
     }
 
     private void createClass(String generatedSourcesPath, String packageName, String className,

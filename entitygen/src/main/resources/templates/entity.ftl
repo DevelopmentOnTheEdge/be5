@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.genegate;
+package com.developmentontheedge.be5.modules.core.generate.entities;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -9,8 +9,10 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class ${entityClassName} extends EntityModelBase
 {
