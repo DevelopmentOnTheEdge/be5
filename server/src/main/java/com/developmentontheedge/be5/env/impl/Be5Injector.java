@@ -170,12 +170,12 @@ public class Be5Injector implements Injector
             Configurable<Object> configurable = (Configurable<Object>) object;
             Object config = getConfiguration(object.getClass(), configurable.getConfigurationClass(), configurations);
 
-            if(config != null)
-            {
-                configurable.configure(config);
-            }else{
-                log.warning("Module '" + object.getClass().getName() + "' not configured.");
-            }
+//            if(config != null)
+//            {
+            configurable.configure(config);
+//            }else{
+//                log.warning("Module '" + object.getClass().getName() + "' not configured.");
+//            }
         }
     }
 

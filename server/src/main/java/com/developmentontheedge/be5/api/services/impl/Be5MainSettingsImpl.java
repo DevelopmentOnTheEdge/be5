@@ -23,6 +23,13 @@ public class Be5MainSettingsImpl implements Be5MainSettings, Configurable<Be5Mai
     @Override
     public int getCacheSize(String name)
     {
-        return config.cacheSizes.getOrDefault(name, config.cacheSizes.getOrDefault("defaultSize", 1000));
+        if(config != null)
+        {
+            return config.cacheSizes.getOrDefault(name, config.cacheSizes.getOrDefault("defaultSize", 1000));
+        }
+        else
+        {
+            return 1000;
+        }
     }
 }
