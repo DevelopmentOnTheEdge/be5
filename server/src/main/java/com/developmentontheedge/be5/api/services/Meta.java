@@ -20,7 +20,11 @@ public interface Meta
     List<Entity> getOrderedEntities(String language);
 
     List<Entity> getOrderedEntities(EntityType entityType, String language);
-    
+
+    Map<String, List<Entity>> getOrderedEntitiesByModules(String language);
+
+    Map<String, List<Entity>> getOrderedEntitiesByModules(EntityType entityType, String language);
+
     /**
      * Returns an entity with by its name. Throws an exception if there's no entity with this name.
      */
