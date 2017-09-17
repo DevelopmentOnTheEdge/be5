@@ -47,7 +47,7 @@ public class Main
 
         String serviceClassName = args[2] + "EntityModels";
 
-        File file = Paths.get(generatedSourcesPath + packageName.replace(".", "\\") + "\\" + serviceClassName + ".java").toFile();
+        File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + "/" + serviceClassName + ".java").toFile();
         if(file.exists() && !file.isDirectory())
         {
             System.out.println("Generate skipped, file exists: " + packageName + "." + serviceClassName);
@@ -144,8 +144,8 @@ public class Main
     private void createClass(String generatedSourcesPath, String packageName, String className,
                                     Template template, Map<String, Object> input) throws IOException
     {
-        Paths.get(generatedSourcesPath + packageName.replace(".", "\\")).toFile().mkdirs();
-        Writer fileWriter = new FileWriter(new File(generatedSourcesPath + packageName.replace(".", "\\")+"\\"+className + ".java"));
+        Paths.get(generatedSourcesPath + packageName.replace(".", "/")).toFile().mkdirs();
+        Writer fileWriter = new FileWriter(new File(generatedSourcesPath + packageName.replace(".", "/")+"/"+className + ".java"));
 
         try
         {
