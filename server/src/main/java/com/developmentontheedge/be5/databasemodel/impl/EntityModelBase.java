@@ -428,6 +428,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         return new QueryModelBase( queryName, emptyMap() );
     }
 
+    public Entity getEntity()
+    {
+        return entity;
+    }
+
     @Override
     public boolean equals( Object o )
     {

@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 import java.io.IOException;
 import java.util.Map;
 
+
 public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
@@ -60,11 +61,14 @@ public class ProjectProviderImpl implements ProjectProvider
                 }
             }
 
-            if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
-
-            watcher = new WatchDir(initModulesMap)
+            //todo move to ModuleLoader2 - find dev.yaml only in current project,
+            if (ProjectProviderImpl.class.getClassLoader().getResource("dev.yaml") != null)
+            {
+                if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
+                watcher = new WatchDir(initModulesMap)
                     .onModify( onModify -> dirty = true)
                     .start();
+            }
 
             return newProject != null ? newProject : project;
         }

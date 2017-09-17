@@ -1,0 +1,13 @@
+testBe5app:
+  features: logging
+  l10n: ru
+  projectFileStructure: {}
+  modules:
+  - core:
+      entities: []
+  application:
+  - _welcome_
+  - testtable
+  scripts:
+  - Post-db
+  - dictionaries

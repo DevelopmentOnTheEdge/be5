@@ -34,8 +34,8 @@ public class Be5Injector implements Injector
     public Be5Injector(Binder binder)
     {
         binder.configure(loadedClasses, bindings, configurations);
+        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
         getLogger();
-        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName()));
     }
 
     @Override
@@ -170,12 +170,12 @@ public class Be5Injector implements Injector
             Configurable<Object> configurable = (Configurable<Object>) object;
             Object config = getConfiguration(object.getClass(), configurable.getConfigurationClass(), configurations);
 
-            if(config != null)
-            {
-                configurable.configure(config);
-            }else{
-                log.warning("Module '" + object.getClass().getName() + "' not configured.");
-            }
+//            if(config != null)
+//            {
+            configurable.configure(config);
+//            }else{
+//                log.warning("Module '" + object.getClass().getName() + "' not configured.");
+//            }
         }
     }
 
