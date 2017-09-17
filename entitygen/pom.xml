@@ -50,6 +50,8 @@
                     <mainClass>com.developmentontheedge.be5.entitygen.Main</mainClass>
                     <arguments>
                         <argument>${project.build.directory}/generated-sources/java/</argument>
+                        <argument>${project.groupId}</argument>
+                        <argument>EntityGen</argument>
                     </arguments>
                 </configuration>
             </plugin>

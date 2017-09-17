@@ -1,15 +1,15 @@
-package com.developmentontheedge.be5.modules.core.generate;
+package ${packageName};
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.modules.core.generate.entities.*;
+import ${packageName}.entities.*;
 
 
-public class ${projectName}
+public class ${serviceClassName}
 {
-    public ${projectName}(SqlService sqlService, DpsHelper dpsHelper, Meta meta, Validator validator)
+    public ${serviceClassName}(SqlService sqlService, DpsHelper dpsHelper, Meta meta, Validator validator)
     {
       <#list entityNames as entityName>
           ${entityName} = new ${entityName?cap_first}(sqlService, dpsHelper, validator, meta.getEntity("${entityName}"));

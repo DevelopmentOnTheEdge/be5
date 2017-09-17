@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.entitygen
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.modules.core.generate.TestBe5appEntityModels
+import com.developmentontheedge.be5.entitygen.generate.EntityGenEntityModels
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.DateUtils
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when
 @TypeChecked
 class EntitiesTest extends Be5ProjectTest
 {
-    @Inject TestBe5appEntityModels entities
+    @Inject EntityGenEntityModels entities
     @Inject DpsHelper dpsHelper
 
     @Test

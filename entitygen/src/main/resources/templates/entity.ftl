@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.generate.entities;
+package ${packageName};
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
