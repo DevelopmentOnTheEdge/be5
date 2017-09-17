@@ -66,7 +66,6 @@ public class Main
                     "Generate successful: " + entityCount + " entities created.\n" +
                             "Add service to context.yaml: " +
                             packageName + "." + serviceClassName));
-            System.exit(0);//todo delete, fix ProjectProviderImpl - disable run watcher without dev.yaml
         }
     }
 

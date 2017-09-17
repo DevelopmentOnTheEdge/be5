@@ -49,7 +49,7 @@
                 <configuration>
                     <mainClass>com.developmentontheedge.be5.entitygen.Main</mainClass>
                     <arguments>
-                        <argument>${project.build.directory}/generated-sources/java/</argument>
+                        <argument>${project.build.directory}/generated-test-sources/java/</argument>
                         <argument>${project.groupId}</argument>
                         <argument>EntityGen</argument>
                     </arguments>
@@ -62,11 +62,11 @@
                     <execution>
                         <phase>generate-test-sources</phase>
                         <goals>
-                            <goal>add-source</goal>
+                            <goal>add-test-source</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/java/</source>
+                                <source>${project.build.directory}/generated-test-sources/java/</source>
                             </sources>
                         </configuration>
                     </execution>
