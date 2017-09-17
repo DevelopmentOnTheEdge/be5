@@ -7,4 +7,5 @@ public interface Binder
     void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
                    Map<Class<?>, Object> configurations);
 
+    String getInfo();
 }

@@ -3,8 +3,10 @@ package com.developmentontheedge.be5.entitygen;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.inject.internal.util.Strings;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class Main
 {
     private Injector injector;
+    private int entityCount = 0;
 
     public static void main(String[] args) throws Exception
     {
@@ -43,15 +46,25 @@ public class Main
         }else{
             generatedSourcesPath = "C:\\java\\dote\\github\\be5\\entitygen\\target\\generated-sources\\java\\";
         }
-        String packageName = "com.developmentontheedge.be5.modules.core.generate.entities.".replace(".", "\\");
+        String packageName = "com.developmentontheedge.be5.modules.core.generate.".replace(".", "\\");
 
-        if(!Paths.get(generatedSourcesPath + packageName).toFile().isDirectory()){
-            injector = Be5.createInjector();
+
+        if(!Paths.get(generatedSourcesPath + packageName).toFile().isDirectory())
+        {
+            injector = Be5.createInjector(new YamlBinder(YamlBinder.Mode.serverOnly));
+            String projectName = Strings.capitalize(injector.getProject().getName()) + "EntityModels";
+
             createClass(generatedSourcesPath,"","package-info.java",cfg.getTemplate("root.ftl"), Collections.emptyMap());
-            createEntities(generatedSourcesPath, cfg);
-            createService(generatedSourcesPath, cfg);
-            System.exit(0);
-        }else{
+            createEntities(generatedSourcesPath + packageName, cfg);
+            createService(generatedSourcesPath + packageName, cfg);
+            System.out.println("------" + JULLogger.infoBlock(
+                    "Generate successful: " + entityCount + " entities created.\n" +
+                            "Add service to context.yaml: " +
+                            "com.developmentontheedge.be5.modules.core.generate." + projectName));
+            System.exit(0);//todo delete, fix ProjectProviderImpl - disable run watcher without dev.yaml
+        }
+        else
+        {
             System.out.println("Skip generate - com.developmentontheedge.be5.modules.core.generate.entities exists");
         }
     }
@@ -59,7 +72,7 @@ public class Main
     private void createEntities(String generatedSourcesPath, Configuration cfg) throws IOException
     {
         Template entityTpl = cfg.getTemplate("entity.ftl");
-        String packageName = "com.developmentontheedge.be5.modules.core.generate.entities.".replace(".", "\\");
+        String packageName = "entities.".replace(".", "\\");
 
         Meta meta = injector.getMeta();
         List<Entity> entities = meta.getOrderedEntities("ru");
@@ -79,13 +92,13 @@ public class Main
             }
             input.put("columns", columnsInfos);
             createClass(generatedSourcesPath, packageName, entityClassName + ".java", entityTpl, input);
+            entityCount++;
         }
     }
 
     private void createService(String generatedSourcesPath, Configuration cfg) throws IOException
     {
         Template serviceTpl = cfg.getTemplate("service.ftl");
-        String packageName = "com.developmentontheedge.be5.modules.core.generate.".replace(".", "\\");
 
         Meta meta = injector.getMeta();
         List<Entity> entities = meta.getOrderedEntities("ru");
@@ -101,10 +114,7 @@ public class Main
             entityNames.add(entity.getName());
         }
         input.put("entityNames", entityNames);
-        createClass(generatedSourcesPath, packageName, projectName + ".java", serviceTpl, input);
-
-        System.out.println("Generate successful - " +
-                "com.developmentontheedge.be5.modules.core.generate." + projectName);
+        createClass(generatedSourcesPath, "", projectName + ".java", serviceTpl, input);
     }
 
     private void createClass(String generatedSourcesPath, String packageName, String className,

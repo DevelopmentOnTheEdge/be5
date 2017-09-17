@@ -63,6 +63,26 @@ public class YamlBinderTest
         assertEquals(Document.class, loadedClasses.get("document"));
     }
 
+    @Test
+    public void isServerTrue()
+    {
+        assertTrue(yamlBinder.isServer(getReader(CONTEXT_FILE)));
+    }
+
+    @Test
+    public void isServerLoad()
+    {
+        yamlBinder = new YamlBinder(YamlBinder.Mode.serverOnly);
+        yamlBinder.configure(loadedClasses, bindings, configurations);
+        assertEquals(Document.class, loadedClasses.get("document"));
+    }
+
+    @Test
+    public void isServerNotFoundFalse()
+    {
+        assertFalse(yamlBinder.isServer(getReader("src/test/resources/errorRedefine/" + CONTEXT_FILE)));
+    }
+
     @Test(expected = Be5Exception.class)
     public void testLoadTryRedefineServices()
     {
