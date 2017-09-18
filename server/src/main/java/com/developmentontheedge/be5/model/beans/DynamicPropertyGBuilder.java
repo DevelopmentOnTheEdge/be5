@@ -9,11 +9,11 @@ import groovy.lang.DelegatesTo;
 
 public class DynamicPropertyGBuilder
 {
-    public static DynamicProperty add(DynamicPropertySet dynamicPropertySet,
+    public DynamicProperty add(DynamicPropertySet dynamicPropertySet,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
         DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, builder, builder);
+        Closure code = cl.rehydrate(builder, this, this);
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
         code.call();
 
@@ -22,11 +22,11 @@ public class DynamicPropertyGBuilder
         return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
     }
 
-    public static DynamicProperty edit(DynamicPropertySet dynamicPropertySet, String propertyName,
+    public DynamicProperty edit(DynamicPropertySet dynamicPropertySet, String propertyName,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
         DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, builder, builder);
+        Closure code = cl.rehydrate(builder, this, this);
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
         code.call();
 

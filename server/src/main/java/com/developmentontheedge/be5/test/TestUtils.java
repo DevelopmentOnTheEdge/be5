@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class TestUtils
+public abstract class TestUtils extends DynamicPropertyGBuilder
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
 

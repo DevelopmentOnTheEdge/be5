@@ -29,6 +29,16 @@ public class Users extends EntityModelBase
         return add(builder.getMap());
     }
 
+    public String insert(Object owner, @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = UsersModel.class) final Closure config)
+    {
+        UsersModel builder = new UsersModel();
+        Closure code = config.rehydrate(builder, owner, owner);
+        code.setResolveStrategy(Closure.DELEGATE_FIRST);
+        code.call();
+
+        return add(builder.getMap());
+    }
+
     public class UsersModel
     {
         public void setUser_name(String user_name)
