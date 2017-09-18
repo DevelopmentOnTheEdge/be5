@@ -7,15 +7,20 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.util.HashUrl;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Immutable wrapper for {@link com.developmentontheedge.be5.metadata.model.Operation}
  */
 public class OperationInfo
 {
-    private Operation operationModel; 
-    
-    public OperationInfo(Operation operationModel)
+    private Operation operationModel;
+    private String queryName;
+
+    public OperationInfo(String queryName, Operation operationModel)
     {
+        this.queryName = queryName;
         this.operationModel = operationModel; 
     }
 
@@ -45,7 +50,20 @@ public class OperationInfo
     public Long getCategoryID()                     { return operationModel.getCategoryID(); }
     public Entity getEntity()                       { return operationModel.getEntity();  }
 
-    public String getUrl(OperationContext context){
-        return ActionHelper.toAction(context.getQueryName(), operationModel).arg;
+    public String getQueryName()
+    {
+        return queryName;
     }
+
+    public OperationResult redirectThisOperation(String[] records)
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName());
+        if(records.length > 0)
+        {
+            hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
+        }
+
+        return OperationResult.redirect(hashUrl.toString());
+    }
+
 }
