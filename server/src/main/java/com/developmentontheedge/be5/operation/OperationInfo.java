@@ -63,7 +63,7 @@ public class OperationInfo
             hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
         }
 
-        return OperationResult.redirect(hashUrl.toString());
+        return OperationResult.redirect(hashUrl);
     }
 
 }

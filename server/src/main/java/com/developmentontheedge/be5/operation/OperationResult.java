@@ -114,12 +114,22 @@ public class OperationResult
 
     public static OperationResult redirect(HashUrl hashUrl)
     {
-        return new OperationResult(OperationStatus.REDIRECTED, hashUrl.toString());
+        return redirect(hashUrl.toString());
     }
 
     public static OperationResult redirect(String url)
     {
         return new OperationResult(OperationStatus.REDIRECTED, url);
+    }
+
+    public static OperationResult redirectAndMessage(HashUrl hashUrl, String message)
+    {
+        return redirectAndMessage(hashUrl.toString(), message);
+    }
+
+    public static OperationResult redirectAndMessage(String url, String message)
+    {
+        return new OperationResult(OperationStatus.REDIRECTED, message, url);
     }
     
     public static OperationResult error(String message, Throwable details)
