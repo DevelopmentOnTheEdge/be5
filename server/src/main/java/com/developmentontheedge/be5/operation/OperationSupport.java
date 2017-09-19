@@ -14,6 +14,8 @@ import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -87,7 +89,7 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
 
     public Object getLayout()
     {
-        return null;
+        return Collections.emptyMap();
     }
 
 }
