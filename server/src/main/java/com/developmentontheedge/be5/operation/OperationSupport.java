@@ -15,7 +15,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 

@@ -13,6 +13,7 @@ import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
 import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
 import static org.junit.Assert.assertEquals
 
+
 @TypeChecked
 class TestAutocomplete extends Be5ProjectTest
 {
@@ -27,6 +28,7 @@ class TestAutocomplete extends Be5ProjectTest
             DISPLAY_NAME  = "Множественный выбор"
             TAG_LIST_ATTR = [["fired", "Уволен"], ["other", "Иная причина"]] as String[][]
             value         = 123
+            DEFAULT_VALUE = 1234
             RELOAD_ON_CHANGE = true
             RELOAD_ON_FOCUS_OUT = true
             MULTIPLE_SELECTION_LIST = true
