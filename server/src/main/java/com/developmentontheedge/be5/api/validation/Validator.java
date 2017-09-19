@@ -68,8 +68,8 @@ public class Validator
             {
                 if(!(property.getValue() instanceof Object[]))
                 {
-                    setError(property, "Value bast be array (MULTIPLE_SELECTION_LIST)");
-                    throw Be5Exception.internal("Value bast be array (MULTIPLE_SELECTION_LIST) - " + property.toString());
+                    setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
+                    throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST) - " + property.toString());
                 }
 
                 Object[] values = (Object[]) property.getValue();
@@ -117,6 +117,8 @@ public class Validator
     @Deprecated
     public Object parseFrom(DynamicProperty property, String value)
     {
+        if(value == null) return null;
+
         Class<?> type = property.getType();
 
         //todo move to IntegerRule, NumberRule
