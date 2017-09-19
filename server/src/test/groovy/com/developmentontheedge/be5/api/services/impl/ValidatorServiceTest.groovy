@@ -14,6 +14,7 @@ import org.junit.Test
 import static com.developmentontheedge.be5.api.validation.rule.BaseRule.*
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
 import static org.junit.Assert.assertArrayEquals
+import static org.junit.Assert.assertEquals
 
 
 class ValidatorServiceTest extends Be5ProjectTest
@@ -22,7 +23,8 @@ class ValidatorServiceTest extends Be5ProjectTest
     DynamicPropertySet dps
 
     @Before
-    void initDps(){
+    void initDps()
+    {
         dps = new DynamicPropertySetSupport()
     }
 
@@ -31,9 +33,11 @@ class ValidatorServiceTest extends Be5ProjectTest
     {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, 2L)
         validator.checkErrorAndCast(property)
+        assertEquals 2L, property.getValue()
 
         DynamicProperty propertyStr = new DynamicProperty("name", "Name", Long.class, "2")
         validator.checkErrorAndCast(propertyStr)
+        assertEquals 2L, property.getValue()
     }
 
     @Test
@@ -93,15 +97,15 @@ class ValidatorServiceTest extends Be5ProjectTest
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, 2)
         validator.checkErrorAndCast(property)
     }
-    
-    @Test
+
     @Ignore//TODO
+    @Test(expected = NumberFormatException.class)
     void name()
     {
-        DynamicProperty property = new DynamicProperty("name", "Name", String.class, 423423)
+        DynamicProperty property = new DynamicProperty("name", "Name", String.class, "a")
         property << [ VALIDATION_RULES: baseRule(digits) ]
 
-        //validator.checkErrorAndCast(property)
+        validator.checkErrorAndCast(property)
     }
 
 }
