@@ -46,7 +46,7 @@ class TestAutocomplete extends Be5ProjectTest
             STATUS           = Validation.Status.ERROR
         }
 
-        assertEquals("{'values':{'reasonMulti':123},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'columnSize':'10','status':'error','message':'Can't be null','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}}},'order':['/reasonMulti']}",
+        assertEquals("{'values':{'reasonMulti':123},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}}},'order':['/reasonMulti']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 
