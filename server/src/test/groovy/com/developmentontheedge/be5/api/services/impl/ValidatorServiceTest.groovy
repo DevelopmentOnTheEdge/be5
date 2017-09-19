@@ -5,14 +5,26 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
+import com.developmentontheedge.beans.DynamicPropertySet
+import com.developmentontheedge.beans.DynamicPropertySetSupport
+import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
+import static com.developmentontheedge.be5.api.validation.rule.BaseRule.*
+import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
 import static org.junit.Assert.assertArrayEquals
 
 
 class ValidatorServiceTest extends Be5ProjectTest
 {
     @Inject Validator validator
+    DynamicPropertySet dps
+
+    @Before
+    void initDps(){
+        dps = new DynamicPropertySetSupport()
+    }
 
     @Test
     void test() throws Exception
@@ -27,13 +39,33 @@ class ValidatorServiceTest extends Be5ProjectTest
     @Test
     void testMulti() throws Exception
     {
-        String[] value = ["val", "val2"] as String[]
-        DynamicProperty property = new DynamicProperty("name", "Name", String.class, value)
-        property.setAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST, true)
+        String[] initValue = ["val", "val2"] as String[]
 
-        validator.checkErrorAndCast(property)
+        def property = add(dps) {
+            name          = "name"
+            TYPE          = String
+            value         = initValue
+            MULTIPLE_SELECTION_LIST = true
+        }
+        validator.checkErrorAndCast(dps)
 
-        assertArrayEquals(value, (Object[])property.getValue())
+        assertArrayEquals(initValue, (Object[])property.getValue())
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    void testMultiCanNotBeNull() throws Exception
+    {
+        String[] initValue = [] as String[]
+
+        def property = add(dps) {
+            name          = "name"
+            TYPE          = String
+            value         = initValue
+            MULTIPLE_SELECTION_LIST = true
+        }
+        validator.checkErrorAndCast(dps)
+
+        assertArrayEquals(initValue, (Object[])property.getValue())
     }
 
     @Test
@@ -63,12 +95,11 @@ class ValidatorServiceTest extends Be5ProjectTest
     }
     
     @Test
+    @Ignore//TODO
     void name()
     {
-        //parameters._account.attributes[ Validation.RULES_ATTR ] = [ "number": "Please enter only digits." ]
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, 423423)
-        property << [ VALIDATION_RULES: [ "number": "Please enter only digits." ] ]
-
+        property << [ VALIDATION_RULES: baseRule(digits) ]
 
         //validator.checkErrorAndCast(property)
     }

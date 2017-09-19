@@ -79,13 +79,19 @@ public class Validator
                 {
                     resValues[i] = parseFrom(property, (String) values[i]);
                 }
+                if(values.length == 0 && !property.isCanBeNull())
+                {
+                    setError(property, "Can not be null");
+                    throw new IllegalArgumentException("Can not be null - " + property.toString());
+                }
                 property.setValue(resValues);
             }
             else
             {
                 if (property.getValue() == null)
                 {
-                    if(!property.isCanBeNull()){
+                    if(!property.isCanBeNull())
+                    {
                         setError(property, "Can not be null");
                         throw new IllegalArgumentException("Can not be null - " + property.toString());
                     }
