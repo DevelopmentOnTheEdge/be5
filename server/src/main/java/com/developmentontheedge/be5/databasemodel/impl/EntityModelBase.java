@@ -308,7 +308,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(values);
 
-        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
+        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
         validator.checkErrorAndCast(dps);
         dpsHelper.checkDpsContainNotNullColumns(entity, dps);
@@ -352,7 +352,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
 
-        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
+        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
         validator.checkErrorAndCast(dps);
         dpsHelper.addUpdateSpecialColumns(entity, dps);

@@ -35,7 +35,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicProperty(meta.getColumn(meta.getEntity("testTags"), "CODE"))
+        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(meta.getColumn(meta.getEntity("testTags"), "CODE"))
         assertEquals "CODE", property.getName()
         assertEquals String.class, property.getType()
         assertEquals null, property.getValue()
