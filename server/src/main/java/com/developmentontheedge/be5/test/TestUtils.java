@@ -154,7 +154,7 @@ public abstract class TestUtils extends DynamicPropertyGBuilder
         return list.stream().collect(Collectors.joining(","));
     }
 
-    public DynamicPropertySet getDps(Map<String, Object> nameValues)
+    public static DynamicPropertySet getDps(Map<String, Object> nameValues)
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         for(Map.Entry<String, Object> entry : nameValues.entrySet()){

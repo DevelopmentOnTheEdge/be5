@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,12 @@ public class DynamicPropertyMeta
     @SuppressWarnings("unchecked")
     public static Map<String, Map<String, String>> get(DynamicProperty property)
     {
-        return (Map<String, Map<String, String>>) property.getAttribute(META_INFO_PROPERTY);
+        Object info = property.getAttribute(META_INFO_PROPERTY);
+        if(info != null) {
+            return (Map<String, Map<String, String>>) property.getAttribute(META_INFO_PROPERTY);
+        }else{
+            return Collections.emptyMap();
+        }
     }
     
     public static void set(DynamicProperty property, Map<String, Map<String, String>> meta)
