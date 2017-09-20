@@ -310,8 +310,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
 
-        dpsHelper.addInsertSpecialColumns(entity, dps);
         validator.checkErrorAndCast(dps);
+        dpsHelper.checkDpsContainNotNullColumns(entity, dps);
+        dpsHelper.addInsertSpecialColumns(entity, dps);
 
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
 
@@ -353,8 +354,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
 
-        dpsHelper.addUpdateSpecialColumns(entity, dps);
         validator.checkErrorAndCast(dps);
+        dpsHelper.addUpdateSpecialColumns(entity, dps);
 
         int count = db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));

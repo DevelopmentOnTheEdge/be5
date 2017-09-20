@@ -683,4 +683,63 @@ public class DpsHelper
                 },
                 LinkedHashMap::new);
     }
+
+    public void checkDpsContainNotNullColumns(Entity entity, DynamicPropertySet dps)
+    {
+        String errorMsg = meta.getColumns(entity).values().stream()
+                .filter(column -> !column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
+                        && !dps.hasProperty(column.getName()))
+                .map(column -> "Dps not contain notNull column '" + column.getName()
+                        + "' in entity '" + column.getEntity().getName()+ "'")
+                .collect(Collectors.joining("\n"));
+
+        if(!errorMsg.isEmpty())
+        {
+            throw Be5Exception.internal("Dps not contain notNull columns:\n"+ errorMsg);
+        }
+    }
+
+    public DynamicProperty getLabel(String text)
+    {
+        return getLabel(text, "infoLabel");
+    }
+
+    public DynamicProperty getLabel(String text, String name)
+    {
+        DynamicProperty label = new DynamicProperty(name, String.class, text);
+        label.setAttribute(BeanInfoConstants.LABEL_FIELD, true);
+        return label;
+    }
+
+    public DynamicProperty getLabelRaw(String text)
+    {
+        return getLabel(text, "infoLabel");
+    }
+
+    public DynamicProperty getLabelRaw(String text, String name)
+    {
+        DynamicProperty label = getLabel(text, name);
+        label.setAttribute(BeanInfoConstants.RAW_VALUE, true);
+
+        return label;
+    }
+
+    public DynamicPropertySet getDpsWithLabelANDNotSubmitted(String text)
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dps.add(getLabel(text, "infoLabel"));
+        DynamicProperty notSubmitted = new DynamicProperty("notSubmitted", String.class, null);
+        notSubmitted.setHidden(true);
+        dps.add(notSubmitted);
+
+        return dps;
+    }
+
+    public DynamicPropertySet getDpsWithLabelRawANDNotSubmitted(String text)
+    {
+        DynamicPropertySet dps = getDpsWithLabelANDNotSubmitted(text);
+        dps.getProperty("infoLabel").setAttribute(BeanInfoConstants.RAW_VALUE, true);
+
+        return dps;
+    }
 }
