@@ -66,4 +66,12 @@ public class OperationInfo
         return OperationResult.redirect(hashUrl);
     }
 
+    public OperationResult redirectThisOperation(String[] records, Object newID )
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
+                .named("selectedRows", newID.toString());
+
+        return OperationResult.redirect(hashUrl);
+    }
+
 }
