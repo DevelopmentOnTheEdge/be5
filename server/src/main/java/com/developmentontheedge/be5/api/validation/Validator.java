@@ -124,7 +124,10 @@ public class Validator
         if(tags != null)
         {
             if(Arrays.stream(tags).noneMatch(item -> (item)[0].equals(value.toString())))
+            {
+                setError(property, "Value is not contained in tags");
                 throw new IllegalArgumentException("Value is not contained in tags - " + toStringProperty(property));
+            }
         }
     }
 

@@ -63,14 +63,14 @@ public abstract class TestUtils extends DynamicPropertyGBuilder
         }
     }
 
-    protected static String oneQuotes(String s)
+    protected static String oneQuotes(Object s)
     {
-        return s.replace("\"", "'");
+        return s.toString().replace("\"", "'");
     }
 
-    protected static String doubleQuotes(String s)
+    protected static String doubleQuotes(Object s)
     {
-        return s.replace("'", "\"");
+        return s.toString().replace("'", "\"");
     }
 
     protected Request getMockRequest(String requestUri)

@@ -3,10 +3,9 @@ package com.developmentontheedge.be5.api.services.impl
 import com.developmentontheedge.be5.api.validation.Validator
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.Be5ProjectTest
-import com.developmentontheedge.beans.BeanInfoConstants
-import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
+import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -14,6 +13,9 @@ import org.junit.Test
 import static com.developmentontheedge.be5.api.validation.rule.BaseRule.digits
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.baseRule
 import static org.junit.Assert.assertArrayEquals
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNull
+
 
 class ValidatorServiceValueInTagsTest extends Be5ProjectTest
 {
@@ -34,6 +36,8 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
             value         = "2"
         }
         validator.checkErrorAndCast(dps)
+        assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
+        assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('message'))
     }
 
     @Test
@@ -46,6 +50,8 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
             value         = 2L
         }
         validator.checkErrorAndCast(dps)
+        assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
+        assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('message'))
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -57,7 +63,14 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
             value         = "3"
         }
 
-        validator.checkErrorAndCast(dps)
+        try {
+            validator.checkErrorAndCast(dps)
+        }catch (RuntimeException e){
+            assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
+            assertEquals("Value is not contained in tags", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
+            throw e
+        }
+
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -71,6 +84,8 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
         }
 
         validator.checkErrorAndCast(dps)
+        assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('status'))
+        assertNull(JsonFactory.dpsMeta(dps).getJsonObject("/test").get('message'))
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -83,6 +98,12 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
             MULTIPLE_SELECTION_LIST = true
         }
 
-        validator.checkErrorAndCast(dps)
+        try {
+            validator.checkErrorAndCast(dps)
+        }catch (RuntimeException e){
+            assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
+            assertEquals("Value is not contained in tags", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
+            throw e
+        }
     }
 }
