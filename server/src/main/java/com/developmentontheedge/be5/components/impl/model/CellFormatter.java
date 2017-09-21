@@ -124,7 +124,8 @@ public class CellFormatter
         {
             @SuppressWarnings("unchecked")
             List<List<Object>> table = (List<List<Object>>) formattedPart;
-            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(", ")).joining("; ");
+            //todo <br/> or ; or ... - add tag support
+            return StreamEx.of(table).map(list -> StreamEx.of(list).map(this::print).joining(", ")).joining("<br/> ");
         }
         else
         {
