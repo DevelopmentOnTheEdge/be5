@@ -45,9 +45,9 @@ public class ResponseTest extends Be5ProjectTest
     }
 
 //    @Test
-//    public void sendAsJson() throws Exception {
+//    public void sendErrorsAsJson() throws Exception {
 //        Action call = new Action("call", "test/path");
-//        response.sendAsJson(call);
+//        response.sendErrorsAsJson(call);
 //
 //        verify(writer).append(doubleQuotes("{'value':{'arg':'test/path','name':'call'}}"));
 //        verify(writer).flush();

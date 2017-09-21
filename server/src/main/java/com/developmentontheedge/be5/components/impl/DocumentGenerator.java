@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
@@ -59,9 +60,12 @@ public class DocumentGenerator implements Runner {
     public void onStatic(Query query)
     {
         String content = query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim());
-        //todo add StaticPagePresentation - title, id, content
-        sendQueryResponse(req, res, query, content);
-        DocumentResponse.of(res).sendStaticPage(content);
+
+        String entityName = query.getEntity().getName();
+        String queryName = query.getName();
+        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
+
+        sendQueryResponse(req, res, query, new StaticPagePresentation(localizedQueryTitle, content));
     }
 
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,

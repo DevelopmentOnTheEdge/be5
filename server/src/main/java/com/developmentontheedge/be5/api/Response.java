@@ -46,14 +46,14 @@ public interface Response
 
     void sendAsJson(ResourceData data, Object meta, Map<String, String> links);
 
-    void sendAsJson(Object[] errors, Object meta, Map<String, String> links);
+    void sendErrorsAsJson(Object[] errors, Object meta, Map<String, String> links);
 
 //    /**
 //     * <p>The conventional way to send untyped responses. It is recommended to use typed responses.</p>
 //     *
 //     * @param value will be serialized
 //     */
-//    void sendAsJson(Object value);
+//    void sendErrorsAsJson(Object value);
 
     void sendAsRawJson(Object value);
 
