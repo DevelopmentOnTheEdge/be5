@@ -150,7 +150,8 @@ public class DatabaseServiceImpl implements DatabaseService
         }
     }
 
-    public Connection getCurrentTxConn() {
+    public Connection getCurrentTxConn()
+    {
         return TRANSACT_CONN.get();
     }
 

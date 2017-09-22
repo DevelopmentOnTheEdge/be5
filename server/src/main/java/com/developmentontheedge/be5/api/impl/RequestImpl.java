@@ -18,7 +18,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
-public class RequestImpl implements Request {
+public class RequestImpl implements Request
+{
 
     public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
 
@@ -28,7 +29,8 @@ public class RequestImpl implements Request {
     private final String remoteAddr;
     private final String sessionId;
     
-    public RequestImpl(HttpServletRequest rawRequest, String requestUri, Map<String, String> parameters) {
+    public RequestImpl(HttpServletRequest rawRequest, String requestUri, Map<String, String> parameters)
+    {
         this.rawRequest = rawRequest;
         this.requestUri = requestUri;
         this.parameters = new HashMap<>(parameters);
@@ -37,13 +39,15 @@ public class RequestImpl implements Request {
     }
     
     @Override
-    public Object getAttribute(String name) {
+    public Object getAttribute(String name)
+    {
     	HttpSession session = rawRequest.getSession();
         return session == null ? null : session.getAttribute(name);
     }
     
     @Override
-    public void setAttribute(String name, Object value) {
+    public void setAttribute(String name, Object value)
+    {
     	HttpSession session = rawRequest.getSession();
     	if(session != null)
     	    session.setAttribute(name, value);
@@ -56,7 +60,8 @@ public class RequestImpl implements Request {
 //    }
 
     @Override
-    public Map<String, Object> getValues(String parameter) throws Be5Exception {
+    public Map<String, Object> getValues(String parameter) throws Be5Exception
+    {
         String valuesString = get(parameter);
         if(Strings.isNullOrEmpty(valuesString))
         {
@@ -113,7 +118,8 @@ public class RequestImpl implements Request {
      * for query
      */
     @Override
-    public Map<String, String> getStringValues(String parameter) throws Be5Exception {
+    public Map<String, String> getStringValues(String parameter) throws Be5Exception
+    {
 		String valuesString = get(parameter);
 		if(Strings.isNullOrEmpty(valuesString))
 		{
@@ -149,27 +155,32 @@ public class RequestImpl implements Request {
     }
 
 	@Override
-    public Map<String, String> getParameters() {
+    public Map<String, String> getParameters()
+    {
         return Collections.unmodifiableMap(parameters);
     }
     
 	@Override
-    public String getRequestUri() {
+    public String getRequestUri()
+    {
         return requestUri;
     }
     
     @Override
-    public String getRemoteAddr() {
+    public String getRemoteAddr()
+    {
         return remoteAddr;
     }
 
     @Override
-    public String getSessionId() {
+    public String getSessionId()
+    {
         return sessionId;
     }
     
 	@Override
-	public HttpServletRequest getRawRequest() {
+	public HttpServletRequest getRawRequest()
+    {
 		return rawRequest;
 	}
 
@@ -180,12 +191,14 @@ public class RequestImpl implements Request {
     }
 
     @Override
-    public String getServletContextRealPath(String s){
+    public String getServletContextRealPath(String s)
+    {
         return getRawRequest().getSession().getServletContext().getRealPath(s);
     }
 
     @Override
-    public String getBaseUrl() {
+    public String getBaseUrl()
+    {
         String scheme = rawRequest.getScheme() + "://";
         String serverName = rawRequest.getServerName();
         String serverPort = (rawRequest.getServerPort() == 80) ? "" : ":" + rawRequest.getServerPort();
