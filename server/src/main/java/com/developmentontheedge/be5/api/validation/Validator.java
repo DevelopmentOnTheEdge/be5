@@ -211,10 +211,19 @@ public class Validator
 
     private String toStringProperty(DynamicProperty property)
     {
+        String value;
+        if(property.getValue() != null)
+        {
+            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : "'" + property.getValue().toString() + "'";
+        }
+        else
+        {
+            value = "null";
+        }
         return "["
                 + " name: '"  + property.getName()
                 + "', type: "  + property.getType()
-                + ", value: " + (property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : property.getValue())
+                + ", value: " + value
                 + " ]";
     }
 }
