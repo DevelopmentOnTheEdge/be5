@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import org.yaml.snakeyaml.Yaml;
@@ -177,8 +176,8 @@ public class YamlBinder implements Binder
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e,
-                    "ClassNotFoundException by path='"+path+"' in " + CONTEXT_FILE);
+            throw Be5Exception.internal(log, e,
+                    "ClassNotFoundException by path='" + path + "' in " + CONTEXT_FILE);
         }
     }
 

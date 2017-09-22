@@ -104,7 +104,7 @@ public class RequestImpl implements Request {
         }
         catch (ClassCastException e)
         {
-            throw Be5ErrorCode.PARAMETER_INVALID.rethrow(log, e, parameter, valuesString);
+            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
         }
         return fieldValues;
     }
@@ -143,7 +143,7 @@ public class RequestImpl implements Request {
         }
         catch (ClassCastException e)
         {
-            throw Be5ErrorCode.PARAMETER_INVALID.rethrow(log, e, parameter, valuesString);
+            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
         }
 		return fieldValues;
     }

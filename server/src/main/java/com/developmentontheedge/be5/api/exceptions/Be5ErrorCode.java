@@ -27,7 +27,7 @@ public enum Be5ErrorCode
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
      */
-    public Be5Exception exception(Logger log, Object... parameters)
+    Be5Exception exception(Logger log, Object... parameters)
     {
         String msg = ErrorMessages.formatMessage(this, parameters);
         log.severe(msg);
@@ -38,7 +38,7 @@ public enum Be5ErrorCode
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
      */
-    public Be5Exception rethrow(Throwable t, Object... parameters)
+    Be5Exception rethrow(Throwable t, Object... parameters)
     {
         String msg = ErrorMessages.formatMessage(this, parameters);
         log.log(Level.SEVERE, msg, t);
@@ -49,7 +49,7 @@ public enum Be5ErrorCode
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
      */
-    public Be5Exception rethrow(Logger log, Throwable t, Object... parameters)
+    Be5Exception rethrow(Logger log, Throwable t, Object... parameters)
     {
         String msg = ErrorMessages.formatMessage(this, parameters);
         log.log(Level.SEVERE, msg, t);

@@ -44,6 +44,16 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.INTERNAL_ERROR.exception(log, message);
     }
 
+    public static Be5Exception internal(Logger log, Throwable t)
+    {
+        return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t);
+    }
+
+    public static Be5Exception internal(Logger log, Throwable t, Object... parameters)
+    {
+        return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, parameters);
+    }
+
     public static Be5Exception internal(Throwable t)
     {
         return internal(t, t.getMessage());
@@ -67,6 +77,11 @@ public class Be5Exception extends RuntimeException
     public static Be5Exception invalidRequestParameter(String parameterName, String invalidValue)
     {
         return Be5ErrorCode.PARAMETER_INVALID.exception(parameterName, invalidValue);
+    }
+
+    public static Be5Exception invalidRequestParameter(Logger log, Throwable t, String parameterName, String invalidValue)
+    {
+        return Be5ErrorCode.PARAMETER_INVALID.rethrow(log, t, parameterName, invalidValue);
     }
     
     public static Be5Exception requestParameterIsAbsent(String parameterName)
