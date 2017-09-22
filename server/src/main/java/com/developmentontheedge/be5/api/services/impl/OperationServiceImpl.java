@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.env.Injector;
@@ -17,6 +18,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -32,12 +34,14 @@ public class OperationServiceImpl implements OperationService
 {
     private final Cache<String, Class> groovyOperationClasses;
     private final Injector injector;
+    private final DatabaseService databaseService;
     private final UserAwareMeta userAwareMeta;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, DatabaseService databaseService, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
+        this.databaseService = databaseService;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
 
@@ -52,9 +56,10 @@ public class OperationServiceImpl implements OperationService
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
-        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
+        Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        return callGetParameters(entityName, queryName, operationName, selectedRowsString, null, operationInfo,
+        return callGetParameters(entityName, queryName, operationName, selectedRowsString, operation, meta,
                 presetValues, req);
     }
 
@@ -63,17 +68,10 @@ public class OperationServiceImpl implements OperationService
                                                                         Map<String, Object> presetValues, Request req)
     {
         OperationResult invokeResult = null;
-        if(operation == null)
+        if(OperationStatus.ERROR == operation.getStatus())
         {
-            operation = create(meta, selectedRows(selectedRowsString), req);
-        }
-        else
-        {
-            if(OperationStatus.ERROR == operation.getStatus())
-            {
-                invokeResult = operation.getResult();
-                operation.setResult(OperationResult.open());
-            }
+            invokeResult = operation.getResult();
+            operation.setResult(OperationResult.open());
         }
 
         Object parameters = getParametersFromOperation(operation, presetValues);
@@ -113,8 +111,18 @@ public class OperationServiceImpl implements OperationService
         if (parameters == null)
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
-            return callInvoke(entityName, queryName, operationName, selectedRowsString,
-                    presetValues, operation, meta, null, operationContext, req);
+            if(operation instanceof TransactionalOperation)
+            {
+                return databaseService.transaction((connection) ->
+                        callInvoke(entityName, queryName, operationName, selectedRowsString,
+                                presetValues, operation, meta, null, operationContext, req)
+                );
+            }
+            else
+            {
+                return callInvoke(entityName, queryName, operationName, selectedRowsString,
+                                  presetValues, operation, meta, null, operationContext, req);
+            }
         }
 
         OperationResult operationResult = OperationResult.open();
@@ -156,8 +164,24 @@ public class OperationServiceImpl implements OperationService
 
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
-        //add TransactionalOperation interface and support all in transaction getParametersFromOperation and invoke in execute
+        if(operation instanceof TransactionalOperation)
+        {
+            return databaseService.transaction((connection) ->
+                    callOperation(entityName, queryName, operationName, selectedRowsString,
+                                  presetValues, operation, meta, operationContext, req)
+            );
+        }
+        else
+        {
+            return callOperation(entityName, queryName, operationName, selectedRowsString,
+                    presetValues, operation, meta, operationContext, req);
+        }
+    }
 
+    private Either<FormPresentation, OperationResult> callOperation(String entityName, String queryName, String operationName,
+                                                                 String selectedRowsString, Map<String, Object> presetValues, Operation operation, OperationInfo meta,
+                                                                 OperationContext operationContext, Request req)
+    {
         Object parameters = getParametersFromOperation(operation, presetValues);
 
         if(OperationStatus.ERROR == operation.getStatus())
