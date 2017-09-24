@@ -1,0 +1,83 @@
+package com.developmentontheedge.be5.modules.core.genegate;
+
+import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields;
+import com.developmentontheedge.sql.format.Ast;
+import com.developmentontheedge.sql.model.AstSelect;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
+import java.io.Serializable;
+import java.util.Collections;
+
+
+public abstract class RepositorySupport<T, ID extends Serializable> implements Repository<T, ID>
+{
+    public BeanHandler<T> beanHandler;
+    public BeanListHandler<T> beanListHandler;
+
+    protected final EntityModelBase entityModelBase;
+    protected final DpsHelper dpsHelper;
+    protected final SqlService db;
+
+    protected final Entity entity;
+    protected final String entityName;
+
+    public static ProvincesFields fields;
+    public String primaryKeyName;
+
+    public RepositorySupport(SqlService db, DpsHelper dpsHelper, Validator validator, Entity entity)
+    {
+        entityModelBase = new EntityModelBase(db, dpsHelper, validator, entity);
+        this.entity = entityModelBase.getEntity();
+        this.entityName = entity.getName();
+
+        this.db = db;
+        this.dpsHelper = dpsHelper;
+    }
+
+    @Override
+    public Long count()
+    {
+        return db.getLong(Ast.selectCount().from(entityName).format());
+    }
+
+    @Override
+    public void remove(ID primaryKey)
+    {
+        entityModelBase.remove(primaryKey.toString());
+    }
+
+    @Override
+    public void removeAll()
+    {
+        db.update(dpsHelper.generateDelete(entity, Collections.emptyMap()));
+    }
+
+    @Override
+    public boolean exists(ID primaryKey)
+    {
+        return findOne(primaryKey) != null;
+    }
+
+    @Override
+    public T findOne(ID primaryKey)
+    {
+        AstSelect sql = Ast.selectAll().from(entityName).where(primaryKeyName, primaryKey);
+
+        return db.query(sql.format(), beanHandler, primaryKey);
+    }
+
+    @Override
+    public Iterable<T> findAll()
+    {
+        AstSelect sql = Ast.selectAll().from(entityName);
+
+        return db.query(sql.format(), beanListHandler);
+    }
+
+}

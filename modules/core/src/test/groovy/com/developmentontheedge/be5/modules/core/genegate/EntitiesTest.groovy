@@ -9,9 +9,12 @@ import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.DateUtils
 import com.developmentontheedge.beans.DynamicPropertySet
+import org.apache.commons.dbutils.ResultSetHandler
+import org.apache.commons.dbutils.handlers.BeanHandler
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Matchers
+import org.mockito.stubbing.OngoingStubbing
 
 import java.sql.Date
 
@@ -19,7 +22,7 @@ import static org.junit.Assert.*
 import static org.mockito.Mockito.*
 
 
-class EntitiesTest extends Be5ProjectTest
+class EntitiesTest extends Be5ProjectTest//todo use Be5ProjectDBTest
 {
     @Inject CoreEntityModels entities
     @Inject DpsHelper dpsHelper
@@ -32,10 +35,9 @@ class EntitiesTest extends Be5ProjectTest
     @Test
     void addAndDps()
     {
-        def day = DateUtils.curDay()
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.provinces.getEntity(), [p.name, p.countryID])
+        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.provinces.entity, [p.name, p.countryID])
 
         add(dps) {
             name        = p.ID
@@ -67,18 +69,37 @@ class EntitiesTest extends Be5ProjectTest
     @Test
     void findOneTest() throws Exception
     {
-        when(SqlServiceMock.mock.select(anyString(),
-            Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(getDps([
-                ID: "12",
-                name: "testName",
-                countryID: "testCountryID",
-        ]))
+        def pojo = new Provinces()
+        pojo.with {ID = "12"; name = "testName"; countryID = "testCountryID"}
+
+        when(SqlServiceMock.mock.query(anyString(),
+                Matchers.<ResultSetHandler<Provinces>> any(), anyVararg())).thenReturn(pojo)
 
         def province = entities.provinces.findOne("12")
 
         assertEquals("12",            province.ID)
         assertEquals("testName",      province.name)
         assertEquals("testCountryID", province.countryID)
+    }
+
+    @Test
+    @Ignore
+    void test() throws Exception
+    {
+        entities.provinces.count()
+        entities.provinces.count {countryID = "foo"}
+
+        def firstFooBar = entities.provinces.findFirst { countryID = "foo"; name = "bar" }
+        def one =         entities.provinces.findOne("12")
+        def all =         entities.provinces.findAll()
+        def allFooBar =   entities.provinces.findAll { countryID = "foo"; name = "bar" }
+
+
+        entities.provinces.removeAll()
+        entities.provinces.removeAll {countryID = "foo"}
+        entities.provinces.remove("12")
+
+        entities.provinces.exists("12")
     }
 
 }

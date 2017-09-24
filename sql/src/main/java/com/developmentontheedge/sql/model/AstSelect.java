@@ -76,14 +76,16 @@ public class AstSelect extends SimpleNode
         return children().select( AstWhere.class ).findFirst().orElse( null );
     }
 
-    public AstSelect where(String key, String value){
+    public AstSelect where(String key, Object value)
+    {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
         where(Collections.singletonMap(key, value));
         return this;
     }
 
-    public AstSelect where(Map<String, ? super Object> conditions){
+    public AstSelect where(Map<String, ? super Object> conditions)
+    {
         Objects.requireNonNull(conditions);
         if(!conditions.isEmpty()) where(new AstWhere(conditions));
         return this;
