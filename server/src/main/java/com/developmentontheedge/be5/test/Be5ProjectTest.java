@@ -43,6 +43,12 @@ public abstract class Be5ProjectTest extends TestUtils
             bindings.put(DatabaseService.class, DatabaseServiceMock.class);
             bindings.put(Be5MainSettings.class, Be5MainSettingsForTest.class);
         }
+
+        @Override
+        public String getInfo()
+        {
+            return "";
+        }
     }
 
 

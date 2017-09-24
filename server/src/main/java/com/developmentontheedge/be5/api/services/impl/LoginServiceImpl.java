@@ -50,7 +50,7 @@ public class LoginServiceImpl implements LoginService
         }
         catch (SQLException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5Exception.internal(log, e);
         }
         catch( java.security.GeneralSecurityException gse )
         {

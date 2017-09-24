@@ -86,15 +86,15 @@ public class CheckIntervalServlet
         }
         if( type.equals( java.util.Date.class ) )
         {
-           java.util.Date fDate = ( java.util.Date )Utils.changeType( intervalFrom, type );
-           java.util.Date tDate = DateUtils.addDays( ( java.util.Date )Utils.changeType( intervalTo, type ), 1 );
-           return DateUtils.isBetween( ( java.util.Date )changed, fDate, tDate );
+           java.sql.Date fDate = ( java.sql.Date )Utils.changeType( intervalFrom, type );
+           java.sql.Date tDate = DateUtils.addDays( ( java.sql.Date )Utils.changeType( intervalTo, type ), 1 );
+           return DateUtils.isBetween( ( java.sql.Date )changed, fDate, tDate );
         }
         if( type.equals( java.sql.Date.class ) )
         {
-           java.util.Date fDate = ( java.sql.Date )Utils.changeType( intervalFrom, type );
-           java.util.Date tDate = DateUtils.addDays( ( java.sql.Date )Utils.changeType( intervalTo, type ), 1 );
-           return DateUtils.isBetween( ( java.util.Date )changed, fDate, tDate );
+           java.sql.Date fDate = ( java.sql.Date )Utils.changeType( intervalFrom, type );
+           java.sql.Date tDate = DateUtils.addDays( ( java.sql.Date )Utils.changeType( intervalTo, type ), 1 );
+           return DateUtils.isBetween( ( java.sql.Date )changed, fDate, tDate );
         }
 
         return false; 

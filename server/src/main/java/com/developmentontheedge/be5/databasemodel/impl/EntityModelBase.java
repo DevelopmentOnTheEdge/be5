@@ -308,10 +308,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     {
         Objects.requireNonNull(values);
 
-        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
+        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
-        dpsHelper.addInsertSpecialColumns(entity, dps);
         validator.checkErrorAndCast(dps);
+        dpsHelper.checkDpsContainNotNullColumns(entity, dps);
+        dpsHelper.addInsertSpecialColumns(entity, dps);
 
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
 
@@ -351,10 +352,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
         Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
 
-        DynamicPropertySet dps = dpsHelper.getSimpleDpsForColumns(entity, values);
+        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
-        dpsHelper.addUpdateSpecialColumns(entity, dps);
         validator.checkErrorAndCast(dps);
+        dpsHelper.addUpdateSpecialColumns(entity, dps);
 
         int count = db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));
@@ -426,6 +427,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     public QueryModel getQuery( String queryName ) 
     {
         return new QueryModelBase( queryName, emptyMap() );
+    }
+
+    public Entity getEntity()
+    {
+        return entity;
     }
 
     @Override

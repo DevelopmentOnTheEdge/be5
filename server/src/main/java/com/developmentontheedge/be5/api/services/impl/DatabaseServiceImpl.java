@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
@@ -37,7 +36,8 @@ public class DatabaseServiceImpl implements DatabaseService
     private Rdbms type;
     private BeConnectionProfile profile;
 
-    public DatabaseServiceImpl(ProjectProvider projectProvider){
+    public DatabaseServiceImpl(ProjectProvider projectProvider)
+    {
         profile = projectProvider.getProject().getConnectionProfile();
         type = profile.getRdbms();
 
@@ -55,7 +55,8 @@ public class DatabaseServiceImpl implements DatabaseService
         ));
     }
 
-    private DataSource getDataSource() {
+    private DataSource getDataSource()
+    {
         return bds;
     }
 
@@ -100,7 +101,7 @@ public class DatabaseServiceImpl implements DatabaseService
                 }
             }
             catch (SQLException e) {
-                throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+                throw Be5Exception.internal(log, e);
             }
         }
     }
@@ -116,7 +117,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "get Statement" );
+            throw Be5Exception.internal(log, t, "get Statement" );
         }
         try
         {
@@ -124,7 +125,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "closing ResultSet" );
+            throw Be5Exception.internal(log, t, "closing ResultSet" );
         }
         try
         {
@@ -133,7 +134,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "closing Statement" );
+            throw Be5Exception.internal(log, t, "closing Statement" );
         }
         try
         {
@@ -145,11 +146,12 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch ( Throwable t )
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, "closing Connection" );
+            throw Be5Exception.internal(log, t, "closing Connection" );
         }
     }
 
-    public Connection getCurrentTxConn() {
+    public Connection getCurrentTxConn()
+    {
         return TRANSACT_CONN.get();
     }
 
@@ -157,7 +159,7 @@ public class DatabaseServiceImpl implements DatabaseService
     {
         Connection conn = TRANSACT_CONN.get();
         if (conn != null) {
-            throw Be5ErrorCode.INTERNAL_ERROR.exception(log, "Start second transaction in one thread");
+            throw Be5Exception.internal(log, "Start second transaction in one thread");
         }
         conn = getDataSource().getConnection();
         conn.setAutoCommit(false);
@@ -170,7 +172,8 @@ public class DatabaseServiceImpl implements DatabaseService
         TRANSACT_CONN.set(null);
     }
 
-    public <T> T transaction(SqlExecutor<T> executor) {
+    public <T> T transaction(SqlExecutor<T> executor)
+    {
         Connection conn = null;
         try {
             conn = getTxConnection();
@@ -184,14 +187,15 @@ public class DatabaseServiceImpl implements DatabaseService
         }
     }
 
-    private Be5Exception rollback(Connection conn, Throwable e) {
+    private Be5Exception rollback(Connection conn, Throwable e)
+    {
         try {
             if (conn != null) {
                 conn.rollback();
             }
-            return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            return Be5Exception.internal(log, e);
         } catch (SQLException se) {
-            return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, se, "Unable to rollback transaction", e);
+            return Be5Exception.internal(log, se, "Unable to rollback transaction", e);
         }
     }
 

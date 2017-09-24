@@ -1,5 +1,4 @@
 context:
   services:
-  - utils:
-      interface:      com.developmentontheedge.be5.modules.core.services.CoreUtils
-      implementation: com.developmentontheedge.be5.modules.core.services.CoreUtils
+  - com.developmentontheedge.be5.modules.core.genegate.CoreEntityModels
+  - com.developmentontheedge.be5.modules.core.services.CoreUtils

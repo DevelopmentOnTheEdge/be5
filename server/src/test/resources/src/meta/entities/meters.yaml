@@ -15,12 +15,16 @@ meters:
         type: SMALLINT
     - modificationDate___:
         type: TIMESTAMP
+        canBeNull: true
     - creationDate___:
         type: TIMESTAMP
+        canBeNull: true
     - whoModified___:
         type: VARCHAR(100)
+        canBeNull: true
     - whoInserted___:
         type: VARCHAR(100)
+        canBeNull: true
     - isDeleted___:
         type: ENUM('no','yes')
         defaultValue: '''no'''

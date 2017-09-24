@@ -90,7 +90,10 @@ public class DPSAttributes
     {
         map.put("GROUP_ID", value);
     }
-
+    public void setDEFAULT_VALUE(Object value)
+    {
+        map.put("DEFAULT_VALUE", value);
+    }
     public void setCSS_CLASSES(String value)
     {
         map.put("CSS_CLASSES", value);

@@ -4,7 +4,7 @@ package com.developmentontheedge.be5.util;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Locale;
 
 public class DateUtils

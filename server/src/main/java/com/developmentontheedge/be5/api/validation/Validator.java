@@ -8,6 +8,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -59,7 +60,10 @@ public class Validator
             }
             else
             {
-                property.setValue(parseFrom(property, stringValue));
+                Object value = parseFrom(property, stringValue);
+                checkValueInTags(property, value);
+
+                property.setValue(value);
             }
         }
         else
@@ -68,8 +72,8 @@ public class Validator
             {
                 if(!(property.getValue() instanceof Object[]))
                 {
-                    setError(property, "Value bast be array (MULTIPLE_SELECTION_LIST)");
-                    throw Be5Exception.internal("Value bast be array (MULTIPLE_SELECTION_LIST) - " + property.toString());
+                    setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
+                    throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST) - " + toStringProperty(property));
                 }
 
                 Object[] values = (Object[]) property.getValue();
@@ -77,7 +81,16 @@ public class Validator
 
                 for (int i = 0; i < values.length; i++)
                 {
-                    resValues[i] = parseFrom(property, (String) values[i]);
+                    if(values[i] instanceof String)
+                        resValues[i] = parseFrom(property, (String)values[i]);
+                    else
+                        resValues[i] = values[i];
+                    checkValueInTags(property, resValues[i]);
+                }
+                if(values.length == 0 && !property.isCanBeNull())
+                {
+                    setError(property, "Can not be null");
+                    throw new IllegalArgumentException("Can not be null - " + toStringProperty(property));
                 }
                 property.setValue(resValues);
             }
@@ -85,9 +98,10 @@ public class Validator
             {
                 if (property.getValue() == null)
                 {
-                    if(!property.isCanBeNull()){
+                    if(!property.isCanBeNull())
+                    {
                         setError(property, "Can not be null");
-                        throw new IllegalArgumentException("Can not be null - " + property.toString());
+                        throw new IllegalArgumentException("Can not be null - " + toStringProperty(property));
                     }
                 }
                 else
@@ -96,9 +110,23 @@ public class Validator
                     {
                         String msg = "Error, value must be a " + property.getType().getName();
                         setError(property, msg);
-                        throw new IllegalArgumentException(msg + " - " + property.toString());
+                        throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
                     }
+                    checkValueInTags(property, property.getValue());
                 }
+            }
+        }
+    }
+
+    private void checkValueInTags(DynamicProperty property, Object value)
+    {
+        String[][] tags = (String[][])property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
+        if(tags != null)
+        {
+            if(Arrays.stream(tags).noneMatch(item -> (item)[0].equals(value.toString())))
+            {
+                setError(property, "Value is not contained in tags");
+                throw new IllegalArgumentException("Value is not contained in tags - " + toStringProperty(property));
             }
         }
     }
@@ -117,6 +145,8 @@ public class Validator
     @Deprecated
     public Object parseFrom(DynamicProperty property, String value)
     {
+        if(value == null) return null;
+
         Class<?> type = property.getType();
 
         //todo move to IntegerRule, NumberRule
@@ -132,7 +162,7 @@ public class Validator
         {
             String msg = "Error, value must be a " + type.getName();
             setError(property, msg);
-            throw new NumberFormatException(msg + " - " + property.toString());
+            throw new NumberFormatException(msg + " - " + toStringProperty(property));
         }
 
         if (type == Boolean.class)  return Boolean.parseBoolean(value);
@@ -146,20 +176,20 @@ public class Validator
         {
             String msg = "Error, value must be a " + type.getName();
             setError(property, msg);
-            throw new IllegalArgumentException(msg + " - " + property.toString());
+            throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
         }
 
         if (type == String.class)return value;
 
         //todo проверить в be3
-        throw new IllegalArgumentException("Unknown type, Возможно тип был автоматически определён из массива(при MULTIPLE_SELECTION_LIST) - тогда вручную укажите тип этемента." + property.toString());
+        throw new IllegalArgumentException("Unknown type, Возможно тип был автоматически определён из массива(при MULTIPLE_SELECTION_LIST) - тогда вручную укажите тип этемента." + toStringProperty(property));
     }
 
     public void isError(DynamicPropertySet dps)
     {
         for (DynamicProperty property: dps)
         {
-            if(isError(property))throw new IllegalArgumentException(property.toString());
+            if(isError(property))throw new IllegalArgumentException(toStringProperty(property));
         }
     }
 
@@ -179,4 +209,21 @@ public class Validator
         }
     }
 
+    private String toStringProperty(DynamicProperty property)
+    {
+        String value;
+        if(property.getValue() != null)
+        {
+            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : "'" + property.getValue().toString() + "'";
+        }
+        else
+        {
+            value = "null";
+        }
+        return "["
+                + " name: '"  + property.getName()
+                + "', type: "  + property.getType()
+                + ", value: " + value
+                + " ]";
+    }
 }

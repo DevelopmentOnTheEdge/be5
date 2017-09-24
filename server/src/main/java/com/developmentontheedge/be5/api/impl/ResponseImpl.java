@@ -104,18 +104,23 @@ public class ResponseImpl implements Response
     }
     
     @Override
-    @Deprecated
     public void sendAsJson(String type, Object value)
     {
         sendAsRawJson(typed(type, value));
     }
 
+    /**
+     * New json api? see JsonApiModel, ResourceData
+     */
     @Override
     public void sendAsJson(JsonApiModel jsonApiModel)
     {
         sendAsRawJson(jsonApiModel);
     }
 
+    /**
+     * New json api? see JsonApiModel, ResourceData
+     */
     @Override
     public void sendAsJson(ResourceData data, Object meta, Map<String, String> links)
     {
@@ -123,7 +128,7 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendAsJson(Object[] errors, Object meta, Map<String, String> links)
+    public void sendErrorsAsJson(Object[] errors, Object meta, Map<String, String> links)
     {
         //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
     }

@@ -122,9 +122,10 @@ public class MetaImpl implements Meta
     @Override
     public List<Entity> getOrderedEntities(String language)
     {
-        return  getOrderedEntities(null, language);
+        return getOrderedEntities(null, language);
     }
 
+    @Override
     public List<Entity> getOrderedEntities(EntityType entityType, String language)
     {
         List<OrderedEntity> entities = new ArrayList<>();
@@ -143,6 +144,34 @@ public class MetaImpl implements Meta
         Collections.sort(entities);
 
         return entities.stream().map(e -> e.entity).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, List<Entity>> getOrderedEntitiesByModules(String language)
+    {
+        return getOrderedEntitiesByModules(null, language);
+    }
+
+    @Override
+    public Map<String, List<Entity>> getOrderedEntitiesByModules(EntityType entityType, String language)
+    {
+        HashMap<String, List<Entity>> result = new HashMap<>();
+
+        for (Module module : getProject().getModulesAndApplication())
+        {
+            List<OrderedEntity> entities = new ArrayList<>();
+            for (Entity entity : module.getEntities())
+            {
+                if (entityType == null || entity.getType() == entityType)
+                {
+                    entities.add(new OrderedEntity(entity, getTitle(entity, language)));
+                }
+            }
+            Collections.sort(entities);
+            result.put(module.getName(), entities.stream().map(e -> e.entity).collect(Collectors.toList()));
+        }
+
+        return result;
     }
 
     /*

@@ -1,3 +1,4 @@
+name: be5-server
 context:
   components:
   - appInfo:          com.developmentontheedge.be5.components.ApplicationInfoComponent

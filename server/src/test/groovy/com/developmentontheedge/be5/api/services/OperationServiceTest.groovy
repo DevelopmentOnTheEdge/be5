@@ -33,10 +33,10 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{" +
-                "'details':'java.lang.IllegalArgumentException: name: name, type:class java.lang.String, value: generateErrorInProperty'," +
-                "'message':'name: name, type:class java.lang.String, value: generateErrorInProperty'," +
-                "'status':'error'}", oneQuotes(jsonb.toJson(first.getOperationResult()))
+        assertEquals "{'details':'java.lang.IllegalArgumentException: " +
+                "[ name: 'name', type: class java.lang.String, value: 'generateErrorInProperty' ]'," +
+                "'message':'[ name: 'name', type: class java.lang.String, value: 'generateErrorInProperty' ]','status':'error'}",
+                oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 
     @Test
@@ -48,10 +48,10 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (invoke)'}",
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{" +
-                "'details':'java.lang.IllegalArgumentException: name: name, type:class java.lang.String, value: executeErrorInProperty'," +
-                "'message':'name: name, type:class java.lang.String, value: executeErrorInProperty'," +
-                "'status':'error'}", oneQuotes(jsonb.toJson(first.getOperationResult()))
+        assertEquals "{'details':'java.lang.IllegalArgumentException: " +
+                "[ name: 'name', type: class java.lang.String, value: 'executeErrorInProperty' ]'," +
+                "'message':'[ name: 'name', type: class java.lang.String, value: 'executeErrorInProperty' ]','status':'error'}",
+                oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 
     @Test

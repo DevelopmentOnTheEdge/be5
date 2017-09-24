@@ -74,11 +74,11 @@ public class QueryRouter
         
         routeAndRun(entityName, queryName, parametersMap, runner);
     }
-    
-    private void routeAndRun(String entityName, String queryName, Map<String, String> parametersMap, Runner runner) {
+
+    public void routeAndRun(String entityName, String queryName, Map<String, String> parametersMap, Runner runner) {
         routeAndRun(userAwareMeta.getQuery(entityName, queryName), parametersMap, runner);
     }
-    
+
     private void routeAndRun(Query query, Map<String, String> parametersMap, Runner runner) {
         switch (query.getType())
         {

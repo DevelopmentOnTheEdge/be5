@@ -48,7 +48,7 @@ public class ProjectTopologicalSort
     public ProjectTopologicalSort(Collection<Project> projects)
     {
         Objects.requireNonNull(projects);
-        if(projects.size() == 0)throw new RuntimeException();
+        if(projects.size() == 0)throw new RuntimeException("Project not found.");
 
         this.projects = projects;
 

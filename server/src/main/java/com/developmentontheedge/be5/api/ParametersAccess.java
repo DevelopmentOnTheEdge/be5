@@ -82,7 +82,7 @@ public interface ParametersAccess
     {
         String value = get( parameter );
         if( value != null && !value.equals( "true" ) && !value.equals( "false" ) )
-            throw Be5ErrorCode.PARAMETER_ABSENT.exception( parameter );
+            throw Be5Exception.requestParameterIsAbsent(parameter);
         if( value != null )
             return Boolean.parseBoolean( value );
         return defaultValue;
@@ -98,10 +98,10 @@ public interface ParametersAccess
     {
         String value = get( parameter );
         if( value == null )
-            throw Be5ErrorCode.PARAMETER_ABSENT.exception( parameter );
+            throw Be5Exception.requestParameterIsAbsent(parameter);
         value = value.trim();
         if( value.isEmpty() )
-            throw Be5ErrorCode.PARAMETER_EMPTY.exception( parameter );
+            throw Be5Exception.requestParameterIsAbsent(parameter);
         return value;
     }
 

@@ -106,10 +106,10 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         @Override
-        public String getSessionVariable(String name)
+        public String getSessionVariable(String name)//todo add test for ExecutorQueryContext
         {
             Object attr = session.getAttribute(name);
-            return attr != null ? attr.toString() : "";
+            return attr != null ? attr.toString() : null;
         }
 
         @Override
@@ -259,10 +259,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             dql.log("With limits", ast);
         }
 
-        String finalSQL = new Formatter().format( ast, context, parserContext );
-        log.fine("Final SQL: " + finalSQL);
-
-        return finalSQL;
+        return new Formatter().format( ast, context, parserContext );
     }
 
     private void countFromQuery(AstQuery query)
@@ -485,9 +482,10 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         public void log(String name, String query)
         {
             if(!query.equals(lastQuery)) {
-                log.fine(name+": ");
+                StringBuilder sb = new StringBuilder();
+                sb.append(name).append(": ");
                 if(lastQuery == null) {
-                    log.fine(query);
+                    sb.append(query);
                 } else {
                     String prefix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonPrefix());
                     String suffix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonSuffix());
@@ -504,8 +502,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                         substring = "..."+substring.substring(1);
                     if(endPos < query.length())
                         substring += "...";
-                    log.fine(substring);
+                    sb.append(substring);
                 }
+                log.finer(sb.toString());
                 lastQuery = query;
             }
         }

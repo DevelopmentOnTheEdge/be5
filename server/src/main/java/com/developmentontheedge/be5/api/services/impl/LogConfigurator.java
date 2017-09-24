@@ -7,7 +7,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.api.Configurable;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
 public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPath>
 {
@@ -27,7 +27,7 @@ public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPa
                 InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(config.path);
                 if (resourceAsStream == null)
                 {
-                    throw Be5ErrorCode.INTERNAL_ERROR.exception("File not found: " + config.path);
+                    throw Be5Exception.internal("File not found: " + config.path);
                 }
                 LogManager.getLogManager().readConfiguration(resourceAsStream);
             }
@@ -40,7 +40,7 @@ public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPa
         }
         catch (IOException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e);
+            throw Be5Exception.internal(log, e);
         }
     }
 

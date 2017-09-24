@@ -125,6 +125,13 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         return dps;
     }
 
+    public static DynamicPropertySet leftShift( DynamicPropertySet dps, List<Object> properties )
+    {
+        Map<String, Object> map = new HashMap<>();
+        //todo
+        return leftShift(dps, map);
+    }
+
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, Map<String, Object> properties )
     {
         Map<String, Object> map = new HashMap<>();

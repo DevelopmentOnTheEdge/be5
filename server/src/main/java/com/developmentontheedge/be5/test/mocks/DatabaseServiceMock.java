@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
@@ -26,11 +27,10 @@ public class DatabaseServiceMock implements DatabaseService
     @Override
     public <T> T transaction(SqlExecutor<T> executor) {
         try {
-            executor.run(null);
+            return executor.run(null);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw Be5Exception.internal(e);
         }
-        return null;
     }
 
     @Override

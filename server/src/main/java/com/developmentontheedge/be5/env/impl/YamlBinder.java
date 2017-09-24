@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import org.yaml.snakeyaml.Yaml;
@@ -21,8 +20,27 @@ public class YamlBinder implements Binder
 {
     private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
 
+    public enum Mode{
+        all,serverOnly
+    }
+
+    private Mode mode = Mode.all;
+
     static final String CONTEXT_FILE = "context.yaml";
     private final Map<String, Class<?>> serviceKeys = new HashMap<>();
+
+    public YamlBinder() {}
+
+    public YamlBinder(Mode mode)
+    {
+        this.mode = mode;
+    }
+
+    @Override
+    public String getInfo()
+    {
+        return mode.name();
+    }
 
     @Override
     public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
@@ -34,12 +52,18 @@ public class YamlBinder implements Binder
             for (URL url: urls)
             {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
+                    if(mode == Mode.serverOnly && !isServer(reader))continue;
+                }
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
                     loadModules(reader, bindings, loadedClasses);
                 }
             }
 
             for (URL url: urls)
             {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
+                    if(mode == Mode.serverOnly && !isServer(reader))continue;
+                }
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
                 {
                     loadModuleConfiguration(reader, configurations);
@@ -51,6 +75,13 @@ public class YamlBinder implements Binder
             throw Be5Exception.internal(e, "Can't load server modules.");
         }
 
+    }
+
+    public boolean isServer(Reader reader)
+    {
+        Object name = ((Map<String, Object>) new Yaml().load(reader)).get("name");
+
+        return "be5-server".equals(name);
     }
 
     @SuppressWarnings("unchecked")
@@ -145,8 +176,8 @@ public class YamlBinder implements Binder
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5ErrorCode.INTERNAL_ERROR.rethrow(log, e,
-                    "ClassNotFoundException by path='"+path+"' in " + CONTEXT_FILE);
+            throw Be5Exception.internal(log, e,
+                    "ClassNotFoundException by path='" + path + "' in " + CONTEXT_FILE);
         }
     }
 
