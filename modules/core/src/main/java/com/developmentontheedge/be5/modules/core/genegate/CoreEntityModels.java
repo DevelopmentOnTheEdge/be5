@@ -4,16 +4,16 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.modules.core.genegate.repositories.ProvincesRepository;
+
 
 public class CoreEntityModels
 {
     public CoreEntityModels(SqlService sqlService, DpsHelper dpsHelper, Meta meta, Validator validator)
     {
-        users = new Users(sqlService, dpsHelper, validator, meta.getEntity("users"));
+        provinces = new ProvincesRepository(sqlService, dpsHelper, validator, meta.getEntity("provinces"));
     }
 
-    public final Users users;
-    //public UserRoles user_roles;
+    public final ProvincesRepository provinces;
 
-    public final CoreEntityFields fields = new CoreEntityFields();
 }

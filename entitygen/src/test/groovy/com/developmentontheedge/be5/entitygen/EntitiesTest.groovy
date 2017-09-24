@@ -24,12 +24,12 @@ class EntitiesTest extends Be5ProjectTest
     @Inject DpsHelper dpsHelper
 
     @Test
-    void name()
+    void insert()
     {
         def dayTime = new Timestamp(DateUtils.curDay().getTime())
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
-        String id = entities.classifications.insert{
+        String id = entities.classifications.insert {
             categoryID = 5L
             recordID   = "dfsdf"
             creationDate___ = dayTime
@@ -55,5 +55,11 @@ class EntitiesTest extends Be5ProjectTest
         )
 
         assertEquals "123", id
+    }
+
+    @Test
+    void findOne()
+    {
+        //entities.provinces.findOne(4)
     }
 }

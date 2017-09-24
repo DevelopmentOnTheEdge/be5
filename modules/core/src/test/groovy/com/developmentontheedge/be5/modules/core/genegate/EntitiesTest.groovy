@@ -2,12 +2,11 @@ package com.developmentontheedge.be5.modules.core.genegate
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.modules.core.genegate.fields.UsersFields as u
+import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields as p
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.DateUtils
 import com.developmentontheedge.beans.DynamicPropertySet
-import groovy.transform.TypeChecked
 import org.junit.Ignore
 import org.junit.Test
 import java.sql.Date
@@ -15,51 +14,48 @@ import java.sql.Date
 import static org.junit.Assert.*
 import static org.mockito.Mockito.*
 
-import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
 
-@TypeChecked
 class EntitiesTest extends Be5ProjectTest
 {
     @Inject CoreEntityModels entities
     @Inject DpsHelper dpsHelper
 
-    int getInt(int a)
+    String getString(Object a)
     {
         return a
     }
 
-    @Ignore("No signature of method getInt()")
+    @Ignore("No signature of method getString()")
     @Test
     void name()
     {
         def day = DateUtils.curDay()
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.users.getEntity(), [u.user_name, u.user_pass,
-                                         u.emailAddress, u.registrationDate])
+        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.provinces.getEntity(), [p.name, p.countryID])
 
         add(dps) {
-            name        = u.attempt
-            TYPE        = Integer
-            value       = 345
+            name        = p.ID
+            TYPE        = String
+            value       = "12"
             CAN_BE_NULL = false
         }
 
-        edit(dps, u.user_name) { value = "test" }
-        edit(dps, u.registrationDate) { value = day }
+        edit(dps, p.name) { value = "testName" }
+        edit(dps, p.countryID) { value = "testCountryID" }
 
-
-        String id = entities.users.insert {
-            user_name        = dps.getValue(u.user_name)
-            registrationDate = (Date)dps.getValue(u.registrationDate)
-            attempt          = getInt((Integer)dps.getValue(u.attempt))
+        //todo getString(dps.$countryID)
+        String id = entities.provinces.add {
+            ID          = dps.$ID
+            name        = dps.$name
+            countryID   = dps.$countryID
         }
 
         verify(SqlServiceMock.mock).insert(
-                eq("INSERT INTO users (user_name, registrationDate, attempt) VALUES (?, ?, ?)"),
-                eq("test"),
-                refEq(day),
-                eq(345)
+                eq("INSERT INTO provinces (name, ID, countryID) VALUES (?, ?, ?)"),
+                eq("testName"),
+                eq("12"),
+                eq("testCountryID"),
         )
 
         assertEquals "123", id
