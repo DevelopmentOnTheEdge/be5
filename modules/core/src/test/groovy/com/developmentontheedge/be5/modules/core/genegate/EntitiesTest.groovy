@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.modules.core.genegate
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper
+import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.modules.core.genegate.entities.Provinces
 import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields as p
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
@@ -9,6 +11,8 @@ import com.developmentontheedge.be5.util.DateUtils
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Ignore
 import org.junit.Test
+import org.mockito.Matchers
+
 import java.sql.Date
 
 import static org.junit.Assert.*
@@ -25,9 +29,8 @@ class EntitiesTest extends Be5ProjectTest
         return a
     }
 
-    @Ignore("No signature of method getString()")
     @Test
-    void name()
+    void addAndDps()
     {
         def day = DateUtils.curDay()
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
@@ -60,4 +63,22 @@ class EntitiesTest extends Be5ProjectTest
 
         assertEquals "123", id
     }
+
+    @Test
+    void findOneTest() throws Exception
+    {
+        when(SqlServiceMock.mock.select(anyString(),
+            Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(getDps([
+                ID: "12",
+                name: "testName",
+                countryID: "testCountryID",
+        ]))
+
+        def province = entities.provinces.findOne("12")
+
+        assertEquals("12",            province.ID)
+        assertEquals("testName",      province.name)
+        assertEquals("testCountryID", province.countryID)
+    }
+
 }
