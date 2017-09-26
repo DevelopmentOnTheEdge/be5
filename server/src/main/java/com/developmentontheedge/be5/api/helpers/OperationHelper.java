@@ -176,6 +176,29 @@ public class OperationHelper
         return tags.toArray(stockArr);
     }
 
+    public Map<String, String> readAsMap( String query, Object... params )
+    {
+        Map<String, String> values = new HashMap<>();
+        db.query(query, rs -> {
+            while (rs.next())
+            {
+                values.put(rs.getString(1), rs.getString(2));
+            }
+            return null;
+        }, params);
+        return values;
+    }
+//
+//    public Map<String, String> getTagsMapFromQuery( Request request, Map<String, String> extraParams, String query, Object... params )
+//    {
+//        //return getTagsListFromQuery( request, Collections.emptyMap(), query, params );
+//        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
+//                rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
+//        );
+//        String[][] stockArr = new String[tags.size()][2];
+//        return tags.toArray(stockArr);
+//    }
+
     private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, String> extraParams)
     {
         TableModel table = TableModel

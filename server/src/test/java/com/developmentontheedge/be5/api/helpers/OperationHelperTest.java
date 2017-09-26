@@ -8,7 +8,10 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Map;
+
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 
 public class OperationHelperTest extends Be5ProjectDBTest
@@ -100,6 +103,18 @@ public class OperationHelperTest extends Be5ProjectDBTest
         String[][] tagsFromEnum = helper.getTagsFromQuery("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
 
         assertArrayEquals(strings, tagsFromEnum);
+    }
+
+    @Test
+    public void readAsMapTest() throws Exception
+    {
+        Map<String, String> values = helper.readAsMap("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
+
+        assertEquals(ImmutableMap.of(
+                "01", "Regional",
+                "02", "Municipal",
+                "03", "Federal",
+                "04", "Regional"), values);
     }
 
     @Test
