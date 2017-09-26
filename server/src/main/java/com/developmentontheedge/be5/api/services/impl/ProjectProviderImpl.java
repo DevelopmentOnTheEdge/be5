@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Be5Caches;
+import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
@@ -39,6 +40,7 @@ public class ProjectProviderImpl implements ProjectProvider
 			project = loadProject();
             be5Caches.clearAll();
             injector.get(UserAwareMeta.class).reCompileLocalizations();
+            GroovyRegister.reInitClassLoader();
         }
 
     	return project;
