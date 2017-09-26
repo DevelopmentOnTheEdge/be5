@@ -54,13 +54,16 @@ public class OperationHelper
      */
     public String[][] getTags(String tableName, String valueColumnName, String textColumnName)
     {
-        return tagsCache.get(tableName+ "getTags" + valueColumnName + "," + textColumnName + UserInfoHolder.getLanguage(), k -> {
-            List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
-                    rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
-            );
-            String[][] stockArr = new String[tags.size()][2];
-            return tags.toArray(stockArr);
-        });
+        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
+                rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
+        );
+        String[][] stockArr = new String[tags.size()][2];
+
+        for (int i = 0; i < tags.size(); i++) {
+            stockArr[i] = new String[]{tags.get(i)[0], userAwareMeta.getColumnTitle(tableName, tags.get(i)[1])};
+        }
+
+        return stockArr;
     }
 
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String valueColumnName, String textColumnName, String placeholder)
@@ -164,11 +167,14 @@ public class OperationHelper
         return getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams);
     }
 
-//    todo - 2 варианта - простой sql + String[] params для SqlService
-//     или be-sql - полный аналог обработки be-sql из yaml
-//    public String[][] getTagsFromQuery(Request request, String sql, String[] params)
-//    {
-//    }
+    public String[][] getTagsFromQuery(String query, Object... params)
+    {
+        List<String[]> tags = db.selectList(query,
+                rs -> new String[]{rs.getString(1), rs.getString(2)}, params
+        );
+        String[][] stockArr = new String[tags.size()][2];
+        return tags.toArray(stockArr);
+    }
 
     private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, String> extraParams)
     {
@@ -488,5 +494,4 @@ public class OperationHelper
 //        return query;
 //    }
 
-    //todo add helper createLabel(String text, Status status),
 }
