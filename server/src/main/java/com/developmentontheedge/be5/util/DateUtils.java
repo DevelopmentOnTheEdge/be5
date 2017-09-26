@@ -27,6 +27,17 @@ public class DateUtils
             { 11, "ноябрь" },
             { 12, "декабрь" } };
 
+
+    public static java.util.Date convert( Object val )
+    {
+        return (java.util.Date)Utils.changeType( val, java.sql.Date.class);
+    }
+
+    public static java.sql.Timestamp convertToTimestamp( Object val )
+    {
+        return ( java.sql.Timestamp )Utils.changeType( val, java.sql.Timestamp.class);
+    }
+
     public static Date toDate( java.sql.Timestamp timestamp )
     {
         return new java.sql.Date( timestamp.getTime() );
