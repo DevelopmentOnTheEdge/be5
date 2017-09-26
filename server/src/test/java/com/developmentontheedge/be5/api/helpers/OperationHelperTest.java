@@ -43,21 +43,21 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void getTagsFromQuery() throws Exception
+    public void getTagsFromCustomSelectionViewTest() throws Exception
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
-        String[][] tagsFromEnum = helper.getTagsFromQuery(getMockRequest(""),"testTags", "With parameter");
+        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(getMockRequest(""),"testTags", "With parameter");
 
         assertArrayEquals(strings, tagsFromEnum);
     }
 
     @Test
-    public void getTagsFromQueryWithParam() throws Exception
+    public void getTagsFromCustomSelectionViewWithParamTest() throws Exception
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} };
 
-        String[][] tagsFromEnum = helper.getTagsFromQuery(getMockRequest(""),"testTags", "With parameter",
+        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(getMockRequest(""),"testTags", "With parameter",
                 ImmutableMap.of("payable","yes"));
 
         assertArrayEquals(strings, tagsFromEnum);

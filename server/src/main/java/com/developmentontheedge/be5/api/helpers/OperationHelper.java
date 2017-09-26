@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -92,13 +91,13 @@ public class OperationHelper
      */
     public String[][] getTagsFromSelectionView(Request request, String tableName)
     {
-        return getTagsFromQuery(request, tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
+        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
     }
 
     public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, String> extraParams)
     {
         //todo getTagsFromCustomSelectionView(...)
-        return getTagsFromQuery(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
+        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
     }
 
 //    /**
@@ -144,98 +143,12 @@ public class OperationHelper
 //        return OperationSupport.getTagsFromQuery( connector, query, null );
 //    }
 
-
-//    /**
-//     * Reads tag list from query stored in the database identified by its name
-//     * for inclusion in drop down list
-//     *
-//     * @param connector connector to the DB
-//     * @param table table name
-//     * @param viewName view name
-//     * @return ArrayList of style for every query row as string
-//     * @throws Exception
-//     */
-//    public String[] getTagsFromCustomSelectionView( DatabaseConnector connector, String table, String viewName )
-//            throws Exception
-//    {
-//        return getTagsFromCustomSelectionView( connector, table, viewName, null );
-//    }
-//
-//    public String[] getTagsFromCustomSelectionView( DatabaseConnector connector, String table, String viewName, Map extraParams )
-//            throws Exception
-//    {
-//        String prefix = this instanceof HttpOperationSupport ?
-//                ( ( HttpOperationSupport )this ).contextPrefix :
-//                null;
-//        return getTagsFromCustomSelectionView( connector, prefix, userInfo, table, viewName, extraParams );
-//    }
-//
-//    /**
-//     * Gets style array, as string array, for every row query of table`s custom selection view.
-//     * See also
-//     * {@link #getTagsFromQuery(DatabaseConnector, String, String) getTagsFromQuery(DatabaseConnector, String, String)}.
-//     *
-//     * @param connector connector to the DB
-//     * @param context value for context placeholder {@link com.beanexplorer.enterprise.DatabaseConstants#CONTEXT_PLACEHOLDER}
-//     * @param ui user info
-//     * @param table table name
-//     * @param viewName view name
-//     * @return ArrayList of style for every query row as string
-//     * @throws Exception
-//     */
-//    public static String[] getTagsFromCustomSelectionView( DatabaseConnector connector,
-//                                                           String context, UserInfo ui, String table, String viewName, Map<?,?> extraParams )
-//            throws Exception
-//    {
-//        String query = QueryInfo.getQueryText( connector, table, viewName );
-//
-//        query = Utils.putPlaceholders( connector, query, ui, context );
-//
-//        if( extraParams != null )
-//        {
-//            extraParams = new HashMap( extraParams ); // to make it mutable
-//            query = Utils.handleConditionalParts( connector, ui, query, extraParams );
-//            query = Utils.putRequestParametersFromMap( connector, query, extraParams, ui );
-//            if( !extraParams.isEmpty() )
-//            {
-//                Map realColumns = new HashMap();
-//                for( Map.Entry<?,?> entry : extraParams.entrySet() )
-//                {
-//                    if( Utils.columnExists( connector, table, ( String )entry.getKey() ) )
-//                    {
-//                        realColumns.put( entry.getKey(), entry.getValue() );
-//                    }
-//                }
-//                if( !realColumns.isEmpty() )
-//                {
-//                    String pk = Utils.findPrimaryKeyName( connector, table );
-//                    query = Utils.addRecordFilter( connector, query, table, pk, realColumns, false, ui );
-//                }
-//                //System.out.println( "query = " + query );
-//            }
-//        }
-//
-//        if ( ui instanceof OperationUserInfo && ((OperationUserInfo)ui).getUnrestrictedSession() != null )
-//        {
-//            HttpSession session = ((OperationUserInfo)ui).getUnrestrictedSession();
-//            query = Utils.putSessionVars( connector, query, session );
-//            query = Utils.putDictionaryValues( connector, query, ui );
-//
-//            return getTagsFromQuery( connector, query, null, session );
-//        }
-//
-//        query = Utils.putDictionaryValues( connector, query, ui );
-//
-//        return getTagsFromQuery( connector, query, null );
-//    }
-
-    //todo getTagsFromCustomSelectionView
-    public String[][] getTagsFromQuery(Request request, String tableName, String queryName)
+    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName)
     {
-        return getTagsFromQuery(request, tableName, queryName, new HashMap<>());
+        return getTagsFromCustomSelectionView(request, tableName, queryName, new HashMap<>());
     }
 
-    public String[][] getTagsFromQuery(Request request, String tableName, String queryName, Map<String, String> extraParams)
+    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName, Map<String, String> extraParams)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
         if (!query.isPresent())
@@ -243,12 +156,12 @@ public class OperationHelper
 
         if(query.get().isCacheable())
         {
-            return tagsCache.get(tableName + "getTagsFromQuery" + queryName +
+            return tagsCache.get(tableName + "getTagsFromCustomSelectionView" + queryName +
                     extraParams.toString() + UserInfoHolder.getLanguage(),
-                k -> getTagsFromQuery(request, tableName, query.get(), extraParams)
+                k -> getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams)
             );
         }
-        return getTagsFromQuery(request, tableName, query.get(), extraParams);
+        return getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams);
     }
 
 //    todo - 2 варианта - простой sql + String[] params для SqlService
@@ -257,7 +170,7 @@ public class OperationHelper
 //    {
 //    }
 
-    private String[][] getTagsFromQuery(Request request, String tableName, Query query, Map<String, String> extraParams)
+    private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, String> extraParams)
     {
         TableModel table = TableModel
                 .from(query, extraParams, request, false, injector)
