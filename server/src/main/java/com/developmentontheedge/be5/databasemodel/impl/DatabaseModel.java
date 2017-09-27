@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -41,14 +42,17 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
     private final SqlService sqlService;
     private final DpsHelper dpsHelper;
+    private final OperationHelper operationHelper;
     private final Meta meta;
     private final Validator validator;
 
 
-    public DatabaseModel(SqlService sqlService, DpsHelper dpsHelper, Meta meta, Validator validator)
+    public DatabaseModel(SqlService sqlService, DpsHelper dpsHelper, OperationHelper operationHelper,
+                         Meta meta, Validator validator)
     {
         this.sqlService = sqlService;
         this.dpsHelper = dpsHelper;
+        this.operationHelper = operationHelper;
         this.meta = meta;
         this.validator = validator;
     }
@@ -57,7 +61,7 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     public EntityModel getEntity( String entityName )
     {
         Objects.requireNonNull(entityName);
-        return new EntityModelBase(sqlService, dpsHelper, validator, meta.getEntity(entityName));
+        return new EntityModelBase(sqlService, dpsHelper, validator, operationHelper, meta.getEntity(entityName));
     }
 
 }

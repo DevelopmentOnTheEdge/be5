@@ -201,9 +201,9 @@ public interface EntityModel<R extends RecordModel> {
      * Returns a list of records of current entity.
      * @return list of records
      */
-    List<R> toList();
+    List<RecordModel> toList();
 
-    List<R> collect();
+    List<RecordModel> collect();
 
     /**
      * Returns a array of records of current entity.
@@ -213,17 +213,17 @@ public interface EntityModel<R extends RecordModel> {
 
     /**
      * Returns a list of records of current entity filtered by the specified parameters.
-     * @param values the filter parameters
+     * @param conditions the filter parameters
      * @return array of records
      */
-    List<R> toList(Map<String, ? super Object> values);
+    List<RecordModel> toList(Map<String, ? super Object> conditions);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
-     * @param values the filter parameters
+     * @param conditions the filter parameters
      * @return array of records
      */
-    RecordModel[] toArray(Map<String, ? super Object> values);
+    RecordModel[] toArray(Map<String, ? super Object> conditions);
 
     /**
      * Spreads collection and collect elements from function to list.<br>
@@ -231,11 +231,11 @@ public interface EntityModel<R extends RecordModel> {
      * <code>List<DynamicPropertySet> list = 
      *      entity.<DynamicPropertySet>collect( ( bean, row ) -> row % 2 == 0 ? bean : null, Collections.<String, Object>.emptyMap() );
      * </code>
-     * @param values condition values
+     * @param conditions condition values
      * @param lambda handler
      * @return list with the function results
      */
-	<T> List<T> collect(Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda);
+	<T> List<T> collect(Map<String, ? super Object> conditions, BiFunction<R, Integer, T> lambda);
 
     /**
      * Returns entity name.
