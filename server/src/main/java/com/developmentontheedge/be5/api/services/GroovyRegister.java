@@ -13,7 +13,11 @@ import java.util.List;
 
 public class GroovyRegister
 {
-    private static GroovyClassLoader classLoader = new GroovyClassLoader();
+    private static GroovyClassLoader classLoader;
+
+    static {
+        initClassLoader();
+    }
 
     public static GroovyClassLoader getClassLoader()
     {
@@ -25,9 +29,10 @@ public class GroovyRegister
         return getClassLoader().parseClass( text );
     }
 
-    public static void reInitClassLoader()
+    public static void initClassLoader()
     {
-        GroovyRegister.classLoader = new GroovyClassLoader();
+        classLoader = new GroovyClassLoader();
+        classLoader.addClasspath("src/groovy/operations");
     }
 
 //    public static Class parseClassWithCache( String name, String text )

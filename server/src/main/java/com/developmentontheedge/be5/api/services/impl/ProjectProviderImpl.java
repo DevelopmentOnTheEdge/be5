@@ -40,7 +40,7 @@ public class ProjectProviderImpl implements ProjectProvider
 			project = loadProject();
             be5Caches.clearAll();
             injector.get(UserAwareMeta.class).reCompileLocalizations();
-            GroovyRegister.reInitClassLoader();
+            GroovyRegister.initClassLoader();
         }
 
     	return project;
