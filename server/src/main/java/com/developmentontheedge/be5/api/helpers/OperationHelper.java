@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
@@ -529,5 +530,22 @@ public class OperationHelper
     public List<DynamicPropertySet> readAsRecords( String sql, Object... params )
     {
         return db.selectList(sql, DpsRecordAdapter::createDps, params);
+    }
+
+    public List<List<Object>> readAsList( String sql, Object... params )
+    {
+        List<List<Object>> vals = new ArrayList<>();
+        List<DynamicPropertySet> list = readAsRecords(sql, params);
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            List<Object> propertyList = new ArrayList<>();
+            for (DynamicProperty property : list.get(i)) {
+                propertyList.add(property.getValue());
+            }
+            vals.add(propertyList);
+        }
+
+        return vals;
     }
 }

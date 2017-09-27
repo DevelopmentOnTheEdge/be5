@@ -143,4 +143,18 @@ public class OperationHelperTest extends Be5ProjectDBTest
         assertEquals(4, list.size());
     }
 
+    @Test
+    public void readAsListTest() throws Exception
+    {
+        List<List<Object>> lists = helper.readAsList("SELECT code, admlevel FROM testTags");
+
+        assertEquals("01",        lists.get(0).get(0));
+        assertEquals("Regional",  lists.get(0).get(1));
+
+        assertEquals("02",        lists.get(1).get(0));
+        assertEquals("Municipal", lists.get(1).get(1));
+
+        assertEquals(4, lists.size());
+    }
+
 }
