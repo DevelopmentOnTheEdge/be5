@@ -4,10 +4,12 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -126,4 +128,19 @@ public class OperationHelperTest extends Be5ProjectDBTest
 
         assertArrayEquals(strings, tagsFromEnum);
     }
+
+    @Test
+    public void readAsRecordsTest() throws Exception
+    {
+        List<DynamicPropertySet> list = helper.readAsRecords("SELECT code, admlevel FROM testTags");
+
+        assertEquals("01",        list.get(0).getValue("code"));
+        assertEquals("Regional",  list.get(0).getValue("admlevel"));
+
+        assertEquals("02",        list.get(1).getValue("code"));
+        assertEquals("Municipal", list.get(1).getValue("admlevel"));
+
+        assertEquals(4, list.size());
+    }
+
 }

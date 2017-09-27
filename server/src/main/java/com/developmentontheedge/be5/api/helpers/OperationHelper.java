@@ -9,8 +9,13 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import java.beans.PropertyDescriptor;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -521,4 +526,8 @@ public class OperationHelper
 //        return query;
 //    }
 
+    public List<DynamicPropertySet> readAsRecords( String sql, Object... params )
+    {
+        return db.selectList(sql, DpsRecordAdapter::createDps, params);
+    }
 }
