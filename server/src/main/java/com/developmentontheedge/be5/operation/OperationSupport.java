@@ -35,7 +35,6 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
 
     public String[] records;
 
-    //use
     public Request request;
     public Session session;
 
