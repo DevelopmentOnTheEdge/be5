@@ -29,6 +29,11 @@ public class GroovyRegister
         return getClassLoader().parseClass( text );
     }
 
+    public static Class parseClass( String text, String name )
+    {
+        return getClassLoader().parseClass( text, name );
+    }
+
     public static void initClassLoader()
     {
         classLoader = new GroovyClassLoader();

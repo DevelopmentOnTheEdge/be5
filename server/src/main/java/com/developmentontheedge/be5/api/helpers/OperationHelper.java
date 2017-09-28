@@ -105,52 +105,8 @@ public class OperationHelper
 
     public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, Object> extraParams)
     {
-        //todo getTagsFromCustomSelectionView(...)
         return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
     }
-
-//    /**
-//     * Retrieves css tags for row representation. First try`s to find a selection view for specified table name, if none found, then selects
-//     * from specified table all columns. And then use
-//     * {@link com.beanexplorer.enterprise.OperationSupport#getTagsFromQuery(DatabaseConnector, String, String) OperationSupport.getTagsFromQuery}
-//     * to find css tags.
-//     *
-//     * @param connector DB connector
-//     * @param table table name
-//     * @return array of css tags
-//     * @throws Exception
-//     */
-//    public static String[] getTagsFromSimpleSelectionView( DatabaseConnector connector, String table )
-//            throws Exception
-//    {
-//        return getTagsFromSimpleSelectionView( connector, table, null );
-//    }
-//
-//    /**
-//     * Retrives css tags for row representation. First try`s to find a selection view for specified table name, if none found, then selects
-//     * from specified table all columns. And then use
-//     * {@link com.beanexplorer.enterprise.OperationSupport#getTagsFromQuery(DatabaseConnector, String, String) OperationSupport.getTagsFromQuery}
-//     * to find css tags.
-//     *
-//     * @param connector DB connector
-//     * @param table table name
-//     * @param ui user info
-//     * @return array of css tags
-//     * @throws Exception
-//     */
-//    public static String[] getTagsFromSimpleSelectionView( DatabaseConnector connector, String table, UserInfo ui )
-//            throws Exception
-//    {
-//        String query = QueryInfo.getQueryText( connector, null, table, DatabaseConstants.SELECTION_VIEW, true );
-//
-//        if( query == null )
-//        {
-//            query = "SELECT * FROM " + table;
-//        }
-//        query = Utils.putRequestParameters( connector, query, new MapParamHelper( Collections.emptyMap() ),
-//                ui != null ? ui : UserInfo.ADMIN );
-//        return OperationSupport.getTagsFromQuery( connector, query, null );
-//    }
 
     public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName)
     {
