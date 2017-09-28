@@ -173,7 +173,7 @@ public class DpsHelper
             }
             else
             {
-                log.warning("Column " + propertyName + " not found in " + entity.getName());
+                throw Be5Exception.internal("Entity '" + entity.getName() + "' not contain column " + propertyName);
             }
         }
 
