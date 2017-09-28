@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -49,7 +49,6 @@ import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
@@ -108,7 +107,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getSessionVariable(String name)//todo add test for ExecutorQueryContext
         {
-            Object attr = session.getAttribute(name);
+            Object attr = session.get(name);
             return attr != null ? attr.toString() : null;
         }
 
@@ -135,7 +134,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Map<String, String> parametersMap;
     private final DatabaseService databaseService;
     private final SqlService db;
-    private final HttpSession session;
+    private final Session session;
     private final ContextApplier contextApplier;
     private final UserAwareMeta userAwareMeta;
     private final Context context;
@@ -145,17 +144,15 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
 
-    /**
-     * Note that the request is not used to get parameters, so parameters can be formed manually in any way.
-     */
-    public Be5QueryExecutor(Query query, Map<String, String> parameters, Request req, Injector injector)
+
+    public Be5QueryExecutor(Query query, Map<String, String> parameters, Session session, Injector injector)
     {
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.databaseService = injector.getDatabaseService();
         this.db = injector.getSqlService();
         this.userAwareMeta = injector.get(UserAwareMeta.class);
-        this.session = req.getRawSession();
+        this.session = session;
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();

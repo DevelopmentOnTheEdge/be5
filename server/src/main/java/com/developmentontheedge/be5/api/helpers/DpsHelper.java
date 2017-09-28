@@ -211,7 +211,9 @@ public class DpsHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
         }
-        else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null ){
+        else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
+        {
+            //todo get real request instead EmptyRequest
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
         }

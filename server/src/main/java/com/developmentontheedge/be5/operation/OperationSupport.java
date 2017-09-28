@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.QRecService;
@@ -33,7 +34,10 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
     private OperationResult operationResult;
 
     public String[] records;
+
+    //use
     public Request request;
+    public Session session;
 
     public DynamicPropertySet dps = new DynamicPropertySetSupport();
 
@@ -47,7 +51,9 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
         this.operationResult = operationResult;
 
         this.records = records;
+
         this.request = request;
+        this.session = request.getSession();
     }
 
     @Override
