@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.MethodProvider;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -18,6 +19,10 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     RecordModelBase(EntityModelBase entityModelBase, DynamicPropertySet dps)
     {
         super( dps );
+        if(dps.getProperty(entityModelBase.getPrimaryKeyName()) == null)
+        {
+            throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModelBase.getPrimaryKeyName() + "'");
+        }
         id = dps.getProperty(entityModelBase.getPrimaryKeyName()).getValue().toString();
         this.entityModelBase = entityModelBase;
     }
