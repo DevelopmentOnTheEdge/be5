@@ -317,7 +317,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
         validator.checkErrorAndCast(dps);
-        dpsHelper.checkDpsContainNotNullColumns(entity, dps);
+        dpsHelper.checkDpsColumns(entity, dps);
         dpsHelper.addInsertSpecialColumns(entity, dps);
 
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
