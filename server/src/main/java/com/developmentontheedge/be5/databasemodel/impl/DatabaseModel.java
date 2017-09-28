@@ -1,10 +1,12 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.databasemodel.EntityAccess;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -61,7 +63,11 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     public EntityModel getEntity( String entityName )
     {
         Objects.requireNonNull(entityName);
-        return new EntityModelBase(sqlService, dpsHelper, validator, operationHelper, meta.getEntity(entityName));
+        Entity entity = meta.getEntity(entityName);
+
+        if (entity == null)throw Be5Exception.unknownEntity(entityName);
+
+        return new EntityModelBase(sqlService, dpsHelper, validator, operationHelper, entity);
     }
 
 }

@@ -93,6 +93,11 @@ public class Be5Exception extends RuntimeException
     {
         return Be5ErrorCode.UNKNOWN_COMPONENT.exception(name);
     }
+
+    public static Be5Exception unknownEntity(String name)
+    {
+        return Be5ErrorCode.UNKNOWN_ENTITY.exception(name);
+    }
     
     public static Be5Exception invalidState(String message)
     {
