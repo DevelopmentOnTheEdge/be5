@@ -459,6 +459,7 @@ public class MetaImpl implements Meta
             case SqlColumnType.TYPE_SMALLINT:
                 return Integer.class;
             case SqlColumnType.TYPE_DECIMAL:
+            case SqlColumnType.TYPE_CURRENCY:
                 return Double.class;
             case SqlColumnType.TYPE_DATE:
                 return Date.class;
