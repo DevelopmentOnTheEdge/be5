@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class OperationHelper
@@ -187,6 +188,24 @@ public class OperationHelper
 
         return stockArr;
     }
+
+    public String[][] localizeTags(String tableName, List<List<String> > tags)
+    {
+        String[][] stockArr = new String[tags.size()][2];
+        tags.stream().map(tag -> new String[]{tag.get(0), tag.get(1)}).collect(Collectors.toList()).toArray(stockArr);
+        return localizeTags(tableName, stockArr);
+    }
+
+    public String[][] localizeTags(String tableName, String[][] tags)
+    {
+        for (String[] tag : tags)
+        {
+            tag[1] = userAwareMeta.getColumnTitle(tableName, tag[1]);
+        }
+
+        return tags;
+    }
+
 
     public String[][] getTagsFromEnum(String tableName, String name)
     {

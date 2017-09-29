@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -120,6 +121,27 @@ public class OperationHelperTest extends Be5ProjectDBTest
         String[][] tagsFromEnum = helper.getTagsFromQuery("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
 
         assertArrayEquals(strings, tagsFromEnum);
+    }
+
+    @Test
+    public void localizeTags() throws Exception
+    {
+        String[][] tags = helper.localizeTags("testTags", new String[][]{ {"01", "Regional"},{"02", "Municipal"} });
+
+        assertArrayEquals(new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} },
+                tags);
+    }
+
+    @Test
+    public void localizeTagsMap() throws Exception
+    {
+        String[][] tags = helper.localizeTags("testTags", ImmutableList.of(
+                ImmutableList.of("01", "Regional"),
+                ImmutableList.of("02", "Municipal")
+        ));
+
+        assertArrayEquals(new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} },
+                tags);
     }
 
     @Test
