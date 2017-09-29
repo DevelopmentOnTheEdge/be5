@@ -113,7 +113,7 @@ public class OperationHelper
         return getTagsFromCustomSelectionView(request, tableName, queryName, new HashMap<>());
     }
 
-    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName, Map<String, Object> extraParams)
+    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName, Map<String, ?> extraParams)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
         if (!query.isPresent())
@@ -161,11 +161,15 @@ public class OperationHelper
 //        return tags.toArray(stockArr);
 //    }
 
-    private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, Object> extraParams)
+    private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, ?> extraParams)
     {
         //todo refactoring Be5QueryExecutor,
         Map<String, String> stringStringMap = new HashMap<>();
-        extraParams.forEach((key, value) -> stringStringMap.put(key, value.toString()));
+        //extraParams.forEach((key, value) -> stringStringMap.put(key, value.toString()));
+        for( Map.Entry<String, ?> entry : extraParams.entrySet())
+        {
+            if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
+        }
 
         TableModel table = TableModel
                 .from(query, stringStringMap, request, false, injector)

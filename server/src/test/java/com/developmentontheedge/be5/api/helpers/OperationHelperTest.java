@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +74,20 @@ public class OperationHelperTest extends Be5ProjectDBTest
 
         String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(request,"testTags", "With parameter",
                 ImmutableMap.of("payable","yes"));
+
+        assertArrayEquals(strings, tagsFromEnum);
+    }
+
+    @Test
+    public void getTagsFromCustomSelectionViewWithParamTestNull() throws Exception
+    {
+        String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
+
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        stringStringHashMap.put("payable", null);
+
+        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(request,"testTags", "With parameter",
+                stringStringHashMap);
 
         assertArrayEquals(strings, tagsFromEnum);
     }
