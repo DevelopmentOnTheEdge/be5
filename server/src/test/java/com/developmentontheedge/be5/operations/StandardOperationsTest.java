@@ -51,7 +51,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
                         "'values':{'name':'test','value':'1'}," +
                         "'meta':{" +
                             "'/name':{'displayName':'name'}," +
-                            "'/value':{'displayName':'value','type':'Integer'}}," +
+                            "'/value':{'displayName':'value','type':'Integer','canBeNull':true}}," +
                         "'order':['/name','/value']}",
                 oneQuotes(first.getBean().toString()));
 

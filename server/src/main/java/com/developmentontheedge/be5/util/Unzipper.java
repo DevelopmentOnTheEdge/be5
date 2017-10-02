@@ -28,6 +28,8 @@ public class Unzipper
     
     public void unzip(String string, Consumer<String> onUnmatched, Consumer<String> onMatched)
     {
+        if(string == null)return;
+
         Matcher matcher = pattern.matcher(string);
         int previousMatchEnd = 0;
         

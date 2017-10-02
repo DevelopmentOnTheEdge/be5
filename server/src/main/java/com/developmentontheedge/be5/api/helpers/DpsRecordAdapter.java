@@ -28,7 +28,8 @@ public class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
 
-    public static DynamicPropertySet createDps(ResultSet resultSet){
+    public static DynamicPropertySet createDps(ResultSet resultSet)
+    {
         return createDps(resultSet, (a,b)->{});
     }
 
@@ -67,28 +68,11 @@ public class DpsRecordAdapter
     public static Object getSqlValue(Class<?> clazz, ResultSet rs, int idx)
     {
         try{
-            if( clazz == String.class )
-                return rs.getString( idx );
-            if( clazz == Short.class )
-                return rs.getShort( idx );
-            if( clazz == Integer.class )
-                return rs.getInt( idx );
-            if( clazz == Long.class )
-                return rs.getLong( idx );
-            if( clazz == Boolean.class )
-                return rs.getBoolean( idx );
-            if( clazz == Double.class )
-                return rs.getDouble( idx );
-            if( clazz == Float.class )
-                return rs.getFloat( idx );
-            if( clazz == Date.class )
-                return rs.getDate( idx );
-            if( clazz == Timestamp.class )
-                return rs.getTimestamp( idx );
+            Object object = rs.getObject(idx);
+            return clazz.cast(object);
         }catch (Exception e){
             throw Be5Exception.internal(e);
         }
-        throw new IllegalArgumentException( clazz.getName() );
     }
 
     public static DynamicProperty[] createSchema(ResultSetMetaData metaData)

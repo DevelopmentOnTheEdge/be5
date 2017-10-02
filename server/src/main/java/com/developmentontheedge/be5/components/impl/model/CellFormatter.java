@@ -17,6 +17,7 @@ import one.util.streamex.StreamEx;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class CellFormatter
@@ -36,25 +37,30 @@ public class CellFormatter
     /**
      * Executes subqueries of the cell or returns the cell content itself.
      */
-    String formatCell(TableModel.RawCellModel cell, DynamicPropertySet previousCells)
+    Object formatCell(TableModel.RawCellModel cell, DynamicPropertySet previousCells)
     {
         return format(cell, new RootVarResolver(previousCells));
     }
 
-    private String format(TableModel.RawCellModel cell, VarResolver varResolver)
+    private Object format(TableModel.RawCellModel cell, VarResolver varResolver)
     {
-        ImmutableList<Object> formattedParts = getFormattedPartsWithoutLink(cell, varResolver);
+        //ImmutableList<Object> formattedParts = getFormattedPartsWithoutLink(cell, varResolver);
 
-        String formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
-
-        formattedContent = userAwareMeta.getLocalizedCell(formattedContent, query.getEntity().getName(), query.getName());
-
-        if(formattedContent != null) {//TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
+        Object formattedContent = getFormattedPartsWithoutLink(cell, varResolver);
+//        if(formattedContent == null) {
+//            return null;
+//        }
+            //formattedContent = StreamEx.of(formattedParts).map(this::print).joining();
+            if(formattedContent instanceof String)
+            {
+                formattedContent = userAwareMeta.getLocalizedCell((String)formattedContent, query.getEntity().getName(), query.getName());
+            }
+            //TODO && extraQuery == Be5QueryExecutor.ExtraQuery.DEFAULT
 
             Map<String, String> blankNullsProperties = cell.options.get(DatabaseConstants.COL_ATTR_BLANKNULLS);
             if(blankNullsProperties != null)
             {
-                if( formattedContent.equals( "null" ) )
+                if( formattedContent == null || formattedContent.equals( "null" ) )
                 {
                     formattedContent = blankNullsProperties.getOrDefault("value", "");
                 }
@@ -64,7 +70,7 @@ public class CellFormatter
             Map<String, String> nullIfProperties = cell.options.get(DatabaseConstants.COL_ATTR_NULLIF);
             if(nullIfProperties != null)
             {
-                if( formattedContent.equals( nullIfProperties.get("value") ) )
+                if( formattedContent == null || formattedContent.equals( nullIfProperties.get("value") ) )
                 {
                     formattedContent = nullIfProperties.getOrDefault("result", "");
                 }
@@ -84,13 +90,14 @@ public class CellFormatter
                 cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
             }
 
-        }
-
         return formattedContent;
     }
 
-    private ImmutableList<Object> getFormattedPartsWithoutLink(TableModel.RawCellModel cell, VarResolver varResolver){
-        boolean hasLink = cell != null && cell.options.containsKey("link");
+    private Object getFormattedPartsWithoutLink(TableModel.RawCellModel cell, VarResolver varResolver)
+    {
+        Objects.requireNonNull(cell);
+
+        boolean hasLink = cell.options.containsKey("link");
         Map<String, String> link = null;
         if(hasLink) {
             link = cell.options.get("link");
@@ -98,17 +105,28 @@ public class CellFormatter
         }
 
         ImmutableList.Builder<Object> builder = ImmutableList.builder();
-        unzipper.unzip(cell != null ? cell.content : "", builder::add, subquery ->
-                builder.add(toTable(subquery, varResolver))
-        );
 
-        ImmutableList<Object> formattedParts = builder.build();
-
-        if(hasLink) {
-            cell.options.put("link", link);
+        if(cell.content == null)
+        {
+            return null;
         }
 
-        return formattedParts;
+        if(cell.content instanceof String)
+        {
+            unzipper.unzip((String)cell.content, builder::add, subquery ->
+                    builder.add(toTable(subquery, varResolver))
+            );
+            ImmutableList<Object> formattedParts = builder.build();
+
+            if(hasLink) {
+                cell.options.put("link", link);
+            }
+            return StreamEx.of(formattedParts).map(this::print).joining();
+        }
+        else
+        {
+            return cell.content;
+        }
     }
 
     /**
@@ -136,7 +154,7 @@ public class CellFormatter
     /**
      * Returns a two-dimensional listDps of processed content. Each element is either a string or a table.
      */
-    private List<List<String>> toTable(String subquery, VarResolver varResolver)
+    private List<List<Object>> toTable(String subquery, VarResolver varResolver)
     {
         try(StreamEx<DynamicPropertySet> stream = queryExecutor.executeSubQuery(subquery, varResolver)){
             return stream.map(dps -> toRow(dps, varResolver)).toList();
@@ -146,14 +164,14 @@ public class CellFormatter
     /**
      * Transforms a set of properties to a listDps. Each element of the listDps is a string or a table.
      */
-    private List<String> toRow(DynamicPropertySet dps, VarResolver varResolver)
+    private List<Object> toRow(DynamicPropertySet dps, VarResolver varResolver)
     {
         DynamicPropertySet previousCells = new DynamicPropertySetAsMap();
 
         return StreamEx.of(dps.spliterator()).map(property -> {
             String name = property.getName();
             Object value = property.getValue();
-            String processedCell = format(new TableModel.RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
+            Object processedCell = format(new TableModel.RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return processedCell;
         }).toList();
@@ -180,7 +198,7 @@ public class CellFormatter
         public String resolve(String varName)
         {
             String value = dps.getValueAsString(varName);
-            return value != null ? value : varName;
+            return value;// != null ? value : varName;
         }
 
     }

@@ -20,9 +20,6 @@ import static org.junit.Assert.assertTrue
 
 class DatabaseModelGroovyTest extends Be5ProjectDBTest
 {
-    @Inject private DatabaseModel database
-    @Inject private SqlService db
-
     @Before
     void before()
     {
@@ -39,18 +36,18 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void test()
     {
-        assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def id = database.testtableAdmin << [
                 "name": "TestName",
                 "value": "1"];
 
-        assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         database.testtableAdmin[id] << [
                 "value": "2"
         ]
-        assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def testtableAdmin = database.testtableAdmin;
 

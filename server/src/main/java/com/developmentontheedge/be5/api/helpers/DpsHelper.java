@@ -219,6 +219,18 @@ public class DpsHelper
         }
     }
 
+    public DynamicPropertySet setValues(DynamicPropertySet dps, DynamicPropertySet values)
+    {
+        for(DynamicProperty property : values)
+        {
+            if(dps.getProperty(property.getName()) != null)
+            {
+                dps.setValue(property.getName(), property.getValue());
+            }
+        }
+        return dps;
+    }
+
     public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)

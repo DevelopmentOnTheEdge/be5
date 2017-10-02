@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.env.Injector
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Before
+import org.junit.BeforeClass
 
 abstract class TestTableQueryDBTest extends Be5ProjectDBTest
 {
@@ -14,7 +15,7 @@ abstract class TestTableQueryDBTest extends Be5ProjectDBTest
     @Inject public Injector injector
 
     @Before
-    void setUp()
+    void testTableQueryDBTestBefore()
     {
         if(db.getLong("select count(*) from testtUser") == 0)
         {

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+import com.developmentontheedge.sql.model.AstNullPredicate;
 import com.developmentontheedge.sql.model.AstOrderingElement;
 import one.util.streamex.StreamEx;
 
@@ -71,8 +72,17 @@ public class ContextApplier
             String value = varResolver.apply( subQuery.translateVar( varNode.getName() ) );
             if( value == null )
                 value = varNode.getDefault();
-            SimpleNode constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart( value )
-                    : new AstStringConstant( value );
+            SimpleNode constant;
+
+            if(value == null)
+            {
+                constant = new AstStringPart( "null", true ); //todo new AstNull()
+            }
+            else
+            {
+                constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
+                        : new AstStringConstant(value);
+            }
             varNode.replaceWith( constant );
         } );
 
