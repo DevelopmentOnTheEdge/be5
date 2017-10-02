@@ -72,6 +72,12 @@ public interface ParametersAccess
         return value == null ? "" : value;
     }
 
+    default String getOrDefault(String parameter, String defaultValue)
+    {
+        String value = get( parameter );
+        return value == null ? defaultValue : value;
+    }
+
     /**
      * Returns a boolean request parameter or the given default value if there's no such parameter.
      * @throws Be5Exception if the parameter is present, but it isn't a boolean value

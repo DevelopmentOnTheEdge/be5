@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model;
 
+
 public class StaticPagePresentation
 {
     public final String title;
