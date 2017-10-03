@@ -36,37 +36,37 @@ public class Main
 
     public Main(String[] args) throws IOException
     {
-        Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(Main.class, "/templates");
-        cfg.setDefaultEncoding("UTF-8");
-
-        String generatedSourcesPath = args[0];
-        String packageName = args[1];
-        if(!packageName.endsWith("."))packageName += ".";
-        packageName += args[2].toLowerCase()+".generate";
-
-        String serviceClassName = args[2] + "EntityModels";
-
-        File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + "/" + serviceClassName + ".java").toFile();
-        if(file.exists() && !file.isDirectory())
-        {
-            System.out.println("Generate skipped, file exists: " + packageName + "." + serviceClassName);
-        }
-        else
-        {
-            System.out.println("File '"+file.toString()+"' not found, generate...");
-            injector = Be5.createInjector(new YamlBinder(YamlBinder.Mode.serverOnly));
-
-            createClass(generatedSourcesPath,"","package-info.java",cfg.getTemplate("root.ftl"), Collections.emptyMap());
-
-            createEntities(generatedSourcesPath, packageName + ".entities", cfg);
-            createService(generatedSourcesPath, packageName, serviceClassName, cfg);
-
-            System.out.println("------" + JULLogger.infoBlock(
-                    "Generate successful: " + entityCount + " entities created.\n" +
-                            "Add service to context.yaml: " +
-                            packageName + "." + serviceClassName));
-        }
+//        Configuration cfg = new Configuration();
+//        cfg.setClassForTemplateLoading(Main.class, "/templates");
+//        cfg.setDefaultEncoding("UTF-8");
+//
+//        String generatedSourcesPath = args[0];
+//        String packageName = args[1];
+//        if(!packageName.endsWith("."))packageName += ".";
+//        packageName += args[2].toLowerCase()+".generate";
+//
+//        String serviceClassName = args[2] + "EntityModels";
+//
+//        File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + "/" + serviceClassName + ".java").toFile();
+//        if(file.exists() && !file.isDirectory())
+//        {
+//            System.out.println("Generate skipped, file exists: " + packageName + "." + serviceClassName);
+//        }
+//        else
+//        {
+//            System.out.println("File '"+file.toString()+"' not found, generate...");
+//            injector = Be5.createInjector(new YamlBinder(YamlBinder.Mode.serverOnly));
+//
+//            createClass(generatedSourcesPath,"","package-info.java",cfg.getTemplate("root.ftl"), Collections.emptyMap());
+//
+//            createEntities(generatedSourcesPath, packageName + ".entities", cfg);
+//            createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+//
+//            System.out.println("------" + JULLogger.infoBlock(
+//                    "Generate successful: " + entityCount + " entities created.\n" +
+//                            "Add service to context.yaml: " +
+//                            packageName + "." + serviceClassName));
+//        }
     }
 
 //    private String artifactIdToPackage(String path)

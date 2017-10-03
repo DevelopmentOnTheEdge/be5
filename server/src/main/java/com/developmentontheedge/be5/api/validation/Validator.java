@@ -214,7 +214,8 @@ public class Validator
         String value;
         if(property.getValue() != null)
         {
-            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : "'" + property.getValue().toString() + "'";
+            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : property.getValue().toString();
+            value += " (" + property.getValue().getClass().getSimpleName() + ")";
         }
         else
         {

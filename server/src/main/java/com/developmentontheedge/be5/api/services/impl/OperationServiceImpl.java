@@ -278,7 +278,8 @@ public class OperationServiceImpl implements OperationService
                 try
                 {
                     Class aClass = groovyOperationClasses.get(operationInfo.getEntity() + operationInfo.getName(),
-                            k -> GroovyRegister.parseClass( operationInfo.getCode() ));
+                            k -> GroovyRegister.parseClass( operationInfo.getCode(),
+                                    operationInfo.getEntity() + "." + operationInfo.getName() + ".groovy" ));
                     if(aClass != null)
                     {
                         operation = ( Operation ) aClass.newInstance();

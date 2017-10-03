@@ -2,10 +2,12 @@ package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
+import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -18,9 +20,6 @@ import static org.junit.Assert.assertTrue
 
 class DatabaseModelGroovyTest extends Be5ProjectDBTest
 {
-    @Inject private DatabaseModel database
-    @Inject private SqlService db
-
     @Before
     void before()
     {
@@ -37,18 +36,18 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void test()
     {
-        assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def id = database.testtableAdmin << [
                 "name": "TestName",
                 "value": "1"];
 
-        assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         database.testtableAdmin[id] << [
                 "value": "2"
         ]
-        assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"));
+        assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def testtableAdmin = database.testtableAdmin;
 
@@ -286,37 +285,35 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //        }
 //        return false;
 //    }
-//
-//    public void testGetList()
-//    {
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel tableName = database.getEntity( "persons" );
-//
-//        tableName << [
-//                "firstname" : "Wirth",
-//                "middlename": "Emil",
-//                "lastname"  : "Niklaus",
-//                "birthday"  : "15.02.1934",
-//                "sex"       : "male"]
-//
-//        tableName << [
-//                "firstname": "Bjarne",
-//                "lastname" : "Stroustrup",
-//                "birthday" : "30.12.1950",
-//                "sex"      : "male"]
-//
-//        List<RecordModel> list = tableName.list;
-//
-//        assertTrue( listContains( list, "firstname", "Wirth" ) )
-//        assertTrue( listContains( list, "firstname", "Bjarne" ) )
-//        assertFalse( listContains( list, "firstname", "Rocky" ) )
-//
-//        list = tableName.list( sex: "male" )
-//        assertTrue( listContains( list, "firstname", "Bjarne" ) )
-//
-//        list = tableName.list( sex: "female" )
-//        assertTrue list.empty
-//    }
+
+    @Test
+    void testGetList()
+    {
+        def entity = database.getEntity("testtableAdmin")
+
+        entity << [
+                "name": "TestName",
+                "value": "1"]
+
+        entity << [
+                "name": "TestName2",
+                "value": "2"]
+
+        List<RecordModel> list = entity.toList()
+
+        assertTrue( listContains( list, "name", "TestName" ) )
+        assertTrue( listContains( list, "value", "1" ) )
+
+        assertTrue( listContains( list, "name", "TestName2" ) )
+        assertTrue( listContains( list, "value", "2" ) )
+
+
+        list = entity.toList( value: "1" )
+        assertTrue( listContains( list, "name", "TestName" ) )
+
+        list = entity.toList( name: "TestName3" )
+        assertTrue list.empty
+    }
 //
 //    public void testGetArray()
 //    {
@@ -567,4 +564,16 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //            database.operationExtension.remove( opID );
 //        }
 //    }
+
+    private static boolean listContains(List<DynamicPropertySet> recs, String propertyName, String value )
+    {
+        for( DynamicPropertySet rec : recs )
+        {
+            if( rec.getValueAsString( propertyName ).equals( value ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

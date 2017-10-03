@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -52,6 +52,13 @@ public class RequestImpl implements Request
     	if(session != null)
     	    session.setAttribute(name, value);
     }
+
+    @Override
+    public Session getSession()
+    {
+        return new SessionImpl(rawRequest.getSession());
+    }
+
 //
 //    @Override
 //    public <T> T getValues(String parameterName, Class<T> clazz) throws Be5Exception

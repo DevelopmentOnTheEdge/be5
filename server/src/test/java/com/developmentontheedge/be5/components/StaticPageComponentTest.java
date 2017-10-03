@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.components.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 import static org.mockito.Matchers.eq;
@@ -43,7 +43,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
 
         component.generate(req, response, injector);
 
-        verify(response).sendAsJson(eq(new ResourceData(TABLE_ACTION,
+        verify(response).sendAsJson(eq(new ResourceData(STATIC_ACTION,
                         new StaticPagePresentation("", "<h1>Info</h1><p>Test text.</p>"))),
                 eq(ImmutableMap.of(TIMESTAMP_PARAM, "123456789")),
                 eq(Collections.singletonMap(SELF_LINK, "static/" + page)));

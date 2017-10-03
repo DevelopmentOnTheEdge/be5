@@ -24,7 +24,7 @@ public class ExecutorServiceImpl implements ExecutorService
     @Override
     public QueryExecutor createExecutor(Query query, Request req)
     {
-        return new Be5QueryExecutor(query, new HashMap<>(), req, injector);
+        return new Be5QueryExecutor(query, new HashMap<>(), req.getSession(), injector);
     }
 
 }

@@ -15,7 +15,6 @@ import java.util.function.BiFunction;
 //@DirtyRealization( comment = "Low type safety, pure logic!" )
 public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
 {
-
     private Entity entity;
     private ResultHandler<T> handler;
     
@@ -27,12 +26,6 @@ public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
     public void setHandler( ResultPostHandler<? extends RecordModel,T> handler )
     {
         this.handler = handler;
-    }
-    
-    @Override
-    public T get()
-    {
-        return get( Collections.<String, Object>emptyMap() );
     }
 
 //    @Override
@@ -60,45 +53,46 @@ public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
 //        }
 //        else return ( T )list;
 //    }
-
-    public T get( Map<String, ? extends Object> values )
-    {
-        return null;//values.isEmpty() ? get( new String[]{} ) : get( Utils.paramsToCondition( databaseService, entity, values ) );
-    }
-    
-    @Override
-    public T get( String ... conditions )
-    {
-
-        StringBuilder sb = new StringBuilder( "SELECT * FROM " );
-        sb.append( entity ).append( " " ).append( entity );
-        sb.append( " WHERE " ).append( getAdditionalConditions() );
-        for( String condition : conditions )
-        {
-            sb.append( " AND " ).append( condition );
-        }
-        List<DynamicPropertySet> dpsList = null;//Utils.readAsRecords( databaseService, sb.toString() );
-        List<RecordModel> recordList = new ArrayList<RecordModel>();
-
-        final ResultEachHandler eachHandler = handler instanceof ResultEachHandler ? ( ResultEachHandler )handler : null;
-
-        for( int i = 0; i < dpsList.size(); i++ )
-        {
-            RecordModel bean = createRecord( dpsList.get( i ) );
-            if( eachHandler != null )
-            {
-                eachHandler.use( bean, i );
-            }
-            recordList.add( bean );
-        }
-        if( handler instanceof ResultPostHandler )
-        {
-            return ( ( ResultPostHandler<RecordModel,T> )handler ).postUse( recordList );
-        }
-        return ( T )recordList;
-
-
-    }
+//
+//    public T get( Map<String, ? super Object> values )
+//    {
+//        //List<RecordModel> recordList = new ArrayList<RecordModel>();
+//        return ;//values.isEmpty() ? get( new String[]{} ) : get( Utils.paramsToCondition( databaseService, entity, values ) );
+//    }
+//
+//    @Override
+//    public T get( String ... conditions )
+//    {
+//
+//        StringBuilder sb = new StringBuilder( "SELECT * FROM " );
+//        sb.append( entity ).append( " " ).append( entity );
+//        sb.append( " WHERE " ).append( getAdditionalConditions() );
+//        for( String condition : conditions )
+//        {
+//            sb.append( " AND " ).append( condition );
+//        }
+//        List<DynamicPropertySet> dpsList = null;//Utils.readAsRecords( databaseService, sb.toString() );
+//        List<RecordModel> recordList = new ArrayList<RecordModel>();
+//
+//        final ResultEachHandler eachHandler = handler instanceof ResultEachHandler ? ( ResultEachHandler )handler : null;
+//
+//        for( int i = 0; i < dpsList.size(); i++ )
+//        {
+//            RecordModel bean = createRecord( dpsList.get( i ) );
+//            if( eachHandler != null )
+//            {
+//                eachHandler.use( bean, i );
+//            }
+//            recordList.add( bean );
+//        }
+//        if( handler instanceof ResultPostHandler )
+//        {
+//            return ( ( ResultPostHandler<RecordModel,T> )handler ).postUse( recordList );
+//        }
+//        return ( T )recordList;
+//
+//
+//    }
 
     interface ResultHandler<T> { }
     
@@ -111,8 +105,7 @@ public abstract class AbstractMultipleRecords<T> implements MultipleRecords<T>
     {
         public T postUse(List<R> list);
     }
-    
-    
+
     public static class LambdaDPSHandler<R extends RecordModel,T> implements ResultEachHandler<R>, ResultPostHandler<R,List<T>>
     {
         private BiFunction<R, Integer, T> lambda;

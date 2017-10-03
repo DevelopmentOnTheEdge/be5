@@ -2,14 +2,22 @@ package com.developmentontheedge.be5.api.services;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
+import org.codehaus.groovy.control.messages.Message;
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroovyRegister
 {
-    private static final GroovyClassLoader classLoader = new GroovyClassLoader();
+    private static GroovyClassLoader classLoader;
+
+    static {
+        initClassLoader();
+    }
 
     public static GroovyClassLoader getClassLoader()
     {
@@ -19,6 +27,17 @@ public class GroovyRegister
     public static Class parseClass( String text )
     {
         return getClassLoader().parseClass( text );
+    }
+
+    public static Class parseClass( String text, String name )
+    {
+        return getClassLoader().parseClass( text, name );
+    }
+
+    public static void initClassLoader()
+    {
+        classLoader = new GroovyClassLoader();
+        classLoader.addClasspath("src/groovy/operations");
     }
 
 //    public static Class parseClassWithCache( String name, String text )
@@ -64,6 +83,22 @@ public class GroovyRegister
         {
             throw new RuntimeException( e );
         }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public static List<String> toCompilationMessages(List errors0)
+    {
+        List<Message> errors = (List<Message>)errors0;
+        List<String> messages = new ArrayList<>();
+        if (errors != null) {
+            for (Message error : errors) {
+                if (error instanceof SyntaxErrorMessage) {
+                    SyntaxErrorMessage syntaxError = (SyntaxErrorMessage) error;
+                    messages.add(syntaxError.getCause().getMessage());
+                }
+            }
+        }
+        return messages;
     }
 
 //    public static boolean classHook( DatabaseConnector connector, Map<String, ?> map )

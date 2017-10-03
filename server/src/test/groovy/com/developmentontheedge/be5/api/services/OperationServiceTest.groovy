@@ -34,8 +34,9 @@ class OperationServiceTest extends SqlMockOperationTest
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals "{'details':'java.lang.IllegalArgumentException: " +
-                "[ name: 'name', type: class java.lang.String, value: 'generateErrorInProperty' ]'," +
-                "'message':'[ name: 'name', type: class java.lang.String, value: 'generateErrorInProperty' ]','status':'error'}",
+                "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
+                "'message':'[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
+                "'status':'error'}",
                 oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 
@@ -49,8 +50,9 @@ class OperationServiceTest extends SqlMockOperationTest
                 oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals "{'details':'java.lang.IllegalArgumentException: " +
-                "[ name: 'name', type: class java.lang.String, value: 'executeErrorInProperty' ]'," +
-                "'message':'[ name: 'name', type: class java.lang.String, value: 'executeErrorInProperty' ]','status':'error'}",
+                "[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]'," +
+                "'message':'[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]'," +
+                "'status':'error'}",
                 oneQuotes(jsonb.toJson(first.getOperationResult()))
     }
 

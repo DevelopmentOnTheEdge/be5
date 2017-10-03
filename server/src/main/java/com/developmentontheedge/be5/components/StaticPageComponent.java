@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Collections;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.components.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
@@ -33,7 +33,7 @@ public class StaticPageComponent implements Component
         else
         {
             res.sendAsJson(
-                    new ResourceData(TABLE_ACTION, new StaticPagePresentation("", staticPageContent)),
+                    new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent)),
                     ImmutableMap.builder()
                             .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
                             .build(),

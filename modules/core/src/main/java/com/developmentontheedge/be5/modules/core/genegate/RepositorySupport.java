@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.genegate;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
@@ -22,6 +23,7 @@ public abstract class RepositorySupport<T, ID extends Serializable> implements R
 
     protected final EntityModelBase entityModelBase;
     protected final DpsHelper dpsHelper;
+    protected final OperationHelper operationHelper;
     protected final SqlService db;
 
     protected final Entity entity;
@@ -30,14 +32,15 @@ public abstract class RepositorySupport<T, ID extends Serializable> implements R
     public static ProvincesFields fields;
     public String primaryKeyName;
 
-    public RepositorySupport(SqlService db, DpsHelper dpsHelper, Validator validator, Entity entity)
+    public RepositorySupport(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper, Entity entity)
     {
-        entityModelBase = new EntityModelBase(db, dpsHelper, validator, entity);
+        entityModelBase = new EntityModelBase(db, dpsHelper, validator, operationHelper, entity);
         this.entity = entityModelBase.getEntity();
         this.entityName = entity.getName();
 
         this.db = db;
         this.dpsHelper = dpsHelper;
+        this.operationHelper = operationHelper;
     }
 
     @Override

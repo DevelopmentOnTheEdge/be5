@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
+import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
 
@@ -43,15 +45,17 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
     private final SqlService db;
     private final DpsHelper dpsHelper;
+    private final OperationHelper operationHelper;
     private final Validator validator;
 
     private final Entity entity;
 
 
-    public EntityModelBase(SqlService db, DpsHelper dpsHelper, Validator validator, Entity entity)
+    public EntityModelBase(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper, Entity entity)
     {
         this.db = db;
         this.dpsHelper = dpsHelper;
+        this.operationHelper = operationHelper;
         this.validator = validator;
 
         this.entity = entity;
@@ -246,7 +250,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    public List<R> toList()
+    public List<RecordModel> toList()
     {
         return toList( emptyMap() );
     }
@@ -258,23 +262,25 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
     
     @Override
-    public List<R> toList( Map<String, ? super Object> values )
+    public List<RecordModel> toList( Map<String, ? super Object> conditions )
     {
-        Objects.requireNonNull(values);
-        return new MultipleRecordsBase<List<R>>().get( values );
+        Objects.requireNonNull(conditions);
+        return new MultipleRecordsBase<List<RecordModel>>().get( conditions );
     }
 
     @Override
-    public RecordModel[] toArray( Map<String, ? super Object> values )
+    public RecordModel[] toArray( Map<String, ? super Object> conditions )
     {
-        Objects.requireNonNull(values);
-        MultipleRecordsBase<R[]> records = new MultipleRecordsBase<>();
-        records.setHandler( new MultipleRecordsBase.ArrayHandler<>() );
-        return records.get( values );
+        Objects.requireNonNull(conditions);
+        MultipleRecordsBase<RecordModel[]> records = new MultipleRecordsBase<>();
+
+        List<RecordModel> recordModels = records.get(conditions);
+        RecordModel[] arr = new RecordModel[recordModels.size()];
+        return recordModels.toArray( arr );
     }
 
     @Override
-    public List<R> collect()
+    public List<RecordModel> collect()
     {
         return toList();
     }
@@ -311,7 +317,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
         validator.checkErrorAndCast(dps);
-        dpsHelper.checkDpsContainNotNullColumns(entity, dps);
+        dpsHelper.checkDpsColumns(entity, dps);
         dpsHelper.addInsertSpecialColumns(entity, dps);
 
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
@@ -392,7 +398,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
     {
-        MultipleRecordsBase()
+        public MultipleRecordsBase()
         {
             super(entity);
         }
@@ -409,6 +415,21 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
             return EntityModelBase.this.getAdditionalConditions();
         }
 
+        @Override
+        public List<RecordModel> get()
+        {
+            return get( Collections.emptyMap() );
+        }
+
+        @Override
+        public List<RecordModel> get(Map<String, ? super Object> conditions)
+        {
+            String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
+
+            return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
+                    .map(this::createRecord)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override

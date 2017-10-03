@@ -52,4 +52,28 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 "}}]}", oneQuotes(jsonb.toJson(testtable.getRows().get(0))))
     }
 
+    @Test
+    void testNullInSubQuery()
+    {
+        //todo add test and fix for numeric types, SELECT name FROM testtableAdmin t WHERE t.value = '11'
+
+        db.update("DELETE FROM testtableAdmin")
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", 11)
+        db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)
+
+        TablePresentation testtable = new DocumentGenerator(request, response, injector).getTablePresentation(
+                meta.getQuery("testtableAdmin", "Test null in subQuery",
+                        Collections.singletonList("SystemDeveloper")), new HashMap<>())
+
+        assertEquals("[" +
+                "{'cells':[" +
+                    "{'content':'tableModelTest','options':{}}," +
+                    "{'content':11,'options':{}}," +
+                    "{'content':'tableModelTest','options':{'sql':{}}}]}," +
+                "{'cells':[" +
+                    "{'content':'tableModelTest','options':{}}," +
+                    "{'options':{}}," +
+                    "{'content':'','options':{'sql':{}}}" +
+                "]}]", oneQuotes(jsonb.toJson(testtable.getRows())))
+    }
 }

@@ -39,7 +39,7 @@ public class TableModel
             this.query = query;
             this.selectable = selectable;
             int sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
-            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req, injector);
+            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req.getSession(), injector);
             this.queryExecutor.sortOrder(sortColumn, "desc".equals(req.get("order[0][dir]")));
             this.userAwareMeta = injector.get(UserAwareMeta.class);
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
@@ -241,7 +241,7 @@ public class TableModel
 
         private void addRowClass(List<RawCellModel> cells)
         {
-            Optional<String> addClassName = cells.stream().filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS))
+            Optional<Object> addClassName = cells.stream().filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS))
                     .map(x -> x.content).findFirst();
 
             if(addClassName.isPresent())
@@ -270,7 +270,7 @@ public class TableModel
 
             for (RawCellModel cell : cells)
             {
-                String processedContent = cellFormatter.formatCell(cell, previousCells);
+                Object processedContent = cellFormatter.formatCell(cell, previousCells);
                 previousCells.add(new DynamicProperty(cell.name, processedContent == null ? String.class
                         : processedContent.getClass(), processedContent));
                 if (!cell.hidden)
@@ -356,11 +356,11 @@ public class TableModel
     public static class RawCellModel
     {
         public final String name;
-        public final String content;
+        public final Object content;
         public final Map<String, Map<String, String>> options;
         public final boolean hidden;
 
-        RawCellModel(String name, String content, Map<String, Map<String, String>> options, boolean hidden)
+        RawCellModel(String name, Object content, Map<String, Map<String, String>> options, boolean hidden)
         {
             this.name = name;
             this.content = content;
@@ -368,7 +368,7 @@ public class TableModel
             this.hidden = hidden;
         }
 
-        RawCellModel(String content)
+        RawCellModel(Object content)
         {
             this.name = "";
             this.content = content;

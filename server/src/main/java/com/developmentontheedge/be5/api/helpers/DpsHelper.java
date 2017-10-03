@@ -173,7 +173,7 @@ public class DpsHelper
             }
             else
             {
-                log.warning("Column " + propertyName + " not found in " + entity.getName());
+                throw Be5Exception.internal("Entity '" + entity.getName() + "' not contain column " + propertyName);
             }
         }
 
@@ -211,10 +211,24 @@ public class DpsHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
         }
-        else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null ){
+        else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
+        {
+            //todo get real request instead EmptyRequest
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
         }
+    }
+
+    public DynamicPropertySet setValues(DynamicPropertySet dps, DynamicPropertySet values)
+    {
+        for(DynamicProperty property : values)
+        {
+            if(dps.getProperty(property.getName()) != null)
+            {
+                dps.setValue(property.getName(), property.getValue());
+            }
+        }
+        return dps;
     }
 
     public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
@@ -385,7 +399,7 @@ public class DpsHelper
 
     public String generateInsertSql(Entity entity, DynamicPropertySet dps)
     {
-        //todo remove property not contain in entity and log warning, as in checkDpsContainNotNullColumns
+        //todo remove property not contain in entity and log warning, as in checkDpsColumns
         //and add to generateUpdateSqlForOneKey
 
         Object[] columns = StreamSupport.stream(dps.spliterator(), false)
@@ -582,18 +596,31 @@ public class DpsHelper
                 LinkedHashMap::new);
     }
 
-    public void checkDpsContainNotNullColumns(Entity entity, DynamicPropertySet dps)
+    public void checkDpsColumns(Entity entity, DynamicPropertySet dps)
     {
-        String errorMsg = meta.getColumns(entity).values().stream()
-                .filter(column -> !column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
-                        && !dps.hasProperty(column.getName()))
-                .map(column -> "Dps not contain notNull column '" + column.getName()
-                        + "' in entity '" + column.getEntity().getName()+ "'")
-                .collect(Collectors.joining("\n"));
+        StringBuilder errorMsg = new StringBuilder();
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
 
-        if(!errorMsg.isEmpty())
+        for (ColumnDef column : columns.values())
         {
-            throw Be5Exception.internal("Dps not contain notNull columns:\n"+ errorMsg);
+            if (!column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
+                    && !dps.hasProperty(column.getName()))
+            {
+                errorMsg.append("Dps not contain notNull column '").append(column.getName()).append("\n");
+            }
+        }
+
+        for (DynamicProperty property : dps)
+        {
+            if (!columns.keySet().contains(property.getName()))
+            {
+                errorMsg.append("Entity not contain column '").append(property.getName()).append("\n");
+            }
+        }
+
+        if(!errorMsg.toString().isEmpty())
+        {
+            throw Be5Exception.internal("Dps columns errors for entity '" + entity.getName() + "'\n"+ errorMsg);
         }
     }
 

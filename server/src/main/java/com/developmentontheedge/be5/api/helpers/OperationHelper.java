@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -10,12 +9,19 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import java.beans.PropertyDescriptor;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class OperationHelper
@@ -55,13 +61,16 @@ public class OperationHelper
      */
     public String[][] getTags(String tableName, String valueColumnName, String textColumnName)
     {
-        return tagsCache.get(tableName+ "getTags" + valueColumnName + "," + textColumnName + UserInfoHolder.getLanguage(), k -> {
-            List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
-                    rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
-            );
-            String[][] stockArr = new String[tags.size()][2];
-            return tags.toArray(stockArr);
-        });
+        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
+                rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
+        );
+        String[][] stockArr = new String[tags.size()][2];
+
+        for (int i = 0; i < tags.size(); i++) {
+            stockArr[i] = new String[]{tags.get(i)[0], userAwareMeta.getColumnTitle(tableName, tags.get(i)[1])};
+        }
+
+        return stockArr;
     }
 
 //    public List<Option> formOptionsWithEmptyValue(String tableName, String valueColumnName, String textColumnName, String placeholder)
@@ -92,150 +101,20 @@ public class OperationHelper
      */
     public String[][] getTagsFromSelectionView(Request request, String tableName)
     {
-        return getTagsFromQuery(request, tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
+        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
     }
 
-    public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, String> extraParams)
+    public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, Object> extraParams)
     {
-        //todo getTagsFromCustomSelectionView(...)
-        return getTagsFromQuery(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
+        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
     }
 
-//    /**
-//     * Retrieves css tags for row representation. First try`s to find a selection view for specified table name, if none found, then selects
-//     * from specified table all columns. And then use
-//     * {@link com.beanexplorer.enterprise.OperationSupport#getTagsFromQuery(DatabaseConnector, String, String) OperationSupport.getTagsFromQuery}
-//     * to find css tags.
-//     *
-//     * @param connector DB connector
-//     * @param table table name
-//     * @return array of css tags
-//     * @throws Exception
-//     */
-//    public static String[] getTagsFromSimpleSelectionView( DatabaseConnector connector, String table )
-//            throws Exception
-//    {
-//        return getTagsFromSimpleSelectionView( connector, table, null );
-//    }
-//
-//    /**
-//     * Retrives css tags for row representation. First try`s to find a selection view for specified table name, if none found, then selects
-//     * from specified table all columns. And then use
-//     * {@link com.beanexplorer.enterprise.OperationSupport#getTagsFromQuery(DatabaseConnector, String, String) OperationSupport.getTagsFromQuery}
-//     * to find css tags.
-//     *
-//     * @param connector DB connector
-//     * @param table table name
-//     * @param ui user info
-//     * @return array of css tags
-//     * @throws Exception
-//     */
-//    public static String[] getTagsFromSimpleSelectionView( DatabaseConnector connector, String table, UserInfo ui )
-//            throws Exception
-//    {
-//        String query = QueryInfo.getQueryText( connector, null, table, DatabaseConstants.SELECTION_VIEW, true );
-//
-//        if( query == null )
-//        {
-//            query = "SELECT * FROM " + table;
-//        }
-//        query = Utils.putRequestParameters( connector, query, new MapParamHelper( Collections.emptyMap() ),
-//                ui != null ? ui : UserInfo.ADMIN );
-//        return OperationSupport.getTagsFromQuery( connector, query, null );
-//    }
-
-
-//    /**
-//     * Reads tag list from query stored in the database identified by its name
-//     * for inclusion in drop down list
-//     *
-//     * @param connector connector to the DB
-//     * @param table table name
-//     * @param viewName view name
-//     * @return ArrayList of style for every query row as string
-//     * @throws Exception
-//     */
-//    public String[] getTagsFromCustomSelectionView( DatabaseConnector connector, String table, String viewName )
-//            throws Exception
-//    {
-//        return getTagsFromCustomSelectionView( connector, table, viewName, null );
-//    }
-//
-//    public String[] getTagsFromCustomSelectionView( DatabaseConnector connector, String table, String viewName, Map extraParams )
-//            throws Exception
-//    {
-//        String prefix = this instanceof HttpOperationSupport ?
-//                ( ( HttpOperationSupport )this ).contextPrefix :
-//                null;
-//        return getTagsFromCustomSelectionView( connector, prefix, userInfo, table, viewName, extraParams );
-//    }
-//
-//    /**
-//     * Gets style array, as string array, for every row query of table`s custom selection view.
-//     * See also
-//     * {@link #getTagsFromQuery(DatabaseConnector, String, String) getTagsFromQuery(DatabaseConnector, String, String)}.
-//     *
-//     * @param connector connector to the DB
-//     * @param context value for context placeholder {@link com.beanexplorer.enterprise.DatabaseConstants#CONTEXT_PLACEHOLDER}
-//     * @param ui user info
-//     * @param table table name
-//     * @param viewName view name
-//     * @return ArrayList of style for every query row as string
-//     * @throws Exception
-//     */
-//    public static String[] getTagsFromCustomSelectionView( DatabaseConnector connector,
-//                                                           String context, UserInfo ui, String table, String viewName, Map<?,?> extraParams )
-//            throws Exception
-//    {
-//        String query = QueryInfo.getQueryText( connector, table, viewName );
-//
-//        query = Utils.putPlaceholders( connector, query, ui, context );
-//
-//        if( extraParams != null )
-//        {
-//            extraParams = new HashMap( extraParams ); // to make it mutable
-//            query = Utils.handleConditionalParts( connector, ui, query, extraParams );
-//            query = Utils.putRequestParametersFromMap( connector, query, extraParams, ui );
-//            if( !extraParams.isEmpty() )
-//            {
-//                Map realColumns = new HashMap();
-//                for( Map.Entry<?,?> entry : extraParams.entrySet() )
-//                {
-//                    if( Utils.columnExists( connector, table, ( String )entry.getKey() ) )
-//                    {
-//                        realColumns.put( entry.getKey(), entry.getValue() );
-//                    }
-//                }
-//                if( !realColumns.isEmpty() )
-//                {
-//                    String pk = Utils.findPrimaryKeyName( connector, table );
-//                    query = Utils.addRecordFilter( connector, query, table, pk, realColumns, false, ui );
-//                }
-//                //System.out.println( "query = " + query );
-//            }
-//        }
-//
-//        if ( ui instanceof OperationUserInfo && ((OperationUserInfo)ui).getUnrestrictedSession() != null )
-//        {
-//            HttpSession session = ((OperationUserInfo)ui).getUnrestrictedSession();
-//            query = Utils.putSessionVars( connector, query, session );
-//            query = Utils.putDictionaryValues( connector, query, ui );
-//
-//            return getTagsFromQuery( connector, query, null, session );
-//        }
-//
-//        query = Utils.putDictionaryValues( connector, query, ui );
-//
-//        return getTagsFromQuery( connector, query, null );
-//    }
-
-    //todo getTagsFromCustomSelectionView
-    public String[][] getTagsFromQuery(Request request, String tableName, String queryName)
+    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName)
     {
-        return getTagsFromQuery(request, tableName, queryName, new HashMap<>());
+        return getTagsFromCustomSelectionView(request, tableName, queryName, new HashMap<>());
     }
 
-    public String[][] getTagsFromQuery(Request request, String tableName, String queryName, Map<String, String> extraParams)
+    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName, Map<String, ?> extraParams)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
         if (!query.isPresent())
@@ -243,24 +122,58 @@ public class OperationHelper
 
         if(query.get().isCacheable())
         {
-            return tagsCache.get(tableName + "getTagsFromQuery" + queryName +
+            return tagsCache.get(tableName + "getTagsFromCustomSelectionView" + queryName +
                     extraParams.toString() + UserInfoHolder.getLanguage(),
-                k -> getTagsFromQuery(request, tableName, query.get(), extraParams)
+                k -> getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams)
             );
         }
-        return getTagsFromQuery(request, tableName, query.get(), extraParams);
+        return getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams);
     }
 
-//    todo - 2 варианта - простой sql + String[] params для SqlService
-//     или be-sql - полный аналог обработки be-sql из yaml
-//    public String[][] getTagsFromQuery(Request request, String sql, String[] params)
+    public String[][] getTagsFromQuery(String query, Object... params)
+    {
+        List<String[]> tags = db.selectList(query,
+                rs -> new String[]{rs.getString(1), rs.getString(2)}, params
+        );
+        String[][] stockArr = new String[tags.size()][2];
+        return tags.toArray(stockArr);
+    }
+
+    public Map<String, String> readAsMap( String query, Object... params )
+    {
+        Map<String, String> values = new HashMap<>();
+        db.query(query, rs -> {
+            while (rs.next())
+            {
+                values.put(rs.getString(1), rs.getString(2));
+            }
+            return null;
+        }, params);
+        return values;
+    }
+//
+//    public Map<String, String> getTagsMapFromQuery( Request request, Map<String, String> extraParams, String query, Object... params )
 //    {
+//        //return getTagsListFromQuery( request, Collections.emptyMap(), query, params );
+//        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
+//                rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
+//        );
+//        String[][] stockArr = new String[tags.size()][2];
+//        return tags.toArray(stockArr);
 //    }
 
-    private String[][] getTagsFromQuery(Request request, String tableName, Query query, Map<String, String> extraParams)
+    private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, ?> extraParams)
     {
+        //todo refactoring Be5QueryExecutor,
+        Map<String, String> stringStringMap = new HashMap<>();
+        //extraParams.forEach((key, value) -> stringStringMap.put(key, value.toString()));
+        for( Map.Entry<String, ?> entry : extraParams.entrySet())
+        {
+            if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
+        }
+
         TableModel table = TableModel
-                .from(query, extraParams, request, false, injector)
+                .from(query, stringStringMap, request, false, injector)
                 .limit(Integer.MAX_VALUE)
                 .build();
         String[][] stockArr = new String[table.getRows().size()][2];
@@ -275,6 +188,24 @@ public class OperationHelper
 
         return stockArr;
     }
+
+    public String[][] localizeTags(String tableName, List<List<String> > tags)
+    {
+        String[][] stockArr = new String[tags.size()][2];
+        tags.stream().map(tag -> new String[]{tag.get(0), tag.get(1)}).collect(Collectors.toList()).toArray(stockArr);
+        return localizeTags(tableName, stockArr);
+    }
+
+    public String[][] localizeTags(String tableName, String[][] tags)
+    {
+        for (String[] tag : tags)
+        {
+            tag[1] = userAwareMeta.getColumnTitle(tableName, tag[1]);
+        }
+
+        return tags;
+    }
+
 
     public String[][] getTagsFromEnum(String tableName, String name)
     {
@@ -575,5 +506,25 @@ public class OperationHelper
 //        return query;
 //    }
 
-    //todo add helper createLabel(String text, Status status),
+    public List<DynamicPropertySet> readAsRecords( String sql, Object... params )
+    {
+        return db.selectList(sql, DpsRecordAdapter::createDps, params);
+    }
+
+    public List<List<Object>> readAsList( String sql, Object... params )
+    {
+        List<List<Object>> vals = new ArrayList<>();
+        List<DynamicPropertySet> list = readAsRecords(sql, params);
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            List<Object> propertyList = new ArrayList<>();
+            for (DynamicProperty property : list.get(i)) {
+                propertyList.add(property.getValue());
+            }
+            vals.add(propertyList);
+        }
+
+        return vals;
+    }
 }

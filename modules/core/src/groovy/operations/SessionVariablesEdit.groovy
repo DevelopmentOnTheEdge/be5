@@ -10,22 +10,23 @@ class SessionVariablesEdit extends OperationSupport implements Operation
     {
         dps << [
                 name        : "label",
-                value       : "Тип: " + request.getAttribute(records[0]).getClass().getName(),
+                value       : "Тип: " + session[records[0]].getClass().getName(),
                 LABEL_FIELD : true
         ]
 
         dps << [
                 name        : "newValue",
-                TYPE        : request.getAttribute(records[0]).getClass(),
+                TYPE        : session[records[0]].getClass(),
                 DISPLAY_NAME: "Новое значение:",
-                value       : presetValues.getOrDefault("newValue", request.getAttribute(records[0]))
+                value       : presetValues.getOrDefault("newValue", session[records[0]])
         ]
 
         return dps
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception {
-        request.setAttribute(records[0], dps.$newValue)
+    void invoke(Object parameters, OperationContext context) throws Exception
+    {
+        session[records[0]] = dps.$newValue
     }
 }

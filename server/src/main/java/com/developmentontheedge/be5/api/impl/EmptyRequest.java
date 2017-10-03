@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
 import javax.servlet.http.HttpServletRequest;
@@ -80,5 +81,11 @@ public class EmptyRequest implements Request
     public void setAttribute(String name, Object value)
     {
 
+    }
+
+    @Override
+    public Session getSession()
+    {
+        return null;
     }
 }

@@ -110,7 +110,7 @@ class PropertiesToRowTransformer
         for( DynamicProperty property : properties )
         {
             String cellName = property.getName();
-            String cellContent = toString(property);
+            Object cellContent = dateToString(property);
             boolean hidden = shouldBeSkipped( cellName );
             cells.add(new RawCellModel(cellName, cellContent, DynamicPropertyMeta.get(property), hidden));
         }
@@ -118,23 +118,44 @@ class PropertiesToRowTransformer
         return cells;
     }
 
-    private void appendProperty(DynamicProperty property, Map<String, StringBuilder> properties)
-    {
-        String targetName = property.getName().substring( DatabaseConstants.GLUE_COLUMN_PREFIX.length() );
-        StringBuilder mutableStr = properties.get( targetName );
+//    private void appendProperty(DynamicProperty property, Map<String, StringBuilder> properties)
+//    {
+//        String targetName = property.getName().substring( DatabaseConstants.GLUE_COLUMN_PREFIX.length() );
+//        StringBuilder mutableStr = properties.get( targetName );
+//
+//        if( mutableStr == null )
+//        {
+//            throw new IllegalStateException( "Expected column '" + targetName + "'" );
+//        }
+//
+//        mutableStr.append( dateToString( property ) );
+//    }
 
-        if( mutableStr == null )
-        {
-            throw new IllegalStateException( "Expected column '" + targetName + "'" );
-        }
+//    private String toString(DynamicProperty property)
+//    {
+//        Object value = property.getValue();
+//        if(value == null)return null;
+//
+//        if(property.getType() == java.sql.Date.class){
+//            return dateFormatter.format(value);
+//        }
+//
+//        if(property.getType() == java.sql.Time.class){
+//            String timestamp = timestampFormatter.format(value);
+//            if(timestamp.startsWith("01.01.1970"))
+//            {
+//                timestamp = timestamp.substring(11);
+//            }
+//            return timestamp;
+//        }
+//
+//        return value.toString();
+//    }
 
-        mutableStr.append( toString( property ) );
-    }
-
-    private String toString(DynamicProperty property)
+    private Object dateToString(DynamicProperty property)
     {
         Object value = property.getValue();
-        if(value == null)return "";
+        if(value == null)return null;
 
         if(property.getType() == java.sql.Date.class){
             return dateFormatter.format(value);
@@ -149,7 +170,7 @@ class PropertiesToRowTransformer
             return timestamp;
         }
 
-        return value.toString();
+        return value;
     }
 
     private boolean shouldBeSkipped(DynamicProperty property)

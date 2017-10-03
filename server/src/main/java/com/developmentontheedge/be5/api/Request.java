@@ -13,7 +13,9 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
  * @see Component
  * @author asko
  */
-public interface Request extends SessionAccess, ParametersAccess {
+public interface Request extends SessionAccess, ParametersAccess
+{
+    Session getSession();
 
     /**
      * Reads a parameter as JSON array in the form of [{name: 'foo', value: 'bar'},...]

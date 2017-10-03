@@ -32,7 +32,7 @@ public class CustomOperationTest extends SqlMockOperationTest
     }
 
     void oneAssert(Either<FormPresentation, OperationResult> generate){
-        assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name'},'/value':{'displayName':'value','type':'Integer','readOnly':true}},'order':['/name','/value']}",
+        assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name'},'/value':{'displayName':'value','type':'Integer','readOnly':true,'canBeNull':true}},'order':['/name','/value']}",
                 oneQuotes(generate.getFirst().getBean().toString()));
     }
 }
