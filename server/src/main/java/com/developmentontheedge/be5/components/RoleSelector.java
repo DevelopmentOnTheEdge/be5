@@ -53,12 +53,17 @@ public class RoleSelector implements Component {
             result = 31 * result + (selectedRoles != null ? selectedRoles.hashCode() : 0);
             return result;
         }
+
+        @Override
+        public String toString()
+        {
+            return "RoleSelectorResponse{" +
+                    "availableRoles=" + availableRoles +
+                    ", selectedRoles=" + selectedRoles +
+                    '}';
+        }
     }
-    
-    public RoleSelector() {
-        /* stateless */
-    }
-    
+
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
@@ -76,12 +81,14 @@ public class RoleSelector implements Component {
         }
     }
     
-    private void sendInitialData(Response res) {
+    private void sendInitialData(Response res)
+    {
         res.sendAsRawJson(getState());
     }
 
-    private void selectRolesAndSendNewState(Request req, Response res) {
-        String roles = req.getNonEmpty("roles");
+    private void selectRolesAndSendNewState(Request req, Response res)
+    {
+        String roles = req.getOrEmpty("roles");
         UserInfoHolder.selectRoles(Splitter.on(',').splitToList(roles));
         
         res.sendAsRawJson(getState());

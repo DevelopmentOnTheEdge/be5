@@ -73,6 +73,21 @@ public class RoleSelectorTest extends Be5ProjectTest
     }
 
     @Test
+    public void generateSelectRolesAndSendEmpty() throws Exception
+    {
+        Response response = mock(Response.class);
+
+        component.generate(getSpyMockRequest("", ImmutableMap.of("roles", "")),
+                response, injector);
+
+        RoleSelectorResponse roleSelectorResponse =
+                new RoleSelectorResponse(ImmutableList.of(RoleType.ROLE_GUEST),
+                        ImmutableList.of(RoleType.ROLE_GUEST));
+
+        verify(response).sendAsRawJson(eq(roleSelectorResponse));
+    }
+
+    @Test
     public void generateSelectRolesAndSendNewState() throws Exception
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);

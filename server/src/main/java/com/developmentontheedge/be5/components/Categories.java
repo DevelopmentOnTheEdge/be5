@@ -14,7 +14,7 @@ public class Categories implements Component
         switch (req.getRequestUri())
         {
         case "forest":
-            res.sendAsRawJson(injector.getCategoriesService().getCategoriesForest(req.getNonEmpty(RestApiConstants.ENTITY), req.get("hideEmpty", false)));
+            res.sendAsRawJson(injector.getCategoriesService().getCategoriesForest(req.getNonEmpty(RestApiConstants.ENTITY), req.getBoolean("hideEmpty", false)));
             return;
         default:
             res.sendUnknownActionError();

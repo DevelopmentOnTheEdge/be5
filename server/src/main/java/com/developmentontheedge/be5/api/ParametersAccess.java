@@ -78,7 +78,7 @@ public interface ParametersAccess
      * 
      * @see ParametersAccess#get(String)
      */
-    default boolean get(String parameter, boolean defaultValue) throws Be5Exception
+    default boolean getBoolean(String parameter, boolean defaultValue) throws Be5Exception
     {
         String value = get( parameter );
         if( value != null && !value.equals( "true" ) && !value.equals( "false" ) )
