@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class GroovyRegister
 {
     private static GroovyClassLoader classLoader;
@@ -37,7 +38,7 @@ public class GroovyRegister
     public static void initClassLoader()
     {
         classLoader = new GroovyClassLoader();
-        classLoader.addClasspath("src/groovy/operations");
+        //classLoader.addClasspath("src/groovy/operations");
     }
 
 //    public static Class parseClassWithCache( String name, String text )
