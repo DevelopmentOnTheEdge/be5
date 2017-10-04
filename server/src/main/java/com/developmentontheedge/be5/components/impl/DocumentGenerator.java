@@ -120,12 +120,12 @@ public class DocumentGenerator implements Runner {
                 parametersMap, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
     }
 
-    private Object getLayoutObject(Query query)
+    private Map<String, Object> getLayoutObject(Query query)
     {
-        if (query.getLayout().length() > 0)
+        if (!query.getLayout().isEmpty())
         {
             return JsonFactory.jsonb.fromJson(query.getLayout(),
-                    new HashMap<String, String>(){}.getClass().getGenericSuperclass());
+                    new HashMap<String, Object>(){}.getClass().getGenericSuperclass());
         }
         else
         {
@@ -141,7 +141,7 @@ public class DocumentGenerator implements Runner {
 
         if (limit == 0)
         {
-            limit = 20;
+            limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit", 10).toString());
         }
 
         TableModel table = TableModel
