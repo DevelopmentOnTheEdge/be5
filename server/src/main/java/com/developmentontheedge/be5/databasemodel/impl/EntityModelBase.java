@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
@@ -278,25 +277,25 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         RecordModel[] arr = new RecordModel[recordModels.size()];
         return recordModels.toArray( arr );
     }
-
-    @Override
-    public List<RecordModel> collect()
-    {
-        return toList();
-    }
-
-    @Override
-    public <T> List<T> collect( Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda )
-    {
-        Objects.requireNonNull(values);
-        Objects.requireNonNull(lambda);
-
-        MultipleRecordsBase<List<T>>  records = new MultipleRecordsBase<>();
-        MultipleRecordsBase.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
-        records.setHandler( handler );
-        records.get( values );
-        return handler.getResult();
-    }
+//
+//    @Override
+//    public List<RecordModel> collect()
+//    {
+//        return toList();
+//    }
+//
+//    @Override
+//    public <T> List<T> collect( Map<String, ? super Object> values, BiFunction<R, Integer, T> lambda )
+//    {
+//        Objects.requireNonNull(values);
+//        Objects.requireNonNull(lambda);
+//
+//        MultipleRecordsBase<List<T>>  records = new MultipleRecordsBase<>();
+//        MultipleRecordsBase.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
+//        records.setHandler( handler );
+//        records.get( values );
+//        return handler.getResult();
+//    }
 
     private boolean isDictionary()
     {

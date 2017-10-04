@@ -203,7 +203,7 @@ public interface EntityModel<R extends RecordModel> {
      */
     List<RecordModel> toList();
 
-    List<RecordModel> collect();
+//    List<RecordModel> collect();
 
     /**
      * Returns a array of records of current entity.
@@ -235,7 +235,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param lambda handler
      * @return list with the function results
      */
-	<T> List<T> collect(Map<String, ? super Object> conditions, BiFunction<R, Integer, T> lambda);
+//	<T> List<T> collect(Map<String, ? super Object> conditions, BiFunction<R, Integer, T> lambda);
 
     /**
      * Returns entity name.
