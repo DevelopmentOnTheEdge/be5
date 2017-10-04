@@ -231,6 +231,7 @@ public class DpsHelper
         return dps;
     }
 
+    //TODO problems with null value in presetValues
     public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
         for (DynamicProperty property : dps)

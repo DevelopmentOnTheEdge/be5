@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -10,6 +11,7 @@ import groovy.lang.GString;
 import groovy.lang.MissingPropertyException;
 import org.codehaus.groovy.runtime.GStringImpl;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -132,6 +134,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         return leftShift(dps, map);
     }
 
+    //todo refactoring duplicate code
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, Map<String, Object> properties )
     {
         Map<String, Object> map = new HashMap<>();
@@ -144,7 +147,14 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         Object value = removeFromMap( map, "value" );
         if(value != null && value.getClass() == GStringImpl.class)
         {
-            value =  value.toString();
+            try
+            {
+                value =  new String(((GStringImpl)value).getBytes("UTF-8"), "UTF-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                throw Be5Exception.internal(e);
+            }
         }
         String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
         Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
