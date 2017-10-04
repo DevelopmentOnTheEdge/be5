@@ -10,27 +10,33 @@ public class UserInfoHolder
 {
     private static final ThreadLocal<UserInfo> threadLocalScope = new  ThreadLocal<>();
 
-    public static UserInfo getUserInfo() {
+    public static UserInfo getUserInfo()
+    {
         return threadLocalScope.get();
     }
 
-    public static void setUserInfo(UserInfo user) {
+    public static void setUserInfo(UserInfo user)
+    {
         threadLocalScope.set(user);
     }
 
-    public static String getLanguage() {
+    public static String getLanguage()
+    {
         return getLocale().getLanguage().toLowerCase();
     }
 
-    public static Locale getLocale() {
+    public static Locale getLocale()
+    {
         return getUserInfo().getLocale();
     }
 
-    public static void changeLanguage(String language) {
+    public static void changeLanguage(String language)
+    {
         getUserInfo().setLocale(new Locale(language));
     }
 
-    public static void selectRoles(List<String> roles) {
+    public static void selectRoles(List<String> roles)
+    {
         getUserInfo().selectRoles(roles);
     }
 
@@ -49,7 +55,8 @@ public class UserInfoHolder
         return getUserInfo().getAvailableRoles();
     }
 
-    public static List<String> getCurrentRoles() {
+    public static List<String> getCurrentRoles()
+    {
         return getUserInfo().getCurrentRoles();
     }
 
@@ -58,8 +65,10 @@ public class UserInfoHolder
         return getUserInfo().getRemoteAddr();
     }
 
-    public static boolean isAdmin(){
-        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR);
+    public static boolean isAdminOrSysDev()
+    {
+        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR) ||
+                getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
 }
