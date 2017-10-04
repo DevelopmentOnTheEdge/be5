@@ -5,11 +5,15 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.google.common.base.Splitter;
 
+import java.util.Collections;
 import java.util.List;
 
-public class RoleSelector implements Component {
+
+public class RoleSelector implements Component
+{
 
     public static class RoleSelectorResponse
     {
@@ -96,7 +100,16 @@ public class RoleSelector implements Component {
     
     private RoleSelectorResponse getState()
     {
-        return new RoleSelectorResponse(UserInfoHolder.getAvailableRoles(), UserInfoHolder.getCurrentRoles());
+        List<String> availableRoles = UserInfoHolder.getAvailableRoles();
+        if(availableRoles.size() == 1 && availableRoles.get(0).equals(RoleType.ROLE_GUEST))
+        {
+            return new RoleSelectorResponse(Collections.emptyList(), Collections.emptyList());
+        }
+
+        return new RoleSelectorResponse(
+                UserInfoHolder.getAvailableRoles(),
+                UserInfoHolder.getCurrentRoles()
+        );
     }
 
 }
