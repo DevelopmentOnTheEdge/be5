@@ -10,7 +10,9 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
+import com.developmentontheedge.be5.util.CopyGroovy;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -38,6 +40,10 @@ public class ProjectProviderImpl implements ProjectProvider
     	if(dirty || project == null)
     	{
 			project = loadProject();
+
+            //String path = new File(".").getCanonicalPath();
+			//CopyGroovy.copyFolder();
+
             be5Caches.clearAll();
             injector.get(UserAwareMeta.class).reCompileLocalizations();
             GroovyRegister.initClassLoader();
