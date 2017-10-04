@@ -2,9 +2,6 @@ package com.developmentontheedge.sql.format;
 
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstSelect;
-import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.SqlQuery;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -13,7 +10,8 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class AstTest {
+public class AstTest
+{
 
     @Test
     public void selectCount()
