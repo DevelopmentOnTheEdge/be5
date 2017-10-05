@@ -639,7 +639,7 @@ public class DpsHelper
 
     public DynamicProperty getLabelRaw(String text)
     {
-        return getLabel(text, "infoLabel");
+        return getLabelRaw(text, "infoLabel");
     }
 
     public DynamicProperty getLabelRaw(String text, String name)

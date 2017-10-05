@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
+import com.developmentontheedge.beans.DynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
 
@@ -114,5 +115,41 @@ class DpsHelperTest extends Be5ProjectDBTest
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
     }
 
+    @Test
+    void getLabelAndGetLabelRawTest() throws Exception
+    {
+        def dps = new DynamicPropertySetSupport()
+        dps.add(dpsHelper.getLabel("test"))
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','labelField':true}},'order':['/infoLabel']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+        dps.remove("infoLabel")
 
+        dps.add(dpsHelper.getLabelRaw("test"))
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true}},'order':['/infoLabel']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+        dps.remove("infoLabel")
+
+        dps.add(dpsHelper.getLabel("test", "customName"))
+        assertEquals "{'/customName':{'displayName':'customName','labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        dps.remove("customName")
+
+        dps.add(dpsHelper.getLabelRaw("test", "customName"))
+        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+    }
+
+    @Test
+    void getDpsWithLabelANDNotSubmittedTest()
+    {
+        def dps = dpsHelper.getDpsWithLabelANDNotSubmitted("test")
+        assertEquals "{'/infoLabel':{'displayName':'infoLabel','labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
+                oneQuotes(JsonFactory.dpsMeta(dps).toString())
+    }
+
+    @Test
+    void getDpsWithLabelRawANDNotSubmittedTest()
+    {
+        def dps = dpsHelper.getDpsWithLabelRawANDNotSubmitted("test")
+        assertEquals "{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
+                oneQuotes(JsonFactory.dpsMeta(dps).toString())
+    }
 }
