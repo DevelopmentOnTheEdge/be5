@@ -147,14 +147,7 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
         Object value = removeFromMap( map, "value" );
         if(value != null && value.getClass() == GStringImpl.class)
         {
-            try
-            {
-                value =  new String(((GStringImpl)value).getBytes("UTF-8"), "UTF-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw Be5Exception.internal(e);
-            }
+            value =  value.toString();
         }
         String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
         Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );

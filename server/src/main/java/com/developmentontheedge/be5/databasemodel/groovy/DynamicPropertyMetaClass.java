@@ -72,14 +72,7 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         Object value = removeFromMap( map, "value" );
         if(value != null && value.getClass() == GStringImpl.class)
         {
-            try
-            {
-                value =  new String(((GStringImpl)value).getBytes("UTF-8"), "UTF-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw Be5Exception.internal(e);
-            }
+            value =  value.toString();
         }
 
         Class type = ( Class )removeFromMap( map, "TYPE" );
