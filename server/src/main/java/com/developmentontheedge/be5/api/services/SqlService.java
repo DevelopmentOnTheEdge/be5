@@ -17,6 +17,8 @@ public interface SqlService
 
     int update(String sql, Object... params);
 
+    int updateWithoutBeSql(String sql, Object... params);
+
     <T> T insert(String sql, Object... params);
 
     default Long getLong(String sql, Object... params)

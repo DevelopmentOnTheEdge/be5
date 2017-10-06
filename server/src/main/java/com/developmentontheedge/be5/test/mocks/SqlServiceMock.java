@@ -57,6 +57,13 @@ public class SqlServiceMock implements SqlService
     }
 
     @Override
+    public int updateWithoutBeSql(String sql, Object... params)
+    {
+        log.warning("Unsafe update (not be-sql parsed and formatted): " + sql + Arrays.toString(params));
+        return mock.update(sql, params);
+    }
+
+    @Override
     public <T> T insert(String sql, Object... params)
     {
         log.fine(sql + Arrays.toString(params));

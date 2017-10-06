@@ -1,21 +1,24 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
-import java.beans.PropertyDescriptor;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,16 +35,18 @@ public class OperationHelper
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final Injector injector;
+    private final ProjectProvider projectProvider;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,Injector injector)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,Injector injector, ProjectProvider projectProvider)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.injector = injector;
+        this.projectProvider = projectProvider;
 
         tagsCache = be5Caches.createCache("Tags");
     }
@@ -527,4 +532,30 @@ public class OperationHelper
 
         return vals;
     }
+//
+//    public String parseBeSQL(String querySql)
+//    {
+//        Project project = projectProvider.getProject();
+//
+//        Entity e = new Entity( "entityForParseQueries", project.getApplication(), EntityType.TABLE );
+//        //DataElementUtils.save( e );
+//        Query query = new Query( "query", e );
+//        //DataElementUtils.save( query );
+//        query.setQuery( querySql );
+//        e.setBesql( true );
+//
+//        String finalSql;
+//        try
+//        {
+//            synchronized(query.getProject())
+//            {
+//                finalSql = query.getQueryCompiled().validate().trim();
+//            }
+//            return finalSql;
+//        }
+//        catch( ProjectElementException er )
+//        {
+//            throw Be5Exception.internalInQuery( er, query );
+//        }
+//    }
 }

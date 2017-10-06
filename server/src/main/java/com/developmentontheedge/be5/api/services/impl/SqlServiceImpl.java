@@ -71,6 +71,12 @@ public class SqlServiceImpl implements SqlService
     }
 
     @Override
+    public int updateWithoutBeSql(String sql, Object... params)
+    {
+        return execute(false, conn -> updateUnsafe(conn, sql, params));
+    }
+
+    @Override
     public <T> T insert(String sql, Object... params)
     {
         return execute(false, conn -> insert(conn, sql, params));
@@ -93,6 +99,12 @@ public class SqlServiceImpl implements SqlService
     {
         sql = format(sql);
         log.fine(sql + Arrays.toString(params));
+        return queryRunner.update(conn, sql, params);
+    }
+
+    private int updateUnsafe(Connection conn, String sql, Object... params) throws SQLException
+    {
+        log.warning("Unsafe update (not be-sql parsed and formatted): " + sql + Arrays.toString(params));
         return queryRunner.update(conn, sql, params);
     }
 
