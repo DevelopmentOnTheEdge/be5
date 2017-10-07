@@ -337,10 +337,8 @@ AstStart Start() #Start : {}
 {
     (
         Query()
-      | (BeMacro() | BeDbmsTransform())+ [Query()]
-      | Insert()
-      | Delete()
-      | Update()
+      |
+        (BeMacro() | BeDbmsTransform())+ [Query()]
     )
 
     <EOF>
@@ -353,6 +351,9 @@ void Query() #Query :
 {
     [WithClause()]
     SelectQuery()
+    | Insert()
+    | Delete()
+    | Update()
 }
 
 void SelectQuery():
