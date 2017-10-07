@@ -40,4 +40,19 @@ public class AstInsertTest
         String query = "INSERT INTO users (name, value) VALUES (?, ?)";
         assertEquals(query, SqlQuery.parse( query ).format());
     }
+
+    @Test
+    public void insertSelect()
+    {
+        String query = "INSERT INTO table2 SELECT * FROM table1 WHERE 1 = 1";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
+    @Test
+    public void insertSelect2()
+    {
+        String query = "INSERT INTO table2 (name, value) " +
+                "SELECT name, value FROM table1";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
 }
