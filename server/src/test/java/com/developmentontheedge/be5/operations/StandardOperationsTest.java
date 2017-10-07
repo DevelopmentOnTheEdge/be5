@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 
@@ -67,16 +68,17 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editOperationGenerate()
     {
-        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "1","{}");
+        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "12","{}");
 
-        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testtableAdmin"));
-        dps.setValue("name", "TestName");
-        dps.setValue("value", 1);
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
+                "name", "TestName",
+                "value", 1,
+                "ID", 12L
+        )));
 
         FormPresentation first = operationService.generate(req).getFirst();
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
 
         assertEquals("{'name':'TestName','value':1}",
                 oneQuotes(first.getBean().getJsonObject("values").toString()));
@@ -103,23 +105,24 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvoke()
     {
-        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "1",
+        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "12",
                 "{'name':'EditName','value':123}");
 
-        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testtableAdmin"));
-        dps.setValue("name", "TestName");
-        dps.setValue("value", 1);
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
+            "name", "TestName",
+            "value", 1,
+            "ID", 12L
+        )));
 
         OperationResult operationResult = operationService.execute(req).getSecond();
 
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(1L));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
 
         verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
-                "EditName", 123, 1L);
+                "EditName", 123, 12L);
     }
 
 }

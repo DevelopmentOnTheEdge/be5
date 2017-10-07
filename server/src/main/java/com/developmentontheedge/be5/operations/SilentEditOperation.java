@@ -6,8 +6,8 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.google.common.collect.ObjectArrays;
 
-import java.util.Collection;
 import java.util.Map;
+
 
 public class SilentEditOperation extends OperationSupport implements Operation
 {
@@ -16,10 +16,9 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        //dpsHelper.withUpdateSpecialColumns(entity, presetValues);
+        dps = dpsHelper.getDpsWithoutAutoIncrement(entity);
 
-        dps = db.select("SELECT * FROM " + entity.getName() + " WHERE " + entity.getPrimaryKey() + " =?",
-                rs -> dpsHelper.getDpsWithoutAutoIncrement(entity, rs), dpsHelper.castToTypePrimaryKey(entity, records[0]));
+        dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(records[0]));
 
         return dpsHelper.setValues(dps, presetValues);
     }
