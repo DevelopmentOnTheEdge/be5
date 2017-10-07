@@ -12,13 +12,13 @@ import java.util.Map;
 public class EmptyRequest implements Request
 {
     @Override
-    public Map<String, Object> getValues(String parameterName) throws Be5Exception
+    public Map<String, Object> getValuesFromJson(String parameterName) throws Be5Exception
     {
         return new HashMap<>();
     }
 
     @Override
-    public Map<String, String> getStringValues(String parameterName) throws Be5Exception
+    public Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception
     {
         return new HashMap<>();
     }

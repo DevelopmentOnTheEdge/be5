@@ -195,7 +195,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     @Override
     public void set( String id, String propertyName, String value )
     {
-        setForce( id, propertyName, value );
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(propertyName);
+        Objects.requireNonNull(value);
+        setForce( id, Collections.singletonMap( propertyName, value ) );
     }
 
     @Override
@@ -325,15 +328,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     }
 
     @Override
-    final public void setForce( String id, String propertyName, String value )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(propertyName);
-        Objects.requireNonNull(value);
-        setForce( id, Collections.singletonMap( propertyName, value ) );
-    }
-
-    @Override
     public void set( String id, Map<String, ? super Object> values )
     {
         Objects.requireNonNull(id);
@@ -392,7 +386,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 //        dpsHelper.updateValuesWithSpecial(dps, values);
 //
 //        db.update(dpsHelper.generateUpdateSqlForConditions(entity, dps, conditions),
-//                ObjectArrays.concat(dpsHelper.getValues(dps), castValues(entity, conditions), Object.class));
+//                ObjectArrays.concat(dpsHelper.getValuesFromJson(dps), castValues(entity, conditions), Object.class));
 //    }
 
     private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>

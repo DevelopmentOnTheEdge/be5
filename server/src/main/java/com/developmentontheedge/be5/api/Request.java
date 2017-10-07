@@ -24,12 +24,12 @@ public interface Request extends SessionAccess, ParametersAccess
      * @return read map
      * @throws Be5Exception if parameter has invalid format
      */
-    Map<String, Object> getValues(String parameterName) throws Be5Exception;
+    Map<String, Object> getValuesFromJson(String parameterName) throws Be5Exception;
 
     /**
-     * For tables - may be need refactoring to use Map<String, Object> getValues()
+     * For tables - may be need refactoring to use Map<String, Object> getValuesFromJson()
      */
-    Map<String, String> getStringValues(String parameterName) throws Be5Exception;
+    Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception;
 
 //    /**
 //     * For operation with POJO
@@ -39,7 +39,7 @@ public interface Request extends SessionAccess, ParametersAccess
 //     * @return
 //     * @throws Be5Exception
 //     */
-//    <T> T getValues(String parameterName, Class<T> clazz) throws Be5Exception;
+//    <T> T getValuesFromJson(String parameterName, Class<T> clazz) throws Be5Exception;
 
 	/**
      * Returns a remaining part of the request URI after the component ID.

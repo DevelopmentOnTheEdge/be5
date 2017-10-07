@@ -231,13 +231,15 @@ public class DpsHelper
         return dps;
     }
 
-    //TODO problems with null value in presetValues
     public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
     {
-        for (DynamicProperty property : dps)
+        for (Map.Entry<String, ?> entry : values.entrySet())
         {
-            Object value = values.get(property.getName());
-            if(!Utils.isEmpty(value))property.setValue(value);
+            DynamicProperty property = dps.getProperty(entry.getKey());
+            if(property != null)
+            {
+                dps.setValue(entry.getKey(), entry.getValue());
+            }
         }
         return dps;
     }

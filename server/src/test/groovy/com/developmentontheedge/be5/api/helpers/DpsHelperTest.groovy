@@ -80,7 +80,8 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void getDpsForColumnsTestSpecial() {
+    void getDpsForColumnsTestSpecial()
+    {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
         DynamicPropertySet dps = dpsHelper.getDpsForColumns(meta.getEntity("meters"), ["name"], presetValues)
 

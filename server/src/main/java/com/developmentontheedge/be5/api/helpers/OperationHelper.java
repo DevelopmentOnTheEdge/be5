@@ -51,11 +51,6 @@ public class OperationHelper
         tagsCache = be5Caches.createCache("Tags");
     }
 
-//    public OperationRequest getOperationRequest(Request req)
-//    {
-//        return new OperationRequest(req);
-//    }
-//
 //    public HashUrl createQueryUrl(Request req)
 //    {
 //        return new HashUrl(FrontendConstants.TABLE_ACTION, req.get(RestApiConstants.ENTITY), req.get(RestApiConstants.QUERY));

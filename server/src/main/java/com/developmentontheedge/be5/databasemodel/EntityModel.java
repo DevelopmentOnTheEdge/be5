@@ -111,7 +111,7 @@ public interface EntityModel<R extends RecordModel> {
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( String, String, String )}
+     * This method calls {@link #setForce( String, Map )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
@@ -131,16 +131,6 @@ public interface EntityModel<R extends RecordModel> {
     //void setMany( Map<String, String> values, String id, String... otherId);
 
 //    void setMany( Map<String, ? super Object> values, Map<String, ? super Object> conditions);
-
-    /**
-     * Sets value to property with a specified name.<br>
-     * This method may not contain any checks, it's just the method implementation.
-     * This method calls {@link #setForce( String, Map )}
-     * @param id identify number of record
-     * @param propertyName column name
-     * @param value new value
-     */
-    void setForce(String id, String propertyName, String value);
 
     /**
      * Sets value to property with a specified name.<br>

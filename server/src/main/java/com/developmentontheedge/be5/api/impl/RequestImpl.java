@@ -12,10 +12,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.google.common.base.Strings;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 
 public class RequestImpl implements Request
@@ -61,13 +58,13 @@ public class RequestImpl implements Request
 
 //
 //    @Override
-//    public <T> T getValues(String parameterName, Class<T> clazz) throws Be5Exception
+//    public <T> T getValuesFromJson(String parameterName, Class<T> clazz) throws Be5Exception
 //    {
 //        return jsonb.fromJson(get(parameterName), clazz);
 //    }
 
     @Override
-    public Map<String, Object> getValues(String parameter) throws Be5Exception
+    public Map<String, Object> getValuesFromJson(String parameter) throws Be5Exception
     {
         String valuesString = get(parameter);
         if(Strings.isNullOrEmpty(valuesString))
@@ -91,7 +88,11 @@ public class RequestImpl implements Request
             for (Map.Entry entry: values.entrySet())
             {
                 String name = entry.getKey().toString();
-                if(entry.getValue() instanceof JsonArray)
+                if(entry.getValue() instanceof JsonNull)
+                {
+                    fieldValues.put(name, null);
+                }
+                else if(entry.getValue() instanceof JsonArray)
                 {
                     JsonArray value = (JsonArray) entry.getValue();
 
@@ -125,7 +126,7 @@ public class RequestImpl implements Request
      * for query
      */
     @Override
-    public Map<String, String> getStringValues(String parameter) throws Be5Exception
+    public Map<String, String> getValuesFromJsonAsStrings(String parameter) throws Be5Exception
     {
 		String valuesString = get(parameter);
 		if(Strings.isNullOrEmpty(valuesString))

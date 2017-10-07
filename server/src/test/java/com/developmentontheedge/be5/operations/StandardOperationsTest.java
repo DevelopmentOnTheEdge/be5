@@ -125,4 +125,28 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 "EditName", 123, 12L);
     }
 
+    @Test
+    public void editInvokeSetNull()
+    {
+        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", "12",
+                "{'name':'EditName','value':null}");
+
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
+                "name", "TestName",
+                "value", 12345,
+                "ID", 12L
+        )));
+
+        OperationResult operationResult = operationService.execute(req).getSecond();
+
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
+                operationResult);
+
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
+
+        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
+                "EditName", null, 12L);
+    }
+
+
 }

@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
@@ -70,7 +69,7 @@ public class QueryRouter
         
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        Map<String, String> parametersMap = req.getStringValues(RestApiConstants.VALUES);
+        Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
         
         routeAndRun(entityName, queryName, parametersMap, runner);
     }

@@ -84,8 +84,8 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     {
         database.testTags << [
                 CODE         : "12",
-                payable      : null,
-                admlevel     : null,
+                payable      : "yes",
+                admlevel     : "Regional",
                 referenceTest: null,
                 testLong     : null,
         ]

@@ -55,7 +55,7 @@ public class OperationServiceImpl implements OperationService
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
+        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
@@ -157,7 +157,7 @@ public class OperationServiceImpl implements OperationService
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
+        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
 
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
@@ -320,7 +320,7 @@ public class OperationServiceImpl implements OperationService
         }
     }
 
-    static String[] selectedRows(String selectedRowsString)
+    public static String[] selectedRows(String selectedRowsString)
     {
         if(selectedRowsString.trim().isEmpty())return new String[0];
         return selectedRowsString.split(",");

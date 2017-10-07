@@ -17,7 +17,7 @@ class RequestTest extends TestUtils
                 "{'name':'test','value':1,'accept':true}")
 
         assertEquals(ImmutableMap.of("name", "test", "value", "1", "accept", "true"),
-                req.getValues(RestApiConstants.VALUES))
+                req.getValuesFromJson(RestApiConstants.VALUES))
     }
 
 }

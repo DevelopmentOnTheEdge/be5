@@ -4,9 +4,9 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.impl.OperationServiceImpl;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
@@ -40,7 +39,7 @@ public class Form implements Component
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, Object> presetValues = req.getValues(RestApiConstants.VALUES);
+//        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
 
         Either<FormPresentation, OperationResult> generate;
@@ -62,7 +61,10 @@ public class Form implements Component
             ImmutableMap.builder()
                     .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
                     .build(),
-            Collections.singletonMap(SELF_LINK, ActionHelper.toAction(queryName, meta.getModel()).arg)
+            Collections.singletonMap(SELF_LINK,
+                    (String) new OperationInfo(queryName, meta.getModel())
+                            .redirectThisOperation(OperationServiceImpl.selectedRows(selectedRowsString))
+                            .getDetails())
         );
     }
 
