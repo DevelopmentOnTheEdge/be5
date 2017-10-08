@@ -132,14 +132,14 @@ public class RequestImpl implements Request
     @Override
     public Map<String, String> getValuesFromJsonAsStrings(String parameter) throws Be5Exception
     {
-		String valuesString = get(parameter);
-		if(Strings.isNullOrEmpty(valuesString))
-		{
-			return Collections.emptyMap();
-		}
-        
+        String valuesString = get(parameter);
+        if(Strings.isNullOrEmpty(valuesString))
+        {
+            return Collections.emptyMap();
+        }
+
         Map<String, String> fieldValues = new HashMap<>();
-        
+
         try
         {
             JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
