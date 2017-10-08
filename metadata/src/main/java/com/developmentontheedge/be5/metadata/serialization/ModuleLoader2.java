@@ -36,6 +36,7 @@ public class ModuleLoader2
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
 
     private static Map<String, Project> modulesMap;
+    public static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
 
     public static Map<String, Project> getModulesMap()
     {
@@ -310,14 +311,14 @@ public class ModuleLoader2
     {
         try
         {
-            Map<String, String> modulesSource = readDevPathsToSourceProjects();
-            if(modulesSource.isEmpty())return;
+            Map<String, Path> modulesSource = readDevPathsToSourceProjects();
+            if(modulesSource.isEmpty() && pathsToProjectsToHotReload.isEmpty())return;
 
             StringBuilder sb = new StringBuilder();
             sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
             boolean started = false;
 
-            for (Map.Entry<String, String> moduleSource : modulesSource.entrySet())
+            for (Map.Entry<String, Path> moduleSource : modulesSource.entrySet())
             {
                 boolean used = false;
                 for (int i = 0; i < urls.size(); i++)
@@ -326,13 +327,13 @@ public class ModuleLoader2
                     if (name.equals(moduleSource.getKey()))
                     {
                         used = started = true;
-                        urls.set(i, Paths.get(moduleSource.getValue()).toUri().toURL());
+                        urls.set(i, moduleSource.getValue().toUri().toURL());
                         sb.append("\n - ").append(String.format("%-15s", name)).append(urls.get(i)).append(" - replace");
                     }
                 }
                 if(!used)
                 {
-                    URL url = Paths.get(moduleSource.getValue()).toUri().toURL();
+                    URL url = moduleSource.getValue().toUri().toURL();
                     urls.add(url);
                     sb.append("\n - ").append(moduleSource.getKey()).append(": ").append(url).append(" - add");
                 }
@@ -362,21 +363,46 @@ public class ModuleLoader2
      * @return Map name -> source path of modules
      */
     @SuppressWarnings("unchecked")
-    private static Map<String, String> readDevPathsToSourceProjects() throws IOException
+    private static Map<String, Path> readDevPathsToSourceProjects() throws IOException
     {
         ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
-        if(urls.size() == 1){
+        if(urls.size() > 1)
+        {
+            throw new RuntimeException("dev.yaml should be only in the project.");
+        }
+
+        if(urls.size() == 1)
+        {
             BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
-            List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) ((Map<String, Object>) new Yaml().load(reader)).get("pathsToSourceProjects");
+            Map<String, Object> content = (Map<String, Object>) new Yaml().load(reader);
+
+            initPathsForDev(content);
+
+            //deprecated
+            List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) content.get("pathsToSourceProjects");
             if(modulesTemp == null)return new HashMap<>();
-            Map<String, String> modules = new HashMap<>();
+            Map<String, Path> modules = new HashMap<>();
             for (Map<String, String> element: modulesTemp)
             {
                 Map.Entry<String, String> entry = element.entrySet().iterator().next();
-                modules.put(entry.getKey(), entry.getValue());
+                modules.put(entry.getKey(), Paths.get(entry.getValue()));
             }
             return modules;
         }
         return new HashMap<>();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void initPathsForDev(Map<String, Object> content)
+    {
+        List<Map<String, String>> paths = ( List<Map<String, String>> ) content.get("paths");
+        if(paths != null)
+        {
+            for (Map<String, String> element : paths)
+            {
+                Map.Entry<String, String> entry = element.entrySet().iterator().next();
+                pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
+            }
+        }
     }
 }

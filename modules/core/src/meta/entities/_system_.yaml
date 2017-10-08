@@ -46,8 +46,8 @@ _system_:
       type: Groovy
       records: 1
       roles: Administrator
-      file: SessionVariablesEdit.groovy
+      file: system/SessionVariablesEdit.groovy
   - ReloadProject:
       type: Groovy
       roles: Administrator
-      file: ReloadProject.groovy
+      file: system/ReloadProject.groovy

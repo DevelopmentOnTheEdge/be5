@@ -1,13 +1,16 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +35,26 @@ public class GroovyRegister
 
     public static Class parseClass( String text, String name )
     {
+//todo parse text and load extend operation first in dev mode ModuleLoader2.pathsToProjectsToHotReload.size() > 0
+//        try {
+//            getClassLoader().parseClass(Paths.get("C:\\Users\\Innokentiy\\workspace\\dote\\be5\\modules\\core\\src\\groovy\\operations\\system\\SessionVariablesEdit.groovy").toFile() );
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return getClassLoader().parseClass( text, name );
     }
 
     public static void initClassLoader()
     {
         classLoader = new GroovyClassLoader();
-        //classLoader.addClasspath("src/groovy/operations");
+        addClassPaths();
+    }
+
+    private static void addClassPaths()
+    {
+        ModuleLoader2.pathsToProjectsToHotReload.forEach(
+                (name, path) -> classLoader.addClasspath(path.resolve("src/groovy/operations").toString())
+        );
     }
 
 //    public static Class parseClassWithCache( String name, String text )

@@ -95,6 +95,31 @@
 					<!--<mainClass>com.developmentontheedge.be5.modules.core.gen.EntityModelsGen</mainClass>-->
 				<!--</configuration>-->
 			<!--</plugin>-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/groovy/operations/</directory>
+									<targetPath>${project.build.directory}/classes</targetPath>
+								</resource>
+							</resources>
+							<!--<sources>-->
+							<!--<source>${project.build.directory}/groovy-code/</source>-->
+							<!--</sources>-->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
