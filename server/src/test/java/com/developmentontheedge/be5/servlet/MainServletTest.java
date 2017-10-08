@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,27 +53,25 @@ public class MainServletTest extends Be5ProjectTest
     }
 
     @Test
-    @Ignore//todo use another component
     public void testGet() throws Exception
     {
-        when(request.getRequestURI()).thenReturn("/api/static/info.be");
+        when(request.getRequestURI()).thenReturn("/api/roleSelector");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
         spyMainServlet.doGet(request, response);
 
-        verify(writer).append(doubleQuotes("{'type':'static','value':'<h1>Info</h1><p>Test text.</p>'}"));
+        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[]}"));
     }
 
     @Test
-    @Ignore//todo use another component
     public void testUriPrefix() throws Exception
     {
-        when(request.getRequestURI()).thenReturn("/be5/api/static/info.be");
+        when(request.getRequestURI()).thenReturn("/be5/api/roleSelector");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
         spyMainServlet.doGet(request, response);
 
-        verify(writer).append(doubleQuotes("{'type':'static','value':'<h1>Info</h1><p>Test text.</p>'}"));
+        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[]}"));
     }
 
     @Test
@@ -97,16 +97,15 @@ public class MainServletTest extends Be5ProjectTest
     }
 
     @Test
-    @Ignore//todo use another component
     public void runComponent() throws Exception
     {
         Request req = mock(Request.class);
-        when(req.getRequestUri()).thenReturn("info.be");
+        when(req.getRequestUri()).thenReturn("");
         Response res = mock(Response.class);
 
-        spyMainServlet.runComponent("static", req, res);
+        spyMainServlet.runComponent("roleSelector", req, res);
 
-        verify(res).sendAsJson(eq("static"), eq("<h1>Info</h1><p>Test text.</p>"));
+        verify(res).sendAsRawJson(eq(new RoleSelector.RoleSelectorResponse(Collections.emptyList(), Collections.emptyList())));
     }
 
     @Test
