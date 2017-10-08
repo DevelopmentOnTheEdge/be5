@@ -39,6 +39,11 @@ public class DatabaseServiceImpl implements DatabaseService
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
         profile = projectProvider.getProject().getConnectionProfile();
+        if(profile == null)
+        {
+            throw Be5Exception.internal("Connection profile is not configured.");
+        }
+
         type = profile.getRdbms();
 
         bds = new BasicDataSource();
