@@ -10,11 +10,11 @@ class SessionVariablesEdit extends OperationSupport implements Operation
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-//        dps << [
-//                name        : "label",
-//                value       : "Тип: " + session[records[0]].getClass().getName(),
-//                LABEL_FIELD : true
-//        ]
+        dps << [
+                name        : "label",
+                value       : "Тип: " + session[records[0]].getClass().getName(),
+                LABEL_FIELD : true
+        ]
 
         dps << [
                 name        : "newValue",

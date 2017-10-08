@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.env.Injector;
@@ -10,6 +12,9 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.GroovyOperation;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -25,6 +30,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import java.util.List;
 import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
@@ -36,14 +42,16 @@ public class OperationServiceImpl implements OperationService
     private final Injector injector;
     private final DatabaseService databaseService;
     private final UserAwareMeta userAwareMeta;
+    private final Meta meta;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, DatabaseService databaseService, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta)
+    public OperationServiceImpl(Injector injector, DatabaseService databaseService, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta, Meta meta)
     {
         this.injector = injector;
         this.databaseService = databaseService;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
+        this.meta = meta;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
     }
@@ -277,6 +285,7 @@ public class OperationServiceImpl implements OperationService
             case OPERATION_TYPE_GROOVY:
                 try
                 {
+                    //loadSuperOperation(operationInfo.getCode());
                     Class aClass = groovyOperationClasses.get(operationInfo.getEntity() + operationInfo.getName(),
                             k -> GroovyRegister.parseClass( operationInfo.getCode(),
                                     operationInfo.getEntity() + "." + operationInfo.getName() + ".groovy" ));
@@ -306,6 +315,41 @@ public class OperationServiceImpl implements OperationService
         injector.injectAnnotatedFields(operation);
 
         return operation;
+    }
+
+    private void loadSuperOperation(String code)
+    {
+        //todo parse from code
+        String superOperationName = "SessionVariablesEdit";
+        String superOperationFullName = "system.SessionVariablesEdit.groovy";
+
+        List<Entity> entities = meta.getOrderedEntities("ru");
+        if(ModuleLoader2.pathsToProjectsToHotReload.size() > 0 && UserInfoHolder.getUserInfo() != null)
+        {
+            for (Entity entity : entities)
+            {
+                List<String> operationNames = meta.getOperationNames(entity);
+                for (String operationName : operationNames)
+                {
+                    if (operationName.equals(superOperationName))
+                    {
+                        com.developmentontheedge.be5.metadata.model.Operation anyOperation = meta.getOperation(entity.getName(), operationName, UserInfoHolder.getAvailableRoles());
+                        if (anyOperation.getType().equals("Groovy"))
+                        {
+                            GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
+                            String fileName = groovyOperation.getFileName().replace("/", ".");
+                            if (fileName.equals(superOperationFullName))
+                            {
+                                //loadSuperOperation(groovyOperation.getCode());
+
+                                groovyOperationClasses.get(fileName,
+                                        k -> GroovyRegister.parseClass(groovyOperation.getCode(), fileName));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)
