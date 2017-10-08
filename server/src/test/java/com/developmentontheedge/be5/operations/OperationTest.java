@@ -57,11 +57,11 @@ public class OperationTest extends SqlMockOperationTest
         Either<FormPresentation, OperationResult> generate = operationService.generate(
                 getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
                         jsonb.toJson(ImmutableMap.of(
-                                "name", "",
+                                "name", "test",
                                 "number", "0",
                                 OperationSupport.reloadControl, "name"))));
 
-        assertEquals("{'name':'','number':0}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+        assertEquals("{'name':'test','number':0}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
     }
 
     @Test
@@ -151,9 +151,10 @@ public class OperationTest extends SqlMockOperationTest
     @Test
     public void testOperationInvokeNullInsteadEmptyString()
     {
-        operationService.execute(
-                getSpyMockRecForOp("testTags", "All records", "Insert", "",
-                        doubleQuotes("{'CODE':'01','referenceTest':'','payable':'','admlevel':'','testLong':''}")));
+        Request req = getSpyMockRecForOp("testTags", "All records", "Insert", "",
+                doubleQuotes("{'CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional','testLong':''}"));
+
+        operationService.execute(req).getSecond();
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testTags (referenceTest, CODE, payable, admlevel, testLong) VALUES (?, ?, ?, ?, ?)",
                 null, "01", "yes", "Regional", null

@@ -111,6 +111,10 @@ public class RequestImpl implements Request
                     {
                         fieldValues.put(name, value);
                     }
+                    else
+                    {
+                        fieldValues.put(name, null);
+                    }
                 }
 
             }

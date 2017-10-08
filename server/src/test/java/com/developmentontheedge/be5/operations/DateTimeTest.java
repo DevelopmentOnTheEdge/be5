@@ -1,18 +1,12 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.google.common.collect.ImmutableMap;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -57,12 +51,12 @@ public class DateTimeTest extends SqlMockOperationTest
     @Test
     public void invokeEmptyValue()
     {
-        operationService.execute(
+        FormPresentation first = operationService.execute(
                 getSpyMockRecForOp("dateTime", "All records", "Insert", "0",
-                        jsonb.toJson(ImmutableMap.of("activeFrom",""))));
+                        jsonb.toJson(ImmutableMap.of("activeFrom", "")))).getFirst();
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
-                Date.valueOf("1900-01-01"));
+        assertEquals("Can not be null",
+                first.bean.getJsonObject("meta").getJsonObject("/activeFrom").getString("message"));
     }
 
     @Test
