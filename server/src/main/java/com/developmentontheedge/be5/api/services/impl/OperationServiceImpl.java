@@ -326,28 +326,26 @@ public class OperationServiceImpl implements OperationService
             String superOperationFullName = getSuperOperationFullName(operationInfo);
 
             List<Entity> entities = meta.getOrderedEntities("ru");
-            if (ModuleLoader2.pathsToProjectsToHotReload.size() > 0 && UserInfoHolder.getUserInfo() != null)
+            for (Entity entity : entities)
             {
-                for (Entity entity : entities)
+                List<String> operationNames = meta.getOperationNames(entity);
+                for (String operationName : operationNames)
                 {
-                    List<String> operationNames = meta.getOperationNames(entity);
-                    for (String operationName : operationNames)
+                    if (operationName.equals(superOperationName))
                     {
-                        if (operationName.equals(superOperationName))
+                        com.developmentontheedge.be5.metadata.model.Operation anyOperation
+                                = meta.getOperation(entity.getName(), operationName, UserInfoHolder.getAvailableRoles());
+                        if (anyOperation.getType().equals("Groovy"))
                         {
-                            com.developmentontheedge.be5.metadata.model.Operation anyOperation = meta.getOperation(entity.getName(), operationName, UserInfoHolder.getAvailableRoles());
-                            if (anyOperation.getType().equals("Groovy"))
+                            GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
+                            String fileName = groovyOperation.getFileName().replace("/", ".");
+                            if (fileName.equals(superOperationFullName))
                             {
-                                GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
-                                String fileName = groovyOperation.getFileName().replace("/", ".");
-                                if (fileName.equals(superOperationFullName))
-                                {
-                                    //preloadSuperOperation(new OperationInfo("", anyOperation));
+                                //preloadSuperOperation(new OperationInfo("", anyOperation));
 
-                                    groovyOperationClasses.get(fileName,
-                                            k -> GroovyRegister.parseClass(groovyOperation.getCode(), fileName));
-                                    return Collections.singletonList(fileName);
-                                }
+                                groovyOperationClasses.get(fileName,
+                                        k -> GroovyRegister.parseClass(groovyOperation.getCode(), fileName));
+                                return Collections.singletonList(fileName);
                             }
                         }
                     }
