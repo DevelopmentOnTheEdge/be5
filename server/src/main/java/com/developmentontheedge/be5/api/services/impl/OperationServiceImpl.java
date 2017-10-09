@@ -30,6 +30,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
@@ -285,7 +286,7 @@ public class OperationServiceImpl implements OperationService
             case OPERATION_TYPE_GROOVY:
                 try
                 {
-                    //loadSuperOperation(operationInfo.getCode());
+                    preloadSuperOperation(operationInfo);
                     Class aClass = groovyOperationClasses.get(operationInfo.getEntity() + operationInfo.getName(),
                             k -> GroovyRegister.parseClass( operationInfo.getCode(),
                                     operationInfo.getEntity() + "." + operationInfo.getName() + ".groovy" ));
@@ -317,39 +318,87 @@ public class OperationServiceImpl implements OperationService
         return operation;
     }
 
-    private void loadSuperOperation(String code)
+    List<String> preloadSuperOperation(OperationInfo operationInfo)
     {
-        //todo parse from code
-        String superOperationName = "SessionVariablesEdit";
-        String superOperationFullName = "system.SessionVariablesEdit.groovy";
-
-        List<Entity> entities = meta.getOrderedEntities("ru");
-        if(ModuleLoader2.pathsToProjectsToHotReload.size() > 0 && UserInfoHolder.getUserInfo() != null)
+        String superOperationName = getSuperOperationClassName(operationInfo);
+        if(superOperationName != null)
         {
-            for (Entity entity : entities)
-            {
-                List<String> operationNames = meta.getOperationNames(entity);
-                for (String operationName : operationNames)
-                {
-                    if (operationName.equals(superOperationName))
-                    {
-                        com.developmentontheedge.be5.metadata.model.Operation anyOperation = meta.getOperation(entity.getName(), operationName, UserInfoHolder.getAvailableRoles());
-                        if (anyOperation.getType().equals("Groovy"))
-                        {
-                            GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
-                            String fileName = groovyOperation.getFileName().replace("/", ".");
-                            if (fileName.equals(superOperationFullName))
-                            {
-                                //loadSuperOperation(groovyOperation.getCode());
+            String superOperationFullName = getSuperOperationFullName(operationInfo);
 
-                                groovyOperationClasses.get(fileName,
-                                        k -> GroovyRegister.parseClass(groovyOperation.getCode(), fileName));
+            List<Entity> entities = meta.getOrderedEntities("ru");
+            if (ModuleLoader2.pathsToProjectsToHotReload.size() > 0 && UserInfoHolder.getUserInfo() != null)
+            {
+                for (Entity entity : entities)
+                {
+                    List<String> operationNames = meta.getOperationNames(entity);
+                    for (String operationName : operationNames)
+                    {
+                        if (operationName.equals(superOperationName))
+                        {
+                            com.developmentontheedge.be5.metadata.model.Operation anyOperation = meta.getOperation(entity.getName(), operationName, UserInfoHolder.getAvailableRoles());
+                            if (anyOperation.getType().equals("Groovy"))
+                            {
+                                GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
+                                String fileName = groovyOperation.getFileName().replace("/", ".");
+                                if (fileName.equals(superOperationFullName))
+                                {
+                                    //preloadSuperOperation(new OperationInfo("", anyOperation));
+
+                                    groovyOperationClasses.get(fileName,
+                                            k -> GroovyRegister.parseClass(groovyOperation.getCode(), fileName));
+                                    return Collections.singletonList(fileName);
+                                }
                             }
                         }
                     }
                 }
             }
         }
+        return Collections.emptyList();
+    }
+
+    String getSuperOperationClassName(OperationInfo operationInfo)
+    {
+        String classBegin = "class " + operationInfo.getName() + " extends ";
+        String code = operationInfo.getCode();
+        int superClassBeginPos = code.indexOf(classBegin);
+        if(superClassBeginPos == -1)return null;
+
+        superClassBeginPos += classBegin.length();
+        int superClassEndPos = Math.min(
+                code.indexOf(" ", superClassBeginPos) != -1 ? code.indexOf(" ", superClassBeginPos) : 999999999,
+                code.indexOf("\n", superClassBeginPos));
+
+
+        return code.substring(superClassBeginPos, superClassEndPos).trim();
+    }
+
+    String getSuperOperationFullName(OperationInfo operationInfo)
+    {
+        String code = operationInfo.getCode();
+        String superOperationName = getSuperOperationClassName(operationInfo);
+
+        String superOperationFullName = superOperationName + ".groovy";
+
+        int lineBegin = code.indexOf("package ");
+        if(lineBegin != -1){
+            int lineEnd = code.indexOf("\n", lineBegin);
+            String line = code.substring(lineBegin, lineEnd);
+            superOperationFullName = line.replace("package ", "").replace(";", "")
+                    + "." + superOperationName + ".groovy";
+        }
+
+        lineBegin = code.indexOf("import ");
+        while (lineBegin != -1)
+        {
+            int lineEnd = code.indexOf("\n", lineBegin);
+            String line = code.substring(lineBegin, lineEnd);
+            if(line.contains("." + superOperationName)){
+                superOperationFullName = line.replace("import ", "").replace(";", "") + ".groovy";
+            }
+            lineBegin = code.indexOf("import ", lineEnd);
+        }
+        return superOperationFullName;
     }
 
     private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)

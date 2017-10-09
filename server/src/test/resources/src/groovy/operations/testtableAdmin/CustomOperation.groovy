@@ -1,4 +1,4 @@
-package src.groovy.operations.testtableAdmin
+package testtableAdmin
 
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext

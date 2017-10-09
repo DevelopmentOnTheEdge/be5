@@ -22,6 +22,8 @@ testtableAdmin:
       operations:
       - TestOperation
       - TestGroovyOp
+      - OperationWithExtend
+      - OperationWithExtend2
       - ErrorProcessing
       - CustomOperation
       - Delete
@@ -73,6 +75,14 @@ testtableAdmin:
       type: Groovy
       roles: Administrator
       file: TestGroovyOp.groovy
+  - OperationWithExtend2:
+      type: Groovy
+      roles: Administrator
+      file: OperationWithExtend2.groovy
+  - OperationWithExtend:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/OperationWithExtend.groovy
   - ErrorProcessing:
       type: Groovy
       roles: Administrator
