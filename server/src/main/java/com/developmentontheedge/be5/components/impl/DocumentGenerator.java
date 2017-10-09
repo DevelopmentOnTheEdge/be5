@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -47,12 +48,14 @@ public class DocumentGenerator implements Runner {
     private final Response res;
     private final Injector injector;
     private final UserAwareMeta userAwareMeta;
+    private final CoreUtils coreUtils;
     
     public DocumentGenerator(Request req, Response res, Injector injector)
     {
         this.req = req;
         this.res = res;
         this.injector = injector;
+        this.coreUtils = injector.get(CoreUtils.class);
         this.userAwareMeta = injector.get(UserAwareMeta.class);
     }
     
@@ -141,7 +144,8 @@ public class DocumentGenerator implements Runner {
 
         if (limit == 0)
         {
-            limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit", 10).toString());
+            limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
+                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
         TableModel table = TableModel

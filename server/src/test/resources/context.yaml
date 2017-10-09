@@ -2,6 +2,9 @@ context:
   services:
   - com.developmentontheedge.be5.env.impl.testServices.AService
   - com.developmentontheedge.be5.env.impl.testServices.BService
+  - coreUtils:
+      interface:      com.developmentontheedge.be5.api.services.CoreUtils
+      implementation: com.developmentontheedge.be5.test.mocks.CoreUtilsForTest
 config:
   com.developmentontheedge.be5.api.services.impl.LogConfigurator:
     path: '/logging.properties'

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
+import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.util.BlobUtils;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class CoreUtils
+public class CoreUtilsImpl implements CoreUtils
 {
     public static final String MISSING_SETTING_VALUE = "some-absolutely-impossble-setting-value";
 
@@ -20,7 +21,7 @@ public class CoreUtils
 
     private final SqlService db;
 
-    public CoreUtils(SqlService db, Be5Caches be5Caches)
+    public CoreUtilsImpl(SqlService db, Be5Caches be5Caches)
     {
         this.db = db;
 
@@ -42,7 +43,8 @@ public class CoreUtils
     // it is deliberately not synchronized!
     // it is better to let 2 processes to do the same thing twice than
     // to block on network call
-    public String getSystemSettingInSection( String section, String param, String defValue )
+    @Override
+    public String getSystemSettingInSection(String section, String param, String defValue)
     {
         Objects.requireNonNull(section); Objects.requireNonNull(param);
 
@@ -76,7 +78,8 @@ public class CoreUtils
      * @param param parameter name
      * @param value parameter value
      */
-    public void setSystemSettingInSection( String section, String param, String value )
+    @Override
+    public void setSystemSettingInSection(String section, String param, String value)
     {
         Objects.requireNonNull(section); Objects.requireNonNull(param);
 
@@ -99,7 +102,8 @@ public class CoreUtils
      * @param section system settings section name
      * @return Map in the form parameter name - parameter value
      */
-    public Map<String, String> getSystemSettingsInSection( String section )
+    @Override
+    public Map<String, String> getSystemSettingsInSection(String section)
     {
         Objects.requireNonNull(section);
 
@@ -121,7 +125,8 @@ public class CoreUtils
      * @param param parameter name
      * @return parameter value
      */
-    public String getSystemSetting( String param )
+    @Override
+    public String getSystemSetting(String param)
     {
         return getSystemSettingInSection( "system", param, null );
     }
@@ -134,12 +139,14 @@ public class CoreUtils
      * @param defValue this value is returned, when such parameter does not exists in DB
      * @return parameter value
      */
-    public String getSystemSetting( String param, String defValue )
+    @Override
+    public String getSystemSetting(String param, String defValue)
     {
         return getSystemSettingInSection( "system", param, defValue );
     }
 
-    public boolean getBooleanSystemSetting( String param, boolean defValue )
+    @Override
+    public boolean getBooleanSystemSetting(String param, boolean defValue)
     {
         String check = getSystemSetting( param, null );
         if( check == null )
@@ -149,7 +156,8 @@ public class CoreUtils
         return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
     }
 
-    public boolean getBooleanSystemSetting( String param )
+    @Override
+    public boolean getBooleanSystemSetting(String param)
     {
         return getBooleanSystemSetting( param, false );
     }
@@ -164,7 +172,8 @@ public class CoreUtils
      * @param param parameter name
      * @return module parameter value
      */
-    public String getModuleSetting( String module, String param )
+    @Override
+    public String getModuleSetting(String module, String param)
     {
         return getModuleSetting( module, param, null );
     }
@@ -178,7 +187,8 @@ public class CoreUtils
      * @param defValue default value for return, if there isn't such section or parameter
      * @return module parameter value
      */
-    public String getModuleSetting( String module, String param, String defValue )
+    @Override
+    public String getModuleSetting(String module, String param, String defValue)
     {
         return getSystemSettingInSection( module.toUpperCase() + "_module", param, defValue );
     }
@@ -191,7 +201,8 @@ public class CoreUtils
 //        return changeType( val, clazz );
 //    }
 
-    public boolean getBooleanModuleSetting( String module, String param, boolean defValue )
+    @Override
+    public boolean getBooleanModuleSetting(String module, String param, boolean defValue)
     {
         String check = getModuleSetting( module, param, null );
         if( check == null )
@@ -201,7 +212,8 @@ public class CoreUtils
         return Arrays.asList( "TRUE", "YES", "1", "ON" ).contains( check.toUpperCase() );
     }
 
-    public boolean getBooleanModuleSetting( String module, String param )
+    @Override
+    public boolean getBooleanModuleSetting(String module, String param)
     {
         return getBooleanModuleSetting( module, param, false );
     }
@@ -213,7 +225,8 @@ public class CoreUtils
      * @param param parameter name
      * @return parameter value
      */
-    public String getUserSetting( String user, String param )
+    @Override
+    public String getUserSetting(String user, String param)
     {
         Objects.requireNonNull(user); Objects.requireNonNull(param);
 
@@ -245,7 +258,8 @@ public class CoreUtils
      * @param param parameter name
      * @param value parameter value
      */
-    public void setUserSetting( String user, String param, String value )
+    @Override
+    public void setUserSetting(String user, String param, String value)
     {
         Objects.requireNonNull(user); Objects.requireNonNull(param);
 
@@ -265,7 +279,8 @@ public class CoreUtils
      * @param user user name
      * @param param parameter name
      */
-    public void removeUserSetting( String user, String param )
+    @Override
+    public void removeUserSetting(String user, String param)
     {
         Objects.requireNonNull(user); Objects.requireNonNull(param);
 

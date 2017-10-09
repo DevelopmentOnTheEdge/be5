@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services
 
 import com.developmentontheedge.be5.api.services.Be5Caches
+import com.developmentontheedge.be5.api.services.CoreUtils
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
@@ -9,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
+
 
 class CoreUtilsTest extends Be5ProjectDBTest
 {
@@ -73,7 +75,7 @@ class CoreUtilsTest extends Be5ProjectDBTest
     void getBooleanSystemSetting() throws Exception
     {
         assertEquals false, utils.getBooleanSystemSetting("is_active")
-        assertEquals CoreUtils.MISSING_SETTING_VALUE,
+        assertEquals CoreUtilsImpl.MISSING_SETTING_VALUE,
                 be5Caches.getCache("System settings").getIfPresent("system.is_active")
         assertEquals true, utils.getBooleanSystemSetting("is_active", true)
 
@@ -102,7 +104,7 @@ class CoreUtilsTest extends Be5ProjectDBTest
     void getUserSetting() throws Exception
     {
         assertEquals null, utils.getUserSetting("testName", "companyID")
-        assertEquals CoreUtils.MISSING_SETTING_VALUE,
+        assertEquals CoreUtilsImpl.MISSING_SETTING_VALUE,
                 be5Caches.getCache("User settings").getIfPresent("testName.companyID")
 
         assertEquals null, utils.getUserSetting("testName", "companyID")
