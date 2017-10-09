@@ -17,6 +17,9 @@ public interface SqlService
 
     int update(String sql, Object... params);
 
+    //todo add несколько запросов через ';',
+    //todo add QueryRunner batch, insertBatch
+
     int updateWithoutBeSql(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
