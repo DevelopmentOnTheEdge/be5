@@ -152,6 +152,20 @@ public class DpsHelper
         return dps;
     }
 
+    public void addDynamicProperties(Entity entity, DynamicPropertySet dps, Collection<String> propertyNames)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
+        for(String propertyName: propertyNames)
+        {
+            ColumnDef columnDef = columns.get(propertyName);
+            DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(columnDef);
+            addTags(dynamicProperty, columnDef);
+
+            dps.add(dynamicProperty);
+        }
+    }
+
     public DynamicPropertySet getDpsForColumnsWithoutTags(Entity entity, Collection<String> columnNames, Map<String, ? super Object> presetValues)
     {
         DynamicPropertySet dps = getDpsForColumnsWithoutTags(entity, columnNames);
