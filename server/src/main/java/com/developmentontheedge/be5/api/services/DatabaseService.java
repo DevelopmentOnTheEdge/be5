@@ -16,12 +16,6 @@ public interface DatabaseService extends DbmsConnector
 
     <T> T transaction(SqlExecutor<T> executor);
 
-    int getNumIdle();
-
-    int getNumActive();
-
-    String getConnectionsStatistics();
-
     Rdbms getRdbms();
 
     String getConnectionProfileName();

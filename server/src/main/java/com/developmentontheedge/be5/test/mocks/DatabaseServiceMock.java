@@ -34,21 +34,6 @@ public class DatabaseServiceMock implements DatabaseService
     }
 
     @Override
-    public int getNumIdle() {
-        return 0;
-    }
-
-    @Override
-    public int getNumActive() {
-        return 0;
-    }
-
-    @Override
-    public String getConnectionsStatistics() {
-        return "test";
-    }
-
-    @Override
     public Rdbms getRdbms() {
         return Rdbms.H2;
     }

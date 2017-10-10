@@ -221,28 +221,6 @@ public class DatabaseServiceImpl implements DatabaseService
         }
     }
 
-    public int getNumIdle()
-    {
-        if(dataSource instanceof BasicDataSource) {
-            return ((BasicDataSource)dataSource).getNumIdle();
-        }else{
-            return 0;
-        }
-    }
-
-    public int getNumActive()
-    {
-        if(dataSource instanceof BasicDataSource) {
-            return ((BasicDataSource)dataSource).getNumActive();
-        }else{
-            return 0;
-        }
-    }
-
-    public String getConnectionsStatistics(){
-        return "Active:" + getNumActive() + ", Idle:" + getNumIdle();
-    }
-
     @Override
     public Rdbms getRdbms()
     {
