@@ -41,6 +41,7 @@ public class DatabaseServiceImpl implements DatabaseService
 
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
+        String configInfo;
         try
         {
             InitialContext ic = new InitialContext();
@@ -48,6 +49,7 @@ public class DatabaseServiceImpl implements DatabaseService
             dataSource = (DataSource) xmlContext.lookup("jdbc/" + projectProvider.getProject().getAppName());
 
             type = Rdbms.getRdbms(((BasicDataSource)dataSource).getUrl());
+            configInfo = "xml context : " + "'jdbc/" + projectProvider.getProject().getAppName() + "'";
         }
         catch (NamingException ignore)
         {
@@ -66,14 +68,15 @@ public class DatabaseServiceImpl implements DatabaseService
             bds.setPassword(profile.getPassword());
 
             dataSource = bds;
-            log.info("Use connection profile: " + profile.getName());
+            configInfo = "connection profile form 'profile.local' - " + profile.getName();
         }
 
 //        //TODO add to Rdbms
 //        dataSource.setValidationQuery("select 1");
 
         log.info(JULLogger.infoBlock(
-            "Using connection:   " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
+            "ConfigInfo: " + configInfo +
+            "\nUsing connection:   " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
         ));
     }
 
