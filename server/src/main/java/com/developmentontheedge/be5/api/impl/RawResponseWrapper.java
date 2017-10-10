@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +20,7 @@ public class RawResponseWrapper {
     private final HttpServletResponse rawResponse;
     private PrintWriter out = null;
     private boolean contentTypeIsSet = false;
-    private boolean characterEncodingIsSet = false;
+    //private boolean characterEncodingIsSet = false;
 
     RawResponseWrapper(HttpServletResponse rawResponse)
     {
@@ -36,13 +35,13 @@ public class RawResponseWrapper {
         contentTypeIsSet = true;
     }
 
-    void setCharacterEncoding(Charset charset)
-    {
-        checkNotNull(charset);
-        checkState(!characterEncodingIsSet);
-        rawResponse.setCharacterEncoding(charset.name());
-        characterEncodingIsSet = true;
-    }
+//    void setCharacterEncoding(Charset charset)
+//    {
+//        checkNotNull(charset);
+//        checkState(!characterEncodingIsSet);
+//        rawResponse.setCharacterEncoding(charset.name());
+//        characterEncodingIsSet = true;
+//    }
     
     public void append(String string)
     {
@@ -61,7 +60,7 @@ public class RawResponseWrapper {
     private PrintWriter getWriter()
     {
         checkState(contentTypeIsSet);
-        checkState(characterEncodingIsSet);
+        //checkState(characterEncodingIsSet);
         
         if (out == null)
         {

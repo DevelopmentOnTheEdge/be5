@@ -57,7 +57,8 @@ public abstract class Be5ProjectDBTest extends TestUtils
                     profileForIntegrationTests));
         }
 
-        if(profileForIntegrationTests.equals(injector.getDatabaseService().getConnectionProfileName()))
+        if(injector.getDatabaseService().getConnectionProfileName() != null &&
+                profileForIntegrationTests.equals(injector.getDatabaseService().getConnectionProfileName()))
         {
             try
             {

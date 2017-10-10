@@ -9,8 +9,11 @@ import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.dbms.DbmsType;
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.dbcp.BasicDataSource;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -32,37 +35,51 @@ public class DatabaseServiceImpl implements DatabaseService
 
     private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
 
-    private BasicDataSource bds = null;
+    private DataSource dataSource = null;
     private Rdbms type;
-    private BeConnectionProfile profile;
+    private BeConnectionProfile profile = null;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
-        profile = projectProvider.getProject().getConnectionProfile();
-        if(profile == null)
+        try
         {
-            throw Be5Exception.internal("Connection profile is not configured.");
+            InitialContext ic = new InitialContext();
+            Context xmlContext = (Context) ic.lookup("java:comp/env");
+            dataSource = (DataSource) xmlContext.lookup("jdbc/" + projectProvider.getProject().getAppName());
+
+            type = Rdbms.getRdbms(((BasicDataSource)dataSource).getUrl());
+        }
+        catch (NamingException ignore)
+        {
+            profile = projectProvider.getProject().getConnectionProfile();
+            if(profile == null)
+            {
+                throw Be5Exception.internal("Connection profile is not configured.");
+            }
+
+            type = profile.getRdbms();
+
+            BasicDataSource bds = new BasicDataSource();
+            bds.setDriverClassName(profile.getDriverDefinition());
+            bds.setUrl(profile.getConnectionUrl());
+            bds.setUsername(profile.getUsername());
+            bds.setPassword(profile.getPassword());
+
+            dataSource = bds;
+            log.info("Use connection profile: " + profile.getName());
         }
 
-        type = profile.getRdbms();
-
-        bds = new BasicDataSource();
-        bds.setDriverClassName(profile.getDriverDefinition());
-        bds.setUrl(profile.getConnectionUrl());
-        bds.setUsername(profile.getUsername());
-        bds.setPassword(profile.getPassword());
 //        //TODO add to Rdbms
-//        bds.setValidationQuery("select 1");
+//        dataSource.setValidationQuery("select 1");
 
         log.info(JULLogger.infoBlock(
-              "Connection profile: " + getConnectionProfileName() +
-            "\nUsing connection:   " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
+            "Using connection:   " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
         ));
     }
 
     private DataSource getDataSource()
     {
-        return bds;
+        return dataSource;
     }
 
     @Override
@@ -206,12 +223,20 @@ public class DatabaseServiceImpl implements DatabaseService
 
     public int getNumIdle()
     {
-        return bds != null ? bds.getNumIdle() : Integer.MAX_VALUE;
+        if(dataSource instanceof BasicDataSource) {
+            return ((BasicDataSource)dataSource).getNumIdle();
+        }else{
+            return 0;
+        }
     }
 
     public int getNumActive()
     {
-        return bds != null ? bds.getNumActive() : Integer.MAX_VALUE;
+        if(dataSource instanceof BasicDataSource) {
+            return ((BasicDataSource)dataSource).getNumActive();
+        }else{
+            return 0;
+        }
     }
 
     public String getConnectionsStatistics(){
@@ -233,19 +258,27 @@ public class DatabaseServiceImpl implements DatabaseService
     @Override
     public String getConnectionProfileName()
     {
-        return profile.getName();
+        return profile != null ? profile.getName() : null;
     }
 
     @Override
     public String getConnectString()
     {
-        return profile.getConnectionUrl();
+        if(dataSource instanceof BasicDataSource)
+        {
+            return ((BasicDataSource) dataSource).getUrl();
+        }
+        throw Be5Exception.internal("Unknown dataSource");
     }
 
     @Override
     public String getUsername()
     {
-        return profile.getUsername();
+        if(dataSource instanceof BasicDataSource)
+        {
+            return ((BasicDataSource) dataSource).getUsername();
+        }
+        throw Be5Exception.internal("Unknown dataSource");
     }
 
     @Override
@@ -325,15 +358,23 @@ public class DatabaseServiceImpl implements DatabaseService
     public Map<String, String> getParameters()
     {
         Map<String, String> map = new TreeMap<>();
-        map.put("Active/Idle", bds.getNumActive() + " / " + bds.getNumIdle());
-        map.put("Username", bds.getUsername());
-        map.put("DefaultCatalog", bds.getDefaultCatalog());
-        map.put("DriverClassName", bds.getDriverClassName());
-        map.put("Url", bds.getUrl());
-        map.put("JmxName", bds.getJmxName());
-        map.put("ValidationQuery", bds.getValidationQuery());
-        map.put("EvictionPolicyClassName", bds.getEvictionPolicyClassName());
-        map.put("ConnectionInitSqls", bds.getConnectionInitSqls().toString());
+
+        if(dataSource instanceof BasicDataSource)
+        {
+            BasicDataSource dataSource = (BasicDataSource)this.dataSource;
+            map.put("Active/Idle", dataSource.getNumActive() + " / " + dataSource.getNumIdle());
+            map.put("max Active/max Idle", dataSource.getMaxActive() + " / " + dataSource.getMaxIdle());
+            map.put("max wait", dataSource.getMaxWait() + "");
+            map.put("Username", dataSource.getUsername());
+            map.put("DefaultCatalog", dataSource.getDefaultCatalog());
+            map.put("DriverClassName", dataSource.getDriverClassName());
+            map.put("Url", dataSource.getUrl());
+            //map.put("JmxName", dataSource.getJmxName());
+            map.put("ValidationQuery", dataSource.getValidationQuery());
+            //map.put("EvictionPolicyClassName", dataSource.getEvictionPolicyClassName());
+            map.put("ConnectionInitSqls", dataSource.getConnectionInitSqls().toString());
+
+        }
 
         return map;
     }

@@ -166,7 +166,7 @@ public class ResponseImpl implements Response
     {
         // The MIME media type for JSON text is 'application/json'.
         // The default encoding is UTF-8. Source: RFC 4627, http://www.ietf.org/rfc/rfc4627.txt.
-        sendText("application/json", json);
+        sendText("application/json;charset=UTF-8", json);
     }
     
     @Override
@@ -180,7 +180,7 @@ public class ResponseImpl implements Response
     {
         // text/xml or application/xml
         // RFC 2376, http://www.ietf.org/rfc/rfc2376.txt
-        sendText("application/xml", xml);
+        sendText("application/xml;charset=UTF-8", xml);
     }
     
     @Override
@@ -194,7 +194,7 @@ public class ResponseImpl implements Response
         // The MIME media type for JSON text is 'application/json'.
         // The default encoding is UTF-8. Source: RFC 4627, http://www.ietf.org/rfc/rfc4627.txt.
         response.setContentType(contentType);
-        response.setCharacterEncoding(StandardCharsets.UTF_8);
+        //response.setCharacterEncoding(StandardCharsets.UTF_8);
         response.append(text);
         response.flush();
     }
@@ -224,7 +224,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendTextError(String messagee)
     {
-        sendText("text/plain", messagee);
+        sendText("text/plain;charset=UTF-8", messagee);
     }
     
     @Override

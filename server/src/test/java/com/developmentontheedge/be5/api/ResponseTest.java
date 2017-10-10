@@ -74,8 +74,8 @@ public class ResponseTest extends Be5ProjectTest
 
         response.sendError(Be5Exception.internal("testMsg"));
 
-        verify(rawResponse).setContentType("application/json");
-        verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
+        verify(rawResponse).setContentType("application/json;charset=UTF-8");
+        //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
         verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR'," +
                 "'message':'Internal error occured: testMsg'}}"));
         verify(writer).flush();
@@ -87,8 +87,8 @@ public class ResponseTest extends Be5ProjectTest
 
         response.sendError(Be5Exception.internal("testMsg"));
 
-        verify(rawResponse).setContentType("application/json");
-        verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
+        verify(rawResponse).setContentType("application/json;charset=UTF-8");
+        //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
         verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR'," +
                 "'message':''}}"));
         verify(writer).flush();
@@ -126,7 +126,7 @@ public class ResponseTest extends Be5ProjectTest
         ActionForXml call = new ActionForXml("call", "test/path");
         response.sendAsXml(ActionForXml.class, call);
 
-        verify(rawResponse).setContentType("application/xml");
+        verify(rawResponse).setContentType("application/xml;charset=UTF-8");
         verify(writer).append(doubleQuotes("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" +
                 "<ActionForXml>\n" +
                 "    <name>call</name>\n" +
