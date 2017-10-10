@@ -6,48 +6,48 @@ _system_:
   queries:
   - Cache:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       operations:
       - ReloadProject
       file: CacheTable.groovy
   - Entities:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: Entities.groovy
   - Queries:
       type: Groovy
       invisible: true
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: Queries.groovy
   - Session variables:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       operations:
       - SessionVariablesEdit
       file: SessionVariables.groovy
   - Threads:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: Threads.groovy
   - System Properties:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: SystemProperties.groovy
   - Http Headers:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: HttpHeaders.groovy
   - DataSource:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: DataSource.groovy
   operations:
   - SessionVariablesEdit:
       type: Groovy
       records: 1
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: system/SessionVariablesEdit.groovy
   - ReloadProject:
       type: Groovy
-      roles: Administrator
+      roles: [SystemDeveloper, Administrator]
       file: system/ReloadProject.groovy
