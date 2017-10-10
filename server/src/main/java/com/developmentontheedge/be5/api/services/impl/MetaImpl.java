@@ -515,4 +515,10 @@ public class MetaImpl implements Meta
         return !query.getParametrizingOperationName().isEmpty();
     }
 
+    @Override
+    public Set<String> getProjectRoles()
+    {
+        return getProject().getRoles();
+    }
+
 }

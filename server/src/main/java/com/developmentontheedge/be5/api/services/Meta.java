@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -129,4 +130,5 @@ public interface Meta
      */
     boolean isParametrizedTable(Query query);
 
+    Set<String> getProjectRoles();
 }

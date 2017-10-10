@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.validation.Validator;
@@ -14,7 +13,6 @@ import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -30,6 +28,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -334,7 +333,7 @@ public class OperationServiceImpl implements OperationService
                     if (operationName.equals(superOperationName))
                     {
                         com.developmentontheedge.be5.metadata.model.Operation anyOperation
-                                = meta.getOperation(entity.getName(), operationName, UserInfoHolder.getAvailableRoles());
+                                = meta.getOperation(entity.getName(), operationName, new ArrayList<>(meta.getProjectRoles()));
                         if (anyOperation.getType().equals("Groovy"))
                         {
                             GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
@@ -357,7 +356,11 @@ public class OperationServiceImpl implements OperationService
 
     String getSuperOperationClassName(OperationInfo operationInfo)
     {
-        String classBegin = "class " + operationInfo.getName() + " extends ";
+        GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
+        String fileName = groovyOperation.getFileName();
+        String className = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
+        String classBegin = "class " + className + " extends ";
+
         String code = operationInfo.getCode();
         int superClassBeginPos = code.indexOf(classBegin);
         if(superClassBeginPos == -1)return null;
