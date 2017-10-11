@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
@@ -48,8 +49,20 @@ public class DatabaseServiceImpl implements DatabaseService
             Context xmlContext = (Context) ic.lookup("java:comp/env");
             dataSource = (DataSource) xmlContext.lookup("jdbc/" + projectProvider.getProject().getAppName());
 
-            type = Rdbms.getRdbms(((BasicDataSource)dataSource).getUrl());
+            String url = ((BasicDataSource) dataSource).getUrl();
+            type = Rdbms.getRdbms(url);
             configInfo = "xml context : " + "'jdbc/" + projectProvider.getProject().getAppName() + "'";
+
+            //for prevent FreemarkerUtils.translateException Project database system is not defined
+            String profileForFremaker = "profileForFremaker";
+            BeConnectionProfile profile = new BeConnectionProfile(profileForFremaker, projectProvider.getProject().getConnectionProfiles().getLocalProfiles());
+            profile.setConnectionUrl(url);
+            profile.setUsername("");
+            profile.setPassword("");
+            profile.setDriverDefinition(type.getDriverDefinition());
+            DataElementUtils.save(profile);
+            projectProvider.getProject().setConnectionProfileName(profileForFremaker);
+            log.info(JULLogger.infoBlock("Add profileForFremaker"));
         }
         catch (NamingException ignore)
         {
