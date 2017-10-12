@@ -46,7 +46,7 @@ public class OperationServiceImpl implements OperationService
     private final Meta meta;
     private final Validator validator;
 
-    private final Map<String, com.developmentontheedge.be5.metadata.model.Operation> operationMap;
+    private Map<String, com.developmentontheedge.be5.metadata.model.Operation> operationMap;
 
     public OperationServiceImpl(Injector injector, DatabaseService databaseService, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta, Meta meta)
     {
@@ -58,12 +58,13 @@ public class OperationServiceImpl implements OperationService
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
 
-        operationMap = initOperationMap();
+        initOperationMap();
     }
 
-    private Map<String, com.developmentontheedge.be5.metadata.model.Operation> initOperationMap()
+    @Override
+    public void initOperationMap()
     {
-        Map<String, com.developmentontheedge.be5.metadata.model.Operation> operationMap = new HashMap<>();
+        Map<String, com.developmentontheedge.be5.metadata.model.Operation> newOperationMap = new HashMap<>();
         List<Entity> entities = meta.getOrderedEntities("ru");
         for (Entity entity : entities)
         {
@@ -76,12 +77,12 @@ public class OperationServiceImpl implements OperationService
                     case OPERATION_TYPE_GROOVY:
                         GroovyOperation groovyOperation = (GroovyOperation) operation;
                         String fileName = groovyOperation.getFileName().replace("/", ".");
-                        operationMap.put(fileName, operation);
+                        newOperationMap.put(fileName, operation);
                         break;
                     default:
                         try
                         {
-                            operationMap.put(operation.getCode(), operation);
+                            newOperationMap.put(operation.getCode(), operation);
                         }
                         catch (RuntimeException ignore)
                         {
@@ -91,7 +92,7 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        return operationMap;
+        operationMap = newOperationMap;
     }
 
     @Override

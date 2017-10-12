@@ -5,20 +5,14 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.be5.util.CopyGroovy;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -54,7 +48,9 @@ public class ProjectProviderImpl implements ProjectProvider
 			//CopyGroovy.copyFolder();
 
             be5Caches.clearAll();
-            injector.get(UserAwareMeta.class).reCompileLocalizations();
+            injector.get(UserAwareMeta.class).compileLocalizations();//todo refactoring and add to be5Caches
+            injector.get(OperationService.class).initOperationMap();//todo refactoring and add to be5Caches
+
             GroovyRegister.initClassLoader();
             updateDatabaseSystem();
         }

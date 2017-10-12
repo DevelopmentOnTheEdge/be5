@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserAwareMeta
 {
 
-    void reCompileLocalizations();
+    void compileLocalizations();
 
     /**
      * Returns a localized title in user's preferred language.

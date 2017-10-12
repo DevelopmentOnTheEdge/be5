@@ -5,14 +5,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -49,17 +46,17 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     {
         this.meta = meta;
         this.projectProvider = projectProvider;
-        reCompileLocalizations();//todo move to configure
+        compileLocalizations();//todo move to configure
     }
 
 //    @Override
 //    public void configure(String config)
 //    {
-//        reCompileLocalizations();
+//        compileLocalizations();
 //    }
 
     @Override
-    public void reCompileLocalizations()
+    public void compileLocalizations()
     {
         localizations = CompiledLocalizations.from(projectProvider.getProject());
     }
