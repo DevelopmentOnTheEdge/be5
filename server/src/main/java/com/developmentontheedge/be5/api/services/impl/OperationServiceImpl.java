@@ -79,7 +79,14 @@ public class OperationServiceImpl implements OperationService
                         operationMap.put(fileName, operation);
                         break;
                     default:
-                        operationMap.put(operation.getCode(), operation);
+                        try
+                        {
+                            operationMap.put(operation.getCode(), operation);
+                        }
+                        catch (RuntimeException ignore)
+                        {
+                            // ignore old be3 operation (because copying modules)
+                        }
                 }
             }
         }
