@@ -3,13 +3,19 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Be5Caches;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.util.CopyGroovy;
 
 import java.io.File;
@@ -28,9 +34,11 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private volatile boolean dirty = false;
 
+    @Inject private DatabaseService databaseService;
+
     public ProjectProviderImpl(Injector injector, Be5Caches be5Caches)
     {
-        this.injector = injector;
+        this.injector = injector;//todo remove injector, use @Inject, fix resolve
         this.be5Caches = be5Caches;
     }
 
@@ -47,6 +55,7 @@ public class ProjectProviderImpl implements ProjectProvider
             be5Caches.clearAll();
             injector.get(UserAwareMeta.class).reCompileLocalizations();
             GroovyRegister.initClassLoader();
+            updateDatabaseSystem();
         }
 
     	return project;
@@ -95,6 +104,21 @@ public class ProjectProviderImpl implements ProjectProvider
     {
         this.dirty = true;
         getProject();
+    }
+
+    @Override
+    public void updateDatabaseSystem()
+    {
+        project.setDatabaseSystem(databaseService.getRdbms());
+        //for prevent FreemarkerUtils.translateException Project database system is not defined
+//        String profileForFremaker = "profileForFremaker";
+//        BeConnectionProfile profile = new BeConnectionProfile(profileForFremaker, getProject().getConnectionProfiles().getLocalProfiles());
+//        profile.setConnectionUrl(url);
+//        profile.setUsername("");
+//        profile.setPassword("");
+//        profile.setDriverDefinition(Rdbms.getRdbms(url).getDriverDefinition());
+//        DataElementUtils.save(profile);
+//        getProject().setConnectionProfileName(profileForFremaker);
     }
 
 }

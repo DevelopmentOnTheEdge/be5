@@ -62,7 +62,7 @@ public class Be5Injector implements Injector
         if (service == null)
         {
             service = resolveService(serviceClass, stack);
-            injectAnnotatedFields(service);
+            injectAnnotatedFields(service);//todo init once - add flag
         }
         
         return service;

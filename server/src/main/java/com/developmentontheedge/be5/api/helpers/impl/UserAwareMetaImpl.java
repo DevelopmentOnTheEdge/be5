@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -19,7 +20,7 @@ import com.developmentontheedge.be5.util.MoreStrings;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
-public class UserAwareMetaImpl implements UserAwareMeta
+public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
 {
     /**
      * The prefix constant for localized message.
@@ -48,8 +49,14 @@ public class UserAwareMetaImpl implements UserAwareMeta
     {
         this.meta = meta;
         this.projectProvider = projectProvider;
-        localizations = CompiledLocalizations.from(projectProvider.getProject());
+        reCompileLocalizations();//todo move to configure
     }
+
+//    @Override
+//    public void configure(String config)
+//    {
+//        reCompileLocalizations();
+//    }
 
     @Override
     public void reCompileLocalizations()
