@@ -2,17 +2,13 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -20,18 +16,12 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.OperationSupport;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.github.benmanes.caffeine.cache.Cache;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
@@ -39,60 +29,21 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class OperationServiceImpl implements OperationService
 {
-    private final Cache<String, Class> groovyOperationClasses;
     private final Injector injector;
     private final DatabaseService databaseService;
     private final UserAwareMeta userAwareMeta;
-    private final Meta meta;
     private final Validator validator;
+    private final GroovyOperationLoader groovyOperationLoader;
 
-    private Map<String, com.developmentontheedge.be5.metadata.model.Operation> operationMap;
 
-    public OperationServiceImpl(Injector injector, DatabaseService databaseService, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta, Meta meta)
+    public OperationServiceImpl(GroovyOperationLoader groovyOperationLoader, Injector injector,
+                                DatabaseService databaseService, Validator validator, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.databaseService = databaseService;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
-        this.meta = meta;
-
-        groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
-
-        initOperationMap();
-    }
-
-    @Override
-    public void initOperationMap()
-    {
-        Map<String, com.developmentontheedge.be5.metadata.model.Operation> newOperationMap = new HashMap<>();
-        List<Entity> entities = meta.getOrderedEntities("ru");
-        for (Entity entity : entities)
-        {
-            List<String> operationNames = meta.getOperationNames(entity);
-            for (String operationName : operationNames)
-            {
-                com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperation(entity, operationName, new ArrayList<>(meta.getProjectRoles()));
-                switch (operation.getType())
-                {
-                    case OPERATION_TYPE_GROOVY:
-                        GroovyOperation groovyOperation = (GroovyOperation) operation;
-                        String fileName = groovyOperation.getFileName().replace("/", ".");
-                        newOperationMap.put(fileName, operation);
-                        break;
-                    default:
-                        try
-                        {
-                            newOperationMap.put(operation.getCode(), operation);
-                        }
-                        catch (RuntimeException ignore)
-                        {
-                            // ignore old be3 operation (because copying modules)
-                        }
-                }
-            }
-        }
-
-        operationMap = newOperationMap;
+        this.groovyOperationLoader = groovyOperationLoader;
     }
 
     @Override
@@ -324,10 +275,7 @@ public class OperationServiceImpl implements OperationService
             case OPERATION_TYPE_GROOVY:
                 try
                 {
-                    preloadSuperOperation(operationInfo);
-                    Class aClass = groovyOperationClasses.get(operationInfo.getEntity() + operationInfo.getName(),
-                            k -> GroovyRegister.parseClass( operationInfo.getCode(),
-                                    operationInfo.getEntity() + "." + operationInfo.getName() + ".groovy" ));
+                    Class aClass = groovyOperationLoader.get(operationInfo);
                     if(aClass != null)
                     {
                         operation = ( Operation ) aClass.newInstance();
@@ -354,72 +302,6 @@ public class OperationServiceImpl implements OperationService
         injector.injectAnnotatedFields(operation);
 
         return operation;
-    }
-
-    List<String> preloadSuperOperation(OperationInfo operationInfo)
-    {
-        String superOperationCanonicalName = getCanonicalName(operationInfo);
-
-        com.developmentontheedge.be5.metadata.model.Operation superOperation = operationMap.get(superOperationCanonicalName);
-
-        if (superOperation != null && superOperation.getType().equals(OPERATION_TYPE_GROOVY))
-        {
-            //preloadSuperOperation(new OperationInfo("", anyOperation));
-
-            groovyOperationClasses.get(superOperationCanonicalName,
-                    k -> GroovyRegister.parseClass(superOperation.getCode(), superOperationCanonicalName));
-            return Collections.singletonList(superOperationCanonicalName);
-        }
-
-        return Collections.emptyList();
-    }
-
-    String getSimpleName(OperationInfo operationInfo)
-    {
-        GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
-        String fileName = groovyOperation.getFileName();
-        String className = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
-        String classBegin = "class " + className + " extends ";
-
-        String code = operationInfo.getCode();
-        int superClassBeginPos = code.indexOf(classBegin);
-        if(superClassBeginPos == -1)return null;
-
-        superClassBeginPos += classBegin.length();
-        int superClassEndPos = Math.min(
-                code.indexOf(" ", superClassBeginPos) != -1 ? code.indexOf(" ", superClassBeginPos) : 999999999,
-                code.indexOf("\n", superClassBeginPos));
-
-
-        return code.substring(superClassBeginPos, superClassEndPos).trim();
-    }
-
-    String getCanonicalName(OperationInfo operationInfo)
-    {
-        String code = operationInfo.getCode();
-        String superOperationName = getSimpleName(operationInfo);
-
-        String superOperationFullName = superOperationName + ".groovy";
-
-        int lineBegin = code.indexOf("package ");
-        if(lineBegin != -1){
-            int lineEnd = code.indexOf("\n", lineBegin);
-            String line = code.substring(lineBegin, lineEnd);
-            superOperationFullName = line.replace("package ", "").replace(";", "")
-                    + "." + superOperationName + ".groovy";
-        }
-
-        lineBegin = code.indexOf("import ");
-        while (lineBegin != -1)
-        {
-            int lineEnd = code.indexOf("\n", lineBegin);
-            String line = code.substring(lineBegin, lineEnd);
-            if(line.contains("." + superOperationName)){
-                superOperationFullName = line.replace("import ", "").replace(";", "") + ".groovy";
-            }
-            lineBegin = code.indexOf("import ", lineEnd);
-        }
-        return superOperationFullName;
     }
 
     private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)

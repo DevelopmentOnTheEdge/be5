@@ -9,8 +9,6 @@ import com.developmentontheedge.be5.util.Either;
 
 public interface OperationService
 {
-    void initOperationMap();
-
     Either<FormPresentation, OperationResult> generate(Request req);
 
     Either<FormPresentation, OperationResult> execute(Request req);

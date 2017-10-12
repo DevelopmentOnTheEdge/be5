@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
-import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
@@ -49,7 +48,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
             be5Caches.clearAll();
             injector.get(UserAwareMeta.class).compileLocalizations();//todo refactoring and add to be5Caches
-            injector.get(OperationService.class).initOperationMap();//todo refactoring and add to be5Caches
+            injector.get(GroovyOperationLoader.class).initOperationMap();//todo refactoring and add to be5Caches
 
             GroovyRegister.initClassLoader();
             updateDatabaseSystem();

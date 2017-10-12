@@ -1,19 +1,20 @@
 package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
-import com.developmentontheedge.be5.api.services.OperationService
 import com.developmentontheedge.be5.api.services.ProjectProvider
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.SqlMockOperationTest
+import groovy.transform.TypeChecked
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 
+@TypeChecked
 class OperationServiceImplTest extends SqlMockOperationTest
 {
     @Inject UserAwareMeta userAwareMeta
-    @Inject OperationService operationService
+    @Inject GroovyOperationLoader operationService
     @Inject ProjectProvider projectProvider
     
     @Test
@@ -27,38 +28,33 @@ class OperationServiceImplTest extends SqlMockOperationTest
     }
 
     @Test
-    void getSuperOperationSimpleNameTest() throws Exception
+    void getSuperOperationSimpleNameTest()
     {
-        operationService = (OperationServiceImpl)operationService
-
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
 
-        assertEquals("CustomOperation", operationService.getSimpleName(operation))
+        assertEquals("CustomOperation", operationService.getSimpleSuperClassName(operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
 
-        assertEquals("OperationWithExtend", operationService.getSimpleName(operation))
+        assertEquals("OperationWithExtend", operationService.getSimpleSuperClassName(operation))
     }
 
     @Test
-    void getSuperOperationCanonicalNameTest() throws Exception
+    void getSuperOperationCanonicalNameTest()
     {
-        operationService = (OperationServiceImpl)operationService
-
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
         assertEquals("testtableAdmin.CustomOperation.groovy",
-                operationService.getCanonicalName(operation))
+                operationService.getCanonicalSuperClassName(operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
         assertEquals("testtableAdmin.OperationWithExtend.groovy",
-                operationService.getCanonicalName(operation))
+                operationService.getCanonicalSuperClassName(operation))
     }
 
     @Test
     void testLoadSuperOperation()
     {
         projectProvider.reloadProject()
-        operationService = (OperationServiceImpl)operationService
 
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
         assertEquals(["testtableAdmin.CustomOperation.groovy"], operationService.preloadSuperOperation(operation))
