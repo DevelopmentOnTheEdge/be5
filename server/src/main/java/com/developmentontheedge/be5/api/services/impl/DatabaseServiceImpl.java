@@ -1,9 +1,11 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
@@ -26,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class DatabaseServiceImpl implements DatabaseService
+public class DatabaseServiceImpl implements DatabaseService, Configurable<String>
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
@@ -39,7 +41,10 @@ public class DatabaseServiceImpl implements DatabaseService
     private Rdbms type;
     private BeConnectionProfile profile = null;
 
-    public DatabaseServiceImpl(ProjectProvider projectProvider)
+    @Inject private ProjectProvider projectProvider;
+
+    @Override
+    public void configure(String config)
     {
         String configInfo;
         try

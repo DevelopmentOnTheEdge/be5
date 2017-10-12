@@ -56,15 +56,28 @@ public class Be5Injector implements Injector
             T thiz = (T) this;
             return thiz;
         }
-        
+
         T service = instantiatedServices.get(serviceClass);
-        
+
         if (service == null)
         {
             service = resolveService(serviceClass, stack);
-            injectAnnotatedFields(service);//todo init once - add flag
+
+
+            for (Class<?> aClass : stack)
+            {
+                injectAnnotatedFields(aClass);
+            }
+            injectAnnotatedFields(service);
+
+
+            for (Class<?> aClass : stack)
+            {
+                configureIfConfigurable(aClass, configurations);
+            }
+            configureIfConfigurable(service, configurations);
         }
-        
+
         return service;
     }
 
@@ -86,7 +99,6 @@ public class Be5Injector implements Injector
                 throw new RuntimeException("Class not binded " + serviceClass.getName() + ", may be has been used implimentation instead interface.");
             }
             service = instantiate(bindings.get(serviceClass), stack);
-            configureIfConfigurable(service, configurations);
         }
         catch (IllegalStateException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {

@@ -34,12 +34,13 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private volatile boolean dirty = false;
 
-    @Inject private DatabaseService databaseService;
+    private DatabaseService databaseService;
 
-    public ProjectProviderImpl(Injector injector, Be5Caches be5Caches)
+    public ProjectProviderImpl(Injector injector, DatabaseService databaseService, Be5Caches be5Caches)
     {
         this.injector = injector;//todo remove injector, use @Inject, fix resolve
         this.be5Caches = be5Caches;
+        this.databaseService = databaseService;
     }
 
     @Override
