@@ -289,9 +289,15 @@ public class MetaImpl implements Meta
      * String, java.lang.String)
      */
     @Override
-    public Operation getOperation(String entity, String name, List<String> availableRoles)
+    public Operation getOperation(String entityName, String name, List<String> availableRoles)
     {
-        Operation operation = getProject().getEntity(entity).getOperations().get(name);
+        return getOperation(getProject().getEntity(entityName), name, availableRoles);
+    }
+
+    @Override
+    public Operation getOperation(Entity entity, String name, List<String> availableRoles)
+    {
+        Operation operation = entity.getOperations().get(name);
         if (operation == null)
             throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entity, name);
         if (!hasAccess(operation.getRoles(), availableRoles))

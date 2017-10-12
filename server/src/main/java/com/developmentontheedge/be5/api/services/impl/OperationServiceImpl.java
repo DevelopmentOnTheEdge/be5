@@ -30,6 +30,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
@@ -45,6 +46,8 @@ public class OperationServiceImpl implements OperationService
     private final Meta meta;
     private final Validator validator;
 
+    private final Map<String, com.developmentontheedge.be5.metadata.model.Operation> operationMap;
+
     public OperationServiceImpl(Injector injector, DatabaseService databaseService, Validator validator, Be5Caches be5Caches, UserAwareMeta userAwareMeta, Meta meta)
     {
         this.injector = injector;
@@ -54,6 +57,34 @@ public class OperationServiceImpl implements OperationService
         this.meta = meta;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
+
+        operationMap = initOperationMap();
+    }
+
+    private Map<String, com.developmentontheedge.be5.metadata.model.Operation> initOperationMap()
+    {
+        Map<String, com.developmentontheedge.be5.metadata.model.Operation> operationMap = new HashMap<>();
+        List<Entity> entities = meta.getOrderedEntities("ru");
+        for (Entity entity : entities)
+        {
+            List<String> operationNames = meta.getOperationNames(entity);
+            for (String operationName : operationNames)
+            {
+                com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperation(entity, operationName, new ArrayList<>(meta.getProjectRoles()));
+                switch (operation.getType())
+                {
+                    case OPERATION_TYPE_GROOVY:
+                        GroovyOperation groovyOperation = (GroovyOperation) operation;
+                        String fileName = groovyOperation.getFileName().replace("/", ".");
+                        operationMap.put(fileName, operation);
+                        break;
+                    default:
+                        operationMap.put(operation.getCode(), operation);
+                }
+            }
+        }
+
+        return operationMap;
     }
 
     @Override
@@ -319,42 +350,23 @@ public class OperationServiceImpl implements OperationService
 
     List<String> preloadSuperOperation(OperationInfo operationInfo)
     {
-        String superOperationName = getSuperOperationClassName(operationInfo);
-        if(superOperationName != null)
+        String superOperationCanonicalName = getCanonicalName(operationInfo);
+
+        com.developmentontheedge.be5.metadata.model.Operation superOperation = operationMap.get(superOperationCanonicalName);
+
+        if (superOperation != null && superOperation.getType().equals(OPERATION_TYPE_GROOVY))
         {
-            String superOperationFullName = getSuperOperationFullName(operationInfo);
+            //preloadSuperOperation(new OperationInfo("", anyOperation));
 
-            List<Entity> entities = meta.getOrderedEntities("ru");
-            for (Entity entity : entities)
-            {
-                List<String> operationNames = meta.getOperationNames(entity);
-                for (String operationName : operationNames)
-                {
-                    if (operationName.equals(superOperationName))
-                    {
-                        com.developmentontheedge.be5.metadata.model.Operation anyOperation
-                                = meta.getOperation(entity.getName(), operationName, new ArrayList<>(meta.getProjectRoles()));
-                        if (anyOperation.getType().equals("Groovy"))
-                        {
-                            GroovyOperation groovyOperation = (GroovyOperation) anyOperation;
-                            String fileName = groovyOperation.getFileName().replace("/", ".");
-                            if (fileName.equals(superOperationFullName))
-                            {
-                                //preloadSuperOperation(new OperationInfo("", anyOperation));
-
-                                groovyOperationClasses.get(fileName,
-                                        k -> GroovyRegister.parseClass(groovyOperation.getCode(), fileName));
-                                return Collections.singletonList(fileName);
-                            }
-                        }
-                    }
-                }
-            }
+            groovyOperationClasses.get(superOperationCanonicalName,
+                    k -> GroovyRegister.parseClass(superOperation.getCode(), superOperationCanonicalName));
+            return Collections.singletonList(superOperationCanonicalName);
         }
+
         return Collections.emptyList();
     }
 
-    String getSuperOperationClassName(OperationInfo operationInfo)
+    String getSimpleName(OperationInfo operationInfo)
     {
         GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
         String fileName = groovyOperation.getFileName();
@@ -374,10 +386,10 @@ public class OperationServiceImpl implements OperationService
         return code.substring(superClassBeginPos, superClassEndPos).trim();
     }
 
-    String getSuperOperationFullName(OperationInfo operationInfo)
+    String getCanonicalName(OperationInfo operationInfo)
     {
         String code = operationInfo.getCode();
-        String superOperationName = getSuperOperationClassName(operationInfo);
+        String superOperationName = getSimpleName(operationInfo);
 
         String superOperationFullName = superOperationName + ".groovy";
 

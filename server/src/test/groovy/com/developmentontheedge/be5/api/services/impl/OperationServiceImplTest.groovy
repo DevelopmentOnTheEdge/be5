@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
-import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.OperationService
 import com.developmentontheedge.be5.api.services.ProjectProvider
 import com.developmentontheedge.be5.env.Inject
@@ -13,7 +12,6 @@ import static org.junit.Assert.*
 
 class OperationServiceImplTest extends SqlMockOperationTest
 {
-    @Inject Meta meta
     @Inject UserAwareMeta userAwareMeta
     @Inject OperationService operationService
     @Inject ProjectProvider projectProvider
@@ -29,31 +27,31 @@ class OperationServiceImplTest extends SqlMockOperationTest
     }
 
     @Test
-    void getSuperOperationClassNameTest() throws Exception
+    void getSuperOperationSimpleNameTest() throws Exception
     {
         operationService = (OperationServiceImpl)operationService
 
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
 
-        assertEquals("CustomOperation", operationService.getSuperOperationClassName(operation))
+        assertEquals("CustomOperation", operationService.getSimpleName(operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
 
-        assertEquals("OperationWithExtend", operationService.getSuperOperationClassName(operation))
+        assertEquals("OperationWithExtend", operationService.getSimpleName(operation))
     }
 
     @Test
-    void getSuperOperationClassFullNameTest() throws Exception
+    void getSuperOperationCanonicalNameTest() throws Exception
     {
         operationService = (OperationServiceImpl)operationService
 
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
         assertEquals("testtableAdmin.CustomOperation.groovy",
-                operationService.getSuperOperationFullName(operation))
+                operationService.getCanonicalName(operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
         assertEquals("testtableAdmin.OperationWithExtend.groovy",
-                operationService.getSuperOperationFullName(operation))
+                operationService.getCanonicalName(operation))
     }
 
     @Test
