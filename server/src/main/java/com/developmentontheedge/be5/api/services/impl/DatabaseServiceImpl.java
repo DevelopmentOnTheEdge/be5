@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
-import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
@@ -28,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class DatabaseServiceImpl implements DatabaseService, Configurable<String>
+public class DatabaseServiceImpl implements DatabaseService
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
@@ -41,27 +40,25 @@ public class DatabaseServiceImpl implements DatabaseService, Configurable<String
     private Rdbms type;
     private BeConnectionProfile profile = null;
 
-    @Inject private ProjectProvider projectProvider;
-
-    @Override
-    public void configure(String config)
+    public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
+        Project project = projectProvider.getProject();
         String configInfo;
         try
         {
             InitialContext ic = new InitialContext();
             Context xmlContext = (Context) ic.lookup("java:comp/env");
-            dataSource = (DataSource) xmlContext.lookup("jdbc/" + projectProvider.getProject().getAppName());
+            dataSource = (DataSource) xmlContext.lookup("jdbc/" + project.getAppName());
 
             String url = ((BasicDataSource) dataSource).getUrl();
             type = Rdbms.getRdbms(url);
             projectProvider.updateDatabaseSystem();
 
-            configInfo = "xml context : " + "'jdbc/" + projectProvider.getProject().getAppName() + "'";
+            configInfo = "xml context : " + "'jdbc/" + project.getAppName() + "'";
         }
         catch (NamingException ignore)
         {
-            profile = projectProvider.getProject().getConnectionProfile();
+            profile = project.getConnectionProfile();
             if(profile == null)
             {
                 throw Be5Exception.internal("Connection profile is not configured.");

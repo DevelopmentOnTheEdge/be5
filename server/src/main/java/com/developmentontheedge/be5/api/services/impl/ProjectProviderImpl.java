@@ -34,13 +34,13 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private volatile boolean dirty = false;
 
-    private DatabaseService databaseService;
+    //private DatabaseService databaseService;
 
-    public ProjectProviderImpl(Injector injector, DatabaseService databaseService, Be5Caches be5Caches)
+    public ProjectProviderImpl(Injector injector, Be5Caches be5Caches)
     {
         this.injector = injector;//todo remove injector, use @Inject, fix resolve
         this.be5Caches = be5Caches;
-        this.databaseService = databaseService;
+        //this.databaseService = databaseService;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ProjectProviderImpl implements ProjectProvider
     @Override
     public void updateDatabaseSystem()
     {
-        project.setDatabaseSystem(databaseService.getRdbms());
+        project.setDatabaseSystem(injector.get(DatabaseService.class).getRdbms());
         //for prevent FreemarkerUtils.translateException Project database system is not defined
 //        String profileForFremaker = "profileForFremaker";
 //        BeConnectionProfile profile = new BeConnectionProfile(profileForFremaker, getProject().getConnectionProfiles().getLocalProfiles());
