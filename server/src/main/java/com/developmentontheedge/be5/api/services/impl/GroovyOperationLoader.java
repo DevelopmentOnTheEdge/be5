@@ -57,6 +57,7 @@ public class GroovyOperationLoader
 
     List<String> preloadSuperOperation(OperationInfo operationInfo)
     {
+        String simpleSuperClassName = getSimpleSuperClassName(operationInfo);
         String superOperationCanonicalName = getCanonicalSuperClassName(operationInfo);
 
         com.developmentontheedge.be5.metadata.model.Operation superOperation = groovyOperationsMap.get(superOperationCanonicalName);
@@ -66,7 +67,7 @@ public class GroovyOperationLoader
             //preloadSuperOperation(new OperationInfo("", anyOperation));
 
             groovyOperationClasses.get(superOperationCanonicalName,
-                    k -> GroovyRegister.parseClass(superOperation.getCode(), superOperationCanonicalName));
+                    k -> GroovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName));
             return Collections.singletonList(superOperationCanonicalName);
         }
 
@@ -77,10 +78,12 @@ public class GroovyOperationLoader
     {
         preloadSuperOperation(operationInfo);
         GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
-        String canonicalName = groovyOperation.getFileName().replace("/", ".");
+        String fileName = groovyOperation.getFileName();
+        String canonicalName = fileName.replace("/", ".");
+        String simpleName = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
 
         return groovyOperationClasses.get(canonicalName, k ->
-                    GroovyRegister.parseClass( operationInfo.getCode(), canonicalName ));
+                    GroovyRegister.parseClass( operationInfo.getCode(), simpleName ));
     }
 
     String getSimpleSuperClassName(OperationInfo operationInfo)
