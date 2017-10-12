@@ -111,15 +111,6 @@ public class ProjectProviderImpl implements ProjectProvider
     public void updateDatabaseSystem()
     {
         project.setDatabaseSystem(injector.get(DatabaseService.class).getRdbms());
-        //for prevent FreemarkerUtils.translateException Project database system is not defined
-//        String profileForFremaker = "profileForFremaker";
-//        BeConnectionProfile profile = new BeConnectionProfile(profileForFremaker, getProject().getConnectionProfiles().getLocalProfiles());
-//        profile.setConnectionUrl(url);
-//        profile.setUsername("");
-//        profile.setPassword("");
-//        profile.setDriverDefinition(Rdbms.getRdbms(url).getDriverDefinition());
-//        DataElementUtils.save(profile);
-//        getProject().setConnectionProfileName(profileForFremaker);
     }
 
 }
