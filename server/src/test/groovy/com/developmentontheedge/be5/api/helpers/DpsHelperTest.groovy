@@ -62,7 +62,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 
-        dpsHelper.addDynamicProperties(meta.getEntity("testTags"), dps, ["CODE", "payable"])
+        dpsHelper.addDynamicProperties(dps, meta.getEntity("testTags"), ["CODE", "payable"])
 
         assertEquals 2, dps.size()
         def list = dps.asList()

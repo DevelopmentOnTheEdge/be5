@@ -152,7 +152,7 @@ public class DpsHelper
         return dps;
     }
 
-    public void addDynamicProperties(Entity entity, DynamicPropertySet dps, Collection<String> propertyNames)
+    public void addDynamicProperties(DynamicPropertySet dps, Entity entity, Collection<String> propertyNames)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
