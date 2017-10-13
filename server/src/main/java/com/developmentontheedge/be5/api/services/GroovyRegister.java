@@ -52,7 +52,7 @@ public class GroovyRegister
 
     private static void addClassPaths()
     {
-        ModuleLoader2.pathsToProjectsToHotReload.forEach(
+        ModuleLoader2.getPathsToProjectsToHotReload().forEach(
                 (name, path) -> classLoader.addClasspath(path.resolve("src/groovy/operations").toString())
         );
     }

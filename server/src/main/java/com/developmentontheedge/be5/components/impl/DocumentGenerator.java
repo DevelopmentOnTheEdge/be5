@@ -2,6 +2,9 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
@@ -19,10 +22,13 @@ import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.google.common.collect.ImmutableMap;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,7 +74,7 @@ public class DocumentGenerator implements Runner {
         String queryName = query.getName();
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
 
-        sendQueryResponse(req, res, query, new StaticPagePresentation(localizedQueryTitle, content));
+        sendQueryResponseData(req, res, query, new StaticPagePresentation(localizedQueryTitle, content));
     }
 
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
@@ -80,24 +86,40 @@ public class DocumentGenerator implements Runner {
     @Override
     public void onTable(Query query, Map<String, String> parametersMap)
     {
-        sendQueryResponse(req, res, query, getTablePresentation(query, parametersMap));
-        //DocumentResponse.of(res, req).send(getTablePresentation(query, parametersMap));
+        try
+        {
+            sendQueryResponseData(req, res, query, getTablePresentation(query, parametersMap));
+        }
+        catch (Be5Exception e)
+        {
+            sendQueryResponseError(req, res, query, e);
+        }
     }
 
     @Override
     public void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel)
     {
-        sendQueryResponse(req, res, query, getTablePresentation(query, parametersMap, tableModel));
-        //DocumentResponse.of(res).send(getTablePresentation(query, parametersMap, tableModel));
+        sendQueryResponseData(req, res, query, getTablePresentation(query, parametersMap, tableModel));
     }
 
-    private void sendQueryResponse(Request req, Response res, Query query, Object data)
+    private void sendQueryResponseData(Request req, Response res, Query query, Object data)
     {
         res.sendAsJson(
                 new ResourceData(TABLE_ACTION, data),
-                ImmutableMap.builder()
-                        .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
-                        .build(),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
+                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
+        );
+    }
+
+    private void sendQueryResponseError(Request req, Response res, Query query, Be5Exception e)
+    {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        String exceptionAsString = sw.toString();
+
+        res.sendErrorAsJson(
+                new ErrorModel("500", e.getTitle(), e.getCause().getMessage() + "\n\n" + exceptionAsString),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
         );
     }

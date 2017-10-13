@@ -36,7 +36,7 @@ public class ModuleLoader2
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
 
     private static Map<String, Project> modulesMap;
-    public static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
+    private static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
 
     public static Map<String, Project> getModulesMap()
     {
@@ -404,5 +404,10 @@ public class ModuleLoader2
                 pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
             }
         }
+    }
+
+    public static Map<String, Path> getPathsToProjectsToHotReload()
+    {
+        return pathsToProjectsToHotReload;
     }
 }

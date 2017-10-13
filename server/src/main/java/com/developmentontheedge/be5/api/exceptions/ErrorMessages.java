@@ -24,8 +24,8 @@ public class ErrorMessages
 		MESSAGES.put(ACCESS_DENIED, "Access denied");
 		MESSAGES.put(ACCESS_DENIED_TO_QUERY, "Access denied to query $1.$2");
 		MESSAGES.put(ACCESS_DENIED_TO_OPERATION, "Access denied to operation $1.$2");
-		MESSAGES.put(INTERNAL_ERROR_IN_OPERATION, "Internal error occured during operation $1.$2: $3");
-        MESSAGES.put(INTERNAL_ERROR_IN_QUERY, "Internal error occured during query $1.$2: $3");
+		MESSAGES.put(INTERNAL_ERROR_IN_OPERATION, "Internal error occured during operation $1.$2");
+        MESSAGES.put(INTERNAL_ERROR_IN_QUERY, "Internal error occured during query $1.$2");
         MESSAGES.put(NOT_FOUND, "Element not found: $1");
 		
         if (MESSAGES.size() < Be5ErrorCode.values().length)

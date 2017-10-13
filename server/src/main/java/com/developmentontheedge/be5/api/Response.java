@@ -5,6 +5,7 @@ import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
@@ -45,6 +46,8 @@ public interface Response
     void sendAsJson(JsonApiModel jsonApiModel);
 
     void sendAsJson(ResourceData data, Object meta, Map<String, String> links);
+
+    void sendErrorAsJson(ErrorModel error, Object meta, Map<String, String> links);
 
     void sendErrorsAsJson(Object[] errors, Object meta, Map<String, String> links);
 

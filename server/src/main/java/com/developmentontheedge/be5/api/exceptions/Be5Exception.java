@@ -66,12 +66,12 @@ public class Be5Exception extends RuntimeException
 
     public static Be5Exception internalInQuery(Throwable t, Query q)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(t, q.getEntity().getName(), q.getName(), t.getMessage());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(t, q.getEntity().getName(), q.getName());
     }
 
     public static Be5Exception internalInOperation(Throwable t, OperationInfo o)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName(), t.getMessage());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName());
     }
     
     public static Be5Exception invalidRequestParameter(String parameterName, String invalidValue)
@@ -109,11 +109,13 @@ public class Be5Exception extends RuntimeException
      */
     private static final long serialVersionUID = 9189259622768482031L;
 
+    private final String title;
     private final Be5ErrorCode code;
 
     private Be5Exception(Be5ErrorCode code, String message, Throwable cause)
     {
         super(message, cause);
+        title = message;
         this.code = code;
     }
 
@@ -125,6 +127,9 @@ public class Be5Exception extends RuntimeException
     private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
     {
         super(ErrorMessages.formatMessage(code, parameters), t);
+
+        title = ErrorMessages.formatMessage(code, parameters);
+
         this.code = code;
     }
     
@@ -147,5 +152,10 @@ public class Be5Exception extends RuntimeException
     @Override
     public int hashCode() {
         return code != null ? code.hashCode() : 0;
+    }
+
+    public String getTitle()
+    {
+        return title;
     }
 }

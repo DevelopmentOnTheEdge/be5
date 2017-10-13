@@ -8,6 +8,8 @@ import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.Jaxb;
@@ -118,13 +120,17 @@ public class ResponseImpl implements Response
         sendAsRawJson(jsonApiModel);
     }
 
-    /**
-     * New json api? see JsonApiModel, ResourceData
-     */
     @Override
     public void sendAsJson(ResourceData data, Object meta, Map<String, String> links)
     {
-        sendAsRawJson(new JsonApiModel(data, meta, links));
+        sendAsRawJson(JsonApiModel.data(data, meta, links));
+    }
+
+    @Override
+    public void sendErrorAsJson(ErrorModel error, Object meta, Map<String, String> links)
+    {
+        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
+        sendAsRawJson(JsonApiModel.error(error, meta, links));
     }
 
     @Override
@@ -142,17 +148,21 @@ public class ResponseImpl implements Response
     @Override
     public void sendError(Be5Exception e)
     {
-        response.getRawResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        String msg = UserInfoHolder.isAdminOrSysDev() ? e.getMessage() : "";
-        sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
+        String msg = showMsg() ? e.getMessage() : "";
+        sendErrorAsJson(new ErrorModel("500", msg), null, null);
     }
 
     @Override
     public void sendAccessDenied(Be5Exception e)
     {
         response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        String msg = UserInfoHolder.isAdminOrSysDev() ? e.getMessage() : "";
+        String msg = showMsg() ? e.getMessage() : "";
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
+    }
+
+    private boolean showMsg()
+    {
+        return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
     }
 
     @Override

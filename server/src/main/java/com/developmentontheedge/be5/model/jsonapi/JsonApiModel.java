@@ -22,24 +22,43 @@ import java.util.Map;
 public class JsonApiModel
 {
     private Object data;
-    private Object[] errors;
+    private ErrorModel[] errors;
     private Object meta;
 
     private Object[] included;
     private Map<String, String> links;
 
-    public JsonApiModel(ResourceData data, Object meta, Map<String, String> links)
+//    public JsonApiModel(ResourceData data, Object meta, Map<String, String> links)
+//    {
+//        this.data = data;
+//        this.meta = meta;
+//        this.links = links;
+//    }
+//
+//    public JsonApiModel(ResourceData[] data, Object meta, Map<String, String> links)
+//    {
+//        this.data = data;
+//        this.meta = meta;
+//        this.links = links;
+//    }
+
+    private JsonApiModel(Object data, ErrorModel[] errors, Object meta, Object[] included, Map<String, String> links)
     {
         this.data = data;
+        this.errors = errors;
         this.meta = meta;
+        this.included = included;
         this.links = links;
     }
 
-    public JsonApiModel(ResourceData[] data, Object meta, Map<String, String> links)
+    public static JsonApiModel data(ResourceData data, Object meta, Map<String, String> links)
     {
-        this.data = data;
-        this.meta = meta;
-        this.links = links;
+        return new JsonApiModel(data, null, meta, null, links);
+    }
+
+    public static JsonApiModel error(ErrorModel error, Object meta, Map<String, String> links)
+    {
+        return new JsonApiModel(null, new ErrorModel[]{error}, meta, null, links);
     }
 
 //    public JsonApiModel(ErrorObject[] errors, Object meta, Map<String, String> links)

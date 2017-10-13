@@ -3,10 +3,13 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.google.common.collect.ImmutableMap;
 
@@ -28,15 +31,18 @@ public class StaticPageComponent implements Component
 
         if (staticPageContent == null)
         {
-            res.sendError(Be5ErrorCode.NOT_FOUND.exception(page));
+            //todo localize
+            res.sendErrorAsJson(
+                    new ErrorModel("500", ErrorMessages.formatMessage(Be5ErrorCode.NOT_FOUND, page)),
+                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
+                    Collections.singletonMap(SELF_LINK, "static/" + page)
+            );
         }
         else
         {
             res.sendAsJson(
                     new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent)),
-                    ImmutableMap.builder()
-                            .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
-                            .build(),
+                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, "static/" + page)
             );
         }

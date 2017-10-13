@@ -30,20 +30,18 @@
 			<version>3.4</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge</groupId>
-			<artifactId>be5-metadata</artifactId>
-			<version>0.3.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>be5-dbms</artifactId>
 			<version>0.1.0</version>
 		</dependency>
+        <dependency>
+            <groupId>com.developmentontheedge</groupId>
+            <artifactId>be5-metadata</artifactId>
+            <version>0.3.0</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.model.FormPresentation;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -57,14 +58,12 @@ public class Form implements Component
         }
 
         res.sendAsJson(
-            new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, generate.get()),
-            ImmutableMap.builder()
-                    .put(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
-                    .build(),
-            Collections.singletonMap(SELF_LINK,
-                    (String) new OperationInfo(queryName, meta.getModel())
-                            .redirectThisOperation(OperationServiceImpl.selectedRows(selectedRowsString))
-                            .getDetails())
+                new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, generate.get()),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
+                Collections.singletonMap(SELF_LINK,
+                        (String) new OperationInfo(queryName, meta.getModel())
+                                .redirectThisOperation(OperationServiceImpl.selectedRows(selectedRowsString))
+                                .getDetails())
         );
     }
 

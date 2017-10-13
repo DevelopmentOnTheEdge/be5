@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,7 +81,9 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.doPost(request, response);
 
-        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'UNKNOWN_COMPONENT','message':''}}"));
+        verify(writer).append(doubleQuotes("{'errors':[" +
+                "{'status':'500','title':'Component not found: /api'}" +
+            "]}"));
     }
 
     @Test
@@ -93,7 +94,9 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.doPost(request, response);
 
-        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'NOT_FOUND','message':''}}"));
+        verify(writer).append(doubleQuotes("{'errors':[" +
+                "{'status':'500','title':'Element not found: '}" +
+            "],'links':{'self':'static/'},'meta':{'_ts_':null}}"));
     }
 
     @Test
