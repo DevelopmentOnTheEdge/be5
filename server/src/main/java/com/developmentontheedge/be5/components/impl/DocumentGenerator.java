@@ -118,7 +118,7 @@ public class DocumentGenerator implements Runner {
         String exceptionAsString = sw.toString();
 
         res.sendErrorAsJson(
-                new ErrorModel("500", e.getTitle(), e.getCause().getMessage() + "\n\n" + exceptionAsString),
+                new ErrorModel("500", e.getTitle(), e.getCause().getMessage(), exceptionAsString),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
         );

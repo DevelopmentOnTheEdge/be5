@@ -12,8 +12,8 @@ public class ErrorModel
     private Map<String, String> links;
 
     private String status;
-    private String code;
     private String title;
+    private String code;
     private String detail;
 
     private Object source;
@@ -25,11 +25,12 @@ public class ErrorModel
         this.title = title;
     }
 
-    public ErrorModel(String status, String title, String code)
+    public ErrorModel(String status, String title, String code, String detail)
     {
         this.status = status;
         this.code = code;
         this.title = title;
+        this.detail = detail;
     }
 
     public String getId()
