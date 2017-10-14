@@ -13,5 +13,4 @@ public interface ProjectProvider
 
     void reloadProject();
 
-    void updateDatabaseSystem();
 }

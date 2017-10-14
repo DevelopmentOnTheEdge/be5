@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -28,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class DatabaseServiceImpl implements DatabaseService, Configurable<String>
+public class DatabaseServiceImpl implements DatabaseService
 {
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
@@ -40,12 +39,9 @@ public class DatabaseServiceImpl implements DatabaseService, Configurable<String
     private DataSource dataSource = null;
     private Rdbms type;
     private BeConnectionProfile profile = null;
-    private ProjectProvider projectProvider;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
-        this.projectProvider = projectProvider;
-
         Project project = projectProvider.getProject();
         String configInfo;
         try
@@ -79,19 +75,12 @@ public class DatabaseServiceImpl implements DatabaseService, Configurable<String
             configInfo = "connection profile form 'profile.local' - " + profile.getName();
         }
 
-//        //TODO add to Rdbms
-//        dataSource.setValidationQuery("select 1");
+        project.setDatabaseSystem(getRdbms());
 
         log.info(JULLogger.infoBlock(
             "ConfigInfo: " + configInfo +
             "\nUsing connection:   " + DatabaseUtils.formatUrl(getConnectString(), getUsername(), "xxxxx")
         ));
-    }
-
-    @Override
-    public void configure(String config)
-    {
-        projectProvider.updateDatabaseSystem();
     }
 
     private DataSource getDataSource()

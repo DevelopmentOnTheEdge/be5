@@ -41,17 +41,21 @@ public class ProjectProviderImpl implements ProjectProvider
     {
     	if(dirty || project == null)
     	{
+    	    Project oldProject = project;
 			project = loadProject();
 
             //String path = new File(".").getCanonicalPath();
 			//CopyGroovy.copyFolder();
 
-            be5Caches.clearAll();
-            injector.get(UserAwareMeta.class).compileLocalizations();//todo refactoring and add to be5Caches
-            injector.get(GroovyOperationLoader.class).initOperationMap();//todo refactoring and add to be5Caches
+            if(oldProject != null)
+            {
+                be5Caches.clearAll();
+                injector.get(UserAwareMeta.class).compileLocalizations();//todo refactoring and add to be5Caches
+                injector.get(GroovyOperationLoader.class).initOperationMap();//todo refactoring and add to be5Caches
 
-            GroovyRegister.initClassLoader();
-            updateDatabaseSystem();
+                GroovyRegister.initClassLoader();
+                updateDatabaseSystem();
+            }
         }
 
     	return project;
@@ -102,8 +106,7 @@ public class ProjectProviderImpl implements ProjectProvider
         getProject();
     }
 
-    @Override
-    public void updateDatabaseSystem()
+    private void updateDatabaseSystem()
     {
         project.setDatabaseSystem(injector.get(DatabaseService.class).getRdbms());
     }

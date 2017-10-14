@@ -31,6 +31,8 @@ public class GroovyOperationLoader
         this.meta = meta;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
+
+        initOperationMap();
     }
 
     void initOperationMap()

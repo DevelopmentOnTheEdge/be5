@@ -3,10 +3,10 @@ package com.developmentontheedge.be5.modules.core.groovy
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Test
 
-public class EntitiesTest extends Be5ProjectTest
+class EntitiesTest extends Be5ProjectTest
 {
     @Test
-    public void get() throws Exception
+    void get() throws Exception
     {
 //todo refactoring test as operation test - refactoring QueryRouter to service
 //        Query query = injector.getMeta()

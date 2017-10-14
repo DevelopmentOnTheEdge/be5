@@ -11,17 +11,17 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 
 
-class LoadTest //extends Be5ProjectDBTest
+class LoadTest extends Be5ProjectDBTest
 {
-//    @Inject ProjectProvider projectProvider
-//
-//    @Test
-//    void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
-//    {
-//        assertEquals("core", projectProvider.getProject().getAppName())
-//
-//        BeModelCollection<Module> modules = projectProvider.getProject().getModules()
-//        assertEquals(0, modules.getSize())
-//    }
+    @Inject ProjectProvider projectProvider
+
+    @Test
+    void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
+    {
+        assertEquals("core", projectProvider.getProject().getAppName())
+
+        BeModelCollection<Module> modules = projectProvider.getProject().getModules()
+        assertEquals(0, modules.getSize())
+    }
 
 }

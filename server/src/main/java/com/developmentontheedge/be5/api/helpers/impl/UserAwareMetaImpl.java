@@ -46,6 +46,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     {
         this.meta = meta;
         this.projectProvider = projectProvider;
+        compileLocalizations();
     }
 
 //    @Override
