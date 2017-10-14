@@ -25,9 +25,17 @@ public class ProjectTopologicalSort
     private void dfs (String v) {
         used.put(v, true);
 
-        for(Module module : g.get(v).getModules()){
+        for(Module module : g.get(v).getModules())
+        {
             if (!used.getOrDefault(module.getName(), false))
-                dfs (module.getName());
+            {
+                if(!g.containsKey(module.getName()))
+                {
+                    throw new RuntimeException("Module " + module.getName() +
+                            " not found, required for " + v + ". Add module to classpath.");
+                }
+                dfs(module.getName());
+            }
         }
 
         ans.add(g.get(v));

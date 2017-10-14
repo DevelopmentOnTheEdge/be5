@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.modules.core
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.maven.AppValidate
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException
 import com.developmentontheedge.be5.metadata.model.Module
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection
@@ -24,4 +25,9 @@ class LoadTest extends Be5ProjectDBTest
         assertEquals(0, modules.getSize())
     }
 
+    @Test
+    void validate()
+    {
+        new AppValidate().setPath("./").execute()
+    }
 }

@@ -119,9 +119,8 @@ public class ModuleLoader2
         return modulesMap.get(name).getLocation();
     }
 
-    public static Project findAndLoadProjectWithModules() throws ProjectLoadException {
-        long startTime = System.nanoTime();
-
+    public static Project findAndLoadProjectWithModules() throws ProjectLoadException
+    {
         loadAllProjects(true);
 
         Project project = null;
@@ -148,7 +147,6 @@ public class ModuleLoader2
 
         ModuleLoader2.mergeModules(project, new JULLogger(log));
 
-        log.info(ModuleLoader2.logLoadedProject(project, startTime));
         return project;
     }
 
@@ -185,6 +183,7 @@ public class ModuleLoader2
 
     public static void mergeModules(Project be5Project, ProcessController logger) throws ProjectLoadException
     {
+        long startTime = System.nanoTime();
         LoadContext loadContext = new LoadContext();
         try
         {
@@ -195,6 +194,7 @@ public class ModuleLoader2
             throw new ProjectLoadException("Merge modules", e);
         }
         loadContext.check();
+        log.info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
 
     private static void mergeAllModules(

@@ -43,7 +43,14 @@
 				<directory>${basedir}</directory>
 				<excludes>
 					<exclude>.*</exclude>
-    				<exclude>src/java/**/*.*</exclude>
+					<exclude>src/html/**/*.*</exclude>
+					<exclude>.idea/**/*</exclude>
+					<exclude>src/frontend/**/*</exclude>
+					<exclude>node_modules/**/*</exclude>
+					<exclude>dist/**/*</exclude>
+					<exclude>src/main/java/**/*.*</exclude>
+					<exclude>target/**/*.*</exclude>
+					<exclude>test/**/*.*</exclude>
 				</excludes>
 			</resource>
 		</resources>
@@ -56,14 +63,14 @@
 				<configuration>
 					<projectPath>./</projectPath>
 				</configuration>
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<phase>generate-sources</phase>-->
-						<!--<goals>-->
-							<!--<goal>validate</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
+				<executions>
+					<execution>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
@@ -79,22 +86,6 @@
                     </execution>
                 </executions>
             </plugin>
-			<!--<plugin>-->
-				<!--<groupId>org.codehaus.mojo</groupId>-->
-				<!--<artifactId>exec-maven-plugin</artifactId>-->
-				<!--<version>1.5.0</version>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<phase>generate-sources</phase>-->
-						<!--<goals>-->
-							<!--<goal>java</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
-				<!--<configuration>-->
-					<!--<mainClass>com.developmentontheedge.be5.modules.core.gen.EntityModelsGen</mainClass>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
 		</plugins>
 	</build>
 

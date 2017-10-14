@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,13 @@ public class AppValidate extends Be5Mojo
 
     @Parameter (property = "BE5_SAVE_PROJECT")
     boolean saveProject;
-    
+
+    public AppValidate setPath(String path)
+    {
+        projectPath = Paths.get(path).toFile();
+        return this;
+    }
+
     @Override
     public void execute() throws MojoFailureException
     {
@@ -102,13 +109,15 @@ public class AppValidate extends Be5Mojo
     private void loadModules() throws MojoFailureException
     {
         LoadContext loadContext = new LoadContext();
-        List<ProjectElementException> errors = new ArrayList<>();
+        //List<ProjectElementException> errors = new ArrayList<>();
         try
         {
-            final Project model = be5Project;
-            List<Project> moduleProjects = ModuleLoader2.loadModules(model, logger, loadContext);
-            errors.addAll( validateDeps(moduleProjects) );
-            ModuleLoader2.mergeAllModules( model, moduleProjects, loadContext );
+//            final Project model = be5Project;
+//            List<Project> moduleProjects = ModuleLoader2.loadModules(model, logger, loadContext);
+//            errors.addAll( validateDeps(moduleProjects) );
+//            ModuleLoader2.mergeAllModules( model, moduleProjects, loadContext );
+
+            ModuleLoader2.mergeModules(be5Project, logger);
         }
         catch ( ProjectLoadException e )
         {
