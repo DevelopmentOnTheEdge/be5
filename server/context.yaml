@@ -9,6 +9,7 @@ context:
   - roleSelector:     com.developmentontheedge.be5.components.RoleSelector
   - static:           com.developmentontheedge.be5.components.StaticPageComponent
   - categories:       com.developmentontheedge.be5.components.Categories
+  - queryBuilder:     com.developmentontheedge.be5.components.QueryBuilder
   services:
   - com.developmentontheedge.be5.api.services.impl.LogConfigurator
   - com.developmentontheedge.be5.databasemodel.impl.DatabaseModel

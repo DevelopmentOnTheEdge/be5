@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.api.services.CoreUtils;
+import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -36,7 +37,8 @@ import static com.developmentontheedge.be5.components.FrontendConstants.*;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
-public class DocumentGenerator implements Runner {
+public class DocumentGenerator implements Runner
+{
     /**
      * Generates a response by the given category and the page.
      * Parameters:
@@ -46,8 +48,15 @@ public class DocumentGenerator implements Runner {
      *   <li>values?</li>
      * </ul>
      */
-    public static void generateAndSend(Request req, Response res, Injector injector) {
+    public static void generateAndSend(Request req, Response res, Injector injector)
+    {
         QueryRouter.on(req, injector).run(new DocumentGenerator(req, res, injector));
+    }
+
+    public static void generateAndSend(Query query, Request req, Response res, Injector injector)
+    {
+        Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
+        QueryRouter.on(req, injector).routeAndRun(query, parametersMap, new DocumentGenerator(req, res, injector));
     }
     
     private final Request req;
@@ -93,6 +102,10 @@ public class DocumentGenerator implements Runner {
         catch (Be5Exception e)
         {
             sendQueryResponseError(req, res, query, e);
+        }
+        catch (Throwable e)
+        {
+            sendQueryResponseError(req, res, query, Be5Exception.internalInQuery(e, query));
         }
     }
 

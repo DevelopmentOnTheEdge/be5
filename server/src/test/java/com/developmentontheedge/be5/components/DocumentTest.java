@@ -24,12 +24,14 @@ public class DocumentTest extends SqlMockOperationTest
     private Component component;
 
     @Before
-    public void init(){
+    public void init()
+    {
         component = injector.getComponent("document");
     }
 
     @Test
-    public void generate() throws Exception {
+    public void generate()
+    {
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("", ImmutableMap.of(
@@ -37,7 +39,7 @@ public class DocumentTest extends SqlMockOperationTest
                 RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime(),
                 RestApiConstants.QUERY,"All records")), response, injector);
 
-        //todo verify(response).sendAsJson(any(ResourceData.class), any(Map.class), anyMapOf(String.class, String.class));
+        verify(response).sendAsJson(any(ResourceData.class), any(Map.class), anyMapOf(String.class, String.class));
     }
 
 }

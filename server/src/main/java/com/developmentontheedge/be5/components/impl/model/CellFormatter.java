@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
@@ -79,15 +80,22 @@ public class CellFormatter
             Map<String, String> linkProperties = cell.options.get(DatabaseConstants.COL_ATTR_LINK);
             if(linkProperties != null)
             {
-                HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
-                        .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
-                String cols = linkProperties.get("columns");
-                String vals = linkProperties.get("using");
-                if(cols != null && vals != null)
+                try
                 {
-                    url = url.named(EntryStream.zip(cols.split(","), vals.split(",")).mapValues(varResolver::resolve).toMap());
+                    HashUrl url = new HashUrl("table").positional(linkProperties.get("table"))
+                            .positional(linkProperties.getOrDefault("queryName", DatabaseConstants.ALL_RECORDS_VIEW));
+                    String cols = linkProperties.get("columns");
+                    String vals = linkProperties.get("using");
+                    if(cols != null && vals != null)
+                    {
+                        url = url.named(EntryStream.zip(cols.split(","), vals.split(",")).mapValues(varResolver::resolve).toMap());
+                    }
+                    cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
                 }
-                cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
+                catch (Throwable e)
+                {
+                    throw Be5Exception.internalInQuery(new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e), query);
+                }
             }
 
         return formattedContent;

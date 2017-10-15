@@ -74,11 +74,13 @@ public class QueryRouter
         routeAndRun(entityName, queryName, parametersMap, runner);
     }
 
-    public void routeAndRun(String entityName, String queryName, Map<String, String> parametersMap, Runner runner) {
+    public void routeAndRun(String entityName, String queryName, Map<String, String> parametersMap, Runner runner)
+    {
         routeAndRun(userAwareMeta.getQuery(entityName, queryName), parametersMap, runner);
     }
 
-    private void routeAndRun(Query query, Map<String, String> parametersMap, Runner runner) {
+    public void routeAndRun(Query query, Map<String, String> parametersMap, Runner runner)
+    {
         switch (query.getType())
         {
         case STATIC:
@@ -92,10 +94,10 @@ public class QueryRouter
         case D1:
         // TODO check whether these cases are correct
         case D1_UNKNOWN:
-        case D2:
-        case CONTAINER:
-        case CUSTOM:
-        case JAVASCRIPT:
+//        case D2:
+//        case CONTAINER:
+//        case CUSTOM:
+//        case JAVASCRIPT:
             if (meta.isParametrizedTable(query))
             {
                 runner.onParametrizedTable(query, parametersMap);

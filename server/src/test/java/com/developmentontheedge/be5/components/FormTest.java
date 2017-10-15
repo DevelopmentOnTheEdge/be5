@@ -28,7 +28,8 @@ public class FormTest extends Be5ProjectTest
     private Component component;
 
     @Before
-    public void init(){
+    public void init()
+    {
         component = injector.getComponent("form");
     }
 
