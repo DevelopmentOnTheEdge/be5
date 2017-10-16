@@ -296,16 +296,21 @@ public class OperationServiceImpl implements OperationService
                 {
                     throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
                 }
-                catch( MultipleCompilationErrorsException e )
+                catch ( Throwable e )
                 {
                     throw Be5Exception.internalInOperation(e, operationInfo);
                 }
                 break;
             default:
-                try {
+                try
+                {
                     operation = ( Operation ) Class.forName(operationInfo.getCode()).newInstance();
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                    throw Be5Exception.internalInOperation(e, operationInfo);
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                {
+                    throw Be5Exception.internalInOperation(new RuntimeException(
+                            "It is possible to use the 'file:' instead of the 'code:' " +
+                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo);
                 }
         }
 
