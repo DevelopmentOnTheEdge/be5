@@ -58,7 +58,7 @@ public class Be5Exception extends RuntimeException
 
     public static Be5Exception internal(Throwable t)
     {
-        return internal(t, t.getMessage());
+        return internal(t, "");
     }
 
     public static Be5Exception internal(Throwable t, String message)
