@@ -120,6 +120,8 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.runComponent(componentId, req, res);
 
+        verify(req).setAttribute("testRequestPreprocessor", 1);
+
         res.sendError(eq(ErrorMessages.formatMessage(Be5ErrorCode.UNKNOWN_COMPONENT, componentId)));
     }
 

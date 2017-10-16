@@ -43,7 +43,7 @@ public class YamlBinderTest
     @Test
     public void test()
     {
-        yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations );
+        yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
 
         assertEquals(Document.class, loadedClasses.get("document"));
         assertEquals(StaticPageComponent.class, loadedClasses.get("static"));
@@ -55,17 +55,19 @@ public class YamlBinderTest
     public void testLoadConfig() throws FileNotFoundException
     {
         yamlBinder.loadModules(getReader(getClass().getClassLoader().getResource(CONTEXT_FILE).getFile()),
-                bindings, loadedClasses, configurations );
+                bindings, loadedClasses, configurations, requestPreprocessors);
 
         assertEquals(Collections.singletonMap("path", "/logging.properties"),
                 configurations.get(LogConfigurator.class));
+
+        assertEquals(1, requestPreprocessors.size());
     }
 
     @Test(expected = Be5Exception.class)
     public void testLoadTryRedefine()
     {
-        yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations);
-        yamlBinder.loadModules(getReader("src/test/resources/errorRedefine/" + CONTEXT_FILE), bindings, loadedClasses, configurations);
+        yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
+        yamlBinder.loadModules(getReader("src/test/resources/errorRedefine/" + CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
         assertEquals(Document.class, loadedClasses.get("document"));
     }
 
@@ -92,8 +94,8 @@ public class YamlBinderTest
     @Test(expected = Be5Exception.class)
     public void testLoadTryRedefineServices()
     {
-        yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations);
-        yamlBinder.loadModules(getReader("src/test/resources/errorRedefine/contextService.yaml"), bindings, loadedClasses, configurations);
+        yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
+        yamlBinder.loadModules(getReader("src/test/resources/errorRedefine/contextService.yaml"), bindings, loadedClasses, configurations, requestPreprocessors);
         assertEquals(Document.class, loadedClasses.get("document"));
     }
 

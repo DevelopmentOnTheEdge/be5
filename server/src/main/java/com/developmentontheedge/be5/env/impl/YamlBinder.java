@@ -52,11 +52,13 @@ public class YamlBinder implements Binder
 
             for (URL url: urls)
             {
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+                {
                     if(mode == Mode.serverOnly && !isServer(reader))continue;
                 }
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
-                    loadModules(reader, bindings, loadedClasses, configurations);
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
+                {
+                    loadModules(reader, bindings, loadedClasses, configurations, requestPreprocessors);
                 }
             }
         }
@@ -77,7 +79,7 @@ public class YamlBinder implements Binder
 
     @SuppressWarnings("unchecked")
     void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses,
-                     Map<Class<?>, Object> configurations)
+                     Map<Class<?>, Object> configurations, List<RequestPreprocessor> requestPreprocessors)
     {
         Map<String, Object> file = (Map<String, Object>) new Yaml().load(reader);
         Map<String, Object> moduleContext = (Map<String, Object>) file.get("context");
@@ -96,6 +98,22 @@ public class YamlBinder implements Binder
             for (Map.Entry<String, Object> entry : config.entrySet())
             {
                 configurations.put(loadClass(entry.getKey()), entry.getValue());
+            }
+        }
+
+        List<String> requestPreprocessorsConfig = (List<String>) file.get("requestPreprocessors");
+        if(requestPreprocessorsConfig != null)
+        {
+            for (String requestPreprocessorClassName : requestPreprocessorsConfig)
+            {
+                try
+                {
+                    requestPreprocessors.add((RequestPreprocessor)loadClass(requestPreprocessorClassName).newInstance());
+                }
+                catch (Throwable e)
+                {
+                    throw Be5Exception.internal(e, "Error on init requestPreprocessor: " + requestPreprocessorClassName);
+                }
             }
         }
     }

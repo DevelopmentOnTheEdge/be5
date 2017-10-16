@@ -11,3 +11,5 @@ config:
   com.developmentontheedge.be5.api.services.impl.Be5MainSettingsImpl:
     cacheSizes:
       User settings: 0
+requestPreprocessors:
+  - com.developmentontheedge.be5.api.TestRequestPreprocessor

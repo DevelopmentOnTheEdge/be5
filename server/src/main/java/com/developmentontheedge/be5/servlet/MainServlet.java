@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -147,16 +149,11 @@ public class MainServlet extends HttpServlet
 
     private void runRequestPreprocessors(String componentId, Request req, Response res)
     {
-        //requestPreprocessors
-        //String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
-
-//        if( className != null )
-//        {
-//            RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
-//                    .getConstructor(DatabaseService.class, UserInfo.class ).newInstance( databaseService, userInfo );
-//
-//            preprocessor.preprocessUrl( request, url );
-//        }
+        List<RequestPreprocessor> requestPreprocessors = getInjector().getRequestPreprocessors();
+        for (RequestPreprocessor preprocessor : requestPreprocessors)
+        {
+            preprocessor.preprocessUrl(componentId, req, res);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////
