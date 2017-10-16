@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+
 public class YamlBinder implements Binder
 {
     private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
@@ -45,7 +46,7 @@ public class YamlBinder implements Binder
 
     @Override
     public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
-                          Map<Class<?>, Object> configurations, List<RequestPreprocessor> requestPreprocessors)
+                          Map<Class<?>, Object> configurations, List<Class<?>> requestPreprocessors)
     {
         try{
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
@@ -79,7 +80,7 @@ public class YamlBinder implements Binder
 
     @SuppressWarnings("unchecked")
     void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses,
-                     Map<Class<?>, Object> configurations, List<RequestPreprocessor> requestPreprocessors)
+                     Map<Class<?>, Object> configurations, List<Class<?>> requestPreprocessors)
     {
         Map<String, Object> file = (Map<String, Object>) new Yaml().load(reader);
         Map<String, Object> moduleContext = (Map<String, Object>) file.get("context");
@@ -106,14 +107,9 @@ public class YamlBinder implements Binder
         {
             for (String requestPreprocessorClassName : requestPreprocessorsConfig)
             {
-                try
-                {
-                    requestPreprocessors.add((RequestPreprocessor)loadClass(requestPreprocessorClassName).newInstance());
-                }
-                catch (Throwable e)
-                {
-                    throw Be5Exception.internal(e, "Error on init requestPreprocessor: " + requestPreprocessorClassName);
-                }
+                Class<?> aClass = loadClass(requestPreprocessorClassName);
+                requestPreprocessors.add(aClass);
+                bindings.put(aClass, aClass);
             }
         }
     }

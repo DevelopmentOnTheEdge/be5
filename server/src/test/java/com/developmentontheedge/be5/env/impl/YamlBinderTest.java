@@ -26,7 +26,7 @@ public class YamlBinderTest
     private YamlBinder yamlBinder;
     private Map<String, Class<?>> loadedClasses;
     private Map<Class<?>, Class<?>> bindings;
-    private List<RequestPreprocessor> requestPreprocessors;
+    private List<Class<?>> requestPreprocessors;
     private Map<Class<?>, Object> configurations;
 
 

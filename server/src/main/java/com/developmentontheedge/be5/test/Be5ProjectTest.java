@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.LoginService;
@@ -38,7 +37,7 @@ public abstract class Be5ProjectTest extends TestUtils
     {
         @Override
         public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
-                              Map<Class<?>, Object> configurations, List<RequestPreprocessor> requestPreprocessors)
+                              Map<Class<?>, Object> configurations, List<Class<?>> requestPreprocessors)
         {
             new YamlBinder().configure(loadedClasses, bindings, configurations, requestPreprocessors);
             bindings.put(SqlService.class, SqlServiceMock.class);

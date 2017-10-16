@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.RequestPreprocessor;
@@ -30,7 +31,7 @@ public class Be5Injector implements Injector
     private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
     private final Map<Class<?>, Class<?>> bindings = new HashMap<>();
 
-    private final List<RequestPreprocessor> requestPreprocessors = new ArrayList<>();
+    private final List<Class<?>> requestPreprocessors = new ArrayList<>();
 
     private final Map<Class<?>, Object> configurations = new HashMap<>();
 
@@ -169,7 +170,9 @@ public class Be5Injector implements Injector
     @Override
     public List<RequestPreprocessor> getRequestPreprocessors()
     {
-        return requestPreprocessors;
+        return requestPreprocessors.stream()
+                .map(clazz -> (RequestPreprocessor)get(clazz))
+                .collect(Collectors.toList());
     }
 
     private Class<?> getComponentClass(String componentId)
