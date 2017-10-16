@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.env;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
+import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ExecutorService;
@@ -11,6 +12,8 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.Project;
+
+import java.util.List;
 
 /**
  * <p>The service provider is the general source of the business-logic objects, services.</p>
@@ -118,20 +121,14 @@ public interface Injector
     }
     
     /**
-     * <p>Bind an interface to an implementation class.</p>
-     * 
-     * <p>This method is not a part of the API as it can be called only before the {@link Injector#freeze()} is called,
-     * that is called before creation of any initializer or component. Services don't have access to the service provider.</p>
-     */
-//    <T, TT extends T> void bind(Class<T> serviceClass, Class<TT> implementationClass, Consumer<TT> initializer);
-
-    /**
      * Resolves a service by its class.
      * @see Injector ServiceProvider for more information
      */
     <T> T get(Class<T> serviceClass);
 
     Component getComponent(String componentId);
+
+    List<RequestPreprocessor> getRequestPreprocessors();
 
     void injectAnnotatedFields(Object obj);
 }

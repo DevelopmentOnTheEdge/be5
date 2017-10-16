@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.env.impl;
 
+import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import org.yaml.snakeyaml.Yaml;
@@ -44,7 +45,7 @@ public class YamlBinder implements Binder
 
     @Override
     public void configure(Map<String, Class<?>> loadedClasses, Map<Class<?>, Class<?>> bindings,
-                          Map<Class<?>, Object> configurations)
+                          Map<Class<?>, Object> configurations, List<RequestPreprocessor> requestPreprocessors)
     {
         try{
             ArrayList<URL> urls = Collections.list(getClass().getClassLoader().getResources(CONTEXT_FILE));
@@ -55,18 +56,7 @@ public class YamlBinder implements Binder
                     if(mode == Mode.serverOnly && !isServer(reader))continue;
                 }
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
-                    loadModules(reader, bindings, loadedClasses);
-                }
-            }
-
-            for (URL url: urls)
-            {
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"))) {
-                    if(mode == Mode.serverOnly && !isServer(reader))continue;
-                }
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
-                {
-                    loadModuleConfiguration(reader, configurations);
+                    loadModules(reader, bindings, loadedClasses, configurations);
                 }
             }
         }
@@ -77,6 +67,7 @@ public class YamlBinder implements Binder
 
     }
 
+    @SuppressWarnings("unchecked")
     public boolean isServer(Reader reader)
     {
         Object name = ((Map<String, Object>) new Yaml().load(reader)).get("name");
@@ -85,9 +76,11 @@ public class YamlBinder implements Binder
     }
 
     @SuppressWarnings("unchecked")
-    void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses)
+    void loadModules(Reader reader, Map<Class<?>, Class<?>> bindings, Map<String, Class<?>> loadedClasses,
+                     Map<Class<?>, Object> configurations)
     {
-        Map<String, Object> moduleContext = (Map<String, Object>) ((Map<String, Object>) new Yaml().load(reader)).get("context");
+        Map<String, Object> file = (Map<String, Object>) new Yaml().load(reader);
+        Map<String, Object> moduleContext = (Map<String, Object>) file.get("context");
         if(moduleContext != null)
         {
             List<Map<String, String>> components = (List<Map<String, String>>) moduleContext.get("components");
@@ -95,6 +88,15 @@ public class YamlBinder implements Binder
 
             if (components != null) loadComponents(loadedClasses, components);
             if (services != null) bindServices(bindings, services);
+        }
+
+        Map<String, Object> config = (Map<String, Object>) file.get("config");
+        if(config != null)
+        {
+            for (Map.Entry<String, Object> entry : config.entrySet())
+            {
+                configurations.put(loadClass(entry.getKey()), entry.getValue());
+            }
         }
     }
 
@@ -151,21 +153,6 @@ public class YamlBinder implements Binder
 
             bindings.put(serviceKeyClass, serviceImplementation);
             serviceKeys.put(key, serviceKeyClass);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    void loadModuleConfiguration(BufferedReader reader, Map<Class<?>, Object> configurations)
-    {
-        Object configObject = ((Map<String, Object>) new Yaml().load(reader)).get("config");
-        if(configObject != null)
-        {
-            Map<String, Object> config = (Map<String, Object>) configObject;
-
-            for (Map.Entry<String, Object> entry : config.entrySet()){
-                configurations.put(loadClass(entry.getKey()), entry.getValue());
-            }
-
         }
     }
 

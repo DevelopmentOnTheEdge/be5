@@ -29,36 +29,37 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
 
-public class MainServlet extends HttpServlet 
+public class MainServlet extends HttpServlet
 {
     private static final Logger log = Logger.getLogger(MainServlet.class.getName());
 
-    private Pattern uriPattern = Pattern.compile( "(/.*)?/api/(.*)" );
+    private Pattern uriPattern = Pattern.compile("(/.*)?/api/(.*)");
 
     private Injector injector;
 
     //TODO private final DaemonStarter starter;
 
     @Override
-    public void init(ServletConfig config) throws ServletException 
+    public void init(ServletConfig config) throws ServletException
     {
         super.init(config);
         injector = Be5.createInjector();
         injector.getDatabaseService();
     }
 
-    public Injector getInjector() {
+    public Injector getInjector()
+    {
         return injector;
     }
 
     @Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
-	{
-	    respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
     }
@@ -66,17 +67,16 @@ public class MainServlet extends HttpServlet
     /**
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
-     *
      */
     private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        String origin = request.getHeader( "Origin" );
+        String origin = request.getHeader("Origin");
         // TODO test origin
 
-        response.addHeader( "Access-Control-Allow-Credentials", "true" );
-        response.addHeader( "Access-Control-Allow-Origin", origin );
-        response.addHeader( "Access-Control-Allow-Methods", "POST, GET" );
-        response.addHeader( "Access-Control-Max-Age", "1728000" );
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Origin", origin);
+        response.addHeader("Access-Control-Allow-Methods", "POST, GET");
+        response.addHeader("Access-Control-Max-Age", "1728000");
 
         response.setHeader("Expires", "Tue, 03 Jul 2001 06:00:00 GMT");
         response.setDateHeader("Last-Modified", new Date().getTime());
@@ -85,35 +85,39 @@ public class MainServlet extends HttpServlet
 
         Response res = new ResponseImpl(response);
 
-        Matcher matcher = uriPattern.matcher( requestUri );
-        if( !matcher.matches() )
+        Matcher matcher = uriPattern.matcher(requestUri);
+        if (!matcher.matches())
         {
-            res.sendError( Be5Exception.unknownComponent(requestUri) );
+            res.sendError(Be5Exception.unknownComponent(requestUri));
             return;
         }
 
         String[] uriParts = requestUri.split("/");
         int ind = 1;
 
-        while(!"api".equals(uriParts[ind]) && ind+1 < uriParts.length )
+        while (!"api".equals(uriParts[ind]) && ind + 1 < uriParts.length)
         {
             ind++;
         }
 
-        String subRequestUri = Joiner.on('/').join( Iterables.skip( Arrays.asList(uriParts), ind+2));
-        Request req = new RequestImpl( request, subRequestUri, simplify( parameters ) );
+        String subRequestUri = Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
+        Request req = new RequestImpl(request, subRequestUri, simplify(parameters));
 
-        if(UserInfoHolder.getUserInfo() == null){
+        if (UserInfoHolder.getUserInfo() == null)
+        {
             injector.getLoginService().initGuest(req);
         }
 
-        runComponent(uriParts[ind+1], req, res);
+        String componentId = uriParts[ind + 1];
+
+        runComponent(componentId, req, res);
     }
 
     void runComponent(String componentId, Request req, Response res)
     {
         try
         {
+            runRequestPreprocessors(componentId, req, res);
             Component component = getInjector().getComponent(componentId);
             component.generate( req, res, getInjector() );
         }
@@ -134,16 +138,18 @@ public class MainServlet extends HttpServlet
                 res.sendError(ex);
             }
         }
-        catch ( RuntimeException | Error e )
+        catch ( Throwable e )
         {
+            log.log(Level.SEVERE, e.getMessage(), e);
             res.sendError(Be5Exception.internal(e));
         }
     }
 
-//    private void preprocessRequest(HttpServletRequest request)
-//    {
-//        String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
-//
+    private void runRequestPreprocessors(String componentId, Request req, Response res)
+    {
+        //requestPreprocessors
+        //String className = Component? Utils.getSystemSetting( "REQUEST_PREPROCESSOR" );
+
 //        if( className != null )
 //        {
 //            RequestPreprocessor preprocessor = Classes.tryLoad( className, RequestPreprocessor.class )
@@ -151,7 +157,7 @@ public class MainServlet extends HttpServlet
 //
 //            preprocessor.preprocessUrl( request, url );
 //        }
-//    }
+    }
 
     ///////////////////////////////////////////////////////////////////
     // web socket

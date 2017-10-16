@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.api.Configurable;
@@ -21,19 +22,23 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.gson.Gson;
 
+
 public class Be5Injector implements Injector
 {
     private static final Logger log = Logger.getLogger(Be5Injector.class.getName());
 
     private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
     private final Map<Class<?>, Class<?>> bindings = new HashMap<>();
+
+    private final List<RequestPreprocessor> requestPreprocessors = new ArrayList<>();
+
     private final Map<Class<?>, Object> configurations = new HashMap<>();
 
     private final ClassToInstanceMap instantiatedServices = new ClassToInstanceMap();
 
     public Be5Injector(Binder binder)
     {
-        binder.configure(loadedClasses, bindings, configurations);
+        binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
         log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
         getLogger();
     }
@@ -159,6 +164,12 @@ public class Be5Injector implements Injector
         {
             throw Be5Exception.internal(e, "Can't create component");
         }
+    }
+
+    @Override
+    public List<RequestPreprocessor> getRequestPreprocessors()
+    {
+        return requestPreprocessors;
     }
 
     private Class<?> getComponentClass(String componentId)
