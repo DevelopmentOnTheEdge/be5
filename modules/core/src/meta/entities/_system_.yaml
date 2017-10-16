@@ -41,6 +41,10 @@ _system_:
       type: Groovy
       roles: [SystemDeveloper, Administrator]
       file: DataSource.groovy
+  - Query Builder:
+      type: static
+      roles: [SystemDeveloper, Administrator]
+      value: qBuilder
   operations:
   - SessionVariablesEdit:
       type: Groovy

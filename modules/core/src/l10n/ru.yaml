@@ -41,7 +41,7 @@ ru:
     - topics: viewName
       entries:
       - Session variables: Переменные сессии
-      - Cache: Статистика кэша
+      - Cache: Кэш
       - DataSource: Характеристики БД
       - System Properties: Свойства
       - Threads: Список потоков
