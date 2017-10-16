@@ -174,4 +174,15 @@ public class Be5Exception extends RuntimeException
         }
         return sw.toString();
     }
+
+    public static String getMessage(Be5Exception e)
+    {
+        StringBuilder out = new StringBuilder(e.getCause().getMessage());
+        while(e.getCause() instanceof Be5Exception)
+        {
+            e = (Be5Exception)e.getCause();
+            out.append("\n").append(e.getCause().getMessage());
+        }
+        return out.toString();
+    }
 }
