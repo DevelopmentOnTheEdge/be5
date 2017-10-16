@@ -126,12 +126,8 @@ public class DocumentGenerator implements Runner
 
     private void sendQueryResponseError(Request req, Response res, Query query, Be5Exception e)
     {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String exceptionAsString = sw.toString();
-
         res.sendErrorAsJson(
-                new ErrorModel("500", e.getTitle(), e.getCause().getMessage(), exceptionAsString),
+                new ErrorModel("500", e.getTitle(), e.getCause().getMessage(), Be5Exception.exceptionAsString(e)),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
         );

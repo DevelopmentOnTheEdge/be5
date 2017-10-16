@@ -21,6 +21,7 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
+import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 
 import java.util.Map;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
@@ -254,6 +255,10 @@ public class OperationServiceImpl implements OperationService
 
             return Either.second(operation.getResult());
         }
+        catch (Be5Exception e)
+        {
+            throw e;//Be5Exception.internalInOperation(e.getCause(), operation.getInfo())
+        }
         catch (Exception e)
         {
             throw Be5Exception.internalInOperation(e, operation.getInfo());
@@ -282,12 +287,18 @@ public class OperationServiceImpl implements OperationService
                     }
                     else
                     {
-                        throw Be5Exception.internal("Class " + operationInfo.getCode() + " is null." );
+                        throw Be5Exception.internalInOperation(
+                                new Error("Class " + operationInfo.getCode() + " is null."), operationInfo);
+                        //throw Be5Exception.internal("Class " + operationInfo.getCode() + " is null." );
                     }
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
                 {
                     throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                }
+                catch( MultipleCompilationErrorsException e )
+                {
+                    throw Be5Exception.internalInOperation(e, operationInfo);
                 }
                 break;
             default:

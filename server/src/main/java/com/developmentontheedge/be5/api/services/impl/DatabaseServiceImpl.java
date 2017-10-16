@@ -221,7 +221,15 @@ public class DatabaseServiceImpl implements DatabaseService
             if (conn != null) {
                 conn.rollback();
             }
-            return Be5Exception.internal(log, e);
+            if(e instanceof Be5Exception)
+            {
+                return (Be5Exception)e;
+            }
+            else
+            {
+                return Be5Exception.internal(log, e);
+            }
+
         } catch (SQLException se) {
             return Be5Exception.internal(log, se, "Unable to rollback transaction", e);
         }

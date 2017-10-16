@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.api.exceptions;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.OperationInfo;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Logger;
 
 /**
@@ -157,5 +159,19 @@ public class Be5Exception extends RuntimeException
     public String getTitle()
     {
         return title;
+    }
+
+    public static String exceptionAsString(Throwable e)
+    {
+        StringWriter sw = new StringWriter();
+        if(e instanceof Be5Exception)
+        {
+            e.getCause().printStackTrace(new PrintWriter(sw));
+        }
+        else
+        {
+            e.printStackTrace(new PrintWriter(sw));
+        }
+        return sw.toString();
     }
 }
