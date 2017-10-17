@@ -22,6 +22,19 @@ public class DynamicPropertyGBuilder
         return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
     }
 
+    public DynamicProperty add(DynamicPropertySet dynamicPropertySet, String propertyName,
+                               @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
+    {
+        DPSAttributes builder = new DPSAttributes();
+        Closure code = cl.rehydrate(builder, this, this);
+        code.setResolveStrategy(Closure.DELEGATE_FIRST);
+        code.call();
+
+        DynamicProperty dynamicProperty = new DynamicProperty(propertyName, String.class);
+        dynamicPropertySet.add(dynamicProperty);
+        return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
+    }
+
     public DynamicProperty edit(DynamicPropertySet dynamicPropertySet, String propertyName,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
