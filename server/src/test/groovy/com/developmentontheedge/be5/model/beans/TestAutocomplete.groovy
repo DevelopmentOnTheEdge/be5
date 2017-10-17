@@ -10,7 +10,6 @@ import org.junit.Test
 
 import static com.developmentontheedge.be5.api.validation.rule.BaseRule.*
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
-import static com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder.*
 import static org.junit.Assert.assertEquals
 
 
@@ -46,7 +45,15 @@ class TestAutocomplete extends Be5ProjectTest
             STATUS           = Validation.Status.ERROR
         }
 
-        assertEquals("{'values':{'reasonMulti':123},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}}},'order':['/reasonMulti']}",
+        add (dps, "input2") {
+            value = "value2"
+        }
+
+        edit (dps, "input2") {
+            CAN_BE_NULL = true
+        }
+
+        assertEquals("{'values':{'reasonMulti':123,'input2':'value2'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}},'/input2':{'displayName':'input2','canBeNull':true}},'order':['/reasonMulti','/input2']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 
