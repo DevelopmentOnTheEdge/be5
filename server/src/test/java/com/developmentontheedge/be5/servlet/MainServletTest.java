@@ -7,7 +7,9 @@ import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +41,8 @@ public class MainServletTest extends Be5ProjectTest
     @Before
     public void init() throws IOException
     {
+        initUserWithRoles(RoleType.ROLE_GUEST);
+
         spyMainServlet = spy(MainServlet.class);
         when(spyMainServlet.getInjector()).thenReturn(injector);
 
