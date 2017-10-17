@@ -251,7 +251,7 @@ public class DpsHelper
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
-            if(property != null)
+            if(property != null && !property.isReadOnly())
             {
                 dps.setValue(entry.getKey(), entry.getValue());
             }
