@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.services;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import org.apache.commons.dbutils.ResultSetHandler;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface SqlService
@@ -41,15 +42,49 @@ public interface SqlService
         return res;
     }
 
-    default String getString(String sql, Object... params){
+    default String getString(String sql, Object... params)
+    {
         return getScalar(sql, params);
     }
 
-    default Integer getInteger(String sql, Object... params){
+    default Integer getInteger(String sql, Object... params)
+    {
         return getScalar(sql, params);
     }
 
-    default Double getDouble(String sql, Object... params){
+    default Double getDouble(String sql, Object... params)
+    {
         return getScalar(sql, params);
     }
+
+    default Date getDate(String sql, Object... params)
+    {
+        return getScalar(sql, params);
+    }
+
+    default List<String> selectListString(String sql, Object... params)
+    {
+        return selectList(sql, rs-> rs.getString(1), params);
+    }
+
+    default List<Integer> selectListInteger(String sql, Object... params)
+    {
+        return selectList(sql, rs-> rs.getInt(1), params);
+    }
+
+    default List<Long> selectListLong(String sql, Object... params)
+    {
+        return selectList(sql, rs-> rs.getLong(1), params);
+    }
+
+    default List<Double> selectListDouble(String sql, Object... params)
+    {
+        return selectList(sql, rs-> rs.getDouble(1), params);
+    }
+
+    default List<Date> selectListDate(String sql, Object... params)
+    {
+        return selectList(sql, rs-> rs.getDate(1), params);
+    }
+
 }
