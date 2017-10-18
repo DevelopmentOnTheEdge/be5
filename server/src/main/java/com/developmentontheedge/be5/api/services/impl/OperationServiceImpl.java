@@ -136,6 +136,8 @@ public class OperationServiceImpl implements OperationService
                 {
                     operationResult = OperationResult.error(e);
                 }
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);//todo add test, refactoring:
+                // create function getEitherFirstFormPresentation(){replaceNullValueToEmptyString; Either.first(new FormPresentation;}
             }
             else
             {
