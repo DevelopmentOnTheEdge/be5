@@ -17,7 +17,6 @@ import static com.developmentontheedge.be5.api.validation.Validation.Status.ERRO
 import static com.developmentontheedge.be5.api.validation.Validation.defaultRules;
 
 
-//TODO localize BeanInfoConstants.MESSAGE
 public class Validator
 {
     private final UserAwareMeta userAwareMeta;
@@ -89,8 +88,8 @@ public class Validator
                 }
                 if(values.length == 0 && !property.isCanBeNull())
                 {
-                    setError(property, "Can not be null");
-                    throw new IllegalArgumentException("Can not be null - " + toStringProperty(property));
+                    setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
+                    throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
                 }
                 property.setValue(resValues);
             }
@@ -100,8 +99,9 @@ public class Validator
                 {
                     if(!property.isCanBeNull())
                     {
-                        setError(property, "Can not be null");
-                        throw new IllegalArgumentException("Can not be null - " + toStringProperty(property));
+
+                        setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
+                        throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
                     }
                 }
                 else
@@ -160,7 +160,8 @@ public class Validator
         }
         catch (NumberFormatException e)
         {
-            String msg = "Error, value must be a " + type.getName();
+            String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid number.");
+            //добавить информацию о конкресном типе - ограничения type.getName();
             setError(property, msg);
             throw new NumberFormatException(msg + " - " + toStringProperty(property));
         }
@@ -174,7 +175,7 @@ public class Validator
         }
         catch (IllegalArgumentException e)
         {
-            String msg = "Error, value must be a " + type.getName();
+            String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid date.");
             setError(property, msg);
             throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
         }

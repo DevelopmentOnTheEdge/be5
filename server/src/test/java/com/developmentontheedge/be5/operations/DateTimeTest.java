@@ -55,7 +55,7 @@ public class DateTimeTest extends SqlMockOperationTest
                 getSpyMockRecForOp("dateTime", "All records", "Insert", "0",
                         jsonb.toJson(ImmutableMap.of("activeFrom", "")))).getFirst();
 
-        assertEquals("Can not be null",
+        assertEquals("Это поле должно быть заполнено.",
                 first.bean.getJsonObject("meta").getJsonObject("/activeFrom").getString("message"));
     }
 
