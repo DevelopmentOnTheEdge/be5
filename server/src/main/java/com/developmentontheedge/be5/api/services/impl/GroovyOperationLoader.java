@@ -66,11 +66,16 @@ public class GroovyOperationLoader
 
         if (superOperation != null && superOperation.getType().equals(OPERATION_TYPE_GROOVY))
         {
-            //preloadSuperOperation(new OperationInfo("", anyOperation));
+            if(groovyOperationClasses.getIfPresent(superOperationCanonicalName) == null)
+            {
+                ArrayList<String> list = new ArrayList<>(preloadSuperOperation(new OperationInfo("", superOperation)));
 
-            groovyOperationClasses.get(superOperationCanonicalName,
-                    k -> GroovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName));
-            return Collections.singletonList(superOperationCanonicalName);
+                list.add(superOperationCanonicalName);
+                groovyOperationClasses.get(superOperationCanonicalName,
+                        k -> GroovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName));
+                return list;
+            }
+            return Collections.emptyList();
         }
 
         return Collections.emptyList();
@@ -78,7 +83,7 @@ public class GroovyOperationLoader
 
     public Class get(OperationInfo operationInfo)
     {
-        preloadSuperOperation(operationInfo);
+        List<String> preloadSuperOperationList = preloadSuperOperation(operationInfo);
         GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
         String fileName = groovyOperation.getFileName();
         String canonicalName = fileName.replace("/", ".");
