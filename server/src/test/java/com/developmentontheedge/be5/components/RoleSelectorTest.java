@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
@@ -40,7 +41,7 @@ public class RoleSelectorTest extends Be5ProjectTest
         component.generate(getMockRequest(""), response, injector);
 
         verify(response).sendAsRawJson(eq(
-                new RoleSelectorResponse(Collections.emptyList(), Collections.emptyList())
+                new RoleSelectorResponse(UserInfoHolder.getUserName(), Collections.emptyList(), Collections.emptyList())
         ));
     }
 
@@ -56,7 +57,7 @@ public class RoleSelectorTest extends Be5ProjectTest
                 response, injector);
 
         verify(response).sendAsRawJson(eq(
-                new RoleSelectorResponse(Collections.emptyList(), Collections.emptyList())
+                new RoleSelectorResponse(UserInfoHolder.getUserName(), Collections.emptyList(), Collections.emptyList())
         ));
     }
 
@@ -69,7 +70,7 @@ public class RoleSelectorTest extends Be5ProjectTest
                 response, injector);
 
         verify(response).sendAsRawJson(eq(
-                new RoleSelectorResponse(Collections.emptyList(), Collections.emptyList())
+                new RoleSelectorResponse(UserInfoHolder.getUserName(), Collections.emptyList(), Collections.emptyList())
         ));
     }
 
@@ -84,7 +85,7 @@ public class RoleSelectorTest extends Be5ProjectTest
                 ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, injector);
 
         RoleSelectorResponse roleSelectorResponse =
-                new RoleSelectorResponse(
+                new RoleSelectorResponse(UserInfoHolder.getUserName(),
                         ImmutableList.of(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER),
                         ImmutableList.of(RoleType.ROLE_ADMINISTRATOR));
 

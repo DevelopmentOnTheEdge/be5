@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
@@ -63,7 +64,7 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.doGet(request, response);
 
-        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[]}"));
+        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[],'username':'testUser'}"));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.doGet(request, response);
 
-        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[]}"));
+        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[],'username':'testUser'}"));
     }
 
     @Test
@@ -112,7 +113,7 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.runComponent("roleSelector", req, res);
 
-        verify(res).sendAsRawJson(eq(new RoleSelector.RoleSelectorResponse(Collections.emptyList(), Collections.emptyList())));
+        verify(res).sendAsRawJson(eq(new RoleSelector.RoleSelectorResponse(UserInfoHolder.getUserName(), Collections.emptyList(), Collections.emptyList())));
     }
 
     @Test

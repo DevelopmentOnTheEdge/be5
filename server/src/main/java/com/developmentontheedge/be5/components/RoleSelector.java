@@ -17,12 +17,13 @@ public class RoleSelector implements Component
 
     public static class RoleSelectorResponse
     {
+        private final String username;
+        private final List<String> availableRoles;
+        private final List<String> selectedRoles;
 
-        final List<String> availableRoles;
-        final List<String> selectedRoles;
-
-        public RoleSelectorResponse(List<String> availableRoles, List<String> selectedRoles)
+        public RoleSelectorResponse(String username, List<String> availableRoles, List<String> selectedRoles)
         {
+            this.username = username;
             this.availableRoles = availableRoles;
             this.selectedRoles = selectedRoles;
         }
@@ -37,6 +38,11 @@ public class RoleSelector implements Component
             return selectedRoles;
         }
 
+        public String getUsername()
+        {
+            return username;
+        }
+
         @Override
         public boolean equals(Object o)
         {
@@ -45,6 +51,7 @@ public class RoleSelector implements Component
 
             RoleSelectorResponse that = (RoleSelectorResponse) o;
 
+            if (username != null ? !username.equals(that.username) : that.username != null) return false;
             if (availableRoles != null ? !availableRoles.equals(that.availableRoles) : that.availableRoles != null)
                 return false;
             return selectedRoles != null ? selectedRoles.equals(that.selectedRoles) : that.selectedRoles == null;
@@ -53,7 +60,8 @@ public class RoleSelector implements Component
         @Override
         public int hashCode()
         {
-            int result = availableRoles != null ? availableRoles.hashCode() : 0;
+            int result = username != null ? username.hashCode() : 0;
+            result = 31 * result + (availableRoles != null ? availableRoles.hashCode() : 0);
             result = 31 * result + (selectedRoles != null ? selectedRoles.hashCode() : 0);
             return result;
         }
@@ -62,7 +70,8 @@ public class RoleSelector implements Component
         public String toString()
         {
             return "RoleSelectorResponse{" +
-                    "availableRoles=" + availableRoles +
+                    "username='" + username + '\'' +
+                    ", availableRoles=" + availableRoles +
                     ", selectedRoles=" + selectedRoles +
                     '}';
         }
@@ -103,10 +112,11 @@ public class RoleSelector implements Component
         List<String> availableRoles = UserInfoHolder.getAvailableRoles();
         if(availableRoles.size() == 1 && availableRoles.get(0).equals(RoleType.ROLE_GUEST))
         {
-            return new RoleSelectorResponse(Collections.emptyList(), Collections.emptyList());
+            return new RoleSelectorResponse(UserInfoHolder.getUserName(), Collections.emptyList(), Collections.emptyList());
         }
 
         return new RoleSelectorResponse(
+                UserInfoHolder.getUserName(),
                 UserInfoHolder.getAvailableRoles(),
                 UserInfoHolder.getCurrentRoles()
         );
