@@ -164,7 +164,7 @@ public class Be5Exception extends RuntimeException
     public static String exceptionAsString(Throwable e)
     {
         StringWriter sw = new StringWriter();
-        if(e instanceof Be5Exception)
+        if(e instanceof Be5Exception && e.getCause() != null)
         {
             e.getCause().printStackTrace(new PrintWriter(sw));
         }
