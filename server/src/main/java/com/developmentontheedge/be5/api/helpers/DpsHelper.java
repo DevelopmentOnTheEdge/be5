@@ -624,7 +624,7 @@ public class DpsHelper
             if (!column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
                     && !dps.hasProperty(column.getName()))
             {
-                errorMsg.append("Dps not contain notNull column '").append(column.getName()).append("\n");
+                errorMsg.append("Dps not contain notNull column '").append(column.getName()).append("'\n");
             }
         }
 
@@ -632,7 +632,7 @@ public class DpsHelper
         {
             if (!columns.keySet().contains(property.getName()))
             {
-                errorMsg.append("Entity not contain column '").append(property.getName()).append("\n");
+                errorMsg.append("Entity not contain column '").append(property.getName()).append("'\n");
             }
         }
 

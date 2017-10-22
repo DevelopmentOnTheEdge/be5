@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.util;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 
 import javax.xml.bind.DatatypeConverter;
@@ -49,7 +50,12 @@ public class Utils
     private static final String[] timeFormats = new String[]{ "HH:mm:ss" };
     private static final String[] dateTimeFormats = new String[]{ "yyyy-MM-dd HH:mm:ss" };
 
-    public static String inClause(int count){
+    public static String inClause(int count)
+    {
+        if(count <=0)
+        {
+            throw Be5Exception.internal("Error in function inClause(int), count value: " + count + ", must be > 0");
+        }
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
     }
 
