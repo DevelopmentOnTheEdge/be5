@@ -378,15 +378,27 @@ public class ModuleLoader2
 
             initPathsForDev(content);
 
-            //deprecated
-            List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) content.get("pathsToSourceProjects");
-            if(modulesTemp == null)return new HashMap<>();
             Map<String, Path> modules = new HashMap<>();
+
+            {//deprecated
+                List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) content.get("pathsToSourceProjects");
+                if(modulesTemp == null)return new HashMap<>();
+
+                for (Map<String, String> element: modulesTemp)
+                {
+                    Map.Entry<String, String> entry = element.entrySet().iterator().next();
+                    modules.put(entry.getKey(), Paths.get(entry.getValue()));
+                }
+            }
+
+            List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) content.get("paths");
+            if(modulesTemp == null)return new HashMap<>();
             for (Map<String, String> element: modulesTemp)
             {
                 Map.Entry<String, String> entry = element.entrySet().iterator().next();
-                modules.put(entry.getKey(), Paths.get(entry.getValue()));
+                modules.put(entry.getKey(), Paths.get(entry.getValue() + "/project.yaml"));
             }
+
             return modules;
         }
         return new HashMap<>();
