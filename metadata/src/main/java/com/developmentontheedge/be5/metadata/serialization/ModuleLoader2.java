@@ -311,14 +311,14 @@ public class ModuleLoader2
     {
         try
         {
-            Map<String, Path> modulesSource = readDevPathsToSourceProjects();
-            if(modulesSource.isEmpty() && pathsToProjectsToHotReload.isEmpty())return;
+            readDevPathsToSourceProjects();
+            if(pathsToProjectsToHotReload.isEmpty())return;
 
             StringBuilder sb = new StringBuilder();
             sb.append(JULLogger.infoBlock("Replace project path for hot reload (dev.yaml):"));
             boolean started = false;
 
-            for (Map.Entry<String, Path> moduleSource : modulesSource.entrySet())
+            for (Map.Entry<String, Path> moduleSource : pathsToProjectsToHotReload.entrySet())
             {
                 boolean used = false;
                 for (int i = 0; i < urls.size(); i++)
@@ -327,13 +327,13 @@ public class ModuleLoader2
                     if (name.equals(moduleSource.getKey()))
                     {
                         used = started = true;
-                        urls.set(i, moduleSource.getValue().toUri().toURL());
+                        urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
                         sb.append("\n - ").append(String.format("%-15s", name)).append(urls.get(i)).append(" - replace");
                     }
                 }
                 if(!used)
                 {
-                    URL url = moduleSource.getValue().toUri().toURL();
+                    URL url = moduleSource.getValue().resolve("project.yaml").toUri().toURL();
                     urls.add(url);
                     sb.append("\n - ").append(moduleSource.getKey()).append(": ").append(url).append(" - add");
                 }
@@ -357,13 +357,13 @@ public class ModuleLoader2
 
     /**
      * dev.yaml example:
-     * pathsToSourceProjects:
-     * - testBe5app: /home/uuinnk/workspace/github/testapp/project.yaml
+     * paths:
+     *   testBe5app: /home/uuinnk/workspace/github/testBe5app
      *
      * @return Map name -> source path of modules
      */
     @SuppressWarnings("unchecked")
-    private static Map<String, Path> readDevPathsToSourceProjects() throws IOException
+    private static void readDevPathsToSourceProjects() throws IOException
     {
         ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
         if(urls.size() > 1)
@@ -377,42 +377,17 @@ public class ModuleLoader2
             Map<String, Object> content = (Map<String, Object>) new Yaml().load(reader);
 
             initPathsForDev(content);
-
-            Map<String, Path> modules = new HashMap<>();
-
-            {//deprecated
-                List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) content.get("pathsToSourceProjects");
-                if(modulesTemp == null)return new HashMap<>();
-
-                for (Map<String, String> element: modulesTemp)
-                {
-                    Map.Entry<String, String> entry = element.entrySet().iterator().next();
-                    modules.put(entry.getKey(), Paths.get(entry.getValue()));
-                }
-            }
-
-            List<Map<String, String>> modulesTemp = ( List<Map<String, String>> ) content.get("paths");
-            if(modulesTemp == null)return new HashMap<>();
-            for (Map<String, String> element: modulesTemp)
-            {
-                Map.Entry<String, String> entry = element.entrySet().iterator().next();
-                modules.put(entry.getKey(), Paths.get(entry.getValue() + "/project.yaml"));
-            }
-
-            return modules;
         }
-        return new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
     private static void initPathsForDev(Map<String, Object> content)
     {
-        List<Map<String, String>> paths = ( List<Map<String, String>> ) content.get("paths");
+        Map<String, String> paths = ( Map<String, String> ) content.get("paths");
         if(paths != null)
         {
-            for (Map<String, String> element : paths)
+            for (Map.Entry<String, String> entry : paths.entrySet())
             {
-                Map.Entry<String, String> entry = element.entrySet().iterator().next();
                 pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
             }
         }
