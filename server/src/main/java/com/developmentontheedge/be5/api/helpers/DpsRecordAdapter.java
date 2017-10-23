@@ -10,6 +10,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import one.util.streamex.IntStreamEx;
 
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Date;
@@ -69,6 +70,11 @@ public class DpsRecordAdapter
     {
         try{
             Object object = rs.getObject(idx);
+            if(object instanceof BigDecimal && clazz == Double.class)
+            {
+                return ((BigDecimal)object).doubleValue();
+            }
+
             return clazz.cast(object);
         }catch (Exception e){
             throw Be5Exception.internal(e);
