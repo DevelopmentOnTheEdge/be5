@@ -48,13 +48,23 @@ public class ModuleLoader2
         if( modulesMap != null && !dirty)
             return;
 
-        modulesMap = new HashMap<>();
-
         try
         {
             ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
                     ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
+            loadAllProjects(urls);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
+    static void loadAllProjects(List<URL> urls)
+    {
+        modulesMap = new HashMap<>();
+        try
+        {
             replaceAndAddURLtoSource(urls);
 
             for (URL url : urls)
@@ -307,7 +317,7 @@ public class ModuleLoader2
      * For hot reload
      * @param urls projects URL
      */
-    private static void replaceAndAddURLtoSource(ArrayList<URL> urls)
+    private static void replaceAndAddURLtoSource(List<URL> urls)
     {
         try
         {
@@ -355,6 +365,12 @@ public class ModuleLoader2
         return module.entrySet().iterator().next().getKey();
     }
 
+    private static void readDevPathsToSourceProjects() throws IOException
+    {
+        ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
+        readDevPathsToSourceProjects(urls);
+    }
+
     /**
      * dev.yaml example:
      * paths:
@@ -363,9 +379,8 @@ public class ModuleLoader2
      * @return Map name -> source path of modules
      */
     @SuppressWarnings("unchecked")
-    private static void readDevPathsToSourceProjects() throws IOException
+    static void readDevPathsToSourceProjects(List<URL> urls) throws IOException
     {
-        ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources("dev.yaml"));
         if(urls.size() > 1)
         {
             throw new RuntimeException("dev.yaml should be only in the project.");
