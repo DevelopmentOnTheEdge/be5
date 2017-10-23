@@ -23,11 +23,11 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
-public class ResultSetDelegator implements ResultSet
+public class ResultSetWrapper implements ResultSet
 {
     private ResultSet _res;
 
-    ResultSetDelegator(ResultSet resultSet)
+    ResultSetWrapper(ResultSet resultSet)
     {
         this._res = resultSet;
     }

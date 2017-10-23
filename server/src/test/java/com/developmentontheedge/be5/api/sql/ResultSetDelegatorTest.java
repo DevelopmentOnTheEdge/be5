@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.api.sql;
 
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.Arrays;
 
-import static com.google.inject.matcher.Matchers.any;
 import static org.junit.Assert.*;
 
 public class ResultSetDelegatorTest
@@ -20,7 +18,7 @@ public class ResultSetDelegatorTest
     public void setResultSet() throws Exception
     {
         ResultSet delegate = Mockito.mock(ResultSet.class);
-        ResultSet wrapper = new ResultSetDelegator(delegate);
+        ResultSet wrapper = new ResultSetWrapper(delegate);
 
         // For each method in the Foo class...
         for (Method fooMethod : ResultSet.class.getDeclaredMethods())
@@ -29,7 +27,7 @@ public class ResultSetDelegatorTest
             boolean methodCalled = false;
 
             // Find matching method in wrapper class and call it
-            for (Method wrapperMethod : ResultSetDelegator.class.getDeclaredMethods())
+            for (Method wrapperMethod : ResultSetWrapper.class.getDeclaredMethods())
             {
                 Class<?>[] fooParameterTypes = fooMethod.getParameterTypes();
                 Class<?>[] parameterTypes = wrapperMethod.getParameterTypes();
