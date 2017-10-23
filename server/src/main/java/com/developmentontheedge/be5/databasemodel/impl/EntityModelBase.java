@@ -267,16 +267,20 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
     public List<RecordModel> toList( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
-        return new MultipleRecordsBase<List<RecordModel>>().get( conditions );
+
+        String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
+
+        return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
+                .map(dps -> new RecordModelBase( EntityModelBase.this, dps ))
+                .collect(Collectors.toList());
     }
 
     @Override
     public RecordModel[] toArray( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
-        MultipleRecordsBase<RecordModel[]> records = new MultipleRecordsBase<>();
 
-        List<RecordModel> recordModels = records.get(conditions);
+        List<RecordModel> recordModels = toList(conditions);
         RecordModel[] arr = new RecordModel[recordModels.size()];
         return recordModels.toArray( arr );
     }
@@ -388,42 +392,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
 //        db.update(dpsHelper.generateUpdateSqlForConditions(entity, dps, conditions),
 //                ObjectArrays.concat(dpsHelper.getValuesFromJson(dps), castValues(entity, conditions), Object.class));
 //    }
-
-    private class MultipleRecordsBase<T> extends AbstractMultipleRecords<T>
-    {
-        public MultipleRecordsBase()
-        {
-            super(entity);
-        }
-
-        @Override
-        public RecordModel createRecord( DynamicPropertySet dps )
-        {
-            return new RecordModelBase( EntityModelBase.this, dps );
-        }
-
-        @Override
-        public String getAdditionalConditions()
-        {
-            return EntityModelBase.this.getAdditionalConditions();
-        }
-
-        @Override
-        public List<RecordModel> get()
-        {
-            return get( Collections.emptyMap() );
-        }
-
-        @Override
-        public List<RecordModel> get(Map<String, ? super Object> conditions)
-        {
-            String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
-
-            return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
-                    .map(this::createRecord)
-                    .collect(Collectors.toList());
-        }
-    }
 
     @Override
     public QueryModel getQuery(String queryName, Map<String, ? super Object> params )
