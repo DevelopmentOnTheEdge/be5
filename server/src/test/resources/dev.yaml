@@ -1,4 +1,2 @@
-pathsToSourceProjects:
-  - testProject: src/test/resources/project.yaml
 paths:
- - testProject: src/test/resources
+  testProject: src/test/resources
