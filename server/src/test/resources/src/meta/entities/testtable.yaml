@@ -42,7 +42,7 @@ testtable:
               t.value AS "Value",
               '<sql>SELECT u.value
                     FROM testtUser u
-                    WHERE u.name = <var:___Name refColumn="testtable.name" />
+                    WHERE u.name = '<var:___Name />'
                </sql>' AS "testtUserValues"
             FROM
               testtable t

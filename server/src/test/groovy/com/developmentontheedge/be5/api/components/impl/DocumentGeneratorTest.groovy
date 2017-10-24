@@ -55,8 +55,6 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     void testNullInSubQuery()
     {
-        //todo add test and fix for numeric types, SELECT name FROM testtableAdmin t WHERE t.value = '11'
-
         db.update("DELETE FROM testtableAdmin")
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", 11)
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)

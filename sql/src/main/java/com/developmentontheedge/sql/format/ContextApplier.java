@@ -76,13 +76,12 @@ public class ContextApplier
 
             if(value == null)
             {
-                constant = new AstStringPart( "null", true ); //todo new AstNull()
+                value = "null";
             }
-            else
-            {
-                constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
-                        : new AstStringConstant(value);
-            }
+
+            constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
+                                                                           : new AstIdentifierConstant(value);
+
             varNode.replaceWith( constant );
         } );
 

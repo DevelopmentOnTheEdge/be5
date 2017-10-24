@@ -31,7 +31,7 @@ public class SubQueryTest
         String key = contextApplier.subQueryKeys().findFirst().get();
         Map<String, String> vars = Collections.singletonMap( "ID", "5" );
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
-        assertEquals("SELECT * FROM subTable WHERE tableID ='5' LIMIT 2", subQuery.getQuery().format());
+        assertEquals("SELECT * FROM subTable WHERE tableID = 5 LIMIT 2", subQuery.getQuery().format());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class SubQueryTest
         String key = contextApplier.subQueryKeys().findFirst().get();
         Map<String, String> vars = Collections.singletonMap( "ID", "5" );
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
-        assertEquals("SELECT * FROM subTable WHERE tableID ='5' LIMIT 2", subQuery.getQuery().format());
+        assertEquals("SELECT * FROM subTable WHERE tableID = 5 LIMIT 2", subQuery.getQuery().format());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class SubQueryTest
                 "ID AS \"___usID\" FROM table", start.format());
 
         assertEquals("SELECT us.utilityType AS \"Name\" " +
-                "FROM utilitySuppliers us WHERE us.ID ='5' LIMIT 1", subQuery.getQuery().format());
+                "FROM utilitySuppliers us WHERE us.ID = 5 LIMIT 1", subQuery.getQuery().format());
 
     }
 
@@ -121,7 +121,7 @@ public class SubQueryTest
         String key = contextApplier.subQueryKeys().findFirst().get();
         Map<String, String> vars = Collections.singletonMap( "ID", "5" );
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
-        assertEquals("SELECT COUNT(*) FROM subTable WHERE tableID ='5' LIMIT 2", subQuery.getQuery().format());
+        assertEquals("SELECT COUNT(*) FROM subTable WHERE tableID = 5 LIMIT 2", subQuery.getQuery().format());
         assertEquals("SELECT ID, '"+key+" entries' FROM table", start.format());
     }
     
@@ -134,9 +134,9 @@ public class SubQueryTest
         String key = contextApplier.subQueryKeys().findFirst().get();
         Map<String, String> vars = Collections.singletonMap( "ID", "5" );
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
-        assertEquals("SELECT * FROM subTable WHERE tableID ='5' LIMIT 2", subQuery.getQuery().format());
+        assertEquals("SELECT * FROM subTable WHERE tableID = 5 LIMIT 2", subQuery.getQuery().format());
     }
-    
+
     @Test
     public void testVarsInFieldReference()
     {
@@ -148,6 +148,6 @@ public class SubQueryTest
         vars.put( "reference", "ref" );
         vars.put( "name", "name" );
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
-        assertEquals("SELECT field.'ref' FROM table.'name' LIMIT 2", subQuery.getQuery().format());
+        assertEquals("SELECT field.ref FROM table.name LIMIT 2", subQuery.getQuery().format());
     }
 }

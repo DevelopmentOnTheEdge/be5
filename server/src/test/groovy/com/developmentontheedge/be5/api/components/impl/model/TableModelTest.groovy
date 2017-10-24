@@ -13,7 +13,8 @@ import static org.mockito.Mockito.mock
 class TableModelTest extends TestTableQueryDBTest
 {
     @Test
-    void testExecuteSubQuery() {
+    void testExecuteSubQuery()
+    {
         Query query = projectProvider.getProject().getEntity("testtable").getQueries().get("Sub Query")
         TableModel table = TableModel
                 .from(query, new HashMap<>(), mock(Request.class), false, injector)
