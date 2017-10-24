@@ -34,21 +34,18 @@ public class ModuleLoader2Test
         project = new Project( "test" );
         project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
         project.setDatabaseSystem( Rdbms.POSTGRESQL );
+        Serialization.save( project, path );
     }
 
     @Test
     public void loadAllProjectsTest() throws IOException, ProjectSaveException, ProjectLoadException
     {
-        Serialization.save( project, path );
-
         ModuleLoader2.loadAllProjects(Collections.singletonList(path.resolve("project.yaml").toUri().toURL()));
     }
 
     @Test
     public void loadAllProjectsTestWithDev() throws IOException, ProjectSaveException, ProjectLoadException
     {
-        Serialization.save( project, path );
-
         try( PrintWriter out = new PrintWriter( path.resolve("dev.yaml").toFile() ) )
         {
             out.println( "paths:" + "\n    test: " + path.toAbsolutePath() );
@@ -58,6 +55,7 @@ public class ModuleLoader2Test
         ModuleLoader2.readDevPathsToSourceProjects(Collections.singletonList(path.resolve("dev.yaml").toUri().toURL()));
 
         assertTrue(ModuleLoader2.getPathsToProjectsToHotReload().toString().startsWith("{test="));
+        assertEquals(1, ModuleLoader2.getPathsToProjectsToHotReload().size());
 
         Project loadProject = ModuleLoader2.findAndLoadProjectWithModules();
         assertEquals("test", loadProject.getAppName());
