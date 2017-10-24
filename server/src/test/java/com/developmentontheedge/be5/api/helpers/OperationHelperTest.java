@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,6 +177,36 @@ public class OperationHelperTest extends Be5ProjectDBTest
 
         assertEquals("02",        list.get(1).getValue("code"));
         assertEquals("Municipal", list.get(1).getValue("admlevel"));
+
+        assertEquals(4, list.size());
+    }
+
+    @Test
+    public void readAsRecordsFromQueryTest() throws Exception
+    {
+        List<DynamicPropertySet> list = helper.readAsRecordsFromQuery("testTags", "With parameter",
+                Collections.emptyMap(), request.getSession());
+
+        assertEquals("01",        list.get(0).getValue("ID"));
+        assertEquals("Regional",  list.get(0).getValue("Name"));
+
+        assertEquals(4, list.size());
+    }
+
+    @Test
+    public void readAsRecordsFromQuerySqlTest() throws Exception
+    {
+        List<DynamicPropertySet> list = helper.readAsRecordsFromQuery(
+                        "SELECT code AS \"ID\", admlevel AS \"NAME\"\n" +
+                        "        FROM testTags\n" +
+                        "        WHERE 1=1\n" +
+                        "        <if parameter=\"payable\">\n" +
+                        "          AND payable = <parameter:payable/>\n" +
+                        "        </if>",
+                Collections.emptyMap(), request.getSession());
+
+        assertEquals("01",        list.get(0).getValue("ID"));
+        assertEquals("Regional",  list.get(0).getValue("Name"));
 
         assertEquals(4, list.size());
     }

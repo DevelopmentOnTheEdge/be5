@@ -25,7 +25,7 @@ public class QueryBuilder implements Component
     {
         if(UserInfoHolder.isAdminOrSysDev())
         {
-            Entity e = new Entity( "queryBuilder", injector.getProject().getApplication(), EntityType.TABLE );
+            Entity e = new Entity( "queryBuilderComponent", injector.getProject().getApplication(), EntityType.TABLE );
             DataElementUtils.save( e );
             Query query = new Query( "query", e );
             DataElementUtils.save( query );

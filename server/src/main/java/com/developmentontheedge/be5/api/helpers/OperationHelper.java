@@ -1,19 +1,19 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -511,6 +511,28 @@ public class OperationHelper
         return db.selectList(sql, DpsRecordAdapter::createDps, params);
     }
 
+    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, String> parameters, Session session )
+    {
+        Entity e = new Entity( "operationHelperService", injector.getProject().getApplication(), EntityType.TABLE );
+        e.setBesql( true );
+        DataElementUtils.save( e );
+        Query query = new Query( "query", e );
+        DataElementUtils.save( query );
+        query.setQuery( sql );
+
+        return readAsRecordsFromQuery(query, parameters, session);
+    }
+
+    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, String> parameters, Session session)
+    {
+        return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters, session);
+    }
+
+    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, String> parameters, Session session)
+    {
+        return new Be5QueryExecutor(query, parameters, session, injector).execute();
+    }
+
     public List<List<Object>> readAsList( String sql, Object... params )
     {
         List<List<Object>> vals = new ArrayList<>();
@@ -527,30 +549,5 @@ public class OperationHelper
 
         return vals;
     }
-//
-//    public String parseBeSQL(String querySql)
-//    {
-//        Project project = projectProvider.getProject();
-//
-//        Entity e = new Entity( "entityForParseQueries", project.getApplication(), EntityType.TABLE );
-//        //DataElementUtils.save( e );
-//        Query query = new Query( "query", e );
-//        //DataElementUtils.save( query );
-//        query.setQuery( querySql );
-//        e.setBesql( true );
-//
-//        String finalSql;
-//        try
-//        {
-//            synchronized(query.getProject())
-//            {
-//                finalSql = query.getQueryCompiled().validate().trim();
-//            }
-//            return finalSql;
-//        }
-//        catch( ProjectElementException er )
-//        {
-//            throw Be5Exception.internalInQuery( er, query );
-//        }
-//    }
+
 }
