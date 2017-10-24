@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -163,7 +164,14 @@ public class LoginServiceImpl implements LoginService
             remoteAddr = req.getRemoteAddr();
         }
 
-        saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr);
+        if(ModuleLoader2.getDevRoles().size() > 0)
+        {
+            saveUser("dev", ModuleLoader2.getDevRoles(), locale, remoteAddr);
+        }
+        else
+        {
+            saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr);
+        }
     }
 
 }

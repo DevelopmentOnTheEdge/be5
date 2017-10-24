@@ -37,6 +37,7 @@ public class ModuleLoader2
 
     private static Map<String, Project> modulesMap;
     private static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
+    private static List<String> devRoles = new ArrayList<>();
 
     public static Map<String, Project> getModulesMap()
     {
@@ -392,6 +393,11 @@ public class ModuleLoader2
             Map<String, Object> content = (Map<String, Object>) new Yaml().load(reader);
 
             initPathsForDev(content);
+            if(content.get("roles") != null)
+            {
+                devRoles = ( List<String> ) content.get("roles");
+                log.info("Dev roles added - " + devRoles.toString());
+            }
         }
     }
 
@@ -411,5 +417,10 @@ public class ModuleLoader2
     public static Map<String, Path> getPathsToProjectsToHotReload()
     {
         return pathsToProjectsToHotReload;
+    }
+
+    public static List<String> getDevRoles()
+    {
+        return devRoles;
     }
 }
