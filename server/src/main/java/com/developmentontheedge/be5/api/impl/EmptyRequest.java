@@ -54,6 +54,12 @@ public class EmptyRequest implements Request
     }
 
     @Override
+    public String getServerUrl()
+    {
+        return "";
+    }
+
+    @Override
     public String getBaseUrl()
     {
         return "";

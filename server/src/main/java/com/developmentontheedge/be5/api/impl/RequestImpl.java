@@ -209,12 +209,18 @@ public class RequestImpl implements Request
     }
 
     @Override
-    public String getBaseUrl()
+    public String getServerUrl()
     {
         String scheme = rawRequest.getScheme() + "://";
         String serverName = rawRequest.getServerName();
         String serverPort = (rawRequest.getServerPort() == 80) ? "" : ":" + rawRequest.getServerPort();
+        return scheme + serverName + serverPort;
+    }
+
+    @Override
+    public String getBaseUrl()
+    {
         String contextPath = rawRequest.getContextPath();
-        return scheme + serverName + serverPort + contextPath;
+        return getServerUrl() + contextPath;
     }
 }

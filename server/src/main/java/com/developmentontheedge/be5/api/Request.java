@@ -63,5 +63,7 @@ public interface Request extends SessionAccess, ParametersAccess
 
     String getServletContextRealPath(String s);
 
+    String getServerUrl();
+
     String getBaseUrl();
 }
