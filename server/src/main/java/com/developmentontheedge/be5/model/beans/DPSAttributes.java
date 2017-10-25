@@ -8,7 +8,7 @@ public class DPSAttributes
     private Map<String, Object> map = new HashMap<>();
 
     private String name;
-    private Class<?> TYPE = String.class;
+    public Class<?> TYPE = String.class;
 
     public void setName(String value)
     {
