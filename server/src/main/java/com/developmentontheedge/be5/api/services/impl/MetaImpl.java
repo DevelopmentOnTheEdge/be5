@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +39,7 @@ import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
+
 
 public class MetaImpl implements Meta
 {
@@ -413,6 +413,7 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Map<String, ColumnDef> getColumns(Entity entity)
     {
         BeModelElement scheme = entity.getAvailableElement("Scheme");
@@ -480,13 +481,7 @@ public class MetaImpl implements Meta
     public boolean isNumericColumn(String entityName, String columnName)
     {
         Objects.requireNonNull(entityName);
-        Objects.requireNonNull(columnName);
-
-        ColumnDef column = getColumn(entityName, columnName);
-        Class<?> type = getColumnType(column);
-        return type == Long.class ||
-                type == Integer.class ||
-                type == Double.class;
+        return isNumericColumn(getEntity(entityName), columnName);
     }
 
     @Override
