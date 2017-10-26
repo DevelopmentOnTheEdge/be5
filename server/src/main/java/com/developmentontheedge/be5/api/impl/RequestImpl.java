@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,8 +113,23 @@ public class RequestImpl implements Request
                     String type = jsonObject.get("type").getAsString();
                     if( "Base64File".equals(type) )
                     {
-                        fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(),
-                                jsonObject.get("data").getAsString()));
+                        try
+                        {
+                            String data = jsonObject.get("data").getAsString();
+                            String base64 = ";base64,";
+                            int base64Pos = data.indexOf(base64);
+
+                            String mimeTypes = data.substring("data:".length(), base64Pos);
+                            byte[] bytes = data.substring(base64Pos + base64.length(), data.length()).getBytes("UTF-8");
+
+                            byte[] decoded = Base64.getDecoder().decode(bytes);
+
+                            fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(), decoded, mimeTypes));
+                        }
+                        catch (UnsupportedEncodingException e)
+                        {
+                            throw Be5Exception.internal(e);
+                        }
                     }
                     else
                     {

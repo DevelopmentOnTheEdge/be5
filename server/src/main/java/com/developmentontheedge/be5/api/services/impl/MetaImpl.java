@@ -472,6 +472,8 @@ public class MetaImpl implements Meta
                 return Date.class;
             case SqlColumnType.TYPE_TIMESTAMP:
                 return Timestamp.class;
+            case SqlColumnType.TYPE_BLOB:
+                return byte[].class;
             default:
                 return String.class;
         }
