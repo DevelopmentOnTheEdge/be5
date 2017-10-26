@@ -148,6 +148,8 @@ public class DpsRecordAdapter
                 return Clob.class;
             case Types.BLOB:
                 return Blob.class;
+            case Types.BINARY:
+                return byte[].class;
             default:
                 return String.class;
         }
