@@ -30,7 +30,7 @@ public class DynamicPropertyGBuilder
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
         code.call();
 
-        DynamicProperty dynamicProperty = new DynamicProperty(propertyName, String.class);
+        DynamicProperty dynamicProperty = new DynamicProperty(propertyName, builder.getTYPE());
         dynamicPropertySet.add(dynamicProperty);
         return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
     }
