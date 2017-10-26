@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.impl.model.Base64File;
 import com.google.common.base.Strings;
 import com.google.gson.*;
 
@@ -104,9 +105,23 @@ public class RequestImpl implements Request
 
                     fieldValues.put(name, arrValues);
                 }
-                else if(entry.getValue() instanceof JsonElement)
+                else if(entry.getValue() instanceof JsonObject)
                 {
-                    String value = ((JsonElement)entry.getValue()).getAsString();
+                    JsonObject jsonObject = ((JsonObject) entry.getValue());
+                    String type = jsonObject.get("type").getAsString();
+                    if( "Base64File".equals(type) )
+                    {
+                        fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(),
+                                jsonObject.get("data").getAsString()));
+                    }
+                    else
+                    {
+                        fieldValues.put(name, jsonObject.toString());
+                    }
+                }
+                else if(entry.getValue() instanceof JsonPrimitive)
+                {
+                    String value = ((JsonPrimitive)entry.getValue()).getAsString();
                     if( !"".equals(value) )
                     {
                         fieldValues.put(name, value);
