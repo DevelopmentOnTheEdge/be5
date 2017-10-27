@@ -20,7 +20,10 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -101,17 +104,17 @@ public class OperationHelper
      */
     public String[][] getTagsFromSelectionView(Request request, String tableName)
     {
-        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, new HashMap<>());
+        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, Collections.emptyMap());
     }
 
-    public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, Object> extraParams)
+    public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, ?> extraParams)
     {
         return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
     }
 
     public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName)
     {
-        return getTagsFromCustomSelectionView(request, tableName, queryName, new HashMap<>());
+        return getTagsFromCustomSelectionView(request, tableName, queryName, Collections.emptyMap());
     }
 
     public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName, Map<String, ?> extraParams)
@@ -141,7 +144,7 @@ public class OperationHelper
 
     public Map<String, String> readAsMap( String query, Object... params )
     {
-        Map<String, String> values = new HashMap<>();
+        Map<String, String> values = new LinkedHashMap<>();
         db.query(query, rs -> {
             while (rs.next())
             {
@@ -193,6 +196,13 @@ public class OperationHelper
     {
         String[][] stockArr = new String[tags.size()][2];
         tags.stream().map(tag -> new String[]{tag.get(0), tag.get(1)}).collect(Collectors.toList()).toArray(stockArr);
+        return localizeTags(tableName, stockArr);
+    }
+
+    public String[][] localizeTags(String tableName, Map<String, String> tags)
+    {
+        String[][] stockArr = new String[tags.size()][2];
+        tags.entrySet().stream().map(tag -> new String[]{tag.getKey(), tag.getValue()}).collect(Collectors.toList()).toArray(stockArr);
         return localizeTags(tableName, stockArr);
     }
 
@@ -550,4 +560,33 @@ public class OperationHelper
         return vals;
     }
 
+    public String[][] addTags(Map<String, String> before, String[][] tags)
+    {
+        Map<String, String> newTags = new LinkedHashMap<>();
+
+        newTags.putAll(before);
+        Arrays.stream(tags).forEach(tag -> newTags.put(tag[0],tag[1]));
+
+        return toTagsArray(newTags);
+    }
+
+    public String[][] addTags(Map<String, String> before, String[][] tags, Map<String, String> after)
+    {
+        Map<String, String> newTags = new LinkedHashMap<>();
+
+        newTags.putAll(before);
+        Arrays.stream(tags).forEach(tag -> newTags.put(tag[0],tag[1]));
+        newTags.putAll(after);
+
+        return toTagsArray(newTags);
+    }
+
+    public String[][] toTagsArray(Map<String, String> tags)
+    {
+        String[][] stockArr = new String[tags.size()][2];
+        tags.entrySet().stream().map(tag -> new String[]{tag.getKey(), tag.getValue()}).collect(Collectors.toList())
+                .toArray(stockArr);
+
+        return stockArr;
+    }
 }
