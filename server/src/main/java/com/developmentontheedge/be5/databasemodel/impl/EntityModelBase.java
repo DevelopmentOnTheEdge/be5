@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
-import com.developmentontheedge.be5.annotations.DirtyRealization;
-import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
@@ -69,29 +67,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
                 .from(entity.getName())
                 .where(conditions);
 
-        DynamicPropertySet dps = db.select(sql.format(), DpsRecordAdapter::createDps, conditions.values().toArray());
+        DynamicPropertySet dps =
+                db.select(sql.format(), rs -> dpsHelper.getDps(entity, rs), conditions.values().toArray());
+
         return dps == null ? null : new RecordModelBase( this, dps );
-    }
-
-    @DirtyRealization(comment="move to dpsHelper, use castToType")
-    private Object[] castValues(Entity entity, Map<String, String> stringValues)
-    {
-        DynamicPropertySet dps = dpsHelper.getDps(entity);
-        dpsHelper.getDps(entity);
-
-        Object[] values = new Object[stringValues.size()];
-
-        int i=0;
-        for(Map.Entry<String,String> entry : stringValues.entrySet())
-        {
-            values[i] = castValue(dps, entry.getKey(), entry.getValue());
-        }
-        return values;
-    }
-
-    @DirtyRealization(comment="move to dpsHelper, use castToType")
-    private Object castValue(DynamicPropertySet dps, String name, String value){
-        return validator.parseFrom(dps.getProperty(name), value);
     }
 
     @Override

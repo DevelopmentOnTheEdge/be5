@@ -10,6 +10,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+import java.util.stream.Collectors
+import java.util.stream.StreamSupport
+
 import static org.junit.Assert.*
 
 
@@ -42,9 +45,23 @@ class SpecialColumnsTest extends Be5ProjectDBTest
     {
         def id = table << [
                 "name": "test",
-                "value": 1]
+                "value": (Short)1]
 
         assertEquals 1, db.getLong("select count(*) from $tableName")
+    }
+
+    @Test
+    void testPropertyNamesFromYaml()
+    {
+        def id = table << [
+                "name" : "test",
+                "value": (Short) 1]
+
+        def propertyList = StreamSupport.stream(table.get(id).spliterator(), false)
+                .map({ p -> p.getName() }).collect(Collectors.toList())
+
+        assertEquals(["whoModified___", "whoInserted___", "name", "ID",
+                      "modificationDate___", "value", "creationDate___", "isDeleted___"], propertyList)
     }
 
     @Test
@@ -52,7 +69,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
     {
         def id = table << [
                 "name": "test",
-                "value": 1]
+                "value": (Short)1]
 
         assertEquals "no", table[ id ].$isDeleted___
 
@@ -88,9 +105,9 @@ class SpecialColumnsTest extends Be5ProjectDBTest
     @Test
     void testDeleteAll()
     {
-        table << [ "name": "TestName", "value": 1]
-        table << [ "name": "TestName", "value": 2]
-        table << [ "name": "TestName2", "value": 2]
+        table << [ "name": "TestName", "value": (Short)1]
+        table << [ "name": "TestName", "value": (Short)2]
+        table << [ "name": "TestName2", "value": (Short)2]
 
         table.remove(["name": "TestName"])
 
@@ -105,7 +122,8 @@ class SpecialColumnsTest extends Be5ProjectDBTest
     {
         def id = table << [
                 "name": "test",
-                "value": 1]
+                "value": (Short)1
+        ]
 
         Thread.sleep(1)
 

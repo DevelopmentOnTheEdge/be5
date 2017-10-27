@@ -68,12 +68,12 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-//    public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
-//    {
-//        DynamicPropertySet dps = getDps(entity);
-//
-//        return setValuesAndAddColumns(entity, dps, resultSet);
-//    }
+    public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
+    {
+        DynamicPropertySet dps = getDps(entity);
+
+        return setValues(dps, resultSet);
+    }
 
 //    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, ResultSet resultSet)
 //    {
@@ -81,11 +81,11 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
-    {
-        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
-        return setValues(dps, resultSet);
-    }
+//    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
+//    {
+//        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
+//        return setValues(dps, resultSet);
+//    }
 
     public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ? super Object> values)
     {

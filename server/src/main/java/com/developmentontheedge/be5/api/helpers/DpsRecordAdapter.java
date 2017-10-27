@@ -76,8 +76,19 @@ public class DpsRecordAdapter
             }
 
             return clazz.cast(object);
-        }catch (Exception e){
-            throw Be5Exception.internal(e);
+        }
+        catch (Exception e)
+        {
+            String name = "";
+            try
+            {
+                name = rs.getMetaData().getColumnName(idx);
+            }
+            catch (SQLException ignore){
+
+            }
+
+            throw Be5Exception.internal(e, "for column: " + name);
         }
     }
 

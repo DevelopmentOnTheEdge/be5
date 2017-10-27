@@ -463,8 +463,9 @@ public class MetaImpl implements Meta
                 return Long.class;
             case SqlColumnType.TYPE_INT:
             case SqlColumnType.TYPE_UINT:
-            case SqlColumnType.TYPE_SMALLINT:
                 return Integer.class;
+            case SqlColumnType.TYPE_SMALLINT:
+                return Short.class;
             case SqlColumnType.TYPE_DECIMAL:
             case SqlColumnType.TYPE_CURRENCY:
                 return Double.class;
