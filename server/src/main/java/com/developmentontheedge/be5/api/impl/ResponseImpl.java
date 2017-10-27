@@ -136,6 +136,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendErrorsAsJson(Object[] errors, Object meta, Map<String, String> links)
     {
+        throw new RuntimeException("todo");
         //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
     }
     
@@ -148,8 +149,17 @@ public class ResponseImpl implements Response
     @Override
     public void sendError(Be5Exception e)
     {
-        String msg = showMsg() ? e.getMessage() : "";
-        sendErrorAsJson(new ErrorModel("500", msg), null, null);
+        ErrorModel errorModel;
+        if(showMsg())
+        {
+            errorModel = new ErrorModel(e);
+        }
+        else
+        {
+            errorModel = new ErrorModel("500", "");
+        }
+
+        sendErrorAsJson(errorModel, null, null);
     }
 
     @Override

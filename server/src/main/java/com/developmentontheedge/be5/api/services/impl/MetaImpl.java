@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -371,9 +372,18 @@ public class MetaImpl implements Meta
     @Override
     public Query getQueryIgnoringRoles(String entityName, String queryName)
     {
-        Query query = getEntity(entityName).getQueries().get(queryName);
+        Entity entity = getEntity(entityName);
+        if(entity == null)
+        {
+            throw Be5Exception.unknownEntity(entityName);
+        }
+
+        Query query = entity.getQueries().get(queryName);
         if (query == null)
+        {
             throw Be5ErrorCode.UNKNOWN_QUERY.exception(entityName, queryName);
+        }
+
         return query;
     }
 

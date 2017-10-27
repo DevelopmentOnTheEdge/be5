@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+
 import java.util.Map;
 
 
@@ -31,6 +33,11 @@ public class ErrorModel
         this.code = code;
         this.title = title;
         this.detail = detail;
+    }
+
+    public ErrorModel(Be5Exception e)
+    {
+        this("500", e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e));
     }
 
     public String getId()

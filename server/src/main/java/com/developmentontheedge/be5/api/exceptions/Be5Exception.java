@@ -96,9 +96,14 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.UNKNOWN_COMPONENT.exception(name);
     }
 
-    public static Be5Exception unknownEntity(String name)
+    public static Be5Exception unknownEntity(String entityName)
     {
-        return Be5ErrorCode.UNKNOWN_ENTITY.exception(name);
+        return Be5ErrorCode.UNKNOWN_ENTITY.exception(entityName);
+    }
+
+    public static Be5Exception unknownQuery(String entityName, String queryName)
+    {
+        return Be5ErrorCode.UNKNOWN_QUERY.exception(entityName, queryName);
     }
     
     public static Be5Exception invalidState(String message)

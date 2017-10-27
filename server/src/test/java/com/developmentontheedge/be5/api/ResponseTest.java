@@ -18,15 +18,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 public class ResponseTest extends Be5ProjectTest
 {
@@ -77,9 +78,7 @@ public class ResponseTest extends Be5ProjectTest
 
         verify(rawResponse).setContentType("application/json;charset=UTF-8");
         //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append(doubleQuotes("{'errors':[" +
-                "{'status':'500','title':'Internal error occured: testMsg'}" +
-        "]}"));
+        verify(writer).append(contains(doubleQuotes("'detail':")));
         verify(writer).flush();
     }
 

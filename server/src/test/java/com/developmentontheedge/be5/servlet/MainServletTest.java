@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -86,9 +87,7 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.doPost(request, response);
 
-        verify(writer).append(doubleQuotes("{'errors':[" +
-                "{'status':'500','title':'Component not found: /api'}" +
-            "]}"));
+        verify(writer).append(contains(doubleQuotes("'detail':")));
     }
 
     @Test
