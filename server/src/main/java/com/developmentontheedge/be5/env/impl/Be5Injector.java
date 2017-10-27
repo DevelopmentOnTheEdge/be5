@@ -117,6 +117,20 @@ public class Be5Injector implements Injector
         }
         configureIfConfigurable(service, configurations);
 
+        StringBuilder resolveLog = new StringBuilder();
+        StringBuilder stackLvl = new StringBuilder();
+        for (Class<?> aClass : stack)
+        {
+            configureIfConfigurable(aClass, configurations);
+            stackLvl.append("> ");
+            resolveLog.append("\nresolve: ").append(stackLvl.toString()).append(aClass.getName());
+        }
+        stackLvl.append("> ");
+        configureIfConfigurable(service, configurations);
+        resolveLog.append("\nresolve: ").append(stackLvl.toString()).append(service.getClass().getName());
+
+        log.fine(resolveLog.toString());
+
         return service;
     }
     
