@@ -20,7 +20,7 @@ class DpsHelperTest extends Be5ProjectDBTest
 
     @Test
     void getDpsWithoutAutoIncrementTest(){
-        def dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("testTags"))
+        def dps = dpsHelper.getDpsExcludeAutoIncrement(meta.getEntity("testTags"))
         assertEquals "{" +
             "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
                 "'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
@@ -118,7 +118,7 @@ class DpsHelperTest extends Be5ProjectDBTest
         DynamicPropertySet dps = dpsHelper.getDps(meta.getEntity("meters"))
         assertNotNull dps.getProperty("value")
 
-        dps = dpsHelper.getDpsWithoutColumns(meta.getEntity("meters"), Collections.singletonList("value"))
+        dps = dpsHelper.getDpsExcludeColumns(meta.getEntity("meters"), Collections.singletonList("value"))
         assertNull dps.getProperty("value")
     }
 

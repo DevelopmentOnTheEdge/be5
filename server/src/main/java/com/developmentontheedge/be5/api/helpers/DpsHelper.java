@@ -71,7 +71,12 @@ public class DpsHelper
     public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
     {
         DynamicPropertySet dps = getDps(entity);
+        return setValues(dps, resultSet);
+    }
 
+    public DynamicPropertySet getDpsWithoutTags(Entity entity, ResultSet resultSet)
+    {
+        DynamicPropertySet dps = getDpsWithoutTags(entity);
         return setValues(dps, resultSet);
     }
 
@@ -81,33 +86,58 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-//    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, ResultSet resultSet)
+//    public DynamicPropertySet getDpsExcludeAutoIncrement(Entity entity, ResultSet resultSet)
 //    {
-//        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
+//        DynamicPropertySet dps = getDpsExcludeAutoIncrement(entity);
 //        return setValues(dps, resultSet);
 //    }
 
-    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity, Map<String, ? super Object> values)
+    public DynamicPropertySet getDpsExcludeAutoIncrement(Entity entity, Map<String, ? super Object> values)
     {
-        DynamicPropertySet dps = getDpsWithoutAutoIncrement(entity);
+        DynamicPropertySet dps = getDpsExcludeAutoIncrement(entity);
         return setValues(dps, values);
     }
 
-    public DynamicPropertySet getDpsWithoutAutoIncrement(Entity entity)
+    public DynamicPropertySet getDpsExcludeAutoIncrement(Entity entity)
     {
+        List<String> excludedColumns = Collections.emptyList();
         if(meta.getColumn(entity, entity.getPrimaryKey()) != null && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
         {
-            return getDpsWithoutColumns(entity, Collections.singletonList(entity.getPrimaryKey()));
+            excludedColumns = Collections.singletonList(entity.getPrimaryKey());
         }
-        return getDps(entity);
+
+        return getDpsExcludeColumns(entity, excludedColumns);
     }
 
     public DynamicPropertySet getDps(Entity entity)
     {
-        return getDpsWithoutColumns(entity, Collections.emptyList());
+        return getDpsExcludeColumns(entity, Collections.emptyList());
     }
 
-    public DynamicPropertySet getDpsWithoutColumns(Entity entity, Collection<String> excludedColumns)
+    public DynamicPropertySet getDpsWithoutTags(Entity entity)
+    {
+        return getDpsExcludedColumnsWithoutTags(entity, Collections.emptyList());
+    }
+
+    public DynamicPropertySet getDpsExcludeColumns(Entity entity, Collection<String> columnNames)
+    {
+        DynamicPropertySet dps = getDpsExcludedColumnsWithoutTags(entity, columnNames);
+
+        return addTags(dps, entity);
+    }
+
+    private DynamicPropertySet addTags(DynamicPropertySet dps, Entity entity)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        for(DynamicProperty property: dps)
+        {
+            ColumnDef columnDef = columns.get(property.getName());
+            if(columnDef != null)addTags(property, columnDef);
+        }
+        return dps;
+    }
+
+    public DynamicPropertySet getDpsExcludedColumnsWithoutTags(Entity entity, Collection<String> excludedColumns)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         DynamicPropertySet dps = new DynamicPropertySetSupport();
@@ -118,7 +148,6 @@ public class DpsHelper
             if(!excludedColumnsList.contains(entry.getKey()))
             {
                 DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(entry.getValue());
-                addTags(dynamicProperty, entry.getValue());
                 dps.add(dynamicProperty);
                 excludedColumnsList.remove(entry.getKey());
             }
@@ -139,17 +168,9 @@ public class DpsHelper
 
     public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
-
         DynamicPropertySet dps = getDpsForColumnsWithoutTags(entity, columnNames);
 
-        for(String propertyName: columnNames)
-        {
-            ColumnDef columnDef = columns.get(propertyName);
-            if(columnDef != null)addTags(dps.getProperty(propertyName), columnDef);
-        }
-
-        return dps;
+        return addTags(dps, entity);
     }
 
     public void addDynamicProperties(DynamicPropertySet dps, Entity entity, Collection<String> propertyNames)

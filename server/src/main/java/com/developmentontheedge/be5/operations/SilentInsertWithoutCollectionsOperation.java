@@ -13,7 +13,7 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity(), presetValues);
+        dps = dpsHelper.getDpsExcludeAutoIncrement(getInfo().getEntity(), presetValues);
         return dps;
     }
 

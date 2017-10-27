@@ -68,7 +68,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
                 .where(conditions);
 
         DynamicPropertySet dps =
-                db.select(sql.format(), rs -> dpsHelper.getDps(entity, rs), conditions.values().toArray());
+                db.select(sql.format(), rs -> dpsHelper.getDpsWithoutTags(entity, rs), conditions.values().toArray());
 
         return dps == null ? null : new RecordModelBase( this, dps );
     }

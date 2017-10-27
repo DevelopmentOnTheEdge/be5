@@ -89,7 +89,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         Request req = getSpyMockRecForOp("propertyTypes", "All records", "Edit", "01","{}");
 
-        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(meta.getEntity("propertyTypes"));
+        DynamicPropertySet dps = dpsHelper.getDpsExcludeAutoIncrement(meta.getEntity("propertyTypes"));
         dps.setValue("name", "TestName");
         dps.setValue("CODE", "02");
         when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);

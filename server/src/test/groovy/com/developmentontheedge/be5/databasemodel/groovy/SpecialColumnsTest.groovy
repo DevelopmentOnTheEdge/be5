@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.beans.BeanInfoConstants
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -62,6 +63,16 @@ class SpecialColumnsTest extends Be5ProjectDBTest
 
         assertEquals(["whoModified___", "whoInserted___", "name", "ID",
                       "modificationDate___", "value", "creationDate___", "isDeleted___"], propertyList)
+    }
+
+    @Test
+    void useGetDpsWithoutSelectingTags()
+    {
+        def id = table << [
+                "name" : "test",
+                "value": (Short) 1]
+
+        assertNull table.get(id).getProperty("isDeleted___").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
     }
 
     @Test

@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -18,7 +17,7 @@ public class FilterOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        DynamicPropertySet dps = dpsHelper.getDpsWithoutAutoIncrement(getInfo().getEntity());
+        DynamicPropertySet dps = dpsHelper.getDpsExcludeAutoIncrement(getInfo().getEntity());
 
         //getInfo().getModel()
         return dps;
