@@ -73,6 +73,10 @@ public class DownloadComponent implements Component
         {
             response.setHeader("Content-disposition","attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
         }
+        else
+        {
+            response.setHeader("Content-disposition","filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+        }
 
         try
         {
