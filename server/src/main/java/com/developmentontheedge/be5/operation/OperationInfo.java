@@ -38,7 +38,7 @@ public class OperationInfo
     //public Icon getIcon()                           { return operationModel.getIcon();  }
     //public BeModelCollection<OperationExtender> getExtenders()
 
-    public Operation getModel()                        { return operationModel;  }
+    public Operation getModel()                     { return operationModel;  }
     public String getName()                         { return operationModel.getName();  }
     public String getType()                         { return operationModel.getType();  }
     public String getCode()                         { return operationModel.getCode();  }
@@ -53,6 +53,25 @@ public class OperationInfo
     public String getQueryName()
     {
         return queryName;
+    }
+
+    public OperationResult redirectThisOperation(String[] records)
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName());
+        if(records.length > 0)
+        {
+            hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
+        }
+
+        return OperationResult.redirect(hashUrl);
+    }
+
+    public OperationResult redirectThisOperationNewId(Object newID)
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
+                .named("selectedRows", newID.toString());
+
+        return OperationResult.redirect(hashUrl);
     }
 
 }
