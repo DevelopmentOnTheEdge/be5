@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.util.TestProjectUtils;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -24,17 +23,14 @@ public class ModuleLoader2Test
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
+    private TestProjectUtils testProjectUtils = new TestProjectUtils();
     private Path path;
-    private Project project;
 
     @Before
     public void setUp() throws Exception
     {
         path = tmp.newFolder().toPath();
-        project = new Project( "test" );
-        project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
-        project.setDatabaseSystem( Rdbms.POSTGRESQL );
-        Serialization.save( project, path );
+        Serialization.save( testProjectUtils.getProject("test"), path );
     }
 
     @Test

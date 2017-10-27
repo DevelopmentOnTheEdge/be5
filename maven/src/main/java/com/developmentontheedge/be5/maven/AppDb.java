@@ -26,6 +26,9 @@ public class AppDb extends Be5Mojo
     private PrintStream ps;
 
     private String moduleName;
+    private int createdTables = 0;
+    private int createdViews = 0;
+
     public String getModule()
     {
         return moduleName;
@@ -68,6 +71,7 @@ public class AppDb extends Be5Mojo
                 }
                 createDb(be5Project.getApplication());
             }
+            getLog().info("Created tables: " + createdTables + ", created views: " + createdViews);
         }
         catch( MojoFailureException e )
         {
@@ -119,6 +123,7 @@ public class AppDb extends Be5Mojo
                         started = true;
                     }
                     processDdl(scheme);
+                    createdTables++;
                 }
                 else
                 {
@@ -140,6 +145,7 @@ public class AppDb extends Be5Mojo
                         started = true;
                     }
                     processDdl(scheme);
+                    createdViews++;
                 }
                 else
                 {
@@ -162,4 +168,13 @@ public class AppDb extends Be5Mojo
         }
     }
 
+    public int getCreatedTables()
+    {
+        return createdTables;
+    }
+
+    public int getCreatedViews()
+    {
+        return createdViews;
+    }
 }
