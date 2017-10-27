@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.EntityModelAdapter;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.databasemodel.QueryModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyMap;
 
 
-public class EntityModelBase<R extends RecordModelBase> implements EntityModelAdapter<R>
+public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R>
 {
     static
     {
@@ -108,32 +107,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModelAd
         AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
 
         return db.getLong(sql.format(), conditions.values().toArray());
-    }
-
-    @Override
-    public String getAdditionalConditions()
-    {
-        StringBuilder sql = new StringBuilder();
-//        try
-//        {
-//            if( Utils.columnExists( connector, getEntityName(), DatabaseConstants.IS_DELETED_COLUMN_NAME ) )
-//            {
-//                sql.append( " " );
-//                sql.append( DatabaseConstants.IS_DELETED_COLUMN_NAME );
-//                sql.append( " != 'yes'" );
-//            }
-//            else
-//            {
-//                sql.append( " 1 = 1" );
-//            }
-//        }
-//        catch( SQLException e )
-//        {
-//            String reason = "Can't fetch " + DatabaseConstants.IS_DELETED_COLUMN_NAME + " column";
-//            Logger.error( cat, reason );
-//            throw new EntityModelException( reason, e );
-//        }
-        return sql.toString();
     }
 
     @Override
