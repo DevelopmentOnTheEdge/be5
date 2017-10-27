@@ -55,23 +55,4 @@ public class OperationInfo
         return queryName;
     }
 
-    public OperationResult redirectThisOperation(String[] records)
-    {
-        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName());
-        if(records.length > 0)
-        {
-            hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
-        }
-
-        return OperationResult.redirect(hashUrl);
-    }
-
-    public OperationResult redirectThisOperationNewId(Object newID)
-    {
-        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named("selectedRows", newID.toString());
-
-        return OperationResult.redirect(hashUrl);
-    }
-
 }

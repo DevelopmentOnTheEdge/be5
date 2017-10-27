@@ -7,16 +7,20 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public abstract class OperationSupport extends DynamicPropertyGBuilder implements Operation
@@ -89,6 +93,27 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
     public void setResult(OperationResult operationResult)
     {
         this.operationResult = operationResult;
+    }
+
+    public void setResultRedirectThisOperation()
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntity().getName(),
+                getInfo().getQueryName(), getInfo().getName());
+        if(records.length > 0)
+        {
+            hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
+        }
+
+        setResult(OperationResult.redirect(hashUrl));
+    }
+
+    public void setResultRedirectThisOperationNewId(Object newID)
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntity().getName(),
+                getInfo().getQueryName(), getInfo().getName())
+                .named("selectedRows", newID.toString());
+
+        setResult(OperationResult.redirect(hashUrl));
     }
 
     public Object getLayout()
