@@ -68,20 +68,6 @@ public class Be5Injector implements Injector
         if (service == null)
         {
             service = resolveService(serviceClass, stack);
-
-
-            for (Class<?> aClass : stack)
-            {
-                injectAnnotatedFields(aClass);
-            }
-            injectAnnotatedFields(service);
-
-
-            for (Class<?> aClass : stack)
-            {
-                configureIfConfigurable(aClass, configurations);
-            }
-            configureIfConfigurable(service, configurations);
         }
 
         return service;
@@ -118,6 +104,18 @@ public class Be5Injector implements Injector
         
         stack.remove(serviceClass);
         instantiatedServices.put(serviceClass, service);
+
+        for (Class<?> aClass : stack)
+        {
+            injectAnnotatedFields(aClass);
+        }
+        injectAnnotatedFields(service);
+
+        for (Class<?> aClass : stack)
+        {
+            configureIfConfigurable(aClass, configurations);
+        }
+        configureIfConfigurable(service, configurations);
 
         return service;
     }

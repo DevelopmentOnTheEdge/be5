@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.env.impl;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 class ClassToInstanceMap
 {
@@ -10,7 +10,7 @@ class ClassToInstanceMap
 
     ClassToInstanceMap()
     {
-        this.map = new HashMap<>();
+        this.map = new ConcurrentHashMap<>();
     }
 
     public <T> void put(Class<T> clazz, T value)
