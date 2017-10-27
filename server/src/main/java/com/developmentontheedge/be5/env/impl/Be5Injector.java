@@ -117,7 +117,7 @@ public class Be5Injector implements Injector
 
 
         instantiatedServices.put(serviceClass, service);
-        log.info("resolve: " + serviceClass.getName() + ", stack.size = " + stack.size());
+        log.fine("resolve: " + serviceClass.getName() + ", stack.size = " + stack.size());
 
         return service;
     }

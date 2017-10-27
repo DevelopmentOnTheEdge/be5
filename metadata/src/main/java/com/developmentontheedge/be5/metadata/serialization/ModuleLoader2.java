@@ -339,7 +339,7 @@ public class ModuleLoader2
                     {
                         used = started = true;
                         urls.set(i, moduleSource.getValue().resolve("project.yaml").toUri().toURL());
-                        sb.append("\n - ").append(String.format("%-15s", name)).append(urls.get(i)).append(" - replace");
+                        sb.append("\n - ").append(String.format("%-20s", name)).append(urls.get(i)).append(" - replace");
                     }
                 }
                 if(!used)
