@@ -29,7 +29,7 @@ public class SerializationTest
     {
         Path path = tmp.newFolder().toPath();
         Project project = utils.getProject("test");
-        Entity entity = utils.createEntity( project, "entity", "CODE" );
+        Entity entity = utils.createEntity( project, "entity", "ID" );
         utils.createScheme( entity );
         utils.createQuery( entity );
         utils.createOperation( entity );
@@ -44,7 +44,7 @@ public class SerializationTest
         Entity entity2 = project2.getEntity( "entity" );
         assertEquals(entity, entity2);
         assertTrue(entity2.isBesql());
-        assertEquals("VARCHAR(20)", entity2.findTableDefinition().getColumns().get("CODE2").getTypeString());
+        assertEquals("VARCHAR(20)", entity2.findTableDefinition().getColumns().get("name").getTypeString());
         assertEquals( StreamEx.of( "Administrator", "Operator" ).toSet(), entity2.getQueries().get( "query" ).getRoles().getFinalValues() );
         assertEquals( "op", entity2.getQueries().get( "query" ).getOperationNames().getFinalValuesString() );
     }

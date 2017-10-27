@@ -16,19 +16,20 @@ public class TestProjectUtils
         return project;
     }
 
-
     public TableDef createScheme(Entity entity)
     {
         TableDef scheme = new TableDef( entity );
         DataElementUtils.save(scheme);
-        ColumnDef column = new ColumnDef( "CODE", scheme.getColumns() );
-        column.setTypeString( "VARCHAR(20)" );
-        column.setCanBeNull( true );
+        ColumnDef column = new ColumnDef( "ID", scheme.getColumns() );
+        column.setTypeString( "KEYTYPE" );
+        column.setAutoIncrement(true);
         column.setPrimaryKey( true );
         DataElementUtils.save(column);
 
-        ColumnDef column2 = new ColumnDef( "CODE2", scheme.getColumns() );
+        ColumnDef column2 = new ColumnDef( "name", scheme.getColumns() );
+        column2.setTypeString( "VARCHAR(20)" );
         column2.setTableTo( entity.getName() );
+        column2.setCanBeNull( true );
         column2.setColumnsTo( column.getName() );
         DataElementUtils.save(column2);
         return scheme;

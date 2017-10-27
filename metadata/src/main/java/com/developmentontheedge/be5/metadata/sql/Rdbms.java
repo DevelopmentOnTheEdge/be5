@@ -7,12 +7,7 @@ import com.developmentontheedge.be5.metadata.sql.macro.MySqlMacroProcessorStrate
 import com.developmentontheedge.be5.metadata.sql.macro.OracleMacroProcessorStrategy;
 import com.developmentontheedge.be5.metadata.sql.macro.PostgresMacroProcessorStrategy;
 import com.developmentontheedge.be5.metadata.sql.macro.SqlServerMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.schema.Db2SchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.DbmsSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.MySqlSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.OracleSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.PostgresSchemaReader;
-import com.developmentontheedge.be5.metadata.sql.schema.SqlServerSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.*;
 import com.developmentontheedge.be5.metadata.sql.type.Db2TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DefaultTypeManager;
@@ -67,7 +62,7 @@ public enum Rdbms
     H2(DbmsType.H2,
             new PostgresMacroProcessorStrategy(),
             new H2TypeManager(),
-            new PostgresSchemaReader(),
+            new H2SchemaReader(),
             "", "org.h2.Driver", "" );
 
     private static final Logger log = Logger.getLogger(Rdbms.class.getName());

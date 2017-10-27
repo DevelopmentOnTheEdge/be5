@@ -32,7 +32,7 @@ public class AppTests
     {
         path = tmp.newFolder().toPath();
         project = utils.getProject("test");
-        Entity entity = utils.createEntity( project, "entity", "CODE" );
+        Entity entity = utils.createEntity( project, "entity", "ID" );
         utils.createScheme( entity );
         //utils.createQuery( entity );
         //utils.createOperation( entity );
@@ -49,9 +49,27 @@ public class AppTests
     }
 
     @Test
-    public void createDb() throws Exception
+    public void createDbAndSync() throws Exception
     {
-        String profileForIntegrationTests = "profileForIntegrationTests";
+        initH2Connection(project);
+
+        AppDb appDb = new AppDb();
+        appDb.setBe5Project(project);
+        appDb.execute();
+
+        assertEquals(1, appDb.getCreatedTables());
+        assertEquals(0, appDb.getCreatedViews());
+
+        appDb.connector.executeInsert("INSERT INTO entity (name) VALUES ('bar')");
+
+        AppSync appSync = new AppSync();
+        appSync.setBe5Project(project);
+        appSync.execute();
+    }
+
+    private void initH2Connection(Project project)
+    {
+        String profileForIntegrationTests = "profileTestMavenPlugin";
         BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
         profile.setConnectionUrl("jdbc:h2:~/"+ profileForIntegrationTests);
         profile.setUsername("sa");
@@ -60,12 +78,6 @@ public class AppTests
         DataElementUtils.save(profile);
         project.setConnectionProfileName(profileForIntegrationTests);
 
-        AppDb appDb = new AppDb();
-        appDb.setLogger(new JULLogger(Logger.getLogger(AppTests.class.getName())));
-        appDb.setBe5Project(project);
-        appDb.execute();
-
-        assertEquals(1, appDb.getCreatedTables());
-        assertEquals(0, appDb.getCreatedViews());
+        project.setDatabaseSystem(Rdbms.H2);
     }
 }
