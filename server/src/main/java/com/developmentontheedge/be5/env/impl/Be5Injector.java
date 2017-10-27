@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -67,8 +68,18 @@ public class Be5Injector implements Injector
 
         if (service == null)
         {
-            service = resolveService(serviceClass, stack);
+            service = resolveServiceAndInject(serviceClass, stack);
         }
+
+        return service;
+    }
+
+    private synchronized <T> T resolveServiceAndInject(Class<T> serviceClass, List<Class<?>> stack)
+    {
+        T service = resolveService(serviceClass, stack);
+
+        injectAnnotatedFields(service);
+        configureIfConfigurable(service, configurations);
 
         return service;
     }
@@ -76,7 +87,7 @@ public class Be5Injector implements Injector
     /**
      * Resolve a service. Adds this service to the instantiated services.
      */
-    private synchronized <T> T resolveService(Class<T> serviceClass, List<Class<?>> stack)
+    private <T> T resolveService(Class<T> serviceClass, List<Class<?>> stack)
     {
         checkState(!stack.contains(serviceClass), "Cyclic service dependency: " + stack.toString() + ", " + serviceClass.toString());
         stack.add(serviceClass);
@@ -103,33 +114,10 @@ public class Be5Injector implements Injector
         }
         
         stack.remove(serviceClass);
+
+
         instantiatedServices.put(serviceClass, service);
-
-        for (Class<?> aClass : stack)
-        {
-            injectAnnotatedFields(aClass);
-        }
-        injectAnnotatedFields(service);
-
-        for (Class<?> aClass : stack)
-        {
-            configureIfConfigurable(aClass, configurations);
-        }
-        configureIfConfigurable(service, configurations);
-
-        StringBuilder resolveLog = new StringBuilder();
-        StringBuilder stackLvl = new StringBuilder();
-        for (Class<?> aClass : stack)
-        {
-            configureIfConfigurable(aClass, configurations);
-            stackLvl.append("> ");
-            resolveLog.append("\nresolve: ").append(stackLvl.toString()).append(aClass.getName());
-        }
-        stackLvl.append("> ");
-        configureIfConfigurable(service, configurations);
-        resolveLog.append("\nresolve: ").append(stackLvl.toString()).append(service.getClass().getName());
-
-        log.fine(resolveLog.toString());
+        log.info("resolve: " + serviceClass.getName() + ", stack.size = " + stack.size());
 
         return service;
     }
