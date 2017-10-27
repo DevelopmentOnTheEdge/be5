@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.LogManager;
@@ -251,5 +252,11 @@ public abstract class Be5Mojo extends AbstractMojo
     public void setBe5Project(Project be5Project)
     {
         this.be5Project = be5Project;
+    }
+
+    public Be5Mojo setPath(String path)
+    {
+        projectPath = Paths.get(path).toFile();
+        return this;
     }
 }

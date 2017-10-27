@@ -53,12 +53,6 @@ public class AppValidate extends Be5Mojo
     @Parameter (property = "BE5_SAVE_PROJECT")
     boolean saveProject;
 
-    public AppValidate setPath(String path)
-    {
-        projectPath = Paths.get(path).toFile();
-        return this;
-    }
-
     @Override
     public void execute() throws MojoFailureException
     {

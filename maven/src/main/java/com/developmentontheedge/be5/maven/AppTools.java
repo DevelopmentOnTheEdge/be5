@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.maven;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.sql.ResultSet;
@@ -28,6 +29,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Mojo( name = "tools")
 public class AppTools extends Be5Mojo
 {
+    InputStream inputStream = System.in;
 
     @Override
     public void execute() throws MojoFailureException
@@ -69,7 +71,7 @@ public class AppTools extends Be5Mojo
             while(true)
             {
                 getLog().info("Enter FTL/SQL (use 'quit' to exit):");
-                String line = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
+                String line = new BufferedReader( new InputStreamReader( inputStream ) ).readLine();
                 if(line == null)
                 {
                     break;
