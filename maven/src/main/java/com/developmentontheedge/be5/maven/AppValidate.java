@@ -160,33 +160,33 @@ public class AppValidate extends Be5Mojo
         }
     }
 
-    private List<ProjectElementException> validateDeps( List<Project> moduleProjects )
-    {
-        List<ProjectElementException> moduleErrors = new ArrayList<>();
-        Map<String, String> entityToModule = new HashMap<>();
-        for(Project prj : moduleProjects)
-        {
-            for(Entity entity : prj.getApplication().getEntities())
-                entityToModule.put( entity.getName(), prj.getName() );
-        }
-        for(Project prj : moduleProjects)
-        {
-            for(Entity entity : prj.getApplication().getEntities())
-            {
-                for(TableReference ref : entity.getAllReferences())
-                {
-                    String moduleTo = entityToModule.get( ref.getTableTo() );
-                    if(moduleTo != null && prj.getModule( moduleTo ) == null)
-                    {
-                        moduleErrors.add( new ProjectElementException( ref, "Reference to entity '" + ref.getTableTo()
-                            + "' which is defined in module '" + moduleTo + "' which is not specified in dependencies of module '"
-                            + prj.getName() + "'" ) );
-                    }
-                }
-            }
-        }
-        return moduleErrors;
-    }
+//    private List<ProjectElementException> validateDeps( List<Project> moduleProjects )
+//    {
+//        List<ProjectElementException> moduleErrors = new ArrayList<>();
+//        Map<String, String> entityToModule = new HashMap<>();
+//        for(Project prj : moduleProjects)
+//        {
+//            for(Entity entity : prj.getApplication().getEntities())
+//                entityToModule.put( entity.getName(), prj.getName() );
+//        }
+//        for(Project prj : moduleProjects)
+//        {
+//            for(Entity entity : prj.getApplication().getEntities())
+//            {
+//                for(TableReference ref : entity.getAllReferences())
+//                {
+//                    String moduleTo = entityToModule.get( ref.getTableTo() );
+//                    if(moduleTo != null && prj.getModule( moduleTo ) == null)
+//                    {
+//                        moduleErrors.add( new ProjectElementException( ref, "Reference to entity '" + ref.getTableTo()
+//                            + "' which is defined in module '" + moduleTo + "' which is not specified in dependencies of module '"
+//                            + prj.getName() + "'" ) );
+//                    }
+//                }
+//            }
+//        }
+//        return moduleErrors;
+//    }
 
     private void saveProject() throws MojoFailureException
     {

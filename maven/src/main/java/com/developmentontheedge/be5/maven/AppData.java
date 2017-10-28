@@ -149,4 +149,8 @@ public class AppData extends Be5Mojo
         new FreemarkerSqlHandler(sqlExecutor, debug, logger).execute(freemarkerScript);
     }
 
+    public void setScript(String script)
+    {
+        this.script = script;
+    }
 }

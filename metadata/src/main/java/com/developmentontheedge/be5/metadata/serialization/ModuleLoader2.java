@@ -61,7 +61,7 @@ public class ModuleLoader2
         }
     }
 
-    static void loadAllProjects(List<URL> urls)
+    public static void loadAllProjects(List<URL> urls)
     {
         modulesMap = new HashMap<>();
         try
@@ -181,7 +181,12 @@ public class ModuleLoader2
                 Project moduleProject = modulesMap.get(module.getName());
                 result.add( moduleProject );
             }
+            else
+            {
+                throw new RuntimeException("Module project not found " + module.getName());
+            }
         }
+        //todo ????? topological sort?
         result.sort((o1, o2) -> {
             if (o1.getModules().contains(o2.getName()))
                 return 1;

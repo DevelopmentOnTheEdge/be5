@@ -64,4 +64,12 @@ public class TestProjectUtils
         DataElementUtils.save(entity);
         return entity;
     }
+
+    public void createScript(Project project)
+    {
+        FreemarkerScript script = new FreemarkerScript("Post-db",
+                project.getApplication().getFreemarkerScripts());
+        script.setSource("delete from entity;\nINSERT INTO entity (name) VALUES ('foo')");
+        DataElementUtils.save( script );
+    }
 }
