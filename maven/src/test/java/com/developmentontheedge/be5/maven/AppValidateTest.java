@@ -6,13 +6,13 @@ import org.junit.Test;
 import java.util.logging.Logger;
 
 
-public class AppValidateTests extends TestUtils
+public class AppValidateTest extends TestUtils
 {
     @Test
     public void validate() throws Exception
     {
         new AppValidate()
-                .setLogger(new JULLogger(Logger.getLogger(AppValidateTests.class.getName())))
+                .setLogger(new JULLogger(Logger.getLogger(AppValidateTest.class.getName())))
                 .setPath(path.toAbsolutePath().toString())
                 .execute();
     }
