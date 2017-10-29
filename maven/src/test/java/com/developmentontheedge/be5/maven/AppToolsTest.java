@@ -11,39 +11,39 @@ import static org.junit.Assert.*;
 
 public class AppToolsTest extends TestUtils
 {
-//    private AppTools appTools;
-//
-//    @Before
-//    public void setUpAppTools() throws Exception
-//    {
-//        createTestDB();
-//
-//        appTools = new AppTools();
-//        appTools.setBe5Project(project).setConnectionProfileName(profileTestMavenPlugin)
-//            .setPath(path.toAbsolutePath().toString());
-//    }
-//
-//    @Test
-//    public void sql() throws Exception
-//    {
-//        String commandString = "select * from entity";
-//        appTools.inputStream = new ByteArrayInputStream(commandString.getBytes(StandardCharsets.UTF_8.name()));
-//        appTools.execute();
-//    }
-//
-//    @Test
-//    public void error() throws Exception
-//    {
-//        String commandString = "select * from entityError";
-//        appTools.inputStream = new ByteArrayInputStream(commandString.getBytes(StandardCharsets.UTF_8.name()));
-//        appTools.execute();
-//    }
-//
-//    @Test
-//    public void ftl() throws Exception
-//    {
-//        String commandString = "//${concat('a'?asDate, 'b', 'c'?str)}";
-//        appTools.inputStream = new ByteArrayInputStream(commandString.getBytes(StandardCharsets.UTF_8.name()));
-//        appTools.execute();
-//    }
+    private AppTools appTools;
+
+    @Before
+    public void setUpAppTools() throws Exception
+    {
+        createTestDB();
+
+        appTools = new AppTools();
+        appTools.setBe5Project(project).setConnectionProfileName(profileTestMavenPlugin)
+            .setPath(path.toAbsolutePath().toString());
+    }
+
+    @Test
+    public void sql() throws Exception
+    {
+        String commandString = "select * from entity";
+        appTools.inputStream = new ByteArrayInputStream(commandString.getBytes(StandardCharsets.UTF_8.name()));
+        appTools.execute();
+    }
+
+    @Test
+    public void error() throws Exception
+    {
+        String commandString = "select * from entityError";
+        appTools.inputStream = new ByteArrayInputStream(commandString.getBytes(StandardCharsets.UTF_8.name()));
+        appTools.execute();
+    }
+
+    @Test
+    public void ftl() throws Exception
+    {
+        String commandString = "//${concat('a'?asDate, 'b', 'c'?str)}";
+        appTools.inputStream = new ByteArrayInputStream(commandString.getBytes(StandardCharsets.UTF_8.name()));
+        appTools.execute();
+    }
 }
