@@ -19,8 +19,8 @@ public class AppToolsTest extends TestUtils
         createTestDB();
 
         appTools = new AppTools();
-        appTools.setBe5Project(project);
-        appTools.setPath(path.toAbsolutePath().toString());
+        appTools.setBe5Project(project).setConnectionProfileName(profileTestMavenPlugin)
+            .setPath(path.toAbsolutePath().toString());
     }
 
     @Test

@@ -27,6 +27,8 @@ public abstract class TestUtils
     Path path;
     Project project;
 
+    final String profileTestMavenPlugin = "profileTestMavenPlugin";
+
     @Before
     public void setUp() throws Exception
     {
@@ -36,7 +38,6 @@ public abstract class TestUtils
         utils.createScheme( entity );
         utils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
         utils.createH2Profile(project, "profileTestMavenPlugin");
-        project.setConnectionProfileName("profileTestMavenPlugin");
 
         //utils.createQuery( entity );
         //utils.createOperation( entity );
@@ -74,8 +75,9 @@ public abstract class TestUtils
     void createTestDB() throws Exception
     {
         AppDb appDb = new AppDb();
-        appDb.setBe5Project(project);
-        appDb.execute();
+        appDb.setBe5Project(project)
+                .setConnectionProfileName(profileTestMavenPlugin)
+                .execute();
 
         assertEquals(2, appDb.getCreatedTables());
         assertEquals(0, appDb.getCreatedViews());

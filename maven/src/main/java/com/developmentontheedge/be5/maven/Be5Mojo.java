@@ -1,15 +1,11 @@
 package com.developmentontheedge.be5.maven;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.LogManager;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -28,7 +24,6 @@ import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.dbms.MultiSqlParser;
 import com.developmentontheedge.dbms.SimpleConnector;
 
 public abstract class Be5Mojo extends AbstractMojo
@@ -52,11 +47,13 @@ public abstract class Be5Mojo extends AbstractMojo
     @Parameter (property = "BE5_LOG_PATH")
     File logPath;
 
+
+    @Parameter (property = "BE5_PROFILE")
+    String connectionProfileName;
+
     Project be5Project;
 
-    String  connectionUrl;
-
-    ///////////////////////////////////////////////////////////////////    
+    ///////////////////////////////////////////////////////////////////
     
    
     public void init() throws MojoFailureException
@@ -88,47 +85,29 @@ public abstract class Be5Mojo extends AbstractMojo
             }
         }
 
-        BeConnectionProfile profile = be5Project.getConnectionProfile();
-        if (connectionUrl != null)
+        if(connectionProfileName != null)
         {
-            getLog().info("Using connection " + connectionUrl);
+            be5Project.setConnectionProfileName(connectionProfileName);
+        }
+
+        BeConnectionProfile profile = be5Project.getConnectionProfile();
+
+        if (profile != null)
+        {
+            this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
+
+            this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
+                    profile.getConnectionUrl(), profile.getUsername(), profile.getPassword());
+
+            getLog().info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
         }
         else
         {
-            String user = null;
-            String password = null;
-
-            if (profile != null)
-            {
-                connectionUrl = profile.getConnectionUrl();
-                user = profile.getUsername();
-                password = profile.getPassword();
-            }
-
-            if (connectionUrl == null)
-            {
-                throw new MojoFailureException(
-                        "Please specify connection profile: either create "
-                                + be5Project.getProjectFileStructure().getSelectedProfileFile()
-                                + " file with profile name or use -DBE5_PROFILE=...");
-            }
-
-            if (user != null)
-            {
-                getLog().info("Using connection " + DatabaseUtils.formatUrl(connectionUrl, user, "xxxxx"));
-                connectionUrl = DatabaseUtils.formatUrl(connectionUrl, user, password);
-            }
-            else
-            {
-                logger.setOperationName("Using connection " + connectionUrl);
-            }
+            throw new MojoFailureException(
+                    "Please specify connection profile: either create "
+                            + be5Project.getProjectFileStructure().getSelectedProfileFile()
+                            + " file with profile name or use -DBE5_PROFILE=...");
         }
-
-        this.be5Project.setDatabaseSystem(Rdbms.getRdbms(connectionUrl));
-
-        this.connector = new SimpleConnector(Rdbms.getRdbms(connectionUrl).getType(),
-                profile.getConnectionUrl(),
-                profile.getUsername(), profile.getPassword());
 
         getLog().info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
@@ -203,60 +182,68 @@ public abstract class Be5Mojo extends AbstractMojo
     }
     
 
-    protected void dumpSql( String ddlString )
-    {
-        System.err.println( MultiSqlParser.normalize( be5Project.getDatabaseSystem().getType(), ddlString ) );
-    }
+//    protected void dumpSql( String ddlString )
+//    {
+//        System.err.println( MultiSqlParser.normalize( be5Project.getDatabaseSystem().getType(), ddlString ) );
+//    }
+//
+//    ///////////////////////////////////////////////////////////////////
+//
+//    protected String readString( String prompt, String defaultValue, Object... values ) throws IOException
+//    {
+//        StringBuilder fullPrompt = new StringBuilder(prompt);
+//        Set<String> vals = new TreeSet<>();
+//        if(values != null)
+//        {
+//            for(Object value : values)
+//                vals.add( value.toString().toLowerCase() );
+//        }
+//        if(!vals.isEmpty())
+//        {
+//            fullPrompt.append( " (" ).append( String.join( ", ", vals ) );
+//            if(defaultValue != null)
+//            {
+//                fullPrompt.append( "; default: " ).append( defaultValue );
+//            }
+//            fullPrompt.append(")");
+//        } else if(defaultValue != null)
+//        {
+//            fullPrompt.append( "(default: " ).append( defaultValue ).append( ")" );
+//        }
+//        fullPrompt.append( ": " );
+//        String result;
+//        do
+//        {
+//            System.err.println( fullPrompt );
+//            String line = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
+//            result = line == null ? "" : line.trim();
+//            if(result.isEmpty() && defaultValue != null)
+//                result = defaultValue;
+//        } while(!vals.isEmpty() && !vals.contains( result ));
+//        return result;
+//    }
 
-    ///////////////////////////////////////////////////////////////////    
-   
-    protected String readString( String prompt, String defaultValue, Object... values ) throws IOException
-    {
-        StringBuilder fullPrompt = new StringBuilder(prompt);
-        Set<String> vals = new TreeSet<>();
-        if(values != null)
-        {
-            for(Object value : values)
-                vals.add( value.toString().toLowerCase() );
-        }
-        if(!vals.isEmpty())
-        {
-            fullPrompt.append( " (" ).append( String.join( ", ", vals ) );
-            if(defaultValue != null)
-            {
-                fullPrompt.append( "; default: " ).append( defaultValue );
-            }
-            fullPrompt.append(")");
-        } else if(defaultValue != null)
-        {
-            fullPrompt.append( "(default: " ).append( defaultValue ).append( ")" );
-        }
-        fullPrompt.append( ": " );
-        String result;
-        do
-        {
-            System.err.println( fullPrompt );
-            String line = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
-            result = line == null ? "" : line.trim();
-            if(result.isEmpty() && defaultValue != null)
-                result = defaultValue;
-        } while(!vals.isEmpty() && !vals.contains( result ));
-        return result;
-    }
-
-    public void setLogger(ProcessController logger)
+    public Be5Mojo setLogger(ProcessController logger)
     {
         this.logger = logger;
+        return this;
     }
 
-    public void setBe5Project(Project be5Project)
+    public Be5Mojo setBe5Project(Project be5Project)
     {
         this.be5Project = be5Project;
+        return this;
     }
 
     public Be5Mojo setPath(String path)
     {
         projectPath = Paths.get(path).toFile();
+        return this;
+    }
+
+    public Be5Mojo setConnectionProfileName(String connectionProfileName)
+    {
+        this.connectionProfileName = connectionProfileName;
         return this;
     }
 }

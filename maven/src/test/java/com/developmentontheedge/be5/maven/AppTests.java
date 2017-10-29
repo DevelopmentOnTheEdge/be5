@@ -17,24 +17,24 @@ public class AppTests extends TestUtils
         appValidate.execute();
     }
 
-//    @Test
-//    public void createDb() throws Exception
-//    {
-//        createTestDB();
-//
-//        AppSync appSync = new AppSync();
-//        appSync.setBe5Project(project);
-//        appSync.execute();
-//    }
+    @Test
+    public void createDb() throws Exception
+    {
+        new AppDb()
+                .setPath(path.toString())
+                .setConnectionProfileName(profileTestMavenPlugin)
+                .execute();
+    }
 
     @Test
     public void sync() throws Exception
     {
         createTestDB();
 
-        AppSync appSync = new AppSync();
-        appSync.setBe5Project(project);
-        appSync.execute();
+        new AppSync()
+                .setBe5Project(project)
+                .setConnectionProfileName(profileTestMavenPlugin)
+                .execute();
     }
 
     @Test
@@ -42,9 +42,10 @@ public class AppTests extends TestUtils
     {
         createTestDB();
 
-        AppData appData = new AppData();
-        appData.setBe5Project(project);
-        appData.execute();
+        new AppData()
+                .setBe5Project(project)
+                .setConnectionProfileName(profileTestMavenPlugin)
+                .execute();
     }
 
     @Test
@@ -52,10 +53,9 @@ public class AppTests extends TestUtils
     {
         createTestDB();
 
-        AppData appData = new AppData();
-        appData.setBe5Project(project);
-        appData.setScript("all:Post-db;testModule:Post-db;Post-db");//todo add module and
-        appData.execute();
+        ((AppData)new AppData().setBe5Project(project).setConnectionProfileName(profileTestMavenPlugin))
+            .setScript("all:Post-db;testModule:Post-db;Post-db")
+            .execute();
     }
 
 }
