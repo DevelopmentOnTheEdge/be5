@@ -2,8 +2,11 @@ package com.developmentontheedge.be5.metadata.serialization;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.TestProjectUtils;
 import one.util.streamex.StreamEx;
@@ -30,7 +33,14 @@ public class SerializationTest
         Path path = tmp.newFolder().toPath();
         Project project = utils.getProject("test");
         Entity entity = utils.createEntity( project, "entity", "ID" );
-        utils.createScheme( entity );
+        TableDef scheme = utils.createScheme(entity);
+
+        //only for test SqlColumnType getType( Collection<ColumnDef> stack )
+        ColumnDef column3 = new ColumnDef( "column3", scheme.getColumns() );
+        column3.setTableTo( entity.getName() );
+        column3.setColumnsTo( "ID" );
+        DataElementUtils.save(column3);
+
         utils.createQuery( entity );
         utils.createOperation( entity );
 

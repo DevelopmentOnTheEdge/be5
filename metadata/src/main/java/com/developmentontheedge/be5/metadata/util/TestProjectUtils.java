@@ -28,15 +28,10 @@ public class TestProjectUtils
 
         ColumnDef column2 = new ColumnDef( "name", scheme.getColumns() );
         column2.setTypeString( "VARCHAR(20)" );
-        column2.setTableTo( entity.getName() );
         column2.setCanBeNull( true );
+        column2.setTableTo( entity.getName() );
         column2.setColumnsTo( column.getName() );
         DataElementUtils.save(column2);
-
-        ColumnDef column3 = new ColumnDef( "column3", scheme.getColumns() );
-        column3.setTableTo( entity.getName() );
-        column3.setColumnsTo( column.getName() );
-        DataElementUtils.save(column3);
 
         return scheme;
     }
