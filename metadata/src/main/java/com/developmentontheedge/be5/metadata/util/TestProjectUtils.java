@@ -32,6 +32,12 @@ public class TestProjectUtils
         column2.setCanBeNull( true );
         column2.setColumnsTo( column.getName() );
         DataElementUtils.save(column2);
+
+        ColumnDef column3 = new ColumnDef( "column3", scheme.getColumns() );
+        column3.setTableTo( entity.getName() );
+        column3.setColumnsTo( column.getName() );
+        DataElementUtils.save(column3);
+
         return scheme;
     }
 

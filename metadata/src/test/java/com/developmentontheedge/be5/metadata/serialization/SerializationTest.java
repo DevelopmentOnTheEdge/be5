@@ -33,11 +33,11 @@ public class SerializationTest
         utils.createScheme( entity );
         utils.createQuery( entity );
         utils.createOperation( entity );
-        
+
         Serialization.save( project, path );
         assertEquals(path, project.getLocation());
         LoadContext lc = new LoadContext();
-        
+
         Project project2 = Serialization.load( path, lc );
         project2.setDatabaseSystem( Rdbms.POSTGRESQL );
         lc.check();
