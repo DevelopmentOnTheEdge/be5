@@ -10,7 +10,7 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 
 
-class TestAutocompleteFunctions extends Be5ProjectTest
+class AutocompleteFunctionsTest extends Be5ProjectTest
 {
     @Test
     void test()

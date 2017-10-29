@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class TestAutocomplete extends Be5ProjectTest
+class AutocompleteTest extends Be5ProjectTest
 {
     @Test
     void test()
