@@ -65,11 +65,11 @@ public class TestProjectUtils
         return entity;
     }
 
-    public void createScript(Project project)
+    public void createScript(Project project, String sql)
     {
         FreemarkerScript script = new FreemarkerScript("Post-db",
                 project.getApplication().getFreemarkerScripts());
-        script.setSource("delete from entity;\nINSERT INTO entity (name) VALUES ('foo')");
+        script.setSource(sql);
         DataElementUtils.save( script );
     }
 }

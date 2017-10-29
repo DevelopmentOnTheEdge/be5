@@ -34,7 +34,7 @@ public abstract class TestUtils
         project = utils.getProject("test");
         Entity entity = utils.createEntity( project, "entity", "ID" );
         utils.createScheme( entity );
-        utils.createScript( project );
+        utils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
         //utils.createQuery( entity );
         //utils.createOperation( entity );
 
@@ -58,7 +58,7 @@ public abstract class TestUtils
         Project module = new Project( moduleName, true);
         Entity entity = utils.createEntity( module, "moduleEntity", "ID" );
         utils.createScheme( entity );
-        utils.createScript( module );
+        utils.createScript( module, "delete from moduleEntity;\nINSERT INTO moduleEntity (name) VALUES ('foo')" );
         Serialization.save( module, path );
 
         Module appModule = new Module( moduleName, project.getModules() );
@@ -78,8 +78,6 @@ public abstract class TestUtils
 
         assertEquals(2, appDb.getCreatedTables());
         assertEquals(0, appDb.getCreatedViews());
-
-        appDb.connector.executeInsert("INSERT INTO entity (name) VALUES ('bar')");
     }
 
     void initH2Connection(Project project)
