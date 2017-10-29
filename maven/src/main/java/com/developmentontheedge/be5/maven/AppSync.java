@@ -450,48 +450,48 @@ public class AppSync extends Be5Mojo
         }
         
         // PENDING
-        if( updateClones || removeClones || removeUnusedTables)
-        {
-            for( Entity entity : entities )
-            {
-                TableDef oldScheme = entity.findTableDefinition();
-
-                if( !oldScheme.withoutDbScheme() )
-                {
-                    System.out.println("Skip table with schema: " + oldScheme.getEntityName());
-                    continue;
-                }
-
-                TableDef newScheme = (TableDef) getDdlForClone(newSchemes, entity.getName());
-
-                if( newScheme == null )
-                {
-                	if( removeUnusedTables && newSchemes.get(entity.getName().toLowerCase()) == null )
-                		sb.append(oldScheme.getDropDdl());                	
-                }
-                else // process clone
-                {
-                	if( removeClones )
-                	{
-                		sb.append(oldScheme.getDropDdl());
-                		
-                	}
-                	else if( updateClones)
-                	{
-                        String cloneId = entity.getName().substring(newScheme.getEntityName().length());
-                        Entity curEntity = newScheme.getEntity();
-                        Entity renamedEntity = curEntity.clone(curEntity.getOrigin(), entity.getName(), false);
-                        newScheme = renamedEntity.findTableDefinition();
-                        syncCloneDdl(oldScheme, newScheme, cloneId);
-                        if (!newScheme.equals(oldScheme) && !newScheme.getDiffDdl(oldScheme, null).isEmpty())
-                        {
-                            sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor) 
-                            		                : newScheme.getDiffDdl(oldScheme, sqlExecutor));
-                        }
-                    }
-                }
-            }
-        }
+//        if( updateClones || removeClones || removeUnusedTables)
+//        {
+//            for( Entity entity : entities )
+//            {
+//                TableDef oldScheme = entity.findTableDefinition();
+//
+//                if( !oldScheme.withoutDbScheme() )
+//                {
+//                    System.out.println("Skip table with schema: " + oldScheme.getEntityName());
+//                    continue;
+//                }
+//
+//                TableDef newScheme = (TableDef) getDdlForClone(newSchemes, entity.getName());
+//
+//                if( newScheme == null )
+//                {
+//                	if( removeUnusedTables && newSchemes.get(entity.getName().toLowerCase()) == null )
+//                		sb.append(oldScheme.getDropDdl());
+//                }
+//                else // process clone
+//                {
+//                	if( removeClones )
+//                	{
+//                		sb.append(oldScheme.getDropDdl());
+//
+//                	}
+//                	else if( updateClones)
+//                	{
+//                        String cloneId = entity.getName().substring(newScheme.getEntityName().length());
+//                        Entity curEntity = newScheme.getEntity();
+//                        Entity renamedEntity = curEntity.clone(curEntity.getOrigin(), entity.getName(), false);
+//                        newScheme = renamedEntity.findTableDefinition();
+//                        syncCloneDdl(oldScheme, newScheme, cloneId);
+//                        if (!newScheme.equals(oldScheme) && !newScheme.getDiffDdl(oldScheme, null).isEmpty())
+//                        {
+//                            sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
+//                            		                : newScheme.getDiffDdl(oldScheme, sqlExecutor));
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         return sb.toString();
     }
@@ -517,50 +517,50 @@ public class AppSync extends Be5Mojo
     }
 
     private static final Pattern CLONE_ID = Pattern.compile( "(\\d+)$" );
-    private static DdlElement getDdlForClone( Map<String, DdlElement> schemes, String cloneName )
-    {
-        String name = cloneName.toLowerCase();
-        Matcher matcher = CLONE_ID.matcher( name );
-        if ( !matcher.find() )
-            return null;
-        String cloneId = matcher.group();
-        return IntStreamEx.range( name.length() - cloneId.length(), name.length() )
-                .mapToObj( len -> schemes.get( name.substring( 0, len ) ) ).nonNull().findFirst().orElse( null );
-    }
-
-    // Fix known changes in cloned table and in normal table
-    private void syncCloneDdl( TableDef cloneDdl, TableDef mainDdl, String cloneId )
-    {
-        // Copy special columns
-        List<String> specialColumns = Arrays.asList( "transportstatus", "linkrule", "linkstatus", "origid" );
-        for(String colName : specialColumns)
-        {
-            ColumnDef cloneCol = cloneDdl.getColumns().getCaseInsensitive( colName );
-            ColumnDef mainCol = mainDdl.getColumns().getCaseInsensitive( colName );
-            if(cloneCol != null && mainCol == null)
-            {
-                DataElementUtils.save( cloneCol.clone( mainDdl.getColumns(), cloneCol.getName() ) );
-            }
-        }
-        
-        // Map indexes as clone indexes may have different names
-        Function<? super IndexDef, ? extends List<String>> classifier = indexDef -> indexDef.stream().map( IndexColumnDef::getDefinition )
-                .toList();
-        Map<List<String>, Deque<IndexDef>> ddlMap = cloneDdl.getIndices().stream().groupingTo( classifier, ArrayDeque::new );
-        for ( IndexDef indexDef : mainDdl.getIndices().stream().toList() )
-        {
-            List<String> key = classifier.apply( indexDef );
-            Deque<IndexDef> list = ddlMap.get( key );
-            IndexDef oldIdx = list == null ? null : list.poll();
-            String newName = oldIdx == null ? indexDef.getName() + cloneId : oldIdx.getName();
-            mainDdl.renameIndex( indexDef.getName(), newName );
-        }
-        // Copy indexes for special columns
-        ddlMap.values().stream().flatMap( Deque::stream )
-                .filter( idx -> specialColumns.stream().anyMatch( col -> idx.getCaseInsensitive( col ) != null ) )
-                .map( idx -> idx.clone( mainDdl.getIndices(), idx.getName() ) )
-                .forEach( DataElementUtils::save );
-        fixPrimaryKey( cloneDdl, mainDdl );
-    }
+//    private static DdlElement getDdlForClone( Map<String, DdlElement> schemes, String cloneName )
+//    {
+//        String name = cloneName.toLowerCase();
+//        Matcher matcher = CLONE_ID.matcher( name );
+//        if ( !matcher.find() )
+//            return null;
+//        String cloneId = matcher.group();
+//        return IntStreamEx.range( name.length() - cloneId.length(), name.length() )
+//                .mapToObj( len -> schemes.get( name.substring( 0, len ) ) ).nonNull().findFirst().orElse( null );
+//    }
+//
+//    // Fix known changes in cloned table and in normal table
+//    private void syncCloneDdl( TableDef cloneDdl, TableDef mainDdl, String cloneId )
+//    {
+//        // Copy special columns
+//        List<String> specialColumns = Arrays.asList( "transportstatus", "linkrule", "linkstatus", "origid" );
+//        for(String colName : specialColumns)
+//        {
+//            ColumnDef cloneCol = cloneDdl.getColumns().getCaseInsensitive( colName );
+//            ColumnDef mainCol = mainDdl.getColumns().getCaseInsensitive( colName );
+//            if(cloneCol != null && mainCol == null)
+//            {
+//                DataElementUtils.save( cloneCol.clone( mainDdl.getColumns(), cloneCol.getName() ) );
+//            }
+//        }
+//
+//        // Map indexes as clone indexes may have different names
+//        Function<? super IndexDef, ? extends List<String>> classifier = indexDef -> indexDef.stream().map( IndexColumnDef::getDefinition )
+//                .toList();
+//        Map<List<String>, Deque<IndexDef>> ddlMap = cloneDdl.getIndices().stream().groupingTo( classifier, ArrayDeque::new );
+//        for ( IndexDef indexDef : mainDdl.getIndices().stream().toList() )
+//        {
+//            List<String> key = classifier.apply( indexDef );
+//            Deque<IndexDef> list = ddlMap.get( key );
+//            IndexDef oldIdx = list == null ? null : list.poll();
+//            String newName = oldIdx == null ? indexDef.getName() + cloneId : oldIdx.getName();
+//            mainDdl.renameIndex( indexDef.getName(), newName );
+//        }
+//        // Copy indexes for special columns
+//        ddlMap.values().stream().flatMap( Deque::stream )
+//                .filter( idx -> specialColumns.stream().anyMatch( col -> idx.getCaseInsensitive( col ) != null ) )
+//                .map( idx -> idx.clone( mainDdl.getIndices(), idx.getName() ) )
+//                .forEach( DataElementUtils::save );
+//        fixPrimaryKey( cloneDdl, mainDdl );
+//    }
     
 }
