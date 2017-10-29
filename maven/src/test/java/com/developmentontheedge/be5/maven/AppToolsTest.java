@@ -8,19 +8,19 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
+
 public class AppToolsTest extends TestUtils
 {
-    AppTools appTools;
+    private AppTools appTools;
 
     @Before
     public void setUpAppTools() throws Exception
     {
-        initH2Connection(project);
+        createTestDB();
+
         appTools = new AppTools();
         appTools.setBe5Project(project);
         appTools.setPath(path.toAbsolutePath().toString());
-
-        createTestDB();
     }
 
     @Test

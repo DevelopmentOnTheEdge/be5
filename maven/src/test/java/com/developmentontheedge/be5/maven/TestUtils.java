@@ -35,6 +35,9 @@ public abstract class TestUtils
         Entity entity = utils.createEntity( project, "entity", "ID" );
         utils.createScheme( entity );
         utils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
+        utils.createH2Profile(project, "profileTestMavenPlugin");
+        project.setConnectionProfileName("profileTestMavenPlugin");
+
         //utils.createQuery( entity );
         //utils.createOperation( entity );
 
@@ -70,28 +73,12 @@ public abstract class TestUtils
 
     void createTestDB() throws Exception
     {
-        initH2Connection(project);
-
         AppDb appDb = new AppDb();
         appDb.setBe5Project(project);
         appDb.execute();
 
         assertEquals(2, appDb.getCreatedTables());
         assertEquals(0, appDb.getCreatedViews());
-    }
-
-    void initH2Connection(Project project)
-    {
-        String profileForIntegrationTests = "profileTestMavenPlugin";
-        BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
-        profile.setConnectionUrl("jdbc:h2:~/"+ profileForIntegrationTests);
-        profile.setUsername("sa");
-        profile.setPassword("");
-        profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
-        DataElementUtils.save(profile);
-        project.setConnectionProfileName(profileForIntegrationTests);
-
-        project.setDatabaseSystem(Rdbms.H2);
     }
 
 }

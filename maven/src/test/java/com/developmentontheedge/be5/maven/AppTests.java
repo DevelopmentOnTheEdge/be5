@@ -17,8 +17,18 @@ public class AppTests extends TestUtils
         appValidate.execute();
     }
 
+//    @Test
+//    public void createDb() throws Exception
+//    {
+//        createTestDB();
+//
+//        AppSync appSync = new AppSync();
+//        appSync.setBe5Project(project);
+//        appSync.execute();
+//    }
+
     @Test
-    public void createDbAndSync() throws Exception
+    public void sync() throws Exception
     {
         createTestDB();
 

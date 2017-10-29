@@ -72,4 +72,14 @@ public class TestProjectUtils
         script.setSource(sql);
         DataElementUtils.save( script );
     }
+
+    public void createH2Profile(Project project, String name)
+    {
+        BeConnectionProfile profile = new BeConnectionProfile(name, project.getConnectionProfiles().getLocalProfiles());
+        profile.setConnectionUrl("jdbc:h2:~/"+ name);
+        profile.setUsername("sa");
+        profile.setPassword("");
+        profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
+        DataElementUtils.save(profile);
+    }
 }
