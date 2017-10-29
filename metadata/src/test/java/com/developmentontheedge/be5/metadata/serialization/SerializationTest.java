@@ -31,10 +31,6 @@ public class SerializationTest
         Project project = utils.getProject("test");
         Entity entity = utils.createEntity( project, "entity", "ID" );
         utils.createScheme( entity );
-
-        Entity entity12 = utils.createEntity( project, "entity12", "CODE" );
-        utils.createScheme2( entity12 );
-
         utils.createQuery( entity );
         utils.createOperation( entity );
         

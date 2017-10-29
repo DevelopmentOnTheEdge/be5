@@ -35,23 +35,6 @@ public class TestProjectUtils
         return scheme;
     }
 
-    public TableDef createScheme2(Entity entity)
-    {
-        TableDef scheme = new TableDef( entity );
-        DataElementUtils.save(scheme);
-        ColumnDef column = new ColumnDef( "CODE", scheme.getColumns() );
-        column.setTypeString( "VARCHAR(20)" );
-        column.setCanBeNull( true );
-        column.setPrimaryKey( true );
-        DataElementUtils.save(column);
-
-        ColumnDef column2 = new ColumnDef( "CODE2", scheme.getColumns() );
-        column2.setTableTo( entity.getName() );
-        column2.setColumnsTo( column.getName() );
-        DataElementUtils.save(column2);
-        return scheme;
-    }
-
     public Operation createOperation(Entity entity)
     {
         Operation operation = Operation.createOperation( "op", Operation.OPERATION_TYPE_GROOVY, entity );
