@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.logging.Logger;
 
+import static org.junit.Assert.*;
+
 
 public class AppTests extends TestUtils
 {
