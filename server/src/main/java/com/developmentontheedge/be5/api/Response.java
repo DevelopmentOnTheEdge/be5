@@ -47,6 +47,8 @@ public interface Response
 
     void sendAsJson(ResourceData data, Object meta, Map<String, String> links);
 
+    void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links);
+
     void sendErrorAsJson(ErrorModel error, Object meta, Map<String, String> links);
 
     void sendErrorsAsJson(Object[] errors, Object meta, Map<String, String> links);

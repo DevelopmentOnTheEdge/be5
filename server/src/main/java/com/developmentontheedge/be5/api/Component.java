@@ -1,6 +1,9 @@
 package com.developmentontheedge.be5.api;
 
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+
+import java.util.Map;
 
 /**
  * <p>This is the general interface for components.</p>
@@ -28,10 +31,10 @@ import com.developmentontheedge.be5.env.Injector;
  * @see Configurable
  * @author asko
  */
-public interface Component {
-
+public interface Component
+{
     /**
-     * <p>Generates some content of any content type. Usually we use {@link Response#sendAsJson(String, Object)} to send the typed JSON response.</p>
+     * <p>Generates some content of any content type. Usually we use {@link Response#sendAsJson(ResourceData, Object, Map)} to send the typed JSON response.</p>
      * 
      * <p>Use the service provider to delegate the action to the model.
      * The business-logic must be implemented in the model, not in controllers (components, initializers).</p>

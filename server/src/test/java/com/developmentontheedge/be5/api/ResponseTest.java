@@ -140,9 +140,7 @@ public class ResponseTest extends Be5ProjectTest
     public void testJsonObject()
     {
         JsonApiModel jsonApiModel = JsonApiModel.data(new ResourceData("testType", "test"),
-                ImmutableMap.builder()
-                        .put(TIMESTAMP_PARAM, 1503291145939L)
-                        .build(),
+                Collections.singletonMap(TIMESTAMP_PARAM, 1503291145939L),
                 Collections.singletonMap(SELF_LINK, "url"));
         response.sendAsJson(jsonApiModel);
 

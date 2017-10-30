@@ -127,6 +127,12 @@ public class ResponseImpl implements Response
     }
 
     @Override
+    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+    {
+        sendAsRawJson(JsonApiModel.data(data, included, meta, links));
+    }
+
+    @Override
     public void sendErrorAsJson(ErrorModel error, Object meta, Map<String, String> links)
     {
         //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
