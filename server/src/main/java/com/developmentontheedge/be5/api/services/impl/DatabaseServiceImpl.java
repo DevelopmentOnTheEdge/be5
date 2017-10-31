@@ -186,7 +186,9 @@ public class DatabaseServiceImpl implements DatabaseService
     private Connection getTxConnection() throws SQLException
     {
         Connection conn = TRANSACT_CONN.get();
-        if (conn != null) {
+        if (conn != null)
+        {
+            //todo return conn; - для вложенных просто возвращать текущую транзакцию, тесты
             throw Be5Exception.internal(log, "Start second transaction in one thread");
         }
         conn = getDataSource().getConnection();
