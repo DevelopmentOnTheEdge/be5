@@ -12,52 +12,49 @@ public class DynamicPropertyGBuilder
     public DynamicProperty add(DynamicPropertySet dynamicPropertySet,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
-        DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, this, this);
-        code.setResolveStrategy(Closure.DELEGATE_FIRST);
-        code.call();
+        DPSAttributes builder = getBuilder(cl);
 
-        DynamicProperty dynamicProperty = new DynamicProperty(builder.getName(), builder.getTYPE());
-        dynamicPropertySet.add(dynamicProperty);
-        return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
+        DynamicProperty property = new DynamicProperty(builder.getName(), builder.getTYPE());
+        dynamicPropertySet.add(property);
+        return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
 
     public DynamicProperty add(DynamicPropertySet dynamicPropertySet, String propertyName,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
-        DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, this, this);
-        code.setResolveStrategy(Closure.DELEGATE_FIRST);
-        code.call();
+        DPSAttributes builder = getBuilder(cl);
 
-        DynamicProperty dynamicProperty = new DynamicProperty(propertyName, builder.getTYPE());
-        dynamicPropertySet.add(dynamicProperty);
-        return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
+        DynamicProperty property = new DynamicProperty(propertyName, builder.getTYPE());
+        dynamicPropertySet.add(property);
+        return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
 
     public DynamicProperty add(DynamicPropertySet dynamicPropertySet, String propertyName, String displayName,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
-        DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, this, this);
-        code.setResolveStrategy(Closure.DELEGATE_FIRST);
-        code.call();
+        DPSAttributes builder = getBuilder(cl);
 
-        DynamicProperty dynamicProperty = new DynamicProperty(propertyName, builder.getTYPE());
-        dynamicProperty.setDisplayName(displayName);
-        dynamicPropertySet.add(dynamicProperty);
-        return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
+        DynamicProperty property = new DynamicProperty(propertyName, builder.getTYPE());
+        dynamicPropertySet.add(property);
+        property.setDisplayName(displayName);
+
+        return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
 
     public DynamicProperty edit(DynamicPropertySet dynamicPropertySet, String propertyName,
                                @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
+        DPSAttributes builder = getBuilder(cl);
+
+        return DynamicPropertyMetaClass.leftShift(dynamicPropertySet.getProperty(propertyName), builder.getMap());
+    }
+
+    private DPSAttributes getBuilder(Closure cl)
+    {
         DPSAttributes builder = new DPSAttributes();
         Closure code = cl.rehydrate(builder, this, this);
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
         code.call();
-
-        DynamicProperty dynamicProperty = dynamicPropertySet.getProperty(propertyName);
-        return DynamicPropertyMetaClass.leftShift(dynamicProperty, builder.getMap());
+        return builder;
     }
 }

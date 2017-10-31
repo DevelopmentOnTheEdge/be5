@@ -54,7 +54,11 @@ class AutocompleteTest extends Be5ProjectTest
             CAN_BE_NULL = true
         }
 
-        assertEquals("{'values':{'reasonMulti':123,'input2':'value2'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}},'/input2':{'displayName':'input2','canBeNull':true}},'order':['/reasonMulti','/input2']}",
+        add (dps, "input3", "Input 3") {
+            value = "value3"
+        }
+
+        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'value3'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}},'/input2':{'displayName':'input2','canBeNull':true},'/input3':{'displayName':'Input 3'}},'order':['/reasonMulti','/input2','/input3']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 
