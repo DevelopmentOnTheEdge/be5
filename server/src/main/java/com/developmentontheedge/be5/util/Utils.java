@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -590,6 +592,35 @@ public class Utils
         return number;
     }
 
+    /**
+     * Try`s array values as an array of value pair and converts it to the Map, where first value is the key.
+     *
+     * @param values Object[n][2]
+     * @return value Map
+     */
+    public static Map valueMap(Object[][] values )
+    {
+        if( values == null )
+        {
+            return null;
+        }
+        LinkedHashMap map = new LinkedHashMap( values.length );
+        for( int i = 0; i < values.length; i++ )
+        {
+            map.put( values[ i ][ 0 ], values[ i ][ 1 ] );
+        }
+        return map;
+    }
+
+    public static Map valueMap( Object ... values )
+    {
+        return SimpleCompositeMap.valueMap( values );
+    }
+
+    public static Map valueNotNullMap( Object ... values )
+    {
+        return SimpleCompositeMap.valueNotNullMap( values );
+    }
 
     /**
      * Substitute string "fromText" in "text" for string "toText".
