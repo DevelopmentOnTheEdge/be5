@@ -160,6 +160,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.injector = injector;
         this.dpsExecutor = injector.get(DpsExecutor.class);
         this.extraQuery = ExtraQuery.DEFAULT;
+        this.sortColumn = -1;
     }
 
     private List<DynamicPropertySet> executeQuery()
