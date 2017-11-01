@@ -55,14 +55,21 @@ public class OperationServiceImpl implements OperationService
         String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
         Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
+
+        return generate(meta, presetValues, selectedRowsString, req);
+    }
+
+    @Override
+    public Either<FormPresentation, OperationResult> generate(OperationInfo meta,
+                                                              Map<String, Object> presetValues, String selectedRowsString, Request req)
+    {
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
         return callGetParameters(selectedRowsString, operation, presetValues);
     }
 
     private Either<FormPresentation, OperationResult> callGetParameters(
-            String selectedRowsString, Operation operation,
-            Map<String, Object> presetValues)
+            String selectedRowsString, Operation operation, Map<String, Object> presetValues)
     {
         OperationResult invokeResult = null;
         if(OperationStatus.ERROR == operation.getStatus())
@@ -159,13 +166,20 @@ public class OperationServiceImpl implements OperationService
         Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
 
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
-        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), queryName);
 
+        return execute(meta, presetValues, selectedRowsString, req);
+    }
+
+    @Override
+    public Either<FormPresentation, OperationResult> execute(OperationInfo meta,
+          Map<String, Object> presetValues, String selectedRowsString, Request req)
+    {
+        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), meta.getQueryName());
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
         if(operation instanceof TransactionalOperation)
         {
-            return databaseService.transaction((connection) ->
+            return databaseService.transaction(connection ->
                     callOperation(selectedRowsString, presetValues, operation, operationContext)
             );
         }
