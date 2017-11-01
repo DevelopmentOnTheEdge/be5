@@ -59,9 +59,9 @@ public class OperationServiceImpl implements OperationService
         return generate(meta, presetValues, selectedRowsString, req);
     }
 
-    @Override
+    @Override//todo refactoring to return only Object - (DPS or bean)
     public Either<FormPresentation, OperationResult> generate(OperationInfo meta,
-                                                              Map<String, Object> presetValues, String selectedRowsString, Request req)
+                Map<String, Object> presetValues, String selectedRowsString, Request req)
     {
         Operation operation = create(meta, selectedRows(selectedRowsString), req);
 
@@ -112,6 +112,7 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
+        //run manually in component
         if (parameters == null)
         {
             OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), operation.getInfo().getQueryName());
@@ -156,7 +157,7 @@ public class OperationServiceImpl implements OperationService
                 selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), operationResult));
     }
 
-    @Override
+    @Override//todo move to component
     public Either<FormPresentation, OperationResult> execute(Request req)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
@@ -170,7 +171,7 @@ public class OperationServiceImpl implements OperationService
         return execute(meta, presetValues, selectedRowsString, req);
     }
 
-    @Override
+    @Override//todo refactoring to Either<Object, OperationResult> Object - (DPS or bean)
     public Either<FormPresentation, OperationResult> execute(OperationInfo meta,
           Map<String, Object> presetValues, String selectedRowsString, Request req)
     {
