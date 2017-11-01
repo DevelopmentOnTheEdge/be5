@@ -50,6 +50,11 @@ public class OperationInfo
     public Long getCategoryID()                     { return operationModel.getCategoryID(); }
     public Entity getEntity()                       { return operationModel.getEntity();  }
 
+    public String getEntityName()
+    {
+        return operationModel.getEntity().getName();
+    }
+
     public String getQueryName()
     {
         return queryName;

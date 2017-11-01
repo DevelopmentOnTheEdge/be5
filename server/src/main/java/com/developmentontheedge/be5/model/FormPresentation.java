@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.model;
 
+import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 
 import javax.json.JsonObject;
@@ -23,6 +24,19 @@ public class FormPresentation
         this.entity = entity;
         this.query = query;
         this.operation = operation;
+        this.title = title;
+        this.selectedRows = selectedRows;
+        this.bean = bean;
+        this.layout = layout;
+        this.operationResult = operationResult;
+    }
+
+    public FormPresentation(OperationInfo operationInfo, String title, String selectedRows,
+                            JsonObject bean, Object layout, OperationResult operationResult)
+    {
+        this.entity = operationInfo.getEntityName();
+        this.query = operationInfo.getQueryName();
+        this.operation = operationInfo.getName();
         this.title = title;
         this.selectedRows = selectedRows;
         this.bean = bean;

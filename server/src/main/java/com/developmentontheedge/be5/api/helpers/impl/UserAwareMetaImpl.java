@@ -89,6 +89,12 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
+    public String getLocalizedOperationTitle(OperationInfo operationInfo) {
+        return localizations.getOperationTitle(UserInfoHolder.getLanguage(),
+                operationInfo.getEntityName(), operationInfo.getName());
+    }
+
+    @Override
     public String getLocalizedOperationTitle(String entity, String operation) {
         return localizations.getOperationTitle(UserInfoHolder.getLanguage(), entity, operation);
     }
