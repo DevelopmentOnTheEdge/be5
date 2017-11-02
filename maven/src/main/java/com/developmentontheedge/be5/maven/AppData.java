@@ -25,7 +25,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo( name = "data")
-public class AppData extends Be5Mojo
+public class AppData extends Be5Mojo<AppData>
 {
     @Parameter(property = "BE5_SCRIPT")
     private String script = FreemarkerCatalog.POST_DB_STEP;
@@ -152,6 +152,10 @@ public class AppData extends Be5Mojo
     public AppData setScript(String script)
     {
         this.script = script;
+        return this;
+    }
+
+    @Override protected AppData me() {
         return this;
     }
 }

@@ -33,7 +33,7 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
  * mvn be5:validate -DBE5_DEBUG=true
  */
 @Mojo( name = "validate")
-public class AppValidate extends Be5Mojo
+public class AppValidate extends Be5Mojo<AppValidate>
 {
     @Parameter (property = "BE5_RDBMS")
     String rdbmsName;
@@ -271,5 +271,9 @@ public class AppValidate extends Be5Mojo
         }
         
         getLog().info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
+    }
+
+    @Override protected AppValidate me() {
+        return this;
     }
 }

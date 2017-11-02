@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
 @Mojo( name = "create-db")
-public class AppDb extends Be5Mojo
+public class AppDb extends Be5Mojo<AppDb>
 {
     private BeSqlExecutor sql;
     private PrintStream ps;
@@ -176,5 +176,9 @@ public class AppDb extends Be5Mojo
     public int getCreatedViews()
     {
         return createdViews;
+    }
+
+    @Override protected AppDb me() {
+        return this;
     }
 }

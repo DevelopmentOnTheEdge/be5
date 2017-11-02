@@ -1,9 +1,7 @@
 package com.developmentontheedge.be5.maven;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -27,9 +25,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
 @Mojo( name = "tools")
-public class AppTools extends Be5Mojo
+public class AppTools extends Be5Mojo<AppTools>
 {
-    InputStream inputStream = System.in;
+    private InputStream inputStream = System.in;
 
     @Override
     public void execute() throws MojoFailureException
@@ -149,4 +147,20 @@ public class AppTools extends Be5Mojo
         }
     }
 
+    public AppTools setInputStream(String str)
+    {
+        try
+        {
+            this.inputStream = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    @Override protected AppTools me() {
+        return this;
+    }
 }

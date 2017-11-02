@@ -53,7 +53,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo( name = "sync")
-public class AppSync extends Be5Mojo
+public class AppSync extends Be5Mojo<AppSync>
 {
     @Parameter (property = "BE5_FORCE_UPDATE")
     boolean forceUpdate;
@@ -562,5 +562,8 @@ public class AppSync extends Be5Mojo
 //                .forEach( DataElementUtils::save );
 //        fixPrimaryKey( cloneDdl, mainDdl );
 //    }
-    
+
+    @Override protected AppSync me() {
+        return this;
+    }
 }

@@ -26,8 +26,10 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SimpleConnector;
 
-public abstract class Be5Mojo extends AbstractMojo
+public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
 {
+    protected abstract T me();
+
     protected ProcessController logger = new MavenLogger(getLog());
 
 	protected DbmsConnector connector;
@@ -223,27 +225,27 @@ public abstract class Be5Mojo extends AbstractMojo
 //        return result;
 //    }
 
-    public Be5Mojo setLogger(ProcessController logger)
+    public T setLogger(ProcessController logger)
     {
         this.logger = logger;
-        return this;
+        return me();
     }
 
-    public Be5Mojo setBe5Project(Project be5Project)
+    public T setBe5Project(Project be5Project)
     {
         this.be5Project = be5Project;
-        return this;
+        return me();
     }
 
-    public Be5Mojo setPath(String path)
+    public  T setPath(String path)
     {
         projectPath = Paths.get(path).toFile();
-        return this;
+        return me();
     }
 
-    public Be5Mojo setConnectionProfileName(String connectionProfileName)
+    public  T setConnectionProfileName(String connectionProfileName)
     {
         this.connectionProfileName = connectionProfileName;
-        return this;
+        return me();
     }
 }

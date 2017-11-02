@@ -22,7 +22,9 @@ public class AppDataTest extends TestUtils
     {
         createTestDB();
 
-        ((AppData)new AppData().setBe5Project(project).setConnectionProfileName(profileTestMavenPlugin))
+        new AppData()
+                .setBe5Project(project)
+                .setConnectionProfileName(profileTestMavenPlugin)
                 .setScript("all:Post-db;testModule:Post-db;Post-db")
                 .execute();
     }
