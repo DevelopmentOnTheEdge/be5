@@ -273,6 +273,12 @@ public class AppValidate extends Be5Mojo<AppValidate>
         getLog().info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
     }
 
+    public AppValidate setCheckQueryPath(String queryPath)
+    {
+        this.queryPath = queryPath;
+        return this;
+    }
+
     @Override protected AppValidate me() {
         return this;
     }

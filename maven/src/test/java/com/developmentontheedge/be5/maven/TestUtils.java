@@ -75,7 +75,7 @@ public abstract class TestUtils
     {
         AppDb appDb = new AppDb();
         appDb.setBe5Project(project)
-                .setConnectionProfileName(profileTestMavenPlugin)
+                .setProfileName(profileTestMavenPlugin)
                 .execute();
 
         assertEquals(2, appDb.getCreatedTables());

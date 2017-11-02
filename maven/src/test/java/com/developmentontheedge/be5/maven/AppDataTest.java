@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.maven;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class AppDataTest extends TestUtils
 {
     @Test
@@ -13,7 +11,7 @@ public class AppDataTest extends TestUtils
 
         new AppData()
                 .setBe5Project(project)
-                .setConnectionProfileName(profileTestMavenPlugin)
+                .setProfileName(profileTestMavenPlugin)
                 .execute();
     }
 
@@ -24,7 +22,7 @@ public class AppDataTest extends TestUtils
 
         new AppData()
                 .setBe5Project(project)
-                .setConnectionProfileName(profileTestMavenPlugin)
+                .setProfileName(profileTestMavenPlugin)
                 .setScript("all:Post-db;testModule:Post-db;Post-db")
                 .execute();
     }

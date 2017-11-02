@@ -13,7 +13,7 @@ public class AppValidateTest extends TestUtils
     {
         new AppValidate()
                 .setLogger(new JULLogger(Logger.getLogger(AppValidateTest.class.getName())))
-                .setPath(path.toAbsolutePath().toString())
+                .setProjectPath(path.toAbsolutePath().toString())
                 .execute();
     }
 

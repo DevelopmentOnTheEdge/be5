@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.maven;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 
 public class AppSyncTest extends TestUtils
 {
@@ -14,7 +12,7 @@ public class AppSyncTest extends TestUtils
 
         new AppSync()
                 .setBe5Project(project)
-                .setConnectionProfileName(profileTestMavenPlugin)
+                .setProfileName(profileTestMavenPlugin)
                 .execute();
     }
 }
