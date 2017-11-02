@@ -29,6 +29,10 @@ import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import static com.developmentontheedge.be5.servlet.TemplateProcessor.htmlTemplateEngine;
 
 
 public class MainServlet extends HttpServlet
@@ -90,6 +94,7 @@ public class MainServlet extends HttpServlet
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
         {
+            //processTemplate(request, res);
             res.sendError(Be5Exception.unknownComponent(requestUri));
             return;
         }
@@ -114,6 +119,26 @@ public class MainServlet extends HttpServlet
 
         runComponent(componentId, req, res);
     }
+
+    private void processTemplate(HttpServletRequest request, Response res)
+    {
+        // This prevents triggering engine executions for resource URLs
+        if (request.getRequestURI().startsWith("/static")) {
+            return;
+        }
+
+        TemplateEngine textTemplateEngine  = htmlTemplateEngine();
+
+        Context context = new Context();
+        context.setVariable("name", "Name");
+        context.setVariable("url", "http://url");
+
+        res.sendHtml(textTemplateEngine.process("template.html", context));
+
+
+        //ITemplateEngine templateEngine = this.application.getTemplateEngine();
+    }
+
 
     void runComponent(String componentId, Request req, Response res)
     {

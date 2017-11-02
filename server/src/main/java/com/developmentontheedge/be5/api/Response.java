@@ -67,6 +67,8 @@ public interface Response
      */
     void sendJson(String json);
 
+    void sendHtml(String json);
+
     /**
      * Sends an XML response. See JAXB documentation to know about the serialization algorithm.
      * 

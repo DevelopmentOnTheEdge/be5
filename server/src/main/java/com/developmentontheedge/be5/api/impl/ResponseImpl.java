@@ -194,7 +194,13 @@ public class ResponseImpl implements Response
         // The default encoding is UTF-8. Source: RFC 4627, http://www.ietf.org/rfc/rfc4627.txt.
         sendText("application/json;charset=UTF-8", json);
     }
-    
+
+    @Override
+    public void sendHtml(String json)
+    {
+        sendText("text/html;charset=UTF-8", json);
+    }
+
     @Override
     public <T> void sendAsXml(Class<T> klass, T object)
     {
