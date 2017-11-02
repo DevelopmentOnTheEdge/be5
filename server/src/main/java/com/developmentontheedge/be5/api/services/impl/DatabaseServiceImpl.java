@@ -345,7 +345,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch( SQLException e )
         {
-            throw new RuntimeException(e);
+            throw Be5Exception.internal(e, query);
         }
     }
 

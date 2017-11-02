@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.developmentontheedge.sql.model.AstNullPredicate;
 import com.developmentontheedge.sql.model.AstOrderingElement;
+import com.developmentontheedge.sql.model.SqlParser;
 import one.util.streamex.StreamEx;
 
 import com.developmentontheedge.sql.model.AstBeCondition;
@@ -42,6 +45,8 @@ import com.developmentontheedge.sql.model.SqlQuery;
 
 public class ContextApplier
 {
+    private static final Logger log = Logger.getLogger(ContextApplier.class.getName());
+
     private final QueryContext context;
     private final Map<String, AstBeSqlSubQuery> subQueries = new HashMap<>();
 
@@ -194,17 +199,32 @@ public class ContextApplier
             String name = subQuery.getQueryName();
             if( name == null )
             {
-                subQuery.addChild(new AstStringConstant("Empty subQuery without queryName parameter"));
+                subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
                 return;
                 //throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
             }
             else
             {
                 String entity = subQuery.getEntityName();
-                String subQueryText = context.resolveQuery(entity, name);
+                String subQueryText = null;
+
+                try
+                {
+                    subQueryText = context.resolveQuery(entity, name);
+                }
+                catch (RuntimeException e)
+                {
+                    log.log(Level.SEVERE, "Error in resolveQuery()" + entity + " " + name, e);
+                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
+                    return;
+                }
+
                 if (subQueryText == null)
                 {
-                    throw new IllegalStateException("Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
+                    log.log(Level.SEVERE, "Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
+                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
+                    return;
+                    //throw new IllegalStateException("Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
                 }
                 AstStart start = SqlQuery.parse(subQueryText);
                 subQuery.addChild(start.getQuery());
