@@ -11,6 +11,7 @@ public class TestProjectUtils
     public Project getProject(String name)
     {
         Project project = new Project( name );
+
         project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
         project.setDatabaseSystem( Rdbms.POSTGRESQL );
         return project;
@@ -40,19 +41,20 @@ public class TestProjectUtils
     {
         Operation operation = Operation.createOperation( "op", Operation.OPERATION_TYPE_GROOVY, entity );
         DataElementUtils.save( operation );
-        PageCustomization customization = new PageCustomization( PageCustomization.DOMAIN_OPERATION, PageCustomization.TYPE_JS,
+        PageCustomization customization = new PageCustomization( PageCustomization.TYPE_CSS, PageCustomization.DOMAIN_OPERATION_FORM,
                 operation.getOrCreateCollection( PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class ) );
-        customization.setCode( "alert('!!!')" );
+        customization.setCode( "form {color: #f1f1f1}" );
         DataElementUtils.save( customization );
         return operation;
     }
 
     public Query createQuery(Entity entity)
     {
-        Query query = new Query( "query", entity );
+            Query query = new Query( "All records", entity );
         query.getRoles().add( '@'+SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP );
         query.getRoles().addExclusion( "User" );
         query.getOperationNames().setValues( Collections.singleton( "op" ) );
+        query.setQuery("select * from entity");
         DataElementUtils.save(query);
         return query;
     }

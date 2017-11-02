@@ -55,8 +55,8 @@ public class SerializationTest
         assertEquals(entity, entity2);
         assertTrue(entity2.isBesql());
         assertEquals("VARCHAR(20)", entity2.findTableDefinition().getColumns().get("name").getTypeString());
-        assertEquals( StreamEx.of( "Administrator", "Operator" ).toSet(), entity2.getQueries().get( "query" ).getRoles().getFinalValues() );
-        assertEquals( "op", entity2.getQueries().get( "query" ).getOperationNames().getFinalValuesString() );
+        assertEquals( StreamEx.of( "Administrator", "Operator" ).toSet(), entity2.getQueries().get( "All records" ).getRoles().getFinalValues() );
+        assertEquals( "op", entity2.getQueries().get( "All records" ).getOperationNames().getFinalValuesString() );
     }
 
 }

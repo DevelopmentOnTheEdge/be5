@@ -38,8 +38,8 @@ public abstract class TestUtils
         utils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
         utils.createH2Profile(project, "profileTestMavenPlugin");
 
-        //utils.createQuery( entity );
-        //utils.createOperation( entity );
+        utils.createQuery( entity );
+        utils.createOperation( entity );
 
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = createModule(project, "testModule", modulePath);
@@ -65,7 +65,7 @@ public abstract class TestUtils
         Serialization.save( module, path );
 
         Module appModule = new Module( moduleName, project.getModules() );
-        project.setRoles( Arrays.asList( "Administrator", "Guest" ) );
+        project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
         DataElementUtils.save( appModule );
 
         return module;

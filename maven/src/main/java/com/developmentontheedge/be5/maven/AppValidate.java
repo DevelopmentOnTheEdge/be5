@@ -228,7 +228,8 @@ public class AppValidate extends Be5Mojo<AppValidate>
     {
         if( checkRoles )
         {
-            getLog().info("Available roles:\n" + String.join( System.lineSeparator(), be5Project.getAvailableRoles()));
+            getLog().info("Available roles:" + System.lineSeparator() + " - " +
+                    String.join( System.lineSeparator()+ " - " , be5Project.getAvailableRoles()));
         }
     }
 
@@ -276,6 +277,18 @@ public class AppValidate extends Be5Mojo<AppValidate>
     public AppValidate setCheckQueryPath(String queryPath)
     {
         this.queryPath = queryPath;
+        return this;
+    }
+
+    public AppValidate setDdlPath(String ddlPath)
+    {
+        this.ddlPath = ddlPath;
+        return this;
+    }
+
+    public AppValidate setCheckRoles(boolean checkRoles)
+    {
+        this.checkRoles = checkRoles;
         return this;
     }
 

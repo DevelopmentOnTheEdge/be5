@@ -17,4 +17,16 @@ public class AppValidateTest extends TestUtils
                 .execute();
     }
 
+    @Test
+    public void validateItems() throws Exception
+    {
+        new AppValidate()
+                .setLogger(new JULLogger(Logger.getLogger(AppValidateTest.class.getName())))
+                .setProjectPath(path.toAbsolutePath().toString())
+                .setCheckQueryPath("entity.All records")
+                .setDdlPath("entity")
+                .setCheckRoles(true)
+                .execute();
+    }
+
 }
