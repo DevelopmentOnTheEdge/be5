@@ -88,7 +88,13 @@ public class CellFormatter
                     String vals = linkProperties.get("using");
                     if(cols != null && vals != null)
                     {
-                        url = url.named(EntryStream.zip(cols.split(","), vals.split(",")).mapValues(varResolver::resolve).toMap());
+                        String[] colsArr = cols.split(",");
+                        String[] valuesArr = vals.split(",");
+                        for (int i=0;i<colsArr.length;i++)
+                        {
+                            String resolveValue = varResolver.resolve(valuesArr[i]);
+                            if(resolveValue != null)url = url.named(colsArr[i], resolveValue);
+                        }
                     }
                     cell.options.put(DatabaseConstants.COL_ATTR_LINK, Collections.singletonMap("url", url.toString()));
                 }
