@@ -77,4 +77,12 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
                 operationService, meta, userAwareMeta, entity);
     }
 
+    /**
+     * add for groovy
+     */
+    public EntityModel getAt( String entityName )
+    {
+        return getEntity(entityName);
+    }
+
 }
