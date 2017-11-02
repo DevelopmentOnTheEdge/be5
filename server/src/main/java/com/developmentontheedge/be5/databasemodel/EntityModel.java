@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.databasemodel;
 
+import com.developmentontheedge.beans.DynamicPropertySet;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 /**
  * 
@@ -60,7 +61,7 @@ public interface EntityModel<R extends RecordModel> {
      * and key value is the column value.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #addForce( Map )}
+     * This method calls {@link #add( DynamicPropertySet )}
      * @param values map with column names and values
      * @return generated record identify number
      */
@@ -70,10 +71,10 @@ public interface EntityModel<R extends RecordModel> {
      * Adds record into database from map, where key is the column name
      * and key value is the column value.<br>
      * This method may not contain any checks, it's just the method implementation.
-     * @param values map with column names and values
+     * @param dps DynamicPropertySet
      * @return generated record identify number
      */
-    String addForce(Map<String, ? super Object> values);
+    String add(DynamicPropertySet dps);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -112,7 +113,7 @@ public interface EntityModel<R extends RecordModel> {
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( String, Map )}
+     * This method calls {@link #set( String, Map )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
@@ -123,7 +124,7 @@ public interface EntityModel<R extends RecordModel> {
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #setForce( String, Map )}
+     * This method calls {@link #set( String, DynamicPropertySet )}
      * @param id identify number of record
      * @param values column names and values
      */
@@ -139,7 +140,7 @@ public interface EntityModel<R extends RecordModel> {
      * @param id identify number of record
      * @param values new column names and values
      */
-    void setForce(String id, Map<String, ? super Object> values);
+    void set(String id, DynamicPropertySet values);
 
     //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 

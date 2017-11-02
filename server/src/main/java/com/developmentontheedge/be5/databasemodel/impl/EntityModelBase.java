@@ -116,7 +116,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     public String add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
-        return addForce( values );
+        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
+
+        return add( dps );
     }
 
     @Override
@@ -161,7 +163,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
         Objects.requireNonNull(value);
-        setForce( id, Collections.singletonMap( propertyName, value ) );
+        this.set( id, Collections.singletonMap( propertyName, value ) );
     }
 
     @Override
@@ -279,11 +281,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    final public String addForce( Map<String, ? super Object> values )
+    final public String add( DynamicPropertySet dps )
     {
-        Objects.requireNonNull(values);
-
-        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
+        Objects.requireNonNull(dps);
 
         validator.checkErrorAndCast(dps);
         dpsHelper.checkDpsColumns(entity, dps);
@@ -299,7 +299,10 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
-        setForce( id, values );
+
+        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
+
+        this.set( id, dps );
     }
 
 //    @Override
@@ -311,14 +314,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 //    }
 
     @Override
-    final public void setForce( String id, Map<String, ? super Object> values )
+    public void set(String id, DynamicPropertySet dps )
     {
         Objects.requireNonNull(id);
-        Objects.requireNonNull(values);
+        Objects.requireNonNull(dps);
 
         Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
-
-        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
 
         validator.checkErrorAndCast(dps);
         dpsHelper.addUpdateSpecialColumns(entity, dps);
