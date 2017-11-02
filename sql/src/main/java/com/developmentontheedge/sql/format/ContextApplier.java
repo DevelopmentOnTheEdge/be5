@@ -194,16 +194,21 @@ public class ContextApplier
             String name = subQuery.getQueryName();
             if( name == null )
             {
-                throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
+                subQuery.addChild(new AstStringConstant("Empty subQuery without queryName parameter"));
+                return;
+                //throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
             }
-            String entity = subQuery.getEntityName();
-            String subQueryText = context.resolveQuery( entity, name );
-            if( subQueryText == null )
+            else
             {
-                throw new IllegalStateException( "Unable to resolve subquery: " + ( entity == null ? "" : entity + "." ) + name );
+                String entity = subQuery.getEntityName();
+                String subQueryText = context.resolveQuery(entity, name);
+                if (subQueryText == null)
+                {
+                    throw new IllegalStateException("Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
+                }
+                AstStart start = SqlQuery.parse(subQueryText);
+                subQuery.addChild(start.getQuery());
             }
-            AstStart start = SqlQuery.parse( subQueryText );
-            subQuery.addChild( start.getQuery() );
         }
 
         if( subQuery.getOutColumns() != null )
@@ -221,7 +226,8 @@ public class ContextApplier
             Map<ColumnRef, String> conditions = new HashMap<>();
             for (int i = 0; i < keys.length; i++)
             {
-                conditions.put(ColumnRef.resolve(subQuery.getQuery(), keys[i]), "<var:" + valProps[i] + "/>");
+                //ColumnRef.resolve(subQuery.getQuery(), keys[i])
+                conditions.put(new ColumnRef(null, keys[i]), "<var:" + valProps[i] + "/>");
             }
             new FilterApplier().addFilter(subQuery.getQuery(), conditions);
         }
