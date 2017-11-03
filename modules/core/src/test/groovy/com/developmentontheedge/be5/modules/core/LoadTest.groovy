@@ -29,6 +29,6 @@ class LoadTest extends Be5ProjectDBTest
     @Test
     void validate()
     {
-        new AppValidate().setProjectPath(new File(".").getCanonicalPath()).execute()
+        new AppValidate().setBe5ProjectPath("./").execute()
     }
 }

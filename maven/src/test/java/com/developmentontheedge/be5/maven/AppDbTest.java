@@ -9,7 +9,7 @@ public class AppDbTest extends TestUtils
     public void createDb() throws Exception
     {
         new AppDb()
-                .setProjectPath(path.toString())
+                .setBe5ProjectPath(path.toString())
                 .setProfileName(profileTestMavenPlugin)
                 .execute();
     }
