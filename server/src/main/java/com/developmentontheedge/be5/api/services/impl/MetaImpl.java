@@ -306,6 +306,12 @@ public class MetaImpl implements Meta
         return operation;
     }
 
+    @Override
+    public Operation getOperationIgnoringRoles(Entity entity, String name)
+    {
+        return entity.getOperations().get(name);
+    }
+
     /*
      * (non-Javadoc)
      * 

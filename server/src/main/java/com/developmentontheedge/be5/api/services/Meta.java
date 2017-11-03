@@ -46,6 +46,8 @@ public interface Meta
 
     Operation getOperation(Entity entity, String name, List<String> roles);
 
+    Operation getOperationIgnoringRoles(Entity entity, String name);
+
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
