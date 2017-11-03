@@ -237,13 +237,19 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
         return me();
     }
 
-    public  T setProjectPath(String path)
+    public T setProjectPath(String path)
     {
         projectPath = Paths.get(path).toFile();
         return me();
     }
 
-    public  T setProfileName(String connectionProfileName)
+    public T setProjectPath(Path path)
+    {
+        projectPath = path.toFile();
+        return me();
+    }
+
+    public T setProfileName(String connectionProfileName)
     {
         this.connectionProfileName = connectionProfileName;
         return me();

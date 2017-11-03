@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelCollection
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Test
 
+
 import static org.junit.Assert.assertEquals
 
 
@@ -28,6 +29,6 @@ class LoadTest extends Be5ProjectDBTest
     @Test
     void validate()
     {
-        new AppValidate().setProjectPath("./").execute()
+        new AppValidate().setProjectPath(new File(".").getCanonicalPath()).execute()
     }
 }
