@@ -32,8 +32,6 @@ import com.google.common.collect.Iterables;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import static com.developmentontheedge.be5.servlet.TemplateProcessor.htmlTemplateEngine;
-
 
 public class MainServlet extends HttpServlet
 {
@@ -94,8 +92,13 @@ public class MainServlet extends HttpServlet
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
         {
-            //processTemplate(request, res);
-            res.sendError(Be5Exception.unknownComponent(requestUri));
+            String templateComponentID = "templateProcessor";
+            if(!injector.hasComponent(templateComponentID))
+            {
+                templateComponentID = "defaultTemplateProcessor";
+            }
+
+            runComponent(templateComponentID, new RequestImpl(request, requestUri, simplify(parameters)), res);
             return;
         }
 
@@ -108,40 +111,18 @@ public class MainServlet extends HttpServlet
         }
 
         String subRequestUri = Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
-        Request req = new RequestImpl(request, subRequestUri, simplify(parameters));
+        String componentId = uriParts[ind + 1];
 
+        runComponent(componentId, new RequestImpl(request, subRequestUri, simplify(parameters)), res);
+    }
+
+    void runComponent(String componentId, Request req, Response res)
+    {
         if (UserInfoHolder.getUserInfo() == null)
         {
             injector.getLoginService().initGuest(req);
         }
 
-        String componentId = uriParts[ind + 1];
-
-        runComponent(componentId, req, res);
-    }
-
-    private void processTemplate(HttpServletRequest request, Response res)
-    {
-        // This prevents triggering engine executions for resource URLs
-        if (request.getRequestURI().startsWith("/static")) {
-            return;
-        }
-
-        TemplateEngine textTemplateEngine  = htmlTemplateEngine();
-
-        Context context = new Context();
-        context.setVariable("name", "Name");
-        context.setVariable("url", "http://url");
-
-        res.sendHtml(textTemplateEngine.process("template.html", context));
-
-
-        //ITemplateEngine templateEngine = this.application.getTemplateEngine();
-    }
-
-
-    void runComponent(String componentId, Request req, Response res)
-    {
         try
         {
             runRequestPreprocessors(componentId, req, res);

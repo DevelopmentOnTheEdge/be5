@@ -175,9 +175,15 @@ public class Be5Injector implements Injector
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean hasComponent(String componentId)
+    {
+        return loadedClasses.containsKey(componentId);
+    }
+
     private Class<?> getComponentClass(String componentId)
     {
-        if(!loadedClasses.containsKey(componentId)){
+        if(!hasComponent(componentId)){
             if("login".equals(componentId) || "logout".equals(componentId)){
                 throw Be5Exception.unknownComponent("Component '"+componentId+"' is not specified in 'context.yaml'. " +
                         "You can specify the default implementation, for example: be5/modules/core/src/test/resources/context.yaml.");

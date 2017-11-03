@@ -130,5 +130,7 @@ public interface Injector
 
     List<RequestPreprocessor> getRequestPreprocessors();
 
+    boolean hasComponent(String componentId);
+
     void injectAnnotatedFields(Object obj);
 }

@@ -11,6 +11,7 @@ context:
   - categories:       com.developmentontheedge.be5.components.Categories
   - queryBuilder:     com.developmentontheedge.be5.components.QueryBuilder
   - download:         com.developmentontheedge.be5.components.DownloadComponent
+  - defaultTemplateProcessor:   com.developmentontheedge.be5.components.TemplateProcessor
   services:
   - com.developmentontheedge.be5.api.services.impl.LogConfigurator
   - com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
