@@ -16,6 +16,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -93,17 +94,44 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
 
     public void setResultRedirectThisOperation()
     {
-        setResult(getInfo().redirectThisOperation(records));
+        setResult(getInfo().redirectThisOperation(records, getRedirectParams()));
     }
 
     public void setResultRedirectThisOperationNewId(Object newID)
     {
-        setResult(getInfo().redirectThisOperationNewId(newID));
+        setResult(getInfo().redirectThisOperationNewId(newID, getRedirectParams()));
     }
 
     public Object getLayout()
     {
         return Collections.emptyMap();
+    }
+
+    private Map<String, String> redirectParams = new HashMap<>();
+
+    @Override
+    public Map<String, String> getRedirectParams()
+    {
+        return redirectParams;
+    }
+
+    /**
+     * Puts additional parameters for redirect OperationResult.
+     * @param extra parameters map
+     */
+    public void addRedirectParams( Map<String, String> extra )
+    {
+        redirectParams.putAll( extra );
+    }
+
+    /**
+     * Puts additional parameter for redirect OperationResult.
+     * @param name  parameter name
+     * @param value parameter value
+     */
+    public void addRedirectParam( String name, String value )
+    {
+        addRedirectParams( Collections.singletonMap( name, value ) );
     }
 
 }

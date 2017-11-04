@@ -262,6 +262,7 @@ public class OperationServiceImpl implements OperationService
                     new HashUrl(FrontendConstants.TABLE_ACTION,
                             operation.getInfo().getEntityName(),
                             operation.getInfo().getQueryName())
+                        .named(operation.getRedirectParams())
                 ));
             }
 

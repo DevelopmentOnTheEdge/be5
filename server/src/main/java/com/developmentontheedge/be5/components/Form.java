@@ -42,7 +42,7 @@ public class Form implements Component
 //        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
         String link = (String) new OperationInfo(queryName, meta.getModel())
-                .redirectThisOperation(OperationServiceImpl.selectedRows(selectedRowsString))
+                .redirectThisOperation(OperationServiceImpl.selectedRows(selectedRowsString), Collections.emptyMap())
                 .getDetails();
         Either<FormPresentation, OperationResult> generate;
 

@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,9 +61,10 @@ public class OperationInfo
         return queryName;
     }
 
-    public OperationResult redirectThisOperation(String[] records)
+    public OperationResult redirectThisOperation(String[] records, Map<String, String> redirectParams)
     {
-        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName());
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
+                .named(redirectParams);
         if(records.length > 0)
         {
             hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
@@ -71,9 +73,10 @@ public class OperationInfo
         return OperationResult.redirect(hashUrl);
     }
 
-    public OperationResult redirectThisOperationNewId(Object newID)
+    public OperationResult redirectThisOperationNewId(Object newID, Map<String, String> redirectParams)
     {
         HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
+                .named(redirectParams)
                 .named("selectedRows", newID.toString());
 
         return OperationResult.redirect(hashUrl);
