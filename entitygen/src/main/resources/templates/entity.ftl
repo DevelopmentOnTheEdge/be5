@@ -1,6 +1,10 @@
 package ${packageName};
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
@@ -16,9 +20,10 @@ import java.util.Map;
 
 public class ${entityClassName} extends EntityModelBase
 {
-    public ${entityClassName}(SqlService db, DpsHelper dpsHelper, Validator validator, Entity entity)
+    public ${entityClassName}(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
+                    OperationService operationService, Meta meta, UserAwareMeta userAwareMeta, Entity entity)
     {
-        super(db, dpsHelper, validator, entity);
+        super(db, dpsHelper, validator, operationHelper, operationService, meta, userAwareMeta, entity);
     }
 
     public String insert(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ${entityClassName}Model.class) final Closure config)

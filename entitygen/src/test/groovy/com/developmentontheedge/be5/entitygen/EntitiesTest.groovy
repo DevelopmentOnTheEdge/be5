@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.entitygen
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper
+import com.developmentontheedge.be5.entitygen.generate.EntityGenEntityModels
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
@@ -19,46 +20,46 @@ import static org.mockito.Mockito.when
 @TypeChecked
 class EntitiesTest extends Be5ProjectTest
 {
-//    @Inject EntityGenEntityModels entities
-//    @Inject DpsHelper dpsHelper
-//
-//    @Test
-//    void insert()
-//    {
-//        def dayTime = new Timestamp(DateUtils.curDay().getTime())
-//        when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
-//
-//        String id = entities.classifications.insert {
-//            categoryID = 5L
-//            recordID   = "dfsdf"
-//            creationDate___ = dayTime
-//        }
-//
-//        entities.systemSettings.insert {
-//            section_name  = "system"
-//            setting_name  = "test"
-//            setting_value = "true"
-//        }
-//
-//        entities.user_roles.insert {
-//            user_name = "user"
-//            role_name = "Tester"
-//        }
-//
-//        verify(SqlServiceMock.mock).insert(
-//                eq("INSERT INTO classifications (recordID, categoryID, creationDate___, whoInserted___) VALUES (?, ?, ?, ?)"),
-//                eq("dfsdf"),
-//                eq(5L),
-//                any(Timestamp),
-//                eq("Guest")
-//        )
-//
-//        assertEquals "123", id
-//    }
-//
-//    @Test
-//    void findOne()
-//    {
-//        //entities.provinces.findOne(4)
-//    }
+    @Inject EntityGenEntityModels entities
+    @Inject DpsHelper dpsHelper
+
+    @Test
+    void insert()
+    {
+        def dayTime = new Timestamp(DateUtils.curDay().getTime())
+        when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
+
+        String id = entities.classifications.insert {
+            categoryID = 5L
+            recordID   = "dfsdf"
+            creationDate___ = dayTime
+        }
+
+        entities.systemSettings.insert {
+            section_name  = "system"
+            setting_name  = "test"
+            setting_value = "true"
+        }
+
+        entities.user_roles.insert {
+            user_name = "user"
+            role_name = "Tester"
+        }
+
+        verify(SqlServiceMock.mock).insert(
+                eq("INSERT INTO classifications (recordID, categoryID, creationDate___, whoInserted___) VALUES (?, ?, ?, ?)"),
+                eq("dfsdf"),
+                eq(5L),
+                any(Timestamp),
+                eq("Guest")
+        )
+
+        assertEquals "123", id
+    }
+
+    @Test
+    void findOne()
+    {
+        //entities.provinces.findOne(4)
+    }
 }
