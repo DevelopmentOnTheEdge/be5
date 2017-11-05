@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.operation.OperationContext
 import groovy.transform.TypeChecked
 
 
-@TypeChecked
 class TestOperation extends GOperationSupport implements Operation
 {
 
@@ -33,7 +32,7 @@ class TestOperation extends GOperationSupport implements Operation
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
-        database.getEntity("aasd") << [
+        database.testtableAdmin << [
             "test1": dps["test1"],
             "test2": dps["test2"]
         ]

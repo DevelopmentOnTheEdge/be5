@@ -3,3 +3,9 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.impl.Datab
     property(name: "testtableAdmin", type: 'com.developmentontheedge.be5.databasemodel.EntityModel')
 
 }
+
+contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityModel")) {
+
+    method name: 'leftShift', type: 'java.lang.String', params: [values: Map]
+
+}

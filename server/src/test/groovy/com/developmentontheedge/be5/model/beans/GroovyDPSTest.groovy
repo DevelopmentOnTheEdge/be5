@@ -59,7 +59,9 @@ class GroovyDPSTest extends Be5ProjectTest
 
         assertEquals(123, dps["reasonMulti"])
 
-        dps["input3"] = "newValue"
+        //dps["input3"] = "newValue"
+        dps.edit("input3") { value = "newValue" }
+
         assertEquals("newValue", dps["input3"])
 
         assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}},'/input2':{'displayName':'input2','canBeNull':true},'/input3':{'displayName':'Input 3'}},'order':['/reasonMulti','/input2','/input3']}",

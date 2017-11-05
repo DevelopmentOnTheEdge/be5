@@ -14,10 +14,10 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         return super.getValue(name);
     }
 
-    public void putAt(String name, Object value)
-    {
-        super.setValue(name, value);
-    }
+//    public void putAt(String name, Object value)
+//    {
+//        super.setValue(name, value);
+//    }
 
     public DynamicProperty add(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
