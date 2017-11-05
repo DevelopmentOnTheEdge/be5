@@ -78,8 +78,9 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     }
 
     /**
-     * add for groovy
+     * TODO generate and use DatabaseModel.gdsl
      */
+    @Deprecated
     public EntityModel getAt( String entityName )
     {
         return getEntity(entityName);

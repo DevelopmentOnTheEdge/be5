@@ -1,0 +1,7 @@
+contribute(context(ctype: "com.developmentontheedge.beans.DynamicPropertySetSupport")) {
+
+    method name: 'getAt', type: 'java.lang.Object', params: [name: String]
+
+    method name: 'add', type: 'java.lang.Object', params: [name: String]
+
+}
