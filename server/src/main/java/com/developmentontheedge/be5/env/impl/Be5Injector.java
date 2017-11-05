@@ -21,6 +21,7 @@ import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.gson.Gson;
 
@@ -38,8 +39,19 @@ public class Be5Injector implements Injector
 
     private final ClassToInstanceMap instantiatedServices = new ClassToInstanceMap();
 
+    private final Stage stage;
+
     public Be5Injector(Binder binder)
     {
+        this.stage = Stage.DEVELOPMENT;
+        binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
+        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
+        getLogger();
+    }
+
+    public Be5Injector(Stage stage, Binder binder)
+    {
+        this.stage = stage;
         binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
         log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
         getLogger();
@@ -250,4 +262,9 @@ public class Be5Injector implements Injector
         }
     }
 
+    @Override
+    public Stage getStage()
+    {
+        return stage;
+    }
 }

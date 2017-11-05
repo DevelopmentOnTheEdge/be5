@@ -25,8 +25,11 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
+import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
+import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import org.thymeleaf.TemplateEngine;
@@ -47,7 +50,10 @@ public class MainServlet extends HttpServlet
     public void init(ServletConfig config) throws ServletException
     {
         super.init(config);
-        injector = Be5.createInjector();
+        boolean mode = MainServlet.class.getClassLoader().getResource("dev.yaml") != null;
+
+        injector = Be5.createInjector(mode ? Stage.DEVELOPMENT : Stage.PRODUCTION, new YamlBinder());
+
         injector.getDatabaseService();
     }
 

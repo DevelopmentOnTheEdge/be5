@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
@@ -79,7 +80,7 @@ public class ProjectProviderImpl implements ProjectProvider
             }
 
             //todo move to ModuleLoader2 - find dev.yaml only in current project,
-            if (ProjectProviderImpl.class.getClassLoader().getResource("dev.yaml") != null)
+            if (injector.getStage() == Stage.DEVELOPMENT)
             {
                 if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
                 watcher = new WatchDir(initModulesMap)

@@ -133,4 +133,6 @@ public interface Injector
     boolean hasComponent(String componentId);
 
     void injectAnnotatedFields(Object obj);
+
+    Stage getStage();
 }
