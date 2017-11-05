@@ -14,13 +14,13 @@ import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class AutocompleteTest extends Be5ProjectTest
+class DynamicPropertyGBuilderTest extends Be5ProjectTest
 {
+    DynamicPropertySet dps = new DynamicPropertySetSupport()
+
     @Test
     void test()
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport()
-
         add (dps) {
             name          = "reasonMulti"
             TYPE          =  Integer
