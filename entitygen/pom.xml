@@ -40,20 +40,36 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                        <id>GdslGenegator</id>
                         <goals>
                             <goal>java</goal>
                         </goals>
                         <phase>generate-test-sources</phase>
+                        <configuration>
+                            <mainClass>com.developmentontheedge.be5.entitygen.GdslGenegator</mainClass>
+                            <arguments>
+                                <argument>${project.build.directory}/generated-test-sources/java/</argument>
+                                <argument/>
+                                <argument>EntityGen</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Main</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <phase>generate-test-sources</phase>
+                        <configuration>
+                            <mainClass>com.developmentontheedge.be5.entitygen.Main</mainClass>
+                            <arguments>
+                                <argument>${project.build.directory}/generated-test-sources/java/</argument>
+                                <argument>${project.groupId}</argument>
+                                <argument>EntityGen</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>com.developmentontheedge.be5.entitygen.Main</mainClass>
-                    <arguments>
-                        <argument>${project.build.directory}/generated-test-sources/java/</argument>
-                        <argument>${project.groupId}</argument>
-                        <argument>EntityGen</argument>
-                    </arguments>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -57,7 +57,7 @@ public class Main
             System.out.println("File '"+file.toString()+"' not found, generate...");
             injector = Be5.createInjector(new YamlBinder(YamlBinder.Mode.serverOnly));
 
-            createClass(generatedSourcesPath,"","package-info", cfg.getTemplate("root.ftl"), Collections.emptyMap());
+            Utils.createFile(generatedSourcesPath,"","package-info.java", cfg.getTemplate("root.ftl"), Collections.emptyMap());
 
             createEntities(generatedSourcesPath, packageName + ".entities", cfg);
             createService(generatedSourcesPath, packageName, serviceClassName, cfg);
@@ -114,7 +114,7 @@ public class Main
                 columnsInfos.add(new ColumnsInfo(columnDef.getName(), meta.getColumnType(columnDef).getSimpleName()));
             }
             input.put("columns", columnsInfos);
-            createClass(generatedSourcesPath, packageName, entityClassName, entityTpl, input);
+            Utils.createFile(generatedSourcesPath, packageName, entityClassName+".java", entityTpl, input);
             entityCount++;
         }
     }
@@ -138,27 +138,7 @@ public class Main
             entityNames.add(entity.getName());
         }
         input.put("entityNames", entityNames);
-        createClass(generatedSourcesPath, packageName, serviceClassName, serviceTpl, input);
-    }
-
-    private void createClass(String generatedSourcesPath, String packageName, String className,
-                                    Template template, Map<String, Object> input) throws IOException
-    {
-        Paths.get(generatedSourcesPath + packageName.replace(".", "/")).toFile().mkdirs();
-        Writer fileWriter = new FileWriter(new File(generatedSourcesPath + packageName.replace(".", "/")+"/"+className + ".java"));
-
-        try
-        {
-            template.process(input, fileWriter);
-        }
-        catch (TemplateException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            fileWriter.close();
-        }
+        Utils.createFile(generatedSourcesPath, packageName, serviceClassName+".java", serviceTpl, input);
     }
 
     public class ColumnsInfo{
