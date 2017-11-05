@@ -128,7 +128,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return ( ( EntityModel )object ).add( values );
     }
 
-    public static RecordModel call( EntityModel self, Map<String, String> values )
+    public static RecordModel call( EntityModel self, Map<String, ? super Object> values )
     {
         return self.get( values );
     }
