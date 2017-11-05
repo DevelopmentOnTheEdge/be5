@@ -6,7 +6,13 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.impl.Datab
 
 contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityModel")) {
 
-method name: 'leftShift', type: 'java.lang.String', params: [values: Map]
+    method name: 'leftShift', type: 'java.lang.String', params: [values: 'Map<String, ? super Object>']
+
+    method name: 'getAt', type: 'com.developmentontheedge.be5.databasemodel.RecordModel', params: [id: String]
+
+    method name: 'getAt', type: 'com.developmentontheedge.be5.databasemodel.RecordModel', params: [id: long]
+
+    method name: 'putAt', type: 'void', params: [id: String, values: 'Map<String, ? super Object>']
 
 }
 
