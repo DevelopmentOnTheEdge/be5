@@ -2,15 +2,12 @@ package com.developmentontheedge.be5.model.beans;
 
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import org.codehaus.groovy.runtime.GStringImpl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -30,19 +27,48 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         this.owner = owner;
     }
 
-    public Object call(String name)
+//в TypeChecked не компилится - тогда лучше использовать $columnName - как в be3
+//    public Object call(String name)
+//    {
+//        return super.getValue(name);
+//    }
+
+    public DynamicProperty getAt(String name)
     {
         return super.getProperty(name);
     }
 
-    public Object getAt(String name)
+    /**
+     * метод со сложным поведением, без тулинга
+     */
+    @Deprecated
+    public void putAt(String propertyName, Object value)
     {
-        return super.getValue(name);
-    }
+        //DynamicPropertySet dps = ( ( T )object );
+        if( value instanceof Map )
+        {
+            Map map = ( Map )value;
+            map.put( "name", propertyName );
+            DynamicPropertySetMetaClass.leftShift(this, map );
+            return;
+        }
+        if( value == null )
+        {
+            DynamicProperty dp = new DynamicProperty( propertyName, String.class );
+            dp.setValue( null );
+            add( dp );
+            return;
+        }
 
-    public void putAt(String name, Object value)
-    {
-        super.setValue(name, value);
+        if( getProperty( propertyName ) != null )
+        {
+            setValue( propertyName, value );
+            return;
+        }
+
+        DynamicProperty dp = new DynamicProperty( propertyName, value.getClass() );
+        dp.setValue( value );
+        add( dp );
     }
 
     public DynamicProperty add(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)

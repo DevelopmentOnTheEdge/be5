@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.operation.OperationContext
 import java.sql.Date
 import java.text.SimpleDateFormat
 
+
 class TestGroovyOp extends GOperationSupport implements Operation
 {
     @Inject private UserAwareMeta userAwareMeta
@@ -50,8 +51,9 @@ class TestGroovyOp extends GOperationSupport implements Operation
                 value                  : ["vacation","sick"] as String[]
         ]
 
-        //todo? dps["beginDate"] << [READ_ONLY: true] conflict in old return property
-        dps.edit("beginDate") { READ_ONLY = true }
+        //@Deprecated
+        dps["beginDate"] << [READ_ONLY: true]
+        //dps.edit("beginDate") { READ_ONLY = true }
 
 //        dps.add {
 //            name = "name"
