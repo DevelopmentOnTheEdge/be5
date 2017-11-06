@@ -92,6 +92,8 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 
         assertEquals "12,yes,Regional,null,null",
                 db.select("SELECT * FROM testTags WHERE CODE = ?", {rs -> resultSetToString(rs)}, "12")
+
+        database.getEntity("testTags").remove("12")
     }
 
     @Test(expected = NumberFormatException.class)

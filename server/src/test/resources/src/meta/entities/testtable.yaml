@@ -28,6 +28,7 @@ testtable:
       roles: SystemDeveloper
       code: |-
          SELECT
+            123 as "___ID",
             t.name AS "Name",
             '<quick visible="true"/>;<link using="___ID" columns="ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
           FROM

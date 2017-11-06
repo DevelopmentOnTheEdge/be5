@@ -3,12 +3,10 @@ package com.developmentontheedge.be5.api.components.impl
 import com.developmentontheedge.be5.api.Request
 import com.developmentontheedge.be5.api.Response
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.components.RestApiConstants
 import com.developmentontheedge.be5.components.impl.DocumentGenerator
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
-import com.google.common.collect.ImmutableMap
 import org.junit.Test
 
 
@@ -47,7 +45,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         assertEquals("{'cells':[{" +
                 "'content':'tableModelTest'," +
                 "'options':{" +
-                    "'link':{'url':'table/testtable/Test 1D unknown/ID=1'}," +
+                    "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," +
                     "'quick':{'visible':'true'}" +
                 "}}]}", oneQuotes(jsonb.toJson(testtable.getRows().get(0))))
     }
