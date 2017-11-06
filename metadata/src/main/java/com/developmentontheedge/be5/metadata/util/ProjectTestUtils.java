@@ -6,9 +6,9 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class TestProjectUtils
+public class ProjectTestUtils
 {
-    public Project getProject(String name)
+    public static Project getProject(String name)
     {
         Project project = new Project( name );
 
@@ -17,7 +17,7 @@ public class TestProjectUtils
         return project;
     }
 
-    public TableDef createScheme(Entity entity)
+    public static TableDef createScheme(Entity entity)
     {
         TableDef scheme = new TableDef( entity );
         DataElementUtils.save(scheme);
@@ -37,7 +37,7 @@ public class TestProjectUtils
         return scheme;
     }
 
-    public Operation createOperation(Entity entity)
+    public static Operation createOperation(Entity entity)
     {
         Operation operation = Operation.createOperation( "op", Operation.OPERATION_TYPE_GROOVY, entity );
         DataElementUtils.save( operation );
@@ -48,7 +48,7 @@ public class TestProjectUtils
         return operation;
     }
 
-    public Query createQuery(Entity entity)
+    public static Query createQuery(Entity entity)
     {
             Query query = new Query( "All records", entity );
         query.getRoles().add( '@'+SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP );
@@ -59,7 +59,7 @@ public class TestProjectUtils
         return query;
     }
 
-    public Entity createEntity(Project project, String entityName, String primaryKeyName)
+    public static Entity createEntity(Project project, String entityName, String primaryKeyName)
     {
         Entity entity = new Entity( entityName, project.getApplication(), EntityType.TABLE );
         entity.setPrimaryKey( primaryKeyName );
@@ -68,7 +68,7 @@ public class TestProjectUtils
         return entity;
     }
 
-    public void createScript(Project project, String sql)
+    public static void createScript(Project project, String sql)
     {
         FreemarkerScript script = new FreemarkerScript("Post-db",
                 project.getApplication().getFreemarkerScripts());
@@ -76,7 +76,7 @@ public class TestProjectUtils
         DataElementUtils.save( script );
     }
 
-    public void createH2Profile(Project project, String name)
+    public static void createH2Profile(Project project, String name)
     {
         BeConnectionProfile profile = new BeConnectionProfile(name, project.getConnectionProfiles().getLocalProfiles());
         profile.setConnectionUrl("jdbc:h2:~/"+ name);

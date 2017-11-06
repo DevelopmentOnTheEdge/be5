@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.metadata.model.*;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import com.developmentontheedge.be5.metadata.util.TestProjectUtils;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -22,7 +22,6 @@ public abstract class TestUtils
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    TestProjectUtils utils = new TestProjectUtils();
     Path path;
     Project project;
 
@@ -32,14 +31,14 @@ public abstract class TestUtils
     public void setUp() throws Exception
     {
         path = tmp.newFolder().toPath();
-        project = utils.getProject("test");
-        Entity entity = utils.createEntity( project, "entity", "ID" );
-        utils.createScheme( entity );
-        utils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
-        utils.createH2Profile(project, "profileTestMavenPlugin");
+        project = ProjectTestUtils.getProject("test");
+        Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
+        ProjectTestUtils.createScheme( entity );
+        ProjectTestUtils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
+        ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
 
-        utils.createQuery( entity );
-        utils.createOperation( entity );
+        ProjectTestUtils.createQuery( entity );
+        ProjectTestUtils.createOperation( entity );
 
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = createModule(project, "testModule", modulePath);
@@ -59,9 +58,9 @@ public abstract class TestUtils
     private Project createModule(Project project, String moduleName, Path path) throws Exception
     {
         Project module = new Project( moduleName, true);
-        Entity entity = utils.createEntity( module, "moduleEntity", "ID" );
-        utils.createScheme( entity );
-        utils.createScript( module, "delete from moduleEntity;\nINSERT INTO moduleEntity (name) VALUES ('foo')" );
+        Entity entity = ProjectTestUtils.createEntity( module, "moduleEntity", "ID" );
+        ProjectTestUtils.createScheme( entity );
+        ProjectTestUtils.createScript( module, "delete from moduleEntity;\nINSERT INTO moduleEntity (name) VALUES ('foo')" );
         Serialization.save( module, path );
 
         Module appModule = new Module( moduleName, project.getModules() );

@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.TestProjectUtils;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import one.util.streamex.StreamEx;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,15 +25,13 @@ public class SerializationTest
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    private TestProjectUtils utils = new TestProjectUtils();
-
     @Test
     public void testSerializationBasics() throws IOException, ProjectSaveException, ProjectLoadException
     {
         Path path = tmp.newFolder().toPath();
-        Project project = utils.getProject("test");
-        Entity entity = utils.createEntity( project, "entity", "ID" );
-        TableDef scheme = utils.createScheme(entity);
+        Project project = ProjectTestUtils.getProject("test");
+        Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
+        TableDef scheme = ProjectTestUtils.createScheme(entity);
 
         //only for test SqlColumnType getType( Collection<ColumnDef> stack )
         ColumnDef column3 = new ColumnDef( "column3", scheme.getColumns() );
@@ -41,8 +39,8 @@ public class SerializationTest
         column3.setColumnsTo( "ID" );
         DataElementUtils.save(column3);
 
-        utils.createQuery( entity );
-        utils.createOperation( entity );
+        ProjectTestUtils.createQuery( entity );
+        ProjectTestUtils.createOperation( entity );
 
         Serialization.save( project, path );
         assertEquals(path, project.getLocation());

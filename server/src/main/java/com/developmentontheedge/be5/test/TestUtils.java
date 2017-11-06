@@ -7,10 +7,8 @@ import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -33,6 +31,7 @@ import java.util.stream.Collectors;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 public abstract class TestUtils extends DynamicPropertyGBuilder
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
@@ -53,12 +52,7 @@ public abstract class TestUtils extends DynamicPropertyGBuilder
     {
         if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
         {
-            BeConnectionProfile profile = new BeConnectionProfile(profileForIntegrationTests, project.getConnectionProfiles().getLocalProfiles());
-            profile.setConnectionUrl("jdbc:h2:~/"+ profileForIntegrationTests);
-            profile.setUsername("sa");
-            profile.setPassword("");
-            profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
-            DataElementUtils.save(profile);
+            ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);
             project.setConnectionProfileName(profileForIntegrationTests);
         }
     }

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
-import com.developmentontheedge.be5.metadata.util.TestProjectUtils;
+import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -23,14 +23,13 @@ public class ModuleLoader2Test
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    private TestProjectUtils testProjectUtils = new TestProjectUtils();
     private Path path;
 
     @Before
     public void setUp() throws Exception
     {
         path = tmp.newFolder().toPath();
-        Serialization.save( testProjectUtils.getProject("test"), path );
+        Serialization.save( ProjectTestUtils.getProject("test"), path );
     }
 
     @Test
