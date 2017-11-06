@@ -9,15 +9,23 @@ import groovy.lang.DelegatesTo;
 
 public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 {
+    private final Object owner;
+
+    public GDynamicPropertySetSupport(Object owner)
+    {
+        super();
+        this.owner = owner;
+    }
+
     public Object getAt(String name)
     {
         return super.getValue(name);
     }
 
-//    public void putAt(String name, Object value)
-//    {
-//        super.setValue(name, value);
-//    }
+    public void putAt(String name, Object value)
+    {
+        super.setValue(name, value);
+    }
 
     public DynamicProperty add(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
@@ -61,7 +69,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     private DPSAttributes getBuilder(Closure cl)
     {
         DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, this, this);
+        Closure code = cl.rehydrate(builder, owner, owner);
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
         code.call();
         return builder;

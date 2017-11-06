@@ -40,7 +40,7 @@ public abstract class GOperationSupport extends DynamicPropertyGBuilder implemen
     public Request request;
     public Session session;
 
-    public GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport();
+    public GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport(this);
 
     public static final String reloadControl = "_reloadcontrol_";
 
