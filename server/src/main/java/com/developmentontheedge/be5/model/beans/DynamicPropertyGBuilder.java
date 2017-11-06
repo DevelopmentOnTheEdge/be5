@@ -7,6 +7,10 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 
 
+/**
+ * remove, use com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
+ */
+@Deprecated
 public class DynamicPropertyGBuilder
 {
     public DynamicProperty add(DynamicPropertySet dynamicPropertySet,

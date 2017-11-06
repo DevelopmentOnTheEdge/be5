@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
 import com.developmentontheedge.be5.operations.SilentInsertOperation
+import com.developmentontheedge.beans.DynamicPropertySet
+import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 
 class OperationWithCanBeNull extends SilentInsertOperation implements Operation
@@ -11,6 +13,8 @@ class OperationWithCanBeNull extends SilentInsertOperation implements Operation
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+
         dps << [
                 name       : "CODE",
                 value      : presetValues.get("CODE")

@@ -4,16 +4,14 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
-import com.developmentontheedge.be5.api.services.QRecService;
-import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.QRecService;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
-import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,9 +37,8 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
     public Request request;
     public Session session;
 
-    public DynamicPropertySet dps = new DynamicPropertySetSupport();
-
     public static final String reloadControl = "_reloadcontrol_";
+    private final Map<String, String> redirectParams = new HashMap<>();
 
     @Override
     public final void initialize(OperationInfo operationInfo,
@@ -106,8 +103,6 @@ public abstract class OperationSupport extends DynamicPropertyGBuilder implement
     {
         return Collections.emptyMap();
     }
-
-    private Map<String, String> redirectParams = new HashMap<>();
 
     @Override
     public Map<String, String> getRedirectParams()

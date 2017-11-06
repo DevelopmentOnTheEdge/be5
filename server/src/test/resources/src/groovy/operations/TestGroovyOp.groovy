@@ -3,14 +3,14 @@ package src.groovy.operations
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
-import com.developmentontheedge.be5.operation.OperationSupport
 
 import java.sql.Date
 import java.text.SimpleDateFormat
 
-class TestGroovyOp extends OperationSupport implements Operation
+class TestGroovyOp extends GOperationSupport implements Operation
 {
     @Inject private UserAwareMeta userAwareMeta
 
@@ -50,7 +50,41 @@ class TestGroovyOp extends OperationSupport implements Operation
                 value                  : ["vacation","sick"] as String[]
         ]
 
-        dps["beginDate"] << [READ_ONLY: true]
+        //todo? dps["beginDate"] << [READ_ONLY: true] conflict in old return property
+        dps.edit("beginDate") { READ_ONLY = true }
+
+//        dps.add {
+//            name = "name"
+//            DISPLAY_NAME = "Имя"
+//            value = "Test"
+//        }
+//
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
+//        java.util.Date utilDate = df.parse("2017-07-01")
+//
+//        dps.add {
+//            name = "beginDate"
+//            DISPLAY_NAME = "Дата начала"
+//            TYPE = Date
+//            value = new Date(utilDate.getTime())
+//        }
+//
+//        dps.add {
+//            name = "reason"
+//            DISPLAY_NAME = "Причина снятия предыдущего работника"
+//            TAG_LIST_ATTR = [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][]
+//            value = "vacation"
+//        }
+//
+//        dps.add {
+//            name = "reasonMulti"
+//            DISPLAY_NAME = "Множественный выбор"
+//            MULTIPLE_SELECTION_LIST = true
+//            TAG_LIST_ATTR = [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][]
+//            value = ["vacation", "sick"] as String[]
+//        }
+//
+//        dps.edit("beginDate") { READ_ONLY = true }
 
         return dpsHelper.setValues(dps, presetValues)
     }

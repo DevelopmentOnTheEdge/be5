@@ -10,6 +10,8 @@ import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
+import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -203,10 +205,14 @@ public class OperationServiceImpl implements OperationService
 
         if(parameters instanceof DynamicPropertySet)
         {
-            ((OperationSupport)operation).dps = (DynamicPropertySet) parameters;
+            if(operation instanceof GOperationSupport)
+            {
+                ((GOperationSupport) operation).dps = (GDynamicPropertySetSupport) parameters;
+            }
+
             try
             {
-                validator.checkErrorAndCast(((OperationSupport)operation).dps);
+                validator.checkErrorAndCast((DynamicPropertySet) parameters);
             }
             catch (RuntimeException e)
             {

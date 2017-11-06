@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ObjectArrays;
 
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
 
 public class SilentEditOperation extends OperationSupport implements Operation
 {
+    private DynamicPropertySet dps = new DynamicPropertySetSupport();
+
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {

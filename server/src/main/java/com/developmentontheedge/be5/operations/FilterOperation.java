@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
+        DynamicPropertySet dps = (DynamicPropertySet) parameters;
         Map<String, String> params = new HashMap<>();
 
         for (DynamicProperty property : dps){

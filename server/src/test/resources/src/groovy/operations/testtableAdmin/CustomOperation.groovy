@@ -1,20 +1,24 @@
 package testtableAdmin
 
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
-import com.developmentontheedge.be5.operation.OperationSupport
 
 
-class CustomOperation extends OperationSupport implements Operation
+class CustomOperation extends GOperationSupport implements Operation
 {
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), ["name", "value"], presetValues)
+        dps = new GDynamicPropertySetSupport(dpsHelper.getDpsForColumns(getInfo().getEntity(), ["name", "value"], presetValues), this)
 
         def newCalculatedValue = '4'
 
-        dps["value"] << [value: newCalculatedValue, READ_ONLY: true]
+        dps.edit("value") {
+            value = newCalculatedValue
+            READ_ONLY = true
+        }
 
         return dps
     }

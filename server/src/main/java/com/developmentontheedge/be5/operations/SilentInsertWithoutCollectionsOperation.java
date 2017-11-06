@@ -4,12 +4,15 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Map;
 
 
 public class SilentInsertWithoutCollectionsOperation extends OperationSupport
 {
+    private DynamicPropertySet dps = new DynamicPropertySetSupport();
+
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
@@ -20,6 +23,8 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
+        dps = (DynamicPropertySet)parameters;
+
         Entity entity = getInfo().getEntity();
 
         dpsHelper.checkDpsColumns(entity, (DynamicPropertySet) parameters);
