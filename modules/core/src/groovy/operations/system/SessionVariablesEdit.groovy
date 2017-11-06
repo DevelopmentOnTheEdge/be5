@@ -1,11 +1,12 @@
 package system
 
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
-import com.developmentontheedge.be5.operation.OperationSupport
 
 
-class SessionVariablesEdit extends OperationSupport implements Operation
+class SessionVariablesEdit extends GOperationSupport implements Operation
 {
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
@@ -28,7 +29,7 @@ class SessionVariablesEdit extends OperationSupport implements Operation
         }
         else
         {
-            dps = dpsHelper.getDpsWithLabelANDNotSubmitted("Session variable '${records[0]}' not found")
+            dps = new GDynamicPropertySetSupport(dpsHelper.getDpsWithLabelANDNotSubmitted("Session variable '${records[0]}' not found"), this)
         }
 
         return dps

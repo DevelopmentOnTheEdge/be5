@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.databasemodel.EntityAccess;
@@ -17,6 +18,7 @@ import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -37,11 +39,9 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
         GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class );
         GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetDecorator.class );
 
-//        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetScriptable.class );
-//        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetLazy.class );
         GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
-//        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, JDBCRecordAdapterAsQuery.class );
-//        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, EntityRecordAdapter.class );
+
+        GroovyRegister.registerMetaClass( GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class );
     }
 
     private final SqlService sqlService;
