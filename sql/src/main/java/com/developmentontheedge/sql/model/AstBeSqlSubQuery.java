@@ -29,6 +29,11 @@ public class AstBeSqlSubQuery extends AstBeNode
         return this.children().select( AstQuery.class ).findFirst().orElse( null );
     }
 
+    public AstBeSqlVar getAstBeSqlVar()
+    {
+        return this.children().select( AstBeSqlVar.class ).findFirst().orElse( null );
+    }
+
     public Integer getLimit()
     {
         String limit = getParameter( "limit" );

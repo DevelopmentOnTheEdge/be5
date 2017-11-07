@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.developmentontheedge.sql.model.AstOrderingElement;
+import com.developmentontheedge.sql.model.SqlParser;
 import one.util.streamex.StreamEx;
 
 import com.developmentontheedge.sql.model.AstBeCondition;
@@ -82,8 +83,15 @@ public class ContextApplier
                 value = "null";
             }
 
-            constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
-                                                                           : new AstIdentifierConstant(value);
+            if(result.getQuery() == null && result.getAstBeSqlVar() != null && !"".equals(value.trim()))
+            {
+                constant = SqlQuery.parse(value).getQuery();
+            }
+            else
+            {
+                constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
+                                                                               : new AstIdentifierConstant(value);
+            }
 
             varNode.replaceWith( constant );
         } );
@@ -193,63 +201,100 @@ public class ContextApplier
 
     private void applySubQuery(AstBeSqlSubQuery subQuery)
     {
-        if( subQuery.getQuery() == null )
+        if( subQuery.getQuery() == null && subQuery.getAstBeSqlVar() == null)
         {
             String name = subQuery.getQueryName();
             if( name == null )
             {
-                subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
-                return;
-                //throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
+                throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
             }
-            else
+            String entity = subQuery.getEntityName();
+            String subQueryText = context.resolveQuery( entity, name );
+            if( subQueryText == null )
             {
-                String entity = subQuery.getEntityName();
-                String subQueryText = null;
-
-                try
-                {
-                    subQueryText = context.resolveQuery(entity, name);
-                }
-                catch (RuntimeException e)
-                {
-                    log.log(Level.SEVERE, "Error in resolveQuery()" + entity + " " + name, e);
-                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
-                    return;
-                }
-
-                if (subQueryText == null)
-                {
-                    log.log(Level.SEVERE, "Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
-                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
-                    return;
-                    //throw new IllegalStateException("Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
-                }
-                AstStart start = SqlQuery.parse(subQueryText);
-                subQuery.addChild(start.getQuery());
+                throw new IllegalStateException( "Unable to resolve subquery: " + ( entity == null ? "" : entity + "." ) + name );
             }
+            AstStart start = SqlQuery.parse( subQueryText );
+            subQuery.addChild( start.getQuery() );
         }
 
-        if( subQuery.getOutColumns() != null )
-            new ColumnsApplier().keepOnlyOutColumns(subQuery);
+//        if( subQuery.getQuery() == null && subQuery.getAstBeSqlVar() == null)
+//        {
+////            if( subQuery.getAstBeSqlVar() != null){
+////                AstBeSqlVar beSqlVar = subQuery.getAstBeSqlVar();
+////
+////                //AstStart start = SqlQuery.parse(context.getParameter(beSqlVar.getName()));
+////                //subQuery.addChild(start.getQuery());
+////                subQuery.replaceWith(beSqlVar);
+////                return;
+////
+////            }
+//
+//            String name = subQuery.getQueryName();
+//            if( name == null )
+//            {
+//                subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
+//                return;
+//                //throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
+//            }
+//            else
+//            {
+//                String entity = subQuery.getEntityName();
+//                String subQueryText = null;
+//
+//                try
+//                {
+//                    subQueryText = context.resolveQuery(entity, name);
+//                }
+//                catch (RuntimeException e)
+//                {
+//                    log.log(Level.SEVERE, "Error in resolveQuery()" + entity + " " + name, e);
+//                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
+//                    return;
+//                }
+//
+//                if (subQueryText == null)
+//                {
+//                    log.log(Level.SEVERE, "Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
+//                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
+//                    return;
+//                    //throw new IllegalStateException("Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
+//                }
+//                AstStart start = SqlQuery.parse(subQueryText);
+//                subQuery.addChild(start.getQuery());
+//            }
+//        }
 
-        if( subQuery.getLimit() != null )
-            new LimitsApplier( 0, subQuery.getLimit() ).transformQuery( subQuery.getQuery() );
-
-        String keyStr = subQuery.getFilterKeys();
-        String valPropStr = subQuery.getFilterValProperties();
-        if(keyStr != null && valPropStr != null)
+        if( subQuery.getAstBeSqlVar() == null)
         {
-            String[] keys = keyStr.split(",");
-            String[] valProps = valPropStr.split(",");
-            Map<ColumnRef, String> conditions = new HashMap<>();
-            for (int i = 0; i < keys.length; i++)
+            if( subQuery.getOutColumns() != null )
+                new ColumnsApplier().keepOnlyOutColumns(subQuery);
+
+            if( subQuery.getLimit() != null )
+                new LimitsApplier( 0, subQuery.getLimit() ).transformQuery( subQuery.getQuery() );
+
+            String keyStr = subQuery.getFilterKeys();
+            String valPropStr = subQuery.getFilterValProperties();
+            if(keyStr != null && valPropStr != null)
             {
-                //ColumnRef.resolve(subQuery.getQuery(), keys[i])
-                conditions.put(new ColumnRef(null, keys[i]), "<var:" + valProps[i] + "/>");
+                String[] keys = keyStr.split(",");
+                String[] valProps = valPropStr.split(",");
+                Map<ColumnRef, String> conditions = new HashMap<>();
+                for (int i = 0; i < keys.length; i++)
+                {
+                    //ColumnRef.resolve(subQuery.getQuery(), keys[i])
+                    conditions.put(new ColumnRef(null, keys[i]), "<var:" + valProps[i] + "/>");
+                }
+                new FilterApplier().addFilter(subQuery.getQuery(), conditions);
             }
-            new FilterApplier().addFilter(subQuery.getQuery(), conditions);
         }
+        //AstBeSqlVar beSqlVar = subQuery.getAstBeSqlVar();
+
+        //AstStart start = SqlQuery.parse(context.getParameter(beSqlVar.getName()));
+        //subQuery.addChild(start.getQuery());
+        //subQuery.replaceWith(beSqlVar);
+        //subQuery.removeChildren();
+
 
         String key = "<sql> SubQuery# " + ( subQueries.size() + 1 ) + "</sql>";
         subQueries.put( key, subQuery );

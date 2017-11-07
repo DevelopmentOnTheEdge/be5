@@ -15,6 +15,7 @@ import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 
+
 public class SubQueryTest
 {
     @Test
@@ -32,6 +33,17 @@ public class SubQueryTest
         Map<String, String> vars = Collections.singletonMap( "ID", "5" );
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
         assertEquals("SELECT * FROM subTable WHERE tableID = 5 LIMIT 2", subQuery.getQuery().format());
+    }
+
+    @Test
+    public void testSubQueryResolverBeVar()
+    {
+        AstStart start = SqlQuery.parse( "SELECT 'select * from test' AS \"___code\", '<sql><var:___code safestr=\"no\"/></sql>' FROM table" );
+
+        ContextApplier contextApplier = new ContextApplier( new BasicQueryContext.Builder().build() );
+        contextApplier.applyContext( start );
+
+        assertEquals("SELECT 'select * from test' AS \"___code\", '<sql> SubQuery# 1</sql>' FROM table", start.getQuery().toString());
     }
 
     @Test
