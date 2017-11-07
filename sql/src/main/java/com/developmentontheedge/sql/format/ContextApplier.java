@@ -9,9 +9,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.developmentontheedge.sql.model.AstNullPredicate;
 import com.developmentontheedge.sql.model.AstOrderingElement;
-import com.developmentontheedge.sql.model.SqlParser;
 import one.util.streamex.StreamEx;
 
 import com.developmentontheedge.sql.model.AstBeCondition;
@@ -189,7 +187,8 @@ public class ContextApplier
     
     private void applyDictionary(AstBeDictionary child)
     {
-        throw new UnsupportedOperationException( "Dictionary is not supported yet :(" );
+        String value = context.getDictionaryValue(child.getTagName(), child.getName(), child.getParameters());
+        child.replaceWith(new AstIdentifierConstant(value));
     }
 
     private void applySubQuery(AstBeSqlSubQuery subQuery)

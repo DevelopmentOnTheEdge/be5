@@ -37,4 +37,6 @@ public interface QueryContext
     String getUserName();
     
     StreamEx<String> roles();
+
+    String getDictionaryValue(String tagName, String name, Map<String, String> parameters);
 }

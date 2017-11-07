@@ -383,6 +383,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         return new QueryModelBase( queryName, emptyMap() );
     }
 
+    @Override
     public Entity getEntity()
     {
         return entity;

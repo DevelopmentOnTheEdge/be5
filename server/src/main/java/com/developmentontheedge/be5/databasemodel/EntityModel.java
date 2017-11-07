@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel;
 
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Collection;
@@ -269,4 +270,5 @@ public interface EntityModel<R extends RecordModel> {
      */
     OperationModel getOperation(String operationName);
 
+    Entity getEntity();
 }

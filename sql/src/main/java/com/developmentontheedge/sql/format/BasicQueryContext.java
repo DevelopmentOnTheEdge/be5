@@ -76,6 +76,12 @@ public class BasicQueryContext implements QueryContext
     }
 
     @Override
+    public String getDictionaryValue(String tagName, String name, Map<String, String> parameters)
+    {
+        return "";
+    }
+
+    @Override
     public String resolveQuery(String entity, String name)
     {
         return queryResolver.resolve( entity, name );

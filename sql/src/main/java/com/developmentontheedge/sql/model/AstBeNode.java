@@ -56,6 +56,11 @@ public abstract class AstBeNode extends SimpleNode
         return parameters.get( key );
     }
 
+    public Map<String, String> getParameters()
+    {
+        return parameters;
+    }
+
     public String getParametersString()
     {
         String result = EntryStream.of( parameters ).mapKeyValue( (k, v) -> k+"=\""+v+"\"").joining( " ", " ", "" );

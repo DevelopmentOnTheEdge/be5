@@ -2,6 +2,10 @@ package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.databasemodel.EntityModel;
+import com.developmentontheedge.be5.databasemodel.RecordModel;
+import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -129,10 +133,28 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             return parametersMap;
         }
+
+        @Override
+        public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
+        {
+            EntityModel entityModel = database.getEntity(tagName);
+            RecordModel row = entityModel.get(conditions);
+
+            String value = row.getValue(name).toString();
+
+            if(!meta.isNumericColumn(entityModel.getEntity(), name))
+            {
+                value = "'" + value + "'";
+            }
+
+            return value;
+        }
     }
 
     private final Map<String, String> parametersMap;
     private final DatabaseService databaseService;
+    private final DatabaseModel database;
+    private final Meta meta;
     private final SqlService db;
     private final Session session;
     private final ContextApplier contextApplier;
@@ -150,6 +172,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         super(query);
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.databaseService = injector.getDatabaseService();
+        this.database = injector.get(DatabaseModel.class);
+        this.meta = injector.getMeta();
         this.db = injector.getSqlService();
         this.userAwareMeta = injector.get(UserAwareMeta.class);
         this.session = session;

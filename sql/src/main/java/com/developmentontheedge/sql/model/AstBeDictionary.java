@@ -25,6 +25,11 @@ public class AstBeDictionary extends AstBeNode
         this.tagName = dict.substring( 1, dict.length()-1 );
     }
 
+    public String getTagName()
+    {
+        return tagName;
+    }
+
     @Override
     public String getParametersString()
     {
