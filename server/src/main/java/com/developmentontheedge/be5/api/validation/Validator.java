@@ -6,6 +6,8 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -155,6 +157,42 @@ public class Validator
             if (type == Short.class) return Short.parseShort(value);
             if (type == Integer.class) return Integer.parseInt(value);
             if (type == Long.class) return Long.parseLong(value);
+        }
+        catch (NumberFormatException e)
+        {
+            String msg = userAwareMeta.getLocalizedValidationMessage("Please specify an integer number.");
+            //добавить информацию о конкресном типе - ограничения type.getName();
+            try{
+                BigInteger bigInteger = new BigInteger(value);
+                if(type == Long.class){
+                    if(bigInteger.compareTo(BigInteger.ZERO) > 0){
+                        msg += " <= " + Long.MAX_VALUE;
+                    }else{
+                        msg += " >= " + Long.MIN_VALUE;
+                    }
+                }
+                if(type == Integer.class){
+                    if(bigInteger.compareTo(BigInteger.ZERO) > 0){
+                        msg += " <= " + Integer.MAX_VALUE;
+                    }else{
+                        msg += " >= " + Integer.MIN_VALUE;
+                    }
+                }
+                if(type == Short.class){
+                    if(bigInteger.compareTo(BigInteger.ZERO) > 0){
+                        msg += " <= " + Short.MAX_VALUE;
+                    }else{
+                        msg += " >= " + Short.MIN_VALUE;
+                    }
+                }
+            }catch (RuntimeException ignore){}
+
+            setError(property, msg);
+            throw new NumberFormatException(msg + " - " + toStringProperty(property));
+        }
+
+        try
+        {
             if (type == Float.class) return Float.parseFloat(value);
             if (type == Double.class) return Double.parseDouble(value);
         }

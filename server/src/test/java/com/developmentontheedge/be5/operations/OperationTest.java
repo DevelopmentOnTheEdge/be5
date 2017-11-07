@@ -81,7 +81,7 @@ public class OperationTest extends SqlMockOperationTest
         assertNotNull(result.getFirst());
 
         assertEquals("error", result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("status"));
-        assertEquals("Здесь должно быть число.",
+        assertEquals("Здесь должно быть целое число.",
                 result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("message"));
     }
 
@@ -98,7 +98,7 @@ public class OperationTest extends SqlMockOperationTest
         assertNotNull(result.getFirst());
 
         assertEquals("error", result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("status"));
-        assertEquals("Здесь должно быть число.",
+        assertEquals("Здесь должно быть целое число.",
                 result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("message"));
     }
 
