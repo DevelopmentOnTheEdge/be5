@@ -6,6 +6,8 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationSupport
 import com.developmentontheedge.be5.operation.TransactionalOperation
+import com.developmentontheedge.beans.DynamicPropertySet
+import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 
 class TestTransactionalOperation extends OperationSupport implements TransactionalOperation
@@ -23,7 +25,7 @@ class TestTransactionalOperation extends OperationSupport implements Transaction
         {
             if(databaseService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transaction")
 
-            return dpsHelper.getDpsExcludeAutoIncrement(getInfo().getEntity(), presetValues)
+            return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), getInfo().getEntity(), presetValues)
         }
     }
 

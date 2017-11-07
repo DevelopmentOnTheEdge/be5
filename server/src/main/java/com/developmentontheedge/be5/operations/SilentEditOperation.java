@@ -20,7 +20,7 @@ public class SilentEditOperation extends OperationSupport implements Operation
     {
         Entity entity = getInfo().getEntity();
 
-        dps = dpsHelper.getDpsExcludeAutoIncrement(entity);
+        dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), entity);
 
         dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(records[0]));
 

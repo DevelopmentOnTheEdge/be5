@@ -8,6 +8,7 @@ import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
+import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
@@ -18,9 +19,16 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Inject private DpsHelper dpsHelper
     @Inject private Meta meta
 
+    DynamicPropertySet dps
+
+    @Before
+    void before(){
+        dps = new DynamicPropertySetSupport()
+    }
+
     @Test
     void getDpsWithoutAutoIncrementTest(){
-        def dps = dpsHelper.getDpsExcludeAutoIncrement(meta.getEntity("testTags"))
+        dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"))
         assertEquals "{" +
             "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
                 "'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
@@ -45,14 +53,15 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsForValuesTest()
     {
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(meta.getEntity("testTags"), ["CODE", "payable"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
 
         assertEquals 2, dps.size()
         def list = dps.asList()
         assertEquals "CODE", list.get(0).getName()
         assertEquals "payable", list.get(1).getName()
 
-        list = dpsHelper.getDpsForColumns(meta.getEntity("testTags"), ["payable", "CODE"]).asList()
+        dps = new DynamicPropertySetSupport()
+        list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"]).asList()
         assertEquals "payable", list.get(0).getName()
         assertEquals "CODE", list.get(1).getName()
     }
@@ -60,8 +69,6 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void addDynamicPropertiesTest()
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport()
-
         dpsHelper.addDynamicProperties(dps, meta.getEntity("testTags"), ["CODE", "payable"])
 
         assertEquals 2, dps.size()
@@ -69,7 +76,8 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "CODE", list.get(0).getName()
         assertEquals "payable", list.get(1).getName()
 
-        list = dpsHelper.getDpsForColumns(meta.getEntity("testTags"), ["payable", "CODE"]).asList()
+        dps = new DynamicPropertySetSupport()
+        list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"]).asList()
         assertEquals "payable", list.get(0).getName()
         assertEquals "CODE", list.get(1).getName()
     }
@@ -78,7 +86,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getDpsForColumnsTestWithValues()
     {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(meta.getEntity("testTags"), ["CODE", "payable"], presetValues)
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], presetValues)
 
         assertEquals 2, dps.size()
         def list = dps.asList()
@@ -100,14 +108,14 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getDpsForColumnsTestSpecial()
     {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(meta.getEntity("meters"), ["name"], presetValues)
+        dpsHelper.addDpForColumns(dps, meta.getEntity("meters"), ["name"], presetValues)
 
     }
 
     @Test
     void getValuesTest() throws Exception
     {
-        DynamicPropertySet dps = dpsHelper.getDps(meta.getEntity("meters"))
+        dpsHelper.addDp(dps, meta.getEntity("meters"))
         dps.setValue("name", "TestName")
         assertArrayEquals( [null,null,"TestName",null,null,null,null,"no"] as Object[], dpsHelper.getValues(dps))
     }
@@ -115,10 +123,11 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsTest() throws Exception
     {
-        DynamicPropertySet dps = dpsHelper.getDps(meta.getEntity("meters"))
+        dpsHelper.addDp(dps, meta.getEntity("meters"))
         assertNotNull dps.getProperty("value")
 
-        dps = dpsHelper.getDpsExcludeColumns(meta.getEntity("meters"), Collections.singletonList("value"))
+        dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), Collections.singletonList("value"))
         assertNull dps.getProperty("value")
     }
 
@@ -127,7 +136,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         Entity metersEntity = meta.getEntity("meters")
 
-        String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.getDps(metersEntity))
+        String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.addDp(dps, metersEntity))
         assertEquals "INSERT INTO meters " +
                 "(whoModified___, whoInserted___, name, ID, modificationDate___, value, creationDate___, isDeleted___) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
@@ -158,7 +167,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsWithLabelANDNotSubmittedTest()
     {
-        def dps = dpsHelper.getDpsWithLabelANDNotSubmitted("test")
+        def dps = dpsHelper.addDpWithLabelANDNotSubmitted(dps, "test")
         assertEquals "{'/infoLabel':{'displayName':'infoLabel','labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
@@ -166,7 +175,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsWithLabelRawANDNotSubmittedTest()
     {
-        def dps = dpsHelper.getDpsWithLabelRawANDNotSubmitted("test")
+        def dps = dpsHelper.addDpWithLabelRawANDNotSubmitted(dps, "test")
         assertEquals "{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }

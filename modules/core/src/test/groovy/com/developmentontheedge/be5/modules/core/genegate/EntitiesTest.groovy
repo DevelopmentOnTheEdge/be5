@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.genegate
 import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.modules.core.genegate.entities.Provinces
 import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields as p
 import com.developmentontheedge.be5.test.Be5ProjectTest
@@ -37,7 +38,7 @@ class EntitiesTest extends Be5ProjectTest//todo use Be5ProjectDBTest
     {
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
-        DynamicPropertySet dps = dpsHelper.getDpsForColumns(entities.provinces.entity, [p.name, p.countryID])
+        DynamicPropertySet dps = dpsHelper.addDpForColumns(new GDynamicPropertySetSupport(this), entities.provinces.entity, [p.name, p.countryID])
 
         add(dps) {
             name        = p.ID

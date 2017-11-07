@@ -18,7 +18,8 @@ public class FilterOperation extends OperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        DynamicPropertySet dps = dpsHelper.getDpsExcludeAutoIncrement(getInfo().getEntity());
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity());
 
         //getInfo().getModel()
         return dps;

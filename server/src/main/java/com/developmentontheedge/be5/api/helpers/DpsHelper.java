@@ -68,15 +68,15 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-    public DynamicPropertySet getDps(Entity entity, ResultSet resultSet)
+    public <T extends DynamicPropertySet> T addDp(T dps, Entity entity, ResultSet resultSet)
     {
-        DynamicPropertySet dps = getDps(entity);
+        addDp(dps, entity);
         return setValues(dps, resultSet);
     }
 
-    public DynamicPropertySet getDpsWithoutTags(Entity entity, ResultSet resultSet)
+    public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, Entity entity, ResultSet resultSet)
     {
-        DynamicPropertySet dps = getDpsWithoutTags(entity);
+        addDpWithoutTags(dps, entity);
         return setValues(dps, resultSet);
     }
 
@@ -92,13 +92,13 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-    public DynamicPropertySet getDpsExcludeAutoIncrement(Entity entity, Map<String, ? super Object> values)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, Entity entity, Map<String, ? super Object> values)
     {
-        DynamicPropertySet dps = getDpsExcludeAutoIncrement(entity);
+        addDpExcludeAutoIncrement(dps, entity);
         return setValues(dps, values);
     }
 
-    public DynamicPropertySet getDpsExcludeAutoIncrement(Entity entity)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, Entity entity)
     {
         List<String> excludedColumns = Collections.emptyList();
         if(meta.getColumn(entity, entity.getPrimaryKey()) != null && meta.getColumn(entity, entity.getPrimaryKey()).isAutoIncrement())
@@ -106,27 +106,27 @@ public class DpsHelper
             excludedColumns = Collections.singletonList(entity.getPrimaryKey());
         }
 
-        return getDpsExcludeColumns(entity, excludedColumns);
+        return addDpExcludeColumns(dps, entity, excludedColumns);
     }
 
-    public DynamicPropertySet getDps(Entity entity)
+    public <T extends DynamicPropertySet> T addDp(T dps, Entity entity)
     {
-        return getDpsExcludeColumns(entity, Collections.emptyList());
+        return addDpExcludeColumns(dps, entity, Collections.emptyList());
     }
 
-    public DynamicPropertySet getDpsWithoutTags(Entity entity)
+    public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, Entity entity)
     {
-        return getDpsExcludedColumnsWithoutTags(entity, Collections.emptyList());
+        return addDpsExcludedColumnsWithoutTags(dps, entity, Collections.emptyList());
     }
 
-    public DynamicPropertySet getDpsExcludeColumns(Entity entity, Collection<String> columnNames)
+    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, Entity entity, Collection<String> columnNames)
     {
-        DynamicPropertySet dps = getDpsExcludedColumnsWithoutTags(entity, columnNames);
+        addDpsExcludedColumnsWithoutTags(dps, entity, columnNames);
 
         return addTags(dps, entity);
     }
 
-    private DynamicPropertySet addTags(DynamicPropertySet dps, Entity entity)
+    private <T extends DynamicPropertySet> T addTags(T dps, Entity entity)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
         for(DynamicProperty property: dps)
@@ -137,10 +137,9 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicPropertySet getDpsExcludedColumnsWithoutTags(Entity entity, Collection<String> excludedColumns)
+    public <T extends DynamicPropertySet> T addDpsExcludedColumnsWithoutTags(T dps, Entity entity, Collection<String> excludedColumns)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
 
         ArrayList<String> excludedColumnsList = new ArrayList<>(excludedColumns);
         for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
@@ -160,20 +159,22 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames, Map<String, ? super Object> presetValues)
+    public <T extends DynamicPropertySet> T addDpForColumns(T dps, Entity entity, Collection<String> columnNames, Map<String, ? super Object> presetValues)
     {
-        DynamicPropertySet dps = getDpsForColumns(entity, columnNames);
-        return setValues(dps, presetValues);
+        addDpForColumns(dps, entity, columnNames);
+        setValues(dps, presetValues);
+        return dps;
     }
 
-    public DynamicPropertySet getDpsForColumns(Entity entity, Collection<String> columnNames)
+    public <T extends DynamicPropertySet> T addDpForColumns(T dps, Entity entity, Collection<String> columnNames)
     {
-        DynamicPropertySet dps = getDpsForColumnsWithoutTags(entity, columnNames);
+        addDpForColumnsWithoutTags(dps, entity, columnNames);
 
-        return addTags(dps, entity);
+        addTags(dps, entity);
+        return dps;
     }
 
-    public void addDynamicProperties(DynamicPropertySet dps, Entity entity, Collection<String> propertyNames)
+    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, Entity entity, Collection<String> propertyNames)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
@@ -185,19 +186,18 @@ public class DpsHelper
 
             dps.add(dynamicProperty);
         }
+        return dps;
     }
 
-    public DynamicPropertySet getDpsForColumnsWithoutTags(Entity entity, Collection<String> columnNames, Map<String, ? super Object> presetValues)
+    public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, Entity entity, Collection<String> columnNames, Map<String, ? super Object> presetValues)
     {
-        DynamicPropertySet dps = getDpsForColumnsWithoutTags(entity, columnNames);
+        addDpForColumnsWithoutTags(dps, entity, columnNames);
         return setValues(dps, presetValues);
     }
 
-    public DynamicPropertySet getDpsForColumnsWithoutTags(Entity entity, Collection<String> columnNames)
+    public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, Entity entity, Collection<String> columnNames)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
         for(String propertyName: columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
@@ -211,10 +211,8 @@ public class DpsHelper
                 throw Be5Exception.internal("Entity '" + entity.getName() + "' not contain column " + propertyName);
             }
         }
-
         return dps;
     }
-
 
     public DynamicProperty getDynamicPropertyWithoutTags(ColumnDef columnDef)
     {
@@ -254,7 +252,7 @@ public class DpsHelper
         }
     }
 
-    public DynamicPropertySet setValues(DynamicPropertySet dps, DynamicPropertySet values)
+    public <T extends DynamicPropertySet> T setValues(T dps, DynamicPropertySet values)
     {
         for(DynamicProperty valueProperty : values)
         {
@@ -267,7 +265,7 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicPropertySet setValues(DynamicPropertySet dps, Map<String, ?> values)
+    public <T extends DynamicPropertySet> T setValues(T dps, Map<String, ?> values)
     {
         for (Map.Entry<String, ?> entry : values.entrySet())
         {
@@ -280,7 +278,7 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicPropertySet setValues(DynamicPropertySet dps, ResultSet resultSet)
+    public <T extends DynamicPropertySet> T setValues(T dps, ResultSet resultSet)
     {
         try
         {
@@ -688,22 +686,19 @@ public class DpsHelper
         return label;
     }
 
-    public DynamicPropertySet getDpsWithLabelANDNotSubmitted(String text)
+    public <T extends DynamicPropertySet> T addDpWithLabelANDNotSubmitted(T dps, String text)
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
         dps.add(getLabel(text, "infoLabel"));
         DynamicProperty notSubmitted = new DynamicProperty("notSubmitted", String.class, null);
         notSubmitted.setHidden(true);
         dps.add(notSubmitted);
-
         return dps;
     }
 
-    public DynamicPropertySet getDpsWithLabelRawANDNotSubmitted(String text)
+    public <T extends DynamicPropertySet> T addDpWithLabelRawANDNotSubmitted(T dps, String text)
     {
-        DynamicPropertySet dps = getDpsWithLabelANDNotSubmitted(text);
+        addDpWithLabelANDNotSubmitted(dps, text);
         dps.getProperty("infoLabel").setAttribute(BeanInfoConstants.RAW_VALUE, true);
-
         return dps;
     }
 }

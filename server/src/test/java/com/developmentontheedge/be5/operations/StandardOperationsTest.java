@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
@@ -89,7 +90,8 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         Request req = getSpyMockRecForOp("propertyTypes", "All records", "Edit", "01","{}");
 
-        DynamicPropertySet dps = dpsHelper.getDpsExcludeAutoIncrement(meta.getEntity("propertyTypes"));
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("propertyTypes"));
         dps.setValue("name", "TestName");
         dps.setValue("CODE", "02");
         when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);

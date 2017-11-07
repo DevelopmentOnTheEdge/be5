@@ -11,7 +11,7 @@ class CustomOperation extends GOperationSupport implements Operation
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = new GDynamicPropertySetSupport(dpsHelper.getDpsForColumns(getInfo().getEntity(), ["name", "value"], presetValues), this)
+        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], presetValues)
 
         def newCalculatedValue = '4'
 

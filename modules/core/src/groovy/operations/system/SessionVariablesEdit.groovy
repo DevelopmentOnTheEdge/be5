@@ -1,6 +1,5 @@
 package system
 
-import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
@@ -29,7 +28,7 @@ class SessionVariablesEdit extends GOperationSupport implements Operation
         }
         else
         {
-            dps = new GDynamicPropertySetSupport(dpsHelper.getDpsWithLabelANDNotSubmitted("Session variable '${records[0]}' not found"), this)
+            dpsHelper.addDpWithLabelANDNotSubmitted(dps, "Session variable '${records[0]}' not found")
         }
 
         return dps

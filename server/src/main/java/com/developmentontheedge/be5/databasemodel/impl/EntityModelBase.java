@@ -19,6 +19,7 @@ import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.google.common.collect.ObjectArrays;
@@ -79,7 +80,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
                 .where(conditions);
 
         DynamicPropertySet dps =
-                db.select(sql.format(), rs -> dpsHelper.getDpsWithoutTags(entity, rs), conditions.values().toArray());
+                db.select(sql.format(), rs -> {
+                    DynamicPropertySet newDps = new DynamicPropertySetSupport();
+                    dpsHelper.addDpWithoutTags(newDps, entity, rs);
+                    return newDps;
+                }, conditions.values().toArray());
 
         return dps == null ? null : new RecordModelBase( this, dps );
     }
@@ -116,7 +121,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     public String add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
-        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
 
         return add( dps );
     }
@@ -300,7 +306,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
-        DynamicPropertySet dps = dpsHelper.getDpsForColumnsWithoutTags(entity, values.keySet(), values);
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
 
         this.set( id, dps );
     }
@@ -349,7 +356,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 //
 //        DynamicPropertySet dps = db.select(
 //                Ast.selectAll().from(entity.getName()).where(conditions).limit(1).format(),
-//                rs -> dpsHelper.getDpsForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
+//                rs -> dpsHelper.addDpForColumns(entity, values.keySet(), rs), castValues(entity, conditions));
 //
 //        dpsHelper.updateValuesWithSpecial(dps, values);
 //

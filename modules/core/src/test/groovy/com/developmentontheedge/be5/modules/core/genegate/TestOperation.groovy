@@ -15,7 +15,7 @@ class TestOperation extends OperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.getDpsForColumns(getInfo().getEntity(), [p.name, p.countryID])
+        dps = dpsHelper.addDpForColumns(getInfo().getEntity(), [p.name, p.countryID])
 
         add(dps) {
             name             = p.name
