@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.developmentontheedge.sql.format.BasicQueryContext;
@@ -96,6 +97,7 @@ public class SubQueryTest
     }
 
     @Test
+    @Ignore
     public void testApplyWithVarsExecDelayedAddFilter()
     {
         //TODO us.ID vs ID in be3 (us from entity)
