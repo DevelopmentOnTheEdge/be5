@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.developmentontheedge.sql.model.AstOrderingElement;
-import com.developmentontheedge.sql.model.SqlParser;
 import one.util.streamex.StreamEx;
 
 import com.developmentontheedge.sql.model.AstBeCondition;
@@ -56,14 +54,37 @@ public class ContextApplier
 
     public void applyContext(AstStart tree)
     {
-        checkExpression( tree );
+        checkExpression( tree , null, (x) -> null);
     }
     
     public StreamEx<String> subQueryKeys()
     {
         return StreamEx.ofKeys( subQueries );
     }
-    
+
+    public Map<String, String> getSubQueryPropertyMap(String key, Function<String, String> varResolver)
+    {
+        Map<String, String> propertyMap = new HashMap<>();
+
+        AstBeSqlSubQuery subQuery = subQueries.get( key );
+        if( subQuery == null )
+            return propertyMap;
+
+        String keyStr = subQuery.getFilterKeys();
+        String valPropStr = subQuery.getFilterValProperties();
+        if(keyStr != null && valPropStr != null)
+        {
+            String[] keys = keyStr.split(",");
+            String[] valProps = valPropStr.split(",");
+
+            for (int i = 0; i < keys.length; i++)
+            {
+                propertyMap.put(keys[i], varResolver.apply(valProps[i]));
+            }
+        }
+        return propertyMap;
+    }
+
     public AstBeSqlSubQuery applyVars(String key, Function<String, String> varResolver)
     {
         AstBeSqlSubQuery subQuery = subQueries.get( key );
@@ -96,23 +117,23 @@ public class ContextApplier
             varNode.replaceWith( constant );
         } );
 
-        checkExpression(result);
+        checkExpression(result, key, varResolver);
 
         return result;
     }
 
-    private void checkExpression(SimpleNode newTree)
+    private void checkExpression(SimpleNode newTree, String key, Function<String, String> varResolver)
     {
         for( int i = 0; i < newTree.jjtGetNumChildren(); i++ )
         {
             SimpleNode child = newTree.child( i );
-            checkExpression( child );
+            checkExpression( child, key, varResolver);
 
             if( child instanceof AstBeCondition )
                 i = applyConditions( newTree, i );
 
             if( child instanceof AstBeParameterTag )
-                applyParameterTag( newTree, i );
+                applyParameterTag( newTree, i, key, varResolver);
 
             else if( child instanceof AstBePlaceHolder )
                 applyPlaceHolder( (AstBePlaceHolder)child );
@@ -237,8 +258,9 @@ public class ContextApplier
                 {
                     //ColumnRef.resolve(subQuery.getQuery(), keys[i])
                     conditions.put(new ColumnRef(null, keys[i]), "<var:" + valProps[i] + "/>");
+                    //subQuery.addParameter(keys[i], valProps[i]);
                 }
-                new FilterApplier().addFilter(subQuery.getQuery(), conditions);
+                //new FilterApplier().addFilter(subQuery.getQuery(), conditions);
             }
         }
         //AstBeSqlVar beSqlVar = subQuery.getAstBeSqlVar();
@@ -320,7 +342,7 @@ public class ContextApplier
         return i;
     }
 
-    private void applyParameterTag(SimpleNode newTree, int i)
+    private void applyParameterTag(SimpleNode newTree, int i, String key, Function<String, String> varResolver)
     {
         String value;
         SimpleNode replacement;
@@ -331,6 +353,14 @@ public class ContextApplier
         if( multiple == null )
         {
             value = context.getParameter( paramNode.getName() );
+
+            Map<String, String> propertyMap = getSubQueryPropertyMap(key, varResolver);
+            if(value == null && propertyMap.containsKey(paramNode.getName()))
+            {
+                value = propertyMap.get(paramNode.getName());
+
+            }
+
             replacement = applyParameters( paramNode, value, tableRefAddend );
         }
         else

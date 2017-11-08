@@ -563,6 +563,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
 
+        if(subQuery.getQuery() == null)
+        {
+            List<DynamicPropertySet> empty = new ArrayList<>();
+            return StreamEx.of(empty);
+        }
+
         String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
 
         return streamDps(finalSQL);
