@@ -201,7 +201,7 @@ public class ContextApplier
 
     private void applySubQuery(AstBeSqlSubQuery subQuery)
     {
-        if( subQuery.getQuery() == null && subQuery.getAstBeSqlVar() == null)
+        if( subQuery.getExec() != null || subQuery.getQueryName() != null)
         {
             String name = subQuery.getQueryName();
             if( name == null )
@@ -218,54 +218,7 @@ public class ContextApplier
             subQuery.addChild( start.getQuery() );
         }
 
-//        if( subQuery.getQuery() == null && subQuery.getAstBeSqlVar() == null)
-//        {
-////            if( subQuery.getAstBeSqlVar() != null){
-////                AstBeSqlVar beSqlVar = subQuery.getAstBeSqlVar();
-////
-////                //AstStart start = SqlQuery.parse(context.getParameter(beSqlVar.getName()));
-////                //subQuery.addChild(start.getQuery());
-////                subQuery.replaceWith(beSqlVar);
-////                return;
-////
-////            }
-//
-//            String name = subQuery.getQueryName();
-//            if( name == null )
-//            {
-//                subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
-//                return;
-//                //throw new IllegalStateException( "Empty subQuery without queryName parameter: " + subQuery.format() );
-//            }
-//            else
-//            {
-//                String entity = subQuery.getEntityName();
-//                String subQueryText = null;
-//
-//                try
-//                {
-//                    subQueryText = context.resolveQuery(entity, name);
-//                }
-//                catch (RuntimeException e)
-//                {
-//                    log.log(Level.SEVERE, "Error in resolveQuery()" + entity + " " + name, e);
-//                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
-//                    return;
-//                }
-//
-//                if (subQueryText == null)
-//                {
-//                    log.log(Level.SEVERE, "Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
-//                    subQuery.addChild(SqlQuery.parse( "select 'error'" ).getQuery());
-//                    return;
-//                    //throw new IllegalStateException("Unable to resolve subquery: " + (entity == null ? "" : entity + ".") + name);
-//                }
-//                AstStart start = SqlQuery.parse(subQueryText);
-//                subQuery.addChild(start.getQuery());
-//            }
-//        }
-
-        if( subQuery.getAstBeSqlVar() == null)
+        if( subQuery.getQuery() != null)
         {
             if( subQuery.getOutColumns() != null )
                 new ColumnsApplier().keepOnlyOutColumns(subQuery);

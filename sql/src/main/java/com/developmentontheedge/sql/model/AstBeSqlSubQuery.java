@@ -64,6 +64,11 @@ public class AstBeSqlSubQuery extends AstBeNode
         return substMap.getOrDefault( name, name );
     }
 
+    public String getExec()
+    {
+        return getParameter( "exec" );
+    }
+
     public String getFilterKeys()
     {
         return getParameter( "filterKey" );
