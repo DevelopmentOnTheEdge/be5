@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.components.impl.model;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
@@ -165,7 +166,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Meta meta;
     private final SqlService db;
     private final Session session;
-    private final ContextApplier contextApplier;
+    private ContextApplier contextApplier;
     private final UserAwareMeta userAwareMeta;
     private final Context context;
     private final ParserContext parserContext;
@@ -589,10 +590,18 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         TableModel table = TableModel
                 .from(meta.createQueryFromSql(subQuery.getQuery().format()), parametersMap, session, false, injector)
+                .setContextApplier(contextApplier)
                 .build();
 
         String result = table.getRows().toString();
 
         return streamDps(finalSQL);
+    }
+
+    @Override
+    public QueryExecutor setContextApplier(ContextApplier contextApplier)
+    {
+        this.contextApplier = contextApplier;
+        return this;
     }
 }

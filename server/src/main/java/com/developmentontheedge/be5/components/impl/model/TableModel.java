@@ -23,6 +23,7 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.sql.format.ContextApplier;
 
 public class TableModel
 {
@@ -60,6 +61,12 @@ public class TableModel
         public Builder sortOrder(int sortColumn, boolean desc)
         {
             queryExecutor.sortOrder(sortColumn + (selectable ? -1 : 0), desc);
+            return this;
+        }
+
+        public Builder setContextApplier(ContextApplier contextApplier)
+        {
+            queryExecutor.setContextApplier(contextApplier);
             return this;
         }
 

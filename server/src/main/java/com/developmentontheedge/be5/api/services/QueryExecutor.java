@@ -3,7 +3,9 @@ package com.developmentontheedge.be5.api.services;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.components.impl.model.CellFormatter;
+import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.sql.format.ContextApplier;
 import one.util.streamex.StreamEx;
 
 import java.util.List;
@@ -60,4 +62,5 @@ public interface QueryExecutor
 
     List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
 
+    QueryExecutor setContextApplier(ContextApplier contextApplier);
 }
