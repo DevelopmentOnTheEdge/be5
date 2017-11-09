@@ -85,6 +85,9 @@ public class ContextApplier
         return propertyMap;
     }
 
+    /**
+     * todo rename getSubQuery
+     */
     public AstBeSqlSubQuery applyVars(String key, Function<String, String> varResolver)
     {
         AstBeSqlSubQuery subQuery = subQueries.get( key );

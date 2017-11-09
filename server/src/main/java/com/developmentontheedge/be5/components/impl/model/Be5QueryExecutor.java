@@ -161,7 +161,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final UserAwareMeta userAwareMeta;
     private final Context context;
     private final ParserContext parserContext;
-    private final Injector injector;
     private final DpsExecutor dpsExecutor;
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
@@ -181,7 +180,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
-        this.injector = injector;
         this.dpsExecutor = injector.get(DpsExecutor.class);
         this.extraQuery = ExtraQuery.DEFAULT;
         this.sortColumn = -1;
@@ -189,6 +187,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private List<DynamicPropertySet> executeQuery()
     {
+        //todo remove and use QueryRouter.routeAndRun - refactoring MoreRowsGenerator
         switch (query.getType())
         {
 //        case Query.QUERY_TYPE_CUSTOM:
