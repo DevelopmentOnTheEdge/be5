@@ -45,7 +45,6 @@ public class ContextApplier
     private static final Logger log = Logger.getLogger(ContextApplier.class.getName());
 
     private final QueryContext context;
-    private final Map<String, AstBeSqlSubQuery> subQueries = new HashMap<>();
 
     public ContextApplier(QueryContext context)
     {
@@ -59,14 +58,14 @@ public class ContextApplier
     
     public StreamEx<String> subQueryKeys()
     {
-        return StreamEx.ofKeys( subQueries );
+        return StreamEx.ofKeys( context.getSubQueries() );
     }
 
     public Map<String, String> getSubQueryPropertyMap(String key, Function<String, String> varResolver)
     {
         Map<String, String> propertyMap = new HashMap<>();
 
-        AstBeSqlSubQuery subQuery = subQueries.get( key );
+        AstBeSqlSubQuery subQuery = context.getSubQueries().get( key );
         if( subQuery == null )
             return propertyMap;
 
@@ -90,7 +89,7 @@ public class ContextApplier
      */
     public AstBeSqlSubQuery applyVars(String key, Function<String, String> varResolver)
     {
-        AstBeSqlSubQuery subQuery = subQueries.get( key );
+        AstBeSqlSubQuery subQuery = context.getSubQueries().get( key );
         if( subQuery == null )
             return null;
         AstBeSqlSubQuery result = (AstBeSqlSubQuery)subQuery.clone();
@@ -278,8 +277,8 @@ public class ContextApplier
         //subQuery.removeChildren();
 
 
-        String key = "<sql> SubQuery# " + ( subQueries.size() + 1 ) + "</sql>";
-        subQueries.put( key, subQuery );
+        String key = "<sql> SubQuery# " + ( context.getSubQueries().size() + 1 ) + "</sql>";
+        context.getSubQueries().put( key, subQuery );
         subQuery.replaceWith( new AstStringPart( key ) );
     }
 

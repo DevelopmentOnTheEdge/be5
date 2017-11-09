@@ -82,6 +82,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private final class ExecutorQueryContext implements QueryContext
     {
+        private final Map<String, AstBeSqlSubQuery> subQueries = new HashMap<>();
+
+        @Override
+        public Map<String, AstBeSqlSubQuery> getSubQueries()
+        {
+            return subQueries;
+        }
+
         @Override
         public StreamEx<String> roles()
         {
@@ -161,6 +169,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final UserAwareMeta userAwareMeta;
     private final Context context;
     private final ParserContext parserContext;
+    private final Injector injector;
     private final DpsExecutor dpsExecutor;
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
@@ -180,6 +189,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
+        this.injector = injector;
         this.dpsExecutor = injector.get(DpsExecutor.class);
         this.extraQuery = ExtraQuery.DEFAULT;
         this.sortColumn = -1;
@@ -577,9 +587,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
 
-//        TableModel table = TableModel
-//                .from(query, parametersMap, req, false, injector)
-//                .build();
+        TableModel table = TableModel
+                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parametersMap, session, false, injector)
+                .build();
+
+        String result = table.getRows().toString();
+
         return streamDps(finalSQL);
     }
 }

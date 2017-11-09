@@ -351,6 +351,14 @@ public class TableModel
         {
             return Objects.requireNonNull( id );
         }
+
+        @Override
+        public String toString()
+        {
+            return "RowModel{" +
+                    "cells=" + cells +
+                    '}';
+        }
     }
 
     /**

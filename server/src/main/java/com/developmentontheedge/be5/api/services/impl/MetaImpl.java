@@ -23,6 +23,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryLink;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.EntityLocalizations;
@@ -541,4 +542,15 @@ public class MetaImpl implements Meta
         return getProject().getRoles();
     }
 
+    @Override
+    public Query createQueryFromSql(String sql)
+    {
+        Entity e = new Entity( "be5DynamicQueries", getProject().getApplication(), EntityType.TABLE );
+        e.setBesql( true );
+        DataElementUtils.save( e );
+        Query query = new Query( "query", e );
+        DataElementUtils.save( query );
+        query.setQuery( sql );
+        return query;
+    }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import one.util.streamex.StreamEx;
 
 public class BasicQueryContext implements QueryContext
@@ -17,6 +18,7 @@ public class BasicQueryContext implements QueryContext
     private final String userName;
     private final List<String> roles;
     private final QueryResolver queryResolver;
+    private final Map<String, AstBeSqlSubQuery> subQueries = new HashMap<>();
 
     @FunctionalInterface
     public interface QueryResolver
@@ -141,5 +143,11 @@ public class BasicQueryContext implements QueryContext
             return new BasicQueryContext( parameters, sessionVariables, userName, roles.isEmpty() ? Collections.singletonList( "Guest" )
                     : roles, queryResolver );
         }
+    }
+
+    @Override
+    public Map<String, AstBeSqlSubQuery> getSubQueries()
+    {
+        return subQueries;
     }
 }

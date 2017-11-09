@@ -3,6 +3,7 @@ package com.developmentontheedge.sql.format;
 import java.util.List;
 import java.util.Map;
 
+import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import one.util.streamex.StreamEx;
 
 /**
@@ -35,7 +36,9 @@ public interface QueryContext
      * @return name of the current user
      */
     String getUserName();
-    
+
+    Map<String, AstBeSqlSubQuery> getSubQueries();
+
     StreamEx<String> roles();
 
     String getDictionaryValue(String tagName, String name, Map<String, String> parameters);

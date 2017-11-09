@@ -135,4 +135,6 @@ public interface Meta
     boolean isParametrizedTable(Query query);
 
     Set<String> getProjectRoles();
+
+    Query createQueryFromSql(String sql);
 }

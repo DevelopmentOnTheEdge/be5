@@ -523,14 +523,7 @@ public class OperationHelper
 
     public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, String> parameters, Session session )
     {
-        Entity e = new Entity( "operationHelperService", injector.getProject().getApplication(), EntityType.TABLE );
-        e.setBesql( true );
-        DataElementUtils.save( e );
-        Query query = new Query( "query", e );
-        DataElementUtils.save( query );
-        query.setQuery( sql );
-
-        return readAsRecordsFromQuery(query, parameters, session);
+        return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters, session);
     }
 
     public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, String> parameters, Session session)
