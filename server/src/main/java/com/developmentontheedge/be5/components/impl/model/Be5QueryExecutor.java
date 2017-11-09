@@ -237,7 +237,15 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         dql.log("After FreeMarker", queryText);
         if(queryText.isEmpty())
             return null;
-        AstStart ast = SqlQuery.parse( queryText );
+        AstStart ast;
+        try
+        {
+            ast = SqlQuery.parse(queryText);
+        }catch (RuntimeException e)
+        {
+            ast = SqlQuery.parse("select 'error'");
+            log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
+        }
         dql.log("Compiled", ast);
 
         // CONTEXT
