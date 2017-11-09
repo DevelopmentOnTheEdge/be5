@@ -114,6 +114,10 @@ public class ContextApplier
                                                                                : new AstIdentifierConstant(value);
             }
 
+//            if(!(varNode.jjtGetParent() instanceof AstBeSqlSubQuery))
+//            {
+//                varNode.replaceWith( constant );
+//            }
             varNode.replaceWith( constant );
         } );
 
