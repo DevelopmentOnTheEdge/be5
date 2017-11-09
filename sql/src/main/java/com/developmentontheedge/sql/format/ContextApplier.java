@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -95,62 +96,75 @@ public class ContextApplier
         AstBeSqlSubQuery result = (AstBeSqlSubQuery)subQuery.clone();
         if( result.getLimit() != null )
             new LimitsApplier( 0, result.getLimit() ).transformQuery( result.getQuery() );
-        result.tree().select( AstBeSqlVar.class ).forEach( varNode -> {
-            String value = varResolver.apply( subQuery.translateVar( varNode.getName() ) );
-            if( value == null )
-                value = varNode.getDefault();
-            SimpleNode constant;
 
-            if(varNode.jjtGetParent() instanceof AstBeSqlSubQuery && value != null && !"".equals(value.trim()))
-            {
-                constant = SqlQuery.parse(value).getQuery();
-            }
-            else
-            {
-                if(value == null)
-                {
-                    value = "null";
-                }
-                constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
-                        : new AstIdentifierConstant(value);
-            }
+        applyFirstLevelVars(1, result, (AstBeSqlVar node) -> applyVar(key, node, varResolver) );
 
-            varNode.replaceWith( constant );
-        } );
+//        result.tree().select( AstBeSqlVar.class ).forEach( varNode -> {
+//            String value = varResolver.apply( subQuery.translateVar( varNode.getName() ) );
+//            if( value == null )
+//                value = varNode.getDefault();
+//            SimpleNode constant;
+//
+//            if(varNode.jjtGetParent() instanceof AstBeSqlSubQuery && value != null && !"".equals(value.trim()))
+//            {
+//                constant = SqlQuery.parse(value).getQuery();
+//            }
+//            else
+//            {
+//                if(value == null)
+//                {
+//                    value = "null";
+//                }
+//                constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
+//                        : new AstIdentifierConstant(value);
+//            }
+//
+//            varNode.replaceWith( constant );
+//        } );
 
         checkExpression(result, key, varResolver);
 
         return result;
     }
 
-//    private void applyVar(String key, AstBeSqlVar varNode, Function<String, String> varResolver, QueryContext context)
-//    {
-//        String value = varResolver.apply( context.getSubQueries().get( key ).translateVar( varNode.getName() ) );
-//        if( value == null )
-//            value = varNode.getDefault();
-//        SimpleNode constant;
-//
-//        if(value == null)
-//        {
-//            value = "null";
-//        }
-//
-//        if(result.getQuery() == null && result.getAstBeSqlVar() != null && !"".equals(value.trim()))
-//        {
-//            constant = SqlQuery.parse(value).getQuery();
-//        }
-//        else
-//        {
-//            constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
-//                    : new AstIdentifierConstant(value);
-//        }
-//
-//    //            if(!(varNode.jjtGetParent() instanceof AstBeSqlSubQuery))
-//    //            {
-//    //                varNode.replaceWith( constant );
-//    //            }
-//        varNode.replaceWith( constant );
-//    }
+    private void applyFirstLevelVars(int level, SimpleNode node, Consumer<AstBeSqlVar> valueSetter)
+    {
+        for (SimpleNode child: node.children())
+        {
+            if(child instanceof AstBeSqlVar)
+            {
+                valueSetter.accept((AstBeSqlVar)child);
+            }
+            else if(level == 1 || !(child instanceof AstBeSqlSubQuery))
+            {
+                applyFirstLevelVars(level + 1, child, valueSetter);
+            }
+        }
+    }
+
+    private void applyVar(String key, AstBeSqlVar varNode, Function<String, String> varResolver)
+    {
+        String value = varResolver.apply( context.getSubQueries().get( key ).translateVar( varNode.getName() ) );
+        if( value == null )
+            value = varNode.getDefault();
+        SimpleNode constant;
+
+        if(varNode.jjtGetParent() instanceof AstBeSqlSubQuery && value != null && !"".equals(value.trim()))
+        {
+            constant = SqlQuery.parse(value).getQuery();
+        }
+        else
+        {
+            if(value == null)
+            {
+                value = "null";
+            }
+            constant = varNode.jjtGetParent() instanceof AstStringConstant ? new AstStringPart(value)
+                    : new AstIdentifierConstant(value);
+        }
+
+        varNode.replaceWith( constant );
+    }
 
     private void checkExpression(SimpleNode newTree, String key, Function<String, String> varResolver)
     {
