@@ -76,7 +76,13 @@ public class MoreRowsGenerator {
      * @param limit 
      */
     private List<List<Object>> runForMoreRows(Query query, Request req, Map<String, String> parametersMap, boolean selectable, int offset, int limit) {
-        TableModel table = TableModel.from(query, parametersMap, req, selectable, injector).offset(offset).limit(limit).build();
+        TableModel table = TableModel
+                .from(query, parametersMap, req.getSession(), selectable, injector)
+                .sortOrder(req.getInt("order[0][column]", -1), "desc".equals(req.get("order[0][dir]")))
+                .offset(offset)
+                .limit(limit)
+                .build();
+
         return new MoreRowsBuilder(selectable).build(table);
     }
     

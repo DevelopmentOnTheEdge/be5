@@ -174,8 +174,10 @@ public class CellFormatter
 
         List<List<Object>> lists = new ArrayList<>();
 
-        for (DynamicPropertySet dps : list){
-            lists.add(toRow(dps, varResolver));
+        for (DynamicPropertySet dps : list)
+        {
+            List<Object> objects = toRow(dps, varResolver);
+            lists.add(objects);
         }
 
         return lists;

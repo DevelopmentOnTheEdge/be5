@@ -148,7 +148,7 @@ public class DocumentGenerator implements Runner
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
         if( totalNumberOfRows == null )
-            totalNumberOfRows = TableModel.from(query, parametersMap, req, injector).count();
+            totalNumberOfRows = TableModel.from(query, parametersMap, req.getSession(), injector).count();
 
         return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, table.getRows().size(),
                 parametersMap, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
@@ -180,7 +180,8 @@ public class DocumentGenerator implements Runner
         }
 
         TableModel table = TableModel
-                .from(query, parametersMap, req, selectable, injector)
+                .from(query, parametersMap, req.getSession(), selectable, injector)
+                .sortOrder(req.getInt("order[0][column]", -1), "desc".equals(req.get("order[0][dir]")))
                 .limit(limit)
                 .build();
 

@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -29,18 +30,16 @@ public class TableModel
     {
         private final Query query;
         private final QueryExecutor queryExecutor;
-        private boolean selectable;
-        private int limit = Integer.MAX_VALUE;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
+        private boolean selectable;
+        private int limit = Integer.MAX_VALUE;
 
-        private Builder(Query query, Map<String, String> parametersMap, Request req, boolean selectable, Injector injector)
+        private Builder(Query query, Map<String, String> parametersMap, Session session, boolean selectable, Injector injector)
         {
             this.query = query;
             this.selectable = selectable;
-            int sortColumn = req.getInt("order[0][column]", -1) + (selectable ? -1 : 0);
-            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, req.getSession(), injector);
-            this.queryExecutor.sortOrder(sortColumn, "desc".equals(req.get("order[0][dir]")));
+            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, session, injector);
             this.userAwareMeta = injector.get(UserAwareMeta.class);
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
         }
@@ -55,6 +54,12 @@ public class TableModel
         {
             this.queryExecutor.limit( limit );
             this.limit = limit;
+            return this;
+        }
+
+        public Builder sortOrder(int sortColumn, boolean desc)
+        {
+            queryExecutor.sortOrder(sortColumn + (selectable ? -1 : 0), desc);
             return this;
         }
 
@@ -284,14 +289,14 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Request req, Injector injector)
+    public static Builder from(Query query, Map<String, String> parametersMap, Session session, Injector injector)
     {
-        return from(query, parametersMap, req, false, injector);
+        return from(query, parametersMap, session, false, injector);
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Request req, boolean selectable, Injector injector)
+    public static Builder from(Query query, Map<String, String> parametersMap, Session session, boolean selectable, Injector injector)
     {
-        return new Builder(query, parametersMap, req, selectable, injector);
+        return new Builder(query, parametersMap, session, selectable, injector);
     }
 
     public static class ColumnModel

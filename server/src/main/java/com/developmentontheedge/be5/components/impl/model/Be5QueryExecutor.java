@@ -578,6 +578,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
 
+//        TableModel table = TableModel
+//                .from(query, parametersMap, req, false, injector)
+//                .build();
         return streamDps(finalSQL);
     }
 }

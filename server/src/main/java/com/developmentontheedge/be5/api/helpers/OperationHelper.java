@@ -176,7 +176,7 @@ public class OperationHelper
         }
 
         TableModel table = TableModel
-                .from(query, stringStringMap, request, false, injector)
+                .from(query, stringStringMap, request.getSession(), false, injector)
                 .limit(Integer.MAX_VALUE)
                 .build();
         String[][] stockArr = new String[table.getRows().size()][2];
