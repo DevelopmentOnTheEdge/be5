@@ -464,11 +464,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //        }
 //    }
 
-    private StreamEx<DynamicPropertySet> streamDps(String finalSql)
+    private List<DynamicPropertySet> streamDps(String finalSql)
     {
         try
         {
-            return dpsExecutor.stream(finalSql, this::processMeta);
+            return dpsExecutor.list(finalSql, this::processMeta);
         }
         catch (Exception e)
         {
@@ -567,14 +567,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public StreamEx<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver)
+    public List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver)
     {
         AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
 
         if(subQuery.getQuery() == null)
         {
-            List<DynamicPropertySet> empty = new ArrayList<>();
-            return StreamEx.of(empty);
+            return Collections.emptyList();
         }
 
         String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);

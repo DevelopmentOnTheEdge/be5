@@ -419,6 +419,15 @@ public class TableModel
             options.get(type).put(attribute, value);
             return this;
         }
+
+        @Override
+        public String toString()
+        {
+            return "CellModel{" +
+                    "content=" + content +
+                    ", options=" + options +
+                    '}';
+        }
     }
 
     private final boolean selectable;

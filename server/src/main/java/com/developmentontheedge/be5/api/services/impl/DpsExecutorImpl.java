@@ -1,16 +1,12 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DpsExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import one.util.streamex.StreamEx;
 
-import java.sql.*;
 import java.util.*;
-import java.util.Spliterators.AbstractSpliterator;
-import java.util.function.Consumer;
+
 
 import static com.developmentontheedge.be5.api.helpers.DpsRecordAdapter.createDps;
 
@@ -48,44 +44,44 @@ public class DpsExecutorImpl implements DpsExecutor
     {
         return db.select(sql, rs -> createDps(rs, metaProcessor));
     }
-
-    @Override
-    public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
-    {
-        ResultSet rs = null;
-        try
-        {
-            rs = databaseService.executeQuery(sql);
-            ResultSet finalRs = rs;
-            return StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE,
-                    Spliterator.ORDERED | Spliterator.IMMUTABLE)
-            {
-                @Override
-                public boolean tryAdvance(Consumer<? super DynamicPropertySet> action)
-                {
-                    try
-                    {
-                        if( !finalRs.next() )
-                        {
-                            databaseService.close( finalRs );
-                            return false;
-                        }
-                        action.accept(DpsRecordAdapter.createDps( finalRs, metaProcessor ));
-                        return true;
-                    }
-                    catch( Throwable t )
-                    {
-                        databaseService.close( finalRs );
-                        throw new RuntimeException(t);
-                    }
-                }
-            } ).onClose( () -> databaseService.close( finalRs ) );
-        }
-        catch( Exception e )
-        {
-            databaseService.close( rs );
-            throw new RuntimeException(e);
-        }
-    }
+//
+//    @Override
+//    public StreamEx<DynamicPropertySet> stream(String sql, MetaProcessor metaProcessor)
+//    {
+//        ResultSet rs = null;
+//        try
+//        {
+//            rs = databaseService.executeQuery(sql);
+//            ResultSet finalRs = rs;
+//            return StreamEx.of( new AbstractSpliterator<DynamicPropertySet>(Long.MAX_VALUE,
+//                    Spliterator.ORDERED | Spliterator.IMMUTABLE)
+//            {
+//                @Override
+//                public boolean tryAdvance(Consumer<? super DynamicPropertySet> action)
+//                {
+//                    try
+//                    {
+//                        if( !finalRs.next() )
+//                        {
+//                            databaseService.close( finalRs );
+//                            return false;
+//                        }
+//                        action.accept(DpsRecordAdapter.createDps( finalRs, metaProcessor ));
+//                        return true;
+//                    }
+//                    catch( Throwable t )
+//                    {
+//                        databaseService.close( finalRs );
+//                        throw new RuntimeException(t);
+//                    }
+//                }
+//            } ).onClose( () -> databaseService.close( finalRs ) );
+//        }
+//        catch( Exception e )
+//        {
+//            databaseService.close( rs );
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }

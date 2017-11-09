@@ -22,4 +22,12 @@ public class InitialRow {
     {
         return cells;
     }
+
+    @Override
+    public String toString()
+    {
+        return "InitialRow{" +
+                "cells=" + cells +
+                '}';
+    }
 }

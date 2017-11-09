@@ -58,6 +58,6 @@ public interface QueryExecutor
      */
     List<String> getColumnNames() throws Be5Exception;
 
-    StreamEx<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
+    List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
 
 }

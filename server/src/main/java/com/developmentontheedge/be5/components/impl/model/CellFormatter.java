@@ -12,9 +12,9 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 import com.google.common.collect.ImmutableList;
-import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -170,9 +170,15 @@ public class CellFormatter
      */
     private List<List<Object>> toTable(String subquery, VarResolver varResolver)
     {
-        try(StreamEx<DynamicPropertySet> stream = queryExecutor.executeSubQuery(subquery, varResolver)){
-            return stream.map(dps -> toRow(dps, varResolver)).toList();
+        List<DynamicPropertySet> list = queryExecutor.executeSubQuery(subquery, varResolver);
+
+        List<List<Object>> lists = new ArrayList<>();
+
+        for (DynamicPropertySet dps : list){
+            lists.add(toRow(dps, varResolver));
         }
+
+        return lists;
     }
 
     /**

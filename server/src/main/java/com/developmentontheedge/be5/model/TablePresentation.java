@@ -107,4 +107,15 @@ public class TablePresentation
     {
         return layout;
     }
+
+    @Override
+    public String toString()
+    {
+        return "TablePresentation{" +
+                "category='" + category + '\'' +
+                ", page='" + page + '\'' +
+                ", columns=" + columns +
+                ", rows=" + rows +
+                '}';
+    }
 }

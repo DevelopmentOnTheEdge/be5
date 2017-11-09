@@ -18,9 +18,9 @@ public interface DpsExecutor
 
     DynamicPropertySet get(String sql, DpsExecutorImpl.MetaProcessor metaProcessor);
 
-    /**
-     * Streams an SQL query result as a sequence of dynamic property sets.
-     */
-    StreamEx<DynamicPropertySet> stream(String sql, DpsExecutorImpl.MetaProcessor metaProcessor);
+//    /**
+//     * Streams an SQL query result as a sequence of dynamic property sets.
+//     */
+//    StreamEx<DynamicPropertySet> stream(String sql, DpsExecutorImpl.MetaProcessor metaProcessor);
 
 }
