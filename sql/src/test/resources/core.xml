@@ -1936,5 +1936,13 @@ ORDER BY ol.executedAt DESC
    <format dbms="oracle"><![CDATA[SELECT product_id FROM inventories MINUS SELECT product_id FROM order_items]]></format>
   </parser>
  </test>
+
+ <test name="sum_DISTINCT">
+  <parser>
+   <query><![CDATA[SELECT SUM(DISTINCT price) FROM goods]]></query>
+   <format dbms="postgres"><![CDATA[SELECT SUM(DISTINCT price) FROM goods]]></format>
+  </parser>
+ </test>
+
  
 </testSuite>

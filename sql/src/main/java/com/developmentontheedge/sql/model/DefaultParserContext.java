@@ -183,7 +183,7 @@ public class DefaultParserContext implements ParserContext
         declareFunction( context, "COALESCE", "IFNULL" );
         declareFunction( context, "LENGTH", "LEN" ); // TODO: check number of arguments
 
-        declareFunction( context, 1, "SUM" );
+        context.declareFunction( new PredefinedFunction( "SUM", Function.AGGREGATE_FUNCTION_PRIORITY, 1 ) );
         declareFunction( context, 1, "MAX" );
         declareFunction( context, 1, "MIN" );
 
