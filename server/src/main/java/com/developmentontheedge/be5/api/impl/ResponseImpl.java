@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.util.Utils;
 
 public class ResponseImpl implements Response
 {
@@ -156,7 +157,7 @@ public class ResponseImpl implements Response
     public void sendError(Be5Exception e)
     {
         ErrorModel errorModel;
-        if(showMsg())
+        if(Utils.showMsg())
         {
             errorModel = new ErrorModel(e);
         }
@@ -172,13 +173,8 @@ public class ResponseImpl implements Response
     public void sendAccessDenied(Be5Exception e)
     {
         response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        String msg = showMsg() ? e.getMessage() : "";
+        String msg = Utils.showMsg() ? e.getMessage() : "";
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
-    }
-
-    private boolean showMsg()
-    {
-        return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
     }
 
     @Override

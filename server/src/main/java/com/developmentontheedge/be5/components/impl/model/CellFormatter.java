@@ -195,7 +195,7 @@ public class CellFormatter
             Object value = property.getValue();
             Object processedCell = format(new TableModel.RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
-            return processedCell;
+            return !name.startsWith("___") ? processedCell : "";
         }).toList();
     }
 

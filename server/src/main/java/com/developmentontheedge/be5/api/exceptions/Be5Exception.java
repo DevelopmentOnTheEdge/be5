@@ -180,7 +180,7 @@ public class Be5Exception extends RuntimeException
         return sw.toString();
     }
 
-    public static String getMessage(Be5Exception e)
+    public static String getMessage(Throwable e)
     {
         StringBuilder out = new StringBuilder(e.getMessage());
 
@@ -188,7 +188,7 @@ public class Be5Exception extends RuntimeException
 
         while(e.getCause() instanceof Be5Exception)
         {
-            e = (Be5Exception)e.getCause();
+            e = e.getCause();
             out.append("\n").append(e.getCause() != null ? e.getCause().getMessage() : "");
         }
         return out.toString();

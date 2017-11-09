@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -673,4 +674,8 @@ public class Utils
         return def;
     }
 
+    public static boolean showMsg()
+    {
+        return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
+    }
 }

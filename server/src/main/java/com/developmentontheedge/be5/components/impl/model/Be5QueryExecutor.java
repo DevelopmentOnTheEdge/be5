@@ -19,8 +19,10 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.ColumnAdder;
@@ -474,29 +476,21 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //        }
 //    }
 
-    private List<DynamicPropertySet> streamDps(String finalSql)
-    {
-        try
-        {
-            return dpsExecutor.list(finalSql, this::processMeta);
-        }
-        catch (Exception e)
-        {
-            log.log(Level.SEVERE, e.toString() + " Final SQL: " + finalSql, e);
-            throw Be5Exception.internalInQuery(e, query);
-        }
-    }
-
     private List<DynamicPropertySet> listDps(String finalSql)
     {
         try
         {
             return dpsExecutor.list(finalSql, this::processMeta);
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.log(Level.SEVERE, e.toString() + " Final SQL: " + finalSql, e);
-            throw Be5Exception.internalInQuery(e, query);
+            Be5Exception be5Exception = Be5Exception.internalInQuery(e, query);
+            log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
+
+            //todo error utils
+            DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
+            dynamicProperties.add(new DynamicProperty("error", String.class, Utils.showMsg() ? Be5Exception.getMessage(e) : "error"));
+            return Collections.singletonList(dynamicProperties);
         }
     }
 
@@ -588,15 +582,28 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
 
-        TableModel table = TableModel
-                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parametersMap, session, false, injector)
-                .setContextApplier(contextApplier)
-                .build();
+        List<DynamicPropertySet> dynamicPropertySets = listDps(finalSQL);
 
-        String result = table.getRows().toString();
+//        TableModel table = TableModel
+//                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parametersMap, session, false, injector)
+//                .setContextApplier(contextApplier)
+//                .build();
+//
+//        String innerJoinedTable = print(table);
+//        DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
+//        dynamicProperties.add(new DynamicProperty("innerJoinedTable", String.class, innerJoinedTable));
 
-        return streamDps(finalSQL);
+
+        //return Collections.singletonList(dynamicProperties);
+        return dynamicPropertySets;
     }
+
+//    private String print(TableModel tableModel)
+//    {
+//        return StreamEx.of(tableModel.getRows())
+//                .map(rowModel -> StreamEx.of(rowModel.getCells()).map(cellModel -> cellModel.content != null ? cellModel.content.toString() : "").joining(" "))
+//                .joining("<br/> ");
+//    }
 
     @Override
     public QueryExecutor setContextApplier(ContextApplier contextApplier)
