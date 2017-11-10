@@ -15,6 +15,14 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 {
     private final Object owner;
 
+    /**
+     * not work without owner
+     */
+    private GDynamicPropertySetSupport()
+    {
+        owner = null;
+    }
+
     public GDynamicPropertySetSupport(Object owner)
     {
         super();

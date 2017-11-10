@@ -1,6 +1,5 @@
 package src.groovy.operations.operationService
 
-import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
@@ -16,14 +15,14 @@ class ErrorProcessing extends GOperationSupport implements Operation
     {
         dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name"], presetValues)
 
-        add(dps) {
+        dps.add {
             name  = "propertyForAnotherEntity"
             value = "text"
         }
 
         if(presetValues.containsKey("booleanProperty"))
         {
-            add(dps) {
+            dps.add {
                 name  = "booleanProperty"
                 TYPE  = Boolean
                 value = presetValues.getOrDefault("booleanProperty", false)

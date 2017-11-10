@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.validation.Validator
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
@@ -20,12 +21,12 @@ import static org.junit.Assert.assertEquals
 class ValidatorServiceTest extends Be5ProjectTest
 {
     @Inject Validator validator
-    DynamicPropertySet dps
+    GDynamicPropertySetSupport dps
 
     @Before
     void initDps()
     {
-        dps = new DynamicPropertySetSupport()
+        dps = new GDynamicPropertySetSupport(this)
     }
 
     @Test
@@ -45,7 +46,7 @@ class ValidatorServiceTest extends Be5ProjectTest
     {
         String[] initValue = ["val", "val2"] as String[]
 
-        def property = add(dps) {
+        def property = dps.add {
             name          = "name"
             TYPE          = String
             value         = initValue
@@ -61,7 +62,7 @@ class ValidatorServiceTest extends Be5ProjectTest
     {
         String[] initValue = [] as String[]
 
-        def property = add(dps) {
+        def property = dps.add {
             name          = "name"
             TYPE          = String
             value         = initValue

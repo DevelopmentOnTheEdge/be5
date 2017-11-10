@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.validation.Validator
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
@@ -20,17 +21,17 @@ import static org.junit.Assert.assertNull
 class ValidatorServiceValueInTagsTest extends Be5ProjectTest
 {
     @Inject Validator validator
-    DynamicPropertySet dps
+    GDynamicPropertySetSupport dps
 
     @Before
     void initDps(){
-        dps = new DynamicPropertySetSupport()
+        dps = new GDynamicPropertySetSupport(this)
     }
 
     @Test
     void checkValueInTags()
     {
-        add(dps) {
+        dps.add {
             name          = "test"
             TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
             value         = "2"
@@ -43,7 +44,7 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
     @Test
     void checkValueInTagsLong()
     {
-        add(dps) {
+        dps.add {
             name          = "test"
             TYPE          = Long
             TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
@@ -57,7 +58,7 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
     @Test(expected = IllegalArgumentException.class)
     void checkValueInTagsError()
     {
-        add(dps) {
+        dps.add {
             name          = "test"
             TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
             value         = "3"
@@ -76,7 +77,7 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
     @Test(expected = IllegalArgumentException.class)
     void checkValueInTagsMultipleErrorStringValue()
     {
-        add(dps) {
+        dps.add {
             name          = "test"
             TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
             value         = ["1","3"] as Object[]
@@ -91,7 +92,7 @@ class ValidatorServiceValueInTagsTest extends Be5ProjectTest
     @Test(expected = IllegalArgumentException.class)
     void checkValueInTagsMultipleError()
     {
-        add(dps) {
+        dps.add {
             name          = "test"
             TAG_LIST_ATTR = [["1","1"],["2","2"]] as String[][]
             value         = [1,3] as Object[]

@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
-import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public abstract class TestUtils extends DynamicPropertyGBuilder
+public abstract class TestUtils
 {
     protected static final Jsonb jsonb = JsonbBuilder.create();
 

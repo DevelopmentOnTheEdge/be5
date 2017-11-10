@@ -1,31 +1,26 @@
 package com.developmentontheedge.be5.modules.core.genegate
 
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields as p
+import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.OperationContext
-import com.developmentontheedge.be5.operation.OperationSupport
-
-//import static com.developmentontheedge.be5.modules.core.genegate.CoreEntityFields.UsersFields.*
 
 
-class TestOperation extends OperationSupport
+class TestOperation extends GOperationSupport
 {
     @Inject CoreEntityModels entities
 
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.addDpForColumns(getInfo().getEntity(), [p.name, p.countryID])
+        dps = dpsHelper.addDpForColumns(getInfo().getEntity(), ["name", "countryID"])
 
-        add(dps) {
-            name             = p.name
-            DISPLAY_NAME     = "Test"
+        dps.add("name", "Test") {
             RELOAD_ON_CHANGE = true
             MULTIPLE_SELECTION_LIST = true
             READ_ONLY        = true
         }
 
-        edit(dps, p.countryID) {
+        dps.edit("countryID") {
             RELOAD_ON_CHANGE = true
             MULTIPLE_SELECTION_LIST = true
         }

@@ -11,14 +11,13 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.model.beans.DynamicPropertyGBuilder;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public abstract class OperationSupport extends DynamicPropertyGBuilder implements Operation
+public abstract class OperationSupport implements Operation
 {
     @Inject public DatabaseService databaseService;
     @Inject public DatabaseModel database;

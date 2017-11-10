@@ -1,23 +1,15 @@
 package com.developmentontheedge.be5.modules.core.genegate
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper
-import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.modules.core.genegate.entities.Provinces
-import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields as p
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
-import com.developmentontheedge.be5.util.DateUtils
-import com.developmentontheedge.beans.DynamicPropertySet
 import org.apache.commons.dbutils.ResultSetHandler
-import org.apache.commons.dbutils.handlers.BeanHandler
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Matchers
-import org.mockito.stubbing.OngoingStubbing
-
-import java.sql.Date
 
 import static org.junit.Assert.*
 import static org.mockito.Mockito.*
@@ -38,17 +30,17 @@ class EntitiesTest extends Be5ProjectTest//todo use Be5ProjectDBTest
     {
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
-        DynamicPropertySet dps = dpsHelper.addDpForColumns(new GDynamicPropertySetSupport(this), entities.provinces.entity, [p.name, p.countryID])
+        GDynamicPropertySetSupport dps = dpsHelper.addDpForColumns(new GDynamicPropertySetSupport(this),
+                entities.provinces.entity, ["name", "countryID"])
 
-        add(dps) {
-            name        = p.ID
+        dps.add("ID") {
             TYPE        = String
             value       = "12"
             CAN_BE_NULL = false
         }
 
-        edit(dps, p.name) { value = "testName" }
-        edit(dps, p.countryID) { value = "testCountryID" }
+        dps.edit("name") { value = "testName" }
+        dps.edit("countryID") { value = "testCountryID" }
 
         //todo getString(dps.$countryID)
         String id = entities.provinces.add {

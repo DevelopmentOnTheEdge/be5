@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.model.beans
 import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
-import groovy.transform.TypeChecked
 
 
 class TestOperation extends GOperationSupport implements Operation
@@ -24,7 +23,7 @@ class TestOperation extends GOperationSupport implements Operation
             TAG_LIST_ATTR = helper.getTagsFromSelectionView(request, "asdasd")
         }
 
-        dps.edit("test1") { value = 123}
+        dps.edit("test1") { value = 123 }
 
         return dps
     }
@@ -35,6 +34,11 @@ class TestOperation extends GOperationSupport implements Operation
         database.testtableAdmin << [
             "test1": dps["test1"],
             "test2": dps["test2"]
+        ]
+
+        database.testtableAdmin << [
+                "test1": dps.$test1,
+                "test2": dps.$test2
         ]
     }
 
