@@ -1,6 +1,6 @@
 
 ### GdslGenegator
-Генерирует GroovyDSL для таблиц в проекте
+Генерирует GroovyDSL для таблиц в проекте    
 GroovyDSL - добавляет поддержку мета классов для groovy:
 ```groovy
 contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.impl.DatabaseModel")) {
@@ -15,7 +15,14 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
 
 ```
 
-Добавление в проект: 
+Добавление в проект:
+```xml
+ <dependency>
+  <groupId>com.developmentontheedge.be5</groupId>
+  <artifactId>be5-entity-gen</artifactId>
+  <version>0.1.0</version>
+ </dependency>
+``` 
 ```xml
  <plugins>
    <plugin>
