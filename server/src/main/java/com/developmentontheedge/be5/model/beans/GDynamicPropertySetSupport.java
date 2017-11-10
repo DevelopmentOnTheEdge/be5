@@ -38,44 +38,11 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         return super.getProperty(name);
     }
 
-    /**
-     * метод со сложным поведением, без тулинга
-     */
-    @Deprecated
-    public void putAt(String propertyName, Object value)
-    {
-        //DynamicPropertySet dps = ( ( T )object );
-        if( value instanceof Map )
-        {
-            Map map = ( Map )value;
-            map.put( "name", propertyName );
-            DynamicPropertySetMetaClass.leftShift(this, map );
-            return;
-        }
-        if( value == null )
-        {
-            DynamicProperty dp = new DynamicProperty( propertyName, String.class );
-            dp.setValue( null );
-            add( dp );
-            return;
-        }
-
-        if( getProperty( propertyName ) != null )
-        {
-            setValue( propertyName, value );
-            return;
-        }
-
-        DynamicProperty dp = new DynamicProperty( propertyName, value.getClass() );
-        dp.setValue( value );
-        add( dp );
-    }
-
     public DynamicProperty add(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
         DPSAttributes builder = getBuilder(cl);
 
-        DynamicProperty property = new DynamicProperty(builder.getName(), builder.getTYPE());//todo - add get type from value and refactoring TestGroovyOp
+        DynamicProperty property = new DynamicProperty(builder.getName(), builder.getTYPE());
         add(property);
         return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
@@ -85,7 +52,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     {
         DPSAttributes builder = getBuilder(cl);
 
-        DynamicProperty property = new DynamicProperty(propertyName, builder.getTYPE());//todo - add get type from value and refactoring TestGroovyOp
+        DynamicProperty property = new DynamicProperty(propertyName, builder.getTYPE());
         add(property);
         return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
@@ -117,6 +84,16 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         code.setResolveStrategy(Closure.DELEGATE_FIRST);
         code.call();
         return builder;
+    }
+
+    /**
+     * be3 синтаксис, метод без тулинга
+     */
+    @Deprecated
+    public void putAt(String propertyName, Map<String, Object> value)
+    {
+        value.put( "name", propertyName );
+        DynamicPropertySetMetaClass.leftShift(this, value );
     }
 
     @Deprecated
