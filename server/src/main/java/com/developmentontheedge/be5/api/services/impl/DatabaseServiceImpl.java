@@ -17,13 +17,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -32,7 +28,7 @@ public class DatabaseServiceImpl implements DatabaseService
     private static final Logger log = Logger.getLogger(DatabaseServiceImpl.class.getName());
 
     //Thread local?
-    private final Map<ResultSet, Connection> queriesMap = new ConcurrentHashMap<>(100);
+    //private final Map<ResultSet, Connection> queriesMap = new ConcurrentHashMap<>(100);
 
     private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
 
@@ -88,12 +84,6 @@ public class DatabaseServiceImpl implements DatabaseService
         return dataSource;
     }
 
-    @Override
-    public Connection getConnection() throws SQLException
-    {
-        return getConnection(false);
-    }
-
     public Connection getConnection(boolean isReadOnly) throws SQLException
     {
         Connection conn = getDataSource().getConnection();
@@ -131,50 +121,6 @@ public class DatabaseServiceImpl implements DatabaseService
             catch (SQLException e) {
                 throw Be5Exception.internal(log, e);
             }
-        }
-    }
-
-    public void close(ResultSet rs)
-    {
-        if ( rs == null )
-            return;
-        Statement stmt;
-        try
-        {
-            stmt = rs.getStatement();
-        }
-        catch ( Throwable t )
-        {
-            throw Be5Exception.internal(log, t, "get Statement" );
-        }
-        try
-        {
-            rs.close();
-        }
-        catch ( Throwable t )
-        {
-            throw Be5Exception.internal(log, t, "closing ResultSet" );
-        }
-        try
-        {
-            if ( stmt != null )
-                stmt.close();
-        }
-        catch ( Throwable t )
-        {
-            throw Be5Exception.internal(log, t, "closing Statement" );
-        }
-        try
-        {
-            Connection conn = queriesMap.remove( rs );
-            if ( conn != null && !isInTransaction() )
-            {
-                releaseConnection(conn);
-            }
-        }
-        catch ( Throwable t )
-        {
-            throw Be5Exception.internal(log, t, "closing Connection" );
         }
     }
 
@@ -275,78 +221,9 @@ public class DatabaseServiceImpl implements DatabaseService
         throw Be5Exception.internal("Unknown dataSource");
     }
 
-    @Override
-    public int executeUpdate(String query) throws SQLException
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String executeInsert(String sql) throws SQLException
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public ResultSet executeQuery(String sql)
-    {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            conn = getConnection(true);
-            stmt = conn.createStatement();
-            rs = paranoidQuery(stmt, sql);
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            if( rs == null )
-            {
-                try
-                {
-                    if(stmt != null)stmt.close();
-                } catch (SQLException e)
-                {
-                    log.log(Level.SEVERE, e.getMessage(), e);
-                }
-                if ( !isInTransaction() )
-                {
-                    returnConnection(conn);
-                }
-            }
-            else if ( !isInTransaction() )
-            {
-                queriesMap.put( rs, conn );
-            }
-        }
-
-        return rs;
-    }
-
     private boolean isInTransaction()
     {
         return getCurrentTxConn() != null;
-    }
-
-    private ResultSet paranoidQuery(Statement stmt, String query)
-    {
-        String hacked = query;
-        hacked += "/* STARTED: " + new java.sql.Timestamp( System.currentTimeMillis() ) + " */";
-
-        try
-        {
-            return stmt.executeQuery( hacked );
-        }
-        catch( SQLException e )
-        {
-            throw Be5Exception.internal(e, query);
-        }
     }
 
     public Map<String, String> getParameters()

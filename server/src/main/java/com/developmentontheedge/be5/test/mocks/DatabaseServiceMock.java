@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,31 +61,31 @@ public class DatabaseServiceMock implements DatabaseService
     public String getConnectString() {
         return "jdbc:postgresql://localhost:5432/test";
     }
-
-    @Override
-    public int executeUpdate(String query) throws SQLException {
-        return 0;
-    }
-
-    @Override
-    public ResultSet executeQuery(String sql) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public String executeInsert(String sql) throws SQLException {
-        return "";
-    }
-
-    @Override
-    public void close(ResultSet rs) {
-
-    }
-
-    @Override
-    public Connection getConnection() throws SQLException {
-        return null;
-    }
+//
+//    @Override
+//    public int executeUpdate(String query) throws SQLException {
+//        return 0;
+//    }
+//
+//    @Override
+//    public ResultSet executeQuery(String sql) throws SQLException {
+//        return null;
+//    }
+//
+//    @Override
+//    public String executeInsert(String sql) throws SQLException {
+//        return "";
+//    }
+//
+//    @Override
+//    public void close(ResultSet rs) {
+//
+//    }
+//
+//    @Override
+//    public Connection getConnection() throws SQLException {
+//        return null;
+//    }
 
     @Override
     public void releaseConnection(Connection conn) {
