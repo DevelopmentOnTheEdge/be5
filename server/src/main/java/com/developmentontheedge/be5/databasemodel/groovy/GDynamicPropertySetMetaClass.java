@@ -1,7 +1,8 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import groovy.lang.MissingPropertyException;
 
 
 public class GDynamicPropertySetMetaClass<T extends DynamicPropertySet> extends ExtensionMethodsMetaClass
@@ -11,15 +12,33 @@ public class GDynamicPropertySetMetaClass<T extends DynamicPropertySet> extends 
         super( theClass );
     }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
     public Object getProperty( Object object, String property )
     {
         if( PropertyAccessHelper.isValueAccess( property ) )
         {
             return ( ( T )object ).getValue( property.substring( 1 ) );
         }
-        throw Be5Exception.internal("use dps[\"nameColumn\"]");
+        try
+        {
+            return super.getProperty( object, property );
+        }
+        catch( MissingPropertyException e )
+        {
+            if( PropertyAccessHelper.isPropertyAccess( property ) )
+            {
+                DynamicProperty prop = ( ( T )object ).getProperty( property.substring( 1 ) );
+                if( prop != null )
+                {
+                    return prop;
+                }
+            }
+            DynamicProperty prop = ( ( T )object ).getProperty( property );
+            if( prop != null )
+            {
+                return prop;
+            }
+            throw e;
+        }
     }
 
 }

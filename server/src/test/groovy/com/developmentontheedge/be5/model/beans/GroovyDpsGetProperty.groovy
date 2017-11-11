@@ -6,7 +6,7 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 
 
-class GroovyDPSGetValueTest extends Be5ProjectTest
+class GroovyDpsGetProperty extends Be5ProjectTest
 {
     private GDynamicPropertySetSupport dps
 
@@ -21,7 +21,9 @@ class GroovyDPSGetValueTest extends Be5ProjectTest
 
         assertEquals("value2", dps["input2"].getValue() )
 
-        assertEquals("value2", dps.$input2 )
+        assertEquals("value2", dps.input2.getValue() )// not TypeChecked
+
+        assertEquals("value2", dps.$input2 )// not TypeChecked
     }
 
 }

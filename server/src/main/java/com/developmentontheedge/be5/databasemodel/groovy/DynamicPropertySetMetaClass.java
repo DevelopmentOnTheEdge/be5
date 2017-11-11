@@ -1,26 +1,22 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import groovy.lang.GString;
-import groovy.lang.MissingPropertyException;
 import org.codehaus.groovy.runtime.GStringImpl;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends ExtensionMethodsMetaClass
+
+public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends GDynamicPropertySetMetaClass
 {
     private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
 
@@ -45,37 +41,6 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends E
     public DynamicPropertySetMetaClass( Class<T> theClass )
     {
         super( theClass );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Object getProperty( Object object, String property )
-    {
-        if( PropertyAccessHelper.isValueAccess( property ) )
-        {
-            return ( ( T )object ).getValue( property.substring( 1 ) );
-        }
-        try
-        {
-            return super.getProperty( object, property );
-        }
-        catch( MissingPropertyException e )
-        {
-            if( PropertyAccessHelper.isPropertyAccess( property ) )
-            {
-                DynamicProperty prop = ( ( T )object ).getProperty( property.substring( 1 ) );
-                if( prop != null )
-                {
-                    return prop;
-                }
-            }
-            DynamicProperty prop = ( ( T )object ).getProperty( property );
-            if( prop != null )
-            {
-                return prop;
-            }
-            throw e;
-        }
     }
 
     @Override
