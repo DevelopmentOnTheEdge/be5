@@ -63,12 +63,12 @@ public class TableModel
             queryExecutor.sortOrder(sortColumn + (selectable ? -1 : 0), desc);
             return this;
         }
-
-        public Builder setContextApplier(ContextApplier contextApplier)
-        {
-            queryExecutor.setContextApplier(contextApplier);
-            return this;
-        }
+//
+//        public Builder setContextApplier(ContextApplier contextApplier)
+//        {
+//            queryExecutor.setContextApplier(contextApplier);
+//            return this;
+//        }
 
         public long count()
         {

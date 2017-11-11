@@ -493,14 +493,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private void processMeta(Object value, Map<String, Map<String, String>> meta)
-    {
-        if (subQueryKeys.contains(value) && !meta.containsKey("sql"))
-        {
-            AstBeSqlSubQuery subQuery = contextApplier.applyVars((String) value, s -> "");
-            meta.put("sql", StreamEx.of("beautifier", "default").mapToEntry(subQuery::getParameter).nonNullValues().toSortedMap());
-        }
-    }
+//    private void processMeta(Object value, Map<String, Map<String, String>> meta)
+//    {
+//        if (subQueryKeys.contains(value) && !meta.containsKey("sql"))
+//        {
+//            AstBeSqlSubQuery subQuery = contextApplier.applyVars((String) value, s -> "");
+//            meta.put("sql", StreamEx.of("beautifier", "default").mapToEntry(subQuery::getParameter).nonNullValues().toSortedMap());
+//        }
+//    }
 
     static class DebugQueryLogger
     {
@@ -603,11 +603,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //                .map(rowModel -> StreamEx.of(rowModel.getCells()).map(cellModel -> cellModel.content != null ? cellModel.content.toString() : "").joining(" "))
 //                .joining("<br/> ");
 //    }
-
-    @Override
-    public QueryExecutor setContextApplier(ContextApplier contextApplier)
-    {
-        this.contextApplier = contextApplier;
-        return this;
-    }
+//
+//    @Override
+//    public QueryExecutor setContextApplier(ContextApplier contextApplier)
+//    {
+//        this.contextApplier = contextApplier;
+//        return this;
+//    }
 }

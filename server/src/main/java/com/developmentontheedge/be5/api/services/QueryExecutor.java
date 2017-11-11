@@ -62,5 +62,5 @@ public interface QueryExecutor
 
     List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
 
-    QueryExecutor setContextApplier(ContextApplier contextApplier);
+    //QueryExecutor setContextApplier(ContextApplier contextApplier);
 }
