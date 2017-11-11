@@ -35,7 +35,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         this.owner = owner;
     }
 
-//в TypeChecked не компилится - тогда лучше использовать $columnName - как в be3, не работает тулинг в IDEA
+//в TypeChecked не компилится, не работает тулинг в IDEA - тогда лучше использовать $columnName - как в be3
 //    public Object call(String name)
 //    {
 //        return super.getValue(name);
