@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.api.sql;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.impl.DpsExecutorImpl;
 import com.developmentontheedge.be5.components.impl.model.BeTagParser;
 import com.developmentontheedge.be5.components.impl.model.DynamicPropertyMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -25,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+
 public class DpsRecordAdapter
 {
     private static final String COLUMN_REF_IDX_PROPERTY = "columnRefIdx";
@@ -34,7 +34,7 @@ public class DpsRecordAdapter
         return createDps(resultSet, (a,b)->{});
     }
 
-    public static DynamicPropertySet createDps(ResultSet resultSet, DpsExecutorImpl.MetaProcessor metaProcessor)
+    public static DynamicPropertySet createDps(ResultSet resultSet, MetaProcessor metaProcessor)
     {
         try {
             DynamicProperty[] schema = createSchema(resultSet.getMetaData());
@@ -54,8 +54,8 @@ public class DpsRecordAdapter
                     continue;
                 }
                 Object val = getSqlValue( dp.getType(), resultSet, i + 1 );
-                Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
-                metaProcessor.process(val, metaInfo);
+                //todo test Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
+                //metaProcessor.process(val, metaInfo);
                 DynamicProperty property = DynamicPropertySetSupport.cloneProperty( dp );
                 property.setValue( val );
                 row.add( property );

@@ -21,7 +21,7 @@ class TableModelTest extends TestTableQueryDBTest
                 .limit(20)
                 .build()
 
-        assertEquals("{'content':'user1<br/> user2','options':{'sql':{}}}",
+        assertEquals("{'content':'user1<br/> user2','options':{}}",
                 oneQuotes(jsonb.toJson(table.getRows().get(0).getCells().get(2))))
     }
 

@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

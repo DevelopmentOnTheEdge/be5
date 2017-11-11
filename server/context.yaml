@@ -41,9 +41,6 @@ context:
   - sqlService:
       interface:      com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
-  - dpsExecutor:
-      interface:      com.developmentontheedge.be5.api.services.DpsExecutor
-      implementation: com.developmentontheedge.be5.api.services.impl.DpsExecutorImpl
   - qRecServiceImpl:
       interface:      com.developmentontheedge.be5.api.services.QRecService
       implementation: com.developmentontheedge.be5.api.services.impl.QRecServiceImpl

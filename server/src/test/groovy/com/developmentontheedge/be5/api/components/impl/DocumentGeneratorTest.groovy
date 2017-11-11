@@ -65,11 +65,11 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 "{'cells':[" +
                     "{'content':'tableModelTest','options':{}}," +
                     "{'content':11,'options':{}}," +
-                    "{'content':'tableModelTest','options':{'sql':{}}}]}," +
+                    "{'content':'tableModelTest','options':{}}]}," +
                 "{'cells':[" +
                     "{'content':'tableModelTest','options':{}}," +
                     "{'options':{}}," +
-                    "{'content':'','options':{'sql':{}}}" +
+                    "{'content':'','options':{}}" +
                 "]}]", oneQuotes(jsonb.toJson(testtable.getRows())))
     }
 }

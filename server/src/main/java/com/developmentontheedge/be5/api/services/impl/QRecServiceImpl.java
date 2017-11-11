@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
+import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.model.QRec;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.components.impl.model;
 
 import com.developmentontheedge.be5.api.Session;
-import com.developmentontheedge.be5.api.helpers.DpsRecordAdapter;
+import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -12,7 +12,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.DpsExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -70,6 +69,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.developmentontheedge.be5.api.sql.DpsRecordAdapter.createDps;
 
 
 /**
@@ -173,7 +174,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Context context;
     private final ParserContext parserContext;
     private final Injector injector;
-    private final DpsExecutor dpsExecutor;
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
 
@@ -193,7 +193,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
         this.injector = injector;
-        this.dpsExecutor = injector.get(DpsExecutor.class);
         this.extraQuery = ExtraQuery.DEFAULT;
         this.sortColumn = -1;
     }
@@ -480,7 +479,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         try
         {
-            return dpsExecutor.list(finalSql, this::processMeta);
+            return db.selectList(finalSql, DpsRecordAdapter::createDps);
         }
         catch (Throwable e)
         {
