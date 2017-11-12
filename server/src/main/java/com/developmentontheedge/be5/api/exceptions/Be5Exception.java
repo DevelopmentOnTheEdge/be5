@@ -1,7 +1,8 @@
 package com.developmentontheedge.be5.api.exceptions;
 
+import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.OperationInfo;
+
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -71,7 +72,7 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(t, q.getEntity().getName(), q.getName());
     }
 
-    public static Be5Exception internalInOperation(Throwable t, OperationInfo o)
+    public static Be5Exception internalInOperation(Throwable t, Operation o)
     {
         return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName());
     }

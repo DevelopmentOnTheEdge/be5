@@ -280,7 +280,7 @@ public class OperationServiceImpl implements OperationService
         }
         catch (Exception e)
         {
-            throw Be5Exception.internalInOperation(e, operation.getInfo());
+            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
         }
     }
 //
@@ -307,7 +307,7 @@ public class OperationServiceImpl implements OperationService
                     else
                     {
                         throw Be5Exception.internalInOperation(
-                                new Error("Class " + operationInfo.getCode() + " is null."), operationInfo);
+                                new Error("Class " + operationInfo.getCode() + " is null."), operationInfo.getModel());
                         //throw Be5Exception.internal("Class " + operationInfo.getCode() + " is null." );
                     }
                 }
@@ -317,7 +317,7 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch ( Throwable e )
                 {
-                    throw Be5Exception.internalInOperation(e, operationInfo);
+                    throw Be5Exception.internalInOperation(e, operationInfo.getModel());
                 }
                 break;
             default:
@@ -329,7 +329,7 @@ public class OperationServiceImpl implements OperationService
                 {
                     throw Be5Exception.internalInOperation(new RuntimeException(
                             "It is possible to use the 'file:' instead of the 'code:' " +
-                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo);
+                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo.getModel());
                 }
         }
 
@@ -347,7 +347,7 @@ public class OperationServiceImpl implements OperationService
         }
         catch (Exception e)
         {
-            throw Be5Exception.internalInOperation(e, operation.getInfo());
+            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
         }
     }
 
