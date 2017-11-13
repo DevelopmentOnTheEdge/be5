@@ -7,12 +7,21 @@ import com.developmentontheedge.be5.env.Injector;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
+import javax.servlet.ServletContext;
 
 
 public class TemplateProcessor implements Component
 {
+    private final ServletContext servletContext;
+
+    public TemplateProcessor(ServletContext servletContext)
+    {
+        this.servletContext = servletContext;
+    }
+
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
@@ -30,8 +39,14 @@ public class TemplateProcessor implements Component
         context.setVariable("title", "Name");
         context.setVariable("url", "http://url");
 
-
-        res.sendHtml(getHtmlTemplateEngine().process("index", context));
+        if(req.getRequestUri().startsWith("/manager/"))
+        {
+            res.sendHtml(getHtmlTemplateEngine().process("manager", context));
+        }
+        else
+        {
+            res.sendHtml(getHtmlTemplateEngine().process("index", context));
+        }
     }
 
     public TemplateEngine getHtmlTemplateEngine()
@@ -43,14 +58,20 @@ public class TemplateProcessor implements Component
 
     public ITemplateResolver textTemplateResolver()
     {
-        //getClass().getClassLoader().getResource("manager/index.html")
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        //templateResolver.setPrefix("/");
-        templateResolver.setSuffix(".html");
+        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+
+        // HTML is the default mode, but we will set it anyway for better understanding of code
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding("UTF8");
-//        templateResolver.setCheckExistence(true);
-//        templateResolver.setCacheable(false);
+        // This will convert "home" to "/WEB-INF/templates/home.html"
+        templateResolver.setPrefix("/WEB-INF/templates/");
+        templateResolver.setSuffix(".html");
+        // Set template cache TTL to 1 hour. If not set, entries would live in cache until expelled by LRU
+        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
+
+        // Cache is set to true by default. Set to false if you want templates to
+        // be automatically updated when modified.
+        templateResolver.setCacheable(true);
+
         return templateResolver;
     }
 }

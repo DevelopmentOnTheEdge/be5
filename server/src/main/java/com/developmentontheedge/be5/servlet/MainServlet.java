@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
+import com.developmentontheedge.be5.components.TemplateProcessor;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
@@ -43,6 +45,7 @@ public class MainServlet extends HttpServlet
     private Pattern uriPattern = Pattern.compile("(/.*)?/api/(.*)");
 
     private Injector injector;
+    private ServletContext servletContext;
 
     //TODO private final DaemonStarter starter;
 
@@ -50,6 +53,8 @@ public class MainServlet extends HttpServlet
     public void init(ServletConfig config) throws ServletException
     {
         super.init(config);
+        servletContext = config.getServletContext();
+
         boolean mode = MainServlet.class.getClassLoader().getResource("dev.yaml") != null;
 
         injector = Be5.createInjector(mode ? Stage.DEVELOPMENT : Stage.PRODUCTION, new YamlBinder());
@@ -104,7 +109,7 @@ public class MainServlet extends HttpServlet
                 templateComponentID = "defaultTemplateProcessor";
             }
 
-            runComponent(templateComponentID, new RequestImpl(request, requestUri, simplify(parameters)), res);
+            runTemplateProcessor(templateComponentID, new RequestImpl(request, requestUri, simplify(parameters)), res);
             return;
         }
 
@@ -120,6 +125,43 @@ public class MainServlet extends HttpServlet
         String componentId = uriParts[ind + 1];
 
         runComponent(componentId, new RequestImpl(request, subRequestUri, simplify(parameters)), res);
+    }
+
+    private void runTemplateProcessor(String componentId, Request req, Response res)
+    {
+        if (UserInfoHolder.getUserInfo() == null)
+        {
+            injector.getLoginService().initGuest(req);
+        }
+
+        try
+        {
+            runRequestPreprocessors(componentId, req, res);
+            new TemplateProcessor(servletContext)
+                    .generate(req, res, injector);
+        }
+
+        catch ( Be5Exception ex )
+        {
+            if(ex.getCode().isInternal() || ex.getCode().isAccessDenied())
+            {
+                log.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+
+            if(ex.getCode().isAccessDenied())
+            {
+                res.sendAccessDenied(ex);
+            }
+            else
+            {
+                res.sendError(ex);
+            }
+        }
+        catch ( Throwable e )
+        {
+            log.log(Level.SEVERE, e.getMessage(), e);
+            res.sendError(Be5Exception.internal(e));
+        }
     }
 
     void runComponent(String componentId, Request req, Response res)
