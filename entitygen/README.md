@@ -50,6 +50,7 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
    <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
+    <version>3.0.0</version>
     <executions>
      <execution>
       <phase>generate-sources</phase>
