@@ -11,10 +11,13 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.Filter;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +29,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.components.TemplateProcessor;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
@@ -34,11 +36,9 @@ import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 
-public class MainServlet extends HttpServlet
+public class MainServlet implements Filter
 {
     private static final Logger log = Logger.getLogger(MainServlet.class.getName());
 
@@ -50,10 +50,9 @@ public class MainServlet extends HttpServlet
     //TODO private final DaemonStarter starter;
 
     @Override
-    public void init(ServletConfig config) throws ServletException
+    public void init(FilterConfig filterConfig) throws ServletException
     {
-        super.init(config);
-        servletContext = config.getServletContext();
+        servletContext = filterConfig.getServletContext();
 
         boolean mode = MainServlet.class.getClassLoader().getResource("dev.yaml") != null;
 
@@ -62,29 +61,38 @@ public class MainServlet extends HttpServlet
         injector.getDatabaseService();
     }
 
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+    {
+        HttpServletRequest req = (HttpServletRequest) request;
+
+        if (!respond(req, (HttpServletResponse)response, req.getMethod(),req.getRequestURI(), req.getParameterMap())) {
+            chain.doFilter(request, response);
+        }
+    }
+
+    @Override
+    public void destroy()
+    {
+        // nothing to do
+    }
+
     public Injector getInjector()
     {
         return injector;
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
     }
 
     /**
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
      */
-    private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
+    private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
+        if ( request.getRequestURI().startsWith("/static") )
+        {
+            return false;
+        }
+
         String origin = request.getHeader("Origin");
         // TODO test origin
 
@@ -110,7 +118,7 @@ public class MainServlet extends HttpServlet
             }
 
             runTemplateProcessor(templateComponentID, new RequestImpl(request, requestUri, simplify(parameters)), res);
-            return;
+            return true;
         }
 
         String[] uriParts = requestUri.split("/");
@@ -125,6 +133,7 @@ public class MainServlet extends HttpServlet
         String componentId = uriParts[ind + 1];
 
         runComponent(componentId, new RequestImpl(request, subRequestUri, simplify(parameters)), res);
+        return true;
     }
 
     private void runTemplateProcessor(String componentId, Request req, Response res)

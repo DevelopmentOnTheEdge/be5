@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -62,7 +63,7 @@ public class MainServletTest extends Be5ProjectTest
         when(request.getRequestURI()).thenReturn("/api/roleSelector");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        spyMainServlet.doGet(request, response);
+        spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
         verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[],'username':'testUser'}"));
     }
@@ -73,7 +74,7 @@ public class MainServletTest extends Be5ProjectTest
         when(request.getRequestURI()).thenReturn("/be5/api/roleSelector");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        spyMainServlet.doGet(request, response);
+        spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
         verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[],'username':'testUser'}"));
     }
@@ -85,7 +86,7 @@ public class MainServletTest extends Be5ProjectTest
         when(request.getRequestURI()).thenReturn("/api");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        spyMainServlet.doPost(request, response);
+        spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
         //verify(writer).append(contains(doubleQuotes("'detail':")));
     }
@@ -96,7 +97,7 @@ public class MainServletTest extends Be5ProjectTest
         when(request.getRequestURI()).thenReturn("/api/static");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
-        spyMainServlet.doPost(request, response);
+        spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
         verify(writer).append(doubleQuotes("{'errors':[" +
                 "{'status':'500','title':'Element not found: '}" +
