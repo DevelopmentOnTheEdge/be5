@@ -87,11 +87,8 @@ public class MainServlet implements Filter
      */
     private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        System.out.println(request.getRequestURI());
-        log.severe(request.getRequestURI());
-        if ( request.getRequestURI().startsWith("/static")
-                || request.getRequestURI().endsWith(".js")
-                || request.getRequestURI().endsWith(".css"))
+        log.severe(requestUri);
+        if ( requestUri.endsWith(".js") || requestUri.endsWith(".css") )
         {
             return false;
         }

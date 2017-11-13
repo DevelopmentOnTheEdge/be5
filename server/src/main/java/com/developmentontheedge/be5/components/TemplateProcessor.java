@@ -39,7 +39,7 @@ public class TemplateProcessor implements Component
         context.setVariable("title", "Name");
         context.setVariable("url", "http://url");
 
-        if(req.getRequestUri().startsWith("/manager/"))
+        if(req.getRequestUri().contains("/manager/"))
         {
             res.sendHtml(getHtmlTemplateEngine().process("manager", context));
         }
