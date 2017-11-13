@@ -87,7 +87,6 @@ public class MainServlet implements Filter
      */
     private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        log.severe(requestUri);
         if ( requestUri.endsWith(".js") || requestUri.endsWith(".css") )
         {
             return false;
