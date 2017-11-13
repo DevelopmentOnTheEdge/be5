@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -61,10 +62,16 @@ public class OperationInfo
         return queryName;
     }
 
-    public OperationResult redirectThisOperation(String[] records, Map<String, String> redirectParams)
+    public OperationResult redirectThisOperation(String[] records, Map<String, Object> redirectParams)
     {
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
+        {
+            if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+        }
+
         HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named(redirectParams);
+                .named(stringStringHashMap);
         if(records.length > 0)
         {
             hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
@@ -73,10 +80,16 @@ public class OperationInfo
         return OperationResult.redirect(hashUrl);
     }
 
-    public OperationResult redirectThisOperationNewId(Object newID, Map<String, String> redirectParams)
+    public OperationResult redirectThisOperationNewId(Object newID, Map<String, Object> redirectParams)
     {
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
+        {
+            if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+        }
+
         HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named(redirectParams)
+                .named(stringStringHashMap)
                 .named("selectedRows", newID.toString());
 
         return OperationResult.redirect(hashUrl);

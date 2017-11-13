@@ -37,7 +37,7 @@ public abstract class OperationSupport implements Operation
     public Session session;
 
     public static final String reloadControl = "_reloadcontrol_";
-    private final Map<String, String> redirectParams = new HashMap<>();
+    private final Map<String, Object> redirectParams = new HashMap<>();
 
     @Override
     public final void initialize(OperationInfo operationInfo,
@@ -104,7 +104,7 @@ public abstract class OperationSupport implements Operation
     }
 
     @Override
-    public Map<String, String> getRedirectParams()
+    public Map<String, Object> getRedirectParams()
     {
         return redirectParams;
     }
@@ -113,7 +113,7 @@ public abstract class OperationSupport implements Operation
      * Puts additional parameters for redirect OperationResult.
      * @param extra parameters map
      */
-    public void addRedirectParams( Map<String, String> extra )
+    public void addRedirectParams( Map<String, Object> extra )
     {
         redirectParams.putAll( extra );
     }
@@ -123,7 +123,7 @@ public abstract class OperationSupport implements Operation
      * @param name  parameter name
      * @param value parameter value
      */
-    public void addRedirectParam( String name, String value )
+    public void addRedirectParam( String name, Object value )
     {
         addRedirectParams( Collections.singletonMap( name, value ) );
     }
