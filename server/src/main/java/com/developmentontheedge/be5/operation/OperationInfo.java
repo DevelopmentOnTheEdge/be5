@@ -62,16 +62,10 @@ public class OperationInfo
         return queryName;
     }
 
-    public OperationResult redirectThisOperation(String[] records, Map<String, Object> redirectParams)
+    public OperationResult redirectThisOperation(String[] records, Map<String, String> redirectParams)
     {
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
-        {
-            if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
-        }
-
         HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named(stringStringHashMap);
+                .named(redirectParams);
         if(records.length > 0)
         {
             hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
@@ -80,16 +74,10 @@ public class OperationInfo
         return OperationResult.redirect(hashUrl);
     }
 
-    public OperationResult redirectThisOperationNewId(Object newID, Map<String, Object> redirectParams)
+    public OperationResult redirectThisOperationNewId(Object newID, Map<String, String> redirectParams)
     {
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
-        {
-            if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
-        }
-
         HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named(stringStringHashMap)
+                .named(redirectParams)
                 .named("selectedRows", newID.toString());
 
         return OperationResult.redirect(hashUrl);

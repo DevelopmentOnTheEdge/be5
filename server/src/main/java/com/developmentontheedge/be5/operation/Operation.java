@@ -54,7 +54,7 @@ public interface Operation extends Serializable
 
     void setResult(OperationResult operationResult);
 
-    Map<String, Object> getRedirectParams();
+    Map<String, String> getRedirectParams();
 
     Object getLayout();
 

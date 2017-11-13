@@ -104,9 +104,14 @@ public abstract class OperationSupport implements Operation
     }
 
     @Override
-    public Map<String, Object> getRedirectParams()
+    public Map<String, String> getRedirectParams()
     {
-        return redirectParams;
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
+        {
+            if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+        }
+        return stringStringHashMap;
     }
 
     /**
