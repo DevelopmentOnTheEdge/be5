@@ -13,6 +13,8 @@ public class SilentDeleteOperation extends OperationSupport implements Operation
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         return null;
+
+        //todo add redirect params
     }
 
     @Override

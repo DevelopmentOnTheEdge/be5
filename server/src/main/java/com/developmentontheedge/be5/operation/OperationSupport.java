@@ -128,4 +128,19 @@ public abstract class OperationSupport implements Operation
         addRedirectParams( Collections.singletonMap( name, value ) );
     }
 
+//    todo addRedirectParam from DPS in invoke as be3
+//    public void addNotNullRedirectParam( Map<String, Object> presetValues, String name )
+//    {
+//        Object value = presetValues.get(name);
+//        if(value != null)
+//        {
+//            addRedirectParams(Collections.singletonMap(name, value.toString()));
+//        }
+//    }
+//
+//    public void addNotNullRedirectParam( Map<String, Object> presetValues )
+//    {
+//        presetValues.forEach((key, value) -> addNotNullRedirectParam(presetValues, key));
+//    }
+
 }
