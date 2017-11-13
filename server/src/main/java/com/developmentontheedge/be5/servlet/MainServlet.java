@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.servlet;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +87,11 @@ public class MainServlet implements Filter
      */
     private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        if ( request.getRequestURI().startsWith("/static") )
+        System.out.println(request.getRequestURI());
+        log.severe(request.getRequestURI());
+        if ( request.getRequestURI().startsWith("/static")
+                || request.getRequestURI().endsWith(".js")
+                || request.getRequestURI().endsWith(".css"))
         {
             return false;
         }
