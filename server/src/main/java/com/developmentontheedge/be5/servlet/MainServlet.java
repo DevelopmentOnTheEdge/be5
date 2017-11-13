@@ -101,10 +101,9 @@ public class MainServlet implements Filter
         response.addHeader("Access-Control-Allow-Methods", "POST, GET");
         response.addHeader("Access-Control-Max-Age", "1728000");
 
-        response.setHeader("Expires", "Tue, 03 Jul 2001 06:00:00 GMT");
-        response.setDateHeader("Last-Modified", new Date().getTime());
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
         response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
 
         Response res = new ResponseImpl(response);
 
