@@ -255,4 +255,10 @@ public class RequestImpl implements Request
         String contextPath = rawRequest.getContextPath();
         return getServerUrl() + contextPath;
     }
+
+    @Override
+    public String getContextPath()
+    {
+        return rawRequest.getContextPath();
+    }
 }

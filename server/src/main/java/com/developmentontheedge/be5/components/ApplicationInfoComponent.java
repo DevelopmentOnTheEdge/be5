@@ -57,7 +57,7 @@ public class ApplicationInfoComponent implements Component
     public static ApplicationInfo getApplicationInfo(Request req, UserAwareMeta userAwareMeta)throws Exception
     {
         String title = userAwareMeta
-                .getColumnTitle("index", "page", "applicationName");
+                .getColumnTitle("index", "page", "title");
 
         String url = "";
         HttpServletRequest request = req.getRawRequest();

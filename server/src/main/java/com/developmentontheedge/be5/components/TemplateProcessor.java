@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.env.Injector;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -35,9 +36,15 @@ public class TemplateProcessor implements Component
 
     public void processTemplate(Request req, Response res, Injector injector)
     {
+        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
+        String title = userAwareMeta.getColumnTitle("index", "page", "title");
+        String description = userAwareMeta.getColumnTitle("index", "page", "description");
+
         Context context = new Context();
-        context.setVariable("title", "Name");
-        context.setVariable("url", "http://url");
+        context.setVariable("title", title);
+        context.setVariable("description", description);
+
+        context.setVariable("baseUrl", req.getContextPath() + "/");
 
         if(req.getRequestUri().contains("/manager/"))
         {

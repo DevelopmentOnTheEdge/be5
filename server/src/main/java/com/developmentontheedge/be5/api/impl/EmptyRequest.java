@@ -66,6 +66,12 @@ public class EmptyRequest implements Request
     }
 
     @Override
+    public String getContextPath()
+    {
+        return "";
+    }
+
+    @Override
     public Map<String, String> getParameters()
     {
         return new HashMap<>();
