@@ -46,18 +46,17 @@ public class GdslGenegator
         if(file.exists() && !file.isDirectory())
         {
             System.out.println("Generate skipped, file exists: " + packageName + "." + serviceClassName);
+            return;
         }
-        else
-        {
-            System.out.println("File '"+file.toString()+"' not found, generate...");
-            injector = Be5.createInjector(Stage.PRODUCTION, new YamlBinder(YamlBinder.Mode.serverOnly));
 
-            createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+        System.out.println("File '"+file.toString()+"' not found, generate...");
+        injector = Be5.createInjector(Stage.PRODUCTION, new YamlBinder(YamlBinder.Mode.serverOnly));
 
-            System.out.println("------" + JULLogger.infoBlock(
-                    "Generate successful: " + entityCount + " entities created.\n" +
-                            packageName + serviceClassName));
-        }
+        createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+
+        System.out.println("------" + JULLogger.infoBlock(
+                "Generate successful: " + entityCount + " entities created.\n" +
+                        packageName + serviceClassName));
     }
 
     private void createService(String generatedSourcesPath, String packageName,

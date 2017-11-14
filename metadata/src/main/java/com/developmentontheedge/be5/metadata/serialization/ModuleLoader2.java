@@ -153,6 +153,7 @@ public class ModuleLoader2
         if(project == null)
         {
             //todo create new not module project for tests?
+            log.info("Project not found, try load main module.");
             project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
         }
 
