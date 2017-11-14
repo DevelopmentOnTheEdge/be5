@@ -22,7 +22,7 @@ public abstract class TestUtils
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    Path path;
+    Path tpmProjectPath;
     Project project;
 
     final String profileTestMavenPlugin = "profileTestMavenPlugin";
@@ -30,7 +30,7 @@ public abstract class TestUtils
     @Before
     public void setUp() throws Exception
     {
-        path = tmp.newFolder().toPath();
+        tpmProjectPath = tmp.newFolder().toPath();
         project = ProjectTestUtils.getProject("test");
         Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
         ProjectTestUtils.createScheme( entity );
@@ -42,12 +42,12 @@ public abstract class TestUtils
 
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = createModule(project, "testModule", modulePath);
-        Serialization.save( project, path );
+        Serialization.save( project, tpmProjectPath);
 
 
         ArrayList<URL> urls = new ArrayList<>();
         urls.add(modulePath.resolve("project.yaml").toUri().toURL());
-        urls.add(path.resolve("project.yaml").toUri().toURL());
+        urls.add(tpmProjectPath.resolve("project.yaml").toUri().toURL());
         ModuleLoader2.loadAllProjects(urls);
 
 

@@ -13,15 +13,15 @@ public class GenerateContextTest extends TestUtils
     @Test
     public void execute() throws Exception
     {
-        Path path = tmp.newFolder().toPath();
+        Path targetPath = tmp.newFolder().toPath();
         new GenerateContext()
-                .setBe5Project(project)
+                .setBe5ProjectPath(tpmProjectPath.toString())
                 .setProfileName(profileTestMavenPlugin)
-                .setGeneratePath(path.toString())
+                .setGeneratePath(targetPath.toString())
                 .execute();
 
 
-        String result = Files.readAllLines(path.resolve("context.xml")).stream().collect(Collectors.joining("\n"));
+        String result = Files.readAllLines(targetPath.resolve("context.xml")).stream().collect(Collectors.joining("\n"));
 
 
         assertTrue(result.contains("<Resource name=\"jdbc/test\""));

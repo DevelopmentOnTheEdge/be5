@@ -13,7 +13,7 @@ public class AppValidateTest extends TestUtils
     {
         new AppValidate()
                 .setLogger(new JULLogger(Logger.getLogger(AppValidateTest.class.getName())))
-                .setBe5ProjectPath(path.toAbsolutePath().toString())
+                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString())
                 .execute();
     }
 
@@ -22,7 +22,7 @@ public class AppValidateTest extends TestUtils
     {
         new AppValidate()
                 .setLogger(new JULLogger(Logger.getLogger(AppValidateTest.class.getName())))
-                .setBe5ProjectPath(path.toAbsolutePath().toString())
+                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString())
                 .setCheckQueryPath("entity.All records")
                 .setDdlPath("entity")
                 .setCheckRoles(true)

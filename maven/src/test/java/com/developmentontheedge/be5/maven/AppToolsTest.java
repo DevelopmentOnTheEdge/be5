@@ -17,7 +17,7 @@ public class AppToolsTest extends TestUtils
         appTools
                 .setBe5Project(project)
                 .setProfileName(profileTestMavenPlugin)
-                .setBe5ProjectPath(path.toAbsolutePath().toString());
+                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString());
     }
 
     @Test
