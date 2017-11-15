@@ -148,8 +148,8 @@ public class DpsHelper
             {
                 DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(entry.getValue());
                 dps.add(dynamicProperty);
-                excludedColumnsList.remove(entry.getKey());
             }
+            excludedColumnsList.remove(entry.getKey());
         }
 
         for(String propertyName: excludedColumnsList)
