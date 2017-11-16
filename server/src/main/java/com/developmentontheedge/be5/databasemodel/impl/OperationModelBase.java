@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
-import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -16,7 +16,7 @@ import java.util.Map;
 //todo need Request
 class OperationModelBase implements OperationModel
 {
-    private OperationService operationService;
+    private OperationExecutor operationExecutor;
     private OperationInfo operationInfo;
     //private DynamicPropertySet parameters;
     //private SessionAdapter sessionAdapter;
@@ -31,9 +31,9 @@ class OperationModelBase implements OperationModel
     //private MessageHandler output = new OutputMessageHandler( out );
     private Map<String, Object> presetValues = Collections.emptyMap();
 
-    OperationModelBase( OperationService operationService, OperationInfo operationInfo )
+    OperationModelBase( OperationExecutor operationExecutor, OperationInfo operationInfo )
     {
-        this.operationService = operationService;
+        this.operationExecutor = operationExecutor;
         this.operationInfo = operationInfo;
     }
 
@@ -61,7 +61,7 @@ class OperationModelBase implements OperationModel
     @Override
     public DynamicPropertySet getParameters() throws Exception
     {
-        return null;//operationService.generate()
+        return null;//operationExecutor.generate(operationInfo, presetValues, records, req);
     }
 
 //    private DynamicPropertySet getParametersImpl() throws Exception

@@ -374,7 +374,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     public OperationModel getOperation( String operationName )
     {
         OperationInfo operationInfo = userAwareMeta.getOperation(entity.getName(), operationName);
-        return new OperationModelBase(operationService, operationInfo);
+        return null;//new OperationModelBase(operationService, operationInfo);
     }
 
     @Override

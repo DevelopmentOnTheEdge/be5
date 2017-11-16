@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -25,27 +26,25 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Map;
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
 public class OperationServiceImpl implements OperationService
 {
     private final Injector injector;
+    private final OperationExecutor operationExecutor;
     private final DatabaseService databaseService;
     private final UserAwareMeta userAwareMeta;
     private final Validator validator;
-    private final GroovyOperationLoader groovyOperationLoader;
 
-
-    public OperationServiceImpl(GroovyOperationLoader groovyOperationLoader, Injector injector,
+    public OperationServiceImpl(Injector injector, OperationExecutor operationExecutor,
                                 DatabaseService databaseService, Validator validator, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
+        this.operationExecutor = operationExecutor;
         this.databaseService = databaseService;
         this.validator = validator;
         this.userAwareMeta = userAwareMeta;
-        this.groovyOperationLoader = groovyOperationLoader;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class OperationServiceImpl implements OperationService
     public Either<FormPresentation, OperationResult> generate(OperationInfo meta,
                 Map<String, Object> presetValues, String selectedRowsString, Request req)
     {
-        Operation operation = create(meta, selectedRows(selectedRowsString), req);
+        Operation operation = operationExecutor.create(meta, selectedRows(selectedRowsString), req);
 
         return callGetParameters(selectedRowsString, operation, presetValues);
     }
@@ -178,7 +177,7 @@ public class OperationServiceImpl implements OperationService
           Map<String, Object> presetValues, String selectedRowsString, Request req)
     {
         OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), meta.getQueryName());
-        Operation operation = create(meta, selectedRows(selectedRowsString), req);
+        Operation operation = operationExecutor.create(meta, selectedRows(selectedRowsString), req);
 
         if(operation instanceof TransactionalOperation)
         {
@@ -289,55 +288,6 @@ public class OperationServiceImpl implements OperationService
 //
 //        return operation;
 //    }
-
-    private Operation create(OperationInfo operationInfo, String[] records, Request request)
-    {
-        Operation operation;
-
-        switch (operationInfo.getType())
-        {
-            case OPERATION_TYPE_GROOVY:
-                try
-                {
-                    Class aClass = groovyOperationLoader.get(operationInfo);
-                    if(aClass != null)
-                    {
-                        operation = ( Operation ) aClass.newInstance();
-                    }
-                    else
-                    {
-                        throw Be5Exception.internalInOperation(
-                                new Error("Class " + operationInfo.getCode() + " is null."), operationInfo.getModel());
-                        //throw Be5Exception.internal("Class " + operationInfo.getCode() + " is null." );
-                    }
-                }
-                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
-                {
-                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
-                }
-                catch ( Throwable e )
-                {
-                    throw Be5Exception.internalInOperation(e, operationInfo.getModel());
-                }
-                break;
-            default:
-                try
-                {
-                    operation = ( Operation ) Class.forName(operationInfo.getCode()).newInstance();
-                }
-                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-                {
-                    throw Be5Exception.internalInOperation(new RuntimeException(
-                            "It is possible to use the 'file:' instead of the 'code:' " +
-                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo.getModel());
-                }
-        }
-
-        operation.initialize(operationInfo, OperationResult.open(), records, request);
-        injector.injectAnnotatedFields(operation);
-
-        return operation;
-    }
 
     private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)
     {

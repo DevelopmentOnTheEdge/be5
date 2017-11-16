@@ -53,3 +53,6 @@ context:
   - operationService:
       interface:      com.developmentontheedge.be5.api.services.OperationService
       implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl
+  - operationExecutor:
+      interface:      com.developmentontheedge.be5.api.services.OperationExecutor
+      implementation: com.developmentontheedge.be5.api.services.impl.OperationExecutorImpl
