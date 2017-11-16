@@ -56,6 +56,8 @@ public interface Operation extends Serializable
 
     Map<String, String> getRedirectParams();
 
+    String[] getRecords();
+
     Object getLayout();
 
     //todo Map<String, String> validate( Object parameters );

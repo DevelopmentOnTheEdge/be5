@@ -7,12 +7,15 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
+import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
+import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -38,45 +41,22 @@ public class OperationExecutorImpl implements OperationExecutor
     }
 
     @Override
-    public Object generate(OperationInfo meta, Map<String, Object> presetValues, String[] selectedRows, Request req)
+    public Object generate(Operation operation, Map<String, Object> presetValues)
     {
-        Operation operation = create(meta, selectedRows, req);
-
-        return callGetParameters(operation, presetValues);
-    }
-
-    private Object callGetParameters(Operation operation, Map<String, Object> presetValues)
-    {
-        Object parameters;
-
         try
         {
-            parameters = operation.getParameters(presetValues);
+            return operation.getParameters(presetValues);
         }
-        catch (Throwable e)
+        catch (Exception e)
         {
             throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
         }
-
-        if(OperationStatus.ERROR == operation.getStatus())
-        {
-            throw Be5Exception.internalInOperation(new Exception("ERROR Status"), operation.getInfo().getModel());
-        }
-
-        if(parameters instanceof DynamicPropertySet)
-        {
-            validator.isError((DynamicPropertySet) parameters);
-            validator.checkErrorAndCast((DynamicPropertySet) parameters);
-        }
-
-        return parameters;
     }
 
     @Override
-    public void execute(OperationInfo meta, Map<String, Object> presetValues, String[] selectedRows, Request req)
+    public void execute(Operation operation, Map<String, Object> presetValues)
     {
-        Operation operation = create(meta, selectedRows, req);
-        OperationContext operationContext = new OperationContext(selectedRows, meta.getQueryName());
+        OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
 
         if(operation instanceof TransactionalOperation)
         {
@@ -93,7 +73,22 @@ public class OperationExecutorImpl implements OperationExecutor
     private OperationResult callOperation(Map<String, Object> presetValues, Operation operation,
              OperationContext operationContext)
     {
-        Object parameters = callGetParameters(operation, presetValues);
+        Object parameters = generate(operation, presetValues);
+
+        if(OperationStatus.ERROR == operation.getStatus())
+        {
+            return operation.getResult();
+        }
+
+        if (parameters instanceof DynamicPropertySet)
+        {
+//            if(operation instanceof GOperationSupport)
+//            {
+//                ((GOperationSupport) operation).dps = (GDynamicPropertySetSupport) parameters;
+//            }
+//
+            validator.checkErrorAndCast((DynamicPropertySet) parameters);
+        }
 
         return callInvoke(operation, parameters, operationContext);
     }
@@ -106,28 +101,28 @@ public class OperationExecutorImpl implements OperationExecutor
         try
         {
             operation.invoke(parameters, operationContext);
+
+            if(OperationStatus.ERROR == operation.getStatus())
+            {
+                throw Be5Exception.internalInOperation(new Exception("ERROR Status"), operation.getInfo().getModel());
+            }
+
+            if(OperationStatus.IN_PROGRESS == operation.getStatus())
+            {
+                operation.setResult(OperationResult.redirect(
+                        new HashUrl(FrontendConstants.TABLE_ACTION,
+                                operation.getInfo().getEntityName(),
+                                operation.getInfo().getQueryName())
+                                .named(operation.getRedirectParams())
+                ));
+            }
+
+            return operation.getResult();
         }
         catch (Throwable e)
         {
             throw Be5Exception.internalInOperation(e.getCause(), operation.getInfo().getModel());
         }
-
-        if(OperationStatus.ERROR == operation.getStatus())
-        {
-            throw Be5Exception.internalInOperation(new Exception("ERROR Status"), operation.getInfo().getModel());
-        }
-
-        if(OperationStatus.IN_PROGRESS == operation.getStatus())
-        {
-            operation.setResult(OperationResult.redirect(
-                    new HashUrl(FrontendConstants.TABLE_ACTION,
-                            operation.getInfo().getEntityName(),
-                            operation.getInfo().getQueryName())
-                            .named(operation.getRedirectParams())
-            ));
-        }
-
-        return operation.getResult();
     }
 
     @Override

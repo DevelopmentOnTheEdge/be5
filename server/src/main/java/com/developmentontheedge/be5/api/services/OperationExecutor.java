@@ -10,7 +10,7 @@ public interface OperationExecutor
 {
     Operation create(OperationInfo operationInfo, String[] records, Request request);
 
-    Object generate(OperationInfo meta, Map<String, Object> presetValues, String[] selectedRows, Request req);
+    Object generate(Operation operation, Map<String, Object> presetValues);
 
-    void execute(OperationInfo meta, Map<String, Object> presetValues, String[] selectedRows, Request req);
+    void execute(Operation operation, Map<String, Object> presetValues);
 }

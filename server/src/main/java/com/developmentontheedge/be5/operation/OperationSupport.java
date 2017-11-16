@@ -77,6 +77,12 @@ public abstract class OperationSupport implements Operation
     }
 
     @Override
+    public String[] getRecords()
+    {
+        return records;
+    }
+
+    @Override
     public final OperationResult getResult()
     {
         return operationResult;

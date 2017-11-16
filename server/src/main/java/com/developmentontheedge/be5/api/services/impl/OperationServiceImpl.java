@@ -79,7 +79,7 @@ public class OperationServiceImpl implements OperationService
             operation.setResult(OperationResult.open());
         }
 
-        Object parameters = getParametersFromOperation(operation, presetValues);
+        Object parameters = operationExecutor.generate(operation, presetValues);
 
         if(invokeResult != null && invokeResult.getStatus() == OperationStatus.ERROR)
         {
@@ -195,7 +195,7 @@ public class OperationServiceImpl implements OperationService
             String selectedRowsString, Map<String, Object> presetValues, Operation operation,
              OperationContext operationContext)
     {
-        Object parameters = getParametersFromOperation(operation, presetValues);
+        Object parameters = operationExecutor.generate(operation, presetValues);
 
         if(OperationStatus.ERROR == operation.getStatus())
         {
@@ -288,18 +288,6 @@ public class OperationServiceImpl implements OperationService
 //
 //        return operation;
 //    }
-
-    private Object getParametersFromOperation(Operation operation, Map<String, Object> presetValues)
-    {
-        try
-        {
-            return operation.getParameters(presetValues);
-        }
-        catch (Exception e)
-        {
-            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
-        }
-    }
 
     public static String[] selectedRows(String selectedRowsString)
     {
