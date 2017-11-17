@@ -14,9 +14,9 @@ public class CustomOperationTest extends SqlMockOperationTest
     @Test
     public void getParametersTest()
     {
-        Either<FormPresentation, OperationResult> generate = operationService.generate(
-                getSpyMockRecForOp("testtableAdmin", "All records", "CustomOperation", "0",
-                        "{}"));
+        Either<FormPresentation, OperationResult> generate = generateOperation(
+                "testtableAdmin", "All records", "CustomOperation", "0",
+                        "{}");
 
         oneAssert(generate);
     }
@@ -24,9 +24,9 @@ public class CustomOperationTest extends SqlMockOperationTest
     @Test
     public void getParametersReload()
     {
-        Either<FormPresentation, OperationResult> generate = operationService.generate(
-                getSpyMockRecForOp("testtableAdmin", "All records", "CustomOperation", "0",
-                        "{'name':'','value':'2'}"));
+        Either<FormPresentation, OperationResult> generate = generateOperation(
+                "testtableAdmin", "All records", "CustomOperation", "0",
+                        "{'name':'','value':'2'}");
 
         oneAssert(generate);
     }

@@ -12,7 +12,6 @@ import org.junit.Before;
 
 public abstract class OperationDBTest extends Be5ProjectDBTest
 {
-    @Inject protected OperationService operationService;
     @Inject protected DpsHelper dpsHelper;
     @Inject protected Meta meta;
     @Inject protected SqlService db;

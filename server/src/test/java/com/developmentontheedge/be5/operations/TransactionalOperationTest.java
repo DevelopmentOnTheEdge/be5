@@ -14,9 +14,9 @@ public class TransactionalOperationTest extends OperationDBTest
     @Test
     public void test()
     {
-        Either<FormPresentation, OperationResult> result = operationService.execute(
-                getSpyMockRecForOp("testtableAdmin", "All records", "TestTransactionalOperation", "0",
-                        "{'name':'test', 'value': 5}"));
+        Either<FormPresentation, OperationResult> result = executeOperation(
+                "testtableAdmin", "All records", "TestTransactionalOperation", "0",
+                        "{'name':'test', 'value': 5}");
 
         assertEquals("{'details':'table/testtableAdmin/All records','message':'REDIRECTED','status':'redirect'}",
                 oneQuotes(jsonb.toJson(result.getSecond())));
@@ -25,9 +25,9 @@ public class TransactionalOperationTest extends OperationDBTest
     @Test
     public void testNullValues()
     {
-        Either<FormPresentation, OperationResult> result = operationService.generate(
-                getSpyMockRecForOp("testtableAdmin", "All records", "TestTransactionalOperation", "0",
-                        "{'nullValues':'yes'}"));
+        Either<FormPresentation, OperationResult> result = generateOperation(
+                "testtableAdmin", "All records", "TestTransactionalOperation", "0",
+                        "{'nullValues':'yes'}");
 
         assertEquals("{'details':'table/testtableAdmin/All records','message':'REDIRECTED','status':'redirect'}",
                 oneQuotes(jsonb.toJson(result.getSecond())));

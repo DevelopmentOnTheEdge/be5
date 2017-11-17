@@ -16,16 +16,6 @@ class OperationServiceImplTest extends SqlMockOperationTest
     @Inject UserAwareMeta userAwareMeta
     @Inject GroovyOperationLoader operationService
     @Inject ProjectProvider projectProvider
-    
-    @Test
-    void selectedRowsTest()
-    {
-        assertTrue( Arrays.equals(["1","2","3"] as String[], OperationServiceImpl.selectedRows("1,2,3")))
-
-        assertTrue( Arrays.equals(["1"] as String[], OperationServiceImpl.selectedRows("1")))
-
-        assertTrue( Arrays.equals([] as String[], OperationServiceImpl.selectedRows("")))
-    }
 
     @Test
     void getSuperOperationSimpleNameTest()

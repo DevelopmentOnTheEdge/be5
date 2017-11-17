@@ -1,18 +1,15 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
-import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.OperationSupport;
@@ -22,10 +19,9 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.google.common.base.Strings.nullToEmpty;
 
 
 public class OperationServiceImpl implements OperationService
@@ -45,24 +41,14 @@ public class OperationServiceImpl implements OperationService
     }
 
     @Override
-    public Either<FormPresentation, OperationResult> generate(Request req)
+    public Either<FormPresentation, OperationResult> generate(Operation operation)
     {
-        String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
-        String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
-        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
-
-        return generate(meta, presetValues, selectedRows(selectedRowsString), req);
+        return generate(operation, Collections.emptyMap());
     }
 
     @Override
-    public Either<FormPresentation, OperationResult> generate(OperationInfo meta,
-                Map<String, Object> presetValues, String[] selectedRows, Request req)
+    public Either<FormPresentation, OperationResult> generate(Operation operation, Map<String, Object> presetValues)
     {
-        Operation operation = operationExecutor.create(meta, selectedRows, req);
-
         Object parameters = operationExecutor.generate(operation, presetValues);
 
         if(OperationStatus.ERROR == operation.getStatus())
@@ -78,7 +64,8 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                return form(operation, parameters, OperationResult.error(e));
+                operation.setResult(OperationResult.error(e));
+                return form(operation, parameters);
             }
         }
 
@@ -111,7 +98,8 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
-                    return form(operation, parameters, OperationResult.error(e));
+                    operation.setResult(OperationResult.error(e));
+                    return form(operation, parameters);
                 }
             }
         }
@@ -119,25 +107,15 @@ public class OperationServiceImpl implements OperationService
         return form(operation, parameters);
     }
 
-    @Override//todo move to component
-    public Either<FormPresentation, OperationResult> execute(Request req)
+    @Override
+    public Either<FormPresentation, OperationResult> execute(Operation operation)
     {
-        String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
-        String queryName = req.getNonEmpty(RestApiConstants.QUERY);
-        String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        String selectedRowsString = nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS));
-        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
-
-        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
-
-        return execute(meta, presetValues, selectedRows(selectedRowsString), req);
+        return execute(operation, Collections.emptyMap());
     }
 
     @Override
-    public Either<FormPresentation, OperationResult> execute(OperationInfo meta,
-          Map<String, Object> presetValues, String[] selectedRows, Request req)
+    public Either<FormPresentation, OperationResult> execute(Operation operation, Map<String, Object> presetValues)
     {
-        Operation operation = operationExecutor.create(meta, selectedRows, req);
         OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
 
         if(operation instanceof TransactionalOperation)
@@ -176,7 +154,8 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                return form(operation, parameters, OperationResult.error(e));
+                operation.setResult(OperationResult.error(e));
+                return form(operation, parameters);
             }
         }
 
@@ -199,7 +178,8 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
-                    return form(operation, parameters, OperationResult.error(e));
+                    operation.setResult(OperationResult.error(e));
+                    return form(operation, parameters);
                 }
             }
 
@@ -207,25 +187,15 @@ public class OperationServiceImpl implements OperationService
             {
                 OperationResult invokeResult = operation.getResult();
                 Object newParameters = operationExecutor.generate(operation, presetValues);
-                return form(operation, newParameters, invokeResult);
+                operation.setResult(invokeResult);
+                return form(operation, newParameters);
             }
         }
 
         return Either.second(operation.getResult());
     }
 
-    public static String[] selectedRows(String selectedRowsString)
-    {
-        if(selectedRowsString.trim().isEmpty())return new String[0];
-        return selectedRowsString.split(",");
-    }
-
     private Either<FormPresentation, OperationResult> form(Operation operation, Object parameters)
-    {
-        return form(operation, parameters, operation.getResult());
-    }
-
-    private Either<FormPresentation, OperationResult> form(Operation operation, Object parameters, OperationResult operationResult)
     {
         validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
 
@@ -233,7 +203,7 @@ public class OperationServiceImpl implements OperationService
                 userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                 Arrays.stream(operation.getRecords()).collect(Collectors.joining(",")),
                 JsonFactory.bean(parameters), operation.getLayout(),
-                operationResult));
+                operation.getResult()));
     }
 
 }

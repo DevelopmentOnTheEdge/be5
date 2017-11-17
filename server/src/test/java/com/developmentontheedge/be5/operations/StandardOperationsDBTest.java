@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.OperationDBTest;
@@ -24,21 +23,17 @@ public class StandardOperationsDBTest extends OperationDBTest
     @Test
     public void editOperationGenerate()
     {
-        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", id.toString(),"{}");
-
-        FormPresentation first = operationService.generate(req).getFirst();
+        FormPresentation first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(),"{}").getFirst();
 
         assertEquals("{'name':'TestName','value':1}",
-                oneQuotes(first.getBean().getJsonObject("values").toString()));
+        oneQuotes(first.getBean().getJsonObject("values").toString()));
     }
 
     @Test
     public void editInvoke()
     {
-        Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Edit", id.toString(),
-                "{'name':'EditName','value':123}");
-
-        OperationResult operationResult = operationService.execute(req).getSecond();
+        OperationResult operationResult = executeOperation("testtableAdmin", "All records", "Edit", id.toString(),
+                "{'name':'EditName','value':123}").getSecond();
 
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);

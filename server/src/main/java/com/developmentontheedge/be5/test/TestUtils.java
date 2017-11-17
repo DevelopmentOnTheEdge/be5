@@ -1,14 +1,24 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.LoginService;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
+import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Binder;
+import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
+import com.developmentontheedge.be5.model.FormPresentation;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -22,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +44,10 @@ import static org.mockito.Mockito.when;
 
 public abstract class TestUtils
 {
+    @Inject protected OperationService operationService;
+    @Inject private OperationExecutor operationExecutor;
+    @Inject protected UserAwareMeta userAwareMeta;
+
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
     static final String profileForIntegrationTests = "profileForIntegrationTests";
@@ -154,6 +169,65 @@ public abstract class TestUtils
             dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
         }
         return dps;
+    }
+
+
+    protected Either<FormPresentation, OperationResult> generateOperation(String entityName, String queryName, String operationName,
+                                                                          String selectedRows)
+    {
+        return generateOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
+    }
+
+    protected Either<FormPresentation, OperationResult> generateOperation(String entityName, String queryName, String operationName,
+                                                                          String selectedRows, String values)
+    {
+        return generateOperation(entityName, queryName, operationName, selectedRows, JsonUtils.getValuesFromJson(values));
+    }
+
+    protected Either<FormPresentation, OperationResult> generateOperation(String entityName, String queryName, String operationName,
+                                                                          String selectedRows, Map<String, Object> presetValues)
+    {
+        return generateOperation(getOperation(entityName, queryName, operationName, selectedRows), presetValues);
+    }
+
+    protected Either<FormPresentation, OperationResult> generateOperation(Operation operation, Map<String, Object> presetValues)
+    {
+        return operationService.generate(operation, presetValues);
+    }
+
+    protected Either<FormPresentation, OperationResult> executeOperation(String entityName, String queryName, String operationName,
+                                                                         String selectedRows)
+    {
+        return executeOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
+    }
+
+    protected Either<FormPresentation, OperationResult> executeOperation(String entityName, String queryName, String operationName,
+                                                                         String selectedRows, String values)
+    {
+        return executeOperation(entityName, queryName, operationName, selectedRows, JsonUtils.getValuesFromJson(values));
+    }
+
+    protected Either<FormPresentation, OperationResult> executeOperation(String entityName, String queryName, String operationName,
+                                                                         String selectedRows, Map<String, Object> presetValues)
+    {
+        return executeOperation(getOperation(entityName, queryName, operationName, selectedRows), presetValues);
+    }
+
+    protected Either<FormPresentation, OperationResult> executeOperation(Operation operation, Map<String, Object> presetValues)
+    {
+        return operationService.execute(operation, presetValues);
+    }
+
+    protected Operation getOperation(String entityName, String queryName, String operationName, String selectedRows)
+    {
+        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
+
+        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
+
+        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap()));
+
+        return operationExecutor.create(meta, JsonUtils.selectedRows(selectedRows), request);
     }
 
 }
