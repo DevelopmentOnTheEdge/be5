@@ -54,7 +54,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
-        String[][] tagsFromEnum = helper.getTagsFromSelectionView(request,"testTags");
+        String[][] tagsFromEnum = helper.getTagsFromSelectionView("testTags");
 
         assertArrayEquals(strings, tagsFromEnum);
     }
@@ -64,7 +64,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
-        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(request,"testTags", "With parameter");
+        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView("testTags", "With parameter");
 
         assertArrayEquals(strings, tagsFromEnum);
     }
@@ -74,7 +74,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} };
 
-        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(request,"testTags", "With parameter",
+        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView("testTags", "With parameter",
                 ImmutableMap.of("payable","yes"));
 
         assertArrayEquals(strings, tagsFromEnum);
@@ -88,7 +88,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
         HashMap<String, String> stringStringHashMap = new HashMap<>();
         stringStringHashMap.put("payable", null);
 
-        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView(request,"testTags", "With parameter",
+        String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView("testTags", "With parameter",
                 stringStringHashMap);
 
         assertArrayEquals(strings, tagsFromEnum);

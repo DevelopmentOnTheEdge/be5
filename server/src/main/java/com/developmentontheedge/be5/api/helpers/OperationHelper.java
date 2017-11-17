@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -100,22 +99,22 @@ public class OperationHelper
      * @throws IllegalArgumentException when an entity or a query is not defined
      * @throws Error if a found query cannot be compiled
      */
-    public String[][] getTagsFromSelectionView(Request request, String tableName)
+    public String[][] getTagsFromSelectionView(String tableName)
     {
-        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, Collections.emptyMap());
+        return getTagsFromCustomSelectionView(tableName, DatabaseConstants.SELECTION_VIEW, Collections.emptyMap());
     }
 
-    public String[][] getTagsFromSelectionView(Request request, String tableName, Map<String, ?> extraParams)
+    public String[][] getTagsFromSelectionView(String tableName, Map<String, ?> extraParams)
     {
-        return getTagsFromCustomSelectionView(request, tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
+        return getTagsFromCustomSelectionView(tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
     }
 
-    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName)
+    public String[][] getTagsFromCustomSelectionView(String tableName, String queryName)
     {
-        return getTagsFromCustomSelectionView(request, tableName, queryName, Collections.emptyMap());
+        return getTagsFromCustomSelectionView(tableName, queryName, Collections.emptyMap());
     }
 
-    public String[][] getTagsFromCustomSelectionView(Request request, String tableName, String queryName, Map<String, ?> extraParams)
+    public String[][] getTagsFromCustomSelectionView(String tableName, String queryName, Map<String, ?> extraParams)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
         if (!query.isPresent())
@@ -125,10 +124,10 @@ public class OperationHelper
         {
             return tagsCache.get(tableName + "getTagsFromCustomSelectionView" + queryName +
                     extraParams.toString() + UserInfoHolder.getLanguage(),
-                k -> getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams)
+                k -> getTagsFromCustomSelectionView(tableName, query.get(), extraParams)
             );
         }
-        return getTagsFromCustomSelectionView(request, tableName, query.get(), extraParams);
+        return getTagsFromCustomSelectionView(tableName, query.get(), extraParams);
     }
 
     public String[][] getTagsFromQuery(String query, Object... params)
@@ -153,9 +152,9 @@ public class OperationHelper
         return values;
     }
 //
-//    public Map<String, String> getTagsMapFromQuery( Request request, Map<String, String> extraParams, String query, Object... params )
+//    public Map<String, String> getTagsMapFromQuery( Map<String, String> extraParams, String query, Object... params )
 //    {
-//        //return getTagsListFromQuery( request, Collections.emptyMap(), query, params );
+//        //return getTagsListFromQuery( Collections.emptyMap(), query, params );
 //        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
 //                rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
 //        );
@@ -163,7 +162,7 @@ public class OperationHelper
 //        return tags.toArray(stockArr);
 //    }
 
-    private String[][] getTagsFromCustomSelectionView(Request request, String tableName, Query query, Map<String, ?> extraParams)
+    private String[][] getTagsFromCustomSelectionView(String tableName, Query query, Map<String, ?> extraParams)
     {
         //todo refactoring Be5QueryExecutor,
         Map<String, String> stringStringMap = new HashMap<>();
@@ -174,7 +173,7 @@ public class OperationHelper
         }
 
         TableModel table = TableModel
-                .from(query, stringStringMap, request.getSession(), false, injector)
+                .from(query, stringStringMap, UserInfoHolder.getSession(), false, injector)
                 .limit(Integer.MAX_VALUE)
                 .build();
         String[][] stockArr = new String[table.getRows().size()][2];

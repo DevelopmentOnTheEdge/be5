@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.impl.EmptyRequest;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -246,9 +245,8 @@ public class DpsHelper
         }
         else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
         {
-            //todo get real request instead EmptyRequest
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                    operationHelper.getTagsFromSelectionView(new EmptyRequest(), columnDef.getTableTo()));
+                    operationHelper.getTagsFromSelectionView(columnDef.getTableTo()));
         }
     }
 

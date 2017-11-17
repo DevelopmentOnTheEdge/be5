@@ -20,7 +20,7 @@ class TestOperation extends GOperationSupport implements Operation
 
         dps.add("test2", "Test Value") {
             MULTIPLE_SELECTION_LIST = true
-            TAG_LIST_ATTR = helper.getTagsFromSelectionView(request, "asdasd")
+            TAG_LIST_ATTR = helper.getTagsFromSelectionView("asdasd")
         }
 
         dps.edit("test1") { value = 123 }
