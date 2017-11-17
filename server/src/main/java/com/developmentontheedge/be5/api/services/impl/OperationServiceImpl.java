@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.RestApiConstants;
@@ -31,16 +30,14 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class OperationServiceImpl implements OperationService
 {
-    private final Injector injector;
     private final OperationExecutor operationExecutor;
     private final DatabaseService databaseService;
     private final UserAwareMeta userAwareMeta;
     private final Validator validator;
 
-    public OperationServiceImpl(Injector injector, OperationExecutor operationExecutor,
+    public OperationServiceImpl(OperationExecutor operationExecutor,
                                 DatabaseService databaseService, Validator validator, UserAwareMeta userAwareMeta)
     {
-        this.injector = injector;
         this.operationExecutor = operationExecutor;
         this.databaseService = databaseService;
         this.validator = validator;
@@ -66,25 +63,13 @@ public class OperationServiceImpl implements OperationService
     {
         Operation operation = operationExecutor.create(meta, selectedRows(selectedRowsString), req);
 
-        return callGetParameters(selectedRowsString, operation, presetValues);
+        return callGetParameters(operation, presetValues);
     }
 
     private Either<FormPresentation, OperationResult> callGetParameters(
-            String selectedRowsString, Operation operation, Map<String, Object> presetValues)
+            Operation operation, Map<String, Object> presetValues)
     {
-        OperationResult invokeResult = null;
-        if(OperationStatus.ERROR == operation.getStatus())
-        {
-            invokeResult = operation.getResult();
-            operation.setResult(OperationResult.open());
-        }
-
         Object parameters = operationExecutor.generate(operation, presetValues);
-
-        if(invokeResult != null && invokeResult.getStatus() == OperationStatus.ERROR)
-        {
-            return form(operation, parameters, invokeResult);
-        }
 
         if(OperationStatus.ERROR == operation.getStatus())
         {
@@ -106,17 +91,17 @@ public class OperationServiceImpl implements OperationService
         //run manually in component
         if (parameters == null)
         {
-            OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), operation.getInfo().getQueryName());
+            OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
             if(operation instanceof TransactionalOperation)
             {
                 return databaseService.transaction((connection) ->
-                        callInvoke(selectedRowsString, presetValues, operation,
+                        callInvoke(presetValues, operation,
                                 null, operationContext)
                 );
             }
             else
             {
-                return callInvoke(selectedRowsString, presetValues, operation,
+                return callInvoke(presetValues, operation,
                         null, operationContext);
             }
         }
@@ -134,10 +119,6 @@ public class OperationServiceImpl implements OperationService
                 {
                     return form(operation, parameters, OperationResult.error(e));
                 }
-            }
-            else
-            {
-                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
             }
         }
 
@@ -168,17 +149,17 @@ public class OperationServiceImpl implements OperationService
         if(operation instanceof TransactionalOperation)
         {
             return databaseService.transaction(connection ->
-                    callOperation(selectedRowsString, presetValues, operation, operationContext)
+                    callOperation(presetValues, operation, operationContext)
             );
         }
         else
         {
-            return callOperation(selectedRowsString, presetValues, operation, operationContext);
+            return callOperation(presetValues, operation, operationContext);
         }
     }
 
     private Either<FormPresentation, OperationResult> callOperation(
-            String selectedRowsString, Map<String, Object> presetValues, Operation operation,
+            Map<String, Object> presetValues, Operation operation,
              OperationContext operationContext)
     {
         Object parameters = operationExecutor.generate(operation, presetValues);
@@ -205,11 +186,11 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        return callInvoke(selectedRowsString, presetValues, operation, parameters, operationContext);
+        return callInvoke(presetValues, operation, parameters, operationContext);
     }
 
     private Either<FormPresentation, OperationResult> callInvoke(
-            String selectedRowsString, Map<String, Object> presetValues, Operation operation,
+            Map<String, Object> presetValues, Operation operation,
             Object parameters, OperationContext operationContext)
     {
         operationExecutor.callInvoke(operation, parameters, operationContext);
@@ -230,9 +211,9 @@ public class OperationServiceImpl implements OperationService
 
             if(OperationStatus.ERROR == operation.getStatus() && parameters != null)
             {
-                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-                return callGetParameters(selectedRowsString, operation, presetValues);
+                OperationResult invokeResult = operation.getResult();
+                Object newParameters = operationExecutor.generate(operation, presetValues);
+                return form(operation, newParameters, invokeResult);
             }
         }
 
