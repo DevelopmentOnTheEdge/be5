@@ -13,28 +13,6 @@ import java.util.Map;
 
 public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 {
-    private final Object owner;
-
-    /**
-     * not work without owner
-     */
-    private GDynamicPropertySetSupport()
-    {
-        owner = null;
-    }
-
-    public GDynamicPropertySetSupport(Object owner)
-    {
-        super();
-        this.owner = owner;
-    }
-
-    public GDynamicPropertySetSupport(DynamicPropertySet dynamicPropertySet, Object owner)
-    {
-        super(dynamicPropertySet);
-        this.owner = owner;
-    }
-
 //в TypeChecked не компилится, не работает тулинг в IDEA - тогда лучше использовать $columnName - как в be3
 //    public Object call(String name)
 //    {
@@ -87,11 +65,11 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 
     private DPSAttributes getBuilder(Closure cl)
     {
-        DPSAttributes builder = new DPSAttributes();
-        Closure code = cl.rehydrate(builder, owner, owner);
-        code.setResolveStrategy(Closure.DELEGATE_FIRST);
-        code.call();
-        return builder;
+        DPSAttributes dpsAttributes = new DPSAttributes();
+        cl.setResolveStrategy( Closure.DELEGATE_FIRST );
+        cl.setDelegate( dpsAttributes );
+        cl.call();
+        return dpsAttributes;
     }
 
     /**

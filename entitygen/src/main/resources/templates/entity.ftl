@@ -29,9 +29,10 @@ public class ${entityClassName} extends EntityModelBase
     public String insert(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ${entityClassName}Model.class) final Closure config)
     {
         ${entityClassName}Model builder = new ${entityClassName}Model();
-        Closure code = config.rehydrate(builder, builder, builder);
-        code.setResolveStrategy(Closure.DELEGATE_FIRST);
-        code.call();
+
+        config.setResolveStrategy( Closure.DELEGATE_FIRST );
+        config.setDelegate( builder );
+        config.call();
 
         return add(builder.getMap());
     }

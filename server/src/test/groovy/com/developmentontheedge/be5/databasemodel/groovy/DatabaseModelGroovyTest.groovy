@@ -509,23 +509,24 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //    }
 //
 //    def parameters;
-//    public void testOperation()
-//    {
-//        setUp()
+    void testOperation()
+    {
+        def entity = database.getEntity("testtableAdmin")
+
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
 //        EntityModel tableName = database.entities;
 //        def rec = tableName( name : 'operations' );
 //        def origin = rec.$origin;
-//        try
-//        {
-//            println tableName.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
-//            assertEquals 'test', tableName[ rec.$name ].$origin;
-//        }
-//        finally
-//        {
-//            rec << [ origin : rec.$origin ];
-//        }
-//    }
+        try
+        {
+            println tableName.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
+            assertEquals 'test', tableName[ rec.$name ].$origin;
+        }
+        finally
+        {
+            rec << [ origin : rec.$origin ];
+        }
+    }
 //
 //    public void testGroovyOperationExtender()
 //    {

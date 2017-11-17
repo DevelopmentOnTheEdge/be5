@@ -13,7 +13,7 @@ class GroovyDpsGetProperty extends Be5ProjectTest
     @Test
     void test()
     {
-        dps = new GDynamicPropertySetSupport(this)
+        dps = new GDynamicPropertySetSupport()
 
         dps.add("input2") {
             value = "value2"

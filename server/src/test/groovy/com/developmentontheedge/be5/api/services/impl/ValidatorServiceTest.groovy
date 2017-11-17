@@ -26,7 +26,7 @@ class ValidatorServiceTest extends Be5ProjectTest
     @Before
     void initDps()
     {
-        dps = new GDynamicPropertySetSupport(this)
+        dps = new GDynamicPropertySetSupport()
     }
 
     @Test

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals
 @TypeChecked
 class GroovyDPSTest extends Be5ProjectTest
 {
-    private GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport(this)
+    private GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport()
 
     private static String getNewValue()
     {

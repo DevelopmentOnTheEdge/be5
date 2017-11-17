@@ -23,6 +23,11 @@ class EntitiesTest extends Be5ProjectTest
     @Inject EntityGenEntityModels entities
     @Inject DpsHelper dpsHelper
 
+    private static String getNewValue()
+    {
+        return "dfsdf"
+    }
+
     @Test
     void insert()
     {
@@ -31,7 +36,7 @@ class EntitiesTest extends Be5ProjectTest
 
         String id = entities.classifications.insert {
             categoryID = 5L
-            recordID   = "dfsdf"
+            recordID   = getNewValue()
             creationDate___ = dayTime
         }
 
