@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.Operation;
@@ -18,6 +19,7 @@ import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Map;
 
@@ -60,9 +62,10 @@ public class OperationExecutorImpl implements OperationExecutor
 
         if(operation instanceof TransactionalOperation)
         {
-            databaseService.transaction(connection ->
-                    callOperation(presetValues, operation, operationContext)
-            );
+            databaseService.transaction(connection -> {
+                callOperation(presetValues, operation, operationContext);
+                return null;
+            });
         }
         else
         {
@@ -70,31 +73,41 @@ public class OperationExecutorImpl implements OperationExecutor
         }
     }
 
-    private OperationResult callOperation(Map<String, Object> presetValues, Operation operation,
+    private void callOperation(Map<String, Object> presetValues, Operation operation,
              OperationContext operationContext)
     {
         Object parameters = generate(operation, presetValues);
 
         if(OperationStatus.ERROR == operation.getStatus())
         {
-            return operation.getResult();
+            return;// operation.getResult();
         }
 
         if (parameters instanceof DynamicPropertySet)
         {
-//            if(operation instanceof GOperationSupport)
-//            {
-//                ((GOperationSupport) operation).dps = (GDynamicPropertySetSupport) parameters;
-//            }
-//
-            validator.checkErrorAndCast((DynamicPropertySet) parameters);
+            if(operation instanceof GOperationSupport)
+            {
+                ((GOperationSupport) operation).dps = (GDynamicPropertySetSupport) parameters;
+            }
+
+            try
+            {
+                validator.checkErrorAndCast((DynamicPropertySet) parameters);
+            }
+            catch (RuntimeException e)
+            {
+                Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+                operation.setResult(OperationResult.error(be5Exception));
+                return;// operation.getResult();
+                //throw Be5Exception.internalInOperationParameter(e, operation.getInfo().getModel());
+            }
         }
 
-        return callInvoke(operation, parameters, operationContext);
+        callInvoke(operation, parameters, operationContext);
     }
 
-    private OperationResult callInvoke(Operation operation,
-         Object parameters, OperationContext operationContext)
+    @Override
+    public void callInvoke(Operation operation, Object parameters, OperationContext operationContext)
     {
         operation.setResult(OperationResult.progress());
 
@@ -104,7 +117,22 @@ public class OperationExecutorImpl implements OperationExecutor
 
             if(OperationStatus.ERROR == operation.getStatus())
             {
-                throw Be5Exception.internalInOperation(new Exception("ERROR Status"), operation.getInfo().getModel());
+                return;// operation.getResult();
+            }
+
+            if (parameters instanceof DynamicPropertySet)
+            {
+                try
+                {
+                    validator.isError((DynamicPropertySet) parameters);
+                }
+                catch (RuntimeException e)
+                {
+                    Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+                    operation.setResult(OperationResult.error(be5Exception));
+                    return;
+                    //throw Be5Exception.internalInOperation(e.getCause(), operation.getInfo().getModel());
+                }
             }
 
             if(OperationStatus.IN_PROGRESS == operation.getStatus())
@@ -116,13 +144,21 @@ public class OperationExecutorImpl implements OperationExecutor
                                 .named(operation.getRedirectParams())
                 ));
             }
-
-            return operation.getResult();
         }
-        catch (Throwable e)
+        catch (Be5Exception e)
         {
-            throw Be5Exception.internalInOperation(e.getCause(), operation.getInfo().getModel());
+            throw e;//Be5Exception.internalInOperation(e.getCause(), operation.getInfo())
         }
+        catch (Exception e)
+        {
+            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+        }
+//        catch (Throwable e)
+//        {
+//            Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+//            operation.setResult(OperationResult.error(be5Exception));
+//            //throw Be5Exception.internalInOperation(e.getCause(), operation.getInfo().getModel());
+//        }
     }
 
     @Override

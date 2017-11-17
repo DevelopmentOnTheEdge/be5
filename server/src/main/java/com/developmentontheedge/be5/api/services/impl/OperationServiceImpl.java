@@ -224,13 +224,41 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        return callInvoke(selectedRowsString, presetValues, operation,
-                parameters, operationContext);
+        operationExecutor.callInvoke(operation, parameters, operationContext);
+
+        if(operation.getStatus() == OperationStatus.ERROR)
+        {
+            if (parameters instanceof DynamicPropertySet)
+            {
+                try
+                {
+                    validator.isError((DynamicPropertySet) parameters);
+                }
+                catch (RuntimeException e)
+                {
+                    validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+                    return Either.first(new FormPresentation(operation.getInfo(),
+                            userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
+                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
+                            OperationResult.error(e)));
+                }
+            }
+
+            if(OperationStatus.ERROR == operation.getStatus() && parameters != null)
+            {
+                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+                return callGetParameters(selectedRowsString, operation, presetValues);
+            }
+        }
+
+        return Either.second(operation.getResult());
     }
 
     private Either<FormPresentation, OperationResult> callInvoke(
-         String selectedRowsString, Map<String, Object> presetValues, Operation operation,
-         Object parameters, OperationContext operationContext)
+            String selectedRowsString, Map<String, Object> presetValues, Operation operation,
+            Object parameters, OperationContext operationContext)
     {
         try
         {
@@ -264,10 +292,10 @@ public class OperationServiceImpl implements OperationService
             if(OperationStatus.IN_PROGRESS == operation.getStatus())
             {
                 operation.setResult(OperationResult.redirect(
-                    new HashUrl(FrontendConstants.TABLE_ACTION,
-                            operation.getInfo().getEntityName(),
-                            operation.getInfo().getQueryName())
-                        .named(operation.getRedirectParams())
+                        new HashUrl(FrontendConstants.TABLE_ACTION,
+                                operation.getInfo().getEntityName(),
+                                operation.getInfo().getQueryName())
+                                .named(operation.getRedirectParams())
                 ));
             }
 
@@ -282,12 +310,6 @@ public class OperationServiceImpl implements OperationService
             throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
         }
     }
-//
-//    public Operation create(Operation operation) {
-//        operation.initialize(injector, null, OperationResult.progress());
-//
-//        return operation;
-//    }
 
     public static String[] selectedRows(String selectedRowsString)
     {
