@@ -54,21 +54,15 @@ public class OperationServiceImpl implements OperationService
         Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        return generate(meta, presetValues, selectedRowsString, req);
+        return generate(meta, presetValues, selectedRows(selectedRowsString), req);
     }
 
     @Override
     public Either<FormPresentation, OperationResult> generate(OperationInfo meta,
-                Map<String, Object> presetValues, String selectedRowsString, Request req)
+                Map<String, Object> presetValues, String[] selectedRows, Request req)
     {
-        Operation operation = operationExecutor.create(meta, selectedRows(selectedRowsString), req);
+        Operation operation = operationExecutor.create(meta, selectedRows, req);
 
-        return callGetParameters(operation, presetValues);
-    }
-
-    private Either<FormPresentation, OperationResult> callGetParameters(
-            Operation operation, Map<String, Object> presetValues)
-    {
         Object parameters = operationExecutor.generate(operation, presetValues);
 
         if(OperationStatus.ERROR == operation.getStatus())
@@ -136,15 +130,15 @@ public class OperationServiceImpl implements OperationService
 
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        return execute(meta, presetValues, selectedRowsString, req);
+        return execute(meta, presetValues, selectedRows(selectedRowsString), req);
     }
 
     @Override
     public Either<FormPresentation, OperationResult> execute(OperationInfo meta,
-          Map<String, Object> presetValues, String selectedRowsString, Request req)
+          Map<String, Object> presetValues, String[] selectedRows, Request req)
     {
-        OperationContext operationContext = new OperationContext(selectedRows(selectedRowsString), meta.getQueryName());
-        Operation operation = operationExecutor.create(meta, selectedRows(selectedRowsString), req);
+        Operation operation = operationExecutor.create(meta, selectedRows, req);
+        OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
 
         if(operation instanceof TransactionalOperation)
         {

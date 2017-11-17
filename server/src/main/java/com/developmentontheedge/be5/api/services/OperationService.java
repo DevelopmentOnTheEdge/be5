@@ -16,10 +16,10 @@ public interface OperationService
     Either<FormPresentation, OperationResult> execute(Request req);
 
     Either<FormPresentation, OperationResult> generate(OperationInfo meta,
-                Map<String, Object> presetValues, String selectedRowsString, Request req);
+                Map<String, Object> presetValues, String[] selectedRows, Request req);
 
     Either<FormPresentation, OperationResult> execute(OperationInfo meta,
-                Map<String, Object> presetValues, String selectedRowsString, Request req);
+                Map<String, Object> presetValues, String[] selectedRows, Request req);
 
 //    Operation create(Operation operation);
 //
