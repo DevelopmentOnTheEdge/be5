@@ -2,8 +2,11 @@ package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.model.FormPresentation
+import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationResult
+import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
+import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Ignore
 import org.junit.Test
 
@@ -15,45 +18,45 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void generate()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "").getFirst()
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        Object first = generateOperation(operation).getFirst()
 
         assertEquals "{'displayName':'name'}",
-                oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{'status':'open'}", oneQuotes(jsonb.toJson(first.getOperationResult()))
+        assertEquals OperationStatus.OPEN, operation.getStatus()
     }
 
     @Test
     void generatePropertyError()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'generateErrorInProperty'}").getFirst()
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        Object first = generateOperation(operation, "{'name':'generateErrorInProperty'}").getFirst()
 
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
-                oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals "{'details':'java.lang.IllegalArgumentException: " +
                 "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
                 "'message':'[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
                 "'status':'error'}",
-                oneQuotes(jsonb.toJson(first.getOperationResult()))
+                oneQuotes(jsonb.toJson(operation.getResult()))
     }
 
     @Test
     void executePropertyError()
     {
-        FormPresentation first = executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'executeErrorInProperty'}").getFirst()
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        Object first = executeOperation(operation, "{'name':'executeErrorInProperty'}").getFirst()
 
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (invoke)'}",
-                oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals "{'details':'java.lang.IllegalArgumentException: " +
                 "[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]'," +
                 "'message':'[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]'," +
                 "'status':'error'}",
-                oneQuotes(jsonb.toJson(first.getOperationResult()))
+                oneQuotes(jsonb.toJson(operation.getResult()))
     }
 
     @Test
@@ -79,14 +82,14 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void executeErrorStatus()
     {
-        FormPresentation first = executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'executeErrorStatus'}").getFirst()
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        Object first = executeOperation(operation, "{'name':'executeErrorStatus'}").getFirst()
 
         assertEquals "{'displayName':'name'}",
-                oneQuotes(first.getBean().getJsonObject("meta").getJsonObject("/name").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals "{'message':'An error occurred while performing operations.','status':'error'}",
-                oneQuotes(jsonb.toJson(first.getOperationResult()))
+                oneQuotes(jsonb.toJson(operation.getResult()))
     }
 
     @Test(expected = Be5Exception)
@@ -106,11 +109,11 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void errorHandlingCycles()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records",
+        Object first = generateOperation("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorInProperty'}").getFirst()
 
         assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text'}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
 
 
         //call callGetParameters and add OperationResult from invoke to FormPresentation
@@ -118,7 +121,7 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeErrorStatus'}").getFirst()
 
         assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text'}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
 
 
         //just return FormPresentation with current parameters
@@ -126,7 +129,7 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeErrorInProperty'}").getFirst()
 
         assertEquals "{'name':'executeErrorInProperty'}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
     }
 
     /**
@@ -137,11 +140,11 @@ class OperationServiceTest extends SqlMockOperationTest
     @Ignore
     void errorHandlingCyclesCastTypesString()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records",
+        Object first = generateOperation("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorInProperty','booleanProperty':'false'}").getFirst()
 
         assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text','booleanProperty':'false'}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
 
 
         //call callGetParameters and add OperationResult from invoke to FormPresentation
@@ -149,7 +152,7 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeErrorStatus','booleanProperty':'false'}").getFirst()
 
         assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text','booleanProperty':false}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
 
 
         //just return FormPresentation with current parameters
@@ -157,7 +160,7 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeErrorInProperty','booleanProperty':'false'}").getFirst()
 
         assertEquals "{'name':'executeErrorInProperty','booleanProperty':false}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
     }
 
     /**
@@ -168,11 +171,11 @@ class OperationServiceTest extends SqlMockOperationTest
     @Ignore
     void errorHandlingCyclesCastTypesBoolean()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records",
+        Object first = generateOperation("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorInProperty','booleanProperty':false}").getFirst()
 
         assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text','booleanProperty':'false'}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
 
 
 //        //call callGetParameters and add OperationResult from invoke to FormPresentation
@@ -180,7 +183,7 @@ class OperationServiceTest extends SqlMockOperationTest
 //                "ErrorProcessing", "", "{'name':'executeErrorStatus','booleanProperty':false}")).getFirst()
 //
 //        assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text','booleanProperty':false}",
-//                oneQuotes(first.getBean().getJsonObject("values").toString())
+//                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
 
 
         //just return FormPresentation with current parameters
@@ -188,6 +191,6 @@ class OperationServiceTest extends SqlMockOperationTest
                 "ErrorProcessing", "", "{'name':'executeErrorInProperty','booleanProperty':false}").getFirst()
 
         assertEquals "{'name':'executeErrorInProperty','booleanProperty':false}",
-                oneQuotes(first.getBean().getJsonObject("values").toString())
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
     }
 }

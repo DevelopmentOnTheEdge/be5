@@ -24,7 +24,7 @@ class SessionVariablesEditTest extends SqlMockOperationTest
         Request req = getSpyMockRecForOp("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr",
                 "", ["remoteAddr":"199.168.0.1"])
 
-        FormPresentation first = generateOperation(req).getFirst()
+        Object first = generateOperation(req).getFirst()
 
         assertEquals("{" +
                 "'values':{" +
@@ -34,7 +34,7 @@ class SessionVariablesEditTest extends SqlMockOperationTest
                     "'/label':{'displayName':'label','labelField':true}," +
                     "'/newValue':{'displayName':'Новое значение:'}}," +
                 "'order':['/label','/newValue']" +
-            "}", oneQuotes(first.getBean().toString()))
+            "}", oneQuotes(JsonFactory.dps(first)))
     }
 
     @Test

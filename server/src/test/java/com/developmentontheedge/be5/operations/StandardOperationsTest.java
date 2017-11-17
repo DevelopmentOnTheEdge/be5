@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
@@ -35,15 +36,15 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void insertOperationInitValues()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records", "Insert", "","{}").getFirst();
+        Object first = generateOperation("testtableAdmin", "All records", "Insert", "","{}").getFirst();
         assertEquals("{'name':'','value':''}",
-                oneQuotes(first.getBean().getJsonObject("values").toString()));
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
     @Test
     public void insertOperation()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records", "Insert", "",
+        Object first = generateOperation("testtableAdmin", "All records", "Insert", "",
                 "{'name':'test','value':1}").getFirst();
         assertEquals("{" +
                         "'values':{'name':'test','value':'1'}," +
@@ -51,7 +52,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
                             "'/name':{'displayName':'name'}," +
                             "'/value':{'displayName':'value','type':'Integer','canBeNull':true}}," +
                         "'order':['/name','/value']}",
-                oneQuotes(first.getBean().toString()));
+                oneQuotes(JsonFactory.bean(first)));
 
         //OperationResult execute = executeOperation(req);
 
@@ -72,12 +73,12 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 "ID", 12L
         )));
 
-        FormPresentation first = generateOperation("testtableAdmin", "All records", "Edit", "12","{}").getFirst();
+        Object first = generateOperation("testtableAdmin", "All records", "Edit", "12","{}").getFirst();
 
         verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
 
         assertEquals("{'name':'TestName','value':1}",
-                oneQuotes(first.getBean().getJsonObject("values").toString()));
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
     @Test
@@ -89,12 +90,12 @@ public class StandardOperationsTest extends SqlMockOperationTest
         dps.setValue("CODE", "02");
         when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
 
-        FormPresentation first = generateOperation("propertyTypes", "All records", "Edit", "01","{}").getFirst();
+        Object first = generateOperation("propertyTypes", "All records", "Edit", "01","{}").getFirst();
 
         verify(SqlServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE =?"),any(),eq("01"));
 
         assertEquals("{'CODE':'02','name':'TestName'}",
-                oneQuotes(first.getBean().getJsonObject("values").toString()));
+                oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
     @Test

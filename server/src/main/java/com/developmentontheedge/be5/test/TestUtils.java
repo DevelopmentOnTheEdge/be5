@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -172,48 +171,68 @@ public abstract class TestUtils
     }
 
 
-    protected Either<FormPresentation, OperationResult> generateOperation(String entityName, String queryName, String operationName,
+    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                           String selectedRows)
     {
         return generateOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
     }
 
-    protected Either<FormPresentation, OperationResult> generateOperation(String entityName, String queryName, String operationName,
+    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                           String selectedRows, String values)
     {
         return generateOperation(entityName, queryName, operationName, selectedRows, JsonUtils.getValuesFromJson(values));
     }
 
-    protected Either<FormPresentation, OperationResult> generateOperation(String entityName, String queryName, String operationName,
+    protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                           String selectedRows, Map<String, Object> presetValues)
     {
         return generateOperation(getOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
 
-    protected Either<FormPresentation, OperationResult> generateOperation(Operation operation, Map<String, Object> presetValues)
+    protected Either<Object, OperationResult> generateOperation(Operation operation, String values)
+    {
+        return operationService.generate(operation, JsonUtils.getValuesFromJson(values));
+    }
+
+    protected Either<Object, OperationResult> generateOperation(Operation operation)
+    {
+        return operationService.generate(operation, Collections.emptyMap());
+    }
+
+    protected Either<Object, OperationResult> generateOperation(Operation operation, Map<String, Object> presetValues)
     {
         return operationService.generate(operation, presetValues);
     }
 
-    protected Either<FormPresentation, OperationResult> executeOperation(String entityName, String queryName, String operationName,
+    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
                                                                          String selectedRows)
     {
         return executeOperation(entityName, queryName, operationName, selectedRows, Collections.emptyMap());
     }
 
-    protected Either<FormPresentation, OperationResult> executeOperation(String entityName, String queryName, String operationName,
+    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
                                                                          String selectedRows, String values)
     {
         return executeOperation(entityName, queryName, operationName, selectedRows, JsonUtils.getValuesFromJson(values));
     }
 
-    protected Either<FormPresentation, OperationResult> executeOperation(String entityName, String queryName, String operationName,
+    protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
                                                                          String selectedRows, Map<String, Object> presetValues)
     {
         return executeOperation(getOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
 
-    protected Either<FormPresentation, OperationResult> executeOperation(Operation operation, Map<String, Object> presetValues)
+    protected Either<Object, OperationResult> executeOperation(Operation operation, String values)
+    {
+        return executeOperation(operation, JsonUtils.getValuesFromJson(values));
+    }
+
+    protected Either<Object, OperationResult> executeOperation(Operation operation)
+    {
+        return executeOperation(operation, Collections.emptyMap());
+    }
+
+    protected Either<Object, OperationResult> executeOperation(Operation operation, Map<String, Object> presetValues)
     {
         return operationService.execute(operation, presetValues);
     }

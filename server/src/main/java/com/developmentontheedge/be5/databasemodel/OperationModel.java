@@ -23,7 +23,7 @@ public interface OperationModel
 
     DynamicPropertySet getParameters() throws Exception;
 
-    Either<FormPresentation, OperationResult> execute();
+    Either<Object, OperationResult> execute();
 
     //OperationModel setSessionAdapter(Operation.SessionAdapter sessionAdapter);
 

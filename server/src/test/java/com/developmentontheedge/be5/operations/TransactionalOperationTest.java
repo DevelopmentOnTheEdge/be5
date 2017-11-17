@@ -14,7 +14,7 @@ public class TransactionalOperationTest extends OperationDBTest
     @Test
     public void test()
     {
-        Either<FormPresentation, OperationResult> result = executeOperation(
+        Either<Object, OperationResult> result = executeOperation(
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                         "{'name':'test', 'value': 5}");
 
@@ -25,7 +25,7 @@ public class TransactionalOperationTest extends OperationDBTest
     @Test
     public void testNullValues()
     {
-        Either<FormPresentation, OperationResult> result = generateOperation(
+        Either<Object, OperationResult> result = generateOperation(
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                         "{'nullValues':'yes'}");
 

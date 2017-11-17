@@ -37,13 +37,13 @@ public class DocumentResponse
         res.sendAsJson(FrontendConstants.TABLE_ACTION, tablePresentation);
     }
     
-    public void send(Either<FormPresentation, OperationResult> formOrResult)
+    public void send(Either<Object, OperationResult> formOrResult)
     {
         checkNotNull(formOrResult);
         formOrResult.apply(this::send, this::send);
     }
     
-    public void send(FormPresentation form)
+    public void send(Object form)
     {
         checkNotNull(form);
         res.sendAsJson(FrontendConstants.FORM_ACTION, form);

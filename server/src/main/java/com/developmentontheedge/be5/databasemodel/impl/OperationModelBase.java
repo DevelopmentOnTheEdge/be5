@@ -73,7 +73,7 @@ class OperationModelBase implements OperationModel
 //    }
 
     @Override
-    public Either<FormPresentation, OperationResult> execute()
+    public Either<Object, OperationResult> execute()
     {
         return null;//
     }

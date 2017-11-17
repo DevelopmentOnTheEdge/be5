@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
@@ -20,12 +21,10 @@ public class OperationTest extends SqlMockOperationTest
     @Test
     public void testOperation()
     {
-        Either<FormPresentation, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
+        Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of("name","testName","number", "1"));
 
-        FormPresentation form = generate.getFirst();
-
-        assertEquals("TestOperation", form.title);
+        Object parameters = generate.getFirst();
 
         assertEquals("{" +
                         "'values':{" +
@@ -35,7 +34,7 @@ public class OperationTest extends SqlMockOperationTest
                             "'/name':{'displayName':'Name'}," +
                             "'/number':{'displayName':'Number','type':'Long'}}," +
                         "'order':['/name','/number']}",
-                oneQuotes(form.bean.toString()));
+                oneQuotes(JsonFactory.bean(parameters)));
 
         OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of("name","testName","number", "1")).getSecond();
@@ -45,28 +44,28 @@ public class OperationTest extends SqlMockOperationTest
     @Test
     public void testOperationParameters()
     {
-        Either<FormPresentation, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0","{}");
+        Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0","{}");
 
-        assertEquals("{'name':'','number':'0'}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+        assertEquals("{'name':'','number':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()));
     }
 
     @Test
     public void testReloadOnChange()
     {
-        Either<FormPresentation, OperationResult> generate = generateOperation(
+        Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperation", "0",
                         ImmutableMap.of(
                                 "name", "test",
                                 "number", "0",
                                 OperationSupport.reloadControl, "name"));
 
-        assertEquals("{'name':'test','number':0}", oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+        assertEquals("{'name':'test','number':0}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()));
     }
 
     @Test
     public void testReloadOnChangeError()
     {
-        Either<FormPresentation, OperationResult> result = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
+        Either<Object, OperationResult> result = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of(
                         "name", "testName",
                         "number", "ab",
@@ -76,9 +75,9 @@ public class OperationTest extends SqlMockOperationTest
 
         assertNotNull(result.getFirst());
 
-        assertEquals("error", result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("status"));
+        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("status"));
         assertEquals("Здесь должно быть целое число.",
-                result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("message"));
+                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("message"));
     }
 
     @Test
@@ -87,14 +86,14 @@ public class OperationTest extends SqlMockOperationTest
         assertNotNull(generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 doubleQuotes("{'name':'testName','number':'ab'}")).getFirst());
 
-        Either<FormPresentation, OperationResult> result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
+        Either<Object, OperationResult> result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
                 doubleQuotes("{'name':'testName','number':'ab'}"));
 
         assertNotNull(result.getFirst());
 
-        assertEquals("error", result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("status"));
+        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("status"));
         assertEquals("Здесь должно быть целое число.",
-                result.getFirst().bean.getJsonObject("meta").getJsonObject("/number").getString("message"));
+                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("message"));
     }
 
     @Test
@@ -110,7 +109,7 @@ public class OperationTest extends SqlMockOperationTest
     @Test
     public void testPropertyInvokeInit()
     {
-        Either<FormPresentation, OperationResult> generate = generateOperation(
+        Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperationProperty", "0", "{}");
 
         assertEquals("{" +
@@ -118,13 +117,13 @@ public class OperationTest extends SqlMockOperationTest
                         "'simpleNumber':''," +
                         "'getOrDefault':'defaultValue'," +
                         "'getOrDefaultNumber':'3'}",
-                oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+                oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()));
     }
 
     @Test
     public void testManualAndAutomaticSettingOfParameterValues()
     {
-        Either<FormPresentation, OperationResult> generate = generateOperation(
+        Either<Object, OperationResult> generate = generateOperation(
                 "testtableAdmin", "All records", "TestOperationProperty", "0",
                         ImmutableMap.of(
                                 "simple", "testName",
@@ -138,7 +137,7 @@ public class OperationTest extends SqlMockOperationTest
                         "'simpleNumber':1," +
                         "'getOrDefault':'testName2'," +
                         "'getOrDefaultNumber':2}",
-                oneQuotes(generate.getFirst().getBean().getJsonObject("values").toString()));
+                oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()));
 
         assertFalse(generate.getFirst().toString().contains("error"));
     }
@@ -181,11 +180,11 @@ public class OperationTest extends SqlMockOperationTest
     @Test
     public void testOperationInvokeNullInsteadEmptyStringCustomOpSpaceOnLong()
     {
-        FormPresentation first = executeOperation(
+        Object first = executeOperation(
                 "testTags", "All records", "OperationWithCanBeNull", "",
                         doubleQuotes("{'CODE':'01','referenceTest':'','testLong':' '}")).getFirst();
 
-        assertEquals("error", first.getBean().getJsonObject("meta").getJsonObject("/testLong").getString("status")) ;
+        assertEquals("error", JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/testLong").getString("status")) ;
     }
 
 }

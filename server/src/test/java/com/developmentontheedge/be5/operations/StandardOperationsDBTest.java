@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.OperationDBTest;
 import com.developmentontheedge.be5.test.TestUtils;
+import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,10 +23,10 @@ public class StandardOperationsDBTest extends OperationDBTest
     @Test
     public void editOperationGenerate()
     {
-        FormPresentation first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(),"{}").getFirst();
+        Object first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(),"{}").getFirst();
 
         assertEquals("{'name':'TestName','value':1}",
-        oneQuotes(first.getBean().getJsonObject("values").toString()));
+        oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
     @Test

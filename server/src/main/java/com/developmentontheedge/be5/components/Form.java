@@ -16,10 +16,13 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.beans.json.JsonFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
@@ -52,7 +55,7 @@ public class Form implements Component
                 .getDetails();
 
         Operation operation = operationExecutor.create(meta, selectedRows, req);
-        Either<FormPresentation, OperationResult> generate;
+        Either<Object, OperationResult> generate;
 
         try
         {
@@ -78,8 +81,23 @@ public class Form implements Component
             );
             return;
         }
+
+        Object result;
+        if(generate.isFirst())
+        {
+            result = new FormPresentation(operation.getInfo(),
+                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
+                    Arrays.stream(operation.getRecords()).collect(Collectors.joining(",")),
+                    JsonFactory.bean(generate.getFirst()), operation.getLayout(),
+                    operation.getResult());
+        }
+        else
+        {
+            result = generate.getSecond();
+        }
+
         res.sendAsJson(
-                new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, generate.get()),
+                new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, result),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, link)
         );
