@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import java.util.Collections;
 import java.util.Map;
 
 
@@ -24,22 +23,14 @@ public class OperationServiceImpl implements OperationService
 {
     private final OperationExecutor operationExecutor;
     private final DatabaseService databaseService;
-    private final UserAwareMeta userAwareMeta;
     private final Validator validator;
 
     public OperationServiceImpl(OperationExecutor operationExecutor,
-                                DatabaseService databaseService, Validator validator, UserAwareMeta userAwareMeta)
+                                DatabaseService databaseService, Validator validator)
     {
         this.operationExecutor = operationExecutor;
         this.databaseService = databaseService;
         this.validator = validator;
-        this.userAwareMeta = userAwareMeta;
-    }
-
-    @Override
-    public Either<Object, OperationResult> generate(Operation operation)
-    {
-        return generate(operation, Collections.emptyMap());
     }
 
     @Override
@@ -101,12 +92,6 @@ public class OperationServiceImpl implements OperationService
         }
 
         return replaceNullValueToEmptyStringAndReturn(operation, parameters);
-    }
-
-    @Override
-    public Either<Object, OperationResult> execute(Operation operation)
-    {
-        return execute(operation, Collections.emptyMap());
     }
 
     @Override

@@ -13,7 +13,4 @@ public interface OperationService
 
     Either<Object, OperationResult> execute(Operation operation, Map<String, Object> presetValues);
 
-    Either<Object, OperationResult> generate(Operation operation);
-
-    Either<Object, OperationResult> execute(Operation operation);
 }
