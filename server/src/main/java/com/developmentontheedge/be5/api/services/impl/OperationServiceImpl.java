@@ -224,6 +224,13 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
+        return callInvoke(selectedRowsString, presetValues, operation, parameters, operationContext);
+    }
+
+    private Either<FormPresentation, OperationResult> callInvoke(
+            String selectedRowsString, Map<String, Object> presetValues, Operation operation,
+            Object parameters, OperationContext operationContext)
+    {
         operationExecutor.callInvoke(operation, parameters, operationContext);
 
         if(operation.getStatus() == OperationStatus.ERROR)
@@ -254,61 +261,6 @@ public class OperationServiceImpl implements OperationService
         }
 
         return Either.second(operation.getResult());
-    }
-
-    private Either<FormPresentation, OperationResult> callInvoke(
-            String selectedRowsString, Map<String, Object> presetValues, Operation operation,
-            Object parameters, OperationContext operationContext)
-    {
-        try
-        {
-            operation.setResult(OperationResult.progress());
-            operation.invoke(parameters, operationContext);
-
-            if(OperationStatus.ERROR == operation.getStatus() && parameters != null)
-            {
-                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-                return callGetParameters(selectedRowsString, operation, presetValues);
-            }
-
-            if (parameters instanceof DynamicPropertySet)
-            {
-                try
-                {
-                    validator.isError((DynamicPropertySet) parameters);
-                }
-                catch (RuntimeException e)
-                {
-                    validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-                    return Either.first(new FormPresentation(operation.getInfo(),
-                            userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
-                            OperationResult.error(e)));
-                }
-            }
-
-            if(OperationStatus.IN_PROGRESS == operation.getStatus())
-            {
-                operation.setResult(OperationResult.redirect(
-                        new HashUrl(FrontendConstants.TABLE_ACTION,
-                                operation.getInfo().getEntityName(),
-                                operation.getInfo().getQueryName())
-                                .named(operation.getRedirectParams())
-                ));
-            }
-
-            return Either.second(operation.getResult());
-        }
-        catch (Be5Exception e)
-        {
-            throw e;//Be5Exception.internalInOperation(e.getCause(), operation.getInfo())
-        }
-        catch (Exception e)
-        {
-            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
-        }
     }
 
     public static String[] selectedRows(String selectedRowsString)
