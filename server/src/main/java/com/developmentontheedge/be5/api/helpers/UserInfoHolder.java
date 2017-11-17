@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
 
@@ -18,6 +19,11 @@ public class UserInfoHolder
     public static void setUserInfo(UserInfo user)
     {
         threadLocalScope.set(user);
+    }
+
+    public static Session getSession()
+    {
+        return getUserInfo().getSession();
     }
 
     public static String getLanguage()

@@ -13,7 +13,8 @@ public class AuthenticationPropagationListener implements ServletRequestListener
 {
 
     @Override
-    public void requestInitialized(ServletRequestEvent event) {
+    public void requestInitialized(ServletRequestEvent event)
+    {
         HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -24,7 +25,8 @@ public class AuthenticationPropagationListener implements ServletRequestListener
     }
 
     @Override
-    public void requestDestroyed(ServletRequestEvent event) {
+    public void requestDestroyed(ServletRequestEvent event)
+    {
         UserInfoHolder.setUserInfo(null);
     }
 

@@ -86,13 +86,13 @@ public class EmptyRequest implements Request
     @Override
     public Object getAttribute(String name)
     {
-        return null;
+        return getSession().get(name);
     }
 
     @Override
     public void setAttribute(String name, Object value)
     {
-
+        getSession().set(name, value);
     }
 
     @Override

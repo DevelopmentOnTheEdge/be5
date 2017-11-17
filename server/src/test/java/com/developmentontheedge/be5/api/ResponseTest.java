@@ -36,7 +36,8 @@ public class ResponseTest extends Be5ProjectTest
     private PrintWriter writer;
 
     @Before
-    public void init() throws Exception {
+    public void init() throws Exception
+    {
         writer = mock(PrintWriter.class);
 
         rawResponse = mock(HttpServletResponse.class);
@@ -55,7 +56,8 @@ public class ResponseTest extends Be5ProjectTest
 //    }
 
     @Test
-    public void sendAsRawJson() throws Exception {
+    public void sendAsRawJson()
+    {
         Action call = new Action("call", "test/path");
         response.sendAsRawJson(call);
 
@@ -63,14 +65,16 @@ public class ResponseTest extends Be5ProjectTest
     }
 
     @Test
-    public void sendSuccess() throws Exception {
+    public void sendSuccess()
+    {
         response.sendSuccess();
 
         verify(writer).append(doubleQuotes("{'type':'ok'}"));
     }
 
     @Test
-    public void sendErrorAdmin() {
+    public void sendErrorAdmin()
+    {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
 
         response.sendError(Be5Exception.internal("testMsg"));
@@ -83,7 +87,8 @@ public class ResponseTest extends Be5ProjectTest
 
     @Test
     @Ignore
-    public void sendErrorNotAdmin() {
+    public void sendErrorNotAdmin()
+    {
         initUserWithRoles(RoleType.ROLE_GUEST);
 
         response.sendError(Be5Exception.internal("testMsg"));
@@ -96,21 +101,23 @@ public class ResponseTest extends Be5ProjectTest
     }
 
     @Test
-    public void sendErrorText()  {
+    public void sendErrorText()
+    {
         response.sendError("test msg");
 
         verify(writer).append(doubleQuotes("{'type':'error','value':'test msg'}"));
     }
 
     @Test
-    public void getRawResponse() throws Exception {
+    public void getRawResponse()
+    {
         assertEquals(rawResponse, response.getRawResponse());
     }
 
     @XmlRootElement(name = "ActionForXml")
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class ActionForXml {
-
+    public static class ActionForXml
+    {
         String name;
         String arg;
 
@@ -123,7 +130,8 @@ public class ResponseTest extends Be5ProjectTest
     }
 
     @Test
-    public void sendAsXml() throws Exception {
+    public void sendAsXml()
+    {
         ActionForXml call = new ActionForXml("call", "test/path");
         response.sendAsXml(ActionForXml.class, call);
 

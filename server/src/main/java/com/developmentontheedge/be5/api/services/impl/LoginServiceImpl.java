@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.impl.SessionImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
@@ -11,6 +12,7 @@ import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.SessionConstants;
+import com.developmentontheedge.be5.test.TestSession;
 import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
@@ -106,8 +108,9 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public void saveUser(String username, Request req) {
-        UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale(), req.getRemoteAddr());
+    public void saveUser(String username, Request req)
+    {
+        UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale(), req.getRemoteAddr(), req.getSession());
 
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
@@ -118,8 +121,9 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr){
-        UserInfo ui = new UserInfo(userName, availableRoles);
+    public UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr, Session session)
+    {
+        UserInfo ui = new UserInfo(userName, availableRoles, session);
         ui.setRemoteAddr(remoteAddr);
 
         UserInfoHolder.setUserInfo(ui);
@@ -158,19 +162,26 @@ public class LoginServiceImpl implements LoginService
     {
         Locale locale = Locale.US;
         String remoteAddr = "";
+
+        Session session;
         if(req != null)
         {
             locale = req.getRawRequest().getLocale();
             remoteAddr = req.getRemoteAddr();
+            session = req.getSession();
+        }
+        else
+        {
+            session = new TestSession();
         }
 
         if(ModuleLoader2.getDevRoles().size() > 0)
         {
-            saveUser("dev", ModuleLoader2.getDevRoles(), locale, remoteAddr);
+            saveUser("dev", ModuleLoader2.getDevRoles(), locale, remoteAddr, session);
         }
         else
         {
-            saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr);
+            saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr, session);
         }
     }
 

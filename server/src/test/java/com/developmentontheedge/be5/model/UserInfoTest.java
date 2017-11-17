@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.test.TestSession;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class UserInfoTest extends Be5ProjectTest
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = loginService.saveUser("test", roles, Locale.US, "");
+        ui = loginService.saveUser("test", roles, Locale.US, "", new TestSession());
 
         assertEquals(roles, ui.getCurrentRoles());
     }

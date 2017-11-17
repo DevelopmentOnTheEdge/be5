@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.model;
 
 /** $Id: UserInfo.java,v 1.20 2014/02/13 06:24:45 lan Exp $ */
 
+import com.developmentontheedge.be5.api.Session;
 import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
-import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
 
 public class UserInfo implements Serializable
 {
@@ -27,9 +28,10 @@ public class UserInfo implements Serializable
         return userName;
     }
 
-    public UserInfo(String userName, List<String> availableRoles)
+    public UserInfo(String userName, List<String> availableRoles, Session session)
     {
         this.userName = userName;
+        this.session = session;
         this.availableRoles = ImmutableList.copyOf(availableRoles);
         this.currentRoles = new ArrayList<>(availableRoles);
 
@@ -74,8 +76,8 @@ public class UserInfo implements Serializable
         this.timeZone = timeZoneID != null ? TimeZone.getTimeZone( timeZoneID ) : null;
     }
 
-    transient protected HttpSession session;
-    public HttpSession getSession()
+    Session session;
+    public Session getSession()
     {
         return session;
     }

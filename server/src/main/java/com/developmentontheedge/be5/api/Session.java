@@ -26,7 +26,7 @@ public interface Session
      */
     void set(String name, Object value);
 
-    //todo move to groovy meta
+    //for groovy meta
     default Object getAt(String name)
     {
         return get(name);

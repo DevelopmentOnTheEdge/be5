@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services;
 
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.model.UserInfo;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface LoginService
 
     void saveUser(String username, Request req);
 
-    UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr);
+    UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr, Session session);
 }
