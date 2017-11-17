@@ -1,5 +1,6 @@
-package com.developmentontheedge.be5.modules.core.genegate
+package com.developmentontheedge.be5.entitygen.experimental.gen
 
+import com.developmentontheedge.be5.entitygen.experimental.genegate.CoreEntityModels
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.OperationContext

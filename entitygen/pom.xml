@@ -55,16 +55,16 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>Main</id>
+                        <id>EntityModels</id>
                         <goals>
                             <goal>java</goal>
                         </goals>
                         <phase>generate-test-sources</phase>
                         <configuration>
-                            <mainClass>com.developmentontheedge.be5.entitygen.Main</mainClass>
+                            <mainClass>com.developmentontheedge.be5.entitygen.experimental.EntityModels</mainClass>
                             <arguments>
                                 <argument>${project.build.directory}/generated-test-sources/java/</argument>
-                                <argument>${project.groupId}</argument>
+                                <argument>${project.groupId}.experimental</argument>
                                 <argument>EntityGen</argument>
                             </arguments>
                         </configuration>

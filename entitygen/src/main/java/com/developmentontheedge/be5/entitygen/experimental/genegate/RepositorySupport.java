@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.genegate;
+package com.developmentontheedge.be5.entitygen.experimental.genegate;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
@@ -8,8 +8,8 @@ import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
+import com.developmentontheedge.be5.entitygen.experimental.genegate.fields.ProvincesFields;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -29,7 +29,7 @@ public abstract class RepositorySupport<T, ID extends Serializable> implements R
     protected final OperationHelper operationHelper;
     protected final SqlService db;
 
-    protected final Entity entity;
+    public final Entity entity;
     protected final String entityName;
 
     public static ProvincesFields fields;

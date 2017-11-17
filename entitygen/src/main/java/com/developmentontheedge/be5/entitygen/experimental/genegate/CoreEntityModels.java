@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.genegate;
+package com.developmentontheedge.be5.entitygen.experimental.genegate;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.modules.core.genegate.repositories.ProvincesRepository;
+import com.developmentontheedge.be5.entitygen.experimental.genegate.repositories.ProvincesRepository;
 
 
 public class CoreEntityModels

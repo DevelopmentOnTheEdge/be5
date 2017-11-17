@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.genegate.repositories;
+package com.developmentontheedge.be5.entitygen.experimental.genegate.repositories;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
@@ -7,10 +7,10 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.entitygen.experimental.genegate.fields.ProvincesFields;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.modules.core.genegate.RepositorySupport;
-import com.developmentontheedge.be5.modules.core.genegate.entities.Provinces;
-import com.developmentontheedge.be5.modules.core.genegate.fields.ProvincesFields;
+import com.developmentontheedge.be5.entitygen.experimental.genegate.RepositorySupport;
+import com.developmentontheedge.be5.entitygen.experimental.genegate.entities.Provinces;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
 import groovy.lang.Closure;

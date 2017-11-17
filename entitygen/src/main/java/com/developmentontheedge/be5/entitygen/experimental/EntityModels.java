@@ -1,6 +1,7 @@
-package com.developmentontheedge.be5.entitygen;
+package com.developmentontheedge.be5.entitygen.experimental;
 
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.entitygen.Utils;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
@@ -22,20 +23,20 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Main
+public class EntityModels
 {
     private Injector injector;
     private int entityCount = 0;
 
     public static void main(String[] args) throws Exception
     {
-        new Main(args);
+        new EntityModels(args);
     }
 
-    public Main(String[] args) throws IOException
+    public EntityModels(String[] args) throws IOException
     {
         Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(Main.class, "/templates");
+        cfg.setClassForTemplateLoading(EntityModels.class, "/templates");
         cfg.setDefaultEncoding("UTF-8");
 
         String generatedSourcesPath = args[0];

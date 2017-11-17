@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.genegate.fields;
+package com.developmentontheedge.be5.entitygen.experimental.genegate.fields;
 
 public interface ProvincesFields
 {

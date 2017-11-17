@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.modules.core.genegate;
+package com.developmentontheedge.be5.entitygen.experimental.genegate;
 
-import com.developmentontheedge.be5.modules.core.genegate.entities.Provinces;
+import com.developmentontheedge.be5.entitygen.experimental.genegate.entities.Provinces;
 import groovy.lang.Closure;
 
 import java.io.Serializable;

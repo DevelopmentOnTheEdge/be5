@@ -28,7 +28,7 @@ public class GdslGenegator
     public GdslGenegator(String[] args) throws IOException
     {
         Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(Main.class, "/templates");
+        cfg.setClassForTemplateLoading(GdslGenegator.class, "/templates");
         cfg.setDefaultEncoding("UTF-8");
 
         String generatedSourcesPath = args[0];

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.genegate.entities;
+package com.developmentontheedge.be5.entitygen.experimental.genegate.entities;
 
 public class SystemSettings
 {
