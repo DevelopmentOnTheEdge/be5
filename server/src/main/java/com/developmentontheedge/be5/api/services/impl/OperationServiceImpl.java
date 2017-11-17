@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
 import com.developmentontheedge.be5.operation.GOperationSupport;
@@ -63,13 +62,13 @@ public class OperationServiceImpl implements OperationService
             if(operation instanceof TransactionalOperation)
             {
                 return databaseService.transaction((connection) ->
-                        callInvoke(presetValues, operation,
+                        callInvoke(operation, presetValues,
                                 null, operationContext)
                 );
             }
             else
             {
-                return callInvoke(presetValues, operation,
+                return callInvoke(operation, presetValues,
                         null, operationContext);
             }
         }
@@ -140,11 +139,10 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        return callInvoke(presetValues, operation, parameters, operationContext);
+        return callInvoke(operation, presetValues, parameters, operationContext);
     }
 
-    private Either<Object, OperationResult> callInvoke(
-            Map<String, Object> presetValues, Operation operation,
+    private Either<Object, OperationResult> callInvoke(Operation operation, Map<String, Object> presetValues,
             Object parameters, OperationContext operationContext)
     {
         operationExecutor.callInvoke(operation, parameters, operationContext);
