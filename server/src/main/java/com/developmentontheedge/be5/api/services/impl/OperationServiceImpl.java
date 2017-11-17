@@ -5,10 +5,8 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
@@ -21,11 +19,13 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.json.JsonFactory;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import static com.google.common.base.Strings.nullToEmpty;
 
 
@@ -60,7 +60,7 @@ public class OperationServiceImpl implements OperationService
         return generate(meta, presetValues, selectedRowsString, req);
     }
 
-    @Override//todo refactoring to return only Object - (DPS or bean)
+    @Override
     public Either<FormPresentation, OperationResult> generate(OperationInfo meta,
                 Map<String, Object> presetValues, String selectedRowsString, Request req)
     {
@@ -83,12 +83,7 @@ public class OperationServiceImpl implements OperationService
 
         if(invokeResult != null && invokeResult.getStatus() == OperationStatus.ERROR)
         {
-            validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-            return Either.first(new FormPresentation(operation.getInfo(),
-                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                    selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
-                    invokeResult));
+            return form(operation, parameters, invokeResult);
         }
 
         if(OperationStatus.ERROR == operation.getStatus())
@@ -104,12 +99,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-                return Either.first(new FormPresentation(operation.getInfo(),
-                        userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
-                        OperationResult.error(e)));
+                return form(operation, parameters, OperationResult.error(e));
             }
         }
 
@@ -131,7 +121,7 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        OperationResult operationResult = OperationResult.open();
+        operation.setResult(OperationResult.open());
         if(parameters instanceof DynamicPropertySet)
         {
             if(presetValues.containsKey(OperationSupport.reloadControl))
@@ -142,10 +132,8 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
-                    operationResult = OperationResult.error(e);
+                    return form(operation, parameters, OperationResult.error(e));
                 }
-                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);//todo add test, refactoring:
-                // create function getEitherFirstFormPresentation(){replaceNullValueToEmptyString; Either.first(new FormPresentation;}
             }
             else
             {
@@ -153,9 +141,7 @@ public class OperationServiceImpl implements OperationService
             }
         }
 
-        return Either.first(new FormPresentation(operation.getInfo(),
-                userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(), operationResult));
+        return form(operation, parameters);
     }
 
     @Override//todo move to component
@@ -172,7 +158,7 @@ public class OperationServiceImpl implements OperationService
         return execute(meta, presetValues, selectedRowsString, req);
     }
 
-    @Override//todo refactoring to Either<Object, OperationResult> Object - (DPS or bean)
+    @Override
     public Either<FormPresentation, OperationResult> execute(OperationInfo meta,
           Map<String, Object> presetValues, String selectedRowsString, Request req)
     {
@@ -215,12 +201,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-                return Either.first(new FormPresentation(operation.getInfo(),
-                        userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                        selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
-                        OperationResult.error(e)));
+                return form(operation, parameters, OperationResult.error(e));
             }
         }
 
@@ -243,12 +224,7 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
-                    validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
-
-                    return Either.first(new FormPresentation(operation.getInfo(),
-                            userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                            selectedRowsString, JsonFactory.bean(parameters), operation.getLayout(),
-                            OperationResult.error(e)));
+                    return form(operation, parameters, OperationResult.error(e));
                 }
             }
 
@@ -268,4 +244,21 @@ public class OperationServiceImpl implements OperationService
         if(selectedRowsString.trim().isEmpty())return new String[0];
         return selectedRowsString.split(",");
     }
+
+    private Either<FormPresentation, OperationResult> form(Operation operation, Object parameters)
+    {
+        return form(operation, parameters, operation.getResult());
+    }
+
+    private Either<FormPresentation, OperationResult> form(Operation operation, Object parameters, OperationResult operationResult)
+    {
+        validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+
+        return Either.first(new FormPresentation(operation.getInfo(),
+                userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
+                Arrays.stream(operation.getRecords()).collect(Collectors.joining(",")),
+                JsonFactory.bean(parameters), operation.getLayout(),
+                operationResult));
+    }
+
 }

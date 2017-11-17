@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.Operation;
@@ -16,10 +15,8 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
-import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Map;
 
@@ -128,10 +125,8 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 catch (RuntimeException e)
                 {
-                    Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
-                    operation.setResult(OperationResult.error(be5Exception));
+                    operation.setResult(OperationResult.error(e));
                     return;
-                    //throw Be5Exception.internalInOperation(e.getCause(), operation.getInfo().getModel());
                 }
             }
 
@@ -153,12 +148,6 @@ public class OperationExecutorImpl implements OperationExecutor
         {
             throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
         }
-//        catch (Throwable e)
-//        {
-//            Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
-//            operation.setResult(OperationResult.error(be5Exception));
-//            //throw Be5Exception.internalInOperation(e.getCause(), operation.getInfo().getModel());
-//        }
     }
 
     @Override
