@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.api.helpers;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
@@ -35,18 +34,16 @@ public class OperationHelper
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final Injector injector;
-    private final ProjectProvider projectProvider;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,Injector injector, ProjectProvider projectProvider)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,Injector injector)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.injector = injector;
-        this.projectProvider = projectProvider;
 
         tagsCache = be5Caches.createCache("Tags");
     }
