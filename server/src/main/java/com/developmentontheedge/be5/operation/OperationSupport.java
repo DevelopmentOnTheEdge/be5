@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.model.UserInfo;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public abstract class OperationSupport implements Operation
 
     public Request request;
     public Session session;
+    public UserInfo userInfo;
 
     public static final String reloadControl = "_reloadcontrol_";
     private final Map<String, Object> redirectParams = new HashMap<>();
@@ -48,8 +50,9 @@ public abstract class OperationSupport implements Operation
 
         this.records = records;
 
-        this.session = UserInfoHolder.getSession();
         this.request = UserInfoHolder.getRequest();
+        this.session = UserInfoHolder.getSession();
+        this.userInfo = UserInfoHolder.getUserInfo();
     }
 
     @Override
