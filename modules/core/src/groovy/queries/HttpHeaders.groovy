@@ -9,14 +9,14 @@ class HttpHeaders extends TableBuilderSupport
     {
         addColumns("name", "value")
 
-        Enumeration<String> keys = req.rawRequest.getHeaderNames();
+        Enumeration<String> keys = request.rawRequest.getHeaderNames();
         if (keys != null) {
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement()
 
                 addRow(cells(
                         key,
-                        req.rawRequest.getHeader(key)
+                        request.rawRequest.getHeader(key)
                 ))
 
             }

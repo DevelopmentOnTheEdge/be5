@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -11,12 +13,14 @@ import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public abstract class TableBuilderSupport implements TableBuilder
 {
@@ -28,18 +32,25 @@ public abstract class TableBuilderSupport implements TableBuilder
     @Inject public OperationHelper helper;
     @Inject public Validator validator;
 
+    protected Request request;
+    protected Session session;
+    protected UserInfo userInfo;
+
     protected Query query;
     protected Map<String, String> parametersMap;
-    protected Request req;
 
     protected List<TableModel.ColumnModel> columns = new ArrayList<>();
     protected List<TableModel.RowModel> rows = new ArrayList<>();
 
-    public TableBuilder initialize(Query query, Map<String, String> parametersMap, Request req)
+    public TableBuilder initialize(Query query, Map<String, String> parametersMap)
     {
         this.query = query;
         this.parametersMap = parametersMap;
-        this.req = req;
+
+        this.request = UserInfoHolder.getRequest();
+        this.session = UserInfoHolder.getSession();
+        this.userInfo = UserInfoHolder.getUserInfo();
+
         return this;
     }
 

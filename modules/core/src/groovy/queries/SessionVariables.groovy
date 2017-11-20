@@ -9,12 +9,9 @@ class SessionVariables extends TableBuilderSupport
     {
         addColumns("Name", "Value")
 
-        def session = req.getRawSession()
-        Enumeration it = session.getAttributeNames();
-        while (it.hasMoreElements())
+        for(String name : session.getAttributeNames())
         {
-            String name = (String)it.nextElement()
-            addRow(name, cells( name, session.getAttribute(name).toString() ))
+            addRow(name, cells( name, session.get(name).toString() ))
         }
 
         return table(columns, rows, true)

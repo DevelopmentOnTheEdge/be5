@@ -1,4 +1,3 @@
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.components.FrontendConstants
 import com.developmentontheedge.be5.components.impl.model.ActionHelper
 import com.developmentontheedge.be5.components.impl.model.TableModel
@@ -8,6 +7,7 @@ import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.query.TableBuilderSupport
 import com.developmentontheedge.be5.util.HashUrl
 
+
 class Entities extends TableBuilderSupport
 {
     @Override
@@ -16,7 +16,7 @@ class Entities extends TableBuilderSupport
         addColumns("Name","Type", "Columns", "Queries", "Operations")
 
 
-        def entities = meta.getOrderedEntities(UserInfoHolder.language)
+        def entities = meta.getOrderedEntities(userInfo.getLanguage())
         for (Entity entity : entities) {
             List<CellModel> cells = new ArrayList<CellModel>()
 

@@ -6,8 +6,8 @@ import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import org.junit.Test
 
-
 import static org.junit.Assert.assertEquals
+
 
 class TableBuilderTest extends Be5ProjectTest
 {
@@ -32,17 +32,16 @@ class TableBuilderTest extends Be5ProjectTest
     {
         def tableBuilder = new TestTable().initialize(
                 meta.getQueryIgnoringRoles("testtableAdmin", "All records"),
-                new HashMap<>(),
-                getMockRequest("")
+                new HashMap<>()
         )
         TableModel table = tableBuilder.getTable()
 
-        assertEquals"name", table.getColumns().get(0).getName()
-        assertEquals"name", table.getColumns().get(0).getTitle()
-        assertEquals"value", table.getColumns().get(1).getName()
+        assertEquals "name", table.getColumns().get(0).getName()
+        assertEquals "name", table.getColumns().get(0).getTitle()
+        assertEquals "value", table.getColumns().get(1).getName()
 
-        assertEquals"a1", table.getRows().get(0).getCells().get(0).getContent()
-        assertEquals"b2", table.getRows().get(1).getCells().get(1).getContent()
+        assertEquals "a1", table.getRows().get(0).getCells().get(0).getContent()
+        assertEquals "b2", table.getRows().get(1).getCells().get(1).getContent()
     }
 
 }

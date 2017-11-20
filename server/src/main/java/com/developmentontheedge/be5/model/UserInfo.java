@@ -146,4 +146,9 @@ public class UserInfo implements Serializable
                 ", remoteAddr='" + remoteAddr + '\'' +
                 '}';
     }
+
+    public String getLanguage()
+    {
+        return getLocale().getLanguage();
+    }
 }

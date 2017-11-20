@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.api;
 
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
 /**
  * A high-level access to the session.
  * 
@@ -25,6 +28,11 @@ public interface Session
      * @param value an attribute value
      */
     void set(String name, Object value);
+
+    HttpSession getRawSession();
+
+    @SuppressWarnings("unchecked")
+    List<String> getAttributeNames();
 
     //for groovy meta
     default Object getAt(String name)

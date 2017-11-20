@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+
 public class QueryRouter
 {
     private static Cache<String, Class> groovyQueryClasses;
@@ -115,7 +116,7 @@ public class QueryRouter
                 if(aClass != null) {
                     TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 
-                    tableBuilder.initialize(query, parametersMap, req);
+                    tableBuilder.initialize(query, parametersMap);
                     injector.injectAnnotatedFields(tableBuilder);
 
                     runner.onTable(query, parametersMap, tableBuilder.getTable());
