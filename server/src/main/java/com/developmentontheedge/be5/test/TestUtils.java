@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
@@ -244,9 +245,9 @@ public abstract class TestUtils
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
-        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap()));
+        UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
 
-        return operationExecutor.create(meta, JsonUtils.selectedRows(selectedRows), request);
+        return operationExecutor.create(meta, JsonUtils.selectedRows(selectedRows));
     }
 
 }

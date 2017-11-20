@@ -54,7 +54,7 @@ public class Form implements Component
                 .redirectThisOperation(selectedRows, Collections.emptyMap())
                 .getDetails();
 
-        Operation operation = operationExecutor.create(meta, selectedRows, req);
+        Operation operation = operationExecutor.create(meta, selectedRows);
         Either<Object, OperationResult> generate;
 
         try

@@ -34,7 +34,7 @@ public abstract class OperationSupport implements Operation
 
     public String[] records;
 
-    public Request request;//todo npe
+    public Request request;
     public Session session;
 
     public static final String reloadControl = "_reloadcontrol_";
@@ -49,6 +49,7 @@ public abstract class OperationSupport implements Operation
         this.records = records;
 
         this.session = UserInfoHolder.getSession();
+        this.request = UserInfoHolder.getRequest();
     }
 
     @Override

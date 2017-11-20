@@ -115,7 +115,9 @@ public class MainServlet implements Filter
                 templateComponentID = "defaultTemplateProcessor";
             }
 
-            runTemplateProcessor(templateComponentID, new RequestImpl(request, requestUri, simplify(parameters)), res);
+            RequestImpl req = new RequestImpl(request, requestUri, simplify(parameters));
+            UserInfoHolder.setRequest(req);
+            runTemplateProcessor(templateComponentID, req, res);
             return true;
         }
 
@@ -130,7 +132,9 @@ public class MainServlet implements Filter
         String subRequestUri = Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
         String componentId = uriParts[ind + 1];
 
-        runComponent(componentId, new RequestImpl(request, subRequestUri, simplify(parameters)), res);
+        Request req = new RequestImpl(request, subRequestUri, simplify(parameters));
+        UserInfoHolder.setRequest(req);
+        runComponent(componentId, req, res);
         return true;
     }
 

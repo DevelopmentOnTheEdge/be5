@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.UserInfo;
@@ -11,15 +12,26 @@ import java.util.Locale;
 public class UserInfoHolder
 {
     private static final ThreadLocal<UserInfo> threadLocalScope = new  ThreadLocal<>();
+    private static final ThreadLocal<Request> requestThreadLocalScope = new  ThreadLocal<>();
+
+    public static void setUserInfo(UserInfo user)
+    {
+        threadLocalScope.set(user);
+    }
 
     public static UserInfo getUserInfo()
     {
         return threadLocalScope.get();
     }
 
-    public static void setUserInfo(UserInfo user)
+    public static void setRequest(Request request)
     {
-        threadLocalScope.set(user);
+        requestThreadLocalScope.set(request);
+    }
+
+    public static Request getRequest()
+    {
+        return requestThreadLocalScope.get();
     }
 
     public static Session getSession()

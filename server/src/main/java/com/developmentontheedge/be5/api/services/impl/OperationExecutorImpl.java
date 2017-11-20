@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
@@ -151,7 +150,7 @@ public class OperationExecutorImpl implements OperationExecutor
     }
 
     @Override
-    public Operation create(OperationInfo operationInfo, String[] records, Request request)
+    public Operation create(OperationInfo operationInfo, String[] records)
     {
         Operation operation;
 
