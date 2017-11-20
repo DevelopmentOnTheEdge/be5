@@ -33,11 +33,11 @@ public abstract class OperationSupport implements Operation
     private OperationInfo operationInfo;
     private OperationResult operationResult;
 
-    public String[] records;
+    protected String[] records;
 
-    public Request request;
-    public Session session;
-    public UserInfo userInfo;
+    protected Request request;
+    protected Session session;
+    protected UserInfo userInfo;
 
     public static final String reloadControl = "_reloadcontrol_";
     private final Map<String, Object> redirectParams = new HashMap<>();
