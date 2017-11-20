@@ -170,7 +170,7 @@ public class OperationHelper
         }
 
         TableModel table = TableModel
-                .from(query, stringStringMap, UserInfoHolder.getSession(), false, injector)
+                .from(query, stringStringMap, false, injector)
                 .limit(Integer.MAX_VALUE)
                 .build();
         String[][] stockArr = new String[table.getRows().size()][2];
@@ -515,19 +515,19 @@ public class OperationHelper
         return db.selectList(sql, DpsRecordAdapter::createDps, params);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, String> parameters, Session session )
+    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, String> parameters )
     {
-        return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters, session);
+        return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, String> parameters, Session session)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, String> parameters)
     {
-        return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters, session);
+        return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, String> parameters, Session session)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, String> parameters)
     {
-        return new Be5QueryExecutor(query, parameters, session, injector).execute();
+        return new Be5QueryExecutor(query, parameters, injector).execute();
     }
 
     public List<List<Object>> readAsList( String sql, Object... params )

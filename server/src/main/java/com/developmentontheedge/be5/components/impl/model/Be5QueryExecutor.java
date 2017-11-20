@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.components.impl.model;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
@@ -70,8 +69,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.sql.DpsRecordAdapter.createDps;
-
 
 /**
  * A modern query executor that uses our new parser.
@@ -123,7 +120,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getSessionVariable(String name)//todo add test for ExecutorQueryContext
         {
-            Object attr = session.get(name);
+            Object attr = UserInfoHolder.getSession().get(name);
             return attr != null ? attr.toString() : null;
         }
 
@@ -168,31 +165,28 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final DatabaseModel database;
     private final Meta meta;
     private final SqlService db;
-    private final Session session;
     private ContextApplier contextApplier;
     private final UserAwareMeta userAwareMeta;
     private final Context context;
     private final ParserContext parserContext;
-    private final Injector injector;
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
 
 
-    public Be5QueryExecutor(Query query, Map<String, String> parameters, Session session, Injector injector)
+    public Be5QueryExecutor(Query query, Map<String, String> parameters, Injector injector)
     {
         super(query);
-        this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.databaseService = injector.getDatabaseService();
-        this.database = injector.get(DatabaseModel.class);
-        this.meta = injector.getMeta();
-        this.db = injector.getSqlService();
-        this.userAwareMeta = injector.get(UserAwareMeta.class);
-        this.session = session;
+        this.database        = injector.get(DatabaseModel.class);
+        this.meta            = injector.getMeta();
+        this.db              = injector.getSqlService();
+        this.userAwareMeta   = injector.get(UserAwareMeta.class);
+
+        this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
-        this.injector = injector;
         this.extraQuery = ExtraQuery.DEFAULT;
         this.sortColumn = -1;
     }

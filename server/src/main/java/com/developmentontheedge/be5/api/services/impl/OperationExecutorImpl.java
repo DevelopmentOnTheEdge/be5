@@ -194,7 +194,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
         }
 
-        operation.initialize(operationInfo, OperationResult.open(), records, request);
+        operation.initialize(operationInfo, OperationResult.open(), records);
         injector.injectAnnotatedFields(operation);
 
         return operation;

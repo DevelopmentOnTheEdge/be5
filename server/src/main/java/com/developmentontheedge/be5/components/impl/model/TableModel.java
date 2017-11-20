@@ -35,11 +35,11 @@ public class TableModel
         private boolean selectable;
         private int limit = Integer.MAX_VALUE;
 
-        private Builder(Query query, Map<String, String> parametersMap, Session session, boolean selectable, Injector injector)
+        private Builder(Query query, Map<String, String> parametersMap, boolean selectable, Injector injector)
         {
             this.query = query;
             this.selectable = selectable;
-            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, session, injector);
+            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, injector);
             this.userAwareMeta = injector.get(UserAwareMeta.class);
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
         }
@@ -295,14 +295,14 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Session session, Injector injector)
+    public static Builder from(Query query, Map<String, String> parametersMap, Injector injector)
     {
-        return from(query, parametersMap, session, false, injector);
+        return from(query, parametersMap, false, injector);
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Session session, boolean selectable, Injector injector)
+    public static Builder from(Query query, Map<String, String> parametersMap, boolean selectable, Injector injector)
     {
-        return new Builder(query, parametersMap, session, selectable, injector);
+        return new Builder(query, parametersMap, selectable, injector);
     }
 
     public static class ColumnModel

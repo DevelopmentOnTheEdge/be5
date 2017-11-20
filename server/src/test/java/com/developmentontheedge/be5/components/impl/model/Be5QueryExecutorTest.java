@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Inject;
@@ -16,7 +15,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+
 
 public class Be5QueryExecutorTest extends Be5ProjectDBTest
 {
@@ -38,7 +37,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     @Test
     public void testExecute()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Session.class), injector);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
         List<DynamicPropertySet> dps = be5QueryExecutor.execute();
         assertTrue(dps.size() > 0);
 
@@ -48,7 +47,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     @Test
     public void testColumnNames()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Session.class), injector);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
         List<String> columnNames = be5QueryExecutor.getColumnNames();
         assertEquals(2, columnNames.size());
         assertEquals("NAME", columnNames.get(0));
@@ -57,7 +56,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), mock(Session.class), injector);
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
 
         assertTrue(be5QueryExecutor.count() > 0);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +

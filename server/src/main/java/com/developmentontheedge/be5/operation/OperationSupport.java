@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QRecService;
@@ -33,23 +34,21 @@ public abstract class OperationSupport implements Operation
 
     public String[] records;
 
-    public Request request;
+    public Request request;//todo npe
     public Session session;
 
     public static final String reloadControl = "_reloadcontrol_";
     private final Map<String, Object> redirectParams = new HashMap<>();
 
     @Override
-    public final void initialize(OperationInfo operationInfo,
-                                 OperationResult operationResult, String[] records, Request request)
+    public final void initialize(OperationInfo operationInfo, OperationResult operationResult, String[] records)
     {
         this.operationInfo = operationInfo;
         this.operationResult = operationResult;
 
         this.records = records;
 
-        this.request = request;
-        this.session = request.getSession();
+        this.session = UserInfoHolder.getSession();
     }
 
     @Override

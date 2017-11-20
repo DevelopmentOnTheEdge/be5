@@ -1,13 +1,11 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -23,12 +21,6 @@ public class OperationHelperTest extends Be5ProjectDBTest
 {
     @Inject private OperationHelper helper;
 
-    private Request request;
-
-    @Before
-    public void before(){
-        request = getMockRequest("");
-    }
 
     @Test
     public void getTagsFromEnum()
@@ -185,7 +177,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     public void readAsRecordsFromQueryTest() throws Exception
     {
         List<DynamicPropertySet> list = helper.readAsRecordsFromQuery("testTags", "With parameter",
-                Collections.emptyMap(), request.getSession());
+                Collections.emptyMap());
 
         assertEquals("01",        list.get(0).getValue("ID"));
         assertEquals("Regional",  list.get(0).getValue("Name"));
@@ -203,7 +195,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
                         "        <if parameter=\"payable\">\n" +
                         "          AND payable = <parameter:payable/>\n" +
                         "        </if>",
-                Collections.emptyMap(), request.getSession());
+                Collections.emptyMap());
 
         assertEquals("01",        list.get(0).getValue("ID"));
         assertEquals("Regional",  list.get(0).getValue("Name"));

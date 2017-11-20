@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.model.UserInfo;
 import java.util.List;
 import java.util.Locale;
 
+
 public class UserInfoHolder
 {
     private static final ThreadLocal<UserInfo> threadLocalScope = new  ThreadLocal<>();

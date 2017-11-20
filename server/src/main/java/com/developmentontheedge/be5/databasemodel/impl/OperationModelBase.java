@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
@@ -13,7 +12,7 @@ import java.io.Writer;
 import java.util.Collections;
 import java.util.Map;
 
-//todo need Request
+
 class OperationModelBase implements OperationModel
 {
     private OperationExecutor operationExecutor;

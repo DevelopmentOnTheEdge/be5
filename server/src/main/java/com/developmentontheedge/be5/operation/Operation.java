@@ -1,18 +1,16 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.api.Request;
-
 import java.io.Serializable;
 import java.util.Map;
 
+
 public interface Operation extends Serializable
 {
-	
 	///////////////////////////////////////////////////////////////////
 	// Main interface
 	//
 
-    void initialize(OperationInfo meta, OperationResult operationResult, String[] records, Request request);
+    void initialize(OperationInfo meta, OperationResult operationResult, String[] records);
 
 	/**
 	 * Returns meta-information from project definition for this operation.
