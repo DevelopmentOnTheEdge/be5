@@ -14,7 +14,7 @@ import static org.junit.Assert.*
 class OperationServiceImplTest extends SqlMockOperationTest
 {
     @Inject UserAwareMeta userAwareMeta
-    @Inject GroovyOperationLoader operationService
+    @Inject GroovyOperationLoader groovyOperationLoader
     @Inject ProjectProvider projectProvider
 
     @Test
@@ -22,11 +22,11 @@ class OperationServiceImplTest extends SqlMockOperationTest
     {
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
 
-        assertEquals("CustomOperation", operationService.getSimpleSuperClassName(operation))
+        assertEquals("CustomOperation", groovyOperationLoader.getSimpleSuperClassName(operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
 
-        assertEquals("OperationWithExtend", operationService.getSimpleSuperClassName(operation))
+        assertEquals("OperationWithExtend", groovyOperationLoader.getSimpleSuperClassName(operation))
     }
 
     @Test
@@ -34,11 +34,11 @@ class OperationServiceImplTest extends SqlMockOperationTest
     {
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
         assertEquals("testtableAdmin.CustomOperation.groovy",
-                operationService.getCanonicalSuperClassName(operation))
+                groovyOperationLoader.getCanonicalSuperClassName(operation))
 
         operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend2")
         assertEquals("testtableAdmin.OperationWithExtend.groovy",
-                operationService.getCanonicalSuperClassName(operation))
+                groovyOperationLoader.getCanonicalSuperClassName(operation))
     }
 
     @Test
@@ -47,7 +47,7 @@ class OperationServiceImplTest extends SqlMockOperationTest
         projectProvider.reloadProject()
 
         def operation = userAwareMeta.getOperation("testtableAdmin", "OperationWithExtend")
-        assertEquals(["testtableAdmin.CustomOperation.groovy"], operationService.preloadSuperOperation(operation))
+        assertEquals(["testtableAdmin.CustomOperation.groovy"], groovyOperationLoader.preloadSuperOperation(operation))
     }
 
 }
