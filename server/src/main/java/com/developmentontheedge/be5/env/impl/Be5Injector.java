@@ -246,7 +246,7 @@ public class Be5Injector implements Injector
             Field[] fields = c.getDeclaredFields();
             for (Field field : fields)
             {
-                if(field.getAnnotation(Inject.class) != null)
+                if(field.getAnnotation(Inject.class) != null || field.getAnnotation(javax.inject.Inject.class) != null)
                 {
                     field.setAccessible(true);
                     try
