@@ -59,17 +59,17 @@ public class OperationExecutorImpl implements OperationExecutor
         if(operation instanceof TransactionalOperation)
         {
             databaseService.transaction(connection -> {
-                callOperation(presetValues, operation, operationContext);
+                callOperation(operation, presetValues, operationContext);
                 return null;
             });
         }
         else
         {
-            callOperation(presetValues, operation, operationContext);
+            callOperation(operation, presetValues, operationContext);
         }
     }
 
-    private void callOperation(Map<String, Object> presetValues, Operation operation,
+    private void callOperation(Operation operation, Map<String, Object> presetValues,
              OperationContext operationContext)
     {
         Object parameters = generate(operation, presetValues);
@@ -194,6 +194,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
 
         operation.initialize(operationInfo, OperationResult.open(), records);
+        operation.setResult(OperationResult.progress());
         injector.injectAnnotatedFields(operation);
 
         return operation;

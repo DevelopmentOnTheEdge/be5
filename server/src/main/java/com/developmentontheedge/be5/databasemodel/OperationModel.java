@@ -1,43 +1,23 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Map;
 
 
 public interface OperationModel 
 {
-//    class OperationFailedException extends RuntimeException
-//    {
-//        OperationFailedException() {
-//            super( "{{{Operation failed}}}" );
-//        }
-//
-//        public OperationFailedException(Throwable e) {
-//            super( e );
-//        }
-//    }
+    OperationModel setEntityName(String entityName);
 
-    DynamicPropertySet getParameters() throws Exception;
+    OperationModel setQueryName(String queryName);
 
-    Either<Object, OperationResult> execute();
-
-    //OperationModel setSessionAdapter(Operation.SessionAdapter sessionAdapter);
-
-    //OperationModel setQueueID(String queueID);
+    OperationModel setOperationName(String operationName);
 
     OperationModel setRecords(String... records);
 
-    OperationModel setFromQuery(String fromQuery);
-
     OperationModel setPresetValues(Map<String, Object> presetValues);
 
-    //OperationModel setOut(Writer out);
+    Object getParameters() throws Exception;
 
-    //OperationModel setOut(MessageHandler out);
-
-    //void makeTemplate(String cronMask) throws Exception;
+    OperationResult execute();
 }
