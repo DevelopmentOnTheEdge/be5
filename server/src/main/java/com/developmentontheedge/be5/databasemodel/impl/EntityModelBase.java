@@ -371,7 +371,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     {
         return new OperationModelBase(meta, operationExecutor)
                 .setEntityName(entity.getName())
-                .setQueryName("from another operation");
+                .setQueryName("from another operation")
+                .setOperationName(operationName);
     }
 
     @Override

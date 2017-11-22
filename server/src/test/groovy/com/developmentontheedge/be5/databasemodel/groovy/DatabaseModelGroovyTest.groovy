@@ -19,17 +19,20 @@ import static org.junit.Assert.assertTrue
 
 class DatabaseModelGroovyTest extends Be5ProjectDBTest
 {
+    EntityModel testtableAdmin
+
     @Before
     void before()
     {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        testtableAdmin = database.getEntity("testtableAdmin")
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
         db.update("DELETE FROM testtableAdmin")
     }
 
     @After
     void after()
     {
-        initUserWithRoles(RoleType.ROLE_GUEST);
+        initUserWithRoles(RoleType.ROLE_GUEST)
     }
 
     @Test
@@ -37,18 +40,18 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     {
         assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
-        def id = database.testtableAdmin << [
+        def id = testtableAdmin << [
                 "name": "TestName",
-                "value": "1"];
+                "value": "1"]
 
         assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
-        database.testtableAdmin[id] << [
+        testtableAdmin[id] << [
                 "value": "2"
         ]
         assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
-        def testtableAdmin = database.testtableAdmin;
+        def testtableAdmin = testtableAdmin
 
         assert db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
         assert testtableAdmin( ["name": "TestName"] ) != null
@@ -57,13 +60,11 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void testGroovyCount()
     {
-        def testtableAdmin = database.getEntity("testtableAdmin")
-
         assertEquals 0, testtableAdmin.count()
 
         testtableAdmin << [
                 "name": "TestName",
-                "value": "1"];
+                "value": "1"]
 
         assertEquals 1, testtableAdmin.count()
     }
@@ -71,9 +72,9 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void testInsert()
     {
-        database.testtableAdmin << [
+        testtableAdmin << [
                 "name": "InsertName",
-                "value": "2"];
+                "value": "2"]
 
         assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
     }
@@ -98,9 +99,9 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test(expected = NumberFormatException.class)
     void testInsertError() throws Exception
     {
-        database.testtableAdmin << [
+        testtableAdmin << [
                 "name": "InsertName",
-                "value": "asd"];
+                "value": "asd"]
 
         assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
     }
@@ -108,45 +109,38 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void testIsEmpty()
     {
-        def testtableAdmin = database.testtableAdmin;
-
         assertTrue(testtableAdmin.empty)
 
         testtableAdmin << [
                 "name": "TestName",
-                "value": "1"];
+                "value": "1"]
 
         assertFalse(testtableAdmin.empty)
 
         testtableAdmin << [
                 "name": "TestName2",
-                "value": "2"];
+                "value": "2"]
 
         assertFalse(testtableAdmin.empty)
     }
 
-
     @Test
     void testIsEmptyWithConditions()
     {
-        def entityName = database.testtableAdmin;
+        assertTrue testtableAdmin.empty
 
-        assertTrue entityName.empty;
-
-        entityName << [
+        testtableAdmin << [
                 "name": "TestName2",
-                "value": "1"];
+                "value": "1"]
 
-        assertFalse entityName.empty;
-        assertTrue entityName.contains( ["value": "1"] );
-        assertFalse entityName.contains( ["value": "2"] );
+        assertFalse testtableAdmin.empty
+        assertTrue testtableAdmin.contains( ["value": "1"] )
+        assertFalse testtableAdmin.contains( ["value": "2"] )
     }
 
     @Test
     void testGetEntity()
     {
-        def testtableAdmin = database.testtableAdmin;
-
         assertEquals "testtableAdmin", testtableAdmin.tableName
         assertTrue testtableAdmin.empty
     }
@@ -155,7 +149,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //    @Ignore
 //    void testDeleteAll()
 //    {
-//        def entityName = (EntityModel)database.testtableAdmin
+//        def entityName = (EntityModel)testtableAdmin
 //
 //        entityName << [ "name": "TestName", "value": 1]
 //        entityName << [ "name": "TestName", "value": 2]
@@ -168,111 +162,100 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //        assertEquals 1, db.getLong("SELECT count(*) FROM testtableAdmin WHERE name = ?", "TestName2")
 //
 //
-//        assertEquals 0, database.testtableAdmin.count(["name": "TestName"])
-//        assertEquals 1, database.testtableAdmin.count(["name": "TestName2"])
+//        assertEquals 0, testtableAdmin.count(["name": "TestName"])
+//        assertEquals 1, testtableAdmin.count(["name": "TestName2"])
 //    }
 
     @Test
     void testDeleteIn()
     {
-        def entityName = database.testtableAdmin
-
-        def id = entityName << [
+        def id = testtableAdmin << [
                 "name": "TestName2",
                 "value": 1]
 
-        assert database.testtableAdmin[ id ] != null
+        assert testtableAdmin[ id ] != null
 
-        assertFalse entityName.empty
-        assertEquals 1, entityName.remove( id )
+        assertFalse testtableAdmin.empty
+        assertEquals 1, testtableAdmin.remove( id )
 
-        assert database.testtableAdmin[ id ] == null
-        assertTrue entityName.empty
+        assert testtableAdmin[ id ] == null
+        assertTrue testtableAdmin.empty
 
-        assertEquals 0, entityName.remove( id )
+        assertEquals 0, testtableAdmin.remove( id )
     }
 
     @Test
     void testDelete()
     {
-        EntityModel entityName = database.testtableAdmin
+        def id = testtableAdmin << [ "name": "TestName", "value": 1]
+        def id2 = testtableAdmin << [ "name": "TestName2", "value": 1]
 
-        def id = entityName << [ "name": "TestName", "value": 1]
-        def id2 = entityName << [ "name": "TestName2", "value": 1]
-
-        assertFalse entityName.empty
-        assertEquals 1, entityName.remove( ["name": "TestName2"] )
-        assertNotNull database.testtableAdmin[ id ]
-        assertNull database.testtableAdmin[ id2 ]
+        assertFalse testtableAdmin.empty
+        assertEquals 1, testtableAdmin.remove( ["name": "TestName2"] )
+        assertNotNull testtableAdmin[ id ]
+        assertNull testtableAdmin[ id2 ]
     }
 
     @Test
     void testDeleteSeveralId()
     {
-        def entityName = database.testtableAdmin
+        def id = testtableAdmin << [ "name": "TestName1", "value": 1]
+        def id2 = testtableAdmin << [ "name": "TestName2", "value": 1]
+        def id3 = testtableAdmin << [ "name": "TestName3", "value": 1]
 
-        def id = entityName << [ "name": "TestName1", "value": 1]
-        def id2 = entityName << [ "name": "TestName2", "value": 1]
-        def id3 = entityName << [ "name": "TestName3", "value": 1]
+        assertEquals 2, testtableAdmin.remove( id, id2 )
 
-        assertEquals 2, entityName.remove( id, id2 )
-
-        assert database.testtableAdmin[ id ] == null
-        assert database.testtableAdmin[ id2 ] == null
-        assert database.testtableAdmin[ id3 ] != null
+        assert testtableAdmin[ id ] == null
+        assert testtableAdmin[ id2 ] == null
+        assert testtableAdmin[ id3 ] != null
     }
 
     @Test
     void testUpdate()
     {
-        def entityName = database.testtableAdmin;
-
-        def id = entityName << [
+        def id = testtableAdmin << [
                 "name": "TestName",
                 "value": 1]
 
-        entityName[id] = [//setAt(id, map)
+        testtableAdmin[id] = [//setAt(id, map)
                 "name": "TestName2",
         ]
 
-        def record = entityName[id]
+        def record = testtableAdmin[id]
 
         assertEquals "TestName2", record.$name
-        assertEquals "TestName2", database.testtableAdmin[id].$name
+        assertEquals "TestName2", testtableAdmin[id].$name
 
         record << [
                 "name": "TestName3",
         ]
 
         assertEquals "TestName3", record.$name
-        assertEquals "TestName3", database.testtableAdmin[id].$name
+        assertEquals "TestName3", testtableAdmin[id].$name
     }
 
     @Test
     void testFindRecord()
     {
-        def entityName = database.testtableAdmin;
 
-        entityName << [
+        testtableAdmin << [
             "name": "TestName2",
             "value": "123"]
 
-        def rec = database.testtableAdmin( ["name": "TestName2"] );
-        assertEquals( 123, rec.$value );
+        def rec = testtableAdmin( ["name": "TestName2"] )
+        assertEquals( 123, rec.$value )
     }
 
 
     @Test
     void testGetRecord()
     {
-        def entityName = database.testtableAdmin;
-
-        def id = entityName << [
+        def id = testtableAdmin << [
                 "name": "TestName2",
                 "value": "123"]
 
-        def record = entityName[ id ];
-        assertEquals( "TestName2", record.$name );
+        def record = testtableAdmin[ id ]
+        assertEquals( "TestName2", record.$name )
     }
 //
 //    private boolean listContains( List<DynamicPropertySet> recs, String propertyName, String value )
@@ -290,17 +273,15 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void testGetList()
     {
-        def entity = database.getEntity("testtableAdmin")
-
-        entity << [
+        testtableAdmin << [
                 "name": "TestName",
                 "value": "1"]
 
-        entity << [
+        testtableAdmin << [
                 "name": "TestName2",
                 "value": "2"]
 
-        List<RecordModel> list = entity.toList()
+        List<RecordModel> list = testtableAdmin.toList()
 
         assertTrue( listContains( list, "name", "TestName" ) )
         assertTrue( listContains( list, "value", "1" ) )
@@ -309,22 +290,17 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         assertTrue( listContains( list, "value", "2" ) )
 
 
-        list = entity.toList( value: "1" )
+        list = testtableAdmin.toList( value: "1" )
         assertTrue( listContains( list, "name", "TestName" ) )
 
-        list = entity.toList( name: "TestName3" )
+        list = testtableAdmin.toList( name: "TestName3" )
         assertTrue list.empty
     }
 
     @Test
     void testOperationGenerate()
     {
-        def entity = database.getEntity("testtableAdmin")
-
-        def params = entity.getOperation("ErrorProcessing").generate {
-            presetValues  = [ 'name': 'ok' ]
-            operationName = "ErrorProcessing"
-        }
+        def params = testtableAdmin.getOperation("ErrorProcessing").generate { presetValues = [ 'name': 'ok' ] }
 
         assertEquals("ok", params.$name)
     }
@@ -332,12 +308,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void testOperationExecute()
     {
-        def entity = database.getEntity("testtableAdmin")
-
-        def operation = entity.getOperation("ErrorProcessing").execute {
-            presetValues  = [ 'name': 'ok' ]
-            operationName = "ErrorProcessing"
-        }
+        def operation = testtableAdmin.getOperation("ErrorProcessing").execute { presetValues = [ 'name': 'ok' ] }
 
         assertEquals(OperationStatus.FINISHED, operation.getStatus())
     }
@@ -570,9 +541,9 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         {
             if( rec.getValueAsString( propertyName ).equals( value ) )
             {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 }
