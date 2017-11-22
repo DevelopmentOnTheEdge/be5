@@ -5,6 +5,8 @@ import com.developmentontheedge.be5.api.services.OperationExecutor
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
+import groovy.transform.TypeChecked
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -12,47 +14,67 @@ import org.junit.rules.ExpectedException
 import static org.junit.Assert.*
 
 
+@TypeChecked
 class OperationModelBaseTest extends Be5ProjectTest
 {
     @Inject OperationExecutor operationExecutor
     @Inject Meta meta
 
     @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+    public ExpectedException expectedEx = ExpectedException.none()
+
+    OperationModelBase operationModelBase
+
+    @Before
+    void init()
+    {
+        operationModelBase = new OperationModelBase(meta, operationExecutor)
+        operationModelBase.setEntityName("testtableAdmin")
+        operationModelBase.setQueryName("All records")
+    }
 
     @Test
     void execute()
     {
-        def operationModelBase = new OperationModelBase(meta, operationExecutor)
-        operationModelBase.setEntityName("testtableAdmin")
-        operationModelBase.setQueryName("All records")
-
-        operationModelBase.with {
+        def operation = operationModelBase.execute {
+            presetValues  = [ 'name': 'ok' ]
             operationName = "ErrorProcessing"
-            presetValues  = [ 'name':'ok' ]
         }
-        def operation = operationModelBase.execute()
 
         assertEquals(OperationStatus.FINISHED, operation.getStatus())
     }
 
     @Test
-    void errorInGenerate()
+    void generateErrorInProperty()
+    {
+        expectedEx.expect(IllegalArgumentException.class)
+        expectedEx.expectMessage("[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]")
+        executeAndCheck('generateErrorInProperty')
+    }
+
+    @Test
+    void generateErrorStatus()
     {
         expectedEx.expect(RuntimeException.class)
         expectedEx.expectMessage("The operation can not be performed.")
+        executeAndCheck('generateErrorStatus')
+    }
 
-        def operationModelBase = new OperationModelBase(meta, operationExecutor)
-        operationModelBase.setEntityName("testtableAdmin")
-        operationModelBase.setQueryName("All records")
+    @Test
+    void executeErrorStatus()
+    {
+        expectedEx.expect(RuntimeException.class)
+        expectedEx.expectMessage("An error occurred while performing operations.")
+        executeAndCheck('executeErrorStatus')
+    }
 
-        operationModelBase.with {
+    void executeAndCheck(String value)
+    {
+        def operation = operationModelBase.execute {
             operationName = "ErrorProcessing"
-            presetValues  = [ 'name':'generateErrorStatus' ]
+            presetValues = [ 'name':value ]
         }
-        def operation = operationModelBase.execute()
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
-
 }

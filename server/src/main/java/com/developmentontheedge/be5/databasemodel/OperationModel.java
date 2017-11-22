@@ -15,7 +15,7 @@ public interface OperationModel
 
     OperationModel setRecords(String... records);
 
-    OperationModel setPresetValues(Map<String, Object> presetValues);
+    OperationModel setPresetValues(Map<String, ?> presetValues);
 
     Object getParameters() throws Exception;
 

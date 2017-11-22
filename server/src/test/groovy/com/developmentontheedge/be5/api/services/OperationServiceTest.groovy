@@ -29,55 +29,49 @@ class OperationServiceTest extends SqlMockOperationTest
     void generatePropertyError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = generateOperation(operation, "{'name':'generateErrorInProperty'}").getFirst()
+        Object first = generateOperation(operation, ['name':'generateErrorInProperty']).getFirst()
 
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{'details':'java.lang.IllegalArgumentException: " +
-                "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
-                "'message':'[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
-                "'status':'error'}",
-                oneQuotes(jsonb.toJson(operation.getResult()))
+        assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
+        assertEquals "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
+                operation.getResult().getMessage()
     }
 
     @Test
     void generatePropertyErrorOnExecute()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = executeOperation(operation, "{'name':'generateErrorInProperty'}").getFirst()
+        Object first = executeOperation(operation, ['name':'generateErrorInProperty']).getFirst()
 
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{'details':'java.lang.IllegalArgumentException: " +
-                "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
-                "'message':'[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
-                "'status':'error'}",
-                oneQuotes(jsonb.toJson(operation.getResult()))
+        assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
+        assertEquals "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
+                operation.getResult().getMessage()
     }
 
     @Test
     void executePropertyError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = executeOperation(operation, "{'name':'executeErrorInProperty'}").getFirst()
+        Object first = executeOperation(operation, ['name':'executeErrorInProperty']).getFirst()
 
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (invoke)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{'details':'java.lang.IllegalArgumentException: " +
-                "[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]'," +
-                "'message':'[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]'," +
-                "'status':'error'}",
-                oneQuotes(jsonb.toJson(operation.getResult()))
+        assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
+        assertEquals "[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]",
+                operation.getResult().getMessage()
     }
 
     @Test
     void generateErrorStatus()
     {
         OperationResult second = generateOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'generateErrorStatus'}").getSecond()
+                "ErrorProcessing", "", ['name':'generateErrorStatus']).getSecond()
 
         assertEquals OperationStatus.ERROR, second.getStatus()
         assertEquals "The operation can not be performed.", second.getMessage()
@@ -87,7 +81,7 @@ class OperationServiceTest extends SqlMockOperationTest
     void generateErrorStatusOnExecute()
     {
         def either = executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'generateErrorStatus'}")
+                "ErrorProcessing", "", ['name':'generateErrorStatus'])
         OperationResult second = either.getSecond()
 
         assertEquals OperationStatus.ERROR, second.getStatus()
@@ -98,7 +92,7 @@ class OperationServiceTest extends SqlMockOperationTest
     void executeErrorStatus()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = executeOperation(operation, "{'name':'executeErrorStatus'}").getFirst()
+        Object first = executeOperation(operation, ['name':'executeErrorStatus']).getFirst()
 
         assertEquals "{'displayName':'name'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
@@ -111,7 +105,7 @@ class OperationServiceTest extends SqlMockOperationTest
     void generateDeveloperError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        generateOperation(operation, "{'name':'generateDeveloperError'}")
+        generateOperation(operation, ['name':'generateDeveloperError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
@@ -120,7 +114,7 @@ class OperationServiceTest extends SqlMockOperationTest
     void executeDeveloperError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        executeOperation(operation, "{'name':'executeDeveloperError'}")
+        executeOperation(operation, ['name':'executeDeveloperError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
@@ -129,7 +123,7 @@ class OperationServiceTest extends SqlMockOperationTest
     void errorHandlingCycles()
     {
         Object first = generateOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'generateErrorInProperty'}").getFirst()
+                "ErrorProcessing", "", ['name':'generateErrorInProperty']).getFirst()
 
         assertEquals "{'name':'generateErrorInProperty','propertyForAnotherEntity':'text'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
@@ -137,7 +131,7 @@ class OperationServiceTest extends SqlMockOperationTest
 
         //call callGetParameters and add OperationResult from invoke to FormPresentation
         first = executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'executeErrorStatus'}").getFirst()
+                "ErrorProcessing", "", ['name':'executeErrorStatus']).getFirst()
 
         assertEquals "{'name':'executeErrorStatus','propertyForAnotherEntity':'text'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())
@@ -145,7 +139,7 @@ class OperationServiceTest extends SqlMockOperationTest
 
         //just return FormPresentation with current parameters
         first = executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'executeErrorInProperty'}").getFirst()
+                "ErrorProcessing", "", ['name':'executeErrorInProperty']).getFirst()
 
         assertEquals "{'name':'executeErrorInProperty'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString())

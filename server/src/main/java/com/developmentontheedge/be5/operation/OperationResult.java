@@ -139,7 +139,7 @@ public class OperationResult
 
     public static OperationResult error(Throwable details)
     {
-        return new OperationResult(OperationStatus.ERROR, details.getMessage(), details.toString());
+        return new OperationResult(OperationStatus.ERROR, details.getMessage(), details);
     }
 
     public static OperationResult error(String message)
