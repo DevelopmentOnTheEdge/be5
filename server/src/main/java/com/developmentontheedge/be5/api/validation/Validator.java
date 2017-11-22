@@ -52,72 +52,66 @@ public class Validator
 
     public void checkErrorAndCast(DynamicProperty property)
     {
-        if(property.getValue() instanceof String && property.getType() != String.class)
+        if(property.getValue() instanceof String && ((String) property.getValue()).isEmpty())
         {
-            String stringValue = (String)property.getValue();
-            if(stringValue.isEmpty() && property.isCanBeNull())
+            property.setValue(null);
+        }
+
+        if(property.getValue() == null)
+        {
+            if (property.isCanBeNull())
             {
-                property.setValue(null);
+                return;
             }
             else
             {
-                Object value = parseFrom(property, stringValue);
-                checkValueInTags(property, value);
-
-                property.setValue(value);
+                setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
+                throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
             }
+        }
+
+        if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+        {
+            if(!(property.getValue() instanceof Object[]))
+            {
+                setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
+                throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST) - " + toStringProperty(property));
+            }
+
+            Object[] values = (Object[]) property.getValue();
+            Object[] resValues = new Object[values.length];
+
+            for (int i = 0; i < values.length; i++)
+            {
+                if(values[i] instanceof String)
+                    resValues[i] = parseFrom(property, (String)values[i]);
+                else
+                    resValues[i] = values[i];
+                checkValueInTags(property, resValues[i]);
+            }
+            if(values.length == 0 && !property.isCanBeNull())
+            {
+                setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
+                throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
+            }
+            property.setValue(resValues);
         }
         else
         {
-            if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
+            if(property.getValue() instanceof String && property.getType() != String.class)
             {
-                if(!(property.getValue() instanceof Object[]))
-                {
-                    setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
-                    throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST) - " + toStringProperty(property));
-                }
-
-                Object[] values = (Object[]) property.getValue();
-                Object[] resValues = new Object[values.length];
-
-                for (int i = 0; i < values.length; i++)
-                {
-                    if(values[i] instanceof String)
-                        resValues[i] = parseFrom(property, (String)values[i]);
-                    else
-                        resValues[i] = values[i];
-                    checkValueInTags(property, resValues[i]);
-                }
-                if(values.length == 0 && !property.isCanBeNull())
-                {
-                    setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
-                    throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
-                }
-                property.setValue(resValues);
+                property.setValue(parseFrom(property, (String) property.getValue()));
             }
-            else
+            else if (property.getType() != property.getValue().getClass())
             {
-                if (property.getValue() == null)
-                {
-                    if(!property.isCanBeNull())
-                    {
-
-                        setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
-                        throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
-                    }
-                }
-                else
-                {
-                    if (property.getType() != property.getValue().getClass())
-                    {
-                        String msg = "Error, value must be a " + property.getType().getName();
-                        setError(property, msg);
-                        throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
-                    }
-                    checkValueInTags(property, property.getValue());
-                }
+                String msg = "Error, value must be a " + property.getType().getName();
+                setError(property, msg);
+                throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
             }
+
+            checkValueInTags(property, property.getValue());
         }
+
     }
 
     private void checkValueInTags(DynamicProperty property, Object value)

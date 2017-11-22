@@ -16,10 +16,14 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class OperationServiceImpl implements OperationService
 {
+    public static final Logger log = Logger.getLogger(OperationServiceImpl.class.getName());
+
     private final OperationExecutor operationExecutor;
     private final DatabaseService databaseService;
     private final Validator validator;
@@ -50,6 +54,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
+                log.log(Level.FINE, "error in isError", e);
                 operation.setResult(OperationResult.error(e));
                 return replaceNullValueToEmptyStringAndReturn(operation, parameters);
             }
@@ -84,6 +89,7 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
+                    log.log(Level.FINE, "error in validate", e);
                     operation.setResult(OperationResult.error(e));
                     return replaceNullValueToEmptyStringAndReturn(operation, parameters);
                 }
@@ -133,6 +139,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
+                log.log(Level.FINE, "error in validate", e);
                 operation.setResult(OperationResult.error(e));
                 return replaceNullValueToEmptyStringAndReturn(operation, parameters);
             }
@@ -156,6 +163,7 @@ public class OperationServiceImpl implements OperationService
                 }
                 catch (RuntimeException e)
                 {
+                    log.log(Level.FINE, "error in isError", e);
                     operation.setResult(OperationResult.error(e));
                     return replaceNullValueToEmptyStringAndReturn(operation, parameters);
                 }

@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+
 
 public class CustomOperationTest extends SqlMockOperationTest
 {
@@ -16,8 +15,7 @@ public class CustomOperationTest extends SqlMockOperationTest
     public void getParametersTest()
     {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "CustomOperation", "0",
-                        "{}");
+                "testtableAdmin", "All records", "CustomOperation", "0", "{}");
 
         oneAssert(generate);
     }
@@ -26,8 +24,7 @@ public class CustomOperationTest extends SqlMockOperationTest
     public void getParametersReload()
     {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "CustomOperation", "0",
-                        "{'name':'','value':'2'}");
+                "testtableAdmin", "All records", "CustomOperation", "0", "{'name':'','value':'2'}");
 
         oneAssert(generate);
     }
