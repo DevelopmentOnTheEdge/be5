@@ -43,12 +43,11 @@ public class OperationServiceImpl implements OperationService
         }
         catch (RuntimeException e)
         {
-            log.log(Level.FINE, "error in isError", e);
+            log.log(Level.FINE, "error on generate", e);
             operation.setResult(OperationResult.error(e));
-            return replaceNullValueToEmptyStringAndReturn(operation, parameters);
+            return replaceNullValueToEmptyStringAndReturn(parameters);
         }
 
-        //run manually in component
         if (parameters == null)
         {
             return execute(operation, presetValues);
@@ -64,13 +63,13 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                log.log(Level.FINE, "error in validate", e);
+                log.log(Level.FINE, "error in validate after generate", e);
                 operation.setResult(OperationResult.error(e));
-                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
+                return replaceNullValueToEmptyStringAndReturn(parameters);
             }
         }
 
-        return replaceNullValueToEmptyStringAndReturn(operation, parameters);
+        return replaceNullValueToEmptyStringAndReturn(parameters);
     }
 
     @Override
@@ -89,9 +88,9 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                log.log(Level.FINE, "error in isError", e);
+                log.log(Level.FINE, "error on execute", e);
                 operation.setResult(OperationResult.error(e));
-                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
+                return replaceNullValueToEmptyStringAndReturn(parameters);
             }
 
             OperationResult invokeResult = operation.getResult();
@@ -103,28 +102,17 @@ public class OperationServiceImpl implements OperationService
                 return Either.second(invokeResult);
             }
 
-            try
-            {
-                validator.isError(newParameters);
-            }
-            catch (RuntimeException e)
-            {
-                log.log(Level.FINE, "error in isError", e);
-                operation.setResult(OperationResult.error(e));
-                return replaceNullValueToEmptyStringAndReturn(operation, newParameters);
-            }
-
             if(newParameters != null)
             {
                 operation.setResult(invokeResult);
-                return replaceNullValueToEmptyStringAndReturn(operation, newParameters);
+                return replaceNullValueToEmptyStringAndReturn(newParameters);
             }
         }
 
         return Either.second(operation.getResult());
     }
 
-    private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Operation operation, Object parameters)
+    private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
     {
         validator.replaceNullValueToEmptyString(parameters);
 

@@ -39,7 +39,7 @@ class ErrorProcessing extends GOperationSupport implements Operation
             setResult(OperationResult.error("The operation can not be performed."))
         }
 
-        if(name.getValue() == "generateDeveloperError")
+        if(name.getValue() == "generateError")
         {
             throw new IllegalArgumentException()
         }
@@ -66,7 +66,7 @@ class ErrorProcessing extends GOperationSupport implements Operation
             return
         }
 
-        if(name.getValue() == "executeDeveloperError")
+        if(name.getValue() == "executeError")
         {
             throw new IllegalArgumentException()
         }

@@ -102,19 +102,19 @@ class OperationServiceTest extends SqlMockOperationTest
     }
 
     @Test(expected = Be5Exception)
-    void generateDeveloperError()
+    void generateError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        generateOperation(operation, ['name':'generateDeveloperError'])
+        generateOperation(operation, ['name':'generateError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
 
     @Test//(expected = Be5Exception)
-    void executeDeveloperError()
+    void executeError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        executeOperation(operation, ['name':'executeDeveloperError'])
+        executeOperation(operation, ['name':'executeError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
     }

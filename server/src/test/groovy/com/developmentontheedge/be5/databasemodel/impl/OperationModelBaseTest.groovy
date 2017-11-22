@@ -45,7 +45,7 @@ class OperationModelBaseTest extends Be5ProjectTest
     }
 
     @Test
-    void generateErrorInProperty()
+    void generateErrorInPropertyOnExecute()
     {
         expectedEx.expect(IllegalArgumentException.class)
         expectedEx.expectMessage("[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]")
@@ -53,11 +53,27 @@ class OperationModelBaseTest extends Be5ProjectTest
     }
 
     @Test
-    void generateErrorStatus()
+    void generateErrorStatusOnExecute()
     {
         expectedEx.expect(RuntimeException.class)
         expectedEx.expectMessage("The operation can not be performed.")
         executeAndCheck('generateErrorStatus')
+    }
+
+    @Test
+    void generateErrorOnExecute()
+    {
+        expectedEx.expect(RuntimeException.class)
+        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing")
+        executeAndCheck('generateError')
+    }
+
+    @Test
+    void executeErrorInProperty()
+    {
+        expectedEx.expect(RuntimeException.class)
+        expectedEx.expectMessage("[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]")
+        executeAndCheck('executeErrorInProperty')
     }
 
     @Test
@@ -66,6 +82,14 @@ class OperationModelBaseTest extends Be5ProjectTest
         expectedEx.expect(RuntimeException.class)
         expectedEx.expectMessage("An error occurred while performing operations.")
         executeAndCheck('executeErrorStatus')
+    }
+
+    @Test
+    void executeError()
+    {
+        expectedEx.expect(IllegalArgumentException.class)
+        //expectedEx.expectMessage()
+        executeAndCheck('executeError')
     }
 
     void executeAndCheck(String value)
