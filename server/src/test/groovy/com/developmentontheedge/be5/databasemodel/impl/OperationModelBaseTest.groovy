@@ -31,8 +31,7 @@ class OperationModelBaseTest extends Be5ProjectTest
     void init()
     {
         operationModelBase = new OperationModelBase(meta, operationExecutor)
-        operationModelBase.setEntityName("testtableAdmin")
-        operationModelBase.setQueryName("All records")
+                .setEntityName("testtableAdmin").setQueryName("All records")
     }
 
     @Test

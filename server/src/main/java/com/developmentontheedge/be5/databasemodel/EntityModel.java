@@ -16,16 +16,8 @@ import java.util.Map;
  * it must be synchronized externally.
  * @author ruslan
  */
-public interface EntityModel<R extends RecordModel> {
-
-    /**
-     * Returns the number of records a table.
-     * This method never use cache.
-     * @return number of records
-     */
-    @Deprecated
-    default long size() { return this.count(); };
-
+public interface EntityModel<R extends RecordModel>
+{
     /**
      * Returns the number of records a table.
      * This method never use cache.
@@ -265,8 +257,8 @@ public interface EntityModel<R extends RecordModel> {
 
     /**
      * Returns operation model of this entity.
-     * @param operationName
-     * @return query model
+     * @param operationName operation name
+     * @return operation model
      */
     OperationModel getOperation(String operationName);
 

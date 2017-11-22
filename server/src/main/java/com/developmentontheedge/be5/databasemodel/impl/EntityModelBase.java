@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -17,7 +16,6 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
@@ -47,24 +45,22 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     private final SqlService db;
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
-    private final OperationService operationService;
+    private final OperationExecutor operationExecutor;
     private final Validator validator;
     private final Meta meta;
-    private final UserAwareMeta userAwareMeta;
 
     private final Entity entity;
 
 
     public EntityModelBase(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
-                           OperationService operationService, Meta meta, UserAwareMeta userAwareMeta, Entity entity)
+                           OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.validator = validator;
-        this.operationService = operationService;
+        this.operationExecutor = operationExecutor;
         this.meta = meta;
-        this.userAwareMeta = userAwareMeta;
 
         this.entity = entity;
     }
@@ -373,8 +369,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     @Override
     public OperationModel getOperation( String operationName )
     {
-        OperationInfo operationInfo = userAwareMeta.getOperation(entity.getName(), operationName);
-        return null;//new OperationModelBase(operationService, operationInfo);
+        return new OperationModelBase(meta, operationExecutor)
+                .setEntityName(entity.getName())
+                .setQueryName("from another operation");
     }
 
     @Override

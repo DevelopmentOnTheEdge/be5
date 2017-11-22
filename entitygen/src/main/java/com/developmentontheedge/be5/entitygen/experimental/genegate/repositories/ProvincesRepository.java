@@ -2,9 +2,8 @@ package com.developmentontheedge.be5.entitygen.experimental.genegate.repositorie
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.entitygen.experimental.genegate.fields.ProvincesFields;
@@ -25,9 +24,9 @@ import java.util.Map;
 public class ProvincesRepository extends RepositorySupport<Provinces, String>
 {
     public ProvincesRepository(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
-                               OperationService operationService, Meta meta, UserAwareMeta userAwareMeta, Entity entity)
+                               OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
-        super(db, dpsHelper, validator, operationHelper, operationService, meta, userAwareMeta, entity);
+        super(db, dpsHelper, validator, operationHelper, operationExecutor, meta, entity);
 
         this.primaryKeyName = ProvincesFields.ID;
         beanHandler = new BeanHandler<>(Provinces.class);

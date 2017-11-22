@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel
-import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
@@ -17,6 +15,7 @@ import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
+
 
 class DatabaseModelGroovyTest extends Be5ProjectDBTest
 {
@@ -58,15 +57,15 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void testGroovyCount()
     {
-        def testtableAdmin = database.testtableAdmin;
+        def testtableAdmin = database.getEntity("testtableAdmin")
 
-        assertEquals 0, testtableAdmin.size()
+        assertEquals 0, testtableAdmin.count()
 
         testtableAdmin << [
                 "name": "TestName",
                 "value": "1"];
 
-        assertEquals 1, testtableAdmin.size()
+        assertEquals 1, testtableAdmin.count()
     }
 
     @Test
@@ -316,6 +315,32 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         list = entity.toList( name: "TestName3" )
         assertTrue list.empty
     }
+
+    @Test
+    void testOperationGenerate()
+    {
+        def entity = database.getEntity("testtableAdmin")
+
+        def params = entity.getOperation("ErrorProcessing").generate {
+            presetValues  = [ 'name': 'ok' ]
+            operationName = "ErrorProcessing"
+        }
+
+        assertEquals("ok", params.$name)
+    }
+
+    @Test
+    void testOperationExecute()
+    {
+        def entity = database.getEntity("testtableAdmin")
+
+        def operation = entity.getOperation("ErrorProcessing").execute {
+            presetValues  = [ 'name': 'ok' ]
+            operationName = "ErrorProcessing"
+        }
+
+        assertEquals(OperationStatus.FINISHED, operation.getStatus())
+    }
 //
 //    public void testGetArray()
 //    {
@@ -498,35 +523,6 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //        };
 //        assertTrue oneTimeTrigger
 //    }
-//
-//    public void testOperationGetParameters()
-//    {
-//        setUp()
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        def params = database.entities.getOperation( "Insert" ).parameters
-//        assertNotNull( "${params.nameIterator().collect()}", params._name );
-//        assertNotNull( "${params.nameIterator().collect()}", params._type );
-//    }
-//
-//    def parameters;
-    void testOperation()
-    {
-        def entity = database.getEntity("testtableAdmin")
-
-//        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        EntityModel tableName = database.entities;
-//        def rec = tableName( name : 'operations' );
-//        def origin = rec.$origin;
-        try
-        {
-            println tableName.runOperation( "Edit", { records = [ rec.$name ]; parameters.origin = "test" } )
-            assertEquals 'test', tableName[ rec.$name ].$origin;
-        }
-        finally
-        {
-            rec << [ origin : rec.$origin ];
-        }
-    }
 //
 //    public void testGroovyOperationExtender()
 //    {

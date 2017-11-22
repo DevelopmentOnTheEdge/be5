@@ -2,9 +2,8 @@ package com.developmentontheedge.be5.entitygen.experimental.genegate;
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
@@ -36,10 +35,10 @@ public abstract class RepositorySupport<T, ID extends Serializable> implements R
     public String primaryKeyName;
 
     public RepositorySupport(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
-                             OperationService operationService, Meta meta, UserAwareMeta userAwareMeta, Entity entity)
+                             OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         entityModelBase = new EntityModelBase(db, dpsHelper, validator, operationHelper,
-                operationService, meta, userAwareMeta, entity);
+                                                                operationExecutor, meta, entity);
         this.entity = entityModelBase.getEntity();
         this.entityName = entity.getName();
 
