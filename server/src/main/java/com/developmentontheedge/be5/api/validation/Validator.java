@@ -6,17 +6,13 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static com.developmentontheedge.be5.api.validation.Validation.Status.SUCCESS;
 import static com.developmentontheedge.be5.api.validation.Validation.Status.ERROR;
-import static com.developmentontheedge.be5.api.validation.Validation.defaultRules;
 
 
 public class Validator
@@ -28,18 +24,18 @@ public class Validator
         this.userAwareMeta = userAwareMeta;
     }
 
-    private Map<String, String> getValidationAttributes(DynamicProperty property)
-    {
-        Map<String, String> result = new LinkedHashMap<String, String>();
-        for( AbstractRule rule : defaultRules )
-        {
-            if( rule.isApplicable( property ) )
-            {
-                result.put( rule.getRule(), userAwareMeta.getLocalizedValidationMessage( rule.getMessage() ) );
-            }
-        }
-        return result;
-    }
+//    private Map<String, String> getValidationAttributes(DynamicProperty property)
+//    {
+//        Map<String, String> result = new LinkedHashMap<String, String>();
+//        for( AbstractRule rule : defaultRules )
+//        {
+//            if( rule.isApplicable( property ) )
+//            {
+//                result.put( rule.getRule(), userAwareMeta.getLocalizedValidationMessage( rule.getMessage() ) );
+//            }
+//        }
+//        return result;
+//    }
 
     public void checkErrorAndCast(DynamicPropertySet dps)
     {
@@ -52,24 +48,6 @@ public class Validator
 
     public void checkErrorAndCast(DynamicProperty property)
     {
-        if(property.getValue() instanceof String && ((String) property.getValue()).isEmpty())
-        {
-            property.setValue(null);
-        }
-
-        if(property.getValue() == null)
-        {
-            if (property.isCanBeNull())
-            {
-                return;
-            }
-            else
-            {
-                setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
-                throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
-            }
-        }
-
         if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
         {
             if(!(property.getValue() instanceof Object[]))
@@ -98,6 +76,24 @@ public class Validator
         }
         else
         {
+            if(property.getValue() instanceof String && ((String) property.getValue()).isEmpty())
+            {
+                property.setValue(null);
+            }
+
+            if(property.getValue() == null)
+            {
+                if (property.isCanBeNull())
+                {
+                    return;
+                }
+                else
+                {
+                    setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
+                    throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
+                }
+            }
+
             if(property.getValue() instanceof String && property.getType() != String.class)
             {
                 property.setValue(parseFrom(property, (String) property.getValue()));
@@ -155,7 +151,7 @@ public class Validator
         catch (NumberFormatException e)
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please specify an integer number.");
-            //добавить информацию о конкресном типе - ограничения type.getName();
+
             try{
                 BigInteger bigInteger = new BigInteger(value);
                 if(type == Long.class){
