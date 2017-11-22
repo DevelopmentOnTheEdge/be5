@@ -6,8 +6,6 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
-import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -91,11 +89,6 @@ public class OperationExecutorImpl implements OperationExecutor
 
         if (parameters instanceof DynamicPropertySet)
         {
-            if(operation instanceof GOperationSupport)
-            {
-                ((GOperationSupport) operation).dps = (GDynamicPropertySetSupport) parameters;
-            }
-
             try
             {
                 validator.checkErrorAndCast((DynamicPropertySet) parameters);
