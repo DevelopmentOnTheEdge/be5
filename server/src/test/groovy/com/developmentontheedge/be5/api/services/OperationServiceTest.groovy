@@ -42,6 +42,22 @@ class OperationServiceTest extends SqlMockOperationTest
     }
 
     @Test
+    void generatePropertyErrorOnExecute()
+    {
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        Object first = executeOperation(operation, "{'name':'generateErrorInProperty'}").getFirst()
+
+        assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
+                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
+
+        assertEquals "{'details':'java.lang.IllegalArgumentException: " +
+                "[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
+                "'message':'[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]'," +
+                "'status':'error'}",
+                oneQuotes(jsonb.toJson(operation.getResult()))
+    }
+
+    @Test
     void executePropertyError()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")

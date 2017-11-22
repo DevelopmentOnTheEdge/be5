@@ -67,20 +67,6 @@ public class OperationExecutorImpl implements OperationExecutor
     {
         Object parameters = generate(operation, presetValues);
 
-//        if (parameters instanceof DynamicPropertySet)
-//        {
-//            try
-//            {
-//                validator.isError((DynamicPropertySet) parameters);
-//            }
-//            catch (RuntimeException e)
-//            {
-//                log.log(Level.FINE, "error in isError", e);
-//                operation.setResult(OperationResult.error(e));
-//                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
-//            }
-//        }
-
         if(operation.getStatus() == OperationStatus.ERROR)
         {
             return parameters;
