@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Map;
 
 
-class OperationModelBase implements OperationModel
+public class OperationModelBase implements OperationModel
 {
     private OperationExecutor operationExecutor;
     private Meta meta;
@@ -68,17 +68,29 @@ class OperationModelBase implements OperationModel
     }
 
     @Override
-    public Object getParameters() throws Exception
+    public Object generate()
     {
         Operation operation = operationExecutor.create(getOperationInfo(), records);
         return operationExecutor.generate(operation, (Map<String, Object>)presetValues);
     }
 
-    public Operation execute(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure cl)
+    @Override
+    public Object generate(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure closure)
     {
-        cl.setResolveStrategy( Closure.DELEGATE_FIRST );
-        cl.setDelegate( this );
-        cl.call();
+        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
+        closure.setDelegate( this );
+        closure.call();
+
+        Operation operation = operationExecutor.create(getOperationInfo(), records);
+        return operationExecutor.generate(operation, (Map<String, Object>)presetValues);
+    }
+
+    @Override
+    public Operation execute(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure closure)
+    {
+        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
+        closure.setDelegate( this );
+        closure.call();
 
         return execute();
     }
@@ -105,7 +117,7 @@ class OperationModelBase implements OperationModel
         return new OperationInfo(queryName, operationModel);
     }
 
-    class GOperationModelBaseBuilder
+    public class GOperationModelBaseBuilder
     {
         public String[] records = new String[]{ };
         public String entityName;

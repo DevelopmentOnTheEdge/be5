@@ -1,6 +1,9 @@
 package com.developmentontheedge.be5.databasemodel;
 
+import com.developmentontheedge.be5.databasemodel.impl.OperationModelBase;
 import com.developmentontheedge.be5.operation.Operation;
+import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
 
 import java.util.Map;
 
@@ -17,7 +20,11 @@ public interface OperationModel
 
     OperationModel setPresetValues(Map<String, ?> presetValues);
 
-    Object getParameters() throws Exception;
+    Object generate();
 
     Operation execute();
+
+    Object generate(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
+
+    Operation execute(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
 }

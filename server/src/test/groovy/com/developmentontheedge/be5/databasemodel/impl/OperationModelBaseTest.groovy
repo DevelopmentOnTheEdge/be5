@@ -2,9 +2,11 @@ package com.developmentontheedge.be5.databasemodel.impl
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.OperationExecutor
+import com.developmentontheedge.be5.databasemodel.OperationModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
+import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Before
 import org.junit.Rule
@@ -23,7 +25,7 @@ class OperationModelBaseTest extends Be5ProjectTest
     @Rule
     public ExpectedException expectedEx = ExpectedException.none()
 
-    OperationModelBase operationModelBase
+    OperationModel operationModelBase
 
     @Before
     void init()
@@ -42,6 +44,19 @@ class OperationModelBaseTest extends Be5ProjectTest
         }
 
         assertEquals(OperationStatus.FINISHED, operation.getStatus())
+    }
+
+    @Test
+    void generate()
+    {
+        def parameters = operationModelBase.generate {
+            records       = ["1"]
+            presetValues  = [ 'name': 'ok' ]
+            operationName = "ErrorProcessing"
+        }
+
+        assertEquals("{'values':{'name':'ok','propertyForAnotherEntity':'text'},'meta':{'/name':{'displayName':'name'},'/propertyForAnotherEntity':{'displayName':'propertyForAnotherEntity'}},'order':['/name','/propertyForAnotherEntity']}",
+                oneQuotes(JsonFactory.bean(parameters)))
     }
 
     @Test
