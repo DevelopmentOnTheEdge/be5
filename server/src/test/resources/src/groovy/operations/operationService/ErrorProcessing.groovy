@@ -15,20 +15,17 @@ class ErrorProcessing extends GOperationSupport implements Operation
     {
         dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name"], presetValues)
 
-        dps.add {
-            name  = "propertyForAnotherEntity"
+        dps.add("propertyForAnotherEntity") {
             value = "text"
         }
 
         if(presetValues.containsKey("booleanProperty"))
         {
-            dps.add {
-                name  = "booleanProperty"
+            dps.add("booleanProperty") {
                 TYPE  = Boolean
                 value = presetValues.getOrDefault("booleanProperty", false)
             }
         }
-
         
         def name = dps.getProperty("name")
 
@@ -60,17 +57,21 @@ class ErrorProcessing extends GOperationSupport implements Operation
         if(name.getValue() == "executeErrorInProperty")
         {
             validator.setError(name, "Error in property (invoke)")
+            return
         }
 
         if(name.getValue() == "executeErrorStatus")
         {
             setResult(OperationResult.error("An error occurred while performing operations."))
+            return
         }
 
         if(name.getValue() == "executeDeveloperError")
         {
             throw new IllegalArgumentException()
         }
+
+        setResult(OperationResult.finished())
     }
 
 }

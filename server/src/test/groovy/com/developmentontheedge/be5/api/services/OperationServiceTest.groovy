@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception
-import com.developmentontheedge.be5.model.FormPresentation
-import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
