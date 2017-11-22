@@ -52,31 +52,41 @@ public class OperationExecutorImpl implements OperationExecutor
     }
 
     @Override
-    public void execute(Operation operation, Map<String, Object> presetValues)
+    public Object execute(Operation operation, Map<String, Object> presetValues)
     {
-        OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
-
         if(operation instanceof TransactionalOperation)
         {
-            databaseService.transaction(connection -> {
-                callOperation(operation, presetValues, operationContext);
-                return null;
-            });
+            return databaseService.transaction(connection ->
+                callOperation(operation, presetValues)
+            );
         }
         else
         {
-            callOperation(operation, presetValues, operationContext);
+            return callOperation(operation, presetValues);
         }
     }
 
-    private void callOperation(Operation operation, Map<String, Object> presetValues,
-             OperationContext operationContext)
+    private Object callOperation(Operation operation, Map<String, Object> presetValues)
     {
         Object parameters = generate(operation, presetValues);
 
-        if(OperationStatus.ERROR == operation.getStatus())
+//        if (parameters instanceof DynamicPropertySet)
+//        {
+//            try
+//            {
+//                validator.isError((DynamicPropertySet) parameters);
+//            }
+//            catch (RuntimeException e)
+//            {
+//                log.log(Level.FINE, "error in isError", e);
+//                operation.setResult(OperationResult.error(e));
+//                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
+//            }
+//        }
+
+        if(operation.getStatus() == OperationStatus.ERROR)
         {
-            return;// operation.getResult();
+            return parameters;
         }
 
         if (parameters instanceof DynamicPropertySet)
@@ -92,29 +102,26 @@ public class OperationExecutorImpl implements OperationExecutor
             }
             catch (RuntimeException e)
             {
-                Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
-                operation.setResult(OperationResult.error(be5Exception));
-                throw be5Exception;
-                //return;// operation.getResult();
-                //throw Be5Exception.internalInOperationParameter(e, operation.getInfo().getModel());
+                operation.setResult(OperationResult.error(e));
+                return parameters;
             }
         }
 
-        callInvoke(operation, parameters, operationContext);
+        return callInvoke(operation, parameters);
     }
 
-    @Override
-    public void callInvoke(Operation operation, Object parameters, OperationContext operationContext)
+    private Object callInvoke(Operation operation, Object parameters)
     {
         operation.setResult(OperationResult.progress());
 
         try
         {
+            OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
             operation.invoke(parameters, operationContext);
 
-            if(OperationStatus.ERROR == operation.getStatus())
+            if(operation.getStatus() == OperationStatus.ERROR)
             {
-                return;// operation.getResult();
+                return parameters;
             }
 
             if (parameters instanceof DynamicPropertySet)
@@ -126,7 +133,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 catch (RuntimeException e)
                 {
                     operation.setResult(OperationResult.error(e));
-                    return;
+                    return parameters;
                 }
             }
 
@@ -139,14 +146,13 @@ public class OperationExecutorImpl implements OperationExecutor
                                 .named(operation.getRedirectParams())
                 ));
             }
+
+            return null;
         }
-        catch (Be5Exception e)
+        catch (Throwable e)
         {
-            throw e;//Be5Exception.internalInOperation(e.getCause(), operation.getInfo())
-        }
-        catch (Exception e)
-        {
-            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+            operation.setResult(OperationResult.error(e));
+            return parameters;
         }
     }
 
@@ -169,7 +175,6 @@ public class OperationExecutorImpl implements OperationExecutor
                     {
                         throw Be5Exception.internalInOperation(
                                 new Error("Class " + operationInfo.getCode() + " is null."), operationInfo.getModel());
-                        //throw Be5Exception.internal("Class " + operationInfo.getCode() + " is null." );
                     }
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )

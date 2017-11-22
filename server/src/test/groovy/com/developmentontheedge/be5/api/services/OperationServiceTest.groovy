@@ -63,18 +63,19 @@ class OperationServiceTest extends SqlMockOperationTest
         OperationResult second = generateOperation("testtableAdmin", "All records",
                 "ErrorProcessing", "", "{'name':'generateErrorStatus'}").getSecond()
 
-        assertEquals "{'message':'The operation can not be performed.','status':'error'}",
-                oneQuotes(jsonb.toJson(second))
+        assertEquals OperationStatus.ERROR, second.getStatus()
+        assertEquals "The operation can not be performed.", second.getMessage()
     }
 
     @Test
     void generateErrorStatusOnExecute()
     {
-        OperationResult second = executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'generateErrorStatus'}").getSecond()
+        def either = executeOperation("testtableAdmin", "All records",
+                "ErrorProcessing", "", "{'name':'generateErrorStatus'}")
+        OperationResult second = either.getSecond()
 
-        assertEquals "{'message':'The operation can not be performed.','status':'error'}",
-                oneQuotes(jsonb.toJson(second))
+        assertEquals OperationStatus.ERROR, second.getStatus()
+        assertEquals "The operation can not be performed.", second.getMessage()
     }
 
     @Test
@@ -86,22 +87,26 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals "{'displayName':'name'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals "{'message':'An error occurred while performing operations.','status':'error'}",
-                oneQuotes(jsonb.toJson(operation.getResult()))
+        assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
+        assertEquals "An error occurred while performing operations.", operation.getResult().getMessage()
     }
 
     @Test(expected = Be5Exception)
     void generateDeveloperError()
     {
-        generateOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'generateDeveloperError'}")
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        generateOperation(operation, "{'name':'generateDeveloperError'}")
+
+        assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
 
-    @Test(expected = Be5Exception)
+    @Test//(expected = Be5Exception)
     void executeDeveloperError()
     {
-        executeOperation("testtableAdmin", "All records",
-                "ErrorProcessing", "", "{'name':'executeDeveloperError'}")
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        executeOperation(operation, "{'name':'executeDeveloperError'}")
+
+        assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
 
     @Test

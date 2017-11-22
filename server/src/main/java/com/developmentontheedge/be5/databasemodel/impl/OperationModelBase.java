@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationStatus;
 
 import java.util.Collections;
 import java.util.Map;
@@ -52,7 +52,7 @@ class OperationModelBase implements OperationModel
     }
 
     @Override
-    public OperationModel setRecords( String ... records )
+    public OperationModel setRecords( String... records )
     {
         this.records = records;
         return this;
@@ -78,6 +78,10 @@ class OperationModelBase implements OperationModel
         Operation operation = operationExecutor.create(getOperationInfo(), records);
 
         operationExecutor.execute(operation, presetValues);
+        if(operation.getStatus() == OperationStatus.ERROR)
+        {
+            throw (RuntimeException)operation.getResult().getDetails();
+        }
 
         return operation;
     }

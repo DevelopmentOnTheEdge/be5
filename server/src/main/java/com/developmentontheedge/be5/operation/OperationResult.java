@@ -144,7 +144,7 @@ public class OperationResult
 
     public static OperationResult error(String message)
     {
-        return new OperationResult(OperationStatus.ERROR, message, null);
+        return new OperationResult(OperationStatus.ERROR, message, new RuntimeException(message));
     }
 
     @Override

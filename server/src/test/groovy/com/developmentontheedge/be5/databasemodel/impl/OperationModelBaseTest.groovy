@@ -5,7 +5,9 @@ import com.developmentontheedge.be5.api.services.OperationExecutor
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 import static org.junit.Assert.*
 
@@ -14,6 +16,9 @@ class OperationModelBaseTest extends Be5ProjectTest
 {
     @Inject OperationExecutor operationExecutor
     @Inject Meta meta
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     void execute()
@@ -34,6 +39,9 @@ class OperationModelBaseTest extends Be5ProjectTest
     @Test
     void errorInGenerate()
     {
+        expectedEx.expect(RuntimeException.class)
+        expectedEx.expectMessage("The operation can not be performed.")
+
         def operationModelBase = new OperationModelBase(meta, operationExecutor)
         operationModelBase.setEntityName("testtableAdmin")
         operationModelBase.setQueryName("All records")
