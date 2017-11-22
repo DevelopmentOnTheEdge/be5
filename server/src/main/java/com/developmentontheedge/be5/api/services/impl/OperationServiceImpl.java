@@ -101,18 +101,17 @@ public class OperationServiceImpl implements OperationService
         if(operation instanceof TransactionalOperation)
         {
             return databaseService.transaction(connection ->
-                    callOperation(presetValues, operation, operationContext)
+                    callOperation(operation, presetValues, operationContext)
             );
         }
         else
         {
-            return callOperation(presetValues, operation, operationContext);
+            return callOperation(operation, presetValues, operationContext);
         }
     }
 
-    private Either<Object, OperationResult> callOperation(
-            Map<String, Object> presetValues, Operation operation,
-             OperationContext operationContext)
+    private Either<Object, OperationResult> callOperation( Operation operation, Map<String, Object> presetValues,
+                                                                                    OperationContext operationContext)
     {
         Object parameters = operationExecutor.generate(operation, presetValues);
 
