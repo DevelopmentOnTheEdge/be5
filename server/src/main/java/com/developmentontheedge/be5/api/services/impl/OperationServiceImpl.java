@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -38,18 +37,15 @@ public class OperationServiceImpl implements OperationService
             return Either.second(operation.getResult());
         }
 
-        if (parameters instanceof DynamicPropertySet)
+        try
         {
-            try
-            {
-                validator.isError((DynamicPropertySet) parameters);
-            }
-            catch (RuntimeException e)
-            {
-                log.log(Level.FINE, "error in isError", e);
-                operation.setResult(OperationResult.error(e));
-                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
-            }
+            validator.isError(parameters);
+        }
+        catch (RuntimeException e)
+        {
+            log.log(Level.FINE, "error in isError", e);
+            operation.setResult(OperationResult.error(e));
+            return replaceNullValueToEmptyStringAndReturn(operation, parameters);
         }
 
         //run manually in component
@@ -60,20 +56,17 @@ public class OperationServiceImpl implements OperationService
 
         operation.setResult(OperationResult.open());
 
-        if(parameters instanceof DynamicPropertySet)
+        if(presetValues.containsKey(OperationSupport.reloadControl))
         {
-            if(presetValues.containsKey(OperationSupport.reloadControl))
+            try
             {
-                try
-                {
-                    validator.checkErrorAndCast((DynamicPropertySet) parameters);
-                }
-                catch (RuntimeException e)
-                {
-                    log.log(Level.FINE, "error in validate", e);
-                    operation.setResult(OperationResult.error(e));
-                    return replaceNullValueToEmptyStringAndReturn(operation, parameters);
-                }
+                validator.checkErrorAndCast(parameters);
+            }
+            catch (RuntimeException e)
+            {
+                log.log(Level.FINE, "error in validate", e);
+                operation.setResult(OperationResult.error(e));
+                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
             }
         }
 
@@ -90,18 +83,15 @@ public class OperationServiceImpl implements OperationService
 
         if(operation.getStatus() == OperationStatus.ERROR)
         {
-            if (parameters instanceof DynamicPropertySet)
+            try
             {
-                try
-                {
-                    validator.isError((DynamicPropertySet) parameters);
-                }
-                catch (RuntimeException e)
-                {
-                    log.log(Level.FINE, "error in isError", e);
-                    operation.setResult(OperationResult.error(e));
-                    return replaceNullValueToEmptyStringAndReturn(operation, parameters);
-                }
+                validator.isError(parameters);
+            }
+            catch (RuntimeException e)
+            {
+                log.log(Level.FINE, "error in isError", e);
+                operation.setResult(OperationResult.error(e));
+                return replaceNullValueToEmptyStringAndReturn(operation, parameters);
             }
 
             OperationResult invokeResult = operation.getResult();
@@ -113,18 +103,15 @@ public class OperationServiceImpl implements OperationService
                 return Either.second(invokeResult);
             }
 
-            if (newParameters instanceof DynamicPropertySet)
+            try
             {
-                try
-                {
-                    validator.isError((DynamicPropertySet) newParameters);
-                }
-                catch (RuntimeException e)
-                {
-                    log.log(Level.FINE, "error in isError", e);
-                    operation.setResult(OperationResult.error(e));
-                    return replaceNullValueToEmptyStringAndReturn(operation, newParameters);
-                }
+                validator.isError(newParameters);
+            }
+            catch (RuntimeException e)
+            {
+                log.log(Level.FINE, "error in isError", e);
+                operation.setResult(OperationResult.error(e));
+                return replaceNullValueToEmptyStringAndReturn(operation, newParameters);
             }
 
             if(newParameters != null)
@@ -139,7 +126,7 @@ public class OperationServiceImpl implements OperationService
 
     private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Operation operation, Object parameters)
     {
-        validator.replaceNullValueToEmptyString((DynamicPropertySet) parameters);
+        validator.replaceNullValueToEmptyString(parameters);
 
         return Either.first(parameters);
     }

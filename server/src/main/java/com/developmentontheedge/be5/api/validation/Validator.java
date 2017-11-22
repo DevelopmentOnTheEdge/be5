@@ -37,12 +37,16 @@ public class Validator
 //        return result;
 //    }
 
-    public void checkErrorAndCast(DynamicPropertySet dps)
+    public void checkErrorAndCast(Object parameters)
     {
-        isError(dps);
-        for (DynamicProperty property: dps)
+        isError(parameters);
+
+        if (parameters instanceof DynamicPropertySet)
         {
-            checkErrorAndCast(property);
+            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            {
+                checkErrorAndCast(property);
+            }
         }
     }
 
@@ -214,11 +218,14 @@ public class Validator
         throw new IllegalArgumentException("Unknown type, Возможно тип был автоматически определён из массива(при MULTIPLE_SELECTION_LIST) - тогда вручную укажите тип этемента." + toStringProperty(property));
     }
 
-    public void isError(DynamicPropertySet dps)
+    public void isError(Object parameters)
     {
-        for (DynamicProperty property: dps)
+        if (parameters instanceof DynamicPropertySet)
         {
-            if(isError(property))throw new IllegalArgumentException(toStringProperty(property));
+            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            {
+                if (isError(property)) throw new IllegalArgumentException(toStringProperty(property));
+            }
         }
     }
 
@@ -229,11 +236,16 @@ public class Validator
                         == Validation.Status.ERROR;
     }
 
-    public void replaceNullValueToEmptyString(DynamicPropertySet dps)
+    public void replaceNullValueToEmptyString(Object parameters)
     {
-        for (DynamicProperty property: dps){
-            if(property.getValue() == null){
-                property.setValue("");
+        if (parameters instanceof DynamicPropertySet)
+        {
+            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            {
+                if (property.getValue() == null)
+                {
+                    property.setValue("");
+                }
             }
         }
     }

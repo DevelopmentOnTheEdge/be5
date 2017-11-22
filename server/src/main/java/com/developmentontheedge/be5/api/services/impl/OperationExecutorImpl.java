@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.HashUrl;
-import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Map;
 
@@ -87,17 +86,14 @@ public class OperationExecutorImpl implements OperationExecutor
             return parameters;
         }
 
-        if (parameters instanceof DynamicPropertySet)
+        try
         {
-            try
-            {
-                validator.checkErrorAndCast((DynamicPropertySet) parameters);
-            }
-            catch (RuntimeException e)
-            {
-                operation.setResult(OperationResult.error(e));
-                return parameters;
-            }
+            validator.checkErrorAndCast(parameters);
+        }
+        catch (RuntimeException e)
+        {
+            operation.setResult(OperationResult.error(e));
+            return parameters;
         }
 
         return callInvoke(operation, parameters);
@@ -117,17 +113,14 @@ public class OperationExecutorImpl implements OperationExecutor
                 return parameters;
             }
 
-            if (parameters instanceof DynamicPropertySet)
+            try
             {
-                try
-                {
-                    validator.isError((DynamicPropertySet) parameters);
-                }
-                catch (RuntimeException e)
-                {
-                    operation.setResult(OperationResult.error(e));
-                    return parameters;
-                }
+                validator.isError(parameters);
+            }
+            catch (RuntimeException e)
+            {
+                operation.setResult(OperationResult.error(e));
+                return parameters;
             }
 
             if(OperationStatus.IN_PROGRESS == operation.getStatus())
