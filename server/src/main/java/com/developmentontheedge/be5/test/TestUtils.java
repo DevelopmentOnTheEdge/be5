@@ -29,8 +29,11 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -250,4 +253,16 @@ public abstract class TestUtils
         return operationExecutor.create(meta, JsonUtils.selectedRows(selectedRows));
     }
 
+    protected Date parseDate(String stringDate)
+    {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try
+        {
+            return new java.sql.Date(df.parse(stringDate).getTime());
+        }
+        catch (ParseException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

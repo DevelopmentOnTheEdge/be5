@@ -94,7 +94,8 @@ public class OperationExecutorImpl implements OperationExecutor
             {
                 Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
                 operation.setResult(OperationResult.error(be5Exception));
-                return;// operation.getResult();
+                throw be5Exception;
+                //return;// operation.getResult();
                 //throw Be5Exception.internalInOperationParameter(e, operation.getInfo().getModel());
             }
         }

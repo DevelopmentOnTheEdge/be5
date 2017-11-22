@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.Operation;
 
 import java.util.Map;
 
@@ -19,5 +19,5 @@ public interface OperationModel
 
     Object getParameters() throws Exception;
 
-    OperationResult execute();
+    Operation execute();
 }

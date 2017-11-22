@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.OperationDBTest;
 import com.developmentontheedge.be5.util.Either;

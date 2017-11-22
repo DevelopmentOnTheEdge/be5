@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
-import com.developmentontheedge.be5.operation.OperationResult;
 
 import java.util.Collections;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
 class OperationModelBase implements OperationModel
 {
     private OperationExecutor operationExecutor;
-    private UserAwareMeta userAwareMeta;
+    private Meta meta;
 
     private String[] records = new String[]{ };
 
@@ -24,9 +24,9 @@ class OperationModelBase implements OperationModel
 
     private Map<String, Object> presetValues = Collections.emptyMap();
 
-    OperationModelBase( UserAwareMeta userAwareMeta, OperationExecutor operationExecutor )
+    OperationModelBase( Meta meta, OperationExecutor operationExecutor )
     {
-        this.userAwareMeta = userAwareMeta;
+        this.meta = meta;
         this.operationExecutor = operationExecutor;
     }
 
@@ -73,20 +73,20 @@ class OperationModelBase implements OperationModel
     }
 
     @Override
-    public OperationResult execute()
+    public Operation execute()
     {
         Operation operation = operationExecutor.create(getOperationInfo(), records);
 
         operationExecutor.execute(operation, presetValues);
 
-        return operation.getResult();
+        return operation;
     }
 
-
-    public OperationInfo getOperationInfo()
+    private OperationInfo getOperationInfo()
     {
-        if(queryName != null)return userAwareMeta.getOperation(entityName, queryName, operationName);
+        com.developmentontheedge.be5.metadata.model.Operation operationModel =
+                meta.getOperationIgnoringRoles(meta.getEntity(entityName), operationName);
 
-        return userAwareMeta.getOperation(entityName, operationName);
+        return new OperationInfo(queryName, operationModel);
     }
 }

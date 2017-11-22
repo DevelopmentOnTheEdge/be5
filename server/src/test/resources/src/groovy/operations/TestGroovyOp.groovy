@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 
 import java.sql.Date
-import java.text.SimpleDateFormat
 
 
 class TestGroovyOp extends GOperationSupport implements Operation
@@ -26,14 +25,11 @@ class TestGroovyOp extends GOperationSupport implements Operation
                 value        : "Test"
         ]
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
-        java.util.Date utilDate = df.parse("2017-07-01")
-
         dps << [
                 name         : "beginDate",
                 DISPLAY_NAME : "Дата начала",
                 TYPE         : Date,
-                value        : new Date(utilDate.getTime())
+                value        : "2017-07-01"
         ]
 
         dps << [
@@ -45,6 +41,7 @@ class TestGroovyOp extends GOperationSupport implements Operation
 
         dps << [
                 name                   : "reasonMulti",
+                TYPE                   : String,
                 DISPLAY_NAME           : "Множественный выбор",
                 MULTIPLE_SELECTION_LIST: true,
                 TAG_LIST_ATTR          : [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
@@ -94,7 +91,7 @@ class TestGroovyOp extends GOperationSupport implements Operation
     @Override
     void invoke(Object parameters, OperationContext context) throws Exception
     {
-
+        db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", dps.$name, dps.$beginDate, dps.$reason)
     }
 
     @Override
