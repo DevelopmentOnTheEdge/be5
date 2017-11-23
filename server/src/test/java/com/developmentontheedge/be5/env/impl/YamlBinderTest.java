@@ -78,14 +78,6 @@ public class YamlBinderTest
     }
 
     @Test
-    public void isServerLoad()
-    {
-        yamlBinder = new YamlBinder(YamlBinder.Mode.serverOnly);
-        yamlBinder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
-        assertEquals(Document.class, loadedClasses.get("document"));
-    }
-
-    @Test
     public void isServerNotFoundFalse()
     {
         assertFalse(yamlBinder.isServer(getReader("src/test/resources/errorRedefine/" + CONTEXT_FILE)));

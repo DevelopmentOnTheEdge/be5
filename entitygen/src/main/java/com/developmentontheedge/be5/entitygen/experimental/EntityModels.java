@@ -54,7 +54,7 @@ public class EntityModels
         else
         {
             System.out.println("File '"+file.toString()+"' not found, generate...");
-            injector = Be5.createInjector(Stage.PRODUCTION, new YamlBinder(YamlBinder.Mode.serverOnly));
+            injector = Be5.createInjector(new YamlBinder());
 
             Utils.createFile(generatedSourcesPath,"","package-info.java", cfg.getTemplate("root.ftl"), Collections.emptyMap());
 

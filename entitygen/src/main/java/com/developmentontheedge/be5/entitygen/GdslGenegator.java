@@ -50,7 +50,7 @@ public class GdslGenegator
         }
 
         System.out.println("File '"+file.toString()+"' not found, generate...");
-        injector = Be5.createInjector(Stage.PRODUCTION, new YamlBinder(YamlBinder.Mode.serverOnly));
+        injector = Be5.createInjector(new YamlBinder());
 
         createService(generatedSourcesPath, packageName, serviceClassName, cfg);
 

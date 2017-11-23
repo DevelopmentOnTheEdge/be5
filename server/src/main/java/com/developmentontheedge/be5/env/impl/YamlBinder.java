@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import org.yaml.snakeyaml.Yaml;
@@ -22,26 +21,15 @@ public class YamlBinder implements Binder
 {
     private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
 
-    public enum Mode{
-        all,serverOnly
-    }
-
-    private Mode mode = Mode.all;
-
     static final String CONTEXT_FILE = "context.yaml";
     private final Map<String, Class<?>> serviceKeys = new HashMap<>();
 
     public YamlBinder() {}
 
-    public YamlBinder(Mode mode)
-    {
-        this.mode = mode;
-    }
-
     @Override
     public String getInfo()
     {
-        return mode.name();
+        return "";
     }
 
     @Override
@@ -53,10 +41,6 @@ public class YamlBinder implements Binder
 
             for (URL url: urls)
             {
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
-                {
-                    if(mode == Mode.serverOnly && !isServer(reader))continue;
-                }
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8")))
                 {
                     loadModules(reader, bindings, loadedClasses, configurations, requestPreprocessors);

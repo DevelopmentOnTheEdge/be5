@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.env.impl;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.testServices.AService;
 import com.developmentontheedge.be5.env.impl.testServices.BService;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
@@ -35,7 +36,7 @@ public class Be5InjectorCyclicDependenciesWithAnnotatedTest extends Be5ProjectTe
     @Test
     public void injectWithAnnotatedBServiceFirst() throws Exception
     {
-        Injector sqlMockInjector2 = Be5.createInjector(new SqlMockBinder());
+        Injector sqlMockInjector2 = Be5.createInjector(Stage.DEVELOPMENT, new SqlMockBinder());
 
         sqlMockInjector2.get(BService.class).bMethodUseAService();
         verify(SqlServiceMock.mock).update("aMethod sql");

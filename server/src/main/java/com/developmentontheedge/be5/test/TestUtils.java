@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.operation.Operation;

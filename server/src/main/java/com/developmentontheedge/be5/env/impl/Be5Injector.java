@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -43,18 +42,21 @@ public class Be5Injector implements Injector
 
     public Be5Injector(Binder binder)
     {
-        this.stage = Stage.DEVELOPMENT;
-        binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
-        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
-        getLogger();
+        this.stage = Stage.PRODUCTION;
+        init(binder);
     }
 
     public Be5Injector(Stage stage, Binder binder)
     {
         this.stage = stage;
+        init(binder);
+    }
+
+    private void init(Binder binder)
+    {
         binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
-        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
         getLogger();
+        log.info(JULLogger.infoBlock("Services initialized: " + binder.getClass().getName() + " - " + binder.getInfo()));
     }
 
     @Override
