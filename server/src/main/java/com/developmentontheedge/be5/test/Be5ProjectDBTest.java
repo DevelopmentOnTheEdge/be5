@@ -27,7 +27,8 @@ public abstract class Be5ProjectDBTest extends TestUtils
     @Inject protected SqlService db;
 
     @Before
-    public void injectAnnotatedFields() {
+    public void injectAnnotatedFields()
+    {
         injector.injectAnnotatedFields(this);
     }
 

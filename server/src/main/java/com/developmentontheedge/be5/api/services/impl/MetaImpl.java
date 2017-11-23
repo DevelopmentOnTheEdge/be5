@@ -308,6 +308,12 @@ public class MetaImpl implements Meta
     }
 
     @Override
+    public Operation getOperationIgnoringRoles(String entityName, String name)
+    {
+        return getOperationIgnoringRoles(getEntity(entityName), name);
+    }
+
+    @Override
     public Operation getOperationIgnoringRoles(Entity entity, String name)
     {
         return entity.getOperations().get(name);
