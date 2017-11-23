@@ -15,12 +15,16 @@ import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 
 
 public class OperationExecutorImpl implements OperationExecutor
 {
+    public static final Logger log = Logger.getLogger(OperationExecutorImpl.class.getName());
+
     private final Injector injector;
     private final DatabaseService databaseService;
     private final Validator validator;
@@ -42,9 +46,11 @@ public class OperationExecutorImpl implements OperationExecutor
         {
             return operation.getParameters(presetValues);
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            throw Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+            Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+            //operation.setResult(OperationResult.error(be5Exception));
+            throw be5Exception;
         }
     }
 
@@ -78,6 +84,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (RuntimeException e)
         {
+            log.log(Level.INFO, "error on execute in validate parameters", e);
             operation.setResult(OperationResult.error(e));
             return parameters;
         }
@@ -105,6 +112,7 @@ public class OperationExecutorImpl implements OperationExecutor
             }
             catch (RuntimeException e)
             {
+                log.log(Level.INFO, "error on execute in parameters", e);
                 operation.setResult(OperationResult.error(e));
                 return parameters;
             }
@@ -123,7 +131,8 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (Throwable e)
         {
-            operation.setResult(OperationResult.error(e));
+            Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+            operation.setResult(OperationResult.error(be5Exception));
             return parameters;
         }
     }

@@ -186,7 +186,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public int removeAll(){
+    public int removeAll()
+    {
         return remove(emptyMap());
     }
 

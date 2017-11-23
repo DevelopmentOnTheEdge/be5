@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.OperationExecutor
 import com.developmentontheedge.be5.databasemodel.OperationModel
@@ -101,8 +102,8 @@ class OperationModelBaseTest extends Be5ProjectTest
     @Test
     void executeError()
     {
-        expectedEx.expect(IllegalArgumentException.class)
-        //expectedEx.expectMessage()
+        expectedEx.expect(Be5Exception.class)
+        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing")
         executeAndCheck('executeError')
     }
 

@@ -43,7 +43,7 @@ public class OperationServiceImpl implements OperationService
         }
         catch (RuntimeException e)
         {
-            log.log(Level.FINE, "error on generate", e);
+            log.log(Level.INFO, "error on generate in parameters", e);
             operation.setResult(OperationResult.error(e));
             return replaceNullValueToEmptyStringAndReturn(parameters);
         }
@@ -63,7 +63,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                log.log(Level.FINE, "error in validate after generate", e);
+                log.log(Level.INFO, "error on generate in validate parameters", e);
                 operation.setResult(OperationResult.error(e));
                 return replaceNullValueToEmptyStringAndReturn(parameters);
             }
@@ -75,10 +75,7 @@ public class OperationServiceImpl implements OperationService
     @Override
     public Either<Object, OperationResult> execute(Operation operation, Map<String, Object> presetValues)
     {
-        Object parameters = null;
-        try{
-            parameters = operationExecutor.execute(operation, presetValues);
-        }catch (Throwable ignore){ }
+        Object parameters = operationExecutor.execute(operation, presetValues);
 
         if(operation.getStatus() == OperationStatus.ERROR)
         {
@@ -88,7 +85,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                log.log(Level.FINE, "error on execute", e);
+                log.log(Level.INFO, "error on execute in parameters", e);
                 operation.setResult(OperationResult.error(e));
                 return replaceNullValueToEmptyStringAndReturn(parameters);
             }
@@ -106,6 +103,10 @@ public class OperationServiceImpl implements OperationService
             {
                 operation.setResult(invokeResult);
                 return replaceNullValueToEmptyStringAndReturn(newParameters);
+            }
+            else
+            {
+                throw (RuntimeException) invokeResult.getDetails();
             }
         }
 
