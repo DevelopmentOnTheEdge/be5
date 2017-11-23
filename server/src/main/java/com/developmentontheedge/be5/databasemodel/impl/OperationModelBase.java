@@ -11,6 +11,7 @@ import groovy.lang.DelegatesTo;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class OperationModelBase implements OperationModel
@@ -113,6 +114,8 @@ public class OperationModelBase implements OperationModel
     {
         com.developmentontheedge.be5.metadata.model.Operation operationModel =
                 meta.getOperationIgnoringRoles(meta.getEntity(entityName), operationName);
+
+        Objects.requireNonNull(operationModel, "Operation '" + entityName + "." + operationName + "' not found.");
 
         return new OperationInfo(queryName, operationModel);
     }

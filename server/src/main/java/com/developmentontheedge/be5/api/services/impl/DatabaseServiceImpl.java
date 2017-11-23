@@ -134,8 +134,7 @@ public class DatabaseServiceImpl implements DatabaseService
         Connection conn = TRANSACT_CONN.get();
         if (conn != null)
         {
-            //todo return conn; - для вложенных просто возвращать текущую транзакцию, тесты
-            throw Be5Exception.internal(log, "Start second transaction in one thread");
+            return conn;//for nested transactions
         }
         conn = getDataSource().getConnection();
         conn.setAutoCommit(false);
@@ -154,7 +153,7 @@ public class DatabaseServiceImpl implements DatabaseService
         try {
             conn = getTxConnection();
             T res = executor.run(conn);
-            conn.commit();
+            if(!conn.isClosed())conn.commit();//for nested transactions
             return res;
         } catch (Error | Exception e) {
             throw rollback(conn, e);
