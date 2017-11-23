@@ -115,16 +115,22 @@ public class SqlServiceImpl implements SqlService
         return queryRunner.insert(conn, sql, new ScalarHandler<>(), params);
     }
 
-    private <T> T execute(boolean isReadOnly, SqlExecutor<T> executor) {
+    private <T> T execute(boolean isReadOnly, SqlExecutor<T> executor)
+    {
         Connection conn = null;
         Connection txConn = databaseService.getCurrentTxConn();
 
-        try {
+        try
+        {
             conn = (txConn != null) ? txConn : databaseService.getConnection(isReadOnly);
             return executor.run(conn);
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             throw Be5Exception.internal(e);
-        } finally {
+        }
+        finally
+        {
             if(txConn == null)
             {
                 databaseService.releaseConnection(conn);

@@ -46,7 +46,7 @@ public class DatabaseServiceImpl implements DatabaseService
             Context xmlContext = (Context) ic.lookup("java:comp/env");
             dataSource = (DataSource) xmlContext.lookup("jdbc/" + project.getAppName());
 
-            String url = ((BasicDataSource) dataSource).getUrl();
+            String url = getConnectString();
             type = Rdbms.getRdbms(url);
 
             configInfo = "xml context : " + "'jdbc/" + project.getAppName() + "'";
@@ -136,10 +136,13 @@ public class DatabaseServiceImpl implements DatabaseService
         {
             return conn;//for nested transactions
         }
-        conn = getDataSource().getConnection();
-        conn.setAutoCommit(false);
-        TRANSACT_CONN.set(conn);
-        return conn;
+        else
+        {
+            conn = getDataSource().getConnection();
+            conn.setAutoCommit(false);
+            TRANSACT_CONN.set(conn);
+            return conn;
+        }
     }
 
     private void closeTx(Connection conn) {
@@ -232,6 +235,7 @@ public class DatabaseServiceImpl implements DatabaseService
         if(dataSource instanceof BasicDataSource)
         {
             BasicDataSource dataSource = (BasicDataSource)this.dataSource;
+            map.put("DataSource class", dataSource.getClass().getCanonicalName());
             map.put("Active/Idle", dataSource.getNumActive() + " / " + dataSource.getNumIdle());
             map.put("max Active/max Idle", dataSource.getMaxActive() + " / " + dataSource.getMaxIdle());
             map.put("max wait", dataSource.getMaxWait() + "");
