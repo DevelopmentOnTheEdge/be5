@@ -24,7 +24,8 @@ public class TransactionTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void testSimple() {
+    public void testSimple()
+    {
         databaseService.transaction(conn -> {
             db.update("INSERT INTO persons (name, password) VALUES (?,?)","user1", "pass1");
             db.update("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
@@ -35,12 +36,12 @@ public class TransactionTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void testSimpleError() {
+    public void testSimpleError()
+    {
         try {
             databaseService.transaction(conn -> {
                 db.update("INSERT INTO persons (name, password) VALUES (?,?)", "userError","pass1");
-                db.update("INSERT INTO persons (name, password2) VALUES (?,?)", "user2","pass1");
-                return null;
+                throw new RuntimeException("test rollback");
             });
             Assert.fail("Should have thrown Be5Exception");
         }

@@ -91,4 +91,10 @@ public class DatabaseServiceMock implements DatabaseService
     public void releaseConnection(Connection conn) {
 
     }
+
+    @Override
+    public Be5Exception rollback(Connection conn, Throwable e)
+    {
+        return null;
+    }
 }

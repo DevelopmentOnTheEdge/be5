@@ -165,10 +165,13 @@ public class DatabaseServiceImpl implements DatabaseService
         }
     }
 
-    private Be5Exception rollback(Connection conn, Throwable e)
+    @Override
+    public Be5Exception rollback(Connection conn, Throwable e)
     {
-        try {
-            if (conn != null) {
+        try
+        {
+            if (conn != null)
+            {
                 conn.rollback();
             }
             if(e instanceof Be5Exception)
@@ -179,8 +182,9 @@ public class DatabaseServiceImpl implements DatabaseService
             {
                 return Be5Exception.internal(log, e);
             }
-
-        } catch (SQLException se) {
+        }
+        catch (SQLException se)
+        {
             return Be5Exception.internal(log, se, "Unable to rollback transaction", e);
         }
     }

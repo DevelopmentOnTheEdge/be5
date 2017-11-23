@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
@@ -21,6 +22,8 @@ public interface DatabaseService
     <T> T transaction(SqlExecutor<T> executor);
 
     void releaseConnection( Connection conn );
+
+    Be5Exception rollback(Connection conn, Throwable e);
 
     Rdbms getRdbms();
 
