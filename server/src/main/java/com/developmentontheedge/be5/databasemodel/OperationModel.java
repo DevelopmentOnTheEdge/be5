@@ -27,4 +27,17 @@ public interface OperationModel
     Object generate(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
 
     Operation execute(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
+
+    default Operation executeIfNotEmptyRecords(String... records)
+    {
+        if(records.length > 0)
+        {
+            setRecords(records);
+            return execute();
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

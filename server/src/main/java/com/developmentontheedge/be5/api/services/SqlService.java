@@ -66,6 +66,15 @@ public interface SqlService
         return selectList(sql, rs-> rs.getString(1), params);
     }
 
+    default String[] selectArrayString(String sql, Object... params)
+    {
+        List<String> strings = selectList(sql, rs -> rs.getString(1), params);
+
+        String[] stockArr = new String[strings.size()];
+        stockArr = strings.toArray(stockArr);
+        return stockArr;
+    }
+
     default List<Integer> selectListInteger(String sql, Object... params)
     {
         return selectList(sql, rs-> rs.getInt(1), params);
