@@ -31,6 +31,7 @@ public class DatabaseServiceImpl implements DatabaseService
     //private final Map<ResultSet, Connection> queriesMap = new ConcurrentHashMap<>(100);
 
     private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
+    private static final ThreadLocal<Integer> TRANSACT_CONN_COUNT = new ThreadLocal<>();
 
     private DataSource dataSource = null;
     private Rdbms type;
@@ -155,13 +156,27 @@ public class DatabaseServiceImpl implements DatabaseService
         Connection conn = null;
         try {
             conn = getTxConnection();
+
+            if(TRANSACT_CONN_COUNT.get() == null)TRANSACT_CONN_COUNT.set(0);
+
+            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
             T res = executor.run(conn);
-            if(!conn.isClosed())conn.commit();//for nested transactions
+            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
+
+            if(TRANSACT_CONN_COUNT.get() == 0)
+            {
+                conn.commit();
+            }
+
             return res;
         } catch (Error | Exception e) {
+            TRANSACT_CONN_COUNT.set(0);
             throw rollback(conn, e);
         } finally {
-            closeTx(conn);
+            if(TRANSACT_CONN_COUNT.get() == 0)
+            {
+                closeTx(conn);
+            }
         }
     }
 

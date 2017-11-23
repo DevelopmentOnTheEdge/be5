@@ -27,8 +27,8 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDBTest
     public void testSimple()
     {
         databaseService.transaction(conn -> {
-            db.update("INSERT INTO persons (name, password) VALUES (?,?)","user1", "pass1");
-            db.update("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
+            db.insert("INSERT INTO persons (name, password) VALUES (?,?)","user1", "pass1");
+            db.insert("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
             return null;//TODO сделаем возможность запросов без возвращения результата (аналог Spring TransactionCallbackWithoutResult) https://habrahabr.ru/post/183204/
         });
         long countUser1 = db.getScalar("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
@@ -40,16 +40,36 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDBTest
     {
         try {
             databaseService.transaction(conn -> {
-                db.update("INSERT INTO persons (name, password) VALUES (?,?)", "userError","pass1");
+                db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1","pass1");
                 throw new RuntimeException("test rollback");
             });
             Assert.fail("Should have thrown Be5Exception");
         }
         catch (Be5Exception e) {
             Assert.assertTrue(true);
-            long countUserError = db.getScalar("SELECT count(*) FROM persons WHERE name = 'userError'" );
-            assertEquals(0, countUserError);
+            assertEquals(0L, (long)db.getLong("SELECT count(*) FROM persons" ));
         }
     }
 
+    @Test
+    public void testErrorInInnerTransaction()
+    {
+        try {
+            databaseService.transaction(conn -> {
+                db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1","pass1");
+
+                databaseService.transaction(conn2 -> {
+                    db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2","pass2");
+                    return null;
+                });
+
+                throw new RuntimeException("test rollback");
+            });
+            Assert.fail("Should have thrown Be5Exception");
+        }
+        catch (Be5Exception e) {
+            Assert.assertTrue(true);
+            assertEquals(0L, (long)db.getLong("SELECT count(*) FROM persons" ));
+        }
+    }
 }
