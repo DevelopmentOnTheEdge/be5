@@ -172,16 +172,16 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     public int remove( String firstId, final String... otherId )
     {
         Objects.requireNonNull(firstId);
-        return removeForce( firstId, otherId );
+        return remove( ObjectArrays.concat(firstId, otherId) );
     }
 
     @Override
-    final public int removeForce( String firstId, final String... otherId )
+    public int remove( String[] ids )
     {
-        Objects.requireNonNull(firstId);
-        return db.update(dpsHelper.generateDeleteInSql(entity, otherId.length + 1),
+        Objects.requireNonNull(ids);
+        return db.update(dpsHelper.generateDeleteInSql(entity, ids.length),
                 ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        dpsHelper.castToTypePrimaryKey(entity, ObjectArrays.concat(firstId, otherId)), Object.class)
+                        dpsHelper.castToTypePrimaryKey(entity, ids), Object.class)
         );
     }
 

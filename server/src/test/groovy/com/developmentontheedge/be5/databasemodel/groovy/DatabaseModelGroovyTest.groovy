@@ -170,7 +170,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     void testDeleteIn()
     {
         def id = testtableAdmin << [
-                "name": "TestName2",
+                "name": "TestName1",
                 "value": 1]
 
         assert testtableAdmin[ id ] != null
@@ -182,6 +182,11 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         assertTrue testtableAdmin.empty
 
         assertEquals 0, testtableAdmin.remove( id )
+
+        def id2 = testtableAdmin << [
+                "name": "TestName2",
+                "value": 2]
+        assertEquals 1, testtableAdmin.remove( [id2] as String[] )
     }
 
     @Test

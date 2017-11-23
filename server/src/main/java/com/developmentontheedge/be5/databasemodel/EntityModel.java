@@ -143,24 +143,22 @@ public interface EntityModel<R extends RecordModel>
      * Operation removes all the records consistent with any of conditions in collection.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(String, String...)}
      * @param c collection of conditions
-     * @return <tt>true</tt> if all conditions has been used otherwise <tt>false</tt>
+     * @return number of affected rows
      */
     int removeAll(Collection<Map<String, ? super Object>> c);
 
     /**
      * Operation removes all the records
-     * @return count of deleted records
+     * @return number of affected rows
      */
     int removeAll();
     /**
      * Operation removes all the records, consistent with conditions.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(String, String...)} }
      * @param conditions conditions
-     * @return count of deleted records
+     * @return number of affected rows
      */
     int remove(Map<String, ? super Object> conditions);
     
@@ -168,19 +166,20 @@ public interface EntityModel<R extends RecordModel>
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #removeForce(String, String...)}
-     * @param id - record identifier numbers
-     * @return <tt>true</tt> if the all record has been deleted otherwise <tt>false<tt>
+     * This method calls {@link #remove(String[])}
+     * @param firstId first identify number of record
+     * @param otherId other identify number of record
+     * @return number of affected rows
      */
-    int remove(String id, String... otherId);
+    int remove(String firstId, String... otherId);
 
     /**
      * Deletes the record with the specified identifiers.<br>
      * This method may not contain any checks, it's just the method implementation.
-     * @param firstId first identify number of record
-     * @param otherId other identify number of record
+     * @param ids numbers of record
+     * @return number of affected rows
      */
-    int removeForce(String firstId, String... otherId);
+    int remove(String[] ids);
 
     /**
      * Returns a list of records of current entity.
