@@ -11,7 +11,7 @@ import static org.junit.Assert.*
 
 
 @TypeChecked
-class OperationServiceImplTest extends SqlMockOperationTest
+class OperationServiceExtendTest extends SqlMockOperationTest
 {
     @Inject UserAwareMeta userAwareMeta
     @Inject GroovyOperationLoader groovyOperationLoader

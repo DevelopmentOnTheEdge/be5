@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
-public class TransactionTest extends Be5ProjectDBTest
+public class DatabaseServiceTransactionTest extends Be5ProjectDBTest
 {
     @Inject private SqlService db;
     @Inject private DatabaseService databaseService;
