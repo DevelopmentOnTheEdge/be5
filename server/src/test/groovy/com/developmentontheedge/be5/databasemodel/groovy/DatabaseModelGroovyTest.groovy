@@ -222,7 +222,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
                 "name": "TestName",
                 "value": 1]
 
-        testtableAdmin[id] = [//setAt(id, map)
+        testtableAdmin[id] = [//putAt(id, map)
                 "name": "TestName2",
         ]
 
@@ -237,12 +237,15 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 
         assertEquals "TestName3", record.$name
         assertEquals "TestName3", testtableAdmin[id].$name
+
+        testtableAdmin[id] = getDps("name": "TestName4")//putAt(id, map)
+
+        assertEquals "TestName4", testtableAdmin[id].$name
     }
 
     @Test
     void testFindRecord()
     {
-
         testtableAdmin << [
             "name": "TestName2",
             "value": "123"]

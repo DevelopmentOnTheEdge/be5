@@ -16,5 +16,7 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
 
     method name: 'putAt', type: 'void', params: [id: String, values: 'Map<String, ? super Object>']
 
+    method name: 'putAt', type: 'void', params: [id: String, values: com.developmentontheedge.beans.DynamicPropertySet]
+
 }
 

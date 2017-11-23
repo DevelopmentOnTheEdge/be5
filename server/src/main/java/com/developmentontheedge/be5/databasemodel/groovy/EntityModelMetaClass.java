@@ -148,4 +148,9 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         self.set(id, values);
     }
 
+    public static void putAt( EntityModel self, String id, DynamicPropertySet dps )
+    {
+        self.set(id, dps);
+    }
+
 }

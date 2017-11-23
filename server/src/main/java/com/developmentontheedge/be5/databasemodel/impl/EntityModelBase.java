@@ -160,12 +160,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public void set( String id, String propertyName, String value )
+    public int set( String id, String propertyName, String value )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
         Objects.requireNonNull(value);
-        this.set( id, Collections.singletonMap( propertyName, value ) );
+        return this.set( id, Collections.singletonMap( propertyName, value ) );
     }
 
     @Override
@@ -298,7 +298,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public void set( String id, Map<String, ? super Object> values )
+    public int set( String id, Map<String, ? super Object> values )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
@@ -306,7 +306,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
 
-        this.set( id, dps );
+        return this.set( id, dps );
     }
 
 //    @Override
@@ -318,7 +318,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 //    }
 
     @Override
-    public void set(String id, DynamicPropertySet dps )
+    public int set(String id, DynamicPropertySet dps )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
@@ -328,9 +328,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         validator.checkErrorAndCast(dps);
         dpsHelper.addUpdateSpecialColumns(entity, dps);
 
-        int count = db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
                 ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));
-        //todo return count;
     }
 //
 //    @Override

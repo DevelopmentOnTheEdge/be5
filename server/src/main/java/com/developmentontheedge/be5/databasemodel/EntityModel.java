@@ -110,8 +110,9 @@ public interface EntityModel<R extends RecordModel>
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
+     * @return number of affected rows
      */
-    void set(String id, String propertyName, String value);
+    int set(String id, String propertyName, String value);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -120,8 +121,9 @@ public interface EntityModel<R extends RecordModel>
      * This method calls {@link #set( String, DynamicPropertySet )}
      * @param id identify number of record
      * @param values column names and values
+     * @return number of affected rows
      */
-    void set(String id, Map<String, ? super Object> values);
+    int set(String id, Map<String, ? super Object> values);
 
     //void setMany( Map<String, String> values, String id, String... otherId);
 
@@ -132,8 +134,9 @@ public interface EntityModel<R extends RecordModel>
      * This method may not contain any checks, it's just the method implementation.
      * @param id identify number of record
      * @param values new column names and values
+     * @return number of affected rows
      */
-    void set(String id, DynamicPropertySet values);
+    int set(String id, DynamicPropertySet values);
 
     //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
