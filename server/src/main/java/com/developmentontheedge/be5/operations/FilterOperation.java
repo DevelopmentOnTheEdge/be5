@@ -22,7 +22,12 @@ public class FilterOperation extends OperationSupport
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues);
 
-        for (DynamicProperty property : dps)property.setCanBeNull(true);
+        for (DynamicProperty property : dps)
+        {
+            property.setCanBeNull(true);
+            //todo _search_presets_:origin,name _search_:true
+            if(presetValues.containsKey(property.getName()))property.setReadOnly(true);
+        }
 
         return dps;
     }

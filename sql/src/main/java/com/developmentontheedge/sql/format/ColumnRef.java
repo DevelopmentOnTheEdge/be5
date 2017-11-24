@@ -54,4 +54,13 @@ public class ColumnRef
         }
         return null;
     }
+
+    @Override
+    public String toString()
+    {
+        return "ColumnRef{" +
+                "table='" + table + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
