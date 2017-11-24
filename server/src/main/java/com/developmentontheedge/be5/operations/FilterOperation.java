@@ -13,17 +13,17 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class FilterOperation extends OperationSupport
 {
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity());
+        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues);
 
         for (DynamicProperty property : dps)property.setCanBeNull(true);
 
-        //getInfo().getModel()
         return dps;
     }
 
@@ -36,7 +36,7 @@ public class FilterOperation extends OperationSupport
         for (DynamicProperty property : dps){
             if(property.getValue() != null && !Strings2.isNullOrEmpty(property.getValue().toString()))//todo utils?
             {
-                params.put("+F" + property.getName(), property.getValue().toString());
+                params.put(property.getName(), property.getValue().toString());
             }
         }
 
@@ -44,5 +44,8 @@ public class FilterOperation extends OperationSupport
                 new HashUrl(FrontendConstants.TABLE_ACTION, getInfo().getEntity().getName(), context.queryName)
                         .named(params)
         ));
+
+        addRedirectParams(params);
+        setResultRedirectThisOperation();
     }
 }

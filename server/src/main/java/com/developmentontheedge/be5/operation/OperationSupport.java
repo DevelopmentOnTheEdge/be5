@@ -127,7 +127,7 @@ public abstract class OperationSupport implements Operation
      * Puts additional parameters for redirect OperationResult.
      * @param extra parameters map
      */
-    public void addRedirectParams( Map<String, Object> extra )
+    public void addRedirectParams( Map<String, ?> extra )
     {
         redirectParams.putAll( extra );
     }
