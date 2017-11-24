@@ -154,7 +154,7 @@ public class TableModel
                         if (row.getCells().get(i).content instanceof List) {
                             add = Double.parseDouble((String)((List) ((List) row.getCells().get(i).content).get(0)).get(0) );
                         } else {
-                            add = Double.parseDouble((String) row.getCells().get(i).content);
+                            add = (double)row.getCells().get(i).content;//todo test aggregate
                         }
                         if("Number".equals(aggregate.get("type")))
                         {
