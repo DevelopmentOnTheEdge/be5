@@ -21,6 +21,8 @@ public class FilterOperation extends OperationSupport
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity());
 
+        for (DynamicProperty property : dps)property.setCanBeNull(true);
+
         //getInfo().getModel()
         return dps;
     }
