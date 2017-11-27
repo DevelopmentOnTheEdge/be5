@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.util;
 
-
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 
 public class DateUtils
 {
@@ -13,19 +13,19 @@ public class DateUtils
     private static final SimpleDateFormat dateFormatRussianCases = getDateFormatRussianCases();
     private static final SimpleDateFormat dateFormatRussianCasesQuotes = getDateFormatRussianCasesQuotes();
 
-    public static final Object[][] MONTHS_TAGS_RU = {
-            { 1, "январь" },
-            { 2, "февраль" },
-            { 3, "март" },
-            { 4, "апрель" },
-            { 5, "май" },
-            { 6, "июнь" },
-            { 7, "июль" },
-            { 8, "август" },
-            { 9, "сентябрь" },
-            { 10, "октябрь" },
-            { 11, "ноябрь" },
-            { 12, "декабрь" } };
+    public static final String[][] MONTHS_TAGS_RU = {
+            { "1", "январь" },
+            { "2", "февраль" },
+            { "3", "март" },
+            { "4", "апрель" },
+            { "5", "май" },
+            { "6", "июнь" },
+            { "7", "июль" },
+            { "8", "август" },
+            { "9", "сентябрь" },
+            { "10", "октябрь" },
+            { "11", "ноябрь" },
+            { "12", "декабрь" } };
 
 
     public static java.util.Date convert( Object val )
