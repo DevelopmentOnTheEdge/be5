@@ -49,9 +49,11 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
     @Parameter (property = "BE5_LOG_PATH")
     File logPath;
 
-
     @Parameter (property = "BE5_PROFILE")
     String connectionProfileName;
+
+    @Parameter (property = "DB_PASSWORD")
+    String connectionPassword;
 
     Project be5Project;
 
@@ -99,7 +101,8 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
             this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
 
             this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
-                    profile.getConnectionUrl(), profile.getUsername(), profile.getPassword());
+                    profile.getConnectionUrl(), profile.getUsername(),
+                    connectionPassword != null ? connectionPassword : profile.getPassword());
 
             getLog().info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
         }

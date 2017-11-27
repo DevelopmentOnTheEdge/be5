@@ -60,11 +60,11 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
         {
             text = br.lines().collect(Collectors.joining("\n"));
         }
+        String resultContext = replacePlaceholders(text);
 
         Paths.get(generatePath).toFile().mkdirs();
-
         PrintWriter writer = new PrintWriter(generateFilePath, "UTF-8");
-        writer.println(replacePlaceholders(text));
+        writer.println(resultContext);
         writer.close();
 
         getLog().info("context.xml created in " + generatePath);
@@ -81,7 +81,7 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
         return text.
                 replaceAll("PROJECT_NAME", be5Project.getName()).
                 replaceAll("USERNAME", prof.getUsername()).
-                replaceAll("PASSWORD", prof.getPassword()).
+                replaceAll("PASSWORD", connectionPassword != null ? connectionPassword : prof.getPassword()).
                 replaceAll("URL", prof.getConnectionUrl());
     }
 
