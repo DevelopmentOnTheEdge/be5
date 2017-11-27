@@ -1,9 +1,6 @@
 package com.developmentontheedge.be5.model;
 
-/** $Id: UserInfo.java,v 1.20 2014/02/13 06:24:45 lan Exp $ */
-
 import com.developmentontheedge.be5.api.Session;
-import com.google.common.collect.ImmutableList;
 import one.util.streamex.StreamEx;
 
 import java.io.Serializable;
@@ -32,7 +29,7 @@ public class UserInfo implements Serializable
     {
         this.userName = userName;
         this.session = session;
-        this.availableRoles = ImmutableList.copyOf(availableRoles);
+        this.availableRoles = new ArrayList<>(availableRoles);
         this.currentRoles = new ArrayList<>(availableRoles);
 
         this.creationTime = new Date();
@@ -129,6 +126,12 @@ public class UserInfo implements Serializable
     public List<String> getCurrentRoles()
     {
         return currentRoles;
+    }
+
+    public void setRoles(List<String> roles)
+    {
+        this.availableRoles = roles;
+        this.currentRoles = roles;
     }
 
     public void selectRoles(List<String> roles)

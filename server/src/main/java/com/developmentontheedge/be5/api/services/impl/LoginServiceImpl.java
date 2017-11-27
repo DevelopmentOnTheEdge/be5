@@ -85,12 +85,14 @@ public class LoginServiceImpl implements LoginService
         return "user_pass = ?";
     }
 
-    private List<String> selectAvailableRoles(String username) {
+    private List<String> selectAvailableRoles(String username)
+    {
         return db.selectList("SELECT role_name FROM user_roles WHERE user_name = ?",
                     rs -> rs.getString(1), username);
     }
 
-    public boolean login(Request req, String username, String password) {
+    public boolean login(Request req, String username, String password)
+    {
         try
         {
             if (login(username, password))
@@ -110,7 +112,13 @@ public class LoginServiceImpl implements LoginService
     @Override
     public void saveUser(String username, Request req)
     {
-        UserInfo ui = saveUser(username, selectAvailableRoles(username), req.getRawRequest().getLocale(), req.getRemoteAddr(), req.getSession());
+        List<String> availableRoles = selectAvailableRoles(username);
+        if(ModuleLoader2.getDevRoles().size() > 0)
+        {
+            availableRoles.addAll(ModuleLoader2.getDevRoles());
+        }
+
+        UserInfo ui = saveUser(username, availableRoles, req.getRawRequest().getLocale(), req.getRemoteAddr(), req.getSession());
 
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
@@ -147,7 +155,8 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public void logout(Request req) {
+    public void logout(Request req)
+    {
         HttpSession session = req.getRawSession();
         session.removeAttribute( SessionConstants.USER_INFO );
         session.invalidate();
