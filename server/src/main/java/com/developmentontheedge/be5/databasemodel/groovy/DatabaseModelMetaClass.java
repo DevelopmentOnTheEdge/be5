@@ -24,12 +24,6 @@ public class DatabaseModelMetaClass extends DelegatingMetaClass
         }
         return ( ( DatabaseModel )object ).getEntity( property );
     }
-    
-    @Override
-    public void setProperty( Object object, String entityName, Object values ) 
-    {
-        ( ( DatabaseModel )object ).getEntity( entityName ).add( ( Map<String, String> )values );
-    }
 
     @Override
     public Object invokeMethod( Object object, String methodName, Object[] arguments ) 
