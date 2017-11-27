@@ -480,8 +480,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             Be5Exception be5Exception = Be5Exception.internalInQuery(e, query);
             log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
 
-            //todo error utils
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
+            dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
             dynamicProperties.add(new DynamicProperty("error", String.class, Utils.showMsg() ? Be5Exception.getMessage(e) : "error"));
             return Collections.singletonList(dynamicProperties);
         }
