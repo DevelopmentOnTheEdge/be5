@@ -10,43 +10,6 @@ users:
     - user_pass:
         type: VARCHAR(50)
         canBeNull: true
-    - emailAddress:
-        type: VARCHAR(255)
-        canBeNull: true
-    - encrypt_user_pass:
-        type: VARCHAR(100)
-        canBeNull: true
-    - encrypt_passwordMnemonic:
-        type: VARCHAR(255)
-        canBeNull: true
-    - registrationDate:
-        type: DATE
-        canBeNull: true
-    - passwordAssignmentDate:
-        type: DATE
-        canBeNull: true
-    - passwordExpirationDate:
-        type: DATE
-        canBeNull: true
-    - status:
-        type: ENUM('blocked','valid')
-        defaultValue: '''valid'''
-    - noOfSessions:
-        type: INT
-        defaultValue: '9999'
-    - attempt:
-        type: INT
-        defaultValue: '0'
-    - blockingReason:
-        type: VARCHAR(255)
-        canBeNull: true
-    - comments:
-        type: VARCHAR(255)
-        canBeNull: true
-    indices:
-    - IDX_USER_EMAIL:
-        columns:
-        - emailAddress
   queries:
   - '*** Selection view ***':
       code: |-
@@ -66,12 +29,7 @@ users:
       code: |-
         SELECT
           u.user_name AS "___ID",
-          u.user_name AS "User",
-          u.emailAddress,
-          u.registrationDate,
-          u.status,
-          u.blockingReason,
-          u.comments
+          u.user_name AS "User"
         FROM users u
   - Login:
       type: static
