@@ -104,7 +104,8 @@ public class MainServlet implements Filter
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
         {
-            if ( requestUri.contains(".") )
+            // This prevents triggering engine executions for resource URLs
+            if (requestUri.startsWith("/static/") || requestUri.contains("favicon.ico"))
             {
                 return false;
             }
