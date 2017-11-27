@@ -1,4 +1,7 @@
 contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.impl.DatabaseModel")) {
+
+    method name: 'getAt', type: 'com.developmentontheedge.be5.databasemodel.EntityModel', params: [entityName: String]
+
 <#list entityNames as table>
     property(name: "${table}", type: 'com.developmentontheedge.be5.databasemodel.EntityModel')
 </#list>
