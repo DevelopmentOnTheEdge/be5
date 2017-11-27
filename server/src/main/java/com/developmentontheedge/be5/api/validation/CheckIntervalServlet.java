@@ -61,43 +61,43 @@ public class CheckIntervalServlet
         Object changed = Utils.changeType( value, type );
         if( !type.isInstance( changed ) )
         {
-            return false; 
+            return false;
         }
 
         if( short.class.equals( type ) || Short.class.equals( type ) )
         {
-           return ( ( Short )Utils.changeType( intervalFrom, type ) ) <= ( ( Number )changed ).shortValue() &&
-                  ( ( Short )Utils.changeType( intervalTo, type ) ) >= ( ( Number )changed ).shortValue();
+            return ( ( Short )Utils.changeType( intervalFrom, type ) ) <= ( ( Number )changed ).shortValue() &&
+                    ( ( Short )Utils.changeType( intervalTo, type ) ) >= ( ( Number )changed ).shortValue();
         }
         if( int.class.equals( type ) || Integer.class.equals( type ) )
         {
-           return ( ( Integer )Utils.changeType( intervalFrom, type ) ) <= ( ( Number )changed ).intValue() &&
-                  ( ( Integer )Utils.changeType( intervalTo, type ) ) >= ( ( Number )changed ).intValue();
+            return ( ( Integer )Utils.changeType( intervalFrom, type ) ) <= ( ( Number )changed ).intValue() &&
+                    ( ( Integer )Utils.changeType( intervalTo, type ) ) >= ( ( Number )changed ).intValue();
         }
         if( long.class.equals( type ) || Long.class.equals( type ) )
         {
-           return ( ( Long )Utils.changeType( intervalFrom, type ) ) <= ( ( Number )changed ).longValue() &&
-                  ( ( Long )Utils.changeType( intervalTo, type ) ) >= ( ( Number )changed ).longValue();
+            return ( ( Long )Utils.changeType( intervalFrom, type ) ) <= ( ( Number )changed ).longValue() &&
+                    ( ( Long )Utils.changeType( intervalTo, type ) ) >= ( ( Number )changed ).longValue();
         }
         if( Number.class.isAssignableFrom( type ) )
         {
-           return Double.parseDouble( Utils.fixNumber( intervalFrom, false ) ) <= ( ( Number )changed ).doubleValue() &&
-                  Double.parseDouble( Utils.fixNumber( intervalTo, false ) ) >= ( ( Number )changed ).doubleValue();
+            return Double.parseDouble( Utils.fixNumber( intervalFrom, false ) ) <= ( ( Number )changed ).doubleValue() &&
+                    Double.parseDouble( Utils.fixNumber( intervalTo, false ) ) >= ( ( Number )changed ).doubleValue();
         }
         if( type.equals( java.util.Date.class ) )
         {
-           java.sql.Date fDate = ( java.sql.Date )Utils.changeType( intervalFrom, type );
-           java.sql.Date tDate = DateUtils.addDays( ( java.sql.Date )Utils.changeType( intervalTo, type ), 1 );
-           return DateUtils.isBetween( ( java.sql.Date )changed, fDate, tDate );
+            java.util.Date fDate = ( java.util.Date )Utils.changeType( intervalFrom, type );
+            java.util.Date tDate = DateUtils.addDays( ( java.util.Date )Utils.changeType( intervalTo, type ), 1 );
+            return DateUtils.isBetween( ( java.util.Date )changed, fDate, tDate );
         }
         if( type.equals( java.sql.Date.class ) )
         {
-           java.sql.Date fDate = ( java.sql.Date )Utils.changeType( intervalFrom, type );
-           java.sql.Date tDate = DateUtils.addDays( ( java.sql.Date )Utils.changeType( intervalTo, type ), 1 );
-           return DateUtils.isBetween( ( java.sql.Date )changed, fDate, tDate );
+            java.util.Date fDate = ( java.sql.Date )Utils.changeType( intervalFrom, type );
+            java.util.Date tDate = DateUtils.addDays( ( java.sql.Date )Utils.changeType( intervalTo, type ), 1 );
+            return DateUtils.isBetween( ( java.util.Date )changed, fDate, tDate );
         }
 
-        return false; 
+        return false;
     }
 
     private static final Pattern pat = Pattern.compile( "^(!|<=?|>=?)\\s*(.*)$" );
