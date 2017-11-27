@@ -44,20 +44,13 @@ public class TemplateProcessor implements Component
         context.setVariable("title", title);
         context.setVariable("description", description);
 
-        if(req.getRequestUri().contains("/manager/"))
-        {
-            context.setVariable("baseUrl", req.getContextPath() + "/manager/");
-            context.setVariable("baseUrlWithoutContext", "/manager/");
+        String reqWithoutContext = req.getRequestUri().replaceFirst(req.getContextPath(), "");
+        if(!reqWithoutContext.endsWith("/"))reqWithoutContext += "/";
 
-            res.sendHtml(getHtmlTemplateEngine().process("manager/manager", context));
-        }
-        else
-        {
-            context.setVariable("baseUrl", req.getContextPath() + "/");
-            context.setVariable("baseUrlWithoutContext", "/");
+        context.setVariable("baseUrl", req.getContextPath() + reqWithoutContext);
+        context.setVariable("baseUrlWithoutContext", reqWithoutContext);
 
-            res.sendHtml(getHtmlTemplateEngine().process("index", context));
-        }
+        res.sendHtml(getHtmlTemplateEngine().process(reqWithoutContext + "index", context));
     }
 
     public TemplateEngine getHtmlTemplateEngine()
