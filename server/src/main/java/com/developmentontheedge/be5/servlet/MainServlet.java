@@ -87,11 +87,6 @@ public class MainServlet implements Filter
      */
     private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        if ( requestUri.endsWith(".js") || requestUri.endsWith(".css") )
-        {
-            return false;
-        }
-
         String origin = request.getHeader("Origin");
         // TODO test origin
 
@@ -109,6 +104,10 @@ public class MainServlet implements Filter
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
         {
+            if ( requestUri.contains(".") )
+            {
+                return false;
+            }
             String templateComponentID = "templateProcessor";
             if(!injector.hasComponent(templateComponentID))
             {
