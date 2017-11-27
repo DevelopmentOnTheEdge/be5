@@ -74,6 +74,10 @@ public class DpsRecordAdapter
             {
                 return ((BigDecimal)object).doubleValue();
             }
+            if(clazz == Short.class && object instanceof Integer)
+            {
+                return ((Integer)object).shortValue();
+            }
 
             return clazz.cast(object);
         }
