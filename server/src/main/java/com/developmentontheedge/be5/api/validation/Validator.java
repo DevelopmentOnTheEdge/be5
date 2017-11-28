@@ -116,10 +116,10 @@ public class Validator
 
     private void checkValueInTags(DynamicProperty property, Object value)
     {
-        String[][] tags = (String[][])property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
+        Object[][] tags = (Object[][])property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
         if(tags != null)
         {
-            if(Arrays.stream(tags).noneMatch(item -> (item)[0].equals(value.toString())))
+            if(Arrays.stream(tags).noneMatch(item -> (item)[0].toString().equals(value.toString())))
             {
                 setError(property, "Value is not contained in tags");
                 throw new IllegalArgumentException("Value is not contained in tags - " + toStringProperty(property));
