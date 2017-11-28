@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
+import static com.developmentontheedge.be5.metadata.model.Operation.*;
 
 
 public class OperationExecutorImpl implements OperationExecutor
@@ -172,6 +172,13 @@ public class OperationExecutorImpl implements OperationExecutor
                     throw Be5Exception.internalInOperation(e, operationInfo.getModel());
                 }
                 break;
+            case OPERATION_TYPE_JAVAFUNCTION:
+            case OPERATION_TYPE_SQL:
+            case OPERATION_TYPE_JAVASCRIPT:
+            case OPERATION_TYPE_JSSERVER:
+            case OPERATION_TYPE_DOTNET:
+            case OPERATION_TYPE_JAVADOTNET:
+                throw Be5Exception.internal("Not support operation type: " + operationInfo.getType());
             default:
                 try
                 {
