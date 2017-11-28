@@ -23,6 +23,14 @@ public class ActionHelperTest extends Be5ProjectTest
     }
 
     @Test
+    public void legacyFormUrlTest() throws Exception
+    {
+        Query query = getQuery(QueryType.STATIC, "public.households.redir?_qn_=Account+Balance&_on_=OpenReview4Period");
+        assertEquals("form/public.households/Account Balance/OpenReview4Period",
+                ActionHelper.toAction(query).arg);
+    }
+
+    @Test
     public void legacyUrlTest2() throws Exception
     {
         Query query = getQuery(QueryType.STATIC, "mspReceiverCategories.redir");

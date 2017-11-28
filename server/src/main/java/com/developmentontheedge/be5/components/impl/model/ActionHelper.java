@@ -59,6 +59,9 @@ final public class ActionHelper
                     if(params.size() == 0){
                         return Action.call(new HashUrl("table", parts[0]));
                     }
+                    if(params.get("_on_") != null){
+                        return Action.call(new HashUrl("form", parts[0], params.get("_qn_"), params.get("_on_")));
+                    }
                     if(params.get("_qn_") != null){
                         return Action.call(new HashUrl("table", parts[0], params.get("_qn_")));
                     }
