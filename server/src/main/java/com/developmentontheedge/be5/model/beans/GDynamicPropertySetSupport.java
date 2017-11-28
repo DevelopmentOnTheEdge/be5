@@ -24,6 +24,14 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         return super.getProperty(name);
     }
 
+//may be add
+//    public DynamicProperty setAt(String name, String value)
+//    {
+//        DynamicProperty property = new DynamicProperty(name, String.class, value);
+//        super.add(property);
+//        return property;
+//    }
+
     public DynamicProperty add(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
         DPSAttributes builder = getBuilder(cl);

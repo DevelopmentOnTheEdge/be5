@@ -1,6 +1,10 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.util.HashUrl;
+
+import java.util.Collections;
+import java.util.Map;
 
 public class OperationResult
 {
@@ -115,6 +119,16 @@ public class OperationResult
     public static OperationResult redirect(HashUrl hashUrl)
     {
         return redirect(hashUrl.toString());
+    }
+
+    public static OperationResult redirectToTable(String entityName, String queryName, Map<String, String> params)
+    {
+        return redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params));
+    }
+
+    public static OperationResult redirectToTable(String entityName, String queryName)
+    {
+        return redirectToTable(entityName, queryName, Collections.emptyMap());
     }
 
     public static OperationResult redirect(String url)

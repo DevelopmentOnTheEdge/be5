@@ -124,11 +124,10 @@ public class OperationExecutorImpl implements OperationExecutor
 
             if(OperationStatus.IN_PROGRESS == operation.getStatus())
             {
-                operation.setResult(OperationResult.redirect(
-                        new HashUrl(FrontendConstants.TABLE_ACTION,
-                                operation.getInfo().getEntityName(),
-                                operation.getInfo().getQueryName())
-                                .named(operation.getRedirectParams())
+                operation.setResult(OperationResult.redirectToTable(
+                    operation.getInfo().getEntityName(),
+                    operation.getInfo().getQueryName(),
+                    operation.getRedirectParams()
                 ));
             }
 
