@@ -252,7 +252,8 @@ public class TableModel
 
         private void addRowClass(List<RawCellModel> cells)
         {
-            Optional<Object> addClassName = cells.stream().filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS))
+            Optional<Object> addClassName = cells.stream()
+                    .filter(x -> x.name.equals(DatabaseConstants.CSS_ROW_CLASS) && x.content != null)
                     .map(x -> x.content).findFirst();
 
             if(addClassName.isPresent())
