@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.components;
 
+
 public interface RestApiConstants
 {
-
     /**
      * Page category.
      */
@@ -35,6 +35,8 @@ public interface RestApiConstants
     String DRAW = "draw";
     String SELECTABLE = "selectable";
     String TOTAL_NUMBER_OF_ROWS = "totalNumberOfRows";
+
+    // json api
 
     String TIMESTAMP_PARAM = "_ts_";
 

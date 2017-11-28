@@ -105,6 +105,7 @@ public class ResponseImpl implements Response
     }
     
     @Override
+    @Deprecated
     public void sendAsJson(String type, Object value)
     {
         sendAsRawJson(typed(type, value));

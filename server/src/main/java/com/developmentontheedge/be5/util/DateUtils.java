@@ -626,5 +626,26 @@ public class DateUtils
     {
         return isSameDay( curDate, beginDate ) || curDate.after( beginDate ) && ( endDate == null || curDate.before( endDate ) );
     }
+
+    /**
+     * Returns current system time, as {@link java.sql.Timestamp Timestamp}.
+     *
+     * @return
+     */
+    public static java.sql.Timestamp currentTimestamp()
+    {
+        return new java.sql.Timestamp( System.currentTimeMillis() );
+    }
+
+    /**
+     * Returns current system time, as {@link java.sql.Date Date}.
+     *
+     * @return
+     */
+    public static java.sql.Date currentDate()
+    {
+        return new java.sql.Date( System.currentTimeMillis() );
+    }
+
 }
 

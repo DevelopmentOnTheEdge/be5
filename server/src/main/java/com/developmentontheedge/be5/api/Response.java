@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.api;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
