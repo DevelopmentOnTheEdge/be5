@@ -39,7 +39,6 @@ public abstract class OperationSupport implements Operation
     protected Session session;
     protected UserInfo userInfo;
 
-    public static final String reloadControl = "_reloadcontrol_";
     private final Map<String, Object> redirectParams = new HashMap<>();
 
     @Override

@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -11,8 +10,10 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+
 import com.github.benmanes.caffeine.cache.Cache;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class OperationHelper
     public static final String yes = "yes";
     public static final String no = "no";
 
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,Injector injector)
+    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches, Injector injector)
     {
         this.db = db;
         this.meta = meta;
@@ -528,6 +529,35 @@ public class OperationHelper
     public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, String> parameters)
     {
         return new Be5QueryExecutor(query, parameters, injector).execute();
+    }
+
+    public QRec readOneRecord(String sql, Map<String, String> parameters)
+    {
+        return readOneRecord(meta.createQueryFromSql(sql), parameters);
+    }
+
+    public QRec readOneRecord(String tableName, String queryName, Map<String, String> parameters)
+    {
+        return readOneRecord(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
+    }
+
+    public QRec readOneRecord(Query query, Map<String, String> parameters)
+    {
+        List<DynamicPropertySet> dps = readAsRecordsFromQuery(query, parameters);
+
+        if(dps.size() == 0)
+        {
+            return null;
+        }
+        else
+        {
+            QRec qRec = new QRec();
+            for (DynamicProperty property : dps.get(0))
+            {
+                qRec.add(property);
+            }
+            return qRec;
+        }
     }
 
     public List<List<Object>> readAsList( String sql, Object... params )

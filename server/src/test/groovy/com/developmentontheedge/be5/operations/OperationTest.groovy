@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations
 
+import com.developmentontheedge.be5.components.FrontendConstants
 import com.developmentontheedge.be5.operation.OperationResult
-import com.developmentontheedge.be5.operation.OperationSupport
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.be5.util.Either
@@ -55,7 +55,7 @@ class OperationTest extends SqlMockOperationTest
                         ImmutableMap.of(
                                 "name", "test",
                                 "number", "0",
-                                OperationSupport.reloadControl, "name"))
+                                FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
         assertEquals("{'name':'test','number':0}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
@@ -67,7 +67,7 @@ class OperationTest extends SqlMockOperationTest
                 ImmutableMap.of(
                         "name", "testName",
                         "number", "ab",
-                        OperationSupport.reloadControl, "name"))
+                        FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
         assertNotNull(result.getFirst())
 

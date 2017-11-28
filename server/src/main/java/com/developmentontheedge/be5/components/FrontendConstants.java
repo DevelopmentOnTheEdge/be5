@@ -18,4 +18,5 @@ public interface FrontendConstants
 
     String OPERATION_RESULT = "operationResult";
 
+    String RELOAD_CONTROL_NAME = "_reloadcontrol_";
 }

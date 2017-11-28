@@ -6,12 +6,13 @@ import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
-import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.be5.util.Either;
 
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.developmentontheedge.be5.components.FrontendConstants.RELOAD_CONTROL_NAME;
 
 
 public class OperationServiceImpl implements OperationService
@@ -55,7 +56,7 @@ public class OperationServiceImpl implements OperationService
 
         operation.setResult(OperationResult.open());
 
-        if(presetValues.containsKey(OperationSupport.reloadControl))
+        if(presetValues.containsKey(RELOAD_CONTROL_NAME))
         {
             try
             {
