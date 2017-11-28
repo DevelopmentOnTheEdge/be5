@@ -99,19 +99,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvoke()
     {
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
-            "name", "TestName",
-            "value", 1,
-            "ID", 12L
-        )));
-
-        OperationResult operationResult = executeOperation("testtableAdmin", "All records", "Edit", "12",
-                "{'name':'EditName','value':123}").getSecond();
-
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
-                operationResult);
-
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
+        executeEditWithParams("{'name':'EditName','value':123}");
 
         verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
                 "EditName", 123, 12L);
@@ -120,19 +108,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvokeValueNull()
     {
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
-                "name", "TestName",
-                "value", 12345,
-                "ID", 12L
-        )));
-
-        OperationResult operationResult = executeOperation("testtableAdmin", "All records", "Edit", "12",
-                "{'name':'EditName','value':null}").getSecond();
-
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
-                operationResult);
-
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
+        executeEditWithParams("{'name':'EditName','value':null}");
 
         verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
                 "EditName", null, 12L);
@@ -141,6 +117,14 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editInvokeEmptyStringToNull()
     {
+        executeEditWithParams("{'name':'EditName','value':''}");
+
+        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
+                "EditName", null, 12L);
+    }
+
+    private void executeEditWithParams(String params)
+    {
         when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
                 "name", "TestName",
                 "value", 12345,
@@ -148,16 +132,11 @@ public class StandardOperationsTest extends SqlMockOperationTest
         )));
 
         OperationResult operationResult = executeOperation("testtableAdmin", "All records", "Edit", "12",
-                "{'name':'EditName','value':''}").getSecond();
+                params).getSecond();
 
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);
 
         verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
-
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
-                "EditName", null, 12L);
     }
-
-
 }
