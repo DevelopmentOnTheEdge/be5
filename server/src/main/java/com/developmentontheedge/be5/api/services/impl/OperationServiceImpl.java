@@ -95,7 +95,7 @@ public class OperationServiceImpl implements OperationService
 
             OperationResult invokeResult = operation.getResult();
 
-            operation.setResult(OperationResult.generate());
+            operation.setResult(OperationResult.execute());
 
             Object newParameters = operationExecutor.generate(operation, presetValues);
 
