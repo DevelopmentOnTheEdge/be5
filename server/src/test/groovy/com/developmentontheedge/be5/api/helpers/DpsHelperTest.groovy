@@ -156,11 +156,11 @@ class DpsHelperTest extends Be5ProjectDBTest
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
-        dps.add(dpsHelper.getLabel("test", "customName"))
+        dps.add(dpsHelper.getLabel("customName", "test"))
         assertEquals "{'/customName':{'displayName':'customName','labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
         dps.remove("customName")
 
-        dps.add(dpsHelper.getLabelRaw("test", "customName"))
+        dps.add(dpsHelper.getLabelRaw("customName", "test"))
         assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 

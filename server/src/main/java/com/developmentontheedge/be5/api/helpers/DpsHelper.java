@@ -661,10 +661,10 @@ public class DpsHelper
 
     public DynamicProperty getLabel(String text)
     {
-        return getLabel(text, "infoLabel");
+        return getLabel("infoLabel", text);
     }
 
-    public DynamicProperty getLabel(String text, String name)
+    public DynamicProperty getLabel(String name, String text)
     {
         DynamicProperty label = new DynamicProperty(name, String.class, text);
         label.setAttribute(BeanInfoConstants.LABEL_FIELD, true);
@@ -673,12 +673,12 @@ public class DpsHelper
 
     public DynamicProperty getLabelRaw(String text)
     {
-        return getLabelRaw(text, "infoLabel");
+        return getLabelRaw("infoLabel", text);
     }
 
-    public DynamicProperty getLabelRaw(String text, String name)
+    public DynamicProperty getLabelRaw(String name, String text)
     {
-        DynamicProperty label = getLabel(text, name);
+        DynamicProperty label = getLabel(name, text);
         label.setAttribute(BeanInfoConstants.RAW_VALUE, true);
 
         return label;
@@ -686,7 +686,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpWithLabelANDNotSubmitted(T dps, String text)
     {
-        dps.add(getLabel(text, "infoLabel"));
+        dps.add(getLabel(text));
         DynamicProperty notSubmitted = new DynamicProperty("notSubmitted", String.class, null);
         notSubmitted.setHidden(true);
         dps.add(notSubmitted);
