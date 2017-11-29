@@ -102,9 +102,9 @@ public class OperationHelper
         return getTagsFromCustomSelectionView(tableName, DatabaseConstants.SELECTION_VIEW, Collections.emptyMap());
     }
 
-    public String[][] getTagsFromSelectionView(String tableName, Map<String, ?> extraParams)
+    public String[][] getTagsFromSelectionView(String tableName, Map<String, ?> parameters)
     {
-        return getTagsFromCustomSelectionView(tableName, DatabaseConstants.SELECTION_VIEW, extraParams);
+        return getTagsFromCustomSelectionView(tableName, DatabaseConstants.SELECTION_VIEW, parameters);
     }
 
     public String[][] getTagsFromCustomSelectionView(String tableName, String queryName)
@@ -112,7 +112,7 @@ public class OperationHelper
         return getTagsFromCustomSelectionView(tableName, queryName, Collections.emptyMap());
     }
 
-    public String[][] getTagsFromCustomSelectionView(String tableName, String queryName, Map<String, ?> extraParams)
+    public String[][] getTagsFromCustomSelectionView(String tableName, String queryName, Map<String, ?> parameters)
     {
         Optional<Query> query = meta.findQuery(tableName, queryName);
         if (!query.isPresent())
@@ -121,11 +121,11 @@ public class OperationHelper
         if(query.get().isCacheable())
         {
             return tagsCache.get(tableName + "getTagsFromCustomSelectionView" + queryName +
-                    extraParams.toString() + UserInfoHolder.getLanguage(),
-                k -> getTagsFromCustomSelectionView(tableName, query.get(), extraParams)
+                    parameters.toString() + UserInfoHolder.getLanguage(),
+                k -> getTagsFromCustomSelectionView(tableName, query.get(), parameters)
             );
         }
-        return getTagsFromCustomSelectionView(tableName, query.get(), extraParams);
+        return getTagsFromCustomSelectionView(tableName, query.get(), parameters);
     }
 
     public String[][] getTagsFromQuery(String query, Object... params)
@@ -150,7 +150,7 @@ public class OperationHelper
         return values;
     }
 //
-//    public Map<String, String> getTagsMapFromQuery( Map<String, String> extraParams, String query, Object... params )
+//    public Map<String, String> getTagsMapFromQuery( Map<String, String> parameters, String query, Object... params )
 //    {
 //        //return getTagsListFromQuery( Collections.emptyMap(), query, params );
 //        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
@@ -160,12 +160,12 @@ public class OperationHelper
 //        return tags.toArray(stockArr);
 //    }
 
-    private String[][] getTagsFromCustomSelectionView(String tableName, Query query, Map<String, ?> extraParams)
+    private String[][] getTagsFromCustomSelectionView(String tableName, Query query, Map<String, ?> parameters)
     {
         //todo refactoring Be5QueryExecutor,
         Map<String, String> stringStringMap = new HashMap<>();
-        //extraParams.forEach((key, value) -> stringStringMap.put(key, value.toString()));
-        for( Map.Entry<String, ?> entry : extraParams.entrySet())
+        //parameters.forEach((key, value) -> stringStringMap.put(key, value.toString()));
+        for( Map.Entry<String, ?> entry : parameters.entrySet())
         {
             if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
         }
@@ -511,37 +511,44 @@ public class OperationHelper
 //        return query;
 //    }
 
+    //todo use Be5QueryExecutor?
     public List<DynamicPropertySet> readAsRecords( String sql, Object... params )
     {
         return db.selectList(sql, DpsRecordAdapter::createDps, params);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, String> parameters )
+    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, ?> parameters )
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, String> parameters)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, ?> parameters)
     {
         return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, String> parameters)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
     {
-        return new Be5QueryExecutor(query, parameters, injector).execute();
+        //todo refactoring Be5QueryExecutor,
+        Map<String, String> stringStringMap = new HashMap<>();
+        for( Map.Entry<String, ?> entry : parameters.entrySet())
+        {
+            if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
+        }
+        return new Be5QueryExecutor(query, stringStringMap, injector).execute();
     }
 
-    public QRec readOneRecord(String sql, Map<String, String> parameters)
+    public QRec readOneRecord(String sql, Map<String, ?> parameters)
     {
         return readOneRecord(meta.createQueryFromSql(sql), parameters);
     }
 
-    public QRec readOneRecord(String tableName, String queryName, Map<String, String> parameters)
+    public QRec readOneRecord(String tableName, String queryName, Map<String, ?> parameters)
     {
         return readOneRecord(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public QRec readOneRecord(Query query, Map<String, String> parameters)
+    public QRec readOneRecord(Query query, Map<String, ?> parameters)
     {
         List<DynamicPropertySet> dps = readAsRecordsFromQuery(query, parameters);
 

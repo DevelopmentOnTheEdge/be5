@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -183,6 +184,16 @@ public class OperationHelperTest extends Be5ProjectDBTest
         assertEquals("Regional",  list.get(0).getValue("Name"));
 
         assertEquals(4, list.size());
+    }
+
+    @Test
+    public void readOneRecordTest() throws Exception
+    {
+        Map<String, Long> stringLongHashMap = new HashMap<>(Collections.singletonMap("unused", 1L));
+        QRec qRec = helper.readOneRecord("testTags", "With parameter", stringLongHashMap);
+
+        assertEquals("01",        qRec.getValue("ID"));
+        assertEquals("Regional",  qRec.getValue("Name"));
     }
 
     @Test
