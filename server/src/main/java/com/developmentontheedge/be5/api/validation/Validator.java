@@ -130,6 +130,7 @@ public class Validator
     public void setSuccess(DynamicProperty property)
     {
         property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
+        property.setAttribute( BeanInfoConstants.MESSAGE, "" );
     }
 
     public void setError(DynamicProperty property, String message)
