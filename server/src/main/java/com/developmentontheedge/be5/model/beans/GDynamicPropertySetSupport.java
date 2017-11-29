@@ -75,10 +75,9 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
                                 @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
         DPSAttributes builder = getBuilder(cl);
-        Map<String, Object> map = builder.getMap();
-        map.put("DISPLAY_NAME", displayName);
+        builder.setDISPLAY_NAME(displayName);
 
-        return DynamicPropertyMetaClass.leftShift(getProperty(propertyName), map);
+        return DynamicPropertyMetaClass.leftShift(getProperty(propertyName), builder.getMap());
     }
 
     private DPSAttributes getBuilder(Closure cl)

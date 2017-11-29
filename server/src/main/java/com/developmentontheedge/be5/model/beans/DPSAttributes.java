@@ -8,7 +8,6 @@ public class DPSAttributes
     private Map<String, Object> map = new HashMap<>();
 
     private String name;
-    public Class<?> TYPE = String.class;
 
     public void setName(String value)
     {
@@ -21,7 +20,7 @@ public class DPSAttributes
     }
     public void setTYPE(Class<?> value)
     {
-        TYPE = value;
+        map.put("TYPE", value);
     }
     public void setValue(Object value)
     {
@@ -119,6 +118,7 @@ public class DPSAttributes
 
     public Class<?> getTYPE()
     {
-        return TYPE;
+        return (Class<?>)map.getOrDefault("TYPE", String.class);
     }
+
 }
