@@ -146,21 +146,21 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getLabelAndGetLabelRawTest() throws Exception
     {
         def dps = new DynamicPropertySetSupport()
-        dps.add(dpsHelper.getLabel("test"))
+        dpsHelper.addLabel(dps, "test")
         assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
-        dps.add(dpsHelper.getLabelRaw("test"))
+        dpsHelper.addLabelRaw(dps, "test")
         assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
-        dps.add(dpsHelper.getLabel("customName", "test"))
+        dpsHelper.addLabel(dps, "customName", "test")
         assertEquals "{'/customName':{'displayName':'customName','labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
         dps.remove("customName")
 
-        dps.add(dpsHelper.getLabelRaw("customName", "test"))
+        dpsHelper.addLabelRaw(dps, "customName", "test")
         assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 

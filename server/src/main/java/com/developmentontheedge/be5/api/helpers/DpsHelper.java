@@ -659,6 +659,30 @@ public class DpsHelper
         }
     }
 
+    public <T extends DynamicPropertySet> T addLabel(T dps, String text)
+    {
+        dps.add(getLabel("infoLabel", text));
+        return dps;
+    }
+
+    public <T extends DynamicPropertySet> T addLabel(T dps, String name, String text)
+    {
+        dps.add(getLabel(name, text));
+        return dps;
+    }
+
+    public <T extends DynamicPropertySet> T addLabelRaw(T dps, String text)
+    {
+        dps.add(getLabelRaw("infoLabel", text));
+        return dps;
+    }
+
+    public <T extends DynamicPropertySet> T addLabelRaw(T dps, String name, String text)
+    {
+        dps.add(getLabelRaw(name, text));
+        return dps;
+    }
+
     public DynamicProperty getLabel(String text)
     {
         return getLabel("infoLabel", text);
