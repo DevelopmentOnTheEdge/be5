@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
@@ -72,7 +73,24 @@ public class OperationModelBase implements OperationModel
     public Object generate()
     {
         Operation operation = operationExecutor.create(getOperationInfo(), records);
+        operation.setResult(OperationResult.generate());
+
         return operationExecutor.generate(operation, (Map<String, Object>)presetValues);
+    }
+
+    @Override
+    public Operation execute()
+    {
+        Operation operation = operationExecutor.create(getOperationInfo(), records);
+        operation.setResult(OperationResult.execute());
+
+        operationExecutor.execute(operation, (Map<String, Object>)presetValues);
+        if(operation.getStatus() == OperationStatus.ERROR)
+        {
+            throw (RuntimeException)operation.getResult().getDetails();
+        }
+
+        return operation;
     }
 
     @Override
@@ -82,8 +100,7 @@ public class OperationModelBase implements OperationModel
         closure.setDelegate( this );
         closure.call();
 
-        Operation operation = operationExecutor.create(getOperationInfo(), records);
-        return operationExecutor.generate(operation, (Map<String, Object>)presetValues);
+        return generate();
     }
 
     @Override
@@ -94,20 +111,6 @@ public class OperationModelBase implements OperationModel
         closure.call();
 
         return execute();
-    }
-
-    @Override
-    public Operation execute()
-    {
-        Operation operation = operationExecutor.create(getOperationInfo(), records);
-
-        operationExecutor.execute(operation, (Map<String, Object>)presetValues);
-        if(operation.getStatus() == OperationStatus.ERROR)
-        {
-            throw (RuntimeException)operation.getResult().getDetails();
-        }
-
-        return operation;
     }
 
     private OperationInfo getOperationInfo()

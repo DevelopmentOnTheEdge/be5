@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.operations;
 
+import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -34,7 +36,13 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void insertOperationInitValues()
     {
-        Object first = generateOperation("testtableAdmin", "All records", "Insert", "","{}").getFirst();
+        Operation operation = getOperation("testtableAdmin", "All records", "Insert", "");
+        assertEquals(OperationStatus.CREATE, operation.getStatus());
+
+        Object first = generateOperation(operation, "{}").getFirst();
+
+        assertEquals(OperationStatus.GENERATE, operation.getStatus());
+
         assertEquals("{'name':'','value':''}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }

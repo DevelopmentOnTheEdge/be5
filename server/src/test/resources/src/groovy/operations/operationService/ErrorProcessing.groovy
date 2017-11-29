@@ -4,7 +4,10 @@ import com.developmentontheedge.be5.operation.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationResult
+import com.developmentontheedge.be5.operation.OperationStatus
 import groovy.transform.TypeChecked
+
+import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
@@ -42,6 +45,16 @@ class ErrorProcessing extends GOperationSupport implements Operation
         if(name.getValue() == "generateError")
         {
             throw new IllegalArgumentException()
+        }
+
+        if(name.getValue() == "generateCall")
+        {
+            assertEquals(OperationStatus.GENERATE, getStatus())
+        }
+
+        if(name.getValue() == "executeErrorInProperty")
+        {
+            assertEquals(OperationStatus.EXECUTE, getStatus())
         }
 
         return dps

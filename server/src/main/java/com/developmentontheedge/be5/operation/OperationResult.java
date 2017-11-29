@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 import java.util.Collections;
 import java.util.Map;
 
+
 public class OperationResult
 {
     ///////////////////////////////////////////////////////////////////
@@ -66,34 +67,40 @@ public class OperationResult
     // OperationResult factory methods
     //
 
-    private static final OperationResult open = new OperationResult(OperationStatus.OPEN);
+    private static final OperationResult create = new OperationResult(OperationStatus.CREATE);
+    private static final OperationResult generate = new OperationResult(OperationStatus.GENERATE);
+    private static final OperationResult execute = new OperationResult(OperationStatus.EXECUTE);
     private static final OperationResult finished = new OperationResult(OperationStatus.FINISHED);
     private static final OperationResult cancelled = new OperationResult(OperationStatus.CANCELLED);
-    private static final OperationResult progress = new OperationResult(OperationStatus.IN_PROGRESS);
 
-    public static OperationResult open()
+    public static OperationResult create()
     {
-        return open;
+        return create;
+    }
+
+    public static OperationResult generate()
+    {
+        return generate;
+    }
+
+    public static OperationResult execute()
+    {
+        return execute;
+    }
+
+    public static OperationResult execute(String message)
+    {
+        return new OperationResult(OperationStatus.EXECUTE, message, "");
+    }
+
+    public static OperationResult execute(double preparedness)
+    {
+        return new OperationResult(OperationStatus.EXECUTE, preparedness);
     }
 
     public static OperationResult cancelled()
     {
         return cancelled;
-    }
-
-    public static OperationResult progress()
-    {
-        return progress;
-    }
-    
-    public static OperationResult progress(String message)
-    {
-        return new OperationResult(OperationStatus.IN_PROGRESS, message, "");
-    }
-
-    public static OperationResult progress(double preparedness)
-    {
-        return new OperationResult(OperationStatus.IN_PROGRESS, preparedness);
     }
 
     public static OperationResult interrupting()

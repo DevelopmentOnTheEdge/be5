@@ -31,6 +31,8 @@ public class OperationServiceImpl implements OperationService
     @Override
     public Either<Object, OperationResult> generate(Operation operation, Map<String, Object> presetValues)
     {
+        operation.setResult(OperationResult.generate());
+
         Object parameters = operationExecutor.generate(operation, presetValues);
 
         if(OperationStatus.ERROR == operation.getStatus())
@@ -54,8 +56,6 @@ public class OperationServiceImpl implements OperationService
             return execute(operation, presetValues);
         }
 
-        operation.setResult(OperationResult.open());
-
         if(presetValues.containsKey(RELOAD_CONTROL_NAME))
         {
             try
@@ -76,9 +76,11 @@ public class OperationServiceImpl implements OperationService
     @Override
     public Either<Object, OperationResult> execute(Operation operation, Map<String, Object> presetValues)
     {
+        operation.setResult(OperationResult.execute());
+
         Object parameters = operationExecutor.execute(operation, presetValues);
 
-        if(operation.getStatus() == OperationStatus.ERROR)
+        if(OperationStatus.ERROR == operation.getStatus())
         {
             try
             {
@@ -92,7 +94,9 @@ public class OperationServiceImpl implements OperationService
             }
 
             OperationResult invokeResult = operation.getResult();
-            operation.setResult(OperationResult.open());
+
+            operation.setResult(OperationResult.generate());
+
             Object newParameters = operationExecutor.generate(operation, presetValues);
 
             if(OperationStatus.ERROR == operation.getStatus())

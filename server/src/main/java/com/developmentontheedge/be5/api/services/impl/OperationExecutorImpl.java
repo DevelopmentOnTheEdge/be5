@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -12,7 +11,6 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
-import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -99,8 +97,6 @@ public class OperationExecutorImpl implements OperationExecutor
 
     private Object callInvoke(Operation operation, Object parameters)
     {
-        operation.setResult(OperationResult.progress());
-
         try
         {
             OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
@@ -122,7 +118,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 return parameters;
             }
 
-            if(OperationStatus.IN_PROGRESS == operation.getStatus())
+            if(OperationStatus.EXECUTE == operation.getStatus())
             {
                 operation.setResult(OperationResult.redirectToTable(
                     operation.getInfo().getEntityName(),
@@ -194,8 +190,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 throw Be5Exception.internal("Unknown action type '" + operationInfo.getType() + "'");
         }
 
-        operation.initialize(operationInfo, OperationResult.open(), records);
-        operation.setResult(OperationResult.progress());
+        operation.initialize(operationInfo, OperationResult.create(), records);
         injector.injectAnnotatedFields(operation);
 
         return operation;

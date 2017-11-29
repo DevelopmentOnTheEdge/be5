@@ -2,10 +2,12 @@ package com.developmentontheedge.be5.operation;
 
 public enum OperationStatus
 {
-    OPEN        ("open"),
+    CREATE      ("create"),
+    GENERATE    ("generate"),
+    EXECUTE     ("execute"),
     SCHEDULED   ("scheduled"),
     CANCELLED   ("cancelled"),
-    IN_PROGRESS ("in progress"),
+    //IN_PROGRESS ("in progress"),
     INTERRUPTING("interrupting"),
     INTERRUPTED ("interrupted"),
     FINISHED    ("finished"),
