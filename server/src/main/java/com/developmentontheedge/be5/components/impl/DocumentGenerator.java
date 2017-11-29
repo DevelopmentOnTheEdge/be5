@@ -2,10 +2,9 @@ package com.developmentontheedge.be5.components.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
 import com.developmentontheedge.be5.api.services.CoreUtils;
+import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
@@ -126,8 +125,12 @@ public class DocumentGenerator implements Runner
 
     private void sendQueryResponseError(Query query, Be5Exception e)
     {
+        String message = Be5Exception.getMessage(e);
+
+        message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
+
         res.sendErrorAsJson(
-                new ErrorModel("500", e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e)),
+                new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
         );

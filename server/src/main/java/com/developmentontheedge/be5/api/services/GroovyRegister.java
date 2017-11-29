@@ -85,6 +85,51 @@ public class GroovyRegister
             throw new RuntimeException( e );
         }
     }
+
+    public static String getErrorCodeLine(Throwable e, String code)
+    {
+        Throwable err = e;
+        int stackID = -1;
+        int lineID = -1;
+        do{
+            StackTraceElement[] stackTrace = err.getStackTrace();
+            for (int i = stackTrace.length -1; i >= 0; i--)
+            {
+                if(stackTrace[i].getFileName().endsWith(".groovy"))
+                {
+                    stackID = i;
+                    lineID = stackTrace[i].getLineNumber();
+                    break;
+                }
+            }
+            if(stackID == -1)err = err.getCause();
+        }while(err != null && stackID == -1);
+
+        if(stackID != -1)
+        {
+            StringBuilder sb = new StringBuilder("\n" + err.getStackTrace()[stackID].getClassName() + "." + err.getStackTrace()[stackID].getMethodName()
+                    + "(" + err.getStackTrace()[stackID].getFileName() + ":" + err.getStackTrace()[stackID].getLineNumber() + ")");
+
+            String lines[] = code.split("\\r?\\n");
+
+            sb.append("\n\n<code>");
+            for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
+            {
+                sb.append(String.format("%4d", i+1)).append(" | ");
+                if(lineID == i+1){
+                    sb.append("<span style=\"color: red;\">").append(lines[i]).append("</span>\n");
+                }else{
+                    sb.append(lines[i]).append("\n");
+                }
+            }
+            sb.append("</code>");
+
+            return sb.toString();
+        }else{
+            return "";
+        }
+    }
+
 //
 //    @SuppressWarnings( "unchecked" )
 //    public static List<String> toCompilationMessages(List errors0)

@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.OperationService;
@@ -76,7 +77,7 @@ public class Form implements Component
         {
             String message = Be5Exception.getMessage(e);
 
-            message += getErrorCodeLine(e, meta.getCode());
+            message += GroovyRegister.getErrorCodeLine(e, meta.getCode());
 
             res.sendErrorAsJson(
                     new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),
@@ -105,19 +106,6 @@ public class Form implements Component
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, link)
         );
-    }
-
-    private static String getErrorCodeLine(Throwable e, String code)
-    {
-        //String lines[] = code.split("\\r?\\n");
-
-        int id = 0;
-        if(e.getStackTrace()[0].getClassName().equals("org.codehaus.groovy.runtime.BytecodeInterface8"))
-        {
-            id = 1;
-        }
-        return "\n" + e.getStackTrace()[id].getClassName() + "." + e.getStackTrace()[id].getMethodName()
-                + "(" + e.getStackTrace()[id].getFileName() + ":" + e.getStackTrace()[id].getLineNumber() + ")";
     }
 
 }

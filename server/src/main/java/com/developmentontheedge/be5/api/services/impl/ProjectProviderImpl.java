@@ -101,7 +101,7 @@ public class ProjectProviderImpl implements ProjectProvider
     }
 
     @Override
-    public void reloadProject()
+    public synchronized void reloadProject()
     {
         this.dirty = true;
         getProject();
