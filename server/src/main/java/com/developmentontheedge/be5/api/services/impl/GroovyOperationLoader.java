@@ -72,7 +72,7 @@ public class GroovyOperationLoader
 
                 list.add(superOperationCanonicalName);
                 groovyOperationClasses.get(superOperationCanonicalName,
-                        k -> GroovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName));
+                        k -> GroovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName + ".groovy"));
                 return list;
             }
             return Collections.emptyList();
@@ -90,7 +90,7 @@ public class GroovyOperationLoader
         String simpleName = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
 
         return groovyOperationClasses.get(canonicalName, k ->
-                    GroovyRegister.parseClass( operationInfo.getCode(), simpleName ));
+                    GroovyRegister.parseClass( operationInfo.getCode(), simpleName + ".groovy" ));
     }
 
     String getSimpleSuperClassName(OperationInfo operationInfo)

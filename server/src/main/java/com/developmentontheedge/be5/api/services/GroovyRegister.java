@@ -3,16 +3,13 @@ package com.developmentontheedge.be5.api.services;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
-import org.codehaus.groovy.control.messages.Message;
-import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 
+//refactoring to service, move and union caches from operation, query
 public class GroovyRegister
 {
     private static GroovyClassLoader classLoader;
@@ -26,19 +23,8 @@ public class GroovyRegister
         return classLoader;
     }
 
-    public static Class parseClass( String text )
-    {
-        return getClassLoader().parseClass( text );
-    }
-
     public static Class parseClass( String text, String name )
     {
-//todo parse text and load extend operation first in dev mode ModuleLoader2.pathsToProjectsToHotReload.size() > 0
-//        try {
-//            getClassLoader().parseClass(Paths.get("C:\\Users\\Innokentiy\\workspace\\dote\\be5\\modules\\core\\src\\groovy\\operations\\system\\SessionVariablesEdit.groovy").toFile() );
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         return getClassLoader().parseClass( text, name );
     }
 
@@ -99,22 +85,22 @@ public class GroovyRegister
             throw new RuntimeException( e );
         }
     }
-
-    @SuppressWarnings( "unchecked" )
-    public static List<String> toCompilationMessages(List errors0)
-    {
-        List<Message> errors = (List<Message>)errors0;
-        List<String> messages = new ArrayList<>();
-        if (errors != null) {
-            for (Message error : errors) {
-                if (error instanceof SyntaxErrorMessage) {
-                    SyntaxErrorMessage syntaxError = (SyntaxErrorMessage) error;
-                    messages.add(syntaxError.getCause().getMessage());
-                }
-            }
-        }
-        return messages;
-    }
+//
+//    @SuppressWarnings( "unchecked" )
+//    public static List<String> toCompilationMessages(List errors0)
+//    {
+//        List<Message> errors = (List<Message>)errors0;
+//        List<String> messages = new ArrayList<>();
+//        if (errors != null) {
+//            for (Message error : errors) {
+//                if (error instanceof SyntaxErrorMessage) {
+//                    SyntaxErrorMessage syntaxError = (SyntaxErrorMessage) error;
+//                    messages.add(syntaxError.getCause().getMessage());
+//                }
+//            }
+//        }
+//        return messages;
+//    }
 
 //    public static boolean classHook( DatabaseConnector connector, Map<String, ?> map )
 //    {

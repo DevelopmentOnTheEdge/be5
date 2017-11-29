@@ -42,7 +42,7 @@ public class QueryRouter
         
         void onParametrizedTable(Query query, Map<String, String> parametersMap);
         
-        void onError(String message);
+        void onError(Query query, Throwable e);
     }
     
     public static QueryRouter on(Request req, Injector injector)
@@ -90,15 +90,10 @@ public class QueryRouter
                 runner.onStatic(query);
                 return;
             }
-            runner.onError("Unsupported static request '" + query.getQuery() + "'.");
+            runner.onError(query, new Exception("Unsupported static request '" + query.getQuery() + "'."));
             return;
         case D1:
-        // TODO check whether these cases are correct
         case D1_UNKNOWN:
-//        case D2:
-//        case CONTAINER:
-//        case CUSTOM:
-//        case JAVASCRIPT:
             if (meta.isParametrizedTable(query))
             {
                 runner.onParametrizedTable(query, parametersMap);
@@ -108,11 +103,16 @@ public class QueryRouter
                 runner.onTable(query, parametersMap);
             }
             return;
+        case D2:
+        case CONTAINER:
+        case CUSTOM:
+        case JAVASCRIPT:
+            throw Be5Exception.internal("Not support operation type: " + query.getType());
         case GROOVY:
             try
             {
                 Class aClass = groovyQueryClasses.get(query.getEntity() + query.getName(),
-                        k -> GroovyRegister.parseClass( query.getQuery() ));
+                        k -> GroovyRegister.parseClass( query.getQuery(), query.getFileName() ));
                 if(aClass != null) {
                     TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 
@@ -128,12 +128,16 @@ public class QueryRouter
             }
             catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
             {
-                throw Be5Exception.internal(e);
+                runner.onError(query, new UnsupportedOperationException( "Groovy feature has been excluded", e ));
+            }
+            catch( Throwable e )
+            {
+                runner.onError(query, e);
             }
             return;
+        default:
+            throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
-        
-        throw new AssertionError("Unknown action type '" + query.getType() + "'");
     }
     
 }

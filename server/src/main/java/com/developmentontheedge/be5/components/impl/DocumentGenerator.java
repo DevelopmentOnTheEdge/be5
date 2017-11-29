@@ -83,7 +83,7 @@ public class DocumentGenerator implements Runner
         String queryName = query.getName();
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
 
-        sendQueryResponseData(req, res, query, new StaticPagePresentation(localizedQueryTitle, content));
+        sendQueryResponseData(query, new StaticPagePresentation(localizedQueryTitle, content));
     }
 
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
@@ -97,25 +97,25 @@ public class DocumentGenerator implements Runner
     {
         try
         {
-            sendQueryResponseData(req, res, query, getTablePresentation(query, parametersMap));
+            sendQueryResponseData(query, getTablePresentation(query, parametersMap));
         }
         catch (Be5Exception e)
         {
-            sendQueryResponseError(req, res, query, e);
+            sendQueryResponseError(query, e);
         }
         catch (Throwable e)
         {
-            sendQueryResponseError(req, res, query, Be5Exception.internalInQuery(e, query));
+            sendQueryResponseError(query, Be5Exception.internalInQuery(e, query));
         }
     }
 
     @Override
     public void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel)
     {
-        sendQueryResponseData(req, res, query, getTablePresentation(query, parametersMap, tableModel));
+        sendQueryResponseData(query, getTablePresentation(query, parametersMap, tableModel));
     }
 
-    private void sendQueryResponseData(Request req, Response res, Query query, Object data)
+    private void sendQueryResponseData(Query query, Object data)
     {
         res.sendAsJson(
                 new ResourceData(TABLE_ACTION, data),
@@ -124,7 +124,7 @@ public class DocumentGenerator implements Runner
         );
     }
 
-    private void sendQueryResponseError(Request req, Response res, Query query, Be5Exception e)
+    private void sendQueryResponseError(Query query, Be5Exception e)
     {
         res.sendErrorAsJson(
                 new ErrorModel("500", e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e)),
@@ -203,9 +203,9 @@ public class DocumentGenerator implements Runner
     }
     
     @Override
-    public void onError(String message)
+    public void onError(Query query, Throwable e)
     {
-        res.sendError(message);
+        sendQueryResponseError(query, Be5Exception.internalInQuery(e, query));
     }
     
     private List<TableOperationPresentation> collectOperations(Query query) {

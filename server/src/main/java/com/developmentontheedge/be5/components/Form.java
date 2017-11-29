@@ -74,8 +74,12 @@ public class Form implements Component
         }
         catch (Be5Exception e)
         {
+            String message = Be5Exception.getMessage(e);
+
+            message += getErrorCodeLine(e, meta.getCode());
+
             res.sendErrorAsJson(
-                    new ErrorModel("500", e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e)),
+                    new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, link)
             );
@@ -103,5 +107,17 @@ public class Form implements Component
         );
     }
 
+    private static String getErrorCodeLine(Throwable e, String code)
+    {
+        //String lines[] = code.split("\\r?\\n");
+
+        int id = 0;
+        if(e.getStackTrace()[0].getClassName().equals("org.codehaus.groovy.runtime.BytecodeInterface8"))
+        {
+            id = 1;
+        }
+        return "\n" + e.getStackTrace()[id].getClassName() + "." + e.getStackTrace()[id].getMethodName()
+                + "(" + e.getStackTrace()[id].getFileName() + ":" + e.getStackTrace()[id].getLineNumber() + ")";
+    }
 
 }

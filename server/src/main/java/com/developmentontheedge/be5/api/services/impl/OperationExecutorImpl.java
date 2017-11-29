@@ -171,6 +171,18 @@ public class OperationExecutorImpl implements OperationExecutor
                     throw Be5Exception.internalInOperation(e, operationInfo.getModel());
                 }
                 break;
+            case OPERATION_TYPE_JAVA:
+                try
+                {
+                    operation = ( Operation ) Class.forName(operationInfo.getCode()).newInstance();
+                    break;
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                {
+                    throw Be5Exception.internalInOperation(new RuntimeException(
+                            "It is possible to use the 'file:' instead of the 'code:' " +
+                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo.getModel());
+                }
             case OPERATION_TYPE_JAVAFUNCTION:
             case OPERATION_TYPE_SQL:
             case OPERATION_TYPE_JAVASCRIPT:
@@ -179,16 +191,7 @@ public class OperationExecutorImpl implements OperationExecutor
             case OPERATION_TYPE_JAVADOTNET:
                 throw Be5Exception.internal("Not support operation type: " + operationInfo.getType());
             default:
-                try
-                {
-                    operation = ( Operation ) Class.forName(operationInfo.getCode()).newInstance();
-                }
-                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
-                {
-                    throw Be5Exception.internalInOperation(new RuntimeException(
-                            "It is possible to use the 'file:' instead of the 'code:' " +
-                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo.getModel());
-                }
+                throw Be5Exception.internal("Unknown action type '" + operationInfo.getType() + "'");
         }
 
         operation.initialize(operationInfo, OperationResult.open(), records);
