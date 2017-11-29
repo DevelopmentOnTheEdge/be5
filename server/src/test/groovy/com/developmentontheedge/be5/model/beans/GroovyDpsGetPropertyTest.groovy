@@ -6,7 +6,7 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 
 
-class GroovyDpsGetProperty extends Be5ProjectTest
+class GroovyDpsGetPropertyTest extends Be5ProjectTest
 {
     private GDynamicPropertySetSupport dps
 
