@@ -183,15 +183,26 @@ public class Be5Exception extends RuntimeException
 
     public static String getMessage(Throwable e)
     {
-        StringBuilder out = new StringBuilder(e.getMessage());
+        StringBuilder out = new StringBuilder(getThrowableMessage(e));
 
-        out.append(e.getCause() != null ? "\n" + e.getCause().getMessage() : "");
-
-        while(e.getCause() instanceof Be5Exception)
+        while(e instanceof Be5Exception && e.getCause() != null)
         {
             e = e.getCause();
-            out.append("\n").append(e.getCause() != null ? e.getCause().getMessage() : "");
+            out.append(getThrowableMessage(e));
         }
+
         return out.toString();
+    }
+
+    private static String getThrowableMessage(Throwable e)
+    {
+        if(e instanceof Be5Exception)
+        {
+            return e.getClass().getSimpleName() + ": " + e.getMessage() + "\n";
+        }
+        else
+        {
+            return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
+        }
     }
 }
