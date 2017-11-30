@@ -24,7 +24,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
@@ -36,8 +35,6 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class Form implements Component
 {
-    private static final Logger log = Logger.getLogger(Form.class.getName());
-
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
@@ -78,7 +75,7 @@ public class Form implements Component
         catch (Be5Exception e)
         {
             res.sendErrorAsJson(
-                    getErrorModel(e, meta.getCode()),
+                    getErrorModel(e, injector),
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, link)
             );
@@ -91,7 +88,7 @@ public class Form implements Component
             ErrorModel errorModel = null;
             if(operation.getResult().getStatus() == OperationStatus.ERROR)
             {
-                errorModel = getErrorModel((Be5Exception) operation.getResult().getDetails(), meta.getCode());
+                errorModel = getErrorModel((Be5Exception) operation.getResult().getDetails(), injector);
             }
 
             result = new FormPresentation(operation.getInfo(),
@@ -112,13 +109,13 @@ public class Form implements Component
         );
     }
 
-    private ErrorModel getErrorModel(Be5Exception e, String code)
+    private ErrorModel getErrorModel(Be5Exception e, Injector injector)
     {
         if (Utils.isAdminORDevMode())
         {
             String message = Be5Exception.getMessage(e);
 
-            message += GroovyRegister.getErrorCodeLine(e, code);
+            message += injector.get(GroovyRegister.class).getErrorCodeLine(e);
 
             return new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e));
         }

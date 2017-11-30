@@ -23,11 +23,13 @@ public class GroovyOperationLoader
     private final Cache<String, Class> groovyOperationClasses;
 
     private final Meta meta;
+    private final GroovyRegister groovyRegister;
 
     private Map<String, Operation> groovyOperationsMap;
 
-    public GroovyOperationLoader(Be5Caches be5Caches, Meta meta)
+    public GroovyOperationLoader(Be5Caches be5Caches, Meta meta, GroovyRegister groovyRegister)
     {
+        this.groovyRegister = groovyRegister;
         this.meta = meta;
 
         groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
@@ -57,6 +59,11 @@ public class GroovyOperationLoader
         groovyOperationsMap = newOperationMap;
     }
 
+    public Operation getByFullName(String name)
+    {
+        return groovyOperationsMap.get(name.replace("/", "."));
+    }
+
     List<String> preloadSuperOperation(OperationInfo operationInfo)
     {
         String simpleSuperClassName = getSimpleSuperClassName(operationInfo);
@@ -72,7 +79,7 @@ public class GroovyOperationLoader
 
                 list.add(superOperationCanonicalName);
                 groovyOperationClasses.get(superOperationCanonicalName,
-                        k -> GroovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName + ".groovy"));
+                        k -> groovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName + ".groovy"));
                 return list;
             }
             return Collections.emptyList();
@@ -83,14 +90,14 @@ public class GroovyOperationLoader
 
     public Class get(OperationInfo operationInfo)
     {
-        List<String> preloadSuperOperationList = preloadSuperOperation(operationInfo);
+        preloadSuperOperation(operationInfo);
         GroovyOperation groovyOperation = (GroovyOperation) operationInfo.getModel();
         String fileName = groovyOperation.getFileName();
         String canonicalName = fileName.replace("/", ".");
         String simpleName = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
 
         return groovyOperationClasses.get(canonicalName, k ->
-                    GroovyRegister.parseClass( operationInfo.getCode(), simpleName + ".groovy" ));
+                groovyRegister.parseClass( operationInfo.getCode(), simpleName + ".groovy" ));
     }
 
     String getSimpleSuperClassName(OperationInfo operationInfo)

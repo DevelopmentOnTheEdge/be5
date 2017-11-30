@@ -55,6 +55,7 @@ public class QueryRouter
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final Injector injector;
+    private final GroovyRegister groovyRegister;
     
     private QueryRouter(Request req, Injector injector)
     {
@@ -62,6 +63,7 @@ public class QueryRouter
         this.req = req;
         this.userAwareMeta = injector.get(UserAwareMeta.class);
         this.meta = injector.get(Meta.class);
+        this.groovyRegister = injector.get(GroovyRegister.class);
     }
     
     public void run(Runner runner)
@@ -112,7 +114,7 @@ public class QueryRouter
             try
             {
                 Class aClass = groovyQueryClasses.get(query.getEntity() + query.getName(),
-                        k -> GroovyRegister.parseClass( query.getQuery(), query.getFileName() ));
+                        k -> groovyRegister.parseClass( query.getQuery(), query.getFileName() ));
                 if(aClass != null) {
                     TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 

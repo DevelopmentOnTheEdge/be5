@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
@@ -7,34 +9,43 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 
-//refactoring to service, move and union caches from operation, query
+//move and union caches from operation, query
 public class GroovyRegister
 {
-    private static GroovyClassLoader classLoader;
+    private GroovyClassLoader classLoader;
 
-    static {
+    private Injector injector;
+
+    public GroovyRegister(Injector injector)
+    {
+        this.injector = injector;
         initClassLoader();
     }
 
-    public static GroovyClassLoader getClassLoader()
+    public GroovyClassLoader getClassLoader()
     {
         return classLoader;
     }
 
-    public static Class parseClass( String text, String name )
+    public Class parseClass( String text, String name )
     {
         return getClassLoader().parseClass( text, name );
     }
 
-    public static void initClassLoader()
+    public void initClassLoader()
     {
         classLoader = new GroovyClassLoader();
         addClassPaths();
     }
 
-    private static void addClassPaths()
+    private void addClassPaths()
     {
         ModuleLoader2.getPathsToProjectsToHotReload().forEach(
                 (name, path) -> classLoader.addClasspath(path.resolve("src/groovy/operations").toString())
@@ -86,50 +97,78 @@ public class GroovyRegister
         }
     }
 
-    public static String getErrorCodeLine(Throwable e, String code)
+    public String getErrorCodeLine(Throwable e)
     {
         Throwable err = e;
-        int stackID = -1;
-        int lineID = -1;
-        do{
+
+        Stack<Throwable> throwables = new Stack<>();
+        throwables.add(err);
+        while (err.getCause() != null)
+        {
+            throwables.add(err.getCause());
+            err = err.getCause();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (!throwables.empty())
+        {
+            err = throwables.pop();
+
             StackTraceElement[] stackTrace = err.getStackTrace();
-            for (int i = stackTrace.length -1; i >= 0; i--)
+            for (int i = 0; i < stackTrace.length; i++)
             {
-                if(stackTrace[i].getFileName().endsWith(".groovy"))
+                if(stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy"))
                 {
-                    stackID = i;
-                    lineID = stackTrace[i].getLineNumber();
+                    sb.append(getErrorCodeLinesForClass(stackTrace[i]));
                     break;
                 }
             }
-            if(stackID == -1)err = err.getCause();
-        }while(err != null && stackID == -1);
-
-        if(stackID != -1)
-        {
-            StringBuilder sb = new StringBuilder("\n" + err.getStackTrace()[stackID].getClassName() + "." + err.getStackTrace()[stackID].getMethodName()
-                    + "(" + err.getStackTrace()[stackID].getFileName() + ":" + err.getStackTrace()[stackID].getLineNumber() + ")");
-
-            String lines[] = code.split("\\r?\\n");
-
-            sb.append("\n\n<code>");
-            for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
-            {
-                sb.append(String.format("%4d", i+1)).append(" | ");
-                if(lineID == i+1){
-                    sb.append("<span style=\"color: red;\">").append(lines[i]).append("</span>\n");
-                }else{
-                    sb.append(lines[i]).append("\n");
-                }
-            }
-            sb.append("</code>");
-
-            return sb.toString();
-        }else{
-            return "";
         }
+
+        return sb.toString();
     }
 
+    private String getErrorCodeLinesForClass(StackTraceElement e)
+    {
+        int lineID = e.getLineNumber();
+        StringBuilder sb = new StringBuilder("\n" + e.getClassName() + "." + e.getMethodName()
+                + "(" + e.getFileName() + ":" + e.getLineNumber() + ")");
+
+        String code = injector.get(GroovyOperationLoader.class)
+                .getByFullName(e.getClassName() + ".groovy")
+                .getCode();
+        String lines[] = escapeHTML(code).split("\\r?\\n");
+
+        sb.append("\n\n<code>");
+        for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
+        {
+            sb.append(String.format("%4d", i+1)).append(" | ");
+            if(lineID == i+1){
+                sb.append("<span style=\"color: red;\">").append(lines[i]).append("</span>\n");
+            }else{
+                sb.append(lines[i]).append("\n");
+            }
+        }
+        sb.append("</code>");
+
+        return sb.toString();
+    }
+
+    private static String escapeHTML(String s)
+    {
+        StringBuilder out = new StringBuilder(Math.max(16, s.length()));
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
+                out.append("&#");
+                out.append((int) c);
+                out.append(';');
+            } else {
+                out.append(c);
+            }
+        }
+        return out.toString();
+    }
 //
 //    @SuppressWarnings( "unchecked" )
 //    public static List<String> toCompilationMessages(List errors0)

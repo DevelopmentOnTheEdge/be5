@@ -127,7 +127,7 @@ public class DocumentGenerator implements Runner
     {
         String message = Be5Exception.getMessage(e);
 
-        message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
+        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
         res.sendErrorAsJson(
                 new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),

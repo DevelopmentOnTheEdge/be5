@@ -21,6 +21,7 @@ public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
     private Be5Caches be5Caches;
+    private GroovyRegister groovyRegister;
     private Injector injector;
     private Map<String, Project> initModulesMap;
 
@@ -30,11 +31,11 @@ public class ProjectProviderImpl implements ProjectProvider
 
     //private DatabaseService databaseService;
 
-    public ProjectProviderImpl(Injector injector, Be5Caches be5Caches)
+    public ProjectProviderImpl(Injector injector, Be5Caches be5Caches, GroovyRegister groovyRegister)
     {
-        this.injector = injector;//todo remove injector, use @Inject, fix resolve
+        this.injector = injector;
         this.be5Caches = be5Caches;
-        //this.databaseService = databaseService;
+        this.groovyRegister = groovyRegister;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class ProjectProviderImpl implements ProjectProvider
                 injector.get(UserAwareMeta.class).compileLocalizations();//todo refactoring and add to be5Caches
                 injector.get(GroovyOperationLoader.class).initOperationMap();//todo refactoring and add to be5Caches
 
-                GroovyRegister.initClassLoader();
+                groovyRegister.initClassLoader();
                 updateDatabaseSystem();
             }
         }

@@ -9,6 +9,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
@@ -35,7 +36,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     public DynamicProperty add(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = DPSAttributes.class) Closure cl)
     {
         DPSAttributes builder = getBuilder(cl);
-
+        Objects.requireNonNull(builder.getName());
         DynamicProperty property = new DynamicProperty(builder.getName(), builder.getTYPE());
         add(property);
         return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
