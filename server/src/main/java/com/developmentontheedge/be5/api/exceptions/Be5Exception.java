@@ -181,8 +181,9 @@ public class Be5Exception extends RuntimeException
         return sw.toString();
     }
 
-    public static String getMessage(Throwable e)
+    public static String getMessage(Throwable err)
     {
+        Throwable e = err;
         StringBuilder out = new StringBuilder(getThrowableMessage(e));
 
         while(e instanceof Be5Exception && e.getCause() != null)
@@ -190,8 +191,22 @@ public class Be5Exception extends RuntimeException
             e = e.getCause();
             out.append(getThrowableMessage(e));
         }
+        if(e instanceof NullPointerException)
+        {
+            StackTraceElement[] stackTrace = e.getStackTrace();
+            for (int i = 0; i < Math.min(stackTrace.length, 2); i++)
+            {
+                out.append(getFullStackTraceLine(stackTrace[i])).append("\n");
+            }
+        }
 
         return out.toString();
+    }
+
+    public static String getFullStackTraceLine(StackTraceElement e)
+    {
+        return e.getClassName() + "." + e.getMethodName()
+                + "(" + e.getFileName() + ":" + e.getLineNumber() + ")";
     }
 
     private static String getThrowableMessage(Throwable e)
@@ -205,4 +220,6 @@ public class Be5Exception extends RuntimeException
             return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
         }
     }
+
+
 }

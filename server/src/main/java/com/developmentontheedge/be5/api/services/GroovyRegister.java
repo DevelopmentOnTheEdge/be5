@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
@@ -9,10 +10,6 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
 
 
@@ -131,8 +128,7 @@ public class GroovyRegister
     private String getErrorCodeLinesForClass(StackTraceElement e)
     {
         int lineID = e.getLineNumber();
-        StringBuilder sb = new StringBuilder("\n" + e.getClassName() + "." + e.getMethodName()
-                + "(" + e.getFileName() + ":" + e.getLineNumber() + ")");
+        StringBuilder sb = new StringBuilder("\n" + Be5Exception.getFullStackTraceLine(e));
 
         String code = injector.get(GroovyOperationLoader.class)
                 .getByFullName(e.getClassName() + ".groovy")

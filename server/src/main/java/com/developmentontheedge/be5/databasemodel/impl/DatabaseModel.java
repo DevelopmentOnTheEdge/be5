@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.databasemodel.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
