@@ -470,20 +470,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private List<DynamicPropertySet> listDps(String finalSql)
     {
-        try
-        {
-            return db.selectList(finalSql, DpsRecordAdapter::createDps);
-        }
-        catch (Throwable e)
-        {
-            Be5Exception be5Exception = Be5Exception.internalInQuery(e, query);
-            log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
-
-            DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
-            dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
-            dynamicProperties.add(new DynamicProperty("error", String.class, Utils.isAdminORDevMode() ? Be5Exception.getMessage(e) : "error"));
-            return Collections.singletonList(dynamicProperties);
-        }
+        return db.selectList(finalSql, DpsRecordAdapter::createDps);
     }
 
 //    private void processMeta(Object value, Map<String, Map<String, String>> meta)
@@ -572,9 +559,26 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             return Collections.emptyList();
         }
 
-        String finalSQL = new Formatter().format(subQuery.getQuery(), context, parserContext);
+        String finalSql = new Formatter().format(subQuery.getQuery(), context, parserContext);
 
-        List<DynamicPropertySet> dynamicPropertySets = listDps(finalSQL);
+        List<DynamicPropertySet> dynamicPropertySets;
+
+        try
+        {
+            dynamicPropertySets = listDps(finalSql);
+        }
+        catch (Throwable e)
+        {
+            //TODO only for Document presentation, for operations must be error throw
+            Be5Exception be5Exception = Be5Exception.internalInQuery(e, query);
+            log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
+
+            DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
+            dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
+            dynamicProperties.add(new DynamicProperty("error", String.class, Utils.isAdminORDevMode() ? Be5Exception.getMessage(e) : "error"));
+            dynamicPropertySets =  Collections.singletonList(dynamicProperties);
+        }
+
 
 //        TableModel table = TableModel
 //                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parametersMap, session, false, injector)
