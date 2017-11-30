@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.components.impl.model;
 
-import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -482,7 +481,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
             dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
-            dynamicProperties.add(new DynamicProperty("error", String.class, Utils.showMsg() ? Be5Exception.getMessage(e) : "error"));
+            dynamicProperties.add(new DynamicProperty("error", String.class, Utils.isAdminORDevMode() ? Be5Exception.getMessage(e) : "error"));
             return Collections.singletonList(dynamicProperties);
         }
     }

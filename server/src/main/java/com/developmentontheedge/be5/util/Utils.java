@@ -674,7 +674,7 @@ public class Utils
         return def;
     }
 
-    public static boolean showMsg()
+    public static boolean isAdminORDevMode()
     {
         return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
     }

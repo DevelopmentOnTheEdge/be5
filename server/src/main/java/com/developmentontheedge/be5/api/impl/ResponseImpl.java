@@ -156,7 +156,7 @@ public class ResponseImpl implements Response
     public void sendError(Be5Exception e)
     {
         ErrorModel errorModel;
-        if(Utils.showMsg())
+        if(Utils.isAdminORDevMode())
         {
             errorModel = new ErrorModel(e);
         }
@@ -172,7 +172,7 @@ public class ResponseImpl implements Response
     public void sendAccessDenied(Be5Exception e)
     {
         response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        String msg = Utils.showMsg() ? e.getMessage() : "";
+        String msg = Utils.isAdminORDevMode() ? e.getMessage() : "";
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
     }
 

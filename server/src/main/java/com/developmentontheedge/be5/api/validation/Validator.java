@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.validation;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -57,7 +58,7 @@ public class Validator
             if(!(property.getValue() instanceof Object[]))
             {
                 setError(property, "Value must be array (MULTIPLE_SELECTION_LIST)");
-                throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST) - " + toStringProperty(property));
+                throw Be5Exception.internal("Value must be array (MULTIPLE_SELECTION_LIST)" + toStringProperty(property));
             }
 
             Object[] values = (Object[]) property.getValue();
@@ -73,8 +74,9 @@ public class Validator
             }
             if(values.length == 0 && !property.isCanBeNull())
             {
-                setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
-                throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
+                String msg = userAwareMeta.getLocalizedValidationMessage("This field is required.");
+                setError(property, msg);
+                throw new IllegalArgumentException(msg + toStringProperty(property));
             }
             property.setValue(resValues);
         }
@@ -93,8 +95,9 @@ public class Validator
                 }
                 else
                 {
-                    setError(property, userAwareMeta.getLocalizedValidationMessage("This field is required."));
-                    throw new IllegalArgumentException("This field is required. - " + toStringProperty(property));
+                    String msg = userAwareMeta.getLocalizedValidationMessage("This field is required.");
+                    setError(property, msg);
+                    throw new IllegalArgumentException(msg + toStringProperty(property));
                 }
             }
 
@@ -106,7 +109,7 @@ public class Validator
             {
                 String msg = "Error, value must be a " + property.getType().getName();
                 setError(property, msg);
-                throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
+                throw new IllegalArgumentException(msg + toStringProperty(property));
             }
 
             checkValueInTags(property, property.getValue());
@@ -122,7 +125,7 @@ public class Validator
             if(Arrays.stream(tags).noneMatch(item -> (item)[0].toString().equals(value.toString())))
             {
                 setError(property, "Value is not contained in tags");
-                throw new IllegalArgumentException("Value is not contained in tags - " + toStringProperty(property));
+                throw new IllegalArgumentException("Value is not contained in tags" + toStringProperty(property));
             }
         }
     }
@@ -183,7 +186,7 @@ public class Validator
             }catch (RuntimeException ignore){}
 
             setError(property, msg);
-            throw new NumberFormatException(msg + " - " + toStringProperty(property));
+            throw new NumberFormatException(msg + toStringProperty(property));
         }
 
         try
@@ -196,7 +199,7 @@ public class Validator
             String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid number.");
             //добавить информацию о конкресном типе - ограничения type.getName();
             setError(property, msg);
-            throw new NumberFormatException(msg + " - " + toStringProperty(property));
+            throw new NumberFormatException(msg + toStringProperty(property));
         }
 
         if (type == Boolean.class)  return Boolean.parseBoolean(value);
@@ -210,7 +213,7 @@ public class Validator
         {
             String msg = userAwareMeta.getLocalizedValidationMessage("Please enter a valid date.");
             setError(property, msg);
-            throw new IllegalArgumentException(msg + " - " + toStringProperty(property));
+            throw new IllegalArgumentException(msg + toStringProperty(property));
         }
 
         if (type == String.class)return value;
@@ -225,7 +228,10 @@ public class Validator
         {
             for (DynamicProperty property : (DynamicPropertySet)parameters)
             {
-                if (isError(property)) throw new IllegalArgumentException(toStringProperty(property));
+                if (isError(property))
+                {
+                    throw new IllegalArgumentException(property.getAttribute("message") + toStringProperty(property));
+                }
             }
         }
     }
@@ -253,6 +259,7 @@ public class Validator
 
     private String toStringProperty(DynamicProperty property)
     {
+        if(!Utils.isAdminORDevMode())return "";
         String value;
         if(property.getValue() != null)
         {
@@ -263,7 +270,7 @@ public class Validator
         {
             value = "null";
         }
-        return "["
+        return " - ["
                 + " name: '"  + property.getName()
                 + "', type: "  + property.getType()
                 + ", value: " + value
