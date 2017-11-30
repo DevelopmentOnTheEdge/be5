@@ -15,8 +15,10 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Arrays;
@@ -75,12 +77,8 @@ public class Form implements Component
         }
         catch (Be5Exception e)
         {
-            String message = Be5Exception.getMessage(e);
-
-            message += GroovyRegister.getErrorCodeLine(e, meta.getCode());
-
             res.sendErrorAsJson(
-                    new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),
+                    getErrorModel(e, meta.getCode()),
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, link)
             );
@@ -90,11 +88,17 @@ public class Form implements Component
         Object result;
         if(generate.isFirst())
         {
+            ErrorModel errorModel = null;
+            if(operation.getResult().getStatus() == OperationStatus.ERROR)
+            {
+                errorModel = getErrorModel((Be5Exception) operation.getResult().getDetails(), meta.getCode());
+            }
+
             result = new FormPresentation(operation.getInfo(),
                     userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                     Arrays.stream(operation.getRecords()).collect(Collectors.joining(",")),
                     JsonFactory.bean(generate.getFirst()), operation.getLayout(),
-                    operation.getResult());
+                    operation.getResult(), errorModel);
         }
         else
         {
@@ -106,6 +110,22 @@ public class Form implements Component
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, link)
         );
+    }
+
+    private ErrorModel getErrorModel(Be5Exception e, String code)
+    {
+        if (Utils.isAdminORDevMode())
+        {
+            String message = Be5Exception.getMessage(e);
+
+            message += GroovyRegister.getErrorCodeLine(e, code);
+
+            return new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e));
+        }
+        else
+        {
+            return null;
+        }
     }
 
 }

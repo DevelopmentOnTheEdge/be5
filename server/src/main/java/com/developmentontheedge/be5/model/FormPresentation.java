@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.model;
 
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 
 import javax.json.JsonObject;
-import java.util.Map;
 
 public class FormPresentation
 {
@@ -17,22 +17,10 @@ public class FormPresentation
     public final JsonObject bean;
     public final Object layout;
     public final OperationResult operationResult;
-
-    public FormPresentation(String entity, String query, String operation, String title, String selectedRows,
-                            JsonObject bean, Object layout, OperationResult operationResult)
-    {
-        this.entity = entity;
-        this.query = query;
-        this.operation = operation;
-        this.title = title;
-        this.selectedRows = selectedRows;
-        this.bean = bean;
-        this.layout = layout;
-        this.operationResult = operationResult;
-    }
+    public final ErrorModel errorModel;
 
     public FormPresentation(OperationInfo operationInfo, String title, String selectedRows,
-                            JsonObject bean, Object layout, OperationResult operationResult)
+                            JsonObject bean, Object layout, OperationResult operationResult, ErrorModel errorModel)
     {
         this.entity = operationInfo.getEntityName();
         this.query = operationInfo.getQueryName();
@@ -42,6 +30,7 @@ public class FormPresentation
         this.bean = bean;
         this.layout = layout;
         this.operationResult = operationResult;
+        this.errorModel = errorModel;
     }
 
     public String getEntity()
@@ -79,7 +68,13 @@ public class FormPresentation
         return layout;
     }
 
-    public OperationResult getOperationResult() {
+    public OperationResult getOperationResult()
+    {
         return operationResult;
+    }
+
+    public ErrorModel getErrorModel()
+    {
+        return errorModel;
     }
 }
