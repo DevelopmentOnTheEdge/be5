@@ -139,11 +139,11 @@ public class GroovyRegister
         sb.append("\n\n<code>");
         for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
         {
-            sb.append(String.format("%4d", i+1)).append(" | ");
+            String lineNumber = String.format("%4d", i+1)+" | ";
             if(lineID == i+1){
-                sb.append("<span style=\"color: red;\">").append(lines[i]).append("</span>\n");
+                sb.append("<span style=\"color: #e00000;\">").append(lineNumber).append(lines[i]).append("</span>\n");
             }else{
-                sb.append(lines[i]).append("\n");
+                sb.append(lineNumber).append(lines[i]).append("\n");
             }
         }
         sb.append("</code>");
