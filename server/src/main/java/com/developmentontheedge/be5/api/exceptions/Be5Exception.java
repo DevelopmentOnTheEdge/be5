@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.exceptions;
 
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.util.Utils;
 
 
 import java.io.PrintWriter;
@@ -200,7 +201,7 @@ public class Be5Exception extends RuntimeException
             }
         }
 
-        return out.toString();
+        return Utils.escapeHTML(out.toString());
     }
 
     public static String getFullStackTraceLine(StackTraceElement e)
@@ -220,6 +221,5 @@ public class Be5Exception extends RuntimeException
             return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
         }
     }
-
 
 }

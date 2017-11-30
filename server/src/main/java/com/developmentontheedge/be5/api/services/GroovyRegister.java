@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.util.Utils;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -133,7 +134,7 @@ public class GroovyRegister
         String code = injector.get(GroovyOperationLoader.class)
                 .getByFullName(e.getClassName() + ".groovy")
                 .getCode();
-        String lines[] = escapeHTML(code).split("\\r?\\n");
+        String lines[] = Utils.escapeHTML(code).split("\\r?\\n");
 
         sb.append("\n\n<code>");
         for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)
@@ -150,21 +151,6 @@ public class GroovyRegister
         return sb.toString();
     }
 
-    private static String escapeHTML(String s)
-    {
-        StringBuilder out = new StringBuilder(Math.max(16, s.length()));
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
-                out.append("&#");
-                out.append((int) c);
-                out.append(';');
-            } else {
-                out.append(c);
-            }
-        }
-        return out.toString();
-    }
 //
 //    @SuppressWarnings( "unchecked" )
 //    public static List<String> toCompilationMessages(List errors0)
