@@ -5,6 +5,8 @@ import static com.google.common.base.Preconditions.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,8 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.gson.Gson;
+
+import javax.inject.Provider;
 
 
 public class Be5Injector implements Injector
@@ -135,7 +139,7 @@ public class Be5Injector implements Injector
 
         return service;
     }
-    
+
     private <T> T instantiate(Class<?> implementationClass, List<Class<?>> stack) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
         checkState(implementationClass != null);
@@ -152,11 +156,21 @@ public class Be5Injector implements Injector
         @SuppressWarnings("unchecked") // safe
         Constructor<T> constructor = (Constructor<T>) constructors[0];
         Class<?>[] parameterTypes = constructor.getParameterTypes();
+        Type[] genericParameterTypes = constructor.getGenericParameterTypes();
         List<Object> resolvedParameters = new ArrayList<>();
         
-        for (Class<?> parameterType : parameterTypes)
+        for (int i = 0 ;i < parameterTypes.length; i++)
         {
-            resolvedParameters.add(get(parameterType, stack));
+            Class<?> parameterType = parameterTypes[i];
+            if(parameterType == Provider.class)
+            {
+                String typeName = ((ParameterizedType) genericParameterTypes[i]).getActualTypeArguments()[0].getTypeName();
+                resolvedParameters.add(new ProviderImpl<>(this, loadClass(typeName)));
+            }
+            else
+            {
+                resolvedParameters.add(get(parameterType, stack));
+            }
         }
         
         return constructor.newInstance(resolvedParameters.toArray());
@@ -269,4 +283,17 @@ public class Be5Injector implements Injector
     {
         return stage;
     }
+
+    private Class<?> loadClass(String path)
+    {
+        try
+        {
+            return Class.forName(path);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

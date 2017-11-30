@@ -2,13 +2,13 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.util.Utils;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import javax.inject.Provider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
@@ -19,11 +19,11 @@ public class GroovyRegister
 {
     private GroovyClassLoader classLoader;
 
-    private Injector injector;
+    private Provider<GroovyOperationLoader> groovyOperationLoaderProvider;
 
-    public GroovyRegister(Injector injector)
+    public GroovyRegister(Provider<GroovyOperationLoader> groovyOperationLoaderProvider)
     {
-        this.injector = injector;
+        this.groovyOperationLoaderProvider = groovyOperationLoaderProvider;
         initClassLoader();
     }
 
@@ -131,7 +131,7 @@ public class GroovyRegister
         int lineID = e.getLineNumber();
         StringBuilder sb = new StringBuilder("\n" + Be5Exception.getFullStackTraceLine(e));
 
-        String code = injector.get(GroovyOperationLoader.class)
+        String code = groovyOperationLoaderProvider.get()
                 .getByFullName(e.getClassName() + ".groovy")
                 .getCode();
         String lines[] = Utils.escapeHTML(code).split("\\r?\\n");
