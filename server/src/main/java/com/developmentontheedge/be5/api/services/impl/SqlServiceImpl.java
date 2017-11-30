@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
@@ -18,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -127,7 +127,8 @@ public class SqlServiceImpl implements SqlService
         }
         catch (SQLException e)
         {
-            throw Be5Exception.internal(e);
+            log.log(Level.SEVERE, "", e);
+            throw new RuntimeException(e);
         }
         finally
         {

@@ -82,7 +82,7 @@ public class SqlServiceTest extends Be5ProjectDBTest
         assertEquals(null, id);
     }
 
-    @Test(expected = Be5Exception.class)
+    @Test(expected = RuntimeException.class)
     public void testBeanHandlerError() {
         TestPerson id = db.query("SELECT id FROM2 persons WHERE name = ?",
                 TestPerson.beanHandler, "notContainUser");
