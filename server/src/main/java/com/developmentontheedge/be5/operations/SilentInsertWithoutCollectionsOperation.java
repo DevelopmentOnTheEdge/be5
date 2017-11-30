@@ -26,8 +26,8 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
 
         Entity entity = getInfo().getEntity();
 
-        dpsHelper.checkDpsColumns(entity, (DynamicPropertySet) parameters);
         dpsHelper.addInsertSpecialColumns(entity, dps);
+        dpsHelper.checkDpsColumns(entity, dps);
 
         db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
     }

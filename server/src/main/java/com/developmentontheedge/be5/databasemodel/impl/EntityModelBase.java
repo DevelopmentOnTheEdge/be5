@@ -289,8 +289,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         Objects.requireNonNull(dps);
 
         validator.checkErrorAndCast(dps);
-        dpsHelper.checkDpsColumns(entity, dps);
+
         dpsHelper.addInsertSpecialColumns(entity, dps);
+        dpsHelper.checkDpsColumns(entity, dps);
 
         Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
 
