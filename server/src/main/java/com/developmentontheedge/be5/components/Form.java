@@ -86,7 +86,7 @@ public class Form implements Component
         if(generate.isFirst())
         {
             ErrorModel errorModel = null;
-            if(operation.getResult().getStatus() == OperationStatus.ERROR )
+            if(operation.getResult().getStatus() == OperationStatus.ERROR && UserInfoHolder.isAdminOrSysDev())
             {
                 errorModel = getErrorModel((Throwable)operation.getResult().getDetails(), injector);
             }
