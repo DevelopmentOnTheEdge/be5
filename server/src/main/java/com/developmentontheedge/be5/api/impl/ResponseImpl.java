@@ -6,13 +6,13 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.util.Utils;
 
 
 public class ResponseImpl implements Response
@@ -156,7 +156,7 @@ public class ResponseImpl implements Response
     public void sendError(Be5Exception e)
     {
         ErrorModel errorModel;
-        if(Utils.isAdminORDevMode())
+        if(UserInfoHolder.isAdminOrSysDev())
         {
             errorModel = new ErrorModel(e);
         }
@@ -172,7 +172,7 @@ public class ResponseImpl implements Response
     public void sendAccessDenied(Be5Exception e)
     {
         response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        String msg = Utils.isAdminORDevMode() ? e.getMessage() : "";
+        String msg = UserInfoHolder.isAdminOrSysDev() ? e.getMessage() : "";
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
     }
 

@@ -575,7 +575,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
             dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
-            dynamicProperties.add(new DynamicProperty("error", String.class, Utils.isAdminORDevMode() ? Be5Exception.getMessage(e) : "error"));
+            dynamicProperties.add(new DynamicProperty("error", String.class, UserInfoHolder.isAdminOrSysDev() ? Be5Exception.getMessage(e) : "error"));
             dynamicPropertySets =  Collections.singletonList(dynamicProperties);
         }
 

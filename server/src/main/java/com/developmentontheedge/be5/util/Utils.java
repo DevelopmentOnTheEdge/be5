@@ -673,11 +673,11 @@ public class Utils
         }
         return def;
     }
-
-    public static boolean isAdminORDevMode()
-    {
-        return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
-    }
+//
+//    public static boolean isAdminORDevMode()
+//    {
+//        return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
+//    }
 
     public static String escapeHTML(String s)
     {

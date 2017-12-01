@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.env.Injector;
@@ -18,7 +19,6 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.JsonUtils;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Arrays;
@@ -86,9 +86,9 @@ public class Form implements Component
         if(generate.isFirst())
         {
             ErrorModel errorModel = null;
-            if(operation.getResult().getStatus() == OperationStatus.ERROR)
+            if(operation.getResult().getStatus() == OperationStatus.ERROR )
             {
-                errorModel = getErrorModel((Be5Exception) operation.getResult().getDetails(), injector);
+                errorModel = getErrorModel((Throwable)operation.getResult().getDetails(), injector);
             }
 
             result = new FormPresentation(operation.getInfo(),
@@ -109,20 +109,13 @@ public class Form implements Component
         );
     }
 
-    private ErrorModel getErrorModel(Be5Exception e, Injector injector)
+    private ErrorModel getErrorModel(Throwable e, Injector injector)
     {
-        if (Utils.isAdminORDevMode())
-        {
-            String message = Be5Exception.getMessage(e);
+        String message = Be5Exception.getMessage(e);
 
-            message += injector.get(GroovyRegister.class).getErrorCodeLine(e);
+        if(UserInfoHolder.isAdminOrSysDev())message += injector.get(GroovyRegister.class).getErrorCodeLine(e);
 
-            return new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e));
-        }
-        else
-        {
-            return null;
-        }
+        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.exceptions;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.Utils;
@@ -170,16 +171,20 @@ public class Be5Exception extends RuntimeException
 
     public static String exceptionAsString(Throwable e)
     {
-        StringWriter sw = new StringWriter();
-        if(e instanceof Be5Exception && e.getCause() != null)
+        if(UserInfoHolder.isAdminOrSysDev())
         {
-            e.getCause().printStackTrace(new PrintWriter(sw));
+            StringWriter sw = new StringWriter();
+            if (e instanceof Be5Exception && e.getCause() != null)
+            {
+                e.getCause().printStackTrace(new PrintWriter(sw));
+            } else
+            {
+                e.printStackTrace(new PrintWriter(sw));
+            }
+            return sw.toString();
+        }else{
+            return null;
         }
-        else
-        {
-            e.printStackTrace(new PrintWriter(sw));
-        }
-        return sw.toString();
     }
 
     public static String getMessage(Throwable err)

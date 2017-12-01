@@ -63,7 +63,7 @@ class OperationModelBaseTest extends Be5ProjectTest
     void generateErrorInPropertyOnExecute()
     {
         expectedEx.expect(IllegalArgumentException.class)
-        expectedEx.expectMessage("[ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]")
+        expectedEx.expectMessage("Error in property (getParameters)")
         executeAndCheck('generateErrorInProperty')
     }
 
@@ -87,7 +87,7 @@ class OperationModelBaseTest extends Be5ProjectTest
     void executeErrorInProperty()
     {
         expectedEx.expect(RuntimeException.class)
-        expectedEx.expectMessage("[ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]")
+        expectedEx.expectMessage("Error in property (invoke)")
         executeAndCheck('executeErrorInProperty')
     }
 
