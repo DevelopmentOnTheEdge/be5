@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 
 import java.util.logging.Logger;
 
+
 public class Login implements Component
 {
     private static final Logger log = Logger.getLogger(Login.class.getName());
@@ -21,7 +22,11 @@ public class Login implements Component
         {
             this.loggedIn = loggedIn;
         }
-        
+
+        public boolean isLoggedIn()
+        {
+            return loggedIn;
+        }
     }
     
     @Override
