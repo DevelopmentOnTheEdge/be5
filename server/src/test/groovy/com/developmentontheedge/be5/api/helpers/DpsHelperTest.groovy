@@ -16,29 +16,31 @@ import static org.junit.Assert.*
 
 class DpsHelperTest extends Be5ProjectDBTest
 {
-    @Inject private DpsHelper dpsHelper
-    @Inject private Meta meta
+    @Inject DpsHelper dpsHelper
+    @Inject Meta meta
 
     DynamicPropertySet dps
 
     @Before
-    void before(){
+    void before()
+    {
         dps = new DynamicPropertySetSupport()
     }
 
     @Test
-    void getDpsWithoutAutoIncrementTest(){
+    void getDpsWithoutAutoIncrementTest()
+    {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"))
         assertEquals "{" +
-            "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
+                "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
                 "'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
-            "'/CODE':{'displayName':'Код'}," +
-            "'/payable':{'displayName':'Оплачиваемая','canBeNull':true," +
+                "'/CODE':{'displayName':'Код'}," +
+                "'/payable':{'displayName':'Оплачиваемая','canBeNull':true," +
                 "'tagList':[['yes','да'],['no','нет']]}," +
-            "'/admlevel':{'displayName':'Уроверь'," +
+                "'/admlevel':{'displayName':'Уроверь'," +
                 "'tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}," +
-            "'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}" +
-        "}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+                "'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}" +
+                "}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
@@ -117,7 +119,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"))
         dps.setValue("name", "TestName")
-        assertArrayEquals( [null,null,"TestName",null,null,null,null,"no"] as Object[], dpsHelper.getValues(dps))
+        assertArrayEquals([null, null, "TestName", null, null, null, null, "no"] as Object[], dpsHelper.getValues(dps))
     }
 
     @Test
@@ -179,4 +181,15 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
+
+    @Test
+    void getAsMapTest()
+    {
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+
+        assertEquals([CODE:null, payable:"yes", test: 2], dpsHelper.getAsMap(dps) << [test: 2])
+
+        assertEquals([CODE:"12", payable:"yes"], dpsHelper.getAsMap(dps, [CODE:"12"]))
+    }
+
 }

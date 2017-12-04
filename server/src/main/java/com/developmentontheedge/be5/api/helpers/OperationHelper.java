@@ -614,12 +614,4 @@ public class OperationHelper
         return stockArr;
     }
 
-    public Map<String, Object> getValues(DynamicPropertySet dps, Map<String, Object> presetValues)
-    {
-        Map<String, Object> values = new HashMap<>();
-        dps.forEach(p -> values.put(p.getName(), p.getValue()));
-        presetValues.forEach(values::put);
-
-        return values;
-    }
 }

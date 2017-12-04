@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -722,5 +723,21 @@ public class DpsHelper
         addDpWithLabelANDNotSubmitted(dps, text);
         dps.getProperty("infoLabel").setAttribute(BeanInfoConstants.RAW_VALUE, true);
         return dps;
+    }
+
+    public Map<String, Object> getAsMap(DynamicPropertySet dps, Map<String, Object> presetValues)
+    {
+        Map<String, Object> values = getAsMap(dps);
+        values.putAll(presetValues);
+
+        return values;
+    }
+
+    public Map<String, Object> getAsMap(DynamicPropertySet dps)
+    {
+        Map<String, Object> values = new HashMap<>();
+        dps.forEach(p -> values.put(p.getName(), p.getValue()));
+
+        return values;
     }
 }
