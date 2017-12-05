@@ -105,8 +105,10 @@ public class MainServlet implements Filter
         if (!matcher.matches())
         {
             // This prevents triggering engine executions for resource URLs
-            log.log(Level.INFO, requestUri + " ContextPath=" + request.getContextPath());
-            if (requestUri.startsWith(request.getContextPath() + "/static/")
+            log.log(Level.INFO, requestUri + " ContextPath=" + request.getContextPath());//todo remove
+
+            String contextPath = request.getContextPath();
+            if (requestUri.startsWith( contextPath + (contextPath.endsWith("/") ? "" : "/") + "static/")
                     || requestUri.contains("favicon.ico"))//|| requestUri.startsWith("/static/")
             {
                 return false;
