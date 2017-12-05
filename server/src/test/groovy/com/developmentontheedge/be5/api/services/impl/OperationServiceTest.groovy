@@ -67,6 +67,10 @@ class OperationServiceTest extends SqlMockOperationTest
                 operation.getResult().getMessage()
     }
 
+    /**
+     * выдать ошибку, не переходя на форму
+     * (нужно доделать фронтенд чтобы небыло перехода на операцию при возвращении Either.second)
+     */
     @Test
     void generateErrorStatus()
     {
@@ -149,7 +153,17 @@ class OperationServiceTest extends SqlMockOperationTest
     void generateCallTest()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = generateOperation(operation, ['name': 'generateCall']).getFirst()
+        generateOperation(operation, ['name': 'generateCall']).getFirst()
+    }
+
+    @Test
+    void executeOperationWithoutParams()
+    {
+        OperationResult second = executeOperation("testtableAdmin", "All records",
+                "ErrorProcessing", "", ['name': 'withoutParams']).getSecond()
+
+        assertEquals OperationStatus.ERROR, second.getStatus()
+        assertEquals "Internal error occured during operation testtableAdmin.ErrorProcessing", second.getMessage()
     }
 
     /**

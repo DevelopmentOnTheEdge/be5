@@ -74,6 +74,7 @@ public class Form implements Component
         }
         catch (Be5Exception e)
         {
+            //todo remove this block, catch in operationService
             res.sendErrorAsJson(
                     getErrorModel(e, injector),
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),

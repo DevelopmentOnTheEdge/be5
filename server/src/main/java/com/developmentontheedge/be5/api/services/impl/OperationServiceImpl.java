@@ -111,7 +111,7 @@ public class OperationServiceImpl implements OperationService
             }
             else
             {
-                throw (RuntimeException) invokeResult.getDetails();
+                return Either.second(invokeResult);
             }
         }
 

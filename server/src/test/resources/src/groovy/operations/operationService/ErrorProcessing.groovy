@@ -16,6 +16,11 @@ class ErrorProcessing extends GOperationSupport implements Operation
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
+        if(presetValues.get("name") == "withoutParams")
+        {
+            return null
+        }
+
         dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name"], presetValues)
 
         dps.add("propertyForAnotherEntity") {
