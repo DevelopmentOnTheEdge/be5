@@ -112,8 +112,9 @@ public class AppSync extends Be5Mojo<AppSync>
             }
             else
             {
-                    System.err.println("The following statements should be executed to update database scheme:");
-                    System.err.println(ddlString);
+                System.err.println("The following statements should be executed to update database scheme:");
+                System.err.println(ddlString);
+                System.err.println("Use -DBE5_FORCE_UPDATE=true, for apply");
             }
             
             checkSynchronizationStatus();
