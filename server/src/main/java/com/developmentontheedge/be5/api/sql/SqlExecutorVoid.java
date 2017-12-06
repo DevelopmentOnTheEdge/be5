@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @FunctionalInterface
-public interface SqlExecutor<T>
+public interface SqlExecutorVoid
 {
-    T run(Connection conn) throws SQLException;
+    void run(Connection conn) throws SQLException;
 }

@@ -4,12 +4,12 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.dbms.DbmsType;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.naming.Context;
@@ -152,7 +152,7 @@ public class DatabaseServiceImpl implements DatabaseService
         TRANSACT_CONN.set(null);
     }
 
-    public <T> T transaction(SqlExecutor<T> executor)
+    public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         Connection conn = null;
         try {
@@ -182,6 +182,19 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
+    public void transaction(SqlExecutorVoid executor)
+    {
+        transactionWithResult(getWrapperExecutor(executor));
+    }
+
+    private static SqlExecutor<Void> getWrapperExecutor(final SqlExecutorVoid voidExecutor) {
+        return conn -> {
+            voidExecutor.run(conn);
+            return null;
+        };
+    }
+
+    @Override
     public Be5Exception rollback(Connection conn, Throwable e)
     {
         try
@@ -201,7 +214,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch (SQLException se)
         {
-            return Be5Exception.internal(log, se, "Unable to rollback transaction", e);
+            return Be5Exception.internal(log, se, "Unable to rollback transactionWithResult", e);
         }
     }
 

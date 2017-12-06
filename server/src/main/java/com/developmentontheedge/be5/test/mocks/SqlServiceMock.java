@@ -1,14 +1,19 @@
 package com.developmentontheedge.be5.test.mocks;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
+import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import org.apache.commons.dbutils.ResultSetHandler;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
 import static org.mockito.Mockito.mock;
+
 
 public class SqlServiceMock implements SqlService
 {
@@ -68,5 +73,25 @@ public class SqlServiceMock implements SqlService
     {
         log.fine(sql + Arrays.toString(params));
         return mock.insert(sql, params);
+    }
+
+    @Override
+    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    {
+        try {
+            return executor.run(null);
+        } catch (SQLException e) {
+            throw Be5Exception.internal(e);
+        }
+    }
+
+    @Override
+    public void transaction(SqlExecutorVoid executor)
+    {
+        try {
+            executor.run(null);
+        } catch (SQLException e) {
+            throw Be5Exception.internal(e);
+        }
     }
 }

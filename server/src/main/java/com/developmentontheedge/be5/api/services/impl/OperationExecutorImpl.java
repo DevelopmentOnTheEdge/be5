@@ -57,7 +57,7 @@ public class OperationExecutorImpl implements OperationExecutor
     {
         if(operation instanceof TransactionalOperation)
         {
-            return databaseService.transaction(connection -> {
+            return databaseService.transactionWithResult(connection -> {
                 Object parameters = callOperation(operation, presetValues);
                 if(operation.getStatus() == OperationStatus.ERROR)
                 {

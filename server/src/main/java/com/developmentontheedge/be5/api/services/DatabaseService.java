@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
 
@@ -17,7 +18,9 @@ public interface DatabaseService
 
     Connection getCurrentTxConn();
 
-    <T> T transaction(SqlExecutor<T> executor);
+    <T> T transactionWithResult(SqlExecutor<T> executor);
+
+    void transaction(SqlExecutorVoid executor);
 
     void releaseConnection( Connection conn );
 

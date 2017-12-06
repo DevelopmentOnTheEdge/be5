@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.test.mocks;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
 
@@ -14,19 +15,32 @@ import java.util.Map;
 public class DatabaseServiceMock implements DatabaseService
 {
     @Override
-    public Connection getConnection(boolean isReadOnly) throws SQLException {
+    public Connection getConnection(boolean isReadOnly) throws SQLException
+    {
         return null;
     }
 
     @Override
-    public Connection getCurrentTxConn() {
+    public Connection getCurrentTxConn()
+    {
         return null;
     }
 
     @Override
-    public <T> T transaction(SqlExecutor<T> executor) {
+    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    {
         try {
             return executor.run(null);
+        } catch (SQLException e) {
+            throw Be5Exception.internal(e);
+        }
+    }
+
+    @Override
+    public void transaction(SqlExecutorVoid executor)
+    {
+        try {
+            executor.run(null);
         } catch (SQLException e) {
             throw Be5Exception.internal(e);
         }

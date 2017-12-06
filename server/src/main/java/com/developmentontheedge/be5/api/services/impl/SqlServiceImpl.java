@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.model.DefaultParserContext;
@@ -139,9 +140,14 @@ public class SqlServiceImpl implements SqlService
         }
     }
 
-    public <T> T transaction(SqlExecutor<T> executor)
+    public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
-        return databaseService.transaction(executor);
+        return databaseService.transactionWithResult(executor);
+    }
+
+    public void transaction(SqlExecutorVoid executor)
+    {
+        databaseService.transaction(executor);
     }
 
 }
