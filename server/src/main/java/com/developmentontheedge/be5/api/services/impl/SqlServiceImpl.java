@@ -139,4 +139,9 @@ public class SqlServiceImpl implements SqlService
         }
     }
 
+    public <T> T transaction(SqlExecutor<T> executor)
+    {
+        return databaseService.transaction(executor);
+    }
+
 }

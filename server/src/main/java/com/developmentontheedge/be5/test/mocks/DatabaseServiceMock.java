@@ -53,11 +53,6 @@ public class DatabaseServiceMock implements DatabaseService
     }
 
     @Override
-    public DbmsType getType() {
-        return getRdbms().getType();
-    }
-
-    @Override
     public String getConnectString() {
         return "jdbc:postgresql://localhost:5432/test";
     }

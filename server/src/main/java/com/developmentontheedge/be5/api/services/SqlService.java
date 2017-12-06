@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
+import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.sql.Date;
@@ -23,6 +24,8 @@ public interface SqlService
     int updateWithoutBeSql(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
+
+    <T> T transaction(SqlExecutor<T> executor);
 
     default Long getLong(String sql, Object... params)
     {

@@ -11,8 +11,6 @@ import java.util.Map;
 
 public interface DatabaseService
 {
-    DbmsType getType();
-
     String getConnectString();
 
     Connection getConnection(boolean isReadOnly) throws SQLException;

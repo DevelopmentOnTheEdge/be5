@@ -212,12 +212,6 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
-    public DbmsType getType()
-    {
-        return getRdbms().getType();
-    }
-
-    @Override
     public String getConnectionProfileName()
     {
         return profile != null ? profile.getName() : null;

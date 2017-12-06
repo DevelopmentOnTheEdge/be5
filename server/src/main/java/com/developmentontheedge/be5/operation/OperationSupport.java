@@ -21,7 +21,6 @@ import java.util.Map;
 
 public abstract class OperationSupport implements Operation
 {
-    @Inject public DatabaseService databaseService;
     @Inject public DatabaseModel database;
     @Inject public SqlService db;
     @Inject public QRecService qRec;
