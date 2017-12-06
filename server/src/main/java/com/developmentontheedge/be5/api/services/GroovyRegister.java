@@ -115,7 +115,7 @@ public class GroovyRegister
             StackTraceElement[] stackTrace = err.getStackTrace();
             for (int i = 0; i < stackTrace.length; i++)
             {
-                if(stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy"))
+                if(stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy") )
                 {
                     sb.append(getErrorCodeLinesForClass(stackTrace[i]));
                     break;
@@ -131,8 +131,9 @@ public class GroovyRegister
         int lineID = e.getLineNumber();
         StringBuilder sb = new StringBuilder("\n" + Be5Exception.getFullStackTraceLine(e));
 
+
         String code = groovyOperationLoaderProvider.get()
-                .getByFullName(e.getClassName() + ".groovy")
+                .getByFullName(e.getClassName().substring(0, e.getClassName().indexOf('$')) + ".groovy")
                 .getCode();
         String lines[] = Utils.escapeHTML(code).split("\\r?\\n");
 
