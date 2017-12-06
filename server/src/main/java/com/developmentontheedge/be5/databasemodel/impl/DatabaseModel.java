@@ -4,6 +4,8 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -74,4 +76,13 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
                                    operationExecutor, meta, entity);
     }
 
+    public <T> T transactionWithResult(SqlExecutor<T> executor)
+    {
+        return sqlService.transactionWithResult(executor);
+    }
+
+    public void transaction(SqlExecutorVoid executor)
+    {
+        sqlService.transaction(executor);
+    }
 }

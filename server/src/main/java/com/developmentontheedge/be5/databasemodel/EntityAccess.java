@@ -1,6 +1,9 @@
 package com.developmentontheedge.be5.databasemodel;
 
 
+import com.developmentontheedge.be5.api.sql.SqlExecutor;
+import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
+
 /**
  * Interface to access object-wrapped representation of the entity.
  * 
@@ -12,7 +15,7 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
     /**
      * 
      * @param entityName entity name
-     * @return
+     * @return EntityModel
      */
     EntityModel getEntity(String entityName);
 
@@ -36,4 +39,7 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
 
 //    EntityAccess<E> getCloned(String tcloneId);
 
+    <T> T transactionWithResult(SqlExecutor<T> executor);
+
+    void transaction(SqlExecutorVoid executor);
 }
