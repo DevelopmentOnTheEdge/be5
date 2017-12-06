@@ -5,17 +5,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
@@ -57,17 +53,17 @@ public class AppSync extends Be5Mojo<AppSync>
 {
     @Parameter (property = "BE5_FORCE_UPDATE")
     boolean forceUpdate;
+//
+//    @Parameter (property = "BE5_UPDATE_CLONES")
+//    boolean updateClones;
+//
+//    @Parameter (property = "BE5_REMOVE_CLONES")
+//    boolean removeClones;
+//
+//    @Parameter (property = "BE5_REMOVE_UNUSED_TABLES")
+//    boolean removeUnusedTables;
 
-    @Parameter (property = "BE5_UPDATE_CLONES")
-    boolean updateClones;
-
-    @Parameter (property = "BE5_REMOVE_CLONES")
-    boolean removeClones;
-
-    @Parameter (property = "BE5_REMOVE_UNUSED_TABLES")
-    boolean removeUnusedTables;
-
-    BeSqlExecutor sqlExecutor;
+    private BeSqlExecutor sqlExecutor;
     
     ///////////////////////////////////////////////////////////////////
     
