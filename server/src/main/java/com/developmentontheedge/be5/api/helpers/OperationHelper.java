@@ -118,19 +118,30 @@ public class OperationHelper
         if (!query.isPresent())
             throw new IllegalArgumentException("Query " + tableName + "." + queryName + " not found.");
 
-        if(query.get().isCacheable())
-        {
-            return tagsCache.get(tableName + "getTagsFromCustomSelectionView" + queryName +
-                    parameters.toString() + UserInfoHolder.getLanguage(),
-                k -> getTagsFromCustomSelectionView(tableName, query.get(), parameters)
-            );
-        }
-        return getTagsFromCustomSelectionView(tableName, query.get(), parameters);
+        return getTagsFromCustomSelectionView(query.get(), parameters);
     }
 
-    public String[][] getTagsFromQuery(String query, Object... params)
+    public String[][] getTagsFromCustomSelectionView(Query query, Map<String, ?> parameters)
     {
-        List<String[]> tags = db.selectList(query,
+        String entityName = query.getEntity().getName();
+        if(query.isCacheable())
+        {
+            return tagsCache.get(entityName + "getTagsFromCustomSelectionView" + query.getEntity() +
+                            parameters.toString() + UserInfoHolder.getLanguage(),
+                    k -> getTagsFromCustomSelectionViewExecute(query, parameters)
+            );
+        }
+        return getTagsFromCustomSelectionViewExecute(query, parameters);
+    }
+
+    public String[][] getTagsFromCustomSelectionView(String sql, Map<String, ?> parameters)
+    {
+        return getTagsFromCustomSelectionView(meta.createQueryFromSql(sql), parameters);
+    }
+
+    public String[][] getTagsFromQuery(String sql, Object... params)
+    {
+        List<String[]> tags = db.selectList(sql,
                 rs -> new String[]{rs.getString(1), rs.getString(2)}, params
         );
         String[][] stockArr = new String[tags.size()][2];
@@ -160,8 +171,9 @@ public class OperationHelper
 //        return tags.toArray(stockArr);
 //    }
 
-    private String[][] getTagsFromCustomSelectionView(String tableName, Query query, Map<String, ?> parameters)
+    private String[][] getTagsFromCustomSelectionViewExecute(Query query, Map<String, ?> parameters)
     {
+        String entityName = query.getEntity().getName();
         //todo refactoring Be5QueryExecutor,
         Map<String, String> stringStringMap = new HashMap<>();
         //parameters.forEach((key, value) -> stringStringMap.put(key, value.toString()));
@@ -181,7 +193,7 @@ public class OperationHelper
         {
             String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
             String second = row.getCells().size() >= 2 ? row.getCells().get(1).content.toString() : "";
-            stockArr[i++] = new String[]{first, userAwareMeta.getColumnTitle(tableName, second)};
+            stockArr[i++] = new String[]{first, userAwareMeta.getColumnTitle(entityName, second)};
         }
 
         return stockArr;

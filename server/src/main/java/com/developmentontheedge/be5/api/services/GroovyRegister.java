@@ -131,9 +131,12 @@ public class GroovyRegister
         int lineID = e.getLineNumber();
         StringBuilder sb = new StringBuilder("\n" + Be5Exception.getFullStackTraceLine(e));
 
+        String className = e.getClassName().indexOf('$') == -1
+                                ? e.getClassName()
+                                : e.getClassName().substring(0, e.getClassName().indexOf('$'));
 
         String code = groovyOperationLoaderProvider.get()
-                .getByFullName(e.getClassName().substring(0, e.getClassName().indexOf('$')) + ".groovy")
+                .getByFullName(className + ".groovy")
                 .getCode();
         String lines[] = Utils.escapeHTML(code).split("\\r?\\n");
 
