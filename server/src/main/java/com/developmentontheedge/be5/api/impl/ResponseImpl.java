@@ -191,9 +191,9 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendHtml(String json)
+    public void sendHtml(String content)
     {
-        sendText("text/html;charset=UTF-8", json);
+        sendText("text/html;charset=UTF-8", content);
     }
 
     @Override
