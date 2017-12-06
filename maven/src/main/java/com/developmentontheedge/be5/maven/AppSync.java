@@ -228,10 +228,6 @@ public class AppSync extends Be5Mojo<AppSync>
             TableDef tableDef = new TableDef(entity);
             for(SqlColumnInfo info : columnInfos)
             {
-                // "isDeleted___" column is maintained by BeanExplorer
-                if(info.getName().equalsIgnoreCase( "isdeleted___" ))
-                    continue;
-
                 ColumnDef column = new ColumnDef(info.getName(), tableDef.getColumns());
                 column.setType( createColumnType(info) );
                 typeManager.correctType( column.getType() );

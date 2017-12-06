@@ -196,10 +196,6 @@ public class ColumnDef extends TableRef
     {
         List<ProjectElementException> errors = new ArrayList<>();
         
-        if(getName().equalsIgnoreCase( "isdeleted___" ))
-        {
-            errors.add( new ProjectElementException( getCompletePath(), "name", "This is special column name which is handled by legacy BeanExplorer. Adding it to the model may cause errors during the synchronization. Use SAFE_DELETE_TABLES ant property instead" ) );
-        }
         if ( getName().length() > Constants.MAX_ID_LENGTH )
         {
             errors.add( new ProjectElementException( getCompletePath(), "name", "Column name is too long: "+getName().length()+" characters ("+Constants.MAX_ID_LENGTH+" allowed)" ) );
