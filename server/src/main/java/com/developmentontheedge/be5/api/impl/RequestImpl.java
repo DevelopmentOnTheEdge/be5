@@ -32,7 +32,7 @@ public class RequestImpl implements Request
         this.rawRequest = rawRequest;
         this.requestUri = requestUri;
         this.parameters = new HashMap<>(parameters);
-        this.remoteAddr = rawRequest.getRemoteAddr();
+        this.remoteAddr = getClientIpAddr(rawRequest);
         this.sessionId = rawRequest.getSession().getId();
     }
     
@@ -181,5 +181,30 @@ public class RequestImpl implements Request
     public String getContextPath()
     {
         return rawRequest.getContextPath();
+    }
+
+    /**
+     * https://stackoverflow.com/a/15323776
+     * @return remote address of a client
+     */
+    private String getClientIpAddr(HttpServletRequest request)
+    {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 }
