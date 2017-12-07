@@ -87,9 +87,17 @@ public class Form implements Component
         if(generate.isFirst())
         {
             ErrorModel errorModel = null;
-            if(operation.getResult().getStatus() == OperationStatus.ERROR && UserInfoHolder.isAdminOrSysDev())
+            if(operation.getResult().getStatus() == OperationStatus.ERROR)
             {
-                errorModel = getErrorModel((Throwable)operation.getResult().getDetails(), injector);
+                if(UserInfoHolder.isAdminOrSysDev())
+                {
+                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), injector);
+                }
+
+                //todo refactoring, add for prevent json error
+                //java.lang.IllegalAccessException: Class org.eclipse.yasson.internal.model.GetFromGetter can not access a member of class sun.reflect.annotation.AnnotatedTypeFactory$AnnotatedTypeBaseImpl with modifiers "public final"
+                //at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
+                operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0]));
             }
 
             result = new FormPresentation(operation.getInfo(),
