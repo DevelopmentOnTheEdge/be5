@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
@@ -26,14 +27,30 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals OperationStatus.GENERATE, operation.getStatus()
     }
 
-    @Test
-    void generatePropertyError()
+    private Operation propertyError(Map<String, String> presetValues)
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = generateOperation(operation, ['name':'generateErrorInProperty']).getFirst()
+        Object first = generateOperation(operation, presetValues).getFirst()
 
         assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
+        return operation
+    }
+
+    /* generateErrorInProperty */
+
+    @Test
+    void generatePropertyError()
+    {
+        def operation = propertyError(['name':'generateErrorInProperty'])
+
+        assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()
+    }
+
+    @Test
+    void generatePropertyErrorReload()
+    {
+        def operation = propertyError(['_reloadcontrol_':'/name','name':'generateErrorInProperty'])
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
         assertEquals "Error in property (getParameters) - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
@@ -44,17 +61,24 @@ class OperationServiceTest extends SqlMockOperationTest
     void generatePropertyErrorNotSysDev()
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR)
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-        Object first = generateOperation(operation, ['name':'generateErrorInProperty']).getFirst()
 
-        assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
-                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
+        def operation = propertyError(['name':'generateErrorInProperty'])
 
         assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()
     }
 
     @Test
-    void generatePropertyErrorOnExecute()
+    void generatePropertyErrorNotSysDevReload()
+    {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR)
+
+        def operation = propertyError(['_reloadcontrol_':'/name','name':'generateErrorInProperty'])
+
+        assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()
+    }
+
+    @Test
+    void executeWithGenerateErrorInProperty()
     {
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'generateErrorInProperty']).getFirst()
@@ -66,6 +90,8 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals "Error in property (getParameters) - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
                 operation.getResult().getMessage()
     }
+
+    /* executeErrorInProperty */
 
     @Test
     void executePropertyError()
@@ -80,6 +106,8 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals "Error in property (invoke) - [ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]",
                 operation.getResult().getMessage()
     }
+
+    /* generateErrorStatus */
 
     /**
      * выдать ошибку, не переходя на форму

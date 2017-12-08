@@ -41,19 +41,6 @@ public class OperationServiceImpl implements OperationService
             return Either.second(operation.getResult());
         }
 
-        if(UserInfoHolder.isSystemDeveloper())
-        {
-            try
-            {
-                validator.isError(parameters);
-            } catch (RuntimeException e)
-            {
-                log.log(Level.INFO, "error on generate in parameters", e);
-                operation.setResult(OperationResult.error(e));
-                return replaceNullValueToEmptyStringAndReturn(parameters);
-            }
-        }
-
         if (parameters == null)
         {
             return execute(operation, presetValues);
@@ -67,9 +54,11 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                log.log(Level.INFO, "error on generate in validate parameters", e);
-                operation.setResult(OperationResult.error(e));
-                return replaceNullValueToEmptyStringAndReturn(parameters);
+                if(UserInfoHolder.isSystemDeveloper())
+                {
+                    log.log(Level.INFO, "error on generate in validate parameters", e);
+                    operation.setResult(OperationResult.error(e));
+                }
             }
         }
 
