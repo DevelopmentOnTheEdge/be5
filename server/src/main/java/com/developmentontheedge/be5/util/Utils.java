@@ -674,9 +674,9 @@ public class Utils
         return def;
     }
 //
-//    public static boolean isAdminORDevMode()
+//    public static boolean isSystemDeveloperORDevMode()
 //    {
-//        return UserInfoHolder.isAdminOrSysDev() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
+//        return UserInfoHolder.isSystemDeveloper() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
 //    }
 
     public static String escapeHTML(String s)

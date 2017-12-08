@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.OperationService;
@@ -40,15 +41,17 @@ public class OperationServiceImpl implements OperationService
             return Either.second(operation.getResult());
         }
 
-        try
+        if(UserInfoHolder.isSystemDeveloper())
         {
-            validator.isError(parameters);
-        }
-        catch (RuntimeException e)
-        {
-            log.log(Level.INFO, "error on generate in parameters", e);
-            operation.setResult(OperationResult.error(e));
-            return replaceNullValueToEmptyStringAndReturn(parameters);
+            try
+            {
+                validator.isError(parameters);
+            } catch (RuntimeException e)
+            {
+                log.log(Level.INFO, "error on generate in parameters", e);
+                operation.setResult(OperationResult.error(e));
+                return replaceNullValueToEmptyStringAndReturn(parameters);
+            }
         }
 
         if (parameters == null)

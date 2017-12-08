@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception
+import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
@@ -37,6 +38,19 @@ class OperationServiceTest extends SqlMockOperationTest
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
         assertEquals "Error in property (getParameters) - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
                 operation.getResult().getMessage()
+    }
+
+    @Test
+    void generatePropertyErrorNotSysDev()
+    {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR)
+        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        Object first = generateOperation(operation, ['name':'generateErrorInProperty']).getFirst()
+
+        assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
+                oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
+
+        assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()
     }
 
     @Test

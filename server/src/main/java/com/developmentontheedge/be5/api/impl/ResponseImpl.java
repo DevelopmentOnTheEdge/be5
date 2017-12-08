@@ -156,7 +156,7 @@ public class ResponseImpl implements Response
     public void sendError(Be5Exception e)
     {
         ErrorModel errorModel;
-        if(UserInfoHolder.isAdminOrSysDev())
+        if(UserInfoHolder.isSystemDeveloper())
         {
             errorModel = new ErrorModel(e);
         }
@@ -172,7 +172,7 @@ public class ResponseImpl implements Response
     public void sendAccessDenied(Be5Exception e)
     {
         response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        String msg = UserInfoHolder.isAdminOrSysDev() ? e.getMessage() : "";
+        String msg = UserInfoHolder.isSystemDeveloper() ? e.getMessage() : "";
         sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
     }
 

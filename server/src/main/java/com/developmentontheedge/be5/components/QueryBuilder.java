@@ -18,12 +18,13 @@ import java.util.Collections;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
+
 public class QueryBuilder implements Component
 {
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
-        if(UserInfoHolder.isAdminOrSysDev())
+        if(UserInfoHolder.isSystemDeveloper())
         {
             Entity e = new Entity( "queryBuilderComponent", injector.getProject().getApplication(), EntityType.TABLE );
             DataElementUtils.save( e );
@@ -36,7 +37,7 @@ public class QueryBuilder implements Component
         else
         {
             res.sendErrorAsJson(
-                    new ErrorModel("403", "Roles " + RoleType.ROLE_ADMINISTRATOR + " or "+RoleType.ROLE_SYSTEM_DEVELOPER+" required."),
+                    new ErrorModel("403", "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, "qBuilder")
             );

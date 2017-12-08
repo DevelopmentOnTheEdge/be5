@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -575,7 +574,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
             dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
-            dynamicProperties.add(new DynamicProperty("error", String.class, UserInfoHolder.isAdminOrSysDev() ? Be5Exception.getMessage(e) : "error"));
+            dynamicProperties.add(new DynamicProperty("error", String.class, UserInfoHolder.isSystemDeveloper() ? Be5Exception.getMessage(e) : "error"));
             dynamicPropertySets =  Collections.singletonList(dynamicProperties);
         }
 

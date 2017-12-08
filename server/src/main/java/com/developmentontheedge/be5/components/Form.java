@@ -89,7 +89,7 @@ public class Form implements Component
             ErrorModel errorModel = null;
             if(operation.getResult().getStatus() == OperationStatus.ERROR)
             {
-                if(UserInfoHolder.isAdminOrSysDev())
+                if(UserInfoHolder.isSystemDeveloper())
                 {
                     errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), injector);
                 }
@@ -122,7 +122,7 @@ public class Form implements Component
     {
         String message = Be5Exception.getMessage(e);
 
-        if(UserInfoHolder.isAdminOrSysDev())message += injector.get(GroovyRegister.class).getErrorCodeLine(e);
+        if(UserInfoHolder.isSystemDeveloper())message += injector.get(GroovyRegister.class).getErrorCodeLine(e);
 
         return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e));
     }

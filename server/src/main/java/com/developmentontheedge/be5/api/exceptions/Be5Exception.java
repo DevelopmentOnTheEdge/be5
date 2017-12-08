@@ -171,7 +171,7 @@ public class Be5Exception extends RuntimeException
 
     public static String exceptionAsString(Throwable e)
     {
-        if(UserInfoHolder.isAdminOrSysDev())
+        if(UserInfoHolder.isSystemDeveloper())
         {
             StringWriter sw = new StringWriter();
             if (e instanceof Be5Exception && e.getCause() != null)

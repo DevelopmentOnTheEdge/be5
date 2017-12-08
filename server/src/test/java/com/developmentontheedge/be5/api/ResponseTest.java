@@ -73,9 +73,9 @@ public class ResponseTest extends Be5ProjectTest
     }
 
     @Test
-    public void sendErrorAdmin()
+    public void sendErrorSysDev()
     {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
         response.sendError(Be5Exception.internal("testMsg"));
 
@@ -86,8 +86,7 @@ public class ResponseTest extends Be5ProjectTest
     }
 
     @Test
-    @Ignore
-    public void sendErrorNotAdmin()
+    public void sendErrorNotSysDev()
     {
         initUserWithRoles(RoleType.ROLE_GUEST);
 
@@ -95,8 +94,7 @@ public class ResponseTest extends Be5ProjectTest
 
         verify(rawResponse).setContentType("application/json;charset=UTF-8");
         //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append(doubleQuotes("{'type':'error','value':{'code':'INTERNAL_ERROR'," +
-                "'message':''}}"));
+        verify(writer).append(doubleQuotes("{'errors':[{'status':'500','title':''}]}"));
         verify(writer).flush();
     }
 

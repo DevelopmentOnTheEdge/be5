@@ -259,7 +259,7 @@ public class Validator
 
     private String toStringProperty(DynamicProperty property)
     {
-        if(!UserInfoHolder.isAdminOrSysDev())return "";
+        if(!UserInfoHolder.isSystemDeveloper())return "";
         String value;
         if(property.getValue() != null)
         {

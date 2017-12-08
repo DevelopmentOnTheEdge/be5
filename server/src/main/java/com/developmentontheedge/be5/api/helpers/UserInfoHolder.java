@@ -84,10 +84,9 @@ public class UserInfoHolder
         return getUserInfo().getRemoteAddr();
     }
 
-    public static boolean isAdminOrSysDev()
+    public static boolean isSystemDeveloper()
     {
-        return getCurrentRoles().contains(RoleType.ROLE_ADMINISTRATOR) ||
-                getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
+        return getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
 }
