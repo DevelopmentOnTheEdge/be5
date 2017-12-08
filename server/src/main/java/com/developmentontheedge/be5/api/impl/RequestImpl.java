@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -181,6 +183,26 @@ public class RequestImpl implements Request
     public String getContextPath()
     {
         return rawRequest.getContextPath();
+    }
+
+    @Override
+    public String getBody()
+    {
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader br = rawRequest.getReader();
+            String str;
+            while( (str = br.readLine()) != null )
+            {
+                sb.append(str);
+            }
+            return sb.toString();
+        }
+        catch (IOException e)
+        {
+            throw Be5Exception.internal(e);
+        }
     }
 
     /**

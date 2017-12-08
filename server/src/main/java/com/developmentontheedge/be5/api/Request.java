@@ -68,4 +68,6 @@ public interface Request extends SessionAccess, ParametersAccess
     String getBaseUrl();
 
     String getContextPath();
+
+    String getBody();
 }
