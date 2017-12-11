@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.components.impl.model;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -20,7 +19,6 @@ import com.developmentontheedge.be5.util.MoreStrings;
  */
 class PropertiesToRowTransformer
 {
-
     private final String entityName;
     private final String queryName;
     private final DynamicPropertySet properties;
@@ -110,7 +108,7 @@ class PropertiesToRowTransformer
         for( DynamicProperty property : properties )
         {
             String cellName = property.getName();
-            Object cellContent = dateToString(property);
+            Object cellContent = formatValue(property);
             boolean hidden = shouldBeSkipped( cellName );
             cells.add(new RawCellModel(cellName, cellContent, DynamicPropertyMeta.get(property), hidden));
         }
@@ -128,7 +126,7 @@ class PropertiesToRowTransformer
 //            throw new IllegalStateException( "Expected column '" + targetName + "'" );
 //        }
 //
-//        mutableStr.append( dateToString( property ) );
+//        mutableStr.append( formatValue( property ) );
 //    }
 
 //    private String toString(DynamicProperty property)
@@ -152,22 +150,29 @@ class PropertiesToRowTransformer
 //        return value.toString();
 //    }
 
-    private Object dateToString(DynamicProperty property)
+    private Object formatValue(DynamicProperty property)
     {
         Object value = property.getValue();
         if(value == null)return null;
 
-        if(property.getType() == java.sql.Date.class){
+        if(property.getType() == java.sql.Date.class)
+        {
             return dateFormatter.format(value);
         }
 
-        if(property.getType() == java.sql.Time.class){
+        if(property.getType() == java.sql.Time.class)
+        {
             String timestamp = timestampFormatter.format(value);
             if(timestamp.startsWith("01.01.1970"))
             {
                 timestamp = timestamp.substring(11);
             }
             return timestamp;
+        }
+
+        if(property.getType() == java.sql.Timestamp.class)
+        {
+            return timestampFormatter.format(value);
         }
 
         return value;
