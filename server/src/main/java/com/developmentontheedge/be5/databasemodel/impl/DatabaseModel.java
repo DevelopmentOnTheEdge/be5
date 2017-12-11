@@ -76,11 +76,13 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
                                    operationExecutor, meta, entity);
     }
 
+    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         return sqlService.transactionWithResult(executor);
     }
 
+    @Override
     public void transaction(SqlExecutorVoid executor)
     {
         sqlService.transaction(executor);
