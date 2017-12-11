@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collector;
@@ -739,5 +740,19 @@ public class DpsHelper
         dps.forEach(p -> values.put(p.getName(), p.getValue()));
 
         return values;
+    }
+
+    public void setValueIfOneTag(DynamicPropertySet dps, List<String> propertyNames)
+    {
+        for (String name : propertyNames)
+        {
+            DynamicProperty property = dps.getProperty(name);
+            Objects.requireNonNull(property);
+            String[][] tags = (String[][]) property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
+            if(tags.length == 1)
+            {
+                property.setValue(tags[0][0]);
+            }
+        }
     }
 }
