@@ -5,8 +5,10 @@ import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
@@ -21,7 +23,7 @@ import java.util.Map;
 
 public abstract class Be5ProjectTest extends TestUtils
 {
-    private static final Injector injector = initInjector(new SqlMockBinder());
+    private static final Injector injector = initInjector(Be5.createInjector(Stage.PRODUCTION, new SqlMockBinder()));
 
     @Before
     public void injectAnnotatedFields()

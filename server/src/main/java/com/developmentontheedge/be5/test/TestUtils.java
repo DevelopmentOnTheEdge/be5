@@ -56,9 +56,8 @@ public abstract class TestUtils
 
     static final String profileForIntegrationTests = "profileForIntegrationTests";
 
-    static Injector initInjector(Binder binder)
+    static Injector initInjector(Injector injector)
     {
-        Injector injector = Be5.createInjector(binder);
         Project project = injector.getProject();
         initProfile(project);
 

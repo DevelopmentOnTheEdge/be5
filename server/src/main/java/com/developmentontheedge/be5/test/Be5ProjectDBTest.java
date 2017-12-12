@@ -3,8 +3,10 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.model.Project;
@@ -21,7 +23,7 @@ public abstract class Be5ProjectDBTest extends TestUtils
 {
     private static final Logger log = Logger.getLogger(Be5ProjectDBTest.class.getName());
 
-    private static final Injector injector = initInjector(new YamlBinder());
+    private static final Injector injector = initInjector(Be5.createInjector(Stage.DEVELOPMENT, new YamlBinder()));
 
     @Inject protected DatabaseModel database;
     @Inject protected SqlService db;
