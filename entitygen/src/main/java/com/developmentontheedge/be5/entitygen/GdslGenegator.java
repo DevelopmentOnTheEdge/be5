@@ -50,12 +50,12 @@ public class GdslGenegator
         }
 
         System.out.println("File '"+file.toString()+"' not found, generate...");
-        injector = Be5.createInjector(new YamlBinder());
+        injector = Be5.createInjector(Stage.TEST, new YamlBinder());
 
         createService(generatedSourcesPath, packageName, serviceClassName, cfg);
 
         System.out.println("------" + JULLogger.infoBlock(
-                "Generate successful: " + entityCount + " entities created.\n" +
+                "Generate successful: " + entityCount + " entities added.\n" +
                         packageName + serviceClassName));
     }
 

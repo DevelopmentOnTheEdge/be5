@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 
 public abstract class TestUtils
 {
-    @Inject protected OperationService operationService;
+    @Inject private OperationService operationService;
     @Inject private OperationExecutor operationExecutor;
     @Inject protected UserAwareMeta userAwareMeta;
 
@@ -58,7 +58,7 @@ public abstract class TestUtils
 
     static Injector initInjector(Binder binder)
     {
-        Injector injector = Be5.createInjector(binder);
+        Injector injector = Be5.createInjector(Stage.TEST, binder);
         Project project = injector.getProject();
         initProfile(project);
 
