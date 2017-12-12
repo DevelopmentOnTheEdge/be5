@@ -187,6 +187,7 @@ public class Be5Injector implements Injector
             Class<?> klass = getComponentClass(componentId);
             Component component = (Component) klass.newInstance();
             configureIfConfigurable(component, configurations);
+            injectAnnotatedFields(component);
             return component;
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
