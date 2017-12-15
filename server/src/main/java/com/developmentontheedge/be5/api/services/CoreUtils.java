@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface CoreUtils
 {
+    String getSystemSettingInSection( String section, String param );
+
     String getSystemSettingInSection(String section, String param, String defValue);
 
     void setSystemSettingInSection(String section, String param, String value);

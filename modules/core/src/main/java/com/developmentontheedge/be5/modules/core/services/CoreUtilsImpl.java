@@ -30,6 +30,20 @@ public class CoreUtilsImpl implements CoreUtils
     }
 
     /**
+     * This method is working like calling method {@link #getSystemSettingInSection(String, String, String) getSystemSettingInSection}
+     * with parameter defValue = null
+     *
+     * @param section system settings section name
+     * @param param parameter name
+     * @return section parameter value
+     */
+    @Override
+    public String getSystemSettingInSection( String section, String param )
+    {
+        return getSystemSettingInSection( section, param, null );
+    }
+
+    /**
      * Retrieving system settings parameter value for specified section and parameter. If there isn't such parameter, or
      * executing query throws any exception, then method will return defValue.
      * <br/>Results of method call are cached.
