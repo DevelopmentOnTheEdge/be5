@@ -1,7 +1,7 @@
 package com.developmentontheedge.sql.format;
 
-import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstSelect;
+import com.google.common.collect.ImmutableList;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class AstTest
     @Test
     public void selectCount()
     {
-        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users");
+        AstSelect users = Ast.selectCount().from("users");
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users",
                 users.format());
     }
@@ -25,8 +25,16 @@ public class AstTest
     @Test
     public void selectAll()
     {
-        AstSelect users = Ast.select(AstDerivedColumn.ALL).from("users");
+        AstSelect users = Ast.selectAll().from("users");
         assertEquals("SELECT * FROM users",
+                users.format());
+    }
+
+    @Test
+    public void selectColumns()
+    {
+        AstSelect users = Ast.select(ImmutableList.of("name", "email")).from("users");
+        assertEquals("SELECT name, email FROM users",
                 users.format());
     }
 
@@ -34,7 +42,7 @@ public class AstTest
     public void selectWhere()
     {
         Map<String, ? super Object> name = Collections.singletonMap("name", "test");
-        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(name);
+        AstSelect users = Ast.selectCount().from("users").where(name);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name =?",
                 users.format());
     }
@@ -43,7 +51,7 @@ public class AstTest
     public void selectWhereEmpty()
     {
         Map<String, ? super Object> name = new HashMap<>();
-        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(name);
+        AstSelect users = Ast.selectCount().from("users").where(name);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users",
                 users.format());
     }
@@ -54,7 +62,7 @@ public class AstTest
         Map<String, ? super Object> names = new HashMap<>();
         names.put("name", "test");
         names.put("name2", "test2");
-        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        AstSelect users = Ast.selectCount().from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name =? AND name2 =?",
                 users.format());
     }
@@ -64,13 +72,13 @@ public class AstTest
     {
         Map<String, ? super Object> names = new HashMap<>();
         names.put("name", "test%");
-        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        AstSelect users = Ast.selectCount().from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name LIKE ?",
                 users.format());
 
         names.clear();
         names.put("name", "%test");
-        AstSelect users2 = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        AstSelect users2 = Ast.selectCount().from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name LIKE ?",
                 users2.format());
     }
@@ -84,14 +92,14 @@ public class AstTest
     {
         Map<String, ? super Object> names = new HashMap<>();
         names.put("name", "null");
-        AstSelect users = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        AstSelect users = Ast.selectCount().from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NULL",
                 users.format());
 
         names.clear();
         names.put("name", "notNull");
 
-        AstSelect users2 = Ast.select(AstDerivedColumn.COUNT).from("users").where(names);
+        AstSelect users2 = Ast.selectCount().from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name IS NOT NULL",
                 users2.format());
     }

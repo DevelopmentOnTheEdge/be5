@@ -5,6 +5,7 @@ import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstFieldReference;
 import com.developmentontheedge.sql.model.AstFrom;
+import com.developmentontheedge.sql.model.AstIdentifierConstant;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstInsertValueList;
 import com.developmentontheedge.sql.model.AstNumericConstant;
@@ -20,7 +21,10 @@ import com.developmentontheedge.sql.model.AstUpdateSetList;
 import com.developmentontheedge.sql.model.SimpleNode;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 public class Ast
 {
@@ -31,9 +35,23 @@ public class Ast
     {
         AstDerivedColumn[] columns;
 
-        ColumnList(AstDerivedColumn[] columns)
+        private ColumnList(AstDerivedColumn[] columns)
         {
             this.columns = columns;
+        }
+
+        ColumnList(List<String> columnsNames)
+        {
+            columns = new AstDerivedColumn[columnsNames.size()];
+
+            columnsNames.stream()
+                    .map(x -> new AstDerivedColumn(new AstIdentifierConstant(x)))
+                    .collect(Collectors.toList()).toArray(columns);
+
+            for (int i = 0; i < columns.length - 1; i++)
+            {
+                columns[i].setSuffixComma(true);
+            }
         }
 
         public AstSelect from(String table)
@@ -122,8 +140,9 @@ public class Ast
         }
     }
 
-    public static ColumnList select(AstDerivedColumn... columns)
+    public static ColumnList select(List<String> columns)
     {
+        if(columns.size() == 0)return ALL;
         return new ColumnList(columns);
     }
 

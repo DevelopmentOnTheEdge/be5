@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,6 +97,11 @@ public interface Meta
     ColumnDef getColumn(String entityName, String columnName);
 
     ColumnDef getColumn(Entity entity, String columnName);
+
+    default boolean columnExists( String entity, String column )
+    {
+        return getColumn( entity, column ) == null;
+    }
 
     default String getColumnDefaultValue(Entity entity, String columnName)
     {

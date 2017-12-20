@@ -100,8 +100,14 @@ public interface EntityModel<R extends RecordModel>
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get( Map<String, ? super Object> conditions );
-    
+    RecordModel get(Map<String, ? super Object> conditions );
+
+    RecordModel getColumns(List<String> columns, String id);
+
+    RecordModel getColumns(List<String> columns, Long id);
+
+    RecordModel getColumns(List<String> columns, Map<String, ? super Object> conditions);
+
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>

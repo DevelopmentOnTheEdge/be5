@@ -66,12 +66,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public RecordModel get( Map<String, ? super Object> conditions )
+    public RecordModel getColumns( List<String> columns, Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
-        AstSelect sql = Ast
-                .selectAll()
+        AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
                 .where(conditions);
 
@@ -83,6 +82,23 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
                 }, conditions.values().toArray());
 
         return dps == null ? null : new RecordModelBase( this, dps );
+    }
+
+    private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
+    {
+        List<String> columnsWithPK = columns;
+        if(columns.size() > 0 && !columns.contains(getPrimaryKeyName()))
+        {
+            columnsWithPK = new ArrayList<>(columns);
+            columnsWithPK.add(getPrimaryKeyName());
+        }
+        return columnsWithPK;
+    }
+
+    @Override
+    public RecordModel get( Map<String, ? super Object> conditions )
+    {
+        return getColumns(Collections.emptyList(), conditions);
     }
 
     @Override
@@ -156,7 +172,19 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     @Override
     public RecordModel get( Long id )
     {
-        return get(Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
+        return getColumns(Collections.emptyList(), id);
+    }
+
+    @Override
+    public RecordModel getColumns( List<String> columns, String id )
+    {
+        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
+    }
+
+    @Override
+    public RecordModel getColumns( List<String> columns, Long id )
+    {
+        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
     }
 
     @Override

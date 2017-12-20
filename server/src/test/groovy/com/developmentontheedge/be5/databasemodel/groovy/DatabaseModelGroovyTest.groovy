@@ -70,6 +70,19 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     }
 
     @Test
+    void testGetColumns()
+    {
+        testtableAdmin << [ "name": "TestName", "value": "1"]
+
+        RecordModel rec = testtableAdmin.getColumns(["value"],
+                ["name": "TestName"]
+        )
+
+        assertEquals null, rec.getValue("name")
+        assertEquals 1, rec.getValue("value")
+    }
+
+    @Test
     void testInsert()
     {
         testtableAdmin << [

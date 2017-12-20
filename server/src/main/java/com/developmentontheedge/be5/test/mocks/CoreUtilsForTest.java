@@ -89,4 +89,10 @@ public class CoreUtilsForTest implements CoreUtils
     {
 
     }
+
+    @Override
+    public String getSystemSettingInSection(String section, String param)
+    {
+        return null;
+    }
 }
