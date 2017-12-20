@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.SessionImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
@@ -16,13 +15,10 @@ import com.developmentontheedge.be5.test.TestSession;
 import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 
@@ -30,8 +26,8 @@ public class LoginServiceImpl implements LoginService
 {
     public static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
-    private SqlService db;
-    private ProjectProvider project;
+    protected SqlService db;
+    protected ProjectProvider project;
 
     public LoginServiceImpl(SqlService db, ProjectProvider project)
     {
@@ -39,50 +35,14 @@ public class LoginServiceImpl implements LoginService
         this.project = project;
     }
 
-    private boolean login(String user, String password)
+    protected boolean login(String username, String password)
     {
-        try
-        {
-            String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = ?";
-            String passwordCheckClause = getPasswordCheckClause();
-            sql += " AND ("+passwordCheckClause+")";
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(password);
 
-            if(db.getLong(sql, user, password) == 1L){
-                return true;
-            }
-        }
-        catch (SQLException e)
-        {
-            throw Be5Exception.internal(log, e);
-        }
-        catch( java.security.GeneralSecurityException gse )
-        {
-            log.log(Level.SEVERE,  "Encryption problem", gse);
-        }
-        catch( java.io.UnsupportedEncodingException uee )
-        {
-            log.log(Level.SEVERE, "Unexpected problem", uee );
-        }
-        return false;
-    }
+        String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?";
 
-    private static String getPasswordCheckClause() throws SQLException,
-            GeneralSecurityException, UnsupportedEncodingException
-    {
-//        if( passwordKey != null )
-//        {
-//            String encFunc = connector.getAnalyzer().makeEncryptExpr( password, passwordKey );
-//            password = ( encFunc != null ) ? encFunc : Utils.safestr( connector, password, true );
-//            return "user_pass = " + password;
-//        }
-
-//        if( Utils.columnExists( connector, "users", DatabaseConstants.ENCRYPT_COLUMN_PREFIX + "user_pass" ) )
-//        {
-//            return encName + " = '" + CryptoUtils.encrypt( password ) + "'" + " OR user_pass = "
-//                    + Utils.safestr( connector, password, true );
-//        }
-
-        return "user_pass = ?";
+        return db.getLong(sql, username, password) == 1L;
     }
 
     private List<String> selectAvailableRoles(String username)

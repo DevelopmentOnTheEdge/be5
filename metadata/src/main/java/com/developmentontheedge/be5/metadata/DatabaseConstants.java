@@ -51,6 +51,4 @@ public interface DatabaseConstants
     String IP_MODIFIED_COLUMN_NAME = "ipModified___";
 
     String IS_DELETED_COLUMN_NAME = "isDeleted___";
-
-    String ENCRYPT_COLUMN_PREFIX = "encrypt_";
 }
