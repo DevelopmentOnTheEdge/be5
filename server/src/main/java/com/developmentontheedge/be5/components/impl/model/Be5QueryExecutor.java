@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -163,9 +164,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final DatabaseModel database;
     private final Meta meta;
     private final SqlService db;
-    private ContextApplier contextApplier;
     private final UserAwareMeta userAwareMeta;
     private final Context context;
+    private final FilterHelper filterHelper;
+
+    private ContextApplier contextApplier;
     private final ParserContext parserContext;
     private Set<String> subQueryKeys;
     private ExtraQuery extraQuery;
@@ -179,6 +182,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.meta            = injector.getMeta();
         this.db              = injector.getSqlService();
         this.userAwareMeta   = injector.get(UserAwareMeta.class);
+        this.filterHelper    = injector.get(FilterHelper.class);
 
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
@@ -268,9 +272,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             dql.log("Without ID column", ast);
         }
 
-        // FILTERS TODO использовать prepare statement, далает: WHERE t.value = 1, t.value - строка.
-        // использия Entity - формировать фильтр в модуле server
-        //applyFilters(ast);
+        // FILTERS
+        //filterHelper.applyFilters(ast, query.getEntity().getName(), parametersMap);
 
         // CATEGORY
         applyCategory( dql, ast );
@@ -302,23 +305,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                 new AstIdentifierConstant( "data", true )
         ));
         query.replaceWith( new AstQuery( select ) );
-    }
-
-    private void applyFilters(AstStart ast)
-    {
-        DebugQueryLogger dql = new DebugQueryLogger();
-        Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
-
-        Map<ColumnRef, String> filters = EntryStream.of(parametersMap)
-                .removeKeys(usedParams::contains)
-                .removeKeys("category"::equals)
-                .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : query.getEntity().getName() + "." + k))
-                .nonNullKeys().toMap();
-        if(!filters.isEmpty())
-        {
-            new FilterApplier().addFilter(ast, filters);
-            dql.log("With filters", ast);
-        }
     }
 
     private boolean hasColumnWithLabel(AstStart ast, String idColumnLabel)

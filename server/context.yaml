@@ -13,6 +13,7 @@ context:
   - download:         com.developmentontheedge.be5.components.DownloadComponent
   - defaultTemplateProcessor:   com.developmentontheedge.be5.components.TemplateProcessor
   services:
+  - com.developmentontheedge.be5.api.helpers.FilterHelper
   - com.developmentontheedge.be5.api.services.impl.LogConfigurator
   - com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
   - com.developmentontheedge.be5.api.helpers.DpsHelper
