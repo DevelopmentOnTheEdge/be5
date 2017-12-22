@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.sql.model.AstStart
 import com.developmentontheedge.sql.model.SqlQuery
-import org.junit.Ignore
 import org.junit.Test
 
 import javax.inject.Inject
@@ -31,20 +30,19 @@ class FilterHelperTest extends Be5ProjectTest
     void simpleFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        filterHelper.applyFilters(ast, "filterTestTable", ["value":"123"])
+        filterHelper.applyFilters(ast, "filterTestTable", ["value":123])
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.value = 123", ast.format())
     }
 
     @Test
-    @Ignore
     void simpleFilterStringColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        filterHelper.applyFilters(ast, "filterTestTable", ["name":"123"])
+        filterHelper.applyFilters(ast, "filterTestTable", ["name":"test"])
 
         assertEquals("SELECT ft.name, ft.value\n" +
-                "FROM filterTestTable ft WHERE ft.name ='123'", ast.format())
+                "FROM filterTestTable ft WHERE ft.name ='test'", ast.format())
     }
 }
