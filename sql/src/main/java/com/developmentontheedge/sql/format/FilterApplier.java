@@ -1,6 +1,7 @@
 package com.developmentontheedge.sql.format;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +27,7 @@ import com.developmentontheedge.sql.model.SimpleNode;
 
 public class FilterApplier
 {
-    public void setFilter(AstStart ast, Map<ColumnRef, String> conditions)
+    public void setFilter(AstStart ast, Map<ColumnRef, Object> conditions)
     {
         AstQuery query = ast.getQuery();
         dropOldConditions( query );
@@ -45,11 +46,11 @@ public class FilterApplier
         }
     }
 
-    public void addFilter(AstStart ast, Map<ColumnRef, String> conditions){
+    public void addFilter(AstStart ast, Map<ColumnRef, Object> conditions){
         addFilter(ast.getQuery(),conditions);
     }
 
-    public void addFilter(AstQuery query, Map<ColumnRef, String> conditions)
+    public void addFilter(AstQuery query, Map<ColumnRef, Object> conditions)
     {
         if( conditions.size() == 0 )
             return;
@@ -82,7 +83,7 @@ public class FilterApplier
             } );
     }
     
-    private void addWhere(AstWhere where, Map<ColumnRef, String> conditions)
+    private void addWhere(AstWhere where, Map<ColumnRef, Object> conditions)
     {
         if( where.jjtGetNumChildren() != 0 )
         {
@@ -105,7 +106,7 @@ public class FilterApplier
             setConditions( where, conditions );
     }
     
-    public void setConditions(SimpleNode where, Map<ColumnRef, String> conditions)
+    public void setConditions(SimpleNode where, Map<ColumnRef, Object> conditions)
     {
         EntryStream.of(conditions).mapKeys( ColumnRef::asNode ).mapValues( this::toNode)
             .mapKeyValue( DefaultParserContext.FUNC_EQ::node ).forEach( where::addChild );
@@ -113,15 +114,27 @@ public class FilterApplier
 
     private static final Pattern BeSqlVar_PATTERN = Pattern.compile("<var:(.*)[ /]");
 
-    private SimpleNode toNode(String value)
+    private SimpleNode toNode(Object value)
     {
-        if( value.matches( "[-+]?\\d*\\.?\\d+" ) )
-            return AstNumericConstant.of( value.contains( "." ) ? (Number)Double.valueOf( value ) : (Number)Integer.valueOf( value ) );
+        if(isNumericColumn(value)) return AstNumericConstant.of( (Number) value );
 
-        Matcher matcher = BeSqlVar_PATTERN.matcher(value);
+        String strValue = value.toString();
+        Matcher matcher = BeSqlVar_PATTERN.matcher(strValue);
         if(matcher.find()){
             return new AstBeSqlVar(matcher.group(1));
         }
-        return new AstStringConstant( value );
+        return new AstStringConstant( strValue );
+    }
+
+    public boolean isNumericColumn(Object value)
+    {
+        Objects.requireNonNull(value);
+
+        Class<?> type = value.getClass();
+        return type == Long.class ||
+                type == Integer.class ||
+                type == Short.class ||
+                type == Double.class ||
+                type == Float.class;
     }
 }

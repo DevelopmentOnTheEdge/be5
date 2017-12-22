@@ -25,8 +25,9 @@ public class FilterApplierTest
     public void testSetFilterApplier()
     {
         AstStart query = SqlQuery.parse( "SELECT g.yr, city.country, g.city FROM games g, city WHERE g.city = city.name" );
-        Map<ColumnRef, String> conditions = EntryStream.of( "city.country", "UK", "g.yr", "2012" )
+        Map<ColumnRef, Object> conditions = EntryStream.<String, Object>of( "city.country", "UK", "g.yr", 2012 )
                 .mapKeys( key -> ColumnRef.resolve( query, key ) ).toCustomMap(LinkedHashMap::new);
+
         new FilterApplier().setFilter( query, conditions );
         assertEquals( "SELECT g.yr, city.country, g.city FROM games g, city WHERE city.country ='UK' AND g.yr = 2012",
                 new Formatter().format( query, new Context( Dbms.MYSQL ), new DefaultParserContext() ) );
@@ -52,7 +53,7 @@ public class FilterApplierTest
     public void testSetFilterApplierUnion()
     {
         AstStart query = SqlQuery.parse( "SELECT name FROM bbc WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%'" );
-        Map<ColumnRef, String> conditions = Collections.singletonMap( ColumnRef.resolve( query, "name" ), "name" );
+        Map<ColumnRef, Object> conditions = Collections.singletonMap( ColumnRef.resolve( query, "name" ), "name" );
         new FilterApplier().setFilter( query, conditions );
         assertEquals( "SELECT * FROM (SELECT name FROM bbc UNION SELECT name FROM actor) tmp WHERE name ='name'",
                 new Formatter().format( query, new Context( Dbms.MYSQL ), new DefaultParserContext() ) );
@@ -72,7 +73,7 @@ public class FilterApplierTest
     {
         AstStart query = SqlQuery
                 .parse( "SELECT games.yr gy, city.country, games.city FROM games, city WHERE games.city = city.name AND city.country = 'UK'" );
-        Map<ColumnRef, String> conditions = Collections.singletonMap( ColumnRef.resolve( query, "games.yr" ), "2012" );
+        Map<ColumnRef, Object> conditions = Collections.singletonMap( ColumnRef.resolve( query, "games.yr" ), 2012 );
         new FilterApplier().addFilter( query, conditions );
         assertEquals( "SELECT games.yr gy, city.country, games.city FROM games, city WHERE games.city = city.name AND city.country = 'UK' AND games.yr = 2012",
                 new Formatter().format( query, new Context( Dbms.MYSQL ), new DefaultParserContext() ) );
@@ -106,7 +107,7 @@ public class FilterApplierTest
     public void testAddFilterApplierUnion()
     {
         AstStart query = SqlQuery.parse( "SELECT name FROM bbc WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%'" );
-        Map<ColumnRef, String> conditions = Collections.singletonMap( ColumnRef.resolve( query, "name" ), "name" );
+        Map<ColumnRef, Object> conditions = Collections.singletonMap( ColumnRef.resolve( query, "name" ), "name" );
         new FilterApplier().addFilter( query, conditions );
         assertEquals( "SELECT * FROM (SELECT name FROM bbc WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%') tmp WHERE name ='name'",
                 new Formatter().format( query, new Context( Dbms.MYSQL ), new DefaultParserContext() ) );
