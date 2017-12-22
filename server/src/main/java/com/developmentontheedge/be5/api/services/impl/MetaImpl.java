@@ -520,7 +520,9 @@ public class MetaImpl implements Meta
         Class<?> type = getColumnType(column);
         return type == Long.class ||
                 type == Integer.class ||
-                type == Double.class;
+                type == Short.class ||
+                type == Double.class ||
+                type == Float.class;
     }
 
     /**
