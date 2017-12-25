@@ -453,7 +453,7 @@ public class ContextApplier
         String regex = paramNode.getRegex();
         String repl = paramNode.getReplacement();
         String changeCase = paramNode.getCase();
-        boolean safestr = !"no".equals( paramNode.getSafeStr() ) && !tableRefAddend;
+        boolean safeStr = "yes".equals( paramNode.getSafeStr() ) && !tableRefAddend;
 
         if( value == null )
             value = "";
@@ -484,11 +484,11 @@ public class ContextApplier
         {
             constant = new AstStringPart( value );
         }
-        else if( isNumeric( value ) )
-        {
-            constant = AstNumericConstant.of( value.contains( "." ) ? (Number)Double.valueOf( value ) : (Number)Integer.valueOf( value ) );
-        }
-        else if( !safestr )
+//        else if( isNumeric( value ) )
+//        {
+//            constant = AstNumericConstant.of( value.contains( "." ) ? (Number)Double.valueOf( value ) : (Number)Integer.valueOf( value ) );
+//        }
+        else if( !safeStr )
         {
             constant = new AstIdentifierConstant( value );
         }
@@ -578,9 +578,9 @@ public class ContextApplier
         for( int k = 0; k < node.jjtGetNumChildren(); k++ )
             tree.jjtAddChild( ( node.child( k ) ), i + k );
     }
-
-    public static boolean isNumeric(String value)
-    {
-        return value.matches( "[-+]?\\d*\\.?\\d+" );
-    }
+//
+//    public static boolean isNumeric(String value)
+//    {
+//        return value.matches( "[-+]?\\d*\\.?\\d+" );
+//    }
 }

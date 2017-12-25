@@ -270,8 +270,8 @@ SELECT * FROM table2]]></format>
             INNER JOIN docTypes dt
               ON dt.code = d.typeID
             WHERE d.entity = 'families'
-              AND d.entityID = <parameter:familyID refColumn="families.ID"/>
-              AND d.typeID = <parameter:docType refColumn="docTypes.code"/>
+              AND d.entityID = <parameter:familyID refColumn="families.ID" safestr="yes"/>
+              AND d.typeID = <parameter:docType refColumn="docTypes.code" safestr="yes"/>
               AND 
       ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
 
@@ -292,8 +292,8 @@ SELECT * FROM table2]]></format>
             INNER JOIN docTypes dt
               ON dt.code = d.typeID
             WHERE d.entity = 'families'
-              AND d.entityID = <parameter:familyID refColumn="families.ID"/>
-              AND d.typeID = <parameter:docType refColumn="docTypes.code"/>
+              AND d.entityID = <parameter:familyID refColumn="families.ID" safestr="yes"/>
+              AND d.typeID = <parameter:docType refColumn="docTypes.code" safestr="yes"/>
               AND 
       ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
 
@@ -335,8 +335,8 @@ SELECT * FROM table2]]></format>
             INNER JOIN docTypes dt
               ON dt.code = d.typeID
             WHERE d.entity = 'families'
-              AND d.entityID = <parameter:familyID refColumn="families.ID"/>
-              AND d.typeID = <parameter:docType refColumn="docTypes.code"/>
+              AND d.entityID = <parameter:familyID refColumn="families.ID" safestr="yes" />
+              AND d.typeID = <parameter:docType refColumn="docTypes.code" safestr="yes" />
               AND 
       ( d.activeFrom <= '<parameter:activeDate type="java.sql.Date"/>'  AND d.activeTo > '<parameter:activeDate type="java.sql.Date"/>'  )
 
@@ -496,7 +496,7 @@ OR x < 2
  <test name="be-if-else-value">
   <parser>
    <query><![CDATA[SELECT * FROM table
-   WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="true"/> AS DATE)</then><else>NOW()</else></if>]]></query>
+   WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="yes"/> AS DATE)</then><else>NOW()</else></if>]]></query>
    <applyContext>
     <parameter name="date" value="2015-11-11" />
    </applyContext>
@@ -507,7 +507,7 @@ OR x < 2
  <test name="be-if-else-value2">
   <parser>
    <query><![CDATA[SELECT * FROM table
-   WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="true"/> AS DATE)</then><else>NOW()</else></if>]]></query>
+   WHERE x > <if expr="date"><then>CAST(<parameter:date safestr="yes"/> AS DATE)</then><else>NOW()</else></if>]]></query>
    <applyContext>
     <parameter name="datee" value="2015-11-11" />
    </applyContext>
@@ -518,7 +518,7 @@ OR x < 2
  <test name="be-if-unless-chain">
   <parser>
    <query><![CDATA[SELECT * FROM table
-   WHERE x > <if parameter="date">CAST(<parameter:date safestr="true"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
+   WHERE x > <if parameter="date">CAST(<parameter:date safestr="yes"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
    <applyContext>
     <parameter name="date" value="2015-11-11" />
    </applyContext>
@@ -529,7 +529,7 @@ OR x < 2
  <test name="be-if-unless-chain2">
   <parser>
    <query><![CDATA[SELECT * FROM table
-   WHERE x > <if parameter="date">CAST(<parameter:date safestr="true"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
+   WHERE x > <if parameter="date">CAST(<parameter:date safestr="yes"/> AS DATE)</if><unless parameter="date">NOW()</unless>]]></query>
    <applyContext>
     <parameter name="datee" value="2015-11-11" />
    </applyContext>
@@ -722,7 +722,7 @@ HAVING COUNT(p2.iD) > 1]]></format>
    <applyContext>
     <parameter name="_tcloneid_" value="bookmarks" />
    </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM 'bookmarks']]></format>
+   <format dbms="oracle"><![CDATA[SELECT ID AS "Code" FROM bookmarks]]></format>
   </parser>
  </test>
  <!-- <test name="parameter-in-tableName2"> <parser> <query><![CDATA[SELECT 
@@ -1785,8 +1785,8 @@ ORDER BY q.section, q.entity, q.name]]></format>
 
  <test name="if-in-string">
   <parser>
-   <query><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter='_cat_'>&_cat_=<parameter:_cat_/></if>">{{{Edit}}}</a>']]></query>
-   <format dbms="oracle"><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter="_cat_">&_cat_=<parameter:_cat_ /></if>">{{{Edit}}}</a>' FROM DUAL]]></format>
+   <query><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter='_cat_'>&_cat_=<parameter:_cat_ safestr="yes"/></if>">{{{Edit}}}</a>']]></query>
+   <format dbms="oracle"><![CDATA[SELECT '<iframe>-<a href="o?_t_=publications&<if parameter="_cat_">&_cat_=<parameter:_cat_ safestr="yes"/></if>">{{{Edit}}}</a>' FROM DUAL]]></format>
    <applyContext>
     <parameter name="_cat_" value="val" />
    </applyContext>
@@ -2092,7 +2092,7 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
      FROM table t
      WHERE 1 = 1
      <if parameter="status">
-        AND status IN <parameter:status multiple="true" />
+        AND status IN <parameter:status multiple="true" safestr="yes"/>
      </if>
 ]]></query>
    <format dbms="postgres"><![CDATA[SELECT
@@ -2100,7 +2100,7 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
      FROM table t
      WHERE 1 = 1
      <if parameter="status">
-        AND status IN <parameter:status multiple="true"/>
+        AND status IN <parameter:status multiple="true" safestr="yes"/>
      </if>]]></format>
    <applyContext>
     <parameter name="status" value="pending" />
