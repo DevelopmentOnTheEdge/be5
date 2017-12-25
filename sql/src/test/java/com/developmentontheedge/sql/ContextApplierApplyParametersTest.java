@@ -65,4 +65,30 @@ public class ContextApplierApplyParametersTest
         assertEquals("SELECT * FROM table WHERE totalSize = 123", start.getQuery().toString());
     }
 
+    @Test
+    public void typeSupport()
+    {
+        AstStart start = SqlQuery.parse( "SELECT * FROM table WHERE date = <parameter:date type=\"java.sql.Date\"/>" );
+
+        ContextApplier contextApplier = new ContextApplier( new BasicQueryContext.Builder()
+                .parameter("date", "1900-01-01")
+                .build() );
+        contextApplier.applyContext( start );
+
+        assertEquals("SELECT * FROM table WHERE date = '1900-01-01'", start.getQuery().toString());
+    }
+
+    @Test
+    public void typeSupportNumber()
+    {
+        AstStart start = SqlQuery.parse( "SELECT * FROM table WHERE totalSize = <parameter:totalSize type=\"java.lang.Integer\"/>" );
+
+        ContextApplier contextApplier = new ContextApplier( new BasicQueryContext.Builder()
+                .parameter("totalSize", "123")
+                .build() );
+        contextApplier.applyContext( start );
+
+        assertEquals("SELECT * FROM table WHERE totalSize = 123", start.getQuery().toString());
+    }
+
 }

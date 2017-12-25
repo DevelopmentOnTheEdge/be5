@@ -12,15 +12,36 @@ public class SqlTypeUtils
                 type == Float.class;
     }
 
+    public static boolean isNumber(String className)
+    {
+        return "java.lang.Long".equals(className) ||
+                "java.lang.Integer".equals(className) ||
+                "java.lang.Short".equals(className) ||
+                "java.lang.Double".equals(className) ||
+                "java.lang.Float".equals(className);
+    }
+
     public static Object parseValue(String value, String className)
     {
-        if("java.lang.Double".equals(className))
+        if("java.lang.Long".equals(className))
+        {
+            return Long.valueOf(value);
+        }
+        else if("java.lang.Integer".equals(className))
+        {
+            return Integer.valueOf(value);
+        }
+        if("java.lang.Short".equals(className))
+        {
+            return Short.valueOf(value);
+        }
+        else if("java.lang.Double".equals(className))
         {
             return Double.valueOf(value);
         }
-        else if("java.lang.Long".equals(className))
+        if("java.lang.Float".equals(className))
         {
-            return Long.valueOf(value);
+            return Float.valueOf(value);
         }
         else
         {

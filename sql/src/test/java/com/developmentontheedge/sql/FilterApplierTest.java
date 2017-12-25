@@ -101,10 +101,10 @@ public class FilterApplierTest
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 
         AstStart query = SqlQuery.parse( "SELECT name FROM bbc b WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%'" );
-        Map<ColumnRef, Object> conditions = Collections.singletonMap( ColumnRef.resolve( query, "bbc.data" ), new java.sql.Date(format.parse("22-12-2017").getTime()) );
+        Map<ColumnRef, Object> conditions = Collections.singletonMap( ColumnRef.resolve( query, "bbc.data" ), new java.sql.Date(format.parse("01-01-1900").getTime()) );
         new FilterApplier().addFilter( query, conditions );
 
-        assertEquals( "SELECT * FROM (SELECT name FROM bbc b WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%') tmp WHERE b.data ='2017-12-22'",
+        assertEquals( "SELECT * FROM (SELECT name FROM bbc b WHERE name LIKE 'Z%' UNION SELECT name FROM actor WHERE name LIKE 'Z%') tmp WHERE b.data ='1900-01-01'",
                 new Formatter().format( query, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
     }
 }

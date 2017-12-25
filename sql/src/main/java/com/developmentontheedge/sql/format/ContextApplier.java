@@ -468,6 +468,7 @@ public class ContextApplier
         String regex = paramNode.getRegex();
         String repl = paramNode.getReplacement();
         String changeCase = paramNode.getCase();
+        String type = paramNode.getType();
         boolean safeStr = "yes".equals( paramNode.getSafeStr() ) && !tableRefAddend;
 
         if( value == null )
@@ -499,10 +500,17 @@ public class ContextApplier
         {
             constant = new AstStringPart( value );
         }
-//        else if( isNumeric( value ) )
-//        {
-//            constant = AstNumericConstant.of( value.contains( "." ) ? (Number)Double.valueOf( value ) : (Number)Integer.valueOf( value ) );
-//        }
+        else if( type != null )
+        {
+            if(SqlTypeUtils.isNumber(type))
+            {
+                constant = AstNumericConstant.of( (Number) SqlTypeUtils.parseValue(value, type) );
+            }
+            else
+            {
+                constant = new AstStringConstant( value );
+            }
+        }
         else if( !safeStr )
         {
             constant = new AstIdentifierConstant( value );
