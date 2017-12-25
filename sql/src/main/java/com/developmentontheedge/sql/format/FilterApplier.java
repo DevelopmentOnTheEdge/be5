@@ -1,7 +1,6 @@
 package com.developmentontheedge.sql.format;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,7 +115,7 @@ public class FilterApplier
 
     private SimpleNode toNode(Object value)
     {
-        if(isNumericColumn(value)) return AstNumericConstant.of( (Number) value );
+        if(SqlTypeUtils.isNumber(value.getClass())) return AstNumericConstant.of( (Number) value );
 
         String strValue = value.toString();
         Matcher matcher = BeSqlVar_PATTERN.matcher(strValue);
@@ -126,15 +125,4 @@ public class FilterApplier
         return new AstStringConstant( strValue );
     }
 
-    public boolean isNumericColumn(Object value)
-    {
-        Objects.requireNonNull(value);
-
-        Class<?> type = value.getClass();
-        return type == Long.class ||
-                type == Integer.class ||
-                type == Short.class ||
-                type == Double.class ||
-                type == Float.class;
-    }
 }

@@ -39,5 +39,10 @@ public class AstBeSessionTag extends AstBeNode
     {
         return getParameter( "default" );
     }
+
+    public String getType()
+    {
+        return getParameter( "type" );
+    }
 }
 /* JavaCC - OriginalChecksum=5bfac9a483d6aca0b9aacdc100e73d4e (do not edit this line) */

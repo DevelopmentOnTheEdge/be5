@@ -26,7 +26,7 @@ public interface QueryContext
      *            session variable name
      * @return session variable value or null if such variable does not exist
      */
-    String getSessionVariable(String name);
+    Object getSessionVariable(String name);
 
     Map<String, String> asMap();
     

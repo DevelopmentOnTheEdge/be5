@@ -11,10 +11,11 @@ import java.util.Objects;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import one.util.streamex.StreamEx;
 
+
 public class BasicQueryContext implements QueryContext
 {
     private final Map<String, List<String>> parameters;
-    private final Map<String, String> sessionVariables;
+    private final Map<String, Object> sessionVariables;
     private final String userName;
     private final List<String> roles;
     private final QueryResolver queryResolver;
@@ -26,7 +27,7 @@ public class BasicQueryContext implements QueryContext
         public String resolve(String entityName, String queryName);
     }
 
-    private BasicQueryContext(Map<String, List<String>> parameters, Map<String, String> sessionVariables, String userName,
+    private BasicQueryContext(Map<String, List<String>> parameters, Map<String, Object> sessionVariables, String userName,
             List<String> roles, QueryResolver queryResolver)
     {
         this.parameters = parameters;
@@ -66,7 +67,7 @@ public class BasicQueryContext implements QueryContext
     }
 
     @Override
-    public String getSessionVariable(String name)
+    public Object getSessionVariable(String name)
     {
         return sessionVariables.get( name );
     }
@@ -92,7 +93,7 @@ public class BasicQueryContext implements QueryContext
     public static class Builder
     {
         private final Map<String, List<String>> parameters = new HashMap<>();
-        private final Map<String, String> sessionVariables = new HashMap<>();
+        private final Map<String, Object> sessionVariables = new HashMap<>();
         private String userName;
         private final List<String> roles = new ArrayList<>();
         private QueryResolver queryResolver = (entity, query) -> null;
@@ -122,7 +123,14 @@ public class BasicQueryContext implements QueryContext
 
         public Builder sessionVar(String name, String value)
         {
-            sessionVariables.put( name, value );
+            sessionVar(name, value, null);
+            return this;
+        }
+
+        public Builder sessionVar(String name, String value, String className)
+        {
+            sessionVariables.put( name, SqlTypeUtils.parseValue(value, className) );
+
             return this;
         }
 

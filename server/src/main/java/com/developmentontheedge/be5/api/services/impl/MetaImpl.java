@@ -41,6 +41,7 @@ import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
+import com.developmentontheedge.sql.format.SqlTypeUtils;
 
 
 public class MetaImpl implements Meta
@@ -516,13 +517,7 @@ public class MetaImpl implements Meta
         Objects.requireNonNull(entity);
         Objects.requireNonNull(columnName);
 
-        ColumnDef column = getColumn(entity, columnName);
-        Class<?> type = getColumnType(column);
-        return type == Long.class ||
-                type == Integer.class ||
-                type == Short.class ||
-                type == Double.class ||
-                type == Float.class;
+        return SqlTypeUtils.isNumber(getColumnType(getColumn(entity, columnName)));
     }
 
     /**

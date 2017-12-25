@@ -117,10 +117,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         @Override
-        public String getSessionVariable(String name)//todo add test for ExecutorQueryContext
+        public Object getSessionVariable(String name)
         {
-            Object attr = UserInfoHolder.getSession().get(name);
-            return attr != null ? attr.toString() : null;
+            return UserInfoHolder.getSession().get(name);
         }
 
         @Override

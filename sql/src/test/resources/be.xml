@@ -171,7 +171,7 @@ FROM mfcSeatsTimeSlots msts
    INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
 WHERE ms.mfcCompanyID = <session:user-companyID/>]]></query>
    <applyContext>
-    <sessionVar name="user-companyID" value="123" />
+    <sessionVar name="user-companyID" value="123" type="java.lang.Long"/>
    </applyContext>
    <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
@@ -185,7 +185,7 @@ WHERE ms.mfcCompanyID = 123]]></format>
 DISTINCT( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
    INNER JOIN mfcSeats ms ON msts.seatID = ms.ID
-WHERE ms.mfcCompanyID = <session:user-companyID default="0"/>]]></query>
+WHERE ms.mfcCompanyID = <session:user-companyID default="0" type="java.lang.Long"/>]]></query>
    <applyContext />
    <format dbms="oracle"><![CDATA[SELECT DISTINCT ( CASE WHEN msts.requestID IS NOT NULL THEN 'Занято' ELSE 'Свободно' END)
 FROM mfcSeatsTimeSlots msts
@@ -199,7 +199,7 @@ WHERE ms.mfcCompanyID = 0]]></format>
 FROM utilities u, utilities2providers up 
 WHERE up.utilityID = u.ID AND up.companyID = <session:user-companyID refColumn='companies.ID' />]]></query>
    <applyContext>
-    <sessionVar name="user-companyID" value="123" />
+    <sessionVar name="user-companyID" value="123" type="java.lang.Long"/>
    </applyContext>
    <format dbms="oracle"><![CDATA[SELECT u.ID, u.utility
 FROM utilities u, utilities2providers up 

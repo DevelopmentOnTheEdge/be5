@@ -40,6 +40,7 @@ public class ParserTarget extends Target
     public static final String ATTR_DBMS  = "dbms";
     public static final String ATTR_NAME  = "name";
     public static final String ATTR_VALUE = "value";
+    public static final String ATTR_TYPE = "type";
 
     protected SqlParser parser = new SqlParser();
     protected String query;
@@ -112,7 +113,7 @@ public class ParserTarget extends Target
                     builder.parameter( child.getAttribute( ATTR_NAME ), child.getAttribute( ATTR_VALUE ) );
                     break;
                 case TAG_SESSION_VAR:
-                    builder.sessionVar( child.getAttribute( ATTR_NAME ), child.getAttribute( ATTR_VALUE ) ); 
+                    builder.sessionVar( child.getAttribute( ATTR_NAME ), child.getAttribute( ATTR_VALUE ), child.getAttribute( ATTR_TYPE ) );
                     break;
                 case TAG_USER_NAME:
                     builder.userName( child.getAttribute(ATTR_NAME) );

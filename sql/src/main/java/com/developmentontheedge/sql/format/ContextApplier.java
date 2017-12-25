@@ -323,25 +323,39 @@ public class ContextApplier
     private void applySessionTag(AstBeSessionTag child)
     {
         String name = child.getName();
-        String value = context.getSessionVariable( name );
-        if(value == null) value = child.getDefault();
-        if(value == null) value = "";
+        Object value = context.getSessionVariable( name );
+
+        if(value == null)
+        {
+            if(child.getDefault() != null)
+            {
+                value = SqlTypeUtils.parseValue(child.getDefault(), child.getType());
+            }
+            else
+            {
+                value = "";
+            }
+        }
+
         SimpleNode replacement;
-        // TODO: support refColumn; smart quoting
+
+        // TODO: support refColumn; smart quoting - in server module
         if( child.jjtGetParent() instanceof AstStringConstant )
-            replacement = new AstStringPart( value );
+        {
+            replacement = new AstStringPart(value.toString());
+        }
         else
         {
-//            try
-//            {
-//                replacement = AstNumericConstant.of( Integer.valueOf( value ) );
-//            }
-//            catch( NumberFormatException e )
-//            {
-//                replacement = new AstStringConstant( value );
-//            }
-            replacement = new AstIdentifierConstant(value);
+            if(SqlTypeUtils.isNumber(value.getClass()))
+            {
+                replacement = AstNumericConstant.of( (Number) value );
+            }
+            else
+            {
+                replacement = new AstStringConstant( value.toString() );
+            }
         }
+
         child.replaceWith( replacement );
     }
 
