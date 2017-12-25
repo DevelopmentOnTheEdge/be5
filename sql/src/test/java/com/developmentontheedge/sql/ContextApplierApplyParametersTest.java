@@ -91,4 +91,16 @@ public class ContextApplierApplyParametersTest
         assertEquals("SELECT * FROM table WHERE totalSize = 123", start.getQuery().toString());
     }
 
+    @Test
+    public void typeSupportNumberNoParameterInIfCondition()
+    {
+        AstStart start = SqlQuery.parse( "SELECT * FROM table WHERE (1=1)" +
+                "<if parameter=\"totalSize\"> AND totalSize = <parameter:totalSize type=\"java.lang.Integer\"/></if>" );
+
+        ContextApplier contextApplier = new ContextApplier( new BasicQueryContext.Builder().build() );
+        contextApplier.applyContext( start );
+
+        assertEquals("SELECT * FROM table WHERE (1 = 1)", start.getQuery().toString());
+    }
+
 }

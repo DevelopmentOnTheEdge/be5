@@ -504,7 +504,11 @@ public class ContextApplier
         {
             if(SqlTypeUtils.isNumber(type))
             {
-                constant = AstNumericConstant.of( (Number) SqlTypeUtils.parseValue(value, type) );
+                if(!value.equals( "" )){
+                    constant = AstNumericConstant.of( (Number) SqlTypeUtils.parseValue(value, type) );
+                }else{
+                    constant = new AstIdentifierConstant( value );
+                }
             }
             else
             {
