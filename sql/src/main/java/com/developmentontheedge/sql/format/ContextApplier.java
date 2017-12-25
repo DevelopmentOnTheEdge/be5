@@ -332,14 +332,15 @@ public class ContextApplier
             replacement = new AstStringPart( value );
         else
         {
-            try
-            {
-                replacement = AstNumericConstant.of( Integer.valueOf( value ) );
-            }
-            catch( NumberFormatException e )
-            {
-                replacement = new AstStringConstant( value );
-            }
+//            try
+//            {
+//                replacement = AstNumericConstant.of( Integer.valueOf( value ) );
+//            }
+//            catch( NumberFormatException e )
+//            {
+//                replacement = new AstStringConstant( value );
+//            }
+            replacement = new AstIdentifierConstant(value);
         }
         child.replaceWith( replacement );
     }
