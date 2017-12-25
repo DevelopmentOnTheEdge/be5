@@ -78,6 +78,11 @@ public class AstBeParameterTag extends AstBeNode
         return getParameter( "type" );
     }
 
+    public void setType(String value)
+    {
+        setParameter( "type", value );
+    }
+
     @Override
     public String getParametersString()
     {

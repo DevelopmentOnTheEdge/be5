@@ -28,7 +28,7 @@ public interface Meta
     Map<String, List<Entity>> getOrderedEntitiesByModules(EntityType entityType, String language);
 
     /**
-     * Returns an entity with by its name. Throws an exception if there's no entity with this name.
+     * Returns an entity with by its name.
      */
     Entity getEntity(String name);
 

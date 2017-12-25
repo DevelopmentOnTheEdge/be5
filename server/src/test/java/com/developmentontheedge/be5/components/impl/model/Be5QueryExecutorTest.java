@@ -10,6 +10,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,5 +65,38 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
                 "  t.value AS \"Value\"\n" +
                 "FROM\n" +
                 "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql());
+    }
+
+    @Test
+    public void testResolveTypeOfRefColumn()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumn");
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, Collections.singletonMap("name", "test"), injector);
+
+        be5QueryExecutor.execute();
+
+        assertEquals("SELECT *\n" +
+                "FROM testtable\n" +
+                "WHERE name = 'test' LIMIT 2147483647", be5QueryExecutor.getFinalSql());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testResolveTypeOfRefColumnError()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
+
+        be5QueryExecutor.execute();
+        assertEquals("", be5QueryExecutor.getFinalSql());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testResolveTypeOfRefColumnNPE()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
+
+        be5QueryExecutor.execute();
+        assertEquals("", be5QueryExecutor.getFinalSql());
     }
 }

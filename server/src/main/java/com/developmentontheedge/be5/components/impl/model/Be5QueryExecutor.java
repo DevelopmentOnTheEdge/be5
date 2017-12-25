@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -247,12 +248,17 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         try
         {
             ast = SqlQuery.parse(queryText);
-        }catch (RuntimeException e)
+        }
+        catch (RuntimeException e)
         {
-            ast = SqlQuery.parse("select 'error'");
             log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
+            throw Be5Exception.internalInQuery(e, query);
+
+            //ast = SqlQuery.parse("select 'error'");
         }
         dql.log("Compiled", ast);
+
+        resolveTypeOfRefColumn(ast);
 
         // CONTEXT
         contextApplier.applyContext( ast );
@@ -295,6 +301,36 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         return new Formatter().format( ast, context, parserContext );
+    }
+
+    private void resolveTypeOfRefColumn(AstStart ast)
+    {
+        ast.tree().select(AstBeParameterTag.class).forEach(tag -> {
+            if(tag.getRefColumn() != null)
+            {
+                String[] split = tag.getRefColumn().split("\\.");
+                String table, column;
+                if(split.length == 2)
+                {
+                    table = split[0];
+                    column = split[1];
+                }
+                else if(split.length == 3)
+                {
+                    table = split[0] + "." + split[1];
+                    column = split[2];
+                }
+                else
+                {
+                    return;
+                }
+                Entity entity = meta.getEntity(table);
+                if(entity != null)
+                {
+                    tag.setType(meta.getColumnType(entity, column).getName());
+                }
+            }
+        });
     }
 
     private void countFromQuery(AstQuery query)
