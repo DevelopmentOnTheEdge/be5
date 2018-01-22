@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.metadata.model.*;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 
 public class ProjectTestUtils
 {
@@ -48,12 +48,10 @@ public class ProjectTestUtils
         return operation;
     }
 
-    public static Query createQuery(Entity entity)
+    public static Query createQuery(Entity entity, String name, Collection<String> roles)
     {
-            Query query = new Query( "All records", entity );
-        query.getRoles().add( '@'+SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP );
-        query.getRoles().addExclusion( "User" );
-        query.getOperationNames().setValues( Collections.singleton( "op" ) );
+        Query query = new Query( name, entity );
+        query.getRoles().parseRoles(roles);
         query.setQuery("select * from entity");
         DataElementUtils.save(query);
         return query;

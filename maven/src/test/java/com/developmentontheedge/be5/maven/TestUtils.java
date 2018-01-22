@@ -37,7 +37,9 @@ public abstract class TestUtils
         ProjectTestUtils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
         ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
 
-        ProjectTestUtils.createQuery( entity );
+        Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
+        query.getOperationNames().setValues( Collections.singleton( "op" ) );
+
         ProjectTestUtils.createOperation( entity );
 
         Path modulePath = tmp.newFolder().toPath();
