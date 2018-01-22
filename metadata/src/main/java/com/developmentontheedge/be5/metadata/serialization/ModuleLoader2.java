@@ -251,8 +251,8 @@ public class ModuleLoader2
         {
             if ( compositeModule != null )
             {
-                module.getModules().merge( compositeModule.getModules(), true, false );
-                module.getApplication().merge( compositeModule.getModule( module.getProjectOrigin() ), true, false );
+                module.getModules().merge( compositeModule.getModules(), true, true );
+                module.getApplication().merge( compositeModule.getModule( module.getProjectOrigin() ), true, true );
             }
 
             module.applyMassChanges( context );

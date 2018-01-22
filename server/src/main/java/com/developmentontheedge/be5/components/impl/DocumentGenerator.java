@@ -244,7 +244,7 @@ public class DocumentGenerator implements Runner
     private TableOperationPresentation presentOperation(Query query, Operation operation) {
         String visibleWhen = Operations.determineWhenVisible(operation);
         String title = userAwareMeta.getLocalizedOperationTitle(query.getEntity().getName(), operation.getName());
-        boolean requiresConfirmation = operation.isConfirm();
+        //boolean requiresConfirmation = operation.isConfirm();
         boolean isClientSide = Operations.isClientSide(operation);
         Action action = null;
         
@@ -253,7 +253,7 @@ public class DocumentGenerator implements Runner
             action = Action.call(Operations.asClientSide(operation).toHashUrl());
         }
                 
-        return new TableOperationPresentation(operation.getName(), title, visibleWhen, requiresConfirmation, isClientSide, action);
+        return new TableOperationPresentation(operation.getName(), title, visibleWhen, false, isClientSide, action);
     }
 
 
