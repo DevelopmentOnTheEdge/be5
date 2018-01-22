@@ -249,18 +249,15 @@ public class ModuleLoader2
 
         for ( Project module : modules )
         {
-            if ( compositeModule == null )
-            {
-                module.applyMassChanges( context );
-                compositeModule = module;
-            }
-            else
+            if ( compositeModule != null )
             {
                 module.getModules().merge( compositeModule.getModules(), true, false );
                 module.getApplication().merge( compositeModule.getModule( module.getProjectOrigin() ), true, false );
-                module.applyMassChanges( context );
-                compositeModule = module;
             }
+
+            module.applyMassChanges( context );
+            compositeModule = module;
+
             if ( compositeModule.isModuleProject() )
             {
                 DataElementUtils.addQuiet( module.getModules(), module.getApplication() );
