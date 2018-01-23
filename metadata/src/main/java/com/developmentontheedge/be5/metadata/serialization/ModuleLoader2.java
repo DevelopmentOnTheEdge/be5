@@ -231,14 +231,14 @@ public class ModuleLoader2
             module.mergeHostProject( model );
         }
 
-        final Project compositeModule = foldModules( modules, context );
+        final Project compositeModule = foldModules( model, modules, context );
         if ( compositeModule != null )
         {
             model.merge( compositeModule );
         }
     }
 
-    private static Project foldModules( final List<Project> modules, LoadContext context )
+    private static Project foldModules( final Project model, final List<Project> modules, LoadContext context )
     {
         if ( modules.isEmpty() )
         {
@@ -261,7 +261,7 @@ public class ModuleLoader2
             if ( compositeModule.isModuleProject() )
             {
                 DataElementUtils.addQuiet( module.getModules(), module.getApplication() );
-                module.setApplication( null );
+                module.setApplication( new Module(model.getProjectOrigin(), model) );
             }
         }
 
