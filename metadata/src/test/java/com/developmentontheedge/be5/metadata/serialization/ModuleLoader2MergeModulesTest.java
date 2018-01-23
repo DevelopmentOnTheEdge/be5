@@ -50,6 +50,7 @@ public class ModuleLoader2MergeModulesTest
         Path modulePath2 = tmp.newFolder().toPath();
         Project moduleProject2 = createModuleWithQueryRoles(project, moduleProject1,"testModule2", "testQuery2", "testRole2", modulePath2);
 
+        project.setRoles(Arrays.asList("testRole1", "testRole2"));
         Serialization.save( project, tpmProjectPath );
 
         ArrayList<URL> urls = new ArrayList<>();
@@ -107,10 +108,10 @@ public class ModuleLoader2MergeModulesTest
     @Test
     public void resolveRoleGroups()
     {
-        assertEquals("",
+        assertEquals("testRole1",
                 project.getEntity("moduleEntity").getQueries().get("testQuery1").getRoles().getFinalRolesString());
 
-        assertEquals("",
+        assertEquals("testRole2",
                 project.getEntity("moduleEntity").getQueries().get("testQuery2").getRoles().getFinalRolesString());
     }
 
