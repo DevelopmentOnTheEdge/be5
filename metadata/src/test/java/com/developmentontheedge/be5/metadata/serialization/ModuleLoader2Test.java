@@ -54,6 +54,9 @@ public class ModuleLoader2Test
 
         Project loadProject = ModuleLoader2.findAndLoadProjectWithModules();
         assertEquals("test", loadProject.getAppName());
+
+        ModuleLoader2.getFileSystem(loadProject, "test");
+
     }
 
 }
