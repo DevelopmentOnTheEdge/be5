@@ -149,7 +149,8 @@ public class YamlDeserializer
             {
                 return field.defaultValue;
             }
-            if ( !(fieldValue instanceof Boolean) && !(fieldValue instanceof Number) && !(fieldValue instanceof String))
+            if ( !(fieldValue instanceof Boolean) && !(fieldValue instanceof Number) && !(fieldValue instanceof String)
+                    && !(fieldValue instanceof Enum))
             {
                 throw new IllegalArgumentException( "Invalid value: expected scalar" );
             }

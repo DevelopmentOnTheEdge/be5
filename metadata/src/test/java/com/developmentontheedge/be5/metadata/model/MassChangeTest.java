@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 public class MassChangeTest
 {
     @Test
-    @Ignore
     public void testMassChange()
     {
         Project project = new Project( "test" );

@@ -95,7 +95,6 @@ public class ReadModelFromXmlTest
      * on windows
      * @throws Exception
      */
-    @Ignore
     @Test
     public void testWriteReadConnectionProfile() throws Exception
     {
