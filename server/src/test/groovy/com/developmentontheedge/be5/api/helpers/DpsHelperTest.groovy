@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
@@ -58,6 +59,8 @@ class DpsHelperTest extends Be5ProjectDBTest
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
 
         assertEquals 2, dps.size()
+        assertNotNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
+
         def list = dps.asList()
         assertEquals "CODE", list.get(0).getName()
         assertEquals "payable", list.get(1).getName()
@@ -66,6 +69,21 @@ class DpsHelperTest extends Be5ProjectDBTest
         list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"]).asList()
         assertEquals "payable", list.get(0).getName()
         assertEquals "CODE", list.get(1).getName()
+    }
+
+    @Test
+    void getDpsForValuesTestOnlyForSpecifiedColumns()
+    {
+        dps.add(new DynamicProperty("payable", String.class))
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE"])
+
+        assertNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
+
+        dps = new DynamicPropertySetSupport()
+        dps.add(new DynamicProperty("payable", String.class))
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("testTags"), ["payable"])
+
+        assertNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
     }
 
     @Test

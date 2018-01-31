@@ -124,14 +124,15 @@ public class DpsHelper
     {
         addDpsExcludedColumnsWithoutTags(dps, entity, columnNames);
 
-        return addTags(dps, entity);
+        return addTags(dps, entity, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()));
     }
 
-    private <T extends DynamicPropertySet> T addTags(T dps, Entity entity)
+    private <T extends DynamicPropertySet> T addTags(T dps, Entity entity, Collection<String> columnNames)
     {
         Map<String, ColumnDef> columns = meta.getColumns(entity);
-        for(DynamicProperty property: dps)
+        for(String propertyName: columnNames)
         {
+            DynamicProperty property = dps.getProperty(propertyName);
             ColumnDef columnDef = columns.get(property.getName());
             if(columnDef != null)addTags(property, columnDef);
         }
@@ -171,7 +172,7 @@ public class DpsHelper
     {
         addDpForColumnsWithoutTags(dps, entity, columnNames);
 
-        addTags(dps, entity);
+        addTags(dps, entity, columnNames);
         return dps;
     }
 
@@ -226,7 +227,7 @@ public class DpsHelper
         }
 
         if(columnDef.isCanBeNull() ||
-            (columnDef.getTypeString().equals(SqlColumnType.TYPE_BOOL) && columnDef.getDefaultValue() != null) )
+                (columnDef.getTypeString().equals(SqlColumnType.TYPE_BOOL) && columnDef.getDefaultValue() != null) )
         {
             dp.setCanBeNull(true);
         }
