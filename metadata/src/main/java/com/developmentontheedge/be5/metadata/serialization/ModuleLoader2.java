@@ -387,6 +387,7 @@ public class ModuleLoader2
     {
         if(urls.size() > 1)
         {
+            log.severe("dev.yaml should be only in the project.");
             throw new RuntimeException("dev.yaml should be only in the project.");
         }
 
@@ -412,7 +413,14 @@ public class ModuleLoader2
         {
             for (Map.Entry<String, String> entry : paths.entrySet())
             {
-                pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
+                if(Paths.get(entry.getValue()).resolve("project.yaml").toFile().exists())
+                {
+                    pathsToProjectsToHotReload.put(entry.getKey(), Paths.get(entry.getValue()));
+                }
+                else
+                {
+                    log.severe("Error path in dev.yaml for " + entry.getKey());
+                }
             }
         }
     }
