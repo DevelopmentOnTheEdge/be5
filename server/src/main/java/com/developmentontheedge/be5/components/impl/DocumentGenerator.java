@@ -178,6 +178,7 @@ public class DocumentGenerator implements Runner
 
         if (limit == 0)
         {
+            //todo delete defaultPageLimit, use getQuerySettings(query).getMaxRecordsPerPage()
             limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
