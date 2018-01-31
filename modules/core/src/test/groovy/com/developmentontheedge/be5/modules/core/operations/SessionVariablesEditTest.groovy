@@ -1,30 +1,23 @@
 package com.developmentontheedge.be5.modules.core.operations
 
-import com.developmentontheedge.be5.api.Request
-import com.developmentontheedge.be5.api.Session
-import com.developmentontheedge.be5.model.FormPresentation
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
-import org.junit.Ignore
+import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.anyString
 import static org.mockito.Matchers.anyVararg
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
 class SessionVariablesEditTest extends SqlMockOperationTest
 {
     @Test
-    @Ignore//todo refactoring access to session
     void testGet()
     {
-        Request req = getSpyMockRecForOp("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr",
-                "", ["remoteAddr":"199.168.0.1"])
+        setSession("remoteAddr", "199.168.0.1")
 
-        Object first = generateOperation(req).getFirst()
+        Object first = generateOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", "").getFirst()
 
         assertEquals("{" +
                 "'values':{" +
@@ -34,22 +27,18 @@ class SessionVariablesEditTest extends SqlMockOperationTest
                     "'/label':{'displayName':'label','labelField':true}," +
                     "'/newValue':{'displayName':'Новое значение:'}}," +
                 "'order':['/label','/newValue']" +
-            "}", oneQuotes(JsonFactory.dps(first)))
+            "}", oneQuotes(JsonFactory.bean(first)))
     }
 
     @Test
-    @Ignore
     void testInvoke()
     {
-        Request req = getSpyMockRecForOp("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr",
-                "{'newValue':'199.168.0.2'}", ["remoteAddr":"199.168.0.1"])
+        setSession("remoteAddr", "199.168.0.1")
 
-//        def session = mock(Session)
-//        when(req.getSession()).thenReturn(session)
-//        when(SqlServiceMock.mock.getScalar(anyString(), anyVararg())).thenReturn(1L)
-//
-//        executeOperation(req)
-//
-//        verify(session).set("remoteAddr", "199.168.0.2")
+        when(SqlServiceMock.mock.getScalar(anyString(), anyVararg())).thenReturn(1L)
+
+        executeOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", ["newValue":"199.168.0.2"])
+
+        assertEquals("199.168.0.2", getSession("remoteAddr"))
     }
 }

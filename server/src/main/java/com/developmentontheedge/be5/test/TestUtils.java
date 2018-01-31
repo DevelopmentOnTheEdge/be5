@@ -254,6 +254,16 @@ public abstract class TestUtils
         return operationExecutor.create(meta, JsonUtils.selectedRows(selectedRows));
     }
 
+    protected void setSession(String name, Object value)
+    {
+        UserInfoHolder.getSession().set(name, value);
+    }
+
+    protected Object getSession(String name)
+    {
+        return UserInfoHolder.getSession().get(name);
+    }
+
     protected Date parseDate(String stringDate)
     {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
