@@ -17,7 +17,7 @@ public class GenerateContextTest extends TestUtils
         new GenerateContext()
                 .setBe5ProjectPath(tpmProjectPath.toString())
                 .setProfileName(profileTestMavenPlugin)
-                .setGeneratePath(targetPath.toString())
+                .setGenerateContextPath(targetPath.toString())
                 .execute();
 
 

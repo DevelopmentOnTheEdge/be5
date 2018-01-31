@@ -109,7 +109,7 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
         else
         {
             throw new MojoFailureException(
-                    "Please specify connection profile: either create "
+                    "Please specify connection profile: create "
                             + be5Project.getProjectFileStructure().getSelectedProfileFile()
                             + " file with profile name or use -DBE5_PROFILE=...");
         }

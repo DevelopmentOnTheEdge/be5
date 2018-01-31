@@ -18,23 +18,32 @@ import java.util.stream.Collectors;
 @Mojo( name = "generate-context")
 public class GenerateContext extends Be5Mojo<GenerateContext>
 {
-    @Parameter(property = "GENERATE_PATH")
-    private String generatePath;
+    @Parameter(property = "GENERATE_CONTEXT_PATH")
+    private String generateContextPath;
+
+    @Parameter(property = "SKIP_GENERATE_CONTEXT")
+    private boolean skipGenerateContextPath = false;
 
     private String generateFilePath;
 
     @Override
     public void execute() throws MojoFailureException
     {
-        generateFilePath = generatePath + "/context.xml";
+        if(skipGenerateContextPath)
+        {
+            System.out.println("Generate context.xml skipped");
+            return;
+        }
 
-        if(generatePath == null)throw new MojoFailureException("generatePath is null");
+        generateFilePath = generateContextPath + "/context.xml";
+
+        if(generateContextPath == null)throw new MojoFailureException("generateContextPath is null");
 
         File file = Paths.get(generateFilePath).toFile();
 
         if(file.exists() && !file.isDirectory())
         {
-            System.out.println("Generate skipped, file exists: " + generateFilePath);
+            System.out.println("Generate context.xml skipped, file exists: " + generateFilePath);
             return;
         }
 
@@ -62,12 +71,12 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
         }
         String resultContext = replacePlaceholders(text);
 
-        Paths.get(generatePath).toFile().mkdirs();
+        Paths.get(generateContextPath).toFile().mkdirs();
         PrintWriter writer = new PrintWriter(generateFilePath, "UTF-8");
         writer.println(resultContext);
         writer.close();
 
-        getLog().info("context.xml created in " + generatePath);
+        getLog().info("context.xml created in " + generateContextPath);
     }
 
     private String replacePlaceholders(String text) throws MojoFailureException
@@ -85,9 +94,9 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
                 replaceAll("URL", prof.getConnectionUrl());
     }
 
-    public GenerateContext setGeneratePath(String generatePath)
+    public GenerateContext setGenerateContextPath(String generateContextPath)
     {
-        this.generatePath = generatePath;
+        this.generateContextPath = generateContextPath;
         return this;
     }
 
