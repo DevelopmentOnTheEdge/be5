@@ -62,11 +62,15 @@ class GroovyDPSTest extends Be5ProjectTest
             value = "value3"
         }
 
+        dps.add("input4", "Input 4")
+
+        dps.getProperty("input4").setValue("input4value")
+
         dps.edit("input3") { value = getNewValue() }
 
         assertEquals("newValue", dps["input3"].getValue() )
 
-        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}},'/input2':{'displayName':'New Display Name','canBeNull':true},'/input3':{'displayName':'Input 3'}},'order':['/reasonMulti','/input2','/input3']}",
+        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue','input4':'input4value'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupName':'Test','groupId':'1','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'digits','type':'baseRule'}},'/input2':{'displayName':'New Display Name','canBeNull':true},'/input3':{'displayName':'Input 3'},'/input4':{'displayName':'Input 4'}},'order':['/reasonMulti','/input2','/input3','/input4']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 
