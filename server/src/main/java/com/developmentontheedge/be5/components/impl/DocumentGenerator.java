@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.components.RestApiConstants;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
@@ -23,12 +22,9 @@ import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.json.JsonFactory;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
