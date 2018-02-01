@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.components.impl.DocumentGenerator;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
@@ -10,8 +9,6 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +45,7 @@ public class FilterOperation extends OperationSupport
     {
         Query query = meta.getQuery(getInfo().getEntityName(), getInfo().getQueryName(), userInfo.getCurrentRoles());
 
-        //todo documentGenerator.getTablePresentation(
+        //todo documentGenerator.getTable(
         //        meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
 
         //todo возвращать OperationResult 'filterResult' с параметрами фильтра

@@ -1,15 +1,14 @@
 package com.developmentontheedge.be5.components.impl;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.components.DocumentGenerator;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.components.impl.QueryRouter.Runner;
 import com.developmentontheedge.be5.components.impl.model.Operations;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
@@ -21,56 +20,104 @@ import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.beans.json.JsonFactory;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.*;
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
-public class DocumentGenerator implements Runner
+public class DocumentGeneratorImpl implements DocumentGenerator
 {
-    /**
-     * Generates a response by the given category and the page.
-     * Parameters:
-     * <ul>
-     *   <li>category</li>
-     *   <li>page</li>
-     *   <li>values?</li>
-     * </ul>
-     */
-    public static void generateAndSend(Request req, Response res, Injector injector)
+    private static Cache<String, Class> groovyQueryClasses;
+
+    private final UserAwareMeta userAwareMeta;
+    private final Meta meta;
+    private final CoreUtils coreUtils;
+    private final GroovyRegister groovyRegister;
+    private final Injector injector;
+
+    public DocumentGeneratorImpl(CoreUtils coreUtils, UserAwareMeta userAwareMeta, Meta meta,
+                                 GroovyRegister groovyRegister, Injector injector)
     {
-        QueryRouter.on(req, injector).run(new DocumentGenerator(req, res, injector));
+        this.coreUtils = coreUtils;
+        this.userAwareMeta = userAwareMeta;
+        this.meta = meta;
+        this.groovyRegister = groovyRegister;
+        this.injector = injector;
+
+        groovyQueryClasses = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .recordStats()
+                .build();
     }
 
-    public static void generateAndSend(Query query, Request req, Response res, Injector injector)
+    @Override
+    public Object routeAndRun(Query query, Map<String, String> parametersMap)
     {
-        Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
-        QueryRouter.on(req, injector).routeAndRun(query, parametersMap, new DocumentGenerator(req, res, injector));
+        return routeAndRun(query, parametersMap, -1, true);
     }
-    
-    private final Request req;
-    private final Response res;
-    private final Injector injector;
-    private final UserAwareMeta userAwareMeta;
-    private final CoreUtils coreUtils;
-    
-    public DocumentGenerator(Request req, Response res, Injector injector)
+
+    @Override
+    public Object routeAndRun(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
     {
-        this.req = req;
-        this.res = res;
-        this.injector = injector;
-        this.coreUtils = injector.get(CoreUtils.class);
-        this.userAwareMeta = injector.get(UserAwareMeta.class);
+        switch (query.getType())
+        {
+            case STATIC:
+                if (ActionHelper.isStaticPage(query))
+                {
+                    return getStatic(query);
+                }
+                else
+                {
+                    throw Be5Exception.internalInQuery(new IllegalStateException("Unsupported static request"), query);
+                }
+            case D1:
+            case D1_UNKNOWN:
+                if (meta.isParametrizedTable(query))
+                {
+                    return getParametrizedTable(query, parametersMap, sortColumn, sortDesc);
+                }
+                else
+                {
+                    return getTable(query, parametersMap, sortColumn, sortDesc);
+                }
+            case D2:
+            case CONTAINER:
+            case CUSTOM:
+            case JAVASCRIPT:
+                throw Be5Exception.internal("Not support operation type: " + query.getType());
+            case GROOVY:
+                try
+                {
+                    Class aClass = groovyQueryClasses.get(query.getEntity() + query.getName(),
+                            k -> groovyRegister.parseClass( query.getQuery(), query.getFileName() ));
+                    if(aClass != null) {
+                        TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
+
+                        tableBuilder.initialize(query, parametersMap);
+                        injector.injectAnnotatedFields(tableBuilder);
+
+                        return getTable(query, parametersMap, tableBuilder.getTable());
+                    }
+                    else
+                    {
+                        throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
+                    }
+                }
+                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+                {
+                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                }
+            default:
+                throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
+        }
     }
     
     @Override
-    public void onStatic(Query query)
+    public StaticPagePresentation getStatic(Query query)
     {
         String content = query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim());
 
@@ -78,7 +125,7 @@ public class DocumentGenerator implements Runner
         String queryName = query.getName();
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
 
-        sendQueryResponseData(query, new StaticPagePresentation(localizedQueryTitle, content));
+        return new StaticPagePresentation(localizedQueryTitle, content);
     }
 
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
@@ -87,52 +134,7 @@ public class DocumentGenerator implements Runner
 //        return new FormGenerator(injector).generate(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
-    @Override
-    public void onTable(Query query, Map<String, String> parametersMap)
-    {
-        try
-        {
-            sendQueryResponseData(query, getTablePresentation(query, parametersMap));
-        }
-        catch (Be5Exception e)
-        {
-            sendQueryResponseError(query, e);
-        }
-        catch (Throwable e)
-        {
-            sendQueryResponseError(query, Be5Exception.internalInQuery(e, query));
-        }
-    }
-
-    @Override
-    public void onTable(Query query, Map<String, String> parametersMap, TableModel tableModel)
-    {
-        sendQueryResponseData(query, getTablePresentation(query, parametersMap, tableModel));
-    }
-
-    private void sendQueryResponseData(Query query, Object data)
-    {
-        res.sendAsJson(
-                new ResourceData(TABLE_ACTION, data),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
-        );
-    }
-
-    private void sendQueryResponseError(Query query, Be5Exception e)
-    {
-        String message = Be5Exception.getMessage(e);
-
-        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
-
-        res.sendErrorAsJson(
-                new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
-        );
-    }
-
-    private TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap, TableModel table)
+    public TablePresentation getTable(Query query, Map<String, String> parametersMap, TableModel table)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
 
@@ -166,7 +168,12 @@ public class DocumentGenerator implements Runner
         }
     }
 
-    public TablePresentation getTablePresentation(Query query, Map<String, String> parametersMap)
+    public TablePresentation getTable(Query query, Map<String, String> parametersMap)
+    {
+        return getTable(query, parametersMap, -1, true);
+    }
+
+    public TablePresentation getTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
         final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
@@ -181,34 +188,29 @@ public class DocumentGenerator implements Runner
 
         TableModel table = TableModel
                 .from(query, parametersMap, selectable, injector)
-                .sortOrder(req.getInt("order[0][column]", -1), "desc".equals(req.get("order[0][dir]")))
+                .sortOrder(sortColumn, sortDesc)
                 .limit(limit)
                 .build();
 
-        return getTablePresentation(query, parametersMap, table);
+        return getTable(query, parametersMap, table);
     }
 
     @Override
-    public void onParametrizedTable(Query query, Map<String, String> parametersMap)
+    public Object getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
     {
 //        TODO String entityName = query.getEntity().getName();
 //        String operationName = query.getParametrizingOperationName();
 //        Operation operation = query.getParametrizingOperation();
 //        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parametersMap).getFirst();
-//        TablePresentation tablePresentation = getTablePresentation(query, parametersMap);
+//        TablePresentation tablePresentation = getTable(query, parametersMap);
 //        FormTable formTable = new FormTable(formPresentation, tablePresentation);
 //
 //        DocumentResponse.of(res).send(formTable);
-        onTable(query, parametersMap);
+        return getTable(query, parametersMap, sortColumn, sortDesc);
     }
-    
-    @Override
-    public void onError(Query query, Throwable e)
+
+    private List<TableOperationPresentation> collectOperations(Query query)
     {
-        sendQueryResponseError(query, Be5Exception.internalInQuery(e, query));
-    }
-    
-    private List<TableOperationPresentation> collectOperations(Query query) {
         List<TableOperationPresentation> operations = new ArrayList<>();
         List<String> userRoles = UserInfoHolder.getCurrentRoles();
 
@@ -238,7 +240,8 @@ public class DocumentGenerator implements Runner
         return queryOperations;
     }
 
-    private TableOperationPresentation presentOperation(Query query, Operation operation) {
+    private TableOperationPresentation presentOperation(Query query, Operation operation)
+    {
         String visibleWhen = Operations.determineWhenVisible(operation);
         String title = userAwareMeta.getLocalizedOperationTitle(query.getEntity().getName(), operation.getName());
         //boolean requiresConfirmation = operation.isConfirm();

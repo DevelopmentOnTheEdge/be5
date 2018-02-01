@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.components.impl.DocumentGenerator;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -32,7 +31,8 @@ public class QueryBuilder implements Component
             DataElementUtils.save( query );
             query.setQuery( req.getNonEmpty("sql") );
 
-            DocumentGenerator.generateAndSend(query, req, res, injector);
+            Object table = injector.get(DocumentGenerator.class).getTable(query, Collections.emptyMap());
+            Document.sendQueryResponseData(req, res, query, table);
         }
         else
         {

@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.env.Injector
 import com.developmentontheedge.be5.model.jsonapi.ResourceData
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.google.common.collect.ImmutableMap
+import groovy.transform.TypeChecked
 import org.junit.Before
 import org.junit.Test
 
@@ -16,6 +17,8 @@ import static org.mockito.Matchers.anyMapOf
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 
+
+@TypeChecked
 class QueryBuilderTest extends SqlMockOperationTest
 {
     @Inject private Injector injector

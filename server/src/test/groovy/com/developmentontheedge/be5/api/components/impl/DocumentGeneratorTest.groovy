@@ -1,43 +1,41 @@
 package com.developmentontheedge.be5.api.components.impl
 
-import com.developmentontheedge.be5.api.Request
-import com.developmentontheedge.be5.api.Response
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.components.impl.DocumentGenerator
+import com.developmentontheedge.be5.components.DocumentGenerator
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
+import groovy.transform.TypeChecked
 import org.junit.Test
 
 
 import static org.junit.Assert.*
-import static org.mockito.Mockito.mock
 
+
+@TypeChecked
 class DocumentGeneratorTest extends TestTableQueryDBTest
 {
     @Inject private Meta meta
-
-    private Response response = mock(Response.class)
-    private Request request = getSpyMockRecForQuery("testtable", "All records", "")
+    @Inject private DocumentGenerator documentGenerator
 
     @Test
     void getTablePresentation()
     {
-        TablePresentation testtable = new DocumentGenerator(request, response, injector).getTablePresentation(
+        TablePresentation testTable = documentGenerator.getTable(
                 meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
 
-        assertEquals("testtable: All records", testtable.getTitle())
+        assertEquals("testtable: All records", testTable.getTitle())
 
         assertEquals("[{'cells':[" +
                 "{'content':'tableModelTest','options':{}}," +
                 "{'content':'1','options':{}}" +
-            "]}]",  oneQuotes(jsonb.toJson(testtable.getRows())))
+            "]}]",  oneQuotes(jsonb.toJson(testTable.getRows())))
     }
 
     @Test
     void testLinkQuick()
     {
-        TablePresentation testtable = new DocumentGenerator(request, response, injector).getTablePresentation(
+        TablePresentation testtable = documentGenerator.getTable(
                 meta.getQuery("testtable", "LinkQuick", Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
         assertEquals("testtable: LinkQuick", testtable.getTitle())
@@ -57,7 +55,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", 11)
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)
 
-        TablePresentation testtable = new DocumentGenerator(request, response, injector).getTablePresentation(
+        TablePresentation testtable = documentGenerator.getTable(
                 meta.getQuery("testtableAdmin", "Test null in subQuery",
                         Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
