@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.components.FrontendConstants;
+import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
@@ -151,6 +152,11 @@ public class OperationResult
     public static OperationResult redirectAndMessage(String url, String message)
     {
         return new OperationResult(OperationStatus.REDIRECTED, message, url);
+    }
+
+    public static OperationResult table(TablePresentation table)
+    {
+        return new OperationResult(OperationStatus.TABLE, null, table);
     }
     
     public static OperationResult error(String message, Throwable details)

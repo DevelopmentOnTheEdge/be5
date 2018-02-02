@@ -18,5 +18,8 @@ public interface FrontendConstants
 
     String OPERATION_RESULT = "operationResult";
 
+    String SEARCH_PARAM = "_search_";
+    String SEARCH_PRESETS_PARAM = "_search_presets_";
+
     String RELOAD_CONTROL_NAME = "_reloadcontrol_";
 }

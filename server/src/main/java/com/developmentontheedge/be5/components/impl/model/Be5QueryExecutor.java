@@ -278,10 +278,10 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
 
         // FILTERS
-        //filterHelper.applyFilters(ast, query.getEntity().getName(), parametersMap);
+        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parametersMap));
 
         // CATEGORY
-        applyCategory( dql, ast );
+        //applyCategory( dql, ast );
 
         // SIMPLIFY
         Simplifier.simplify(ast);
@@ -421,28 +421,28 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             databaseService.releaseConnection(conn);
         }
     }
-
-    private void applyCategory(DebugQueryLogger dql, AstStart ast)
-    {
-        String categoryString = parametersMap.get( "category" );
-        if(categoryString != null)
-        {
-            long categoryId;
-            try
-            {
-                categoryId = Long.parseLong(categoryString);
-            }
-            catch( NumberFormatException e )
-            {
-                IllegalArgumentException e2 = new IllegalArgumentException("Invalid category: " + categoryString, e);
-                log.log(Level.SEVERE, e2.toString() + query.getEntity().getName(), e2);
-                throw Be5Exception.internalInQuery( new IllegalArgumentException( "Invalid category: " + categoryString ),
-                        query );
-            }
-            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply( ast );
-            dql.log("With category", ast);
-        }
-    }
+//
+//    private void applyCategory(DebugQueryLogger dql, AstStart ast)
+//    {
+//        String categoryString = parametersMap.get( "category" );
+//        if(categoryString != null)
+//        {
+//            long categoryId;
+//            try
+//            {
+//                categoryId = Long.parseLong(categoryString);
+//            }
+//            catch( NumberFormatException e )
+//            {
+//                IllegalArgumentException e2 = new IllegalArgumentException("Invalid category: " + categoryString, e);
+//                log.log(Level.SEVERE, e2.toString() + query.getEntity().getName(), e2);
+//                throw Be5Exception.internalInQuery( new IllegalArgumentException( "Invalid category: " + categoryString ),
+//                        query );
+//            }
+//            new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply( ast );
+//            dql.log("With category", ast);
+//        }
+//    }
 
     private <T> List<T> getResults(String sql, ResultSetParser<T> parser)
     {
