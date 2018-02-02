@@ -55,17 +55,17 @@ public class Form implements Component
                 .getDetails();
 
         Operation operation = operationExecutor.create(meta, selectedRows);
-        Either<Object, OperationResult> generate;
+        Either<Object, OperationResult> result;
 
         try
         {
             switch (req.getRequestUri())
             {
                 case "":
-                    generate = operationService.generate(operation, presetValues);
+                    result = operationService.generate(operation, presetValues);
                     break;
                 case "apply":
-                    generate = operationService.execute(operation, presetValues);
+                    result = operationService.execute(operation, presetValues);
                     break;
                 default:
                     res.sendUnknownActionError();
@@ -83,8 +83,8 @@ public class Form implements Component
             return;
         }
 
-        Object result;
-        if(generate.isFirst())
+        Object data;
+        if(result.isFirst())
         {
             ErrorModel errorModel = null;
             if(operation.getResult().getStatus() == OperationStatus.ERROR)
@@ -100,19 +100,19 @@ public class Form implements Component
                 operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0]));
             }
 
-            result = new FormPresentation(operation.getInfo(),
+            data = new FormPresentation(operation.getInfo(),
                     userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                     Arrays.stream(operation.getRecords()).collect(Collectors.joining(",")),
-                    JsonFactory.bean(generate.getFirst()), operation.getLayout(),
+                    JsonFactory.bean(result.getFirst()), operation.getLayout(),
                     operation.getResult(), errorModel);
         }
         else
         {
-            result = generate.getSecond();
+            data = result.getSecond();
         }
 
         res.sendAsJson(
-                new ResourceData(generate.isFirst() ? FORM_ACTION : OPERATION_RESULT, result),
+                new ResourceData(result.isFirst() ? FORM_ACTION : OPERATION_RESULT, data),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, link)
         );

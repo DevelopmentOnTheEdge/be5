@@ -11,10 +11,9 @@ import com.developmentontheedge.be5.util.HashUrl
 class Entities extends TableBuilderSupport
 {
     @Override
-    TableModel getTable()
+    TableModel getTableModel()
     {
         addColumns("Name","Type", "Columns", "Queries", "Operations")
-
 
         def entities = meta.getOrderedEntities(userInfo.getLanguage())
         for (Entity entity : entities) {

@@ -10,5 +10,5 @@ public interface TableBuilder
 {
     TableBuilder initialize(Query query, Map<String, String> parametersMap);
 
-    TableModel getTable();
+    TableModel getTableModel();
 }

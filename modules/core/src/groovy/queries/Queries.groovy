@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.query.TableBuilderSupport
 class Queries extends TableBuilderSupport
 {
     @Override
-    TableModel getTable()
+    TableModel getTableModel()
     {
         addColumns("Name","Type", "Roles", "Operations")
 

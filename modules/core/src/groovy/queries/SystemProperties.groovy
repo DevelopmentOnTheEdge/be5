@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.query.TableBuilderSupport
 class SystemProperties extends TableBuilderSupport
 {
     @Override
-    TableModel getTable()
+    TableModel getTableModel()
     {
         addColumns("name", "value")
 

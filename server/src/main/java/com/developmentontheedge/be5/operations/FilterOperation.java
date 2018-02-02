@@ -45,7 +45,7 @@ public class FilterOperation extends OperationSupport
     {
         Query query = meta.getQuery(getInfo().getEntityName(), getInfo().getQueryName(), userInfo.getCurrentRoles());
 
-        //todo documentGenerator.getTable(
+        //todo documentGenerator.getTableModel(
         //        meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
 
         //todo возвращать OperationResult 'filterResult' с параметрами фильтра

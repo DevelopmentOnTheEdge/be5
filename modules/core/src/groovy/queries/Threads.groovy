@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.query.TableBuilderSupport
 class Threads extends TableBuilderSupport
 {
     @Override
-    TableModel getTable()
+    TableModel getTableModel()
     {
         addColumns("name", "groupName",  "state", "alive", "priority", "threadGroup", "id")
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet()

@@ -100,7 +100,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                         tableBuilder.initialize(query, parametersMap);
                         injector.injectAnnotatedFields(tableBuilder);
 
-                        return getTable(query, parametersMap, tableBuilder.getTable());
+                        return getTable(query, parametersMap, tableBuilder.getTableModel());
                     }
                     else
                     {
@@ -196,13 +196,13 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public Object getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
+    public TablePresentation getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
     {
 //        TODO String entityName = query.getEntity().getName();
 //        String operationName = query.getParametrizingOperationName();
 //        Operation operation = query.getParametrizingOperation();
 //        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parametersMap).getFirst();
-//        TablePresentation tablePresentation = getTable(query, parametersMap);
+//        TablePresentation tablePresentation = getTableModel(query, parametersMap);
 //        FormTable formTable = new FormTable(formPresentation, tablePresentation);
 //
 //        DocumentResponse.of(res).send(formTable);

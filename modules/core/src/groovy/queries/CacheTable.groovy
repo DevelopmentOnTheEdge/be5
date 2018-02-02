@@ -10,7 +10,7 @@ class CacheTable extends TableBuilderSupport
     @Inject Be5Caches be5Caches
 
     @Override
-    TableModel getTable()
+    TableModel getTableModel()
     {
         addColumns("Name",
                 "Hit rate",

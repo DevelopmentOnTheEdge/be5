@@ -16,7 +16,7 @@ class TableBuilderTest extends Be5ProjectTest
     class TestTable extends TableBuilderSupport
     {
         @Override
-        TableModel getTable()
+        TableModel getTableModel()
         {
             addColumns("name", "value")
 
@@ -34,7 +34,7 @@ class TableBuilderTest extends Be5ProjectTest
                 meta.getQueryIgnoringRoles("testtableAdmin", "All records"),
                 new HashMap<>()
         )
-        TableModel table = tableBuilder.getTable()
+        TableModel table = tableBuilder.getTableModel()
 
         assertEquals "name", table.getColumns().get(0).getName()
         assertEquals "name", table.getColumns().get(0).getTitle()
