@@ -743,6 +743,16 @@ public class DpsHelper
         return values;
     }
 
+    public Map<String, String> getAsMapStringValues(DynamicPropertySet dps)
+    {
+        Map<String, String> values = new HashMap<>();
+        dps.forEach(p -> {
+            if(p.getValue() != null)values.put(p.getName(), p.getValue().toString());
+        });
+
+        return values;
+    }
+
     public void setValueIfOneTag(DynamicPropertySet dps, List<String> propertyNames)
     {
         for (String name : propertyNames)

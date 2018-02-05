@@ -62,13 +62,13 @@ public class FilterOperation extends OperationSupport
         DynamicProperty searchPresetsProperty = new DynamicProperty(SEARCH_PRESETS_PARAM, String.class, String.join(",", searchPresets));
         searchPresetsProperty.setReadOnly(true);
         searchPresetsProperty.setCanBeNull(true);
-        //searchPresetsProperty.setHidden(true);
+        searchPresetsProperty.setHidden(true);
         dps.add(searchPresetsProperty);
 
         DynamicProperty searchParamProperty = new DynamicProperty(SEARCH_PARAM, Boolean.class, true);
         searchParamProperty.setReadOnly(true);
         searchParamProperty.setCanBeNull(true);
-        //searchParamProperty.setHidden(true);
+        searchParamProperty.setHidden(true);
         dps.add(searchParamProperty);
 
 
@@ -78,17 +78,11 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters, OperationContext context) throws Exception
     {
-        //todo remove - редирект ломает навигацию
-        //addRedirectParams(((DynamicPropertySet)parameters).asMap());
-
         Query query = meta.getQuery(getInfo().getEntityName(), getInfo().getQueryName(), userInfo.getCurrentRoles());
 
-        TablePresentation table = documentGenerator.getTable(query, Collections.emptyMap());
-        //((DynamicPropertySet)parameters).asMap()
+        TablePresentation table = documentGenerator.getTable(query,
+                dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));
 
         setResult(OperationResult.table(table));
-
-        //возвращать OperationResult 'filterResult' с параметрами фильтра
-        //и отфильтрованую таблицу в JsonApiModel.included
     }
 }
