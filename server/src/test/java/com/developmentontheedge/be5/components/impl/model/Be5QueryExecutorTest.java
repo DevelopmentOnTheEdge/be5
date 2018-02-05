@@ -80,6 +80,15 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
                 "WHERE name = 'test' LIMIT 2147483647", be5QueryExecutor.getFinalSql());
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testResolveUnknownColumn()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumn");
+        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, Collections.singletonMap("unknownColumn", "test"), injector);
+
+        be5QueryExecutor.execute();
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testResolveTypeOfRefColumnError()
     {

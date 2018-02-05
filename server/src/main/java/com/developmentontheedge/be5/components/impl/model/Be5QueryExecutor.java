@@ -261,6 +261,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         resolveTypeOfRefColumn(ast);
 
         // CONTEXT
+
+        // FILTERS
+        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parametersMap));
+
+        // CATEGORY
+        //applyCategory( dql, ast );
+
         contextApplier.applyContext( ast );
         subQueryKeys = contextApplier.subQueryKeys().toSet();
         dql.log("With context", ast);
@@ -276,12 +283,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             dql.log("Without ID column", ast);
         }
-
-        // FILTERS
-        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parametersMap));
-
-        // CATEGORY
-        //applyCategory( dql, ast );
 
         // SIMPLIFY
         Simplifier.simplify(ast);

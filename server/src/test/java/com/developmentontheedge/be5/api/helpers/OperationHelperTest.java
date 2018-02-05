@@ -189,7 +189,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     @Test
     public void readOneRecordTest() throws Exception
     {
-        Map<String, Long> stringLongHashMap = new HashMap<>(Collections.singletonMap("unused", 1L));
+        Map<String, Long> stringLongHashMap = new HashMap<>(Collections.emptyMap());
         QRec qRec = helper.readOneRecord("testTags", "With parameter", stringLongHashMap);
 
         assertEquals("01",        qRec.getValue("ID"));

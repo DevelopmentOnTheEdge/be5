@@ -73,4 +73,4 @@ testtable:
         SELECT *
         FROM testtable
         WHERE 1=1
-          AND name = <parameter:name refColumn="testtable.unnounColumn" />
+          AND name = <parameter:name refColumn="testtable.unknownColumn" />
