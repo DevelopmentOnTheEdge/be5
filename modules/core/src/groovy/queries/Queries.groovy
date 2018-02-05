@@ -1,22 +1,43 @@
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.components.impl.model.ActionHelper
 import com.developmentontheedge.be5.components.impl.model.TableModel
 import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.query.TableBuilderSupport
 
+
 class Queries extends TableBuilderSupport
 {
     @Override
     TableModel getTableModel()
     {
-        addColumns("Name","Type", "Roles", "Operations")
+        addColumns("EntityName","Name","Type", "Roles", "Operations")
 
-        def queries = meta.getQueryNames(meta.getEntity(parametersMap.get("entity")))
+        def selectEntity = parametersMap.get("entity")
 
-        for (String queryName: queries) {
-            Query query = meta.getQueryIgnoringRoles(parametersMap.get("entity"), queryName)
+        if(selectEntity)
+        {
+            addQueries(selectEntity)
+        }
+        else
+        {
+            meta.getOrderedEntities(UserInfoHolder.getLanguage()).forEach(
+                    {e -> addQueries(e.getName())}
+            )
+        }
+
+        return table(columns, rows)
+    }
+
+    void addQueries(String entityName)
+    {
+        def queries = meta.getQueryNames(meta.getEntity(entityName))
+        for (String queryName: queries)
+        {
+            Query query = meta.getQueryIgnoringRoles(entityName, queryName)
             List<CellModel> cells = new ArrayList<CellModel>()
 
+            cells.add(new CellModel(entityName))
             cells.add(new CellModel(query.getName())
                     .add("link", "url", ActionHelper.toAction(query).arg))
             cells.add(new CellModel(query.getType()))
@@ -25,7 +46,5 @@ class Queries extends TableBuilderSupport
 
             addRow(cells)
         }
-
-        return table(columns, rows)
     }
 }

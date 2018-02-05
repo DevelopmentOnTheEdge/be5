@@ -82,7 +82,9 @@ public interface Meta
     Query getQueryIgnoringRoles(String entity, String name);
 
     List<String> getQueryNames(Entity entity);
-    
+
+    Optional<Entity> findEntity(String entityName);
+
     /**
      * Tries to find a query ignoring roles.
      */
@@ -136,7 +138,7 @@ public interface Meta
      * Returns a localized title of a query. Takes into consideration its menu name.
      */
     String getTitle(Query query, String language);
-    
+
     /**
      * Checks only the specified query, doesn't respolve redirects.
      */

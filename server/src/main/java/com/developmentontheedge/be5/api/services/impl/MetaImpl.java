@@ -523,7 +523,8 @@ public class MetaImpl implements Meta
     /**
      * Tries to find a entity with the specified name.
      */
-    private Optional<Entity> findEntity(String entityName)
+    @Override
+    public Optional<Entity> findEntity(String entityName)
     {
         return Optional.ofNullable(getProject().getEntity(entityName));
     }
