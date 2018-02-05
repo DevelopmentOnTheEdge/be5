@@ -29,7 +29,7 @@ public class FilterOperation extends OperationSupport
     @Override
     public Object getLayout()
     {
-        return Collections.emptyMap();//Collections.singletonMap("type", "modal");
+        return Collections.singletonMap("type", "modal");
     }
 
     @Override
