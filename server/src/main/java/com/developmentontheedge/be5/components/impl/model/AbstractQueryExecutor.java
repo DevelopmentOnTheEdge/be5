@@ -46,4 +46,5 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
         return this;
     }
 
+    public abstract String getFinalSql();
 }

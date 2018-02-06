@@ -64,7 +64,7 @@ public class Document implements Component
         }
     }
 
-    public static void sendQueryResponseData(Request req, Response res, Query query, Object data)
+    private void sendQueryResponseData(Request req, Response res, Query query, Object data)
     {
         res.sendAsJson(
                 new ResourceData(TABLE_ACTION, data),

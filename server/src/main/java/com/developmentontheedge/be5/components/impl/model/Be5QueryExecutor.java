@@ -225,7 +225,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
-    String getFinalSql()
+    @Override
+    public String getFinalSql()
     {
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
