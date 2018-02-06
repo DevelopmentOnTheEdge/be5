@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -14,7 +13,6 @@ import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -22,10 +20,8 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
