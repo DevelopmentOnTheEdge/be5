@@ -492,7 +492,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private List<DynamicPropertySet> listDps(String finalSql)
     {
-        return db.selectList(finalSql, DpsRecordAdapter::createDps);
+        try
+        {
+            return db.selectList(finalSql, DpsRecordAdapter::createDps);
+        }
+        catch (RuntimeException e)
+        {
+            throw Be5Exception.internalInQuery(e, query);
+        }
     }
 
 //    private void processMeta(Object value, Map<String, Map<String, String>> meta)
