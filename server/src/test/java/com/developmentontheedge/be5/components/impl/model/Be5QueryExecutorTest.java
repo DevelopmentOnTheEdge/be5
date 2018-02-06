@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.components.impl.model;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Inject;
@@ -89,14 +90,13 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
         be5QueryExecutor.execute();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Be5Exception.class)
     public void testResolveTypeOfRefColumnError()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
         Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
 
         be5QueryExecutor.execute();
-        assertEquals("", be5QueryExecutor.getFinalSql());
     }
 
     @Test(expected = NullPointerException.class)

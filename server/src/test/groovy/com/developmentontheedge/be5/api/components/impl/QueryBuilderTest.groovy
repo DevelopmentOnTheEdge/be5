@@ -38,7 +38,7 @@ class QueryBuilderTest extends SqlMockOperationTest
                 "sql", "select * from testtable limit 1",
                 RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), response, injector)
 
-        verify(response).sendAsJson(any(ResourceData.class), any(Map.class), anyMapOf(String.class, String.class))
+        verify(response).sendAsJson(any(ResourceData.class), any(ResourceData[].class), any(Map.class), anyMapOf(String.class, String.class))
     }
 
 }

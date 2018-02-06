@@ -35,6 +35,10 @@ public class QueryBuilder implements Component
     public void generate(Request req, Response res, Injector injector)
     {
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
+
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps.add(new DynamicProperty("sql", String.class, ""));
+
         if(UserInfoHolder.isSystemDeveloper())
         {
             Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
@@ -60,8 +64,7 @@ public class QueryBuilder implements Component
 
             Object table;
 
-            DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-            dps.add(new DynamicProperty("sql", String.class, query.getQuery()));
+            dps.setValue("sql", query.getQuery());
 
             try
             {
@@ -92,6 +95,7 @@ public class QueryBuilder implements Component
         {
             res.sendErrorAsJson(
                     new ErrorModel("403", "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
+                    new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps))},
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, "qBuilder")
             );
