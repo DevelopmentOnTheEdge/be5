@@ -252,7 +252,7 @@ public abstract class TestUtils
 
         UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
 
-        return operationExecutor.create(meta, new OperationContext(selectedRows.split(","), queryName, Collections.emptyMap()));
+        return operationExecutor.create(meta, new OperationContext(JsonUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
     }
 
     protected void setSession(String name, Object value)
