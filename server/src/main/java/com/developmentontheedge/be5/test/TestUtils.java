@@ -243,14 +243,21 @@ public abstract class TestUtils
         return operationService.execute(operation, presetValues);
     }
 
-    protected Operation getOperation(String entityName, String queryName, String operationName, String selectedRows)
+    protected Operation getOperation(String entityName, String operationName, OperationContext context)
     {
         OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
 
-        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
-        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
+        return operationExecutor.create(meta, context);
+    }
 
-        UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
+    protected Operation getOperation(String entityName, String queryName, String operationName, String selectedRows)
+    {
+        OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
+//
+//        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+//        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
+//
+//        UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
 
         return operationExecutor.create(meta, new OperationContext(JsonUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
     }

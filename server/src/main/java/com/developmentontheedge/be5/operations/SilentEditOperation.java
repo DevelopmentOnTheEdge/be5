@@ -19,6 +19,8 @@ public class SilentEditOperation extends OperationSupport
 
         dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(context.records[0]));
 
+        dpsHelper.setOperationParams(dps, context.getOperationParams());
+
         return dpsHelper.setValues(dps, presetValues);
     }
 

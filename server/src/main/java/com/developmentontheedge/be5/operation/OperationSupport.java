@@ -135,9 +135,25 @@ public abstract class OperationSupport implements Operation
     public Map<String, String> getRedirectParams()
     {
         HashMap<String, String> stringStringHashMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
+
+        for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
         {
             if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+        }
+
+        for (Map.Entry<String, Object> entry : redirectParams.entrySet())
+        {
+            if(entry.getValue() != null)
+            {
+                if(!entry.getValue().toString().isEmpty())
+                {
+                    stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+                }
+                else
+                {
+                    stringStringHashMap.remove(entry.getKey());
+                }
+            }
         }
         return stringStringHashMap;
     }

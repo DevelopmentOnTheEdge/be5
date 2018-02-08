@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ImmutableList;
 
@@ -765,5 +766,19 @@ public class DpsHelper
                 property.setValue(tags[0][0]);
             }
         }
+    }
+
+    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, ?> operationParams)
+    {
+        for (Map.Entry<String, ?> entry : operationParams.entrySet())
+        {
+            DynamicProperty property = dps.getProperty(entry.getKey());
+            if(property != null)
+            {
+                property.setValue(entry.getValue());
+                property.setReadOnly(true);
+            }
+        }
+        return dps;
     }
 }

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operations
 
 import com.developmentontheedge.be5.components.FrontendConstants
+import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
@@ -34,9 +35,18 @@ class OperationTest extends SqlMockOperationTest
                         "'order':['/name','/number']}",
                 oneQuotes(JsonFactory.bean(parameters)))
 
-        OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
+        OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "",
                 ImmutableMap.of("name","testName","number", "1")).getSecond()
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"), result)
+        assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation"), result)
+    }
+
+    @Test
+    void withOperationParams() throws Exception
+    {
+        OperationResult result = executeOperation(getOperation("testtableAdmin", "TestOperation",
+                new OperationContext([] as String[], "All records", ["name": "foo"])),
+                ImmutableMap.of("name","testName","number", "1")).getSecond()
+        assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation/name=foo"), result)
     }
 
     @Test

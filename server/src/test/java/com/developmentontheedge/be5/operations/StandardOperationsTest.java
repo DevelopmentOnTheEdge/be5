@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
@@ -10,6 +11,8 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -68,6 +71,26 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "test", 1);
+    }
+
+    @Test
+    public void insertOperationWithOperationParams()
+    {
+        Object first = generateOperation(getOperation("testtableAdmin", "Insert",
+                new OperationContext(new String[]{}, "All records", Collections.singletonMap("name", "foo"))),
+                "{'name':'test','value':1}").getFirst();
+
+        assertEquals("{'values':{'name':'foo','value':'1'}," +
+                        "'meta':{'/name':{'displayName':'name','readOnly':true},'/value':{'displayName':'value','type':'Integer','canBeNull':true}},'order':['/name','/value']}",
+                oneQuotes(JsonFactory.bean(first)));
+
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"),
+                executeOperation(getOperation("testtableAdmin", "Insert",
+                        new OperationContext(new String[]{}, "All records", Collections.singletonMap("name", "foo"))),
+                        "{'name':'test','value':1}").getSecond());
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
+                "VALUES (?, ?)", "foo", 1);
     }
 
     @Test
