@@ -1,14 +1,11 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.components.FrontendConstants;
-import com.developmentontheedge.be5.components.RestApiConstants;
-import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,7 +15,7 @@ import java.util.stream.Collectors;
 public class OperationInfo
 {
     private Operation operationModel;
-    private String queryName;
+    private String queryName;//todo move to OperationContext
 
     public OperationInfo(String queryName, Operation operationModel)
     {

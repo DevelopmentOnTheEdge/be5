@@ -31,7 +31,7 @@ class OperationExecutorImplTest extends Be5ProjectDBTest
 
         testtableAdmin.removeAll()
 
-        operationExecutor.execute(operation, [] as Map)
+        operationExecutor.execute(operation, [:])
 
         assertEquals OperationStatus.ERROR, operation.getStatus()
         assertEquals 0, testtableAdmin.count()

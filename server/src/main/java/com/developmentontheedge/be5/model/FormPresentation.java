@@ -16,7 +16,7 @@ public class FormPresentation
     public final String selectedRows;
     public final JsonObject bean;
     public final Object layout;
-    public final OperationResult operationResult;
+    public final OperationResult operationResult;//todo remove
     public final ErrorModel errorModel;
 
     public FormPresentation(OperationInfo operationInfo, String title, String selectedRows,

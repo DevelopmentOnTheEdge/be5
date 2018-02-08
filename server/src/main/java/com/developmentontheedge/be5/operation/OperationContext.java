@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class OperationContext
@@ -8,8 +9,9 @@ public class OperationContext
     // Properties
     //
 
-    public final String[] records;
-    public final String queryName;
+    private final String[] records;
+    private final String queryName;
+    //todo private final Map<String, String> queryParams;
 
     public OperationContext(String[] records, String queryName)
     {
