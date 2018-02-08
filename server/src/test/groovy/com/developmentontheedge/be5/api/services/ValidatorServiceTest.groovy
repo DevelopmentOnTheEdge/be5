@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services.impl
+package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.validation.Validator
 import com.developmentontheedge.be5.env.Inject
@@ -6,8 +6,6 @@ import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
-import com.developmentontheedge.beans.DynamicPropertySet
-import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test

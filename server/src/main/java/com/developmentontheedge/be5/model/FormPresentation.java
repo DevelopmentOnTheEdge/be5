@@ -1,32 +1,37 @@
 package com.developmentontheedge.be5.model;
 
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 
 import javax.json.JsonObject;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FormPresentation
 {
-    public final String entity;
-    public final String query;
-    public final String operation;
-    public final String title;//todo change to 'Здания - Добавить'
-    // add public final String operationName;
-    public final String selectedRows;
-    public final JsonObject bean;
-    public final Object layout;
-    public final OperationResult operationResult;//todo remove
-    public final ErrorModel errorModel;
+    private final String entity;
+    private final String query;
+    private final String operation;
+    private final String title;//todo change to 'Здания - Добавить'
+    private final String selectedRows;
+    private final Map<String, Object> operationParams;
+    private final JsonObject bean;
+    private final Object layout;
+    private final OperationResult operationResult;//todo remove
+    private final ErrorModel errorModel;
 
-    public FormPresentation(OperationInfo operationInfo, String title, String selectedRows,
+    public FormPresentation(OperationInfo operationInfo, OperationContext context, String title,
                             JsonObject bean, Object layout, OperationResult operationResult, ErrorModel errorModel)
     {
         this.entity = operationInfo.getEntityName();
-        this.query = operationInfo.getQueryName();
+        this.query = context.getQueryName();
         this.operation = operationInfo.getName();
         this.title = title;
-        this.selectedRows = selectedRows;
+        this.selectedRows = Arrays.stream(context.getRecords()).collect(Collectors.joining(","));
+        this.operationParams = context.getOperationParams();
         this.bean = bean;
         this.layout = layout;
         this.operationResult = operationResult;
@@ -56,6 +61,11 @@ public class FormPresentation
     public String getSelectedRows()
     {
         return selectedRows;
+    }
+
+    public Map<String, Object> getOperationParams()
+    {
+        return operationParams;
     }
 
     public JsonObject getBean()

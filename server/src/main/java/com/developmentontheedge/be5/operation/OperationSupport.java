@@ -9,13 +9,17 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.util.HashUrl;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public abstract class OperationSupport implements Operation
@@ -28,10 +32,9 @@ public abstract class OperationSupport implements Operation
     @Inject public OperationHelper helper;
     @Inject public Validator validator;
 
-    private OperationInfo operationInfo;
+    protected OperationInfo info;
+    protected OperationContext context;
     private OperationResult operationResult;
-
-    protected String[] records;
 
     protected Request request;
     protected Session session;
@@ -40,12 +43,11 @@ public abstract class OperationSupport implements Operation
     private final Map<String, Object> redirectParams = new HashMap<>();
 
     @Override
-    public final void initialize(OperationInfo operationInfo, OperationResult operationResult, String[] records)
+    public final void initialize(OperationInfo info, OperationContext context, OperationResult operationResult)
     {
-        this.operationInfo = operationInfo;
+        this.info = info;
+        this.context = context;
         this.operationResult = operationResult;
-
-        this.records = records;
 
         this.request = UserInfoHolder.getRequest();
         this.session = UserInfoHolder.getSession();
@@ -55,7 +57,13 @@ public abstract class OperationSupport implements Operation
     @Override
     public final OperationInfo getInfo()
     {
-        return operationInfo;
+        return info;
+    }
+
+    @Override
+    public OperationContext getContext()
+    {
+        return context;
     }
 
     @Override
@@ -77,12 +85,6 @@ public abstract class OperationSupport implements Operation
     }
 
     @Override
-    public String[] getRecords()
-    {
-        return records;
-    }
-
-    @Override
     public final OperationResult getResult()
     {
         return operationResult;
@@ -96,12 +98,32 @@ public abstract class OperationSupport implements Operation
 
     public void setResultRedirectThisOperation()
     {
-        setResult(getInfo().redirectThisOperation(records, getRedirectParams()));
+        setResult(OperationResult.redirect(getUrl()));
     }
 
     public void setResultRedirectThisOperationNewId(Object newID)
     {
-        setResult(getInfo().redirectThisOperationNewId(newID, getRedirectParams()));
+        setResult(OperationResult.redirect(getUrlForNewRecordId(newID)));
+    }
+
+    @Override
+    public HashUrl getUrl()
+    {
+        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
+                .named(getRedirectParams());
+        if(context.getRecords().length > 0)
+        {
+            hashUrl = hashUrl.named("selectedRows", Arrays.stream(context.getRecords()).collect(Collectors.joining(",")));
+        }
+
+        return hashUrl;
+    }
+
+    public HashUrl getUrlForNewRecordId(Object newID)
+    {
+        return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
+                .named(getRedirectParams())
+                .named("selectedRows", newID.toString());
     }
 
     public Object getLayout()

@@ -163,21 +163,9 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
-    public OperationInfo getOperation(String entity, String queryName, String name)
-    {
-        return new OperationInfo(queryName, meta.getOperation(entity, queryName, name, UserInfoHolder.getCurrentRoles()));
-    }
-
-    @Override
-    public OperationInfo getOperation(boolean useQueryName, String entity, String queryName, String name)
-    {
-        return new OperationInfo(queryName, meta.getOperation(useQueryName, entity, queryName, name, UserInfoHolder.getCurrentRoles()));
-    }
-
-    @Override
     public OperationInfo getOperation(String entity, String name)
     {
-        return new OperationInfo("", meta.getOperation(entity, name, UserInfoHolder.getCurrentRoles()));
+        return new OperationInfo(meta.getOperation(entity, name, UserInfoHolder.getCurrentRoles()));
     }
 
     @Override

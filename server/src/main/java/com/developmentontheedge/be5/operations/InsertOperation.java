@@ -1,15 +1,13 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 
-public class InsertOperation extends SilentInsertOperation implements Operation
+public class InsertOperation extends SilentInsertOperation
 {
     @Override
-    public void invoke(Object parameters, OperationContext context) throws Exception
+    public void invoke(Object parameters) throws Exception
     {
-        super.invoke(parameters, context);
+        super.invoke(parameters);
 
         setResult(OperationResult.finished());
     }

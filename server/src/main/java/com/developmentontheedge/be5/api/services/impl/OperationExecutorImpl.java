@@ -99,8 +99,7 @@ public class OperationExecutorImpl implements OperationExecutor
     {
         try
         {
-            OperationContext operationContext = new OperationContext(operation.getRecords(), operation.getInfo().getQueryName());
-            operation.invoke(parameters, operationContext);
+            operation.invoke(parameters);
 
             if(operation.getStatus() == OperationStatus.ERROR)
             {
@@ -122,7 +121,7 @@ public class OperationExecutorImpl implements OperationExecutor
             {
                 operation.setResult(OperationResult.redirectToTable(
                     operation.getInfo().getEntityName(),
-                    operation.getInfo().getQueryName(),
+                    operation.getContext().getQueryName(),
                     operation.getRedirectParams()
                 ));
             }
@@ -138,7 +137,7 @@ public class OperationExecutorImpl implements OperationExecutor
     }
 
     @Override
-    public Operation create(OperationInfo operationInfo, String[] records)
+    public Operation create(OperationInfo operationInfo, OperationContext operationContext)
     {
         Operation operation;
 
@@ -190,7 +189,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 throw Be5Exception.internal("Unknown action type '" + operationInfo.getType() + "'");
         }
 
-        operation.initialize(operationInfo, OperationResult.create(), records);
+        operation.initialize(operationInfo, operationContext, OperationResult.create());
         injector.injectAnnotatedFields(operation);
 
         return operation;

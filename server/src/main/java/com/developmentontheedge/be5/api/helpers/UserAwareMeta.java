@@ -67,18 +67,6 @@ public interface UserAwareMeta
     OperationInfo getOperation(String entity, String name);
 
     /**
-     * Returns an operation by its name.
-     * Throws an exception if there's no operation with this name.
-     */
-    OperationInfo getOperation(String entity, String queryName, String name);
-
-    /**
-     * Returns an operation by its name.
-     * Throws an exception if there's no operation with this name.
-     */
-    OperationInfo getOperation(boolean useQueryName, String entity, String queryName, String name);
-
-    /**
      * Returns a localized title of a column - be4 format.
      */
     String getColumnTitle(String entityName, String queryName, String columnName);

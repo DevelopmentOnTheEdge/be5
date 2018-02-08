@@ -30,7 +30,7 @@ class TestTransactionalOperation extends OperationSupport implements Transaction
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
         if(databaseService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
     }

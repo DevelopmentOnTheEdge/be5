@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.components.DocumentGenerator;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.TablePresentation;
-import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -14,7 +13,6 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,9 +74,9 @@ public class FilterOperation extends OperationSupport
     }
 
     @Override
-    public void invoke(Object parameters, OperationContext context) throws Exception
+    public void invoke(Object parameters) throws Exception
     {
-        Query query = meta.getQuery(getInfo().getEntityName(), getInfo().getQueryName(), userInfo.getCurrentRoles());
+        Query query = meta.getQuery(getInfo().getEntityName(), context.getQueryName(), userInfo.getCurrentRoles());
 
         TablePresentation table = documentGenerator.getTable(query,
                 dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));

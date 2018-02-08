@@ -1,13 +1,8 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.util.HashUrl;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Immutable wrapper for {@link com.developmentontheedge.be5.metadata.model.Operation}
@@ -15,11 +10,9 @@ import java.util.stream.Collectors;
 public class OperationInfo
 {
     private Operation operationModel;
-    private String queryName;//todo move to OperationContext
 
-    public OperationInfo(String queryName, Operation operationModel)
+    public OperationInfo(Operation operationModel)
     {
-        this.queryName = queryName;
         this.operationModel = operationModel; 
     }
 
@@ -52,32 +45,6 @@ public class OperationInfo
     public String getEntityName()
     {
         return operationModel.getEntity().getName();
-    }
-
-    public String getQueryName()
-    {
-        return queryName;
-    }
-
-    public OperationResult redirectThisOperation(String[] records, Map<String, String> redirectParams)
-    {
-        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named(redirectParams);
-        if(records.length > 0)
-        {
-            hashUrl = hashUrl.named("selectedRows", Arrays.stream(records).collect(Collectors.joining(",")));
-        }
-
-        return OperationResult.redirect(hashUrl);
-    }
-
-    public OperationResult redirectThisOperationNewId(Object newID, Map<String, String> redirectParams)
-    {
-        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getEntity().getName(), getQueryName(), getName())
-                .named(redirectParams)
-                .named("selectedRows", newID.toString());
-
-        return OperationResult.redirect(hashUrl);
     }
 
 }

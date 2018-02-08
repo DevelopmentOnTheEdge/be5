@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
@@ -72,7 +73,7 @@ public class OperationModelBase implements OperationModel
     @Override
     public Object generate()
     {
-        Operation operation = operationExecutor.create(getOperationInfo(), records);
+        Operation operation = operationExecutor.create(getOperationInfo(), getOperationContext());
         operation.setResult(OperationResult.generate());
 
         return operationExecutor.generate(operation, (Map<String, Object>)presetValues);
@@ -81,13 +82,13 @@ public class OperationModelBase implements OperationModel
     @Override
     public Operation execute()
     {
-        Operation operation = operationExecutor.create(getOperationInfo(), records);
+        Operation operation = operationExecutor.create(getOperationInfo(), getOperationContext());
         operation.setResult(OperationResult.execute());
 
-        operationExecutor.execute(operation, (Map<String, Object>)presetValues);
-        if(operation.getStatus() == OperationStatus.ERROR)
+        operationExecutor.execute(operation, (Map<String, Object>) presetValues);
+        if (operation.getStatus() == OperationStatus.ERROR)
         {
-            throw (RuntimeException)operation.getResult().getDetails();
+            throw (RuntimeException) operation.getResult().getDetails();
         }
 
         return operation;
@@ -120,7 +121,12 @@ public class OperationModelBase implements OperationModel
 
         Objects.requireNonNull(operationModel, "Operation '" + entityName + "." + operationName + "' not found.");
 
-        return new OperationInfo(queryName, operationModel);
+        return new OperationInfo(operationModel);
+    }
+
+    public OperationContext getOperationContext()
+    {
+        return new OperationContext(records, queryName, Collections.emptyMap());
     }
 
     public class GOperationModelBaseBuilder

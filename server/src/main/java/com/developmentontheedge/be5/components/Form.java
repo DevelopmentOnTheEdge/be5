@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
@@ -21,10 +22,8 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
@@ -47,14 +46,13 @@ public class Form implements Component
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String[] selectedRows = JsonUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
         Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
+        Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
 
-        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, operationName);
 
-        String link = (String) new OperationInfo(queryName, meta.getModel())
-                .redirectThisOperation(selectedRows, Collections.emptyMap())
-                .getDetails();
+        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+        Operation operation = operationExecutor.create(operationInfo, operationContext);
 
-        Operation operation = operationExecutor.create(meta, selectedRows);
         Either<Object, OperationResult> result;
 
         try
@@ -78,7 +76,7 @@ public class Form implements Component
             res.sendErrorAsJson(
                     getErrorModel(e, injector),
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                    Collections.singletonMap(SELF_LINK, link)
+                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())
             );
             return;
         }
@@ -100,11 +98,15 @@ public class Form implements Component
                 operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0]));
             }
 
-            data = new FormPresentation(operation.getInfo(),
-                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
-                    Arrays.stream(operation.getRecords()).collect(Collectors.joining(",")),
-                    JsonFactory.bean(result.getFirst()), operation.getLayout(),
-                    operation.getResult(), errorModel);
+            data = new FormPresentation(
+                    operationInfo,
+                    operationContext,
+                    userAwareMeta.getLocalizedOperationTitle(operationInfo),
+                    JsonFactory.bean(result.getFirst()),
+                    operation.getLayout(),
+                    operation.getResult(),
+                    errorModel
+            );
         }
         else
         {
@@ -114,7 +116,7 @@ public class Form implements Component
         res.sendAsJson(
                 new ResourceData(result.isFirst() ? FORM_ACTION : OPERATION_RESULT, data),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, link)
+                Collections.singletonMap(SELF_LINK, operation.getUrl().toString())
         );
     }
 

@@ -1,19 +1,13 @@
-package com.developmentontheedge.be5.api.services.impl
+package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.validation.Validator
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectTest
-import com.developmentontheedge.beans.DynamicPropertySet
-import com.developmentontheedge.beans.DynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
-import static com.developmentontheedge.be5.api.validation.rule.BaseRule.digits
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.baseRule
-import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNull
 

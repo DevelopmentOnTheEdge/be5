@@ -29,7 +29,7 @@ class TestOperation extends GOperationSupport implements Operation
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
         database.testtableAdmin << [
             "test1": dps["test1"],

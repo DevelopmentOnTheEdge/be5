@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services.impl
+package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.metadata.RoleType

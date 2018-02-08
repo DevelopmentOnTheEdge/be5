@@ -89,7 +89,7 @@ class TestGroovyOp extends GOperationSupport implements Operation
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
         db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", dps.$name, dps.$beginDate, dps.$reason)
     }

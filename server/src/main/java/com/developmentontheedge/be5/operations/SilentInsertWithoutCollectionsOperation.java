@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -17,7 +16,7 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     }
 
     @Override
-    public void invoke(Object parameters, OperationContext context) throws Exception
+    public void invoke(Object parameters) throws Exception
     {
         database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet)parameters);
     }

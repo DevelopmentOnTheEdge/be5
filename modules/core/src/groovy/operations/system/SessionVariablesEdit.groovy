@@ -1,16 +1,14 @@
 package system
 
 import com.developmentontheedge.be5.operation.GOperationSupport
-import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationContext
 
 
-class SessionVariablesEdit extends GOperationSupport implements Operation
+class SessionVariablesEdit extends GOperationSupport
 {
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        def variable = session[records[0]]
+        def variable = session[context.records[0]]
         if(variable != null)
         {
             dps << [
@@ -28,15 +26,15 @@ class SessionVariablesEdit extends GOperationSupport implements Operation
         }
         else
         {
-            dpsHelper.addDpWithLabelANDNotSubmitted(dps, "Session variable '${records[0]}' not found")
+            dpsHelper.addDpWithLabelANDNotSubmitted(dps, "Session variable '${context.records[0]}' not found")
         }
 
         return dps
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
-        session[records[0]] = dps.$newValue
+        session[context.records[0]] = (Object)dps.$newValue
     }
 }

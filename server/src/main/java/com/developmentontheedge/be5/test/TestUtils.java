@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
@@ -244,14 +245,14 @@ public abstract class TestUtils
 
     protected Operation getOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
-        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
 
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
         UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
 
-        return operationExecutor.create(meta, JsonUtils.selectedRows(selectedRows));
+        return operationExecutor.create(meta, new OperationContext(selectedRows.split(","), queryName, Collections.emptyMap()));
     }
 
     protected void setSession(String name, Object value)

@@ -3,25 +3,28 @@ package com.developmentontheedge.be5.operation;
 import java.util.Map;
 import java.util.Objects;
 
+
 public class OperationContext
 {
     // ////////////////////////////////////////////////////////////////////////
     // Properties
     //
 
-    private final String[] records;
-    private final String queryName;
-    //todo private final Map<String, String> queryParams;
+    public final String[] records;
+    public final String queryName;
+    private final Map<String, Object> operationParams;
 
-    public OperationContext(String[] records, String queryName)
+    public OperationContext(String[] records, String queryName, Map<String, Object> operationParams)
     {
         Objects.requireNonNull(records);
-        Objects.requireNonNull(queryName);
+        Objects.requireNonNull(operationParams);
+
         this.records = records;
         this.queryName = queryName;
+        this.operationParams = operationParams;
     }
 
-    public String[] getRecordIDs()
+    public String[] getRecords()
     {
         return records;
     }
@@ -29,6 +32,11 @@ public class OperationContext
     public String getQueryName()
     {
         return queryName;
+    }
+
+    public Map<String, Object> getOperationParams()
+    {
+        return operationParams;
     }
 
     //String platform, UserInfo ui, String[] records, String fromQuery, String category, String tcloneId

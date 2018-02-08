@@ -1,7 +1,7 @@
-package com.developmentontheedge.be5.api.services.impl
+package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
-import com.developmentontheedge.be5.api.services.ProjectProvider
+import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import groovy.transform.TypeChecked

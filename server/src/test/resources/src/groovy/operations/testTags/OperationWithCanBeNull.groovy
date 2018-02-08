@@ -37,9 +37,9 @@ class OperationWithCanBeNull extends SilentInsertOperation implements Operation
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
-        super.invoke(parameters, context)
+        super.invoke(parameters)
     }
 
 }

@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.util.HashUrl;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -10,14 +12,19 @@ public interface Operation extends Serializable
 	// Main interface
 	//
 
-    void initialize(OperationInfo meta, OperationResult operationResult, String[] records);
+    void initialize(OperationInfo info, OperationContext context, OperationResult operationResult);
 
 	/**
 	 * Returns meta-information from project definition for this operation.
 	 */
 	OperationInfo getInfo();
-	
-	/**
+
+    /**
+     * Returns context of operation.
+     */
+    OperationContext getContext();
+
+    /**
 	 * Returns Java bean or {@link com.developmentontheedge.beans.DynamicPropertySet}.
 	 * 
 	 * @param presetValues - map of preset values
@@ -27,10 +34,9 @@ public interface Operation extends Serializable
     /**
      * Invokes the operation with the specified parameters.
      *
-     * @param parameters
-     * @param context
+     * @param parameters {@link #getParameters(Map)} result
      */
-    void invoke(Object parameters, OperationContext context) throws Exception;
+    void invoke(Object parameters) throws Exception;
     
     /**
      * Set flag (Thread.interrupt) to interrupt the operation.
@@ -54,7 +60,7 @@ public interface Operation extends Serializable
 
     Map<String, String> getRedirectParams();
 
-    String[] getRecords();
+    HashUrl getUrl();
 
     Object getLayout();
 

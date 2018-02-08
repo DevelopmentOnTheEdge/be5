@@ -7,18 +7,18 @@ import com.developmentontheedge.be5.components.impl.InitialRow;
 
 public class TablePresentation
 {
-    public final String title;
-    public final String category;
-    public final String page;
-    public final List<TableOperationPresentation> operations;
-    public final boolean selectable;
-    public final List<Object> columns;
-    public final List<InitialRow> rows;
-    public final int length;
-    public final Map<String, String> parameters;
-    public final Long totalNumberOfRows;
-    public final boolean hasAggregate;
-    public final Object layout;
+    private final String title;
+    private final String category;
+    private final String page;
+    private final List<TableOperationPresentation> operations;
+    private final boolean selectable;
+    private final List<Object> columns;
+    private final List<InitialRow> rows;
+    private final int length;
+    private final Map<String, String> parameters;
+    private final Long totalNumberOfRows;
+    private final boolean hasAggregate;
+    private final Object layout;
 
     public TablePresentation(
             String title,

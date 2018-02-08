@@ -23,7 +23,7 @@ class CustomOperation extends GOperationSupport implements Operation
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
 
     }

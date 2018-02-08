@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.entitygen.experimental.gen
 import com.developmentontheedge.be5.entitygen.experimental.genegate.CoreEntityModels
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.operation.GOperationSupport
-import com.developmentontheedge.be5.operation.OperationContext
 
 
 class TestOperation extends GOperationSupport
@@ -13,7 +12,7 @@ class TestOperation extends GOperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.addDpForColumns(getInfo().getEntity(), ["name", "countryID"])
+        dps = dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "countryID"])
 
         dps.add("name", "Test") {
             RELOAD_ON_CHANGE = true
@@ -30,7 +29,7 @@ class TestOperation extends GOperationSupport
     }
 
     @Override
-    void invoke(Object parameters, OperationContext context) throws Exception
+    void invoke(Object parameters) throws Exception
     {
         //DynamicPropertySet.metaClass.$ = { String name -> delegate.getValue(name) }
         entities.provinces.add {
