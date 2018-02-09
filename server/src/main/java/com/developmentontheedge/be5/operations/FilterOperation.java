@@ -36,8 +36,10 @@ public class FilterOperation extends OperationSupport
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues);
 
+        Map<String, Object> operationParams = context.getOperationParams();
+
         List<String> searchPresets = new ArrayList<>();
-        if(!presetValues.containsKey(SEARCH_PARAM))
+        if(!operationParams.containsKey(SEARCH_PARAM))
         {
             searchPresets.addAll(dps.asMap().entrySet()
                     .stream().filter(x -> x.getValue() != null).map(Map.Entry::getKey).collect(Collectors.toList())
@@ -45,11 +47,14 @@ public class FilterOperation extends OperationSupport
         }
         else
         {
-            if(presetValues.get(SEARCH_PRESETS_PARAM) != null)
+            if(operationParams.get(SEARCH_PRESETS_PARAM) != null)
             {
-                searchPresets.addAll(Arrays.asList(((String) presetValues.get(SEARCH_PRESETS_PARAM)).split(",")));
+                searchPresets.addAll(Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(",")));
             }
         }
+
+        dpsHelper.setValues(dps, operationParams);
+        dpsHelper.setValues(dps, presetValues);
 
         for (DynamicProperty property : dps)
         {
@@ -70,7 +75,7 @@ public class FilterOperation extends OperationSupport
         dps.add(searchParamProperty);
 
 
-        return dpsHelper.setOperationParams(dps, context.getOperationParams());
+        return dps;
     }
 
     @Override
