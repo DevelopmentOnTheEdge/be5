@@ -21,32 +21,32 @@ public class Be5Exception extends RuntimeException
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    static Be5Exception create(Be5ErrorCode code, String message)
+    static Be5Exception create(Be5ErrorCode code, String title)
     {
-        return new Be5Exception(code, message);
+        return new Be5Exception(code, title);
     }
     
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    static Be5Exception create(Be5ErrorCode code, String message, Throwable t)
+    static Be5Exception create(Be5ErrorCode code, String title, Throwable t)
     {
-        return new Be5Exception(code, message, t);
+        return new Be5Exception(code, title, t);
     }
     
     public static Be5Exception accessDenied()
     {
         return Be5ErrorCode.ACCESS_DENIED.exception();
     }
-    
-    public static Be5Exception internal(String message)
+
+    public static Be5Exception internal(String title)
     {
-        return Be5ErrorCode.INTERNAL_ERROR.exception(message);
+        return Be5ErrorCode.INTERNAL_ERROR.exception(title);
     }
 
-    public static Be5Exception internal(Logger log, String message)
+    public static Be5Exception internal(Logger log, String title)
     {
-        return Be5ErrorCode.INTERNAL_ERROR.exception(log, message);
+        return Be5ErrorCode.INTERNAL_ERROR.exception(log, title);
     }
 
     public static Be5Exception internal(Logger log, Throwable t)
@@ -64,9 +64,9 @@ public class Be5Exception extends RuntimeException
         return internal(t, "");
     }
 
-    public static Be5Exception internal(Throwable t, String message)
+    public static Be5Exception internal(Throwable t, String title)
     {
-        return Be5ErrorCode.INTERNAL_ERROR.rethrow(t, message);
+        return Be5ErrorCode.INTERNAL_ERROR.rethrow(t, title);
     }
 
     public static Be5Exception internalInQuery(Throwable t, Query q)
@@ -109,9 +109,9 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.UNKNOWN_QUERY.exception(entityName, queryName);
     }
     
-    public static Be5Exception invalidState(String message)
+    public static Be5Exception invalidState(String title)
     {
-        return Be5ErrorCode.STATE_INVALID.exception(message);
+        return Be5ErrorCode.STATE_INVALID.exception(title);
     }
     
     /**
@@ -122,23 +122,23 @@ public class Be5Exception extends RuntimeException
     private final String title;
     private final Be5ErrorCode code;
 
-    private Be5Exception(Be5ErrorCode code, String message, Throwable cause)
+    private Be5Exception(Be5ErrorCode code, String title, Throwable cause)
     {
-        super(message, cause);
-        title = message;
+        super(title, cause);
+        this.title = title;
         this.code = code;
     }
 
-    private Be5Exception(Be5ErrorCode code, String message)
+    private Be5Exception(Be5ErrorCode code, String title)
     {
-        this(code, message, null);
+        this(code, title, null);
     }
 
     private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
     {
-        super(ErrorMessages.formatMessage(code, parameters), t);
+        super(ErrorTitles.formatTitle(code, parameters), t);
 
-        title = ErrorMessages.formatMessage(code, parameters);
+        title = ErrorTitles.formatTitle(code, parameters);
 
         this.code = code;
     }

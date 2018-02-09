@@ -2,24 +2,22 @@ package com.developmentontheedge.be5.model.jsonapi;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
-import java.util.Map;
-
 
 /**
  * http://jsonapi.org/format/#errors-processing
  */
 public class ErrorModel
 {
-    private String id;
-    private Map<String, String> links;
+//    private String id;
+//    private Map<String, String> links;
 
     private String status;
     private String title;
     private String code;
     private String detail;
 
-    private Object source;
-    private Object meta;
+//    private Object source;
+//    private Object meta;
 
     public ErrorModel(String status, String title)
     {
@@ -30,24 +28,20 @@ public class ErrorModel
     public ErrorModel(String status, String title, String code, String detail)
     {
         this.status = status;
-        this.code = code;
         this.title = title;
+        this.code = code;
         this.detail = detail;
+    }
+
+    public ErrorModel(Be5Exception e, String additionalMessage)
+    {
+        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e) + " " + additionalMessage,
+                Be5Exception.exceptionAsString(e));
     }
 
     public ErrorModel(Be5Exception e)
     {
-        this("500", e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e));
-    }
-
-    public String getId()
-    {
-        return id;
-    }
-
-    public Map<String, String> getLinks()
-    {
-        return links;
+        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e));
     }
 
     public String getStatus()
@@ -70,28 +64,26 @@ public class ErrorModel
         return detail;
     }
 
-    public Object getSource()
-    {
-        return source;
-    }
-
-    public Object getMeta()
-    {
-        return meta;
-    }
-
     @Override
     public String toString()
     {
         return "ErrorModel{" +
-                "id='" + id + '\'' +
-                ", links=" + links +
                 ", status='" + status + '\'' +
                 ", code='" + code + '\'' +
                 ", title='" + title + '\'' +
                 ", detail='" + detail + '\'' +
-                ", source=" + source +
-                ", meta=" + meta +
                 '}';
+    }
+
+
+    private final static String httpCode404 = "404";
+    private final static String httpCode403 = "403";
+    private final static String httpCode500 = "500";
+
+    private static String getHttpStatusCode(Be5Exception e)
+    {
+        if (e.getCode().isNotFound())return httpCode404;
+        if (e.getCode().isAccessDenied())return httpCode403;
+        return httpCode500;
     }
 }

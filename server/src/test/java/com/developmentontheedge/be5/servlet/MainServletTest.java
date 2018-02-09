@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.servlet;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.developmentontheedge.be5.api.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.env.Inject;
@@ -127,7 +127,7 @@ public class MainServletTest extends Be5ProjectTest
 
         verify(req).setAttribute("testRequestPreprocessor", "testProject");
 
-        res.sendError(eq(ErrorMessages.formatMessage(Be5ErrorCode.UNKNOWN_COMPONENT, componentId)));
+        res.sendError(eq(ErrorTitles.formatTitle(Be5ErrorCode.UNKNOWN_COMPONENT, componentId)));
     }
 
     @Test

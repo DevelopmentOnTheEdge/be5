@@ -5,12 +5,12 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.components.impl.MoreRowsGenerator;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -36,15 +36,27 @@ public class Document implements Component
 
         Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
+        HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parametersMap);
+
         UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
-        Query query = userAwareMeta.getQuery(entityName, queryName);
+        Query query;
+
+        try
+        {
+            query = userAwareMeta.getQuery(entityName, queryName);
+        }
+        catch (Be5Exception e)
+        {
+            sendError(req, res, url, e);
+            return;
+        }
 
         try
         {
             switch (req.getRequestUri())
             {
                 case "":
-                    sendQueryResponseData(req, res, query,
+                    sendQueryResponseData(req, res, url,
                             documentGenerator.routeAndRun(query, parametersMap, sortColumn, sortDesc));
                     return;
                 case "moreRows":
@@ -56,33 +68,33 @@ public class Document implements Component
         }
         catch (Be5Exception e)
         {
-            sendQueryResponseError(req, res, query, e);
+            sendError(req, res, url, e);
         }
         catch (Throwable e)
         {
-            sendQueryResponseError(req, res, query, Be5Exception.internalInQuery(e, query));
+            sendError(req, res, url, Be5Exception.internalInQuery(e, query));
         }
     }
 
-    private void sendQueryResponseData(Request req, Response res, Query query, Object data)
+    private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data)
     {
         res.sendAsJson(
                 new ResourceData(TABLE_ACTION, data),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
+                Collections.singletonMap(SELF_LINK, url.toString())
         );
     }
 
-    private void sendQueryResponseError(Request req, Response res, Query query, Be5Exception e)
+    private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
     {
-        String message = Be5Exception.getMessage(e);
+        String message = "";
 
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
         res.sendErrorAsJson(
-                new ErrorModel("500", e.getTitle(), message, Be5Exception.exceptionAsString(e)),
+                new ErrorModel(e, message),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, ActionHelper.toAction(query).arg)
+                Collections.singletonMap(SELF_LINK, url.toString())
         );
     }
 

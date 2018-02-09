@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.exceptions.ErrorMessages;
+import com.developmentontheedge.be5.api.exceptions.ErrorTitles;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,7 +54,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
     public void generateLanguageParameterIsAbsent() throws Exception
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage(ErrorMessages.formatMessage(Be5ErrorCode.PARAMETER_ABSENT, "language"));
+        expectedEx.expectMessage(ErrorTitles.formatTitle(Be5ErrorCode.PARAMETER_ABSENT, "language"));
 
         Response response = mock(Response.class);
 

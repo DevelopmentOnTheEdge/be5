@@ -94,7 +94,7 @@ public class QueryBuilder implements Component
         else
         {
             res.sendErrorAsJson(
-                    new ErrorModel("403", "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
+                    new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
                     new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps))},
                     Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                     Collections.singletonMap(SELF_LINK, "qBuilder")
