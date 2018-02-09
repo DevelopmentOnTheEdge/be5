@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
@@ -62,18 +63,19 @@ public class FilterOperation extends OperationSupport
             if(searchPresets.contains(property.getName()))property.setReadOnly(true);
         }
 
-        DynamicProperty searchPresetsProperty = new DynamicProperty(SEARCH_PRESETS_PARAM, String.class, String.join(",", searchPresets));
-        searchPresetsProperty.setReadOnly(true);
-        searchPresetsProperty.setCanBeNull(true);
-        searchPresetsProperty.setHidden(true);
-        dps.add(searchPresetsProperty);
+        dps.add(new DynamicPropertyBuilder( SEARCH_PRESETS_PARAM, String.class)
+                .value(String.join(",", searchPresets))
+                .readonly()
+                .nullable()
+                .hidden()
+                .get());
 
-        DynamicProperty searchParamProperty = new DynamicProperty(SEARCH_PARAM, Boolean.class, true);
-        searchParamProperty.setReadOnly(true);
-        searchParamProperty.setCanBeNull(true);
-        searchParamProperty.setHidden(true);
-        dps.add(searchParamProperty);
-
+        dps.add(new DynamicPropertyBuilder( SEARCH_PARAM, Boolean.class)
+                .value(true)
+                .readonly()
+                .nullable()
+                .hidden()
+                .get());
 
         return dps;
     }
