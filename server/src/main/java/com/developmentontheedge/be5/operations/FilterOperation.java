@@ -70,7 +70,7 @@ public class FilterOperation extends OperationSupport
         dps.add(searchParamProperty);
 
 
-        return dps;
+        return dpsHelper.setOperationParams(dps, context.getOperationParams());
     }
 
     @Override
