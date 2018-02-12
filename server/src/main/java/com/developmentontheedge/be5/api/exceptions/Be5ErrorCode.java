@@ -19,8 +19,9 @@ public enum Be5ErrorCode
     public Be5Exception exception(Object... parameters)
     {
         String msg = ErrorTitles.formatTitle(this, parameters);
-        log.severe(msg);
-        return Be5Exception.create(this, ErrorTitles.formatTitle(this, parameters));
+        log.log(getLogLevel(), msg);
+
+        return Be5Exception.create(this, msg);
     }
 
     /**
@@ -30,7 +31,8 @@ public enum Be5ErrorCode
     Be5Exception exception(Logger log, Object... parameters)
     {
         String msg = ErrorTitles.formatTitle(this, parameters);
-        log.severe(msg);
+        log.log(getLogLevel(), msg);
+
         return Be5Exception.create(this, msg);
     }
 
@@ -41,7 +43,8 @@ public enum Be5ErrorCode
     Be5Exception rethrow(Throwable t, Object... parameters)
     {
         String msg = ErrorTitles.formatTitle(this, parameters);
-        log.log(Level.SEVERE, msg, t);
+        log.log(getLogLevel(), msg, t);
+
         return Be5Exception.create(this, msg, t);
     }
 
@@ -52,7 +55,8 @@ public enum Be5ErrorCode
     Be5Exception rethrow(Logger log, Throwable t, Object... parameters)
     {
         String msg = ErrorTitles.formatTitle(this, parameters);
-        log.log(Level.SEVERE, msg, t);
+        log.log(getLogLevel(), msg, t);
+
         return Be5Exception.create(this, msg, t);
     }
 
@@ -99,4 +103,8 @@ public enum Be5ErrorCode
         }
     }
 
+    public Level getLogLevel()
+    {
+        return isInternal() ? Level.SEVERE : Level.FINE;
+    }
 }
