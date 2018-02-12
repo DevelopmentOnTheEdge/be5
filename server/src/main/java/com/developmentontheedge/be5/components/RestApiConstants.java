@@ -30,13 +30,14 @@ public interface RestApiConstants
      */
     String SELECTED_ROWS = "selectedRows";
     
-    // MORE ROWS GENERATOR
-    
+    // MORE ROWS GENERATOR TODO rename as "_name_" and save in hash params on frontend
+
     String START = "start";
     String LENGTH = "length";
     String DRAW = "draw";
     String SELECTABLE = "selectable";
     String TOTAL_NUMBER_OF_ROWS = "totalNumberOfRows";
+    //TODO add sortColumn, sortNav
 
     // json api
 
