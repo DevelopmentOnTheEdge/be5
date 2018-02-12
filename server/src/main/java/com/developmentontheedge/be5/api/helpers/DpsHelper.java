@@ -12,7 +12,6 @@ import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ImmutableList;
 
@@ -21,6 +20,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -35,6 +35,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PRESETS_PARAM;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY;
 
@@ -770,7 +772,30 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, ?> operationParams)
     {
-        for (Map.Entry<String, ?> entry : operationParams.entrySet())
+        Map<String, ?> params;
+        if(!operationParams.containsKey(SEARCH_PARAM))
+        {
+            params = operationParams;
+        }
+        else
+        {
+            List<String> notFilterParams;
+            if(operationParams.get(SEARCH_PRESETS_PARAM) != null)
+            {
+                notFilterParams = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+            }
+            else
+            {
+                notFilterParams = Collections.emptyList();
+            }
+
+            params = operationParams.entrySet()
+                    .stream()
+                    .filter(e -> notFilterParams.contains(e.getKey()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+
+        for (Map.Entry<String, ?> entry : params.entrySet())
         {
             DynamicProperty property = dps.getProperty(entry.getKey());
             if(property != null)

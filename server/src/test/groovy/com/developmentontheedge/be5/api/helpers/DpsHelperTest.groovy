@@ -12,6 +12,8 @@ import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test
 
+import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PARAM
+import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.*
 
 
@@ -210,4 +212,42 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals([CODE:"12", payable:"yes"], dpsHelper.getAsMap(dps, [CODE:"12"]))
     }
 
+    @Test
+    void setOperationParamsTest()
+    {
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+
+        dpsHelper.setOperationParams(dps, [payable:"no"])
+
+        assertEquals([CODE:null, payable:"no"], dpsHelper.getAsMap(dps))
+
+        assertTrue dps.getProperty("payable").getBooleanAttribute(BeanInfoConstants.READ_ONLY)
+    }
+
+    @Test
+    void setOperationParamsTestWithSearchParams()
+    {
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+
+        def map = [payable:"no"]
+        map.put(SEARCH_PARAM, "true")
+
+        dpsHelper.setOperationParams(dps, map)
+
+        assertEquals([CODE:null, payable:"yes"], dpsHelper.getAsMap(dps))
+    }
+
+    @Test
+    void setOperationParamsTestWithSearchParamsContain()
+    {
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+
+        def map = [payable:"no", CODE:"123"]
+        map.put(SEARCH_PARAM, "true")
+        map.put(SEARCH_PRESETS_PARAM, "payable,CODE")
+
+        dpsHelper.setOperationParams(dps, map)
+
+        assertEquals([CODE:"123", payable:"no"], dpsHelper.getAsMap(dps))
+    }
 }
