@@ -23,6 +23,7 @@ import com.developmentontheedge.be5.util.JsonUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
@@ -45,8 +46,12 @@ public class Form implements Component
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String[] selectedRows = JsonUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
-        Map<String, Object> presetValues = req.getValuesFromJson(RestApiConstants.VALUES);
+
         Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
+
+        //moved from frontend
+        Map<String, Object> presetValues = new HashMap<>(operationParams);
+        presetValues.putAll(req.getValuesFromJson(RestApiConstants.VALUES));
 
         OperationInfo operationInfo = userAwareMeta.getOperation(entityName, operationName);
 
