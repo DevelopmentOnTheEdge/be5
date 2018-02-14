@@ -24,6 +24,7 @@ testtableAdmin:
       - TestGroovyOp
       - OperationWithExtend
       - OperationWithExtend2
+      - Filter
       - ErrorProcessing
       - TransactionTestOp
       - CustomOperation
@@ -108,6 +109,9 @@ testtableAdmin:
       records: 1
       roles: Administrator
       code: com.developmentontheedge.be5.operations.SilentEditOperation
+  - Filter:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.FilterOperation
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
