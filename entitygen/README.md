@@ -41,7 +41,7 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
        <arguments>
         <argument>${project.build.directory}/generated-sources/java/</argument>
         <argument/>
-        <argument>EgissoBe5</argument>
+        <argument>${project.artifactId}</argument>
        </arguments>
       </configuration>
      </execution>
