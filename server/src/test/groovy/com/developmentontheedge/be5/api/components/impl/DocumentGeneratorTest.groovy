@@ -21,31 +21,33 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     void getTablePresentation()
     {
-        TablePresentation testTable = documentGenerator.getTable(
+        TablePresentation table = documentGenerator.getTable(
                 meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
 
-        assertEquals("testtable: All records", testTable.getTitle())
+        assertEquals("testtable: All records", table.getTitle())
+
+        assertEquals "['Name','Value']", oneQuotes(jsonb.toJson(table.getColumns()))
 
         assertEquals("[{'cells':[" +
                 "{'content':'tableModelTest','options':{}}," +
                 "{'content':'1','options':{}}" +
-            "]}]",  oneQuotes(jsonb.toJson(testTable.getRows())))
+            "]}]",  oneQuotes(jsonb.toJson(table.getRows())))
     }
 
     @Test
     void testLinkQuick()
     {
-        TablePresentation testtable = documentGenerator.getTable(
+        TablePresentation table = documentGenerator.getTable(
                 meta.getQuery("testtable", "LinkQuick", Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
-        assertEquals("testtable: LinkQuick", testtable.getTitle())
+        assertEquals("testtable: LinkQuick", table.getTitle())
 
         assertEquals("{'cells':[{" +
                 "'content':'tableModelTest'," +
                 "'options':{" +
                     "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," +
                     "'quick':{'visible':'true'}" +
-                "}}]}", oneQuotes(jsonb.toJson(testtable.getRows().get(0))))
+                "}}]}", oneQuotes(jsonb.toJson(table.getRows().get(0))))
     }
 
     @Test
@@ -55,7 +57,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", 11)
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)
 
-        TablePresentation testtable = documentGenerator.getTable(
+        TablePresentation table = documentGenerator.getTable(
                 meta.getQuery("testtableAdmin", "Test null in subQuery",
                         Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
@@ -68,6 +70,20 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                     "{'content':'tableModelTest','options':{}}," +
                     "{'options':{}}," +
                     "{'content':'','options':{}}" +
-                "]}]", oneQuotes(jsonb.toJson(testtable.getRows())))
+                "]}]", oneQuotes(jsonb.toJson(table.getRows())))
+    }
+
+    @Test
+    void groovyTableTest() throws Exception
+    {
+        def table = (TablePresentation)documentGenerator.
+                routeAndRun(meta.getQueryIgnoringRoles("testtableAdmin", "TestGroovyTable"), new HashMap<>())
+
+        assertEquals "['name','value']", oneQuotes(jsonb.toJson(table.getColumns()))
+
+        assertEquals("[" +
+                "{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}]}," +
+                "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}]}]"
+                , oneQuotes(jsonb.toJson(table.getRows())))
     }
 }

@@ -62,6 +62,11 @@ testtableAdmin:
                </sql>' AS "NameFromSubQuery"
             FROM
               testtableAdmin t
+  - TestGroovyTable:
+      type: Groovy
+      invisible: true
+      roles: [SystemDeveloper, Administrator]
+      file: TestGroovyTable.groovy
   operations:
   - TestOperation:
       roles: Administrator
