@@ -29,15 +29,14 @@ public class Document implements Component
     public void generate(Request req, Response res, Injector injector)
     {
         DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         int sortColumn = req.getInt("order[0][column]", -1);
         boolean sortDesc = "desc".equals(req.get("order[0][dir]"));
-
         Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
         HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parametersMap);
-
         UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
         Query query;
 
