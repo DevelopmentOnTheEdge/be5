@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -770,30 +771,9 @@ public class DpsHelper
         }
     }
 
-    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, ?> operationParams)
+    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
     {
-        Map<String, ?> params;
-        if(!operationParams.containsKey(SEARCH_PARAM))
-        {
-            params = operationParams;
-        }
-        else
-        {
-            List<String> notFilterParams;
-            if(operationParams.get(SEARCH_PRESETS_PARAM) != null)
-            {
-                notFilterParams = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
-            }
-            else
-            {
-                notFilterParams = Collections.emptyList();
-            }
-
-            params = operationParams.entrySet()
-                    .stream()
-                    .filter(e -> notFilterParams.contains(e.getKey()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        }
+        Map<String, ?> params = ParseRequestUtils.getOperationParams(operationParams);
 
         for (Map.Entry<String, ?> entry : params.entrySet())
         {

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.google.common.base.Strings;
 import com.google.gson.*;
 
@@ -73,7 +73,7 @@ public class RequestImpl implements Request
 
         try
         {
-            return JsonUtils.getValuesFromJson(get(parameter));
+            return ParseRequestUtils.getValuesFromJson(get(parameter));
         }
         catch (ClassCastException e)
         {

@@ -19,7 +19,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class Form implements Component
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
-        String[] selectedRows = JsonUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
+        String[] selectedRows = ParseRequestUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
 
         Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
 

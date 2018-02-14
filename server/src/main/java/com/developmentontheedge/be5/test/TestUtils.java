@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.be5.util.JsonUtils;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -186,7 +186,7 @@ public abstract class TestUtils
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                           String selectedRows, String values)
     {
-        return generateOperation(entityName, queryName, operationName, selectedRows, JsonUtils.getValuesFromJson(values));
+        return generateOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
@@ -197,7 +197,7 @@ public abstract class TestUtils
 
     protected Either<Object, OperationResult> generateOperation(Operation operation, String values)
     {
-        return operationService.generate(operation, JsonUtils.getValuesFromJson(values));
+        return operationService.generate(operation, ParseRequestUtils.getValuesFromJson(values));
     }
 
     protected Either<Object, OperationResult> generateOperation(Operation operation)
@@ -219,7 +219,7 @@ public abstract class TestUtils
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
                                                                          String selectedRows, String values)
     {
-        return executeOperation(entityName, queryName, operationName, selectedRows, JsonUtils.getValuesFromJson(values));
+        return executeOperation(entityName, queryName, operationName, selectedRows, ParseRequestUtils.getValuesFromJson(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
@@ -230,7 +230,7 @@ public abstract class TestUtils
 
     protected Either<Object, OperationResult> executeOperation(Operation operation, String values)
     {
-        return executeOperation(operation, JsonUtils.getValuesFromJson(values));
+        return executeOperation(operation, ParseRequestUtils.getValuesFromJson(values));
     }
 
     protected Either<Object, OperationResult> executeOperation(Operation operation)
@@ -259,7 +259,7 @@ public abstract class TestUtils
 //
 //        UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
 
-        return operationExecutor.create(meta, new OperationContext(JsonUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
+        return operationExecutor.create(meta, new OperationContext(ParseRequestUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
     }
 
     protected void setSession(String name, Object value)

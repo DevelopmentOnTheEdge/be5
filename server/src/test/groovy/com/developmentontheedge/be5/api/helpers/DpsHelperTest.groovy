@@ -224,30 +224,4 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertTrue dps.getProperty("payable").getBooleanAttribute(BeanInfoConstants.READ_ONLY)
     }
 
-    @Test
-    void setOperationParamsTestWithSearchParams()
-    {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
-
-        def map = [payable:"no"]
-        map.put(SEARCH_PARAM, "true")
-
-        dpsHelper.setOperationParams(dps, map)
-
-        assertEquals([CODE:null, payable:"yes"], dpsHelper.getAsMap(dps))
-    }
-
-    @Test
-    void setOperationParamsTestWithSearchParamsContain()
-    {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
-
-        def map = [payable:"no", CODE:"123"]
-        map.put(SEARCH_PARAM, "true")
-        map.put(SEARCH_PRESETS_PARAM, "payable,CODE")
-
-        dpsHelper.setOperationParams(dps, map)
-
-        assertEquals([CODE:"123", payable:"no"], dpsHelper.getAsMap(dps))
-    }
 }

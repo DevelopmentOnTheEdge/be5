@@ -10,12 +10,19 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class JsonUtils
+import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PRESETS_PARAM;
+
+
+public class ParseRequestUtils
 {
     public static String[] selectedRows(String selectedRowsString)
     {
@@ -106,5 +113,25 @@ public class JsonUtils
             }
 
         return fieldValues;
+    }
+
+    public static Map<String, Object> getOperationParams(Map<String, Object> operationParams)
+    {
+        if (!operationParams.containsKey(SEARCH_PARAM))
+        {
+            return operationParams;
+        }
+
+        if (operationParams.get(SEARCH_PRESETS_PARAM) == null)
+        {
+            return Collections.emptyMap();
+        }
+
+        List<String> notFilterParams = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+
+        return operationParams.entrySet()
+                .stream()
+                .filter(e -> notFilterParams.contains(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
