@@ -34,6 +34,13 @@ public class OperationContext
         return queryName;
     }
 
+    /**
+     * Contain operation and filter parameters.
+     * For get only operation parameters use
+     * {@link com.developmentontheedge.be5.util.ParseRequestUtils#getOperationParamsWithoutFilter(Map)}
+     *
+     * @return map of parameters
+     */
     public Map<String, Object> getOperationParams()
     {
         return operationParams;

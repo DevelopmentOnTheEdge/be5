@@ -23,7 +23,6 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
@@ -46,16 +45,12 @@ public class Form implements Component
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String[] selectedRows = ParseRequestUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
-
         Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
-
-        //moved from frontend
-        Map<String, Object> presetValues = new HashMap<>(operationParams);
-        presetValues.putAll(req.getValuesFromJson(RestApiConstants.VALUES));
+        Map<String, Object> values = req.getValuesFromJson(RestApiConstants.VALUES);
 
         OperationInfo operationInfo = userAwareMeta.getOperation(entityName, operationName);
-
         OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+
         Operation operation = operationExecutor.create(operationInfo, operationContext);
 
         Either<Object, OperationResult> result;
@@ -65,10 +60,10 @@ public class Form implements Component
             switch (req.getRequestUri())
             {
                 case "":
-                    result = operationService.generate(operation, presetValues);
+                    result = operationService.generate(operation, values);
                     break;
                 case "apply":
-                    result = operationService.execute(operation, presetValues);
+                    result = operationService.execute(operation, values);
                     break;
                 default:
                     res.sendUnknownActionError();

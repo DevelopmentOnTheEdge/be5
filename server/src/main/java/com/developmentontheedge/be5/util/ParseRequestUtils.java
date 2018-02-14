@@ -115,7 +115,7 @@ public class ParseRequestUtils
         return fieldValues;
     }
 
-    public static Map<String, Object> getOperationParams(Map<String, Object> operationParams)
+    public static Map<String, Object> getOperationParamsWithoutFilter(Map<String, Object> operationParams)
     {
         if (!operationParams.containsKey(SEARCH_PARAM))
         {

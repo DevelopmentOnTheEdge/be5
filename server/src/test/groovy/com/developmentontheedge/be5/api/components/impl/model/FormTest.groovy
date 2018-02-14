@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.model.jsonapi.ResourceData
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.google.common.collect.ImmutableMap
-import com.google.gson.Gson
 import org.junit.Before
 import org.junit.Test
 
@@ -17,6 +16,7 @@ import static org.mockito.Matchers.any
 import static org.mockito.Matchers.anyMapOf
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
+
 
 class FormTest extends Be5ProjectTest
 {
@@ -30,19 +30,19 @@ class FormTest extends Be5ProjectTest
     }
 
     @Test
-    void generate() throws Exception {
+    void generate()
+    {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
 
         Response response = mock(Response.class)
-        String values = new Gson().toJson(ImmutableMap.of(
-                "name","test1",
-                "value", "2"))
+        String values = jsonb.toJson([name:"test1", value: "2"])
 
         component.generate(getSpyMockRequest("", ImmutableMap.<String, String>builder()
                 .put(RestApiConstants.ENTITY, "testtableAdmin")
                 .put(RestApiConstants.QUERY, "All records")
                 .put(RestApiConstants.OPERATION, "Insert")
-                .put(RestApiConstants.SELECTED_ROWS, "0")
+                .put(RestApiConstants.SELECTED_ROWS, "")
+                .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson([name:"test1"]))
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())
                 .put(RestApiConstants.VALUES, values).build()), response, injector)
 

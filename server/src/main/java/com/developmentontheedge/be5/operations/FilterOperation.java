@@ -14,6 +14,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,25 +38,29 @@ public class FilterOperation extends OperationSupport
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues);
 
-        //Map<String, Object> operationParams = context.getOperationParams();
+        Map<String, Object> filterPresetValues = new HashMap<>(context.getOperationParams());
+        filterPresetValues.putAll(presetValues);
 
         List<String> searchPresets = new ArrayList<>();
-        if(!presetValues.containsKey(SEARCH_PARAM))
+        if(!filterPresetValues.containsKey(SEARCH_PARAM))
         {
-            searchPresets.addAll(dps.asMap().entrySet()
-                    .stream().filter(x -> x.getValue() != null).map(Map.Entry::getKey).collect(Collectors.toList())
+            searchPresets.addAll(
+                    presetValues.entrySet()
+                        .stream()
+                        .filter(x -> x.getValue() != null)
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toList())
             );
         }
         else
         {
-            if(presetValues.get(SEARCH_PRESETS_PARAM) != null)
+            if(filterPresetValues.get(SEARCH_PRESETS_PARAM) != null)
             {
-                searchPresets.addAll(Arrays.asList(((String) presetValues.get(SEARCH_PRESETS_PARAM)).split(",")));
+                searchPresets.addAll(Arrays.asList(((String) filterPresetValues.get(SEARCH_PRESETS_PARAM)).split(",")));
             }
         }
 
-        dpsHelper.setValues(dps, presetValues);
-        //dpsHelper.setValues(dps, presetValues);
+        dpsHelper.setValues(dps, filterPresetValues);
 
         for (DynamicProperty property : dps)
         {
@@ -63,14 +68,14 @@ public class FilterOperation extends OperationSupport
             if(searchPresets.contains(property.getName()))property.setReadOnly(true);
         }
 
-        dps.add(new DynamicPropertyBuilder( SEARCH_PRESETS_PARAM, String.class)
+        dps.add(new DynamicPropertyBuilder(SEARCH_PRESETS_PARAM, String.class)
                 .value(String.join(",", searchPresets))
                 .readonly()
                 .nullable()
                 .hidden()
                 .get());
 
-        dps.add(new DynamicPropertyBuilder( SEARCH_PARAM, Boolean.class)
+        dps.add(new DynamicPropertyBuilder(SEARCH_PARAM, Boolean.class)
                 .value(true)
                 .readonly()
                 .nullable()

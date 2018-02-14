@@ -9,8 +9,8 @@ import java.util.Map;
 
 public interface OperationService
 {
-    Either<Object, OperationResult> generate(Operation operation, Map<String, Object> presetValues);
+    Either<Object, OperationResult> generate(Operation operation, Map<String, Object> values);
 
-    Either<Object, OperationResult> execute(Operation operation, Map<String, Object> presetValues);
+    Either<Object, OperationResult> execute(Operation operation, Map<String, Object> values);
 
 }

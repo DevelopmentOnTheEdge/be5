@@ -22,25 +22,22 @@ class ParseRequestUtilsTest
     @Test
     void setOperationParamsTest()
     {
-        assertEquals([payable:"no"], ParseRequestUtils.getOperationParams([payable:"no"]))
+        assertEquals([payable:"no"], ParseRequestUtils.getOperationParamsWithoutFilter([payable:"no"]))
     }
 
     @Test
     void setOperationParamsTestWithSearchParams()
     {
-        def map = [payable:"no"]
-        map.put(SEARCH_PARAM, "true")
+        def map = [payable:"no", (SEARCH_PARAM):"true"]
 
-        assertEquals([:], ParseRequestUtils.getOperationParams(map))
+        assertEquals([:], ParseRequestUtils.getOperationParamsWithoutFilter(map))
     }
 
     @Test
     void setOperationParamsTestWithSearchParamsContain()
     {
-        def map = [payable:"no", CODE:"123"]
-        map.put(SEARCH_PARAM, "true")
-        map.put(SEARCH_PRESETS_PARAM, "payable,CODE")
+        def map = [payable:"no", CODE:"123", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "payable,CODE"]
 
-        assertEquals([CODE:"123", payable:"no"], ParseRequestUtils.getOperationParams(map))
+        assertEquals([CODE:"123", payable:"no"], ParseRequestUtils.getOperationParamsWithoutFilter(map))
     }
 }

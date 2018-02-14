@@ -162,6 +162,7 @@ public abstract class OperationSupport implements Operation
      * Puts additional parameters for redirect OperationResult.
      * @param extra parameters map
      */
+    @Override
     public void addRedirectParams( Map<String, ?> extra )
     {
         redirectParams.putAll( extra );
@@ -172,6 +173,7 @@ public abstract class OperationSupport implements Operation
      * @param name  parameter name
      * @param value parameter value
      */
+    @Override
     public void addRedirectParam( String name, Object value )
     {
         addRedirectParams( Collections.singletonMap( name, value ) );

@@ -74,26 +74,6 @@ public class StandardOperationsTest extends SqlMockOperationTest
     }
 
     @Test
-    public void insertOperationWithOperationParams()
-    {
-        Object first = generateOperation(getOperation("testtableAdmin", "Insert",
-                new OperationContext(new String[]{}, "All records", Collections.singletonMap("name", "foo"))),
-                "{'name':'test','value':1}").getFirst();
-
-        assertEquals("{'values':{'name':'foo','value':'1'}," +
-                        "'meta':{'/name':{'displayName':'name','readOnly':true},'/value':{'displayName':'value','type':'Integer','canBeNull':true}},'order':['/name','/value']}",
-                oneQuotes(JsonFactory.bean(first)));
-
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"),
-                executeOperation(getOperation("testtableAdmin", "Insert",
-                        new OperationContext(new String[]{}, "All records", Collections.singletonMap("name", "foo"))),
-                        "{'name':'test','value':1}").getSecond());
-
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
-                "VALUES (?, ?)", "foo", 1);
-    }
-
-    @Test
     public void editOperationGenerate()
     {
         when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(

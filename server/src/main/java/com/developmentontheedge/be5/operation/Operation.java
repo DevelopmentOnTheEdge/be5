@@ -58,11 +58,15 @@ public interface Operation extends Serializable
 
     void setResult(OperationResult operationResult);
 
-    Map<String, String> getRedirectParams();
-
     HashUrl getUrl();
 
     Object getLayout();
+
+    void addRedirectParams(Map<String, ?> extra);
+
+    void addRedirectParam(String name, Object value);
+
+    Map<String, String> getRedirectParams();
 
     //todo Map<String, String> validate( Object parameters );
 }

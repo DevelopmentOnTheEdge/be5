@@ -84,6 +84,14 @@ testtableAdmin:
       type: Groovy
       roles: Administrator
       file: testtableAdmin/OperationWithExtend.groovy
+  - PrintParamsInsertOp:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/PrintParamsInsertOp.groovy
+  - PrintParamsCustomOp:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/PrintParamsCustomOp.groovy
   - TransactionTestOp:
       type: Groovy
       roles: Administrator

@@ -5,10 +5,13 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,8 +33,10 @@ public class OperationServiceImpl implements OperationService
     }
 
     @Override
-    public Either<Object, OperationResult> generate(Operation operation, Map<String, Object> presetValues)
+    public Either<Object, OperationResult> generate(Operation operation, Map<String, Object> values)
     {
+        Map<String, Object> presetValues = getPresetValues(operation.getContext(), values);
+
         operation.setResult(OperationResult.generate());
 
         Object parameters = operationExecutor.generate(operation, presetValues);
@@ -66,8 +71,10 @@ public class OperationServiceImpl implements OperationService
     }
 
     @Override
-    public Either<Object, OperationResult> execute(Operation operation, Map<String, Object> presetValues)
+    public Either<Object, OperationResult> execute(Operation operation, Map<String, Object> values)
     {
+        Map<String, Object> presetValues = getPresetValues(operation.getContext(), values);
+
         operation.setResult(OperationResult.execute());
 
         Object parameters = operationExecutor.execute(operation, presetValues);
@@ -108,6 +115,15 @@ public class OperationServiceImpl implements OperationService
         }
 
         return Either.second(operation.getResult());
+    }
+
+    private Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
+    {
+        Map<String, Object> presetValues =
+                new HashMap<>(ParseRequestUtils.getOperationParamsWithoutFilter(context.getOperationParams()));
+
+        presetValues.putAll(values);
+        return presetValues;
     }
 
     private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
