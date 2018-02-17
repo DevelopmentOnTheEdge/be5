@@ -22,4 +22,7 @@ public interface FrontendConstants
     String SEARCH_PRESETS_PARAM = "_search_presets_";
 
     String RELOAD_CONTROL_NAME = "_reloadcontrol_";
+
+    String REFRESH_ALL = "refreshAll";
+
 }

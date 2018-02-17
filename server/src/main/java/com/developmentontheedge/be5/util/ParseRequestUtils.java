@@ -115,7 +115,7 @@ public class ParseRequestUtils
         return fieldValues;
     }
 
-    public static Map<String, Object> getOperationParamsWithoutFilter(Map<String, Object> operationParams)
+    public static Map<String, String> getOperationParamsWithoutFilter(Map<String, String> operationParams)
     {
         if (!operationParams.containsKey(SEARCH_PARAM))
         {
@@ -127,7 +127,7 @@ public class ParseRequestUtils
             return Collections.emptyMap();
         }
 
-        List<String> notFilterParams = Arrays.asList(((String) operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+        List<String> notFilterParams = Arrays.asList((operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
 
         return operationParams.entrySet()
                 .stream()

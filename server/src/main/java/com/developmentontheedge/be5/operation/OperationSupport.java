@@ -136,7 +136,7 @@ public abstract class OperationSupport implements Operation
     {
         HashMap<String, String> stringStringHashMap = new HashMap<>();
 
-        for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
+        for (Map.Entry<String, String> entry : context.getOperationParams().entrySet())
         {
             if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
         }

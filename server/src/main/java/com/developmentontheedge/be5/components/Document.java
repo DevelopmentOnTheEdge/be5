@@ -29,6 +29,7 @@ public class Document implements Component
     public void generate(Request req, Response res, Injector injector)
     {
         DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -37,9 +38,8 @@ public class Document implements Component
         Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
         HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parametersMap);
-        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
-        Query query;
 
+        Query query;
         try
         {
             query = userAwareMeta.getQuery(entityName, queryName);

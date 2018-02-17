@@ -768,7 +768,7 @@ public class DpsHelper
         }
     }
 
-    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
+    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, String> operationParams)
     {
         Map<String, ?> params = ParseRequestUtils.getOperationParamsWithoutFilter(operationParams);
 

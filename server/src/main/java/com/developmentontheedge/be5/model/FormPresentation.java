@@ -17,7 +17,7 @@ public class FormPresentation
     private final String operation;
     private final String title;//todo change to 'Здания - Добавить'
     private final String selectedRows;
-    private final Map<String, Object> operationParams;
+    private final Map<String, String> operationParams;
     private final JsonObject bean;
     private final Object layout;
     private final OperationResult operationResult;//todo remove
@@ -63,7 +63,7 @@ public class FormPresentation
         return selectedRows;
     }
 
-    public Map<String, Object> getOperationParams()
+    public Map<String, String> getOperationParams()
     {
         return operationParams;
     }

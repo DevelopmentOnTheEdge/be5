@@ -19,6 +19,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
@@ -45,10 +46,21 @@ public class Form implements Component
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String[] selectedRows = ParseRequestUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
-        Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
+        Map<String, String> operationParams = req.getValuesFromJsonAsStrings(RestApiConstants.OPERATION_PARAMS);
         Map<String, Object> values = req.getValuesFromJson(RestApiConstants.VALUES);
 
-        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, operationName);
+        OperationInfo operationInfo;
+        try
+        {
+            operationInfo = userAwareMeta.getOperation(entityName, operationName);
+        }
+        catch (Be5Exception e)
+        {
+            HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
+            sendError(req, res, url, e);
+            return;
+        }
+
         OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
 
         Operation operation = operationExecutor.create(operationInfo, operationContext);
@@ -117,6 +129,20 @@ public class Form implements Component
                 new ResourceData(result.isFirst() ? FORM_ACTION : OPERATION_RESULT, data),
                 Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
                 Collections.singletonMap(SELF_LINK, operation.getUrl().toString())
+        );
+    }
+
+    //todo refactoring
+    private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
+    {
+        String message = "";
+
+        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
+
+        res.sendErrorAsJson(
+                new ErrorModel(e, message),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
+                Collections.singletonMap(SELF_LINK, url.toString())
         );
     }
 
