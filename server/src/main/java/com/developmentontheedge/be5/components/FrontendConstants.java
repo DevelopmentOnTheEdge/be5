@@ -24,5 +24,6 @@ public interface FrontendConstants
     String RELOAD_CONTROL_NAME = "_reloadcontrol_";
 
     String REFRESH_ALL = "refreshAll";
+    String REFRESH_ALL_AND_GOBACK = "refreshAllAndGoBack";
 
 }

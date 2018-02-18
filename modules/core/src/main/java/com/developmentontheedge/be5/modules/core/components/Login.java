@@ -10,6 +10,7 @@ import com.google.common.base.Strings;
 import java.util.logging.Logger;
 
 
+@Deprecated
 public class Login implements Component
 {
     private static final Logger log = Logger.getLogger(Login.class.getName());

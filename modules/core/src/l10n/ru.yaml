@@ -72,6 +72,13 @@ ru:
     - topics: viewName
       entries:
       - Login: Вход
+    - topics: operationName
+      entries:
+      - Login: Авторизация
+    - topics: '@AllQueries'
+      entries:
+      - user_name: Логин
+      - user_pass: Пароль
   - default:
     - topics: operationName
       entries:

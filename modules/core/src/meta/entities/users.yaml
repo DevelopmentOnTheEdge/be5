@@ -47,3 +47,11 @@ users:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.InsertOperation
+  - Login:
+      roles: Guest
+      type: Groovy
+      file: users/Login.groovy
+  - Logout:
+      roles: '@AllRolesExceptGuest'
+      type: Groovy
+      file: users/Logout.groovy

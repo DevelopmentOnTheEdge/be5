@@ -5,6 +5,8 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.env.Injector;
 
+
+@Deprecated
 public class Logout implements Component
 {
 
