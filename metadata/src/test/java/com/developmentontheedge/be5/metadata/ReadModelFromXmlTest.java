@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
-import org.junit.Ignore;
+import org.junit.Assume;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
 import com.developmentontheedge.be5.metadata.model.Localizations;
 import com.developmentontheedge.be5.metadata.model.Module;
@@ -24,7 +23,6 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.metadata.model.QuickFilter;
-import com.developmentontheedge.be5.metadata.model.TableRef;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -98,6 +96,8 @@ public class ReadModelFromXmlTest
     @Test
     public void testWriteReadConnectionProfile() throws Exception
     {
+        Assume.assumeFalse(System.getProperty("os.name").toLowerCase().startsWith("win"));
+
         final Project project = new Project("TestProject");
         BeConnectionProfile profile = new BeConnectionProfile( "test", project.getConnectionProfiles().getLocalProfiles() );
         profile.setConnectionUrl( "jdbc:db2://localhost:50000/housing:retrieveMessagesFromServerOnGetMessage=true;" );
