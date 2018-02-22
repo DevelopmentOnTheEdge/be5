@@ -30,7 +30,7 @@ class Login extends GOperationSupport
         }
         else
         {
-            setResult(OperationResult.redirect(FrontendConstants.REFRESH_ALL_AND_GOBACK))
+            setResult(OperationResult.redirect(FrontendConstants.REFRESH_ALL))
         }
     }
 }
