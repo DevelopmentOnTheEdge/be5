@@ -1,30 +1,19 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.components.DocumentGenerator;
+import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
-import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.developmentontheedge.be5.components.FrontendConstants.*;
 
 
 public class FilterOperation extends OperationSupport
 {
-    @Inject private DocumentGenerator documentGenerator;
+    @Inject private FilterHelper filterHelper;
 
     @Override
     public Object getLayout()
@@ -38,61 +27,13 @@ public class FilterOperation extends OperationSupport
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues);
 
-        Map<String, Object> filterPresetValues = new HashMap<>(context.getOperationParams());
-        filterPresetValues.putAll(presetValues);
-
-        List<String> searchPresets = new ArrayList<>();
-        if(!filterPresetValues.containsKey(SEARCH_PARAM))
-        {
-            searchPresets.addAll(
-                    presetValues.entrySet()
-                        .stream()
-                        .filter(x -> x.getValue() != null)
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toList())
-            );
-        }
-        else
-        {
-            if(filterPresetValues.get(SEARCH_PRESETS_PARAM) != null)
-            {
-                searchPresets.addAll(Arrays.asList(((String) filterPresetValues.get(SEARCH_PRESETS_PARAM)).split(",")));
-            }
-        }
-
-        dpsHelper.setValues(dps, filterPresetValues);
-
-        for (DynamicProperty property : dps)
-        {
-            property.setCanBeNull(true);
-            if(searchPresets.contains(property.getName()))property.setReadOnly(true);
-        }
-
-        dps.add(new DynamicPropertyBuilder(SEARCH_PRESETS_PARAM, String.class)
-                .value(String.join(",", searchPresets))
-                .readonly()
-                .nullable()
-                .hidden()
-                .get());
-
-        dps.add(new DynamicPropertyBuilder(SEARCH_PARAM, Boolean.class)
-                .value(true)
-                .readonly()
-                .nullable()
-                .hidden()
-                .get());
-
-        return dps;
+        return filterHelper.processFilterParams(dps, presetValues, context.getOperationParams());
     }
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        Query query = meta.getQuery(getInfo().getEntityName(), context.getQueryName(), userInfo.getCurrentRoles());
-
-        TablePresentation table = documentGenerator.getTable(query,
-                dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));
-
-        setResult(OperationResult.table(table));
+        setResult(OperationResult.table(
+                filterHelper.filterTable(getInfo().getEntityName(), context.getQueryName(), parameters)));
     }
 }
