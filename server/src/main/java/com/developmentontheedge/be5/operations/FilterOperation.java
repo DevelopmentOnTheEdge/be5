@@ -33,7 +33,6 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.table(
-                filterHelper.filterTable(getInfo().getEntityName(), context.getQueryName(), parameters)));
+        setResult(OperationResult.table(filterHelper.filterTable(getQuery(), parameters)));
     }
 }

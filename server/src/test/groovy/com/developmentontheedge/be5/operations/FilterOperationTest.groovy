@@ -11,6 +11,7 @@ import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_P
 import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.assertEquals
 
+
 class FilterOperationTest extends SqlMockOperationTest
 {
     @Test

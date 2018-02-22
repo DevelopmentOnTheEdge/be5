@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.util.HashUrl;
 
@@ -104,6 +105,11 @@ public abstract class OperationSupport implements Operation
     public void setResultRedirectThisOperationNewId(Object newID)
     {
         setResult(OperationResult.redirect(getUrlForNewRecordId(newID)));
+    }
+
+    public Query getQuery()
+    {
+        return meta.getQuery(getInfo().getEntityName(), context.getQueryName(), userInfo.getCurrentRoles());
     }
 
     @Override
