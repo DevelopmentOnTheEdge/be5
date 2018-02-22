@@ -222,6 +222,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             }
         }
 
+        operations.sort(Comparator.comparing(TableOperationPresentation::getTitle));
+
         return operations;
     }
 
