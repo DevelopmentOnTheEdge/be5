@@ -22,6 +22,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryLink;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -381,6 +382,31 @@ public class MetaImpl implements Meta
         if (!hasAccess(query.getRoles(), availableRoles))
             throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
         return query;
+    }
+
+    @Override
+    public String getQueryCode(String entityName, String queryName, List<String> availableRoles)
+    {
+        Query query = getQueryIgnoringRoles(entityName, queryName);
+        if (!hasAccess(query.getRoles(), availableRoles))
+            throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
+        return getQueryCode(query, availableRoles);
+    }
+
+    @Override
+    public String getQueryCode(Query query, List<String> availableRoles)
+    {
+        try
+        {
+            synchronized(query.getProject())
+            {
+                return query.getQueryCompiled().validate().trim();
+            }
+        }
+        catch( ProjectElementException e )
+        {
+            throw Be5Exception.internalInQuery( e, query );
+        }
     }
 
     @Override

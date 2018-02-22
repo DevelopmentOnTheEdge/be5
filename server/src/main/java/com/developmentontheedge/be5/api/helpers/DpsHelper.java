@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
@@ -14,6 +15,9 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.sql.format.Ast;
+import com.developmentontheedge.sql.model.AstBeParameterTag;
+import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.collect.ImmutableList;
 
 import java.sql.ResultSet;
@@ -29,7 +33,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -214,6 +220,26 @@ public class DpsHelper
                 throw Be5Exception.internal("Entity '" + entity.getName() + "' not contain column " + propertyName);
             }
         }
+        return dps;
+    }
+
+    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, Entity entity, Query query)
+    {
+        AstStart ast;
+        try
+        {
+            ast = SqlQuery.parse(meta.getQueryCode(query, UserInfoHolder.getCurrentRoles()));
+        }
+        catch (RuntimeException e)
+        {
+            log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
+            throw Be5Exception.internalInQuery(e, query);
+        }
+
+        Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
+
+        addDpForColumns(dps, entity, usedParams);
+
         return dps;
     }
 

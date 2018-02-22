@@ -1,7 +1,10 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.components.DocumentGenerator;
+import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -11,6 +14,7 @@ import com.developmentontheedge.sql.format.ColumnRef;
 import com.developmentontheedge.sql.format.FilterApplier;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.SqlQuery;
 import one.util.streamex.EntryStream;
 
 import java.util.ArrayList;
@@ -19,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PARAM;
@@ -27,6 +33,8 @@ import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_P
 
 public class FilterHelper
 {
+    private static final Logger log = Logger.getLogger(FilterHelper.class.getName());
+
     private static final List<String> keywords = Arrays.asList("category", SEARCH_PARAM, SEARCH_PRESETS_PARAM);
 
     private final DpsHelper dpsHelper;

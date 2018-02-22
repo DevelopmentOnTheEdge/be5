@@ -100,15 +100,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String resolveQuery(String entityName, String queryName)
         {
-            Query subQuery = userAwareMeta.getQuery( entityName == null ? query.getEntity().getName() : entityName, queryName );
-            try
-            {
-                return subQuery.getQueryCompiled().validate();
-            }
-            catch( ProjectElementException e )
-            {
-                throw Be5Exception.internal( e );
-            }
+            return meta.getQueryCode( entityName == null ? query.getEntity().getName() : entityName,
+                    queryName, UserInfoHolder.getCurrentRoles() );
         }
 
         @Override
@@ -230,18 +223,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
-        String queryText;
-        try
-        {
-            synchronized(query.getProject())
-            {
-                queryText = query.getQueryCompiled().validate().trim();
-            }
-        }
-        catch( ProjectElementException e )
-        {
-            throw Be5Exception.internalInQuery( e, query );
-        }
+
+        String queryText = meta.getQueryCode(query, UserInfoHolder.getCurrentRoles());
+
         dql.log("After FreeMarker", queryText);
         if(queryText.isEmpty())
             return null;

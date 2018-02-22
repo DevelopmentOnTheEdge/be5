@@ -74,7 +74,11 @@ public interface Meta
      * Throws an exception if there's no such query or it is not awailable due to lack of rights.
      */
     Query getQuery(String entity, String name, List<String> roles);
-    
+
+    String getQueryCode(String entityName, String queryName, List<String> availableRoles);
+
+    String getQueryCode(Query query, List<String> availableRoles);
+
     /**
      * Returns a query.
      * Throws an exception if there's no such query.
