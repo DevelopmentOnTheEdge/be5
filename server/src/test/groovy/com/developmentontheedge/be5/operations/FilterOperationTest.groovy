@@ -63,4 +63,17 @@ class FilterOperationTest extends SqlMockOperationTest
                 oneQuotes(((TablePresentation)execute.getSecond().getDetails()).getParameters().toString()))
     }
 
+    @Test
+    void executeOldRedirectFilter()
+    {
+        Either<Object, OperationResult> execute = executeOperation(
+                "testtableAdmin", "All records", "OldRedirectFilter", "", [name:"test"])
+
+        assertEquals("redirect",
+                oneQuotes(execute.getSecond().getStatus()))
+
+        assertEquals("table/testtableAdmin/All records/_search_presets_=name/name=test/_search_=true",
+                (String)execute.getSecond().getDetails())
+    }
+
 }

@@ -25,6 +25,7 @@ testtableAdmin:
       - OperationWithExtend
       - OperationWithExtend2
       - Filter
+      - OldRedirectFilter
       - ErrorProcessing
       - TransactionTestOp
       - CustomOperation
@@ -117,6 +118,10 @@ testtableAdmin:
   - Filter:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.FilterOperation
+  - OldRedirectFilter:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/OldRedirectFilter.groovy
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.SilentInsertOperation

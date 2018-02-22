@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.components.FrontendConstants;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.util.HashUrl;
 
@@ -137,6 +138,16 @@ public class OperationResult
     public static OperationResult redirectToTable(String entityName, String queryName)
     {
         return redirectToTable(entityName, queryName, Collections.emptyMap());
+    }
+
+    public static OperationResult redirectToTable(Query query)
+    {
+        return redirectToTable(query, Collections.emptyMap());
+    }
+
+    public static OperationResult redirectToTable(Query query, Map<String, String> params)
+    {
+        return redirectToTable(query.getEntity().getName(), query.getName(), params);
     }
 
     public static OperationResult redirect(String url)
