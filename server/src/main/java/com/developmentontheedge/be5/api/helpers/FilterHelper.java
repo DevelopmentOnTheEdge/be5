@@ -73,6 +73,11 @@ public class FilterHelper
             }
         }
 
+        for (DynamicProperty property : dps)
+        {
+            property.setValue(null);//remove defaultValue
+        }
+
         dpsHelper.setValues(dps, filterPresetValues);
 
         for (DynamicProperty property : dps)
