@@ -87,7 +87,7 @@ public class FilterHelper
         }
 
         dps.add(new DynamicPropertyBuilder(SEARCH_PRESETS_PARAM, String.class)
-                .value(String.join(",", searchPresets))
+                .value(searchPresets.size() > 0 ? String.join(",", searchPresets) : null)
                 .readonly()
                 .nullable()
                 .hidden()

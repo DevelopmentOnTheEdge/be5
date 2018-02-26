@@ -128,7 +128,7 @@ public class OperationServiceImpl implements OperationService
 
     private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
     {
-        validator.replaceNullValueToEmptyString(parameters);
+        ParseRequestUtils.replaceNullToEmptyString(parameters);
 
         return Either.first(parameters);
     }

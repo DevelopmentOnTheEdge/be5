@@ -28,7 +28,7 @@ class ValidatorServiceTest extends Be5ProjectTest
     }
 
     @Test
-    void test() throws Exception
+    void test()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, 2L)
         validator.checkErrorAndCast(property)
@@ -36,11 +36,25 @@ class ValidatorServiceTest extends Be5ProjectTest
 
         DynamicProperty propertyStr = new DynamicProperty("name", "Name", Long.class, "2")
         validator.checkErrorAndCast(propertyStr)
-        assertEquals 2L, property.getValue()
+        assertEquals 2L, propertyStr.getValue()
     }
 
     @Test
-    void testMulti() throws Exception
+    void canBeNull()
+    {
+        DynamicProperty property = new DynamicProperty("name", "Name", String.class, null)
+        property.setCanBeNull(true)
+        validator.checkErrorAndCast(property)
+        assertEquals null, property.getValue()
+
+        DynamicProperty propertyStr = new DynamicProperty("name", "Name", String.class, "")
+        propertyStr.setCanBeNull(true)
+        validator.checkErrorAndCast(propertyStr)
+        assertEquals "", propertyStr.getValue()
+    }
+
+    @Test
+    void testMulti()
     {
         String[] initValue = ["val", "val2"] as String[]
 
@@ -62,7 +76,7 @@ class ValidatorServiceTest extends Be5ProjectTest
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void testMultiCanNotBeNull() throws Exception
+    void testMultiCanNotBeNull()
     {
         String[] initValue = [] as String[]
 
@@ -78,7 +92,7 @@ class ValidatorServiceTest extends Be5ProjectTest
     }
 
     @Test
-    void testMultiLong() throws Exception
+    void testMultiLong()
     {
         String[] value = ["1", "3"] as String[]
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, value)
@@ -90,14 +104,14 @@ class ValidatorServiceTest extends Be5ProjectTest
     }
 
     @Test(expected = NumberFormatException.class)
-    void testError() throws Exception
+    void testError()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", Long.class, "a")
         validator.checkErrorAndCast(property)
     }
 
     @Test(expected = IllegalArgumentException.class)
-    void testString() throws Exception
+    void testString()
     {
         DynamicProperty property = new DynamicProperty("name", "Name", String.class, 2)
         validator.checkErrorAndCast(property)

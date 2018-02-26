@@ -2,6 +2,8 @@ package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.impl.model.Base64File;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
@@ -104,10 +106,10 @@ public class ParseRequestUtils
 
         }
 
-        return emptyStringReplaceToNull(fieldValues);
+        return replaceEmptyStringToNull(fieldValues);
     }
 
-    public static Map<String, Object> emptyStringReplaceToNull(Map<String, Object> values)
+    public static Map<String, Object> replaceEmptyStringToNull(Map<String, Object> values)
     {
         HashMap<String, Object> map = new HashMap<>();
         for (Map.Entry<String, Object> entry : values.entrySet())
@@ -122,6 +124,20 @@ public class ParseRequestUtils
             }
         }
         return map;
+    }
+
+    public static void replaceNullToEmptyString(Object parameters)
+    {
+        if (parameters instanceof DynamicPropertySet)
+        {
+            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            {
+                if (property.getValue() == null)
+                {
+                    property.setValue("");
+                }
+            }
+        }
     }
 
     public static Map<String, String> getOperationParamsWithoutFilter(Map<String, String> operationParams)

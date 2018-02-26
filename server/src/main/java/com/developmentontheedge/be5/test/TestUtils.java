@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.util.ParseRequestUtils.emptyStringReplaceToNull;
+import static com.developmentontheedge.be5.util.ParseRequestUtils.replaceEmptyStringToNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -208,7 +208,7 @@ public abstract class TestUtils
 
     protected Either<Object, OperationResult> generateOperation(Operation operation, Map<String, Object> presetValues)
     {
-        return operationService.generate(operation, emptyStringReplaceToNull(presetValues));
+        return operationService.generate(operation, replaceEmptyStringToNull(presetValues));
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
@@ -241,7 +241,7 @@ public abstract class TestUtils
 
     protected Either<Object, OperationResult> executeOperation(Operation operation, Map<String, Object> presetValues)
     {
-        return operationService.execute(operation, emptyStringReplaceToNull(presetValues));
+        return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
     protected Operation getOperation(String entityName, String operationName, OperationContext context)

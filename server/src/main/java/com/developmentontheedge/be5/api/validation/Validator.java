@@ -92,11 +92,6 @@ public class Validator
         }
         else
         {
-            if(property.getValue() instanceof String && ((String) property.getValue()).isEmpty())
-            {
-                property.setValue(null);
-            }
-
             if(property.getValue() instanceof String && property.getType() != String.class)
             {
                 property.setValue(parseFrom(property, (String) property.getValue()));
@@ -237,20 +232,6 @@ public class Validator
         return property.getAttribute(BeanInfoConstants.STATUS) != null &&
                 Validation.Status.valueOf(((String) property.getAttribute(BeanInfoConstants.STATUS)).toUpperCase())
                         == Validation.Status.ERROR;
-    }
-
-    public void replaceNullValueToEmptyString(Object parameters)
-    {
-        if (parameters instanceof DynamicPropertySet)
-        {
-            for (DynamicProperty property : (DynamicPropertySet)parameters)
-            {
-                if (property.getValue() == null)
-                {
-                    property.setValue("");
-                }
-            }
-        }
     }
 
     private String toStringProperty(DynamicProperty property)
