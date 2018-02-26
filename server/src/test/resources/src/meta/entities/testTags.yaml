@@ -43,7 +43,7 @@ testTags:
       type: 1D_unknown
       invisible: true
       cacheable: true
-      layout: '{"type":"tableForm", "defaultOperation":"Insert"}'
+      layout: '{"type":"tableForm"}'
       roles: '@AllRoles'
       code: |-
         SELECT code AS "ID", admlevel AS "NAME"
