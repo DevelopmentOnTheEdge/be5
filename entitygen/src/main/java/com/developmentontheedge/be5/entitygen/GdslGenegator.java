@@ -76,6 +76,7 @@ public class GdslGenegator
         for(Entity entity : entities)
         {
             if(entity.getName().startsWith("_"))continue;
+            if(entity.getName().equals("properties"))continue;//groovy have getProperties()
             entityNames.add(entity.getName());
         }
         input.put("entityNames", entityNames);
