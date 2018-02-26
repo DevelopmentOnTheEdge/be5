@@ -107,7 +107,10 @@ public class Form implements Component
                 //todo refactoring, add for prevent json error
                 //java.lang.IllegalAccessException: Class org.eclipse.yasson.internal.model.GetFromGetter can not access a member of class sun.reflect.annotation.AnnotatedTypeFactory$AnnotatedTypeBaseImpl with modifiers "public final"
                 //at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
-                operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0]));
+                if(operation.getResult().getMessage() != null)
+                {
+                    operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0]));
+                }
             }
 
             data = new FormPresentation(

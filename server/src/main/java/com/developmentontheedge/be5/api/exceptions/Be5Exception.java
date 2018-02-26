@@ -197,7 +197,7 @@ public class Be5Exception extends RuntimeException
             e = e.getCause();
             out.append(getThrowableMessage(e));
         }
-        if(e instanceof NullPointerException)
+        if(e.getClass() == NullPointerException.class)
         {
             StackTraceElement[] stackTrace = e.getStackTrace();
             for (int i = 0; i < Math.min(stackTrace.length, 2); i++)

@@ -192,21 +192,20 @@ public class MainServlet implements Filter
             Component component = getInjector().getComponent(componentId);
             component.generate( req, res, getInjector() );
         }
-
-        catch ( Be5Exception ex )
+        catch ( Be5Exception e )
         {
-            if(ex.getCode().isInternal() || ex.getCode().isAccessDenied())
+            if(e.getCode().isInternal() || e.getCode().isAccessDenied())
             {
-                log.log(Level.SEVERE, ex.getMessage(), ex);
+                log.log(Level.SEVERE, e.getMessage(), e);
             }
 
-            if(ex.getCode().isAccessDenied())
+            if(e.getCode().isAccessDenied())
             {
-                res.sendAccessDenied(ex);
+                res.sendAccessDenied(e);
             }
             else
             {
-                res.sendError(ex);
+                res.sendError(e);
             }
         }
         catch ( Throwable e )
