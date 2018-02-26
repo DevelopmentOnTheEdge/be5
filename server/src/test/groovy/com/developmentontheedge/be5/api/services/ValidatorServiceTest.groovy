@@ -53,6 +53,12 @@ class ValidatorServiceTest extends Be5ProjectTest
         validator.checkErrorAndCast(dps)
 
         assertArrayEquals(initValue, (Object[])property.getValue())
+
+        property.setValue(null)
+        property.setCanBeNull(true)
+        validator.checkErrorAndCast(dps)
+
+        assertEquals(null, property.getValue())
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -53,6 +53,22 @@ public class Validator
 
     public void checkErrorAndCast(DynamicProperty property)
     {
+        if(property.getValue() == null
+                || ( property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST)
+                     && ((Object[]) property.getValue()).length == 0))
+        {
+            if (property.isCanBeNull())
+            {
+                return;
+            }
+            else
+            {
+                String msg = userAwareMeta.getLocalizedValidationMessage("This field is required.");
+                setError(property, msg);
+                throw new IllegalArgumentException(msg + toStringProperty(property));
+            }
+        }
+
         if(property.getBooleanAttribute(BeanInfoConstants.MULTIPLE_SELECTION_LIST))
         {
             if(!(property.getValue() instanceof Object[]))
@@ -72,12 +88,6 @@ public class Validator
                     resValues[i] = values[i];
                 checkValueInTags(property, resValues[i]);
             }
-            if(values.length == 0 && !property.isCanBeNull())
-            {
-                String msg = userAwareMeta.getLocalizedValidationMessage("This field is required.");
-                setError(property, msg);
-                throw new IllegalArgumentException(msg + toStringProperty(property));
-            }
             property.setValue(resValues);
         }
         else
@@ -85,20 +95,6 @@ public class Validator
             if(property.getValue() instanceof String && ((String) property.getValue()).isEmpty())
             {
                 property.setValue(null);
-            }
-
-            if(property.getValue() == null)
-            {
-                if (property.isCanBeNull())
-                {
-                    return;
-                }
-                else
-                {
-                    String msg = userAwareMeta.getLocalizedValidationMessage("This field is required.");
-                    setError(property, msg);
-                    throw new IllegalArgumentException(msg + toStringProperty(property));
-                }
             }
 
             if(property.getValue() instanceof String && property.getType() != String.class)

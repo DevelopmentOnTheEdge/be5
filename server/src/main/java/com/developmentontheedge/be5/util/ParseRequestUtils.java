@@ -48,71 +48,80 @@ public class ParseRequestUtils
 //            Set<Map.Entry<String, JsonValue>> entries = object.entrySet();
 
 
-            JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
-            for (Map.Entry entry: values.entrySet())
+        JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
+        for (Map.Entry entry: values.entrySet())
+        {
+            String name = entry.getKey().toString();
+            if(entry.getValue() instanceof JsonNull)
             {
-                String name = entry.getKey().toString();
-                if(entry.getValue() instanceof JsonNull)
+                fieldValues.put(name, null);
+            }
+            else if(entry.getValue() instanceof JsonArray)
+            {
+                JsonArray value = (JsonArray) entry.getValue();
+
+                String[] arrValues = new String[value.size()];
+                for (int i = 0; i < value.size(); i++)
                 {
-                    fieldValues.put(name, null);
-                }
-                else if(entry.getValue() instanceof JsonArray)
-                {
-                    JsonArray value = (JsonArray) entry.getValue();
-
-                    String[] arrValues = new String[value.size()];
-                    for (int i = 0; i < value.size(); i++)
-                    {
-                        arrValues[i] = value.get(i).getAsString();
-                    }
-
-                    fieldValues.put(name, arrValues);
-                }
-                else if(entry.getValue() instanceof JsonObject)
-                {
-                    JsonObject jsonObject = ((JsonObject) entry.getValue());
-                    String type = jsonObject.get("type").getAsString();
-                    if( "Base64File".equals(type) )
-                    {
-                        try
-                        {
-                            String data = jsonObject.get("data").getAsString();
-                            String base64 = ";base64,";
-                            int base64Pos = data.indexOf(base64);
-
-                            String mimeTypes = data.substring("data:".length(), base64Pos);
-                            byte[] bytes = data.substring(base64Pos + base64.length(), data.length()).getBytes("UTF-8");
-
-                            byte[] decoded = Base64.getDecoder().decode(bytes);
-
-                            fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(), decoded, mimeTypes));
-                        }
-                        catch (UnsupportedEncodingException e)
-                        {
-                            throw Be5Exception.internal(e);
-                        }
-                    }
-                    else
-                    {
-                        fieldValues.put(name, jsonObject.toString());
-                    }
-                }
-                else if(entry.getValue() instanceof JsonPrimitive)
-                {
-                    String value = ((JsonPrimitive)entry.getValue()).getAsString();
-                    if( !"".equals(value) )
-                    {
-                        fieldValues.put(name, value);
-                    }
-                    else
-                    {
-                        fieldValues.put(name, null);
-                    }
+                    arrValues[i] = value.get(i).getAsString();
                 }
 
+                fieldValues.put(name, arrValues);
+            }
+            else if(entry.getValue() instanceof JsonObject)
+            {
+                JsonObject jsonObject = ((JsonObject) entry.getValue());
+                String type = jsonObject.get("type").getAsString();
+                if( "Base64File".equals(type) )
+                {
+                    try
+                    {
+                        String data = jsonObject.get("data").getAsString();
+                        String base64 = ";base64,";
+                        int base64Pos = data.indexOf(base64);
+
+                        String mimeTypes = data.substring("data:".length(), base64Pos);
+                        byte[] bytes = data.substring(base64Pos + base64.length(), data.length()).getBytes("UTF-8");
+
+                        byte[] decoded = Base64.getDecoder().decode(bytes);
+
+                        fieldValues.put(name, new Base64File(jsonObject.get("name").getAsString(), decoded, mimeTypes));
+                    }
+                    catch (UnsupportedEncodingException e)
+                    {
+                        throw Be5Exception.internal(e);
+                    }
+                }
+                else
+                {
+                    fieldValues.put(name, jsonObject.toString());
+                }
+            }
+            else if(entry.getValue() instanceof JsonPrimitive)
+            {
+                fieldValues.put(name, ((JsonPrimitive)entry.getValue()).getAsString());
             }
 
-        return fieldValues;
+        }
+
+        return emptyStringReplaceToNull(fieldValues);
+    }
+
+    public static Map<String, Object> emptyStringReplaceToNull(Map<String, Object> values)
+    {
+        HashMap<String, Object> map = new HashMap<>();
+        for (Map.Entry<String, Object> entry : values.entrySet())
+        {
+            if( "".equals(entry.getValue()) )
+            {
+                map.put(entry.getKey(), null);
+            }
+            else
+            {
+                map.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return map;
     }
 
     public static Map<String, String> getOperationParamsWithoutFilter(Map<String, String> operationParams)
