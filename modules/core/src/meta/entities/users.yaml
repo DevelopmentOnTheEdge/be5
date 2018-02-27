@@ -53,9 +53,7 @@ users:
       code: com.developmentontheedge.be5.operations.FilterOperation
   - Login:
       roles: Guest
-      type: Groovy
-      file: users/Login.groovy
+      code: com.developmentontheedge.be5.modules.core.operations.users.Login
   - Logout:
       roles: '@AllRoles'
-      type: Groovy
-      file: users/Logout.groovy
+      code: com.developmentontheedge.be5.modules.core.operations.users.Logout
