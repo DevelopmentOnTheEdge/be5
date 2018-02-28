@@ -236,7 +236,7 @@ public class DpsHelper
             throw Be5Exception.internalInQuery(e, query);
         }
 
-        Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
+        List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
 
         addDpForColumns(dps, entity, usedParams);
 
