@@ -42,6 +42,7 @@ import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.sql.format.SqlTypeUtils;
 
 
@@ -471,7 +472,7 @@ public class MetaImpl implements Meta
         BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
 
         return StreamSupport.stream(columns.spliterator(), false).collect(
-                Collectors.toMap(ColumnDef::getName, Function.identity() )
+                Utils.toLinkedMap(ColumnDef::getName, Function.identity())
         );
     }
 

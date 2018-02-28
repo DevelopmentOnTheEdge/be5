@@ -61,8 +61,8 @@ class SpecialColumnsTest extends Be5ProjectDBTest
         def propertyList = StreamSupport.stream(table.get(id).spliterator(), false)
                 .map({ p -> p.getName() }).collect(Collectors.toList())
 
-        assertEquals(["whoModified___", "whoInserted___", "name", "ID",
-                      "modificationDate___", "value", "creationDate___", "isDeleted___"], propertyList)
+        assertEquals(["ID", "name","value",  "whoInserted___", "whoModified___",
+                      "creationDate___", "modificationDate___", "isDeleted___"], propertyList)
     }
 
     @Test

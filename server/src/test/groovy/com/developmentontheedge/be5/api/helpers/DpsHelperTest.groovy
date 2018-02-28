@@ -35,15 +35,12 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"))
         assertEquals "{" +
-                "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true," +
-                "'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
                 "'/CODE':{'displayName':'Код'}," +
-                "'/payable':{'displayName':'Оплачиваемая','canBeNull':true," +
-                "'tagList':[['yes','да'],['no','нет']]}," +
-                "'/admlevel':{'displayName':'Уроверь'," +
-                "'tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}," +
-                "'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}" +
-                "}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+                "'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]}," +
+                "'/admlevel':{'displayName':'Уроверь','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}," +
+                "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
+                "'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}}",
+            oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
@@ -139,7 +136,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"))
         dps.setValue("name", "TestName")
-        assertArrayEquals([null, null, "TestName", null, null, null, null, "no"] as Object[], dpsHelper.getValues(dps))
+        assertArrayEquals([null, "TestName", null, null, null, null, null, "no"] as Object[], dpsHelper.getValues(dps))
     }
 
     @Test
@@ -160,7 +157,7 @@ class DpsHelperTest extends Be5ProjectDBTest
 
         String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.addDp(dps, metersEntity))
         assertEquals "INSERT INTO meters " +
-                "(whoModified___, whoInserted___, name, ID, modificationDate___, value, creationDate___, isDeleted___) " +
+                "(ID, name, value, whoInserted___, whoModified___, creationDate___, modificationDate___, isDeleted___) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
     }
 

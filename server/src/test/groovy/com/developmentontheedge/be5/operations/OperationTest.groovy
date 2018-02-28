@@ -155,8 +155,8 @@ class OperationTest extends SqlMockOperationTest
         executeOperation("testTags", "All records", "Insert", "",
                 ['CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional','testLong':'']).getSecond()
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (referenceTest, CODE, payable, admlevel, testLong) VALUES (?, ?, ?, ?, ?)",
-                null, "01", "yes", "Regional", null
+        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel, referenceTest, testLong) VALUES (?, ?, ?, ?, ?)",
+                "01", "yes", "Regional", null, null
         )
     }
 

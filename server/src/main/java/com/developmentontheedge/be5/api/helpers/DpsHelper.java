@@ -510,7 +510,7 @@ public class DpsHelper
     public String generateUpdateSqlForOneKey(Entity entity, DynamicPropertySet dps)
     {
         Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
+                .collect(Utils.toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(entity.getName()).set(valuePlaceholders)
                 .where(Collections.singletonMap(entity.getPrimaryKey(), "?")).format();
@@ -519,7 +519,7 @@ public class DpsHelper
     public String generateUpdateSqlForConditions(Entity entity, DynamicPropertySet dps, Map<String, ? super Object> conditions)
     {
         Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
+                .collect(Utils.toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(entity.getName()).set(valuePlaceholders)
                 .where(conditions).format();
@@ -648,17 +648,6 @@ public class DpsHelper
         }
 
         return id;
-    }
-
-    public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
-            Function<? super T, ? extends K> keyMapper,
-            Function<? super T, ? extends U> valueMapper)
-    {
-        return Collectors.toMap(keyMapper, valueMapper,
-                (u, v) -> {
-                    throw new IllegalStateException(String.format("Duplicate key %s", u));
-                },
-                LinkedHashMap::new);
     }
 
     public void checkDpsColumns(Entity entity, DynamicPropertySet dps)

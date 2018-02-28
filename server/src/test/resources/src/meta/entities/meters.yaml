@@ -13,17 +13,17 @@ meters:
         defaultValue: '''Н/Д'''
     - value:
         type: SMALLINT
-    - modificationDate___:
-        type: TIMESTAMP
-        canBeNull: true
-    - creationDate___:
-        type: TIMESTAMP
+    - whoInserted___:
+        type: VARCHAR(100)
         canBeNull: true
     - whoModified___:
         type: VARCHAR(100)
         canBeNull: true
-    - whoInserted___:
-        type: VARCHAR(100)
+    - creationDate___:
+        type: TIMESTAMP
+        canBeNull: true
+    - modificationDate___:
+        type: TIMESTAMP
         canBeNull: true
     - isDeleted___:
         type: ENUM('no','yes')
