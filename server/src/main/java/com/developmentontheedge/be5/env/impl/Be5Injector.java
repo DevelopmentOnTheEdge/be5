@@ -96,6 +96,13 @@ public class Be5Injector implements Injector
             return thiz;
         }
 
+        if (serviceClass == Stage.class)
+        {
+            @SuppressWarnings("unchecked")
+            T stage = (T) this.stage;
+            return stage;
+        }
+
         T service = instantiatedServices.get(serviceClass);
 
         if (service == null)

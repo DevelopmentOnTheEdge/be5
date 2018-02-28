@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 
+import javax.inject.Provider;
 import java.io.IOException;
 import java.util.Map;
 
@@ -20,20 +21,24 @@ import java.util.Map;
 public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
-    private Be5Caches be5Caches;
-    private GroovyRegister groovyRegister;
-    private Injector injector;
     private Map<String, Project> initModulesMap;
 
     private WatchDir watcher = null;
 
     private volatile boolean dirty = false;
 
-    //private DatabaseService databaseService;
+    private final Injector injector;
+    private final Stage stage;
+    private final Provider<DatabaseService> databaseServiceProvider;
+    private final Be5Caches be5Caches;
+    private final GroovyRegister groovyRegister;
 
-    public ProjectProviderImpl(Injector injector, Be5Caches be5Caches, GroovyRegister groovyRegister)
+    public ProjectProviderImpl(Injector injector, Stage stage, Provider<DatabaseService> databaseServiceProvider,
+                               Be5Caches be5Caches, GroovyRegister groovyRegister)
     {
         this.injector = injector;
+        this.stage = stage;
+        this.databaseServiceProvider = databaseServiceProvider;
         this.be5Caches = be5Caches;
         this.groovyRegister = groovyRegister;
     }
@@ -81,7 +86,7 @@ public class ProjectProviderImpl implements ProjectProvider
             }
 
             //todo move to ModuleLoader2 - find dev.yaml only in current project,
-            if (injector.getStage() == Stage.DEVELOPMENT)
+            if (stage == Stage.DEVELOPMENT)
             {
                 if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
                 watcher = new WatchDir(initModulesMap)
@@ -110,7 +115,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private void updateDatabaseSystem()
     {
-        project.setDatabaseSystem(injector.get(DatabaseService.class).getRdbms());
+        project.setDatabaseSystem(databaseServiceProvider.get().getRdbms());
     }
 
 }
