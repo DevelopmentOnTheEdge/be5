@@ -60,12 +60,13 @@ public class Be5Injector implements Injector
     {
         binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
         getLogger();
-        log.info(JULLogger.infoBlock("Load classes: " + binder.getClass().getName() + " - " + binder.getInfo()));
+        log.info(JULLogger.infoBlock(
+                "Load classes: " + binder.getClass().getName() +
+                    (!binder.getInfo().isEmpty() ? " - " + binder.getInfo() : "") + "\n" +
+                 stage + " mod"));
 
         if (stage == Stage.PRODUCTION)
         {
-            log.info("PRODUCTION mod: initialized all services");
-
             List<String> serviceNames = new ArrayList<>();
             for (Class<?> service : bindings.keySet())
             {
