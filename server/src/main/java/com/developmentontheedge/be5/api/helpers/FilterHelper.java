@@ -103,13 +103,6 @@ public class FilterHelper
         return dps;
     }
 
-    public TablePresentation filterTable(String entityName, String queryName, Object parameters)
-    {
-        Query query = meta.getQuery(entityName, queryName, UserInfoHolder.getCurrentRoles());
-
-        return filterTable(query, parameters);
-    }
-
     public TablePresentation filterTable(Query query, Object parameters)
     {
         return documentGenerator.getTable(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));
