@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.api.validation.rule;
 
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 
 public class ValidationRules
@@ -21,9 +19,29 @@ public class ValidationRules
         return new ValidationRules("baseRule", ruleNames.name());
     }
 
-    public static ValidationRules range(int from, int to)
+    public static ValidationRules range(long from, long to)
     {
         return new ValidationRules("range", new Range(from, to));
+    }
+
+    public static ValidationRules range(double from, double to)
+    {
+        return new ValidationRules("range", new DoubleRange(from, to));
+    }
+
+    public static ValidationRules step(long value)
+    {
+        return new ValidationRules("step", value);
+    }
+
+    public static ValidationRules step(double value)
+    {
+        return new ValidationRules("step", value);
+    }
+
+    public static ValidationRules pattern(String value)
+    {
+        return new ValidationRules("pattern", value);
     }
 
     public static ValidationRules unique(String tableName)
@@ -49,18 +67,36 @@ public class ValidationRules
 
     public static class Range
     {
-        int from,to;
+        long from,to;
 
-        Range(int from, int to) {
+        Range(long from, long to) {
             this.from = from;
             this.to = to;
         }
 
-        public int getFrom() {
+        public long getFrom() {
             return from;
         }
 
-        public int getTo() {
+        public long getTo() {
+            return to;
+        }
+    }
+
+    public static class DoubleRange
+    {
+        double from, to;
+
+        DoubleRange(double from, double to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public double getFrom() {
+            return from;
+        }
+
+        public double getTo() {
             return to;
         }
     }

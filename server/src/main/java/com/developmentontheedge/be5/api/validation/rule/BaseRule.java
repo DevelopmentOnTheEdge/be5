@@ -4,8 +4,5 @@ public enum BaseRule
 {
     digits,
     phone,
-    email,
-    integer,
-    number,
-    date
+    email
 }
