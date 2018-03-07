@@ -48,9 +48,9 @@ class ValidationRulesTest extends Be5ProjectTest
     @Test
     void manyTest()
     {
-        def list = [baseRule(digits), unique("users")]
+        def list = [pattern('^[0-9]+$'), unique("users")]
         assertEquals("[" +
-                "{'attr':'digits','type':'baseRule'}, " +
+                "{'attr':'^[0-9]+\$','type':'pattern'}, " +
                 "{'attr':{'tableName':'users'},'type':'unique'}" +
             "]", oneQuotes(list.toString()))
     }
@@ -62,10 +62,10 @@ class ValidationRulesTest extends Be5ProjectTest
 
         dps << [
                 name: "test",
-                VALIDATION_RULES: baseRule(digits)
+                VALIDATION_RULES: pattern('^[0-9]+$')
         ]
 
-        assertEquals("{'/test':{'displayName':'test','validationRules':{'attr':'digits','type':'baseRule'}}}"
+        assertEquals("{'/test':{'displayName':'test','validationRules':{'attr':'^[0-9]+\$','type':'pattern'}}}"
                 , oneQuotes(JsonFactory.beanMeta(dps).toString()))
     }
 
@@ -76,12 +76,12 @@ class ValidationRulesTest extends Be5ProjectTest
 
         dps << [
                 name: "test",
-                VALIDATION_RULES: [baseRule(digits), unique("users")]
+                VALIDATION_RULES: [pattern('^[0-9]+$'), unique("users")]
         ]
 
         assertEquals("{'/test':{'displayName':'test'," +
                     "'validationRules':[" +
-                        "{'attr':'digits','type':'baseRule'}," +
+                        "{'attr':'^[0-9]+\$','type':'pattern'}," +
                         "{'attr':{'tableName':'users'},'type':'unique'}" +
                     "]" +
                 "}}" , oneQuotes(JsonFactory.beanMeta(dps).toString()))
