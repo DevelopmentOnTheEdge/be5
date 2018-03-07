@@ -10,8 +10,6 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 
-import static com.developmentontheedge.be5.api.validation.rule.BaseRule.*
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 

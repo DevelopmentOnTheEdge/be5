@@ -7,24 +7,10 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
-import static com.developmentontheedge.be5.api.validation.rule.BaseRule.*
 
 
 class ValidationRulesTest extends Be5ProjectTest
 {
-    @Test
-    void baseRulesTest()
-    {
-        def test = baseRule(digits)
-        assertEquals("{'attr':'digits','type':'baseRule'}", oneQuotes(test.toString()))
-
-        assertEquals("{'attr':'email','type':'baseRule'}",
-                oneQuotes(baseRule(email).toString()))
-
-        assertEquals("{'attr':'digits','type':'baseRule'}",
-                oneQuotes(baseRule(digits).toString()))
-    }
-
     @Test
     void rangeTest()
     {

@@ -14,11 +14,6 @@ public class ValidationRules
         this.attr = attr;
     }
 
-    public static ValidationRules baseRule(BaseRule ruleNames)
-    {
-        return new ValidationRules("baseRule", ruleNames.name());
-    }
-
     public static ValidationRules range(long min, long max)
     {
         return new ValidationRules("range", new Range(min, max));

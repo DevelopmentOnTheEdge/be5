@@ -6,9 +6,7 @@ import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Test
 
-
-import static com.developmentontheedge.be5.api.validation.rule.BaseRule.digits
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.baseRule
+import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range
 import static org.junit.Assert.assertEquals
 
 
@@ -42,7 +40,7 @@ class GroovyDPSTest extends Be5ProjectTest
             PASSWORD_FIELD = true
             GROUP_ID = 1
             GROUP_NAME = "Test"
-            VALIDATION_RULES = baseRule(digits)
+            VALIDATION_RULES = range(0, 100)
             EXTRA_ATTRS = [["search": "all"]]
             COLUMN_SIZE_ATTR = 10
             MESSAGE = "Can't be null"
