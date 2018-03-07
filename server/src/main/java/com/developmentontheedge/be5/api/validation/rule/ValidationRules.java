@@ -19,14 +19,14 @@ public class ValidationRules
         return new ValidationRules("baseRule", ruleNames.name());
     }
 
-    public static ValidationRules range(long from, long to)
+    public static ValidationRules range(long min, long max)
     {
-        return new ValidationRules("range", new Range(from, to));
+        return new ValidationRules("range", new Range(min, max));
     }
 
-    public static ValidationRules range(double from, double to)
+    public static ValidationRules range(double min, double max)
     {
-        return new ValidationRules("range", new DoubleRange(from, to));
+        return new ValidationRules("range", new DoubleRange(min, max));
     }
 
     public static ValidationRules step(long value)
@@ -67,37 +67,37 @@ public class ValidationRules
 
     public static class Range
     {
-        long from,to;
+        long min,max;
 
-        Range(long from, long to) {
-            this.from = from;
-            this.to = to;
+        Range(long min, long max) {
+            this.min = min;
+            this.max = max;
         }
 
-        public long getFrom() {
-            return from;
+        public long getMin() {
+            return min;
         }
 
-        public long getTo() {
-            return to;
+        public long getMax() {
+            return max;
         }
     }
 
     public static class DoubleRange
     {
-        double from, to;
+        double min, max;
 
-        DoubleRange(double from, double to) {
-            this.from = from;
-            this.to = to;
+        DoubleRange(double min, double max) {
+            this.min = min;
+            this.max = max;
         }
 
-        public double getFrom() {
-            return from;
+        public double getMin() {
+            return min;
         }
 
-        public double getTo() {
-            return to;
+        public double getMax() {
+            return max;
         }
     }
 

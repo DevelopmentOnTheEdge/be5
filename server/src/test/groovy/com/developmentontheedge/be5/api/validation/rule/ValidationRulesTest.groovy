@@ -29,10 +29,10 @@ class ValidationRulesTest extends Be5ProjectTest
     void rangeTest()
     {
         def test = range(0, 10)
-        assertEquals("{'attr':{'from':0,'to':10},'type':'range'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':{'max':10,'min':0},'type':'range'}", oneQuotes(test.toString()))
 
         test = range(0, 0.5)
-        assertEquals("{'attr':{'from':0.0,'to':0.5},'type':'range'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':{'max':0.5,'min':0.0},'type':'range'}", oneQuotes(test.toString()))
     }
 
     @Test
