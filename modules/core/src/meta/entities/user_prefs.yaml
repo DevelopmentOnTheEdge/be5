@@ -1,7 +1,7 @@
 user_prefs:
   type: metadata
   displayName: User Preferences
-  primaryKey: _dummy_
+  primaryKey: dummy
   scheme:
     columns:
     - user_name:
@@ -21,21 +21,15 @@ user_prefs:
       type: 1D_unknown
       roles: Administrator
       operations:
-      - Delete
       - Insert
-      - Edit
+      - Filter
       code: |-
         SELECT user_name, pref_name, pref_value
         FROM user_prefs
   operations:
-  - Delete:
-      records: 2
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.DeleteOperation
-  - Edit:
-      records: 2
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.EditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.InsertOperation
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - Filter:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.FilterOperation

@@ -20,22 +20,15 @@ user_roles:
       type: 1D_unknown
       roles: Administrator
       operations:
-      - Delete
       - Insert
-      - Edit
+      - Filter
       code: |-
         SELECT user_name, role_name
         FROM user_roles
   operations:
-  - Delete:
-      records: 2
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.DeleteOperation
-  - Edit:
-      records: 2
-      roles: Administrator
-      code: com.developmentontheedge.be5.operations.EditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.InsertOperation
-
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - Filter:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.FilterOperation

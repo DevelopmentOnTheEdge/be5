@@ -16,7 +16,6 @@ core:
   - provinces
   - sequences
   - systemSettings
-  - table_refs
   - user_roles
   - user_prefs
   - users
