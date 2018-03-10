@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.operations.users;
 
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.components.FrontendConstants;
@@ -19,6 +20,7 @@ public class Login extends GOperationSupport
 {
     @Inject protected LoginService loginService;
     @Inject protected CoreUtils coreUtils;
+    @Inject protected UserAwareMeta userAwareMeta;
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
@@ -42,7 +44,8 @@ public class Login extends GOperationSupport
         }
         else
         {
-            setResult(OperationResult.error("Access denied"));
+            setResult(OperationResult.error(userAwareMeta
+                    .getLocalizedExceptionMessage("Incorrect username or password.")));
         }
     }
 
