@@ -62,12 +62,12 @@ public class ResponseImpl implements Response
         sendAsRawJson(JsonApiModel.error(error, included, meta));
     }
 
-    @Override
-    public void sendErrorsAsJson(Object[] errors, Object meta)
-    {
-        throw new RuntimeException("todo");
-        //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
-    }
+//    @Override
+//    public void sendErrorsAsJson(Object[] errors, Object meta)
+//    {
+//        throw new RuntimeException("todo");
+//        //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
+//    }
 
     @Override
     public void sendError(Be5Exception e)

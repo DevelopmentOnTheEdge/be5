@@ -17,6 +17,8 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.google.common.base.Strings;
 import com.google.gson.*;
 
+import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
+
 
 public class RequestImpl implements Request
 {
@@ -203,6 +205,12 @@ public class RequestImpl implements Request
         {
             throw Be5Exception.internal(e);
         }
+    }
+
+    @Override
+    public Object getDefaultMeta()
+    {
+        return Collections.singletonMap(TIMESTAMP_PARAM, get(TIMESTAMP_PARAM));
     }
 
     /**

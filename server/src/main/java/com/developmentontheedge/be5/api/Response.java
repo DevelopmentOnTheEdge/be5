@@ -26,7 +26,7 @@ public interface Response
 
     void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta);
 
-    void sendErrorsAsJson(Object[] errors, Object meta);
+    //void sendErrorsAsJson(Object[] errors, Object meta);
 
 //    /**
 //     * <p>The conventional way to send untyped responses. It is recommended to use typed responses.</p>

@@ -57,7 +57,10 @@ public class Form implements Component
         catch (Be5Exception e)
         {
             HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
-            sendError(req, res, url, e);
+            res.sendErrorAsJson(
+                    new ErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
+                    req.getDefaultMeta()
+            );
             return;
         }
 
@@ -87,7 +90,7 @@ public class Form implements Component
             //todo remove this block, catch in operationService
             res.sendErrorAsJson(
                     getErrorModel(e, injector, operation.getUrl()),
-                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                    req.getDefaultMeta()
             );
             return;
         }
@@ -131,7 +134,7 @@ public class Form implements Component
         res.sendAsJson(
                 new ResourceData(result.isFirst() ? FORM_ACTION : OPERATION_RESULT, data,
                         Collections.singletonMap(SELF_LINK, operation.getUrl().toString())),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                req.getDefaultMeta()
         );
     }
 
@@ -145,7 +148,7 @@ public class Form implements Component
         res.sendErrorAsJson(
                 new ErrorModel(e, message,
                         Collections.singletonMap(SELF_LINK, url.toString())),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                req.getDefaultMeta()
         );
     }
 

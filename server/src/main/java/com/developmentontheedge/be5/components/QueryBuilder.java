@@ -77,7 +77,7 @@ public class QueryBuilder implements Component
                         new ResourceData(TABLE_ACTION, table,
                                 Collections.singletonMap(SELF_LINK, "qBuilder")),
                         new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
-                        Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                        req.getDefaultMeta()
                 );
             }
             catch (Be5Exception e)
@@ -85,7 +85,7 @@ public class QueryBuilder implements Component
                 res.sendErrorAsJson(
                         new ErrorModel(e, Collections.singletonMap(SELF_LINK, "qBuilder")),
                         new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
-                        Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                        req.getDefaultMeta()
                 );
             }
 
@@ -96,7 +96,7 @@ public class QueryBuilder implements Component
                     new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
                             Collections.singletonMap(SELF_LINK, "qBuilder")),
                     new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
-                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                    req.getDefaultMeta()
             );
         }
 

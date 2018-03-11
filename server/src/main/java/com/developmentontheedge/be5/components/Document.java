@@ -78,7 +78,7 @@ public class Document implements Component
     }
 
     //private final String TOP_FORM = "topForm";
-    //private final String topDocument = "topDocument";
+    //private final String TOP_DOCUMENT = "topDocument";
 
     private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data, String layout)
     {
@@ -89,11 +89,11 @@ public class Document implements Component
 //        {
 //            included.add(new ResourceData(TOP_FORM, FORM_ACTION, null));
 //        }
-//
-//        included.toArray(new ResourceData[0]),
+
         res.sendAsJson(
                 new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                //included.toArray(new ResourceData[0]),
+                req.getDefaultMeta()
         );
     }
 
@@ -105,7 +105,7 @@ public class Document implements Component
 
         res.sendErrorAsJson(
                 new ErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                req.getDefaultMeta()
         );
     }
 

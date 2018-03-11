@@ -70,4 +70,6 @@ public interface Request extends SessionAccess, ParametersAccess
     String getContextPath();
 
     String getBody();
+
+    Object getDefaultMeta();
 }

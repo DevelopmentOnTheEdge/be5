@@ -33,7 +33,7 @@ public class StaticPageComponent implements Component
             res.sendErrorAsJson(
                     new ErrorModel("500", ErrorTitles.formatTitle(Be5ErrorCode.NOT_FOUND, page),
                             Collections.singletonMap(SELF_LINK, "static/" + page)),
-                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                    req.getDefaultMeta()
             );
         }
         else
@@ -41,7 +41,7 @@ public class StaticPageComponent implements Component
             res.sendAsJson(
                     new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent),
                             Collections.singletonMap(SELF_LINK, "static/" + page)),
-                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
+                    req.getDefaultMeta()
             );
         }
     }
