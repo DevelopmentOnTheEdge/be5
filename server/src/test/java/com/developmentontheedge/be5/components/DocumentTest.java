@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -39,7 +40,7 @@ public class DocumentTest extends SqlMockOperationTest
                 RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime(),
                 RestApiConstants.QUERY,"All records")), response, injector);
 
-        verify(response).sendAsJson(any(ResourceData.class), any(Map.class));
+        verify(response).sendAsJson(any(ResourceData.class), eq(new ResourceData[]{}),any(Map.class));
     }
 
 }

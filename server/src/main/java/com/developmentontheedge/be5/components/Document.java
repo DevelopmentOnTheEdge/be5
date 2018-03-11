@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
 
 public class Document implements Component 
@@ -58,7 +57,7 @@ public class Document implements Component
             {
                 case "":
                     sendQueryResponseData(req, res, url,
-                            documentGenerator.routeAndRun(query, parametersMap, sortColumn, sortDesc), query.getLayout());
+                            documentGenerator.routeAndRun(query, parametersMap, sortColumn, sortDesc), query);
                     return;
                 case "moreRows":
                     res.sendAsRawJson(new MoreRowsGenerator(injector).generate(req));
@@ -77,22 +76,22 @@ public class Document implements Component
         }
     }
 
-    //private final String TOP_FORM = "topForm";
+    private final String TOP_FORM = "topForm";
     //private final String TOP_DOCUMENT = "topDocument";
 
-    private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data, String layout)
+    private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data, Query query)
     {
-//        ArrayList<ResourceData> included = new ArrayList<>();
-//
-//        String topForm = (String)req.getValuesFromJson(layout).get(TOP_FORM);
-//        if(topForm != null)
-//        {
-//            included.add(new ResourceData(TOP_FORM, FORM_ACTION, null));
-//        }
+        ArrayList<ResourceData> included = new ArrayList<>();
+        String topForm = (String)req.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+        if(topForm != null)
+        {
+            String entityName = query.getEntity().getName();
+            included.add(new ResourceData(TOP_FORM, FORM_ACTION, null, null));
+        }
 
         res.sendAsJson(
                 new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
-                //included.toArray(new ResourceData[0]),
+                included.toArray(new ResourceData[0]),
                 req.getDefaultMeta()
         );
     }

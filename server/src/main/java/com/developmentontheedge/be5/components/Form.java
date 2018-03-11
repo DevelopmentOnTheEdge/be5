@@ -29,7 +29,6 @@ import java.util.Map;
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
@@ -139,18 +138,18 @@ public class Form implements Component
     }
 
     //todo refactoring
-    private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
-    {
-        String message = "";
-
-        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
-
-        res.sendErrorAsJson(
-                new ErrorModel(e, message,
-                        Collections.singletonMap(SELF_LINK, url.toString())),
-                req.getDefaultMeta()
-        );
-    }
+//    private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
+//    {
+//        String message = "";
+//
+//        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
+//
+//        res.sendErrorAsJson(
+//                new ErrorModel(e, message,
+//                        Collections.singletonMap(SELF_LINK, url.toString())),
+//                req.getDefaultMeta()
+//        );
+//    }
 
     private ErrorModel getErrorModel(Throwable e, Injector injector, HashUrl url)
     {
