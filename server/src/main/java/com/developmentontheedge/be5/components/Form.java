@@ -86,9 +86,8 @@ public class Form implements Component
         {
             //todo remove this block, catch in operationService
             res.sendErrorAsJson(
-                    getErrorModel(e, injector),
-                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())
+                    getErrorModel(e, injector, operation.getUrl()),
+                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
             );
             return;
         }
@@ -101,7 +100,7 @@ public class Form implements Component
             {
                 if(UserInfoHolder.isSystemDeveloper())
                 {
-                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), injector);
+                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), injector, operation.getUrl());
                 }
                 operation.setResult(OperationResult.error(operation.getResult().getMessage(), null));
 
@@ -130,9 +129,9 @@ public class Form implements Component
         }
 
         res.sendAsJson(
-                new ResourceData(result.isFirst() ? FORM_ACTION : OPERATION_RESULT, data),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, operation.getUrl().toString())
+                new ResourceData(result.isFirst() ? FORM_ACTION : OPERATION_RESULT, data,
+                        Collections.singletonMap(SELF_LINK, operation.getUrl().toString())),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
         );
     }
 
@@ -144,19 +143,20 @@ public class Form implements Component
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
         res.sendErrorAsJson(
-                new ErrorModel(e, message),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, url.toString())
+                new ErrorModel(e, message,
+                        Collections.singletonMap(SELF_LINK, url.toString())),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
         );
     }
 
-    private ErrorModel getErrorModel(Throwable e, Injector injector)
+    private ErrorModel getErrorModel(Throwable e, Injector injector, HashUrl url)
     {
         String message = Be5Exception.getMessage(e);
 
         if(UserInfoHolder.isSystemDeveloper())message += injector.get(GroovyRegister.class).getErrorCodeLine(e);
 
-        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e));
+        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e),
+                Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
 }

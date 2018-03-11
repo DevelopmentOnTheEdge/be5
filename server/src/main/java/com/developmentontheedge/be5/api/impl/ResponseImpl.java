@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.api.impl;
 
-import java.util.Map;
-
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
@@ -20,75 +18,6 @@ public class ResponseImpl implements Response
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     /**
-     * use DocumentModel
-     */
-    @Deprecated
-    public static class TypedResponse {
-        final String type;
-        final Object value;
-
-        TypedResponse(String type, Object value)
-        {
-            this.type = type;
-            this.value = value;
-        }
-
-        public String getType()
-        {
-            return type;
-        }
-
-        public Object getValue()
-        {
-            return value;
-        }
-    }
-
-    /**
-     * use DocumentModel
-     */
-    @Deprecated
-    public static class UntypedResponse {
-        final Object value;
-
-        UntypedResponse(Object value)
-        {
-            this.value = value;
-        }
-
-        public Object getValue()
-        {
-            return value;
-        }
-    }
-
-    /**
-     * use DocumentModel
-     */
-    @Deprecated
-    public static class ErrorResponse
-    {
-        final String message;
-        final String code;
-
-        ErrorResponse(String message, String code)
-        {
-            this.message = message;
-            this.code = code;
-        }
-
-        public String getMessage()
-        {
-            return message;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-    }
-    
-    /**
      * Guarantees correct state of the response.
      */
     private final RawResponseWrapper response;
@@ -96,19 +25,6 @@ public class ResponseImpl implements Response
     public ResponseImpl(HttpServletResponse rawResponse)
     {
         this.response = new RawResponseWrapper(rawResponse);
-    }
-
-    @Override
-    public void sendSuccess()
-    {
-        sendAsRawJson(typed("ok", null));
-    }
-    
-    @Override
-    @Deprecated
-    public void sendAsJson(String type, Object value)
-    {
-        sendAsRawJson(typed(type, value));
     }
 
     /**
@@ -121,43 +37,37 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendAsJson(ResourceData data, Object meta, Map<String, String> links)
+    public void sendAsJson(ResourceData data, Object meta)
     {
-        sendAsRawJson(JsonApiModel.data(data, meta, links));
+        sendAsRawJson(JsonApiModel.data(data, meta));
     }
 
     @Override
-    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta)
     {
-        sendAsRawJson(JsonApiModel.data(data, included, meta, links));
+        sendAsRawJson(JsonApiModel.data(data, included, meta));
     }
 
     @Override
-    public void sendErrorAsJson(ErrorModel error, Object meta, Map<String, String> links)
-    {
-        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
-        sendAsRawJson(JsonApiModel.error(error, meta, links));
-    }
-
-    @Override
-    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
+    public void sendErrorAsJson(ErrorModel error, Object meta)
     {
         //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
-        sendAsRawJson(JsonApiModel.error(error, included, meta, links));
+        sendAsRawJson(JsonApiModel.error(error, meta));
     }
 
     @Override
-    public void sendErrorsAsJson(Object[] errors, Object meta, Map<String, String> links)
+    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta)
+    {
+        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
+        sendAsRawJson(JsonApiModel.error(error, included, meta));
+    }
+
+    @Override
+    public void sendErrorsAsJson(Object[] errors, Object meta)
     {
         throw new RuntimeException("todo");
         //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
     }
-    
-//    @Override
-//    public void sendAsJson(Object value)
-//    {
-//        sendAsRawJson(untyped(value));
-//    }
 
     @Override
     public void sendError(Be5Exception e)
@@ -172,15 +82,7 @@ public class ResponseImpl implements Response
             errorModel = new ErrorModel("500", "");
         }
 
-        sendErrorAsJson(errorModel, null, null);
-    }
-
-    @Override
-    public void sendAccessDenied(Be5Exception e)
-    {
-        response.getRawResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        String msg = UserInfoHolder.isSystemDeveloper() ? e.getMessage() : "";
-        sendAsJson("error", new ErrorResponse(msg, e.getCode().toString()));
+        sendErrorAsJson(errorModel, null);
     }
 
     @Override
@@ -220,7 +122,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendUnknownActionError()
     {
-        sendError("Unknown component action.", "UNKNOWN_ACTION");
+        sendErrorAsJson( new ErrorModel("500", "Unknown component action."), null);
     }
     
     private void sendText(String contentType, String text)
@@ -233,28 +135,6 @@ public class ResponseImpl implements Response
         response.flush();
     }
 
-    private TypedResponse typed(String type, Object value)
-    {
-        return new TypedResponse(type, value);
-    }
-    
-    private UntypedResponse untyped(Object value)
-    {
-        return new UntypedResponse(value);
-    }
-
-    @Override
-    public void sendError(String message)
-    {
-        sendAsJson("error", message);
-    }
-    
-    @Override
-    public void sendError(String message, String code)
-    {
-        sendAsJson("error", new ErrorResponse(message, code));
-    }
-    
     @Override
     public void sendTextError(String messagee)
     {

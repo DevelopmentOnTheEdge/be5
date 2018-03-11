@@ -17,7 +17,32 @@ import java.util.logging.Logger;
  */
 public class Be5Exception extends RuntimeException
 {
-    
+    private static final long serialVersionUID = 9189259622768482031L;
+
+    private final String title;
+    private final Be5ErrorCode code;
+
+    private Be5Exception(Be5ErrorCode code, String title, Throwable cause)
+    {
+        super(title, cause);
+        this.title = title;
+        this.code = code;
+    }
+
+    private Be5Exception(Be5ErrorCode code, String title)
+    {
+        this(code, title, null);
+    }
+
+    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
+    {
+        super(ErrorTitles.formatTitle(code, parameters), t);
+
+        title = ErrorTitles.formatTitle(code, parameters);
+
+        this.code = code;
+    }
+
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
@@ -113,55 +138,10 @@ public class Be5Exception extends RuntimeException
     {
         return Be5ErrorCode.STATE_INVALID.exception(title);
     }
-    
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 9189259622768482031L;
 
-    private final String title;
-    private final Be5ErrorCode code;
-
-    private Be5Exception(Be5ErrorCode code, String title, Throwable cause)
-    {
-        super(title, cause);
-        this.title = title;
-        this.code = code;
-    }
-
-    private Be5Exception(Be5ErrorCode code, String title)
-    {
-        this(code, title, null);
-    }
-
-    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
-    {
-        super(ErrorTitles.formatTitle(code, parameters), t);
-
-        title = ErrorTitles.formatTitle(code, parameters);
-
-        this.code = code;
-    }
-    
     public Be5ErrorCode getCode()
     {
         return code;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Be5Exception that = (Be5Exception) o;
-
-        return code == that.code;
-    }
-
-    @Override
-    public int hashCode() {
-        return code != null ? code.hashCode() : 0;
     }
 
     public String getTitle()
@@ -227,4 +207,23 @@ public class Be5Exception extends RuntimeException
         }
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Be5Exception that = (Be5Exception) o;
+
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        return code == that.code;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        return result;
+    }
 }

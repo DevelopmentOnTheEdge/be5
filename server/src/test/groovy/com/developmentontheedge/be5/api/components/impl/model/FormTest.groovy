@@ -46,7 +46,7 @@ class FormTest extends Be5ProjectTest
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())
                 .put(RestApiConstants.VALUES, values).build()), response, injector)
 
-        verify(response).sendAsJson(any(ResourceData.class), any(Map.class), anyMapOf(String.class, String.class))
+        verify(response).sendAsJson(any(ResourceData.class), any(Map.class))
 
         initUserWithRoles(RoleType.ROLE_GUEST)
     }

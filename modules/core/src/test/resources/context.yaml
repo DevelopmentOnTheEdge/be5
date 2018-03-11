@@ -1,4 +1,0 @@
-context:
-  components:
-  - login: com.developmentontheedge.be5.modules.core.components.Login
-  - logout: com.developmentontheedge.be5.modules.core.components.Logout

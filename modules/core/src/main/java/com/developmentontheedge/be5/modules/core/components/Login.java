@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.google.common.base.Strings;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
 import java.util.logging.Logger;
 
@@ -15,6 +15,7 @@ public class Login implements Component
 {
     private static final Logger log = Logger.getLogger(Login.class.getName());
 
+    //todo move
     public static class State
     {
         final boolean loggedIn;
@@ -35,41 +36,11 @@ public class Login implements Component
     {
         switch (req.getRequestUri())
         {
-        case "":
-            login(req, res, injector);
-            return;
-        case "state":
-            res.sendAsJson("loginState", new State(UserInfoHolder.isLoggedIn()));
-            return;
-        default:
-            res.sendUnknownActionError();
-        }
-    }
-
-    public void login(Request req, Response res, Injector injector)
-    {
-        String username = req.get("username");
-        String password = req.get("password");
-        
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password))
-        {
-            res.sendError("Empty username or password", "loginError");
-            return;
-        }
-        
-        if (!injector.getLoginService().login(req, username, password))
-        {
-            res.sendError("Access denied", "loginError");
-            return;
-        }
-
-        if(extendLogin(req, res, injector)){
-            res.sendSuccess();
-        }
-    }
-
-    public boolean extendLogin(Request req, Response res, Injector injector)
-    {
-        return true;
+            case "state":
+                res.sendAsJson(new ResourceData("loginState", new State(UserInfoHolder.isLoggedIn()), null), null);
+                return;
+            default:
+                res.sendUnknownActionError();
+            }
     }
 }

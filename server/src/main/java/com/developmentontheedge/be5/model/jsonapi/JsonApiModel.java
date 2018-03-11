@@ -51,24 +51,24 @@ public class JsonApiModel
         this.links = links;
     }
 
-    public static JsonApiModel data(ResourceData data, Object meta, Map<String, String> links)
+    public static JsonApiModel data(ResourceData data, Object meta)
     {
-        return new JsonApiModel(data, null, meta, null, links);
+        return new JsonApiModel(data, null, meta, null, null);
     }
 
-    public static JsonApiModel data(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+    public static JsonApiModel data(ResourceData data, ResourceData[] included, Object meta)
     {
-        return new JsonApiModel(data, null, meta, included, links);
+        return new JsonApiModel(data, null, meta, included, null);
     }
 
-    public static JsonApiModel error(ErrorModel error, Object meta, Map<String, String> links)
+    public static JsonApiModel error(ErrorModel error, Object meta)
     {
-        return new JsonApiModel(null, new ErrorModel[]{error}, meta, null, links);
+        return new JsonApiModel(null, new ErrorModel[]{error}, meta, null, null);
     }
 
-    public static JsonApiModel error(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
+    public static JsonApiModel error(ErrorModel error, ResourceData[] included, Object meta)
     {
-        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, links);
+        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, null);
     }
 
 //    public JsonApiModel(ErrorObject[] errors, Object meta, Map<String, String> links)
@@ -115,14 +115,3 @@ public class JsonApiModel
         '}';
     }
 }
-
-/*
-нужно добавить время вызова для предотвращения открытия на фронтенде старых запросов после долгой загрузки.
-static final String TIMESTAMP_PARAM = "_ts_";
-
-ссылку на самого себя
-"links": {
- "self": "http://example.com/articles"
- },
-
-* */

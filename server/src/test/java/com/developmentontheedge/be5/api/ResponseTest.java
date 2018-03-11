@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -65,14 +64,6 @@ public class ResponseTest extends Be5ProjectTest
     }
 
     @Test
-    public void sendSuccess()
-    {
-        response.sendSuccess();
-
-        verify(writer).append(doubleQuotes("{'type':'ok'}"));
-    }
-
-    @Test
     public void sendErrorSysDev()
     {
         initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
@@ -96,14 +87,6 @@ public class ResponseTest extends Be5ProjectTest
         //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
         verify(writer).append(doubleQuotes("{'errors':[{'status':'500','title':''}]}"));
         verify(writer).flush();
-    }
-
-    @Test
-    public void sendErrorText()
-    {
-        response.sendError("test msg");
-
-        verify(writer).append(doubleQuotes("{'type':'error','value':'test msg'}"));
     }
 
     @Test
@@ -144,14 +127,12 @@ public class ResponseTest extends Be5ProjectTest
     @Test
     public void testJsonObject()
     {
-        JsonApiModel jsonApiModel = JsonApiModel.data(new ResourceData("testType", "test"),
-                Collections.singletonMap(TIMESTAMP_PARAM, 1503291145939L),
-                Collections.singletonMap(SELF_LINK, "url"));
+        JsonApiModel jsonApiModel = JsonApiModel.data(new ResourceData("testType", "test", Collections.singletonMap(SELF_LINK, "url")),
+                Collections.singletonMap(TIMESTAMP_PARAM, 1503291145939L));
         response.sendAsJson(jsonApiModel);
 
         verify(writer).append(doubleQuotes("{" +
-                "'data':{'attributes':'test','type':'testType'}," +
-                "'links':{'self':'url'}," +
+                "'data':{'attributes':'test','links':{'self':'url'},'type':'testType'}," +
                 "'meta':{'_ts_':1503291145939}" +
         "}"));
     }

@@ -62,7 +62,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
         String page = "foo.be";
         component.generate(getMockRequest(page), response, injector);
 
-        verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class), anyMapOf(String.class, String.class));
+        verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class));
     }
 
 }

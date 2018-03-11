@@ -162,15 +162,7 @@ public class MainServlet implements Filter
             {
                 log.log(Level.SEVERE, ex.getMessage(), ex);
             }
-
-            if(ex.getCode().isAccessDenied())
-            {
-                res.sendAccessDenied(ex);
-            }
-            else
-            {
-                res.sendError(ex);
-            }
+            res.sendError(ex);
         }
         catch ( Throwable e )
         {
@@ -199,14 +191,7 @@ public class MainServlet implements Filter
                 log.log(Level.SEVERE, e.getMessage(), e);
             }
 
-            if(e.getCode().isAccessDenied())
-            {
-                res.sendAccessDenied(e);
-            }
-            else
-            {
-                res.sendError(e);
-            }
+            res.sendError(e);
         }
         catch ( Throwable e )
         {

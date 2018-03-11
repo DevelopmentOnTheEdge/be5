@@ -12,10 +12,12 @@ import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.HashUrl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
@@ -56,7 +58,7 @@ public class Document implements Component
             {
                 case "":
                     sendQueryResponseData(req, res, url,
-                            documentGenerator.routeAndRun(query, parametersMap, sortColumn, sortDesc));
+                            documentGenerator.routeAndRun(query, parametersMap, sortColumn, sortDesc), query.getLayout());
                     return;
                 case "moreRows":
                     res.sendAsRawJson(new MoreRowsGenerator(injector).generate(req));
@@ -75,12 +77,23 @@ public class Document implements Component
         }
     }
 
-    private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data)
+    //private final String TOP_FORM = "topForm";
+    //private final String topDocument = "topDocument";
+
+    private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data, String layout)
     {
+//        ArrayList<ResourceData> included = new ArrayList<>();
+//
+//        String topForm = (String)req.getValuesFromJson(layout).get(TOP_FORM);
+//        if(topForm != null)
+//        {
+//            included.add(new ResourceData(TOP_FORM, FORM_ACTION, null));
+//        }
+//
+//        included.toArray(new ResourceData[0]),
         res.sendAsJson(
-                new ResourceData(TABLE_ACTION, data),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, url.toString())
+                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
         );
     }
 
@@ -91,9 +104,8 @@ public class Document implements Component
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
         res.sendErrorAsJson(
-                new ErrorModel(e, message),
-                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                Collections.singletonMap(SELF_LINK, url.toString())
+                new ErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
+                Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
         );
     }
 

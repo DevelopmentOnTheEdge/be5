@@ -2,8 +2,7 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.api.exceptions.ErrorTitles;
+import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.env.Inject;
@@ -100,8 +99,8 @@ public class MainServletTest extends Be5ProjectTest
         spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
         verify(writer).append(doubleQuotes("{'errors':[" +
-                "{'status':'500','title':'Element not found: '}" +
-            "],'links':{'self':'static/'},'meta':{'_ts_':null}}"));
+                "{'links':{'self':'static/'},'status':'500','title':'Element not found: '}" +
+            "],'meta':{'_ts_':null}}"));
     }
 
     @Test
@@ -127,7 +126,7 @@ public class MainServletTest extends Be5ProjectTest
 
         verify(req).setAttribute("testRequestPreprocessor", "testProject");
 
-        res.sendError(eq(ErrorTitles.formatTitle(Be5ErrorCode.UNKNOWN_COMPONENT, componentId)));
+        verify(res).sendError(eq(Be5Exception.unknownComponent("foo")));
     }
 
     @Test

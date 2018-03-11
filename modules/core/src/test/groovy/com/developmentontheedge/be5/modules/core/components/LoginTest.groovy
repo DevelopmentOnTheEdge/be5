@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.env.Injector
 import com.developmentontheedge.be5.api.services.LoginService
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.mockito.Matchers.any
@@ -27,6 +28,7 @@ class LoginTest extends Be5ProjectTest
     }
 
     @Test
+    @Ignore
     void login() throws Exception {
         String testUser = "testUser"
         String testPass = "testPass"
@@ -50,6 +52,7 @@ class LoginTest extends Be5ProjectTest
     }
 
     @Test
+    @Ignore
     void loginAccessDenied() throws Exception {
         String testUser = "testUser"
         String testPass = "testPass"
@@ -69,6 +72,7 @@ class LoginTest extends Be5ProjectTest
     }
 
     @Test
+    @Ignore
     void error() throws Exception {
         Response response = mock(Response.class)
 

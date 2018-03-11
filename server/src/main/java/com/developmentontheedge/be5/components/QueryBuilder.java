@@ -74,19 +74,18 @@ public class QueryBuilder implements Component
                         new Be5QueryExecutor(query, parametersMap, injector).getFinalSql()));
 
                 res.sendAsJson(
-                        new ResourceData(TABLE_ACTION, table),
-                        new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps))},
-                        Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                        Collections.singletonMap(SELF_LINK, "qBuilder")
+                        new ResourceData(TABLE_ACTION, table,
+                                Collections.singletonMap(SELF_LINK, "qBuilder")),
+                        new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
+                        Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
                 );
             }
             catch (Be5Exception e)
             {
                 res.sendErrorAsJson(
-                        new ErrorModel(e),
-                        new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps))},
-                        Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                        Collections.singletonMap(SELF_LINK, "qBuilder")
+                        new ErrorModel(e, Collections.singletonMap(SELF_LINK, "qBuilder")),
+                        new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
+                        Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
                 );
             }
 
@@ -94,10 +93,10 @@ public class QueryBuilder implements Component
         else
         {
             res.sendErrorAsJson(
-                    new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
-                    new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps))},
-                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM)),
-                    Collections.singletonMap(SELF_LINK, "qBuilder")
+                    new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
+                            Collections.singletonMap(SELF_LINK, "qBuilder")),
+                    new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
+                    Collections.singletonMap(TIMESTAMP_PARAM, req.get(TIMESTAMP_PARAM))
             );
         }
 
