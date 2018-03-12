@@ -108,14 +108,16 @@ public class MenuTest extends Be5ProjectTest
     @Test
     public void testGenerateSimpleMenu()
     {
+        initUserWithRoles("User");
+
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
 
         assertEquals(true, menuResponse.loggedIn);
 
-        assertEquals("testtable", menuResponse.root.get(0).getTitle());
-        assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(0).getAction());
-        assertNull(menuResponse.root.get(0).getChildren());
+        assertEquals("testtable", menuResponse.root.get(1).getTitle());
+        assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(1).getAction());
+        assertNull(menuResponse.root.get(1).getChildren());
     }
 
     @Test

@@ -12,7 +12,7 @@ public enum OperationStatus
     INTERRUPTED ("interrupted"),
     FINISHED    ("finished"),
     REDIRECTED  ("redirect"),
-    TABLE       ("table"),
+    DOCUMENT    ("document"),
     ERROR       ("error");
 
     /* PENDING

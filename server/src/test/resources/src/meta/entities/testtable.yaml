@@ -33,6 +33,12 @@ testtable:
             '<quick visible="true"/>;<link using="___ID" columns="ID" table="testtable" queryName="Test 1D unknown"/>' AS ";Name"
           FROM
             testtable t
+  - TableWithFilter:
+      type: 1D_unknown
+      layout: '{"topForm":"Filter"}'
+      roles: SystemDeveloper
+      code: |-
+         SELECT 1
   - Sub Query:
       type: 1D_unknown
       roles: SystemDeveloper
@@ -74,3 +80,7 @@ testtable:
         FROM testtable
         WHERE 1=1
           AND name = <parameter:name refColumn="testtable.unknownColumn" />
+  operations:
+  - Filter:
+      roles: '@AllRoles'
+      code: com.developmentontheedge.be5.operations.FilterByParamsInQueryOperation

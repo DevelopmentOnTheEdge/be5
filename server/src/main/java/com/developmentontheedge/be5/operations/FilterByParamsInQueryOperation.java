@@ -33,6 +33,6 @@ public class FilterByParamsInQueryOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.table(filterHelper.filterTable(getQuery(), parameters)));
+        setResult(OperationResult.document(filterHelper.filterDocument(getQuery(), parameters)));
     }
 }

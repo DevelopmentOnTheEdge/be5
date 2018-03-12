@@ -87,18 +87,4 @@ public class Form implements Component
         );
     }
 
-    //todo refactoring
-//    private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
-//    {
-//        String message = "";
-//
-//        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
-//
-//        res.sendErrorAsJson(
-//                new ErrorModel(e, message,
-//                        Collections.singletonMap(SELF_LINK, url.toString())),
-//                req.getDefaultMeta()
-//        );
-//    }
-
 }

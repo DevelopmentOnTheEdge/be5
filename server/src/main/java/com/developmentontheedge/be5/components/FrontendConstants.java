@@ -26,4 +26,6 @@ public interface FrontendConstants
     String REFRESH_ALL = "refreshAll";
     String REFRESH_ALL_AND_GOBACK = "refreshAllAndGoBack";
 
+    String TOP_FORM = "topForm";
+    //String TOP_DOCUMENT = "topDocument";
 }

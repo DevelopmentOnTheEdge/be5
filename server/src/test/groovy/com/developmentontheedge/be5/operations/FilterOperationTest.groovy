@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operations
 
 import com.developmentontheedge.be5.model.TablePresentation
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.util.Either
@@ -56,11 +57,12 @@ class FilterOperationTest extends SqlMockOperationTest
         Either<Object, OperationResult> execute = executeOperation(
                 "testtableAdmin", "All records", "Filter", "", [name:"test"])
 
-        assertEquals("table",
+        assertEquals("document",
                 oneQuotes(execute.getSecond().getStatus()))
 
         assertEquals("[_search_presets_:name, name:test, _search_:true]",
-                oneQuotes(((TablePresentation)execute.getSecond().getDetails()).getParameters().toString()))
+                oneQuotes(((TablePresentation)((JsonApiModel)execute.getSecond().getDetails())
+                        .getData().getAttributes()).getParameters().toString()))
     }
 
     @Test

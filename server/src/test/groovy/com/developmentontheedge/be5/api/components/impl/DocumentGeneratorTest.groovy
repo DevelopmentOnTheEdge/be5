@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.components.DocumentGenerator
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.TablePresentation
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked
 import org.junit.Test
@@ -48,6 +49,34 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                     "'link':{'url':'table/testtable/Test 1D unknown/ID=123'}," +
                     "'quick':{'visible':'true'}" +
                 "}}]}", oneQuotes(jsonb.toJson(table.getRows().get(0))))
+    }
+
+    @Test
+    void testTableWithFilter()
+    {
+        initUserWithRoles("SystemDeveloper")
+
+        JsonApiModel document = documentGenerator.getDocument(
+                meta.getQuery("testtable", "TableWithFilter", Collections.singletonList("SystemDeveloper")), new HashMap<>())
+
+        assertEquals("{" +
+                "'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'Filter'},'length':1,'operations':[],'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," +
+                "'included':[" +
+                    "{'attributes':{" +
+                        "'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," +
+                        "'entity':'testtable'," +
+                        "'layout':{'type':'modal'}," +
+                        "'operation':'Filter','operationParams':{}," +
+                        "'operationResult':{'status':'generate'}," +
+                        "'query':'TableWithFilter'," +
+                        "'selectedRows':''," +
+                        "'title':'Фильтр'" +
+                    "}," +
+                    "'id':'topForm'," +
+                    "'links':{'self':'form/testtable/TableWithFilter/Filter'}," +
+                    "'type':'form'}" +
+                "]" +
+                "}", oneQuotes(jsonb.toJson(document)))
     }
 
     @Test

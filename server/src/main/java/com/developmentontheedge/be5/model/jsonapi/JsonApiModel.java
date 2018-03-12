@@ -92,6 +92,11 @@ public class JsonApiModel
         return links;
     }
 
+    public void setMeta(Object meta)
+    {
+        this.meta = meta;
+    }
+
     @Override
     public String toString()
     {

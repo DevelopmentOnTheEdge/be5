@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.DocumentGenerator;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
@@ -23,18 +24,30 @@ import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.components.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 
 
@@ -48,15 +61,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final GroovyRegister groovyRegister;
     private final Injector injector;
     private final OperationService operationService;
+    private final OperationExecutor operationExecutor;
 
-    public DocumentGeneratorImpl(CoreUtils coreUtils, UserAwareMeta userAwareMeta, Meta meta,
-                                 GroovyRegister groovyRegister, OperationService operationService, Injector injector)
+    public DocumentGeneratorImpl(CoreUtils coreUtils, UserAwareMeta userAwareMeta, Meta meta, GroovyRegister groovyRegister,
+                                 OperationService operationService, OperationExecutor operationExecutor, Injector injector)
     {
         this.coreUtils = coreUtils;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.groovyRegister = groovyRegister;
         this.operationService = operationService;
+        this.operationExecutor = operationExecutor;
         this.injector = injector;
 
         groovyQueryClasses = Caffeine.newBuilder()
@@ -126,7 +141,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
     }
-    
+
     @Override
     public StaticPagePresentation getStatic(Query query)
     {
@@ -207,6 +222,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
+    @Deprecated
     public TablePresentation getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
     {
 //        TODO String entityName = query.getEntity().getName();
@@ -242,14 +258,14 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         List<Operation> queryOperations = new ArrayList<>();
         OperationSet operationNames = query.getOperationNames();
-        
+
         for (String operationName : operationNames.getFinalValues())
         {
             Operation op = query.getEntity().getOperations().get(operationName);
             if ( op != null )
                 queryOperations.add( op );
         }
-        
+
         return queryOperations;
     }
 
@@ -260,40 +276,40 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         //boolean requiresConfirmation = operation.isConfirm();
         boolean isClientSide = Operations.isClientSide(operation);
         Action action = null;
-        
+
         if (isClientSide)
         {
             action = Action.call(Operations.asClientSide(operation).toHashUrl());
         }
-                
+
         return new TableOperationPresentation(operation.getName(), title, visibleWhen, false, isClientSide, action);
     }
 
     @Override
     public Either<FormPresentation, OperationResult> generateForm(com.developmentontheedge.be5.operation.Operation operation,
-                                                                  Map<String, Object> values)
+                                                                  Map<String, ?> values)
     {
         return processForm(operation, values, false);
     }
 
     @Override
     public Either<FormPresentation, OperationResult> executeForm(com.developmentontheedge.be5.operation.Operation operation,
-                                                                 Map<String, Object> values)
+                                                                 Map<String, ?> values)
     {
         return processForm(operation, values, true);
     }
 
     private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.Operation operation,
-                                                                  Map<String, Object> values, boolean execute)
+                                                                  Map<String, ?> values, boolean execute)
     {
         Either<Object, OperationResult> result;
         if(execute)
         {
-            result = operationService.execute(operation, values);
+            result = operationService.execute(operation, (Map<String, Object>)values);
         }
         else
         {
-            result = operationService.generate(operation, values);
+            result = operationService.generate(operation, (Map<String, Object>)values);
         }
 
         if(result.isFirst())
@@ -341,6 +357,39 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));
+    }
+
+    @Override
+    public JsonApiModel getDocument(Query query, Map<String, String> parameters)
+    {
+        return getDocument(query, parameters, -1, true);
+    }
+
+    @Override
+    public JsonApiModel getDocument(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
+    {
+        Object data = routeAndRun(query, parameters, sortColumn, sortDesc);
+        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
+
+        List<ResourceData> included = new ArrayList<>();
+
+        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+        if(topForm != null)
+        {
+            com.developmentontheedge.be5.operation.Operation operation =
+                    operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+
+            Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
+            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
+                    dataTopForm.get(),
+                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
+        }
+
+        return JsonApiModel.data(
+                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
+                included.toArray(new ResourceData[0]),
+                null
+        );
     }
 
 }

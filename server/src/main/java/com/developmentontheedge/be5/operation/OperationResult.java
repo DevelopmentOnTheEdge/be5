@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
@@ -165,9 +165,9 @@ public class OperationResult
         return new OperationResult(OperationStatus.REDIRECTED, message, url);
     }
 
-    public static OperationResult table(TablePresentation table)
+    public static OperationResult document(JsonApiModel table)
     {
-        return new OperationResult(OperationStatus.TABLE, null, table);
+        return new OperationResult(OperationStatus.DOCUMENT, null, table);
     }
     
     public static OperationResult error(String message, Throwable details)
