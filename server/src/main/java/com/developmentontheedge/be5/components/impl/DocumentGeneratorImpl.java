@@ -81,13 +81,13 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public Object routeAndRun(Query query, Map<String, String> parametersMap)
+    public Object routeAndRun(Query query, Map<String, String> parameters)
     {
-        return routeAndRun(query, parametersMap, -1, true);
+        return routeAndRun(query, parameters, -1, true);
     }
 
     @Override
-    public Object routeAndRun(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
+    public Object routeAndRun(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
     {
         switch (query.getType())
         {
@@ -104,11 +104,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             case D1_UNKNOWN:
                 if (meta.isParametrizedTable(query))
                 {
-                    return getParametrizedTable(query, parametersMap, sortColumn, sortDesc);
+                    return getParametrizedTable(query, parameters, sortColumn, sortDesc);
                 }
                 else
                 {
-                    return getTable(query, parametersMap, sortColumn, sortDesc);
+                    return getTable(query, parameters, sortColumn, sortDesc);
                 }
             case D2:
             case CONTAINER:
@@ -123,10 +123,10 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     if(aClass != null) {
                         TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 
-                        tableBuilder.initialize(query, parametersMap);
+                        tableBuilder.initialize(query, parameters);
                         injector.injectAnnotatedFields(tableBuilder);
 
-                        return getTable(query, parametersMap, tableBuilder.getTableModel());
+                        return getTable(query, parameters, tableBuilder.getTableModel());
                     }
                     else
                     {
@@ -160,7 +160,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
-    public TablePresentation getTable(Query query, Map<String, String> parametersMap, TableModel table)
+    public TablePresentation getTable(Query query, Map<String, String> parameters, TableModel table)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
 
@@ -175,10 +175,10 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
         if( totalNumberOfRows == null )
-            totalNumberOfRows = TableModel.from(query, parametersMap, injector).count();
+            totalNumberOfRows = TableModel.from(query, parameters, injector).count();
 
         return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, table.getRows().size(),
-                parametersMap, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
+                parameters, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
     }
 
     private Map<String, Object> getLayoutObject(Query query)
@@ -194,12 +194,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
     }
 
-    public TablePresentation getTable(Query query, Map<String, String> parametersMap)
+    public TablePresentation getTable(Query query, Map<String, String> parameters)
     {
-        return getTable(query, parametersMap, -1, true);
+        return getTable(query, parameters, -1, true);
     }
 
-    public TablePresentation getTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
+    public TablePresentation getTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
         final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
@@ -213,27 +213,27 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
 
         TableModel table = TableModel
-                .from(query, parametersMap, selectable, injector)
+                .from(query, parameters, selectable, injector)
                 .sortOrder(sortColumn, sortDesc)
                 .limit(limit)
                 .build();
 
-        return getTable(query, parametersMap, table);
+        return getTable(query, parameters, table);
     }
 
     @Override
     @Deprecated
-    public TablePresentation getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc)
+    public TablePresentation getParametrizedTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
     {
 //        TODO String entityName = query.getEntity().getName();
 //        String operationName = query.getParametrizingOperationName();
 //        Operation operation = query.getParametrizingOperation();
-//        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parametersMap).getFirst();
-//        TablePresentation tablePresentation = getTableModel(query, parametersMap);
+//        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parameters).getFirst();
+//        TablePresentation tablePresentation = getTableModel(query, parameters);
 //        FormTable formTable = new FormTable(formPresentation, tablePresentation);
 //
 //        DocumentResponse.of(res).send(formTable);
-        return getTable(query, parametersMap, sortColumn, sortDesc);
+        return getTable(query, parameters, sortColumn, sortDesc);
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)

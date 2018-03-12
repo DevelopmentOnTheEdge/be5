@@ -17,19 +17,19 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
-    Object routeAndRun(Query query, Map<String, String> parametersMap);
+    Object routeAndRun(Query query, Map<String, String> parameters);
 
-    Object routeAndRun(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc);
+    Object routeAndRun(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
 
     StaticPagePresentation getStatic(Query query);
 
-    TablePresentation getTable(Query query, Map<String, String> parametersMap);
+    TablePresentation getTable(Query query, Map<String, String> parameters);
 
-    TablePresentation getTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc);
+    TablePresentation getTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
 
-    TablePresentation getTable(Query query, Map<String, String> parametersMap, TableModel tableModel);
+    TablePresentation getTable(Query query, Map<String, String> parameters, TableModel tableModel);
 
-    TablePresentation getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc);
+    TablePresentation getParametrizedTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
 
     Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
 
