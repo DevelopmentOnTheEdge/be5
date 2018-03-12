@@ -12,6 +12,8 @@ import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 
+import java.util.Map;
+
 
 public class ResponseImpl implements Response
 {
@@ -49,6 +51,12 @@ public class ResponseImpl implements Response
     }
 
     @Override
+    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+    {
+        sendAsRawJson(JsonApiModel.data(data, included, meta, links));
+    }
+
+    @Override
     public void sendErrorAsJson(ErrorModel error, Object meta)
     {
         //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
@@ -58,8 +66,13 @@ public class ResponseImpl implements Response
     @Override
     public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta)
     {
-        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
         sendAsRawJson(JsonApiModel.error(error, included, meta));
+    }
+
+    @Override
+    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
+    {
+        sendAsRawJson(JsonApiModel.error(error, included, meta, links));
     }
 
 //    @Override

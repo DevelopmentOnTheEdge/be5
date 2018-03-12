@@ -7,6 +7,8 @@ import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
+import java.util.Map;
+
 
 /**
  * <p>The main interface for sending responses.</p>
@@ -22,9 +24,13 @@ public interface Response
 
     void sendAsJson(ResourceData data, ResourceData[] included, Object meta);
 
+    void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links);
+
     void sendErrorAsJson(ErrorModel error, Object meta);
 
     void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta);
+
+    void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links);
 
     //void sendErrorsAsJson(Object[] errors, Object meta);
 

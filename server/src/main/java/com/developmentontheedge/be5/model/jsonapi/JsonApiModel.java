@@ -28,20 +28,6 @@ public class JsonApiModel
     private ResourceData[] included;
     private Map<String, String> links;
 
-//    public JsonApiModel(ResourceData data, Object meta, Map<String, String> links)
-//    {
-//        this.data = data;
-//        this.meta = meta;
-//        this.links = links;
-//    }
-//
-//    public JsonApiModel(ResourceData[] data, Object meta, Map<String, String> links)
-//    {
-//        this.data = data;
-//        this.meta = meta;
-//        this.links = links;
-//    }
-
     private JsonApiModel(ResourceData data, ErrorModel[] errors, Object meta, ResourceData[] included, Map<String, String> links)
     {
         this.data = data;
@@ -61,6 +47,11 @@ public class JsonApiModel
         return new JsonApiModel(data, null, meta, included, null);
     }
 
+    public static JsonApiModel data(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+    {
+        return new JsonApiModel(data, null, meta, included, links);
+    }
+
     public static JsonApiModel error(ErrorModel error, Object meta)
     {
         return new JsonApiModel(null, new ErrorModel[]{error}, meta, null, null);
@@ -71,12 +62,10 @@ public class JsonApiModel
         return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, null);
     }
 
-//    public JsonApiModel(ErrorObject[] errors, Object meta, Map<String, String> links)
-//    {
-//        this.errors = errors;
-//        this.meta = meta;
-//        this.links = links;
-//    }
+    public static JsonApiModel error(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
+    {
+        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, links);
+    }
 
     public ResourceData getData()
     {
