@@ -63,7 +63,7 @@ public class Be5Injector implements Injector
         log.info(JULLogger.infoBlock(
                 "Load classes: " + binder.getClass().getName() +
                     (!binder.getInfo().isEmpty() ? " - " + binder.getInfo() : "") + "\n" +
-                 stage + " mod"));
+                 stage + " stage"));
 
         if (stage == Stage.PRODUCTION)
         {
