@@ -5,12 +5,20 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.OperationExecutor;
+import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.components.impl.MoreRowsGenerator;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +26,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 
@@ -26,11 +35,16 @@ public class Document implements Component
 {
     private static final Logger log = Logger.getLogger(Document.class.getName());
 
+    private DocumentGenerator documentGenerator;
+    private UserAwareMeta userAwareMeta;
+    private OperationExecutor operationExecutor;
+
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
-        DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
-        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
+        documentGenerator = injector.get(DocumentGenerator.class);
+        userAwareMeta = injector.get(UserAwareMeta.class);
+        operationExecutor = injector.get(OperationExecutor.class);
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -76,17 +90,22 @@ public class Document implements Component
         }
     }
 
-    private final String TOP_FORM = "topForm";
-    //private final String TOP_DOCUMENT = "topDocument";
+    private final static String TOP_FORM = "topForm";
+    //private final static String TOP_DOCUMENT = "topDocument";
 
     private void sendQueryResponseData(Request req, Response res, HashUrl url, Object data, Query query)
     {
         ArrayList<ResourceData> included = new ArrayList<>();
-        String topForm = (String)req.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+
+        String topForm = (String)ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
         if(topForm != null)
         {
-            String entityName = query.getEntity().getName();
-            included.add(new ResourceData(TOP_FORM, FORM_ACTION, null, null));
+            Operation operation = operationExecutor.create(query.getEntity().getName(), query.getName(), topForm);
+
+            Either<FormPresentation, OperationResult> dataTopForm = documentGenerator.generateForm(operation, Collections.emptyMap());
+            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
+                    dataTopForm.get(),
+                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
         }
 
         res.sendAsJson(

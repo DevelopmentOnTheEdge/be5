@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
@@ -12,6 +13,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,14 +29,15 @@ public class OperationExecutorImpl implements OperationExecutor
     private final DatabaseService databaseService;
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
+    private final UserAwareMeta userAwareMeta;
 
-    public OperationExecutorImpl(GroovyOperationLoader groovyOperationLoader, Injector injector,
-                                 DatabaseService databaseService, Validator validator)
+    public OperationExecutorImpl(Injector injector, DatabaseService databaseService, Validator validator, GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta)
     {
         this.injector = injector;
         this.databaseService = databaseService;
         this.validator = validator;
         this.groovyOperationLoader = groovyOperationLoader;
+        this.userAwareMeta = userAwareMeta;
     }
 
     @Override
@@ -134,6 +137,23 @@ public class OperationExecutorImpl implements OperationExecutor
             operation.setResult(OperationResult.error(be5Exception));
             return parameters;
         }
+    }
+
+    @Override
+    public Operation create(String entityName, String queryName, String operationName)
+    {
+        return create(entityName, queryName, operationName, new String[]{}, Collections.emptyMap());
+    }
+
+    @Override
+    public Operation create(String entityName, String queryName, String operationName,
+                            String[] selectedRows, Map<String, String> operationParams)
+    {
+        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, operationName);
+
+        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+
+        return create(operationInfo, operationContext);
     }
 
     @Override

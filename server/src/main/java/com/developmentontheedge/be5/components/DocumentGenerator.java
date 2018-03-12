@@ -2,8 +2,14 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Map;
 
@@ -24,4 +30,9 @@ public interface DocumentGenerator
 
     TablePresentation getParametrizedTable(Query query, Map<String, String> parametersMap, int sortColumn, boolean sortDesc);
 
+    Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, Object> values);
+
+    Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, Object> values);
+
+    ErrorModel getErrorModel(Throwable e, HashUrl url);
 }

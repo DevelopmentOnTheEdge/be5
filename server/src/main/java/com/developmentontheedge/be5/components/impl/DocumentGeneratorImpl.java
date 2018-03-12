@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.DocumentGenerator;
 import com.developmentontheedge.be5.components.impl.model.ActionHelper;
 import com.developmentontheedge.be5.env.Injector;
@@ -17,16 +18,24 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
+import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.query.TableBuilder;
+import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
 
 
 public class DocumentGeneratorImpl implements DocumentGenerator
@@ -38,14 +47,16 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
     private final Injector injector;
+    private final OperationService operationService;
 
     public DocumentGeneratorImpl(CoreUtils coreUtils, UserAwareMeta userAwareMeta, Meta meta,
-                                 GroovyRegister groovyRegister, Injector injector)
+                                 GroovyRegister groovyRegister, OperationService operationService, Injector injector)
     {
         this.coreUtils = coreUtils;
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.groovyRegister = groovyRegister;
+        this.operationService = operationService;
         this.injector = injector;
 
         groovyQueryClasses = Caffeine.newBuilder()
@@ -131,7 +142,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
 //            Operation operation, Map<String, String> presetValues)
 //    {
-//        return new FormGenerator(injector).generate(entityName, queryName, operationName, operation, presetValues, req);
+//        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
     public TablePresentation getTable(Query query, Map<String, String> parametersMap, TableModel table)
@@ -258,5 +269,78 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         return new TableOperationPresentation(operation.getName(), title, visibleWhen, false, isClientSide, action);
     }
 
+    @Override
+    public Either<FormPresentation, OperationResult> generateForm(com.developmentontheedge.be5.operation.Operation operation,
+                                                                  Map<String, Object> values)
+    {
+        return processForm(operation, values, false);
+    }
+
+    @Override
+    public Either<FormPresentation, OperationResult> executeForm(com.developmentontheedge.be5.operation.Operation operation,
+                                                                 Map<String, Object> values)
+    {
+        return processForm(operation, values, true);
+    }
+
+    private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.Operation operation,
+                                                                  Map<String, Object> values, boolean execute)
+    {
+        Either<Object, OperationResult> result;
+        if(execute)
+        {
+            result = operationService.execute(operation, values);
+        }
+        else
+        {
+            result = operationService.generate(operation, values);
+        }
+
+        if(result.isFirst())
+        {
+            ErrorModel errorModel = null;
+            if(operation.getResult().getStatus() == OperationStatus.ERROR)
+            {
+                if(UserInfoHolder.isSystemDeveloper())
+                {
+                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), operation.getUrl());
+                }
+                operation.setResult(OperationResult.error(operation.getResult().getMessage(), null));
+
+                //todo refactoring, add for prevent json error
+                //java.lang.IllegalAccessException: Class org.eclipse.yasson.internal.model.GetFromGetter can not access a member of class sun.reflect.annotation.AnnotatedTypeFactory$AnnotatedTypeBaseImpl with modifiers "public final"
+                //at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
+                if(operation.getResult().getMessage() != null)
+                {
+                    operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0], null));
+                }
+            }
+
+            return Either.first(new FormPresentation(
+                    operation.getInfo(),
+                    operation.getContext(),
+                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
+                    JsonFactory.bean(result.getFirst()),
+                    operation.getLayout(),
+                    operation.getResult(),
+                    errorModel
+            ));
+        }
+        else
+        {
+            return Either.second(result.getSecond());
+        }
+    }
+
+    @Override
+    public ErrorModel getErrorModel(Throwable e, HashUrl url)
+    {
+        String message = Be5Exception.getMessage(e);
+
+        if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
+
+        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e),
+                Collections.singletonMap(SELF_LINK, url.toString()));
+    }
 
 }
