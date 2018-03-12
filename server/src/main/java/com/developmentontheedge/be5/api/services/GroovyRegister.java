@@ -11,6 +11,8 @@ import org.codehaus.groovy.runtime.InvokerHelper;
 import javax.inject.Provider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 
@@ -97,6 +99,7 @@ public class GroovyRegister
 
     public String getErrorCodeLine(Throwable e)
     {
+        Set<String> printedGroovyClasses = new HashSet<>();
         Throwable err = e;
 
         Stack<Throwable> throwables = new Stack<>();
@@ -115,8 +118,10 @@ public class GroovyRegister
             StackTraceElement[] stackTrace = err.getStackTrace();
             for (int i = 0; i < stackTrace.length; i++)
             {
-                if(stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy") )
+                if(stackTrace[i].getFileName() != null && stackTrace[i].getFileName().endsWith(".groovy")
+                        && !printedGroovyClasses.contains(stackTrace[i].getFileName()))
                 {
+                    printedGroovyClasses.add(stackTrace[i].getFileName());
                     sb.append(getErrorCodeLinesForClass(stackTrace[i]));
                     break;
                 }
