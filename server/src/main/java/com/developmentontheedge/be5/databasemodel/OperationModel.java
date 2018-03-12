@@ -20,6 +20,8 @@ public interface OperationModel
 
     OperationModel setPresetValues(Map<String, ?> presetValues);
 
+    OperationModel setOperationParams(Map<String, String> operationParams);
+
     Object generate();
 
     Operation execute();

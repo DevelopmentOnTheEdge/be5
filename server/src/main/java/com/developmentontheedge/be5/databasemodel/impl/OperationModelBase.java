@@ -28,6 +28,7 @@ public class OperationModelBase implements OperationModel
     private String operationName;
 
     private Map<String, ?> presetValues = Collections.emptyMap();
+    private Map<String, String> operationParams = Collections.emptyMap();
 
     OperationModelBase( Meta meta, OperationExecutor operationExecutor )
     {
@@ -67,6 +68,13 @@ public class OperationModelBase implements OperationModel
     public OperationModel setPresetValues( Map<String, ?> presetValues )
     {
         this.presetValues = presetValues;
+        return this;
+    }
+
+    @Override
+    public OperationModel setOperationParams( Map<String, String> operationParams )
+    {
+        this.operationParams = operationParams;
         return this;
     }
 
@@ -126,7 +134,7 @@ public class OperationModelBase implements OperationModel
 
     public OperationContext getOperationContext()
     {
-        return new OperationContext(records, queryName, Collections.emptyMap());
+        return new OperationContext(records, queryName, operationParams);
     }
 
     public class GOperationModelBaseBuilder
