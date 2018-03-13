@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.helpers;
 import com.developmentontheedge.be5.components.DocumentGenerator;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -64,7 +65,10 @@ public class FilterHelper
 
         for (DynamicProperty property : dps)
         {
-            property.setValue(null);//remove defaultValue
+            if(!property.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
+            {
+                property.setValue(null);//remove defaultValue
+            }
         }
 
         dpsHelper.setValues(dps, filterPresetValues);
