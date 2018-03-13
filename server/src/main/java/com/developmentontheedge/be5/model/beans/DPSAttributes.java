@@ -3,6 +3,10 @@ package com.developmentontheedge.be5.model.beans;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * @see com.developmentontheedge.beans.BeanInfoConstants
+ */
 public class DPSAttributes
 {
     private Map<String, Object> map = new HashMap<>();
@@ -79,6 +83,14 @@ public class DPSAttributes
     public void setCOLUMN_SIZE_ATTR(Object value)
     {
         map.put("COLUMN_SIZE_ATTR", value);
+    }
+    public void setINPUT_SIZE_ATTR(Object value)
+    {
+        map.put("INPUT_SIZE_ATTR", value);
+    }
+    public void setPLACEHOLDER(String value)
+    {
+        map.put("PLACEHOLDER", value);
     }
 
     public void setGROUP_NAME(String value)
