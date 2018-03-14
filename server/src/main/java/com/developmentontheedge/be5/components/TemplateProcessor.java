@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.env.Injector;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -46,6 +47,7 @@ public class TemplateProcessor implements Component
         String description = userAwareMeta.getColumnTitle("index", "page", "description");
 
         Context context = new Context();
+        context.setVariable("lang", UserInfoHolder.getLanguage());
         context.setVariable("title", title);
         context.setVariable("description", description);
 
