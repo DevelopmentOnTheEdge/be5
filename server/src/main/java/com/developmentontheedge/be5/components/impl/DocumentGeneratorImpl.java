@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.components.impl.model.Operations;
 import com.developmentontheedge.be5.components.impl.model.TableModel;
 import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
 import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -181,19 +182,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 parameters, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
     }
 
-    private Map<String, Object> getLayoutObject(Query query)
-    {
-        if (!query.getLayout().isEmpty())
-        {
-            return JsonFactory.jsonb.fromJson(query.getLayout(),
-                    new HashMap<String, Object>(){}.getClass().getGenericSuperclass());
-        }
-        else
-        {
-            return new HashMap<>();
-        }
-    }
-
     public TablePresentation getTable(Query query, Map<String, String> parameters)
     {
         return getTable(query, parameters, -1, true);
@@ -339,7 +327,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     operation.getContext(),
                     userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                     JsonFactory.bean(result.getFirst()),
-                    operation.getLayout(),
+                    operation.getLayout() != Collections.emptyMap() ? operation.getLayout() : getLayoutObject(operation.getInfo().getModel()),
                     operation.getResult(),
                     errorModel
             ));
@@ -353,17 +341,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 return Either.second(result.getSecond());
             }
         }
-    }
-
-    @Override
-    public ErrorModel getErrorModel(Throwable e, HashUrl url)
-    {
-        String message = Be5Exception.getMessage(e);
-
-        if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
-
-        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e),
-                Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
     @Override
@@ -399,4 +376,27 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         );
     }
 
+    @Override
+    public ErrorModel getErrorModel(Throwable e, HashUrl url)
+    {
+        String message = Be5Exception.getMessage(e);
+
+        if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
+
+        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e),
+                Collections.singletonMap(SELF_LINK, url.toString()));
+    }
+
+    private Map<String, Object> getLayoutObject(EntityItem query)
+    {
+        if (!query.getLayout().isEmpty())
+        {
+            return JsonFactory.jsonb.fromJson(query.getLayout(),
+                    new HashMap<String, Object>(){}.getClass().getGenericSuperclass());
+        }
+        else
+        {
+            return new HashMap<>();
+        }
+    }
 }
