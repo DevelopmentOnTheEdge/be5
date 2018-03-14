@@ -321,6 +321,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 {
                     errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), operation.getUrl());
                 }
+
+                //remove Throwable for prevent adding to json
                 operation.setResult(OperationResult.error(operation.getResult().getMessage(), null));
 
                 //todo refactoring, add for prevent json error
@@ -344,7 +346,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
         else
         {
-            return Either.second(result.getSecond());
+            if(operation.getResult().getStatus() == OperationStatus.ERROR){
+                //remove Throwable for prevent adding to json
+                return Either.second(OperationResult.error(result.getSecond().getMessage(), null));
+            }else{
+                return Either.second(result.getSecond());
+            }
         }
     }
 
