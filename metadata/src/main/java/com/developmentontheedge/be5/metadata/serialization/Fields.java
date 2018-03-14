@@ -6,19 +6,21 @@ import java.util.List;
 
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
-import com.developmentontheedge.be5.metadata.QueryType;
+
 
 public class Fields
 {
     private static final List<Field> PROJECT = Collections.unmodifiableList( Arrays.asList(
         new Field( SerializationConstants.ATTR_PROJECT_NAME ),
-        new Field( SerializationConstants.ATTR_CONNECTION_PROFILE ) ) );
+        new Field( SerializationConstants.ATTR_CONNECTION_PROFILE )
+    ) );
     private static final List<Field> ENTITY = Collections.unmodifiableList( Arrays.asList(
         new Field( SerializationConstants.ATTR_ENTITY_NAME ),
         new Field( SerializationConstants.ATTR_ENTITY_DISPLAY_NAME ),
         new Field( "order" ),
         new Field( SerializationConstants.ATTR_ENTITY_PRIMARY_KEY_COLUMN ),
-        new Field( "besql", false ) ) );
+        new Field( "besql", false )
+    ) );
     private static final List<Field> OPERATION = Collections.unmodifiableList( Arrays.asList(
         new Field( "name" ),
         new Field( "notSupported" ),
@@ -72,19 +74,23 @@ public class Fields
     ) );
     private static final List<Field> TABLE_DEF = Collections.unmodifiableList( Arrays.asList(
         new Field( "name" ),
-        new Field( "startIdVariable", "" )) );
+        new Field( "startIdVariable", "" )
+    ) );
     private static final List<Field> VIEW_DEF = Collections.unmodifiableList( Arrays.asList(
-            new Field( "name" )) );
+            new Field( "name" )
+    ) );
     private static final List<Field> COLUMN_DEF = Collections.unmodifiableList( Arrays.asList(
             new Field( "name" ),
             new Field( "type" ),
             new Field( "canBeNull", false ),
             new Field( "autoIncrement", false ),
             new Field( "primaryKey", false ),
-            new Field( "defaultValue" ) ) );
+            new Field( "defaultValue" )
+    ) );
     private static final List<Field> INDEX_DEF = Collections.unmodifiableList( Arrays.asList(
             new Field( "name" ),
-            new Field( "unique", false ) ) );
+            new Field( "unique", false )
+    ) );
     private static final List<Field> FILE_STRUCTURE = Collections.unmodifiableList( Arrays.asList(
         new Field( "htmlDir",           "src/html" ),
         new Field( "javaSourcesDir",    "src/main/java" ),
@@ -105,21 +111,25 @@ public class Fields
         new Field( "pagesFile",         "src/pages.yaml"),
         new Field( "pagesDir",          "src/pages"),
         new Field( "jsFormsFile",       "src/forms.yaml")
-        ) );
+    ) );
     private static final List<Field> QUICK_FILTER = Collections.unmodifiableList( Arrays.asList( 
         new Field( "name" ), 
         new Field( "queryParam" ), 
         new Field( "targetQueryName" ), 
-        new Field( "filteringClass" ) ) );
+        new Field( "filteringClass" )
+    ) );
     private static final List<Field> QUERY_SETTINGS = Collections.unmodifiableList( Arrays.asList( 
         new Field( "maxRecordsPerPage", 0 ), 
         new Field( "maxRecordsPerPrintPage", 0 ), 
         new Field( "maxRecordsInDynamicDropDown", 20 ), 
         new Field( "colorSchemeID" ), 
         new Field( "autoRefresh", 0 ), 
-        new Field( "beautifier", "com.beanexplorer.web.html.HtmlTableBeautifier" ) ) );
+        new Field( "beautifier", "com.beanexplorer.web.html.HtmlTableBeautifier" )
+    ) );
+
     private static final String CONNECION_PROFILE_PROVIDER_ID = "providerId";
     private static final String CONNECION_PROFILE_DRIVER_DEFINITION = "driverDefinition";
+
     private static final List<Field> CONNECTION_PROFILE = Collections.unmodifiableList( Arrays.asList( // removed providerId and driverDefinition from this list
             new Field( "connectionUrl", "" ),
             new Field( "username" ),
@@ -129,10 +139,12 @@ public class Fields
             new Field( "tomcatAppName" ),
             new Field( "tomcatManagerScriptUserName" ),
             new Field( "tomcatManagerScriptPassword" ),
-            new Field( "tomcatManagerReloadUrlTemplate" ) ) );
+            new Field( "tomcatManagerReloadUrlTemplate" )
+    ) );
     private static final List<Field> CONNECTION_PROFILE_READ = Collections.unmodifiableList( Arrays.asList(
             new Field( CONNECION_PROFILE_PROVIDER_ID ),
-            new Field( CONNECION_PROFILE_DRIVER_DEFINITION ) ) );
+            new Field( CONNECION_PROFILE_DRIVER_DEFINITION )
+    ) );
 
     /**
      * This class is not intended to be instantiated.
