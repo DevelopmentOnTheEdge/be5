@@ -46,7 +46,6 @@ public class Query extends EntityItem implements TemplateElement
     private String titleName;
     private QueryType type;
     private String query = " ";
-    private String layout = "";
     private String newDataCheckQuery;
     private boolean invisible = false;
     private boolean slow = false;
@@ -447,13 +446,6 @@ public class Query extends EntityItem implements TemplateElement
         }
         else if ( !getTitleName().equals( other.getTitleName() ) )
             return debugEquals( "titleName" );
-        if ( getLayout() == null )
-        {
-            if ( other.getLayout() != null )
-                return debugEquals( "layout" );
-        }
-        else if ( !getLayout().equals( other.getLayout() ) )
-            return debugEquals( "layout" );
         if ( getType() == null )
         {
             if ( other.getType() != null )
@@ -592,14 +584,4 @@ public class Query extends EntityItem implements TemplateElement
         return type == QueryType.D1 || type == QueryType.D1_UNKNOWN || type == QueryType.D2;
     }
 
-    public String getLayout()
-    {
-        return getValue( "layout", layout, "" );
-    }
-
-    public void setLayout(String layout)
-    {
-        this.layout = customizeProperty( "layout", this.layout, Strings2.nullToEmpty( layout ) );
-        fireChanged();
-    }
 }

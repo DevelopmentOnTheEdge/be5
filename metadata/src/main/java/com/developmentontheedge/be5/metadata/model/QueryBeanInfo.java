@@ -49,10 +49,10 @@ public class QueryBeanInfo extends BeanInfoEx
         add("querySettings");
         add("newDataCheckQuery");
         add("usedInExtras");
+        add("layout");
         add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
         addHidden("contextID");
         addHidden("categoryID");
         addHidden(new PropertyDescriptor("icon", beanClass, "getIcon", null));
-        add("layout");
     }
 }

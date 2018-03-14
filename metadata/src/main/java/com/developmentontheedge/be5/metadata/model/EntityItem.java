@@ -21,6 +21,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     private Long contextID;
     private Long categoryID;
     private boolean secure = false;
+    private String layout = "";
     
     public EntityItem(String name, BeModelCollection<?> origin)
     {
@@ -147,6 +148,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         EntityItem other = (EntityItem)obj;
         if ( !getName().equals( other.getName() ) )
             return debugEquals( "name" );
+
         if( getWellKnownName() == null )
         {
             if( other.getWellKnownName() != null )
@@ -154,6 +156,15 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         }
         else if( !getWellKnownName().equals(other.getWellKnownName()) )
             return debugEquals( "wellKnownName" );
+
+        if ( getLayout() == null )
+        {
+            if ( other.getLayout() != null )
+                return debugEquals( "layout" );
+        }
+        else if ( !getLayout().equals( other.getLayout() ) )
+            return debugEquals( "layout" );
+
         if ( getNotSupported() == null )
         {
             if ( other.getNotSupported() != null )
@@ -264,5 +275,16 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         super.mergeThis( other, inherit );
         if(customizedProperties == null || !customizedProperties.contains( "icon" ))
             icon.copyFrom( ((EntityItem)other).icon );
+    }
+
+    public String getLayout()
+    {
+        return getValue( "layout", layout, "" );
+    }
+
+    public void setLayout(String layout)
+    {
+        this.layout = customizeProperty( "layout", this.layout, Strings2.nullToEmpty( layout ) );
+        fireChanged();
     }
 }

@@ -39,6 +39,7 @@ public class OperationBeanInfo extends BeanInfoEx
         add("originModuleName", ModuleSelector.class);
         add("roles");
         add("usedInExtras");
+        add("layout");
         add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
         addHidden("contextID");
         addHidden("categoryID");

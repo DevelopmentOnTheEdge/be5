@@ -29,7 +29,9 @@ public class Fields
         new Field( "confirm", false ),
         new Field( "contextID" ),
         new Field( "categoryID" ),
-        new Field( "wellKnownName", "" ) ) );
+        new Field( "wellKnownName", "" ),
+        new Field( "layout", "" )
+    ) );
     private static final List<Field> EXTENDER = Collections.unmodifiableList( Arrays.asList(
         new Field("invokeOrder", 0)
     ) );
@@ -66,7 +68,7 @@ public class Fields
         new Field( "messageWhenEmpty" ),
         new Field( "parametrizingOperationName", "" ),
         new Field( "wellKnownName", "" ),
-        new Field( "layout" )
+        new Field( "layout", "" )
     ) );
     private static final List<Field> TABLE_DEF = Collections.unmodifiableList( Arrays.asList(
         new Field( "name" ),

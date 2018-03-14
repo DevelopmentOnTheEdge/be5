@@ -87,7 +87,8 @@ public class Operation extends EntityItem
             "wellKnownName",
             "records",
             "code",
-            "icon" ).toSet() );
+            "icon",
+            "layout").toSet() );
     
     public static String[] getOperationTypes()
     {
