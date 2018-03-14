@@ -103,14 +103,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 }
             case D1:
             case D1_UNKNOWN:
-                if (meta.isParametrizedTable(query))
-                {
-                    return getParametrizedTable(query, parameters, sortColumn, sortDesc);
-                }
-                else
-                {
-                    return getTable(query, parameters, sortColumn, sortDesc);
-                }
+                return getTable(query, parameters, sortColumn, sortDesc);
             case D2:
             case CONTAINER:
             case CUSTOM:
@@ -207,21 +200,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 .build();
 
         return getTable(query, parameters, table);
-    }
-
-    @Override
-    @Deprecated
-    public TablePresentation getParametrizedTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
-    {
-//        TODO String entityName = query.getEntity().getName();
-//        String operationName = query.getParametrizingOperationName();
-//        Operation operation = query.getParametrizingOperation();
-//        FormPresentation formPresentation = getFormPresentation(entityName, query.getName(), operationName, operation, parameters).getFirst();
-//        TablePresentation tablePresentation = getTableModel(query, parameters);
-//        FormTable formTable = new FormTable(formPresentation, tablePresentation);
-//
-//        DocumentResponse.of(res).send(formTable);
-        return getTable(query, parameters, sortColumn, sortDesc);
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)

@@ -29,8 +29,6 @@ public interface DocumentGenerator
 
     TablePresentation getTable(Query query, Map<String, String> parameters, TableModel tableModel);
 
-    TablePresentation getParametrizedTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
-
     Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
 
     Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);
