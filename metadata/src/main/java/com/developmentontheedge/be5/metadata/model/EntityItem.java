@@ -149,14 +149,6 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         if ( !getName().equals( other.getName() ) )
             return debugEquals( "name" );
 
-        if( getWellKnownName() == null )
-        {
-            if( other.getWellKnownName() != null )
-                return debugEquals( "wellKnownName" );
-        }
-        else if( !getWellKnownName().equals(other.getWellKnownName()) )
-            return debugEquals( "wellKnownName" );
-
         if ( getLayout() == null )
         {
             if ( other.getLayout() != null )
@@ -164,6 +156,14 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         }
         else if ( !getLayout().equals( other.getLayout() ) )
             return debugEquals( "layout" );
+
+        if( getWellKnownName() == null )
+        {
+            if( other.getWellKnownName() != null )
+                return debugEquals( "wellKnownName" );
+        }
+        else if( !getWellKnownName().equals(other.getWellKnownName()) )
+            return debugEquals( "wellKnownName" );
 
         if ( getNotSupported() == null )
         {
