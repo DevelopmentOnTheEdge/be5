@@ -94,8 +94,4 @@ class TestGroovyOp extends GOperationSupport implements Operation
         db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", dps.$name, dps.$beginDate, dps.$reason)
     }
 
-    @Override
-    Object getLayout() {
-        return [type:'custom', name:'addresses']
-    }
 }

@@ -21,8 +21,6 @@ class FilterOperationTest extends SqlMockOperationTest
         def operation = getOperation("testtableAdmin", "All records", "Filter", "")
         Either<Object, OperationResult> generate = generateOperation(operation, [:])
 
-        assertEquals("[type:modal]", operation.getLayout().toString())
-
         assertEquals("{" +
             "'values':{'name':'','value':'','_search_presets_':'','_search_':true}," +
             "'meta':{" +

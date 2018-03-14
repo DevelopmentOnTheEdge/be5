@@ -16,12 +16,6 @@ public class FilterOperation extends OperationSupport
     @Inject private FilterHelper filterHelper;
 
     @Override
-    public Object getLayout()
-    {
-        return Collections.singletonMap("type", "modal");
-    }
-
-    @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();

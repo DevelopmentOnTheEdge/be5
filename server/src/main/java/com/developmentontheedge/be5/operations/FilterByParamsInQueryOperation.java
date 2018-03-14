@@ -7,19 +7,12 @@ import com.developmentontheedge.be5.operation.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import java.util.Collections;
 import java.util.Map;
 
 
 public class FilterByParamsInQueryOperation extends OperationSupport
 {
     @Inject private FilterHelper filterHelper;
-
-    @Override
-    public Object getLayout()
-    {
-        return Collections.singletonMap("type", "modal");
-    }
 
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception

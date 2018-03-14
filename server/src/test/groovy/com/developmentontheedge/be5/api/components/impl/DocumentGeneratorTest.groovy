@@ -65,7 +65,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                     "{'attributes':{" +
                         "'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," +
                         "'entity':'testtable'," +
-                        "'layout':{'type':'modal'}," +
+                        "'layout':{}," +
                         "'operation':'Filter','operationParams':{}," +
                         "'operationResult':{'status':'generate'}," +
                         "'query':'TableWithFilter'," +

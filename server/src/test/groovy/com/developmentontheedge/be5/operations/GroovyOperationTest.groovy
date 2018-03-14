@@ -38,16 +38,6 @@ class GroovyOperationTest extends SqlMockOperationTest
     }
 
     @Test
-    void getLayout()
-    {
-        Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "TestGroovyOp", "0","{}")
-//todo test form component
-//        assertEquals(ImmutableMap.of("type","custom", "name","addresses"),
-//                generate.getFirst().getLayout());
-    }
-
-    @Test
     void execute()
     {
         Operation operation = getOperation("testtableAdmin", "All records", "TestGroovyOp", "0")
