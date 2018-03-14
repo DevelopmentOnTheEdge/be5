@@ -727,22 +727,6 @@ public class DpsHelper
         return label;
     }
 
-    public <T extends DynamicPropertySet> T addDpWithLabelANDNotSubmitted(T dps, String text)
-    {
-        dps.add(getLabel(text));
-        DynamicProperty notSubmitted = new DynamicProperty("notSubmitted", String.class, null);
-        notSubmitted.setHidden(true);
-        dps.add(notSubmitted);
-        return dps;
-    }
-
-    public <T extends DynamicPropertySet> T addDpWithLabelRawANDNotSubmitted(T dps, String text)
-    {
-        addDpWithLabelANDNotSubmitted(dps, text);
-        dps.getProperty("infoLabel").setAttribute(BeanInfoConstants.RAW_VALUE, true);
-        return dps;
-    }
-
     public Map<String, Object> getAsMap(DynamicPropertySet dps, Map<String, Object> presetValues)
     {
         Map<String, Object> values = getAsMap(dps);

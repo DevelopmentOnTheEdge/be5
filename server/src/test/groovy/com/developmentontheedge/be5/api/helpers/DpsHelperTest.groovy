@@ -184,22 +184,6 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void getDpsWithLabelANDNotSubmittedTest()
-    {
-        def dps = dpsHelper.addDpWithLabelANDNotSubmitted(dps, "test")
-        assertEquals "{'/infoLabel':{'displayName':'infoLabel','labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
-                oneQuotes(JsonFactory.dpsMeta(dps).toString())
-    }
-
-    @Test
-    void getDpsWithLabelRawANDNotSubmittedTest()
-    {
-        def dps = dpsHelper.addDpWithLabelRawANDNotSubmitted(dps, "test")
-        assertEquals "{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true},'/notSubmitted':{'displayName':'notSubmitted','hidden':true}}",
-                oneQuotes(JsonFactory.dpsMeta(dps).toString())
-    }
-
-    @Test
     void getAsMapTest()
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
