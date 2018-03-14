@@ -279,7 +279,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
 
     public String getLayout()
     {
-        return getValue( "layout", layout, "" );
+        return layout;
     }
 
     public void setLayout(String layout)
