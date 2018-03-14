@@ -60,8 +60,6 @@ public interface Operation extends Serializable
 
     HashUrl getUrl();
 
-    Object getLayout();
-
     void addRedirectParams(Map<String, ?> extra);
 
     void addRedirectParam(String name, Object value);

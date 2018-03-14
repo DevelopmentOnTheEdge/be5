@@ -132,11 +132,6 @@ public abstract class OperationSupport implements Operation
                 .named("selectedRows", newID.toString());
     }
 
-    public Object getLayout()
-    {
-        return Collections.emptyMap();
-    }
-
     @Override
     public Map<String, String> getRedirectParams()
     {

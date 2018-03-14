@@ -305,7 +305,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     operation.getContext(),
                     userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                     JsonFactory.bean(result.getFirst()),
-                    operation.getLayout() != Collections.emptyMap() ? operation.getLayout() : getLayoutObject(operation.getInfo().getModel()),
+                    getLayoutObject(operation.getInfo().getModel()),
                     operation.getResult(),
                     errorModel
             ));
