@@ -15,7 +15,7 @@ public class SilentEditOperation extends OperationSupport
     {
         Entity entity = getInfo().getEntity();
 
-        DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), entity);
+        DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), getInfo().getModel());
 
         dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(context.records[0]));
 

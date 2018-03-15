@@ -13,7 +13,7 @@ public class SilentInsertWithoutCollectionsOperation extends OperationSupport
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues);
+        dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(), presetValues);
 
         return dpsHelper.setOperationParams(dps, context.getOperationParams());
     }

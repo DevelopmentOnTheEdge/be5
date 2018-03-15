@@ -116,16 +116,16 @@ public class CompiledLocalizations {
                 CompiledEntityLocalizations.fnGetFirstByTopic(DatabaseConstants.L10N_TOPIC_DISPLAY_NAME));
     }
 
-    public String getOperationTitle(String language, String entityName, final String operationName) {
+    public String getOperationTitle(String language, String entityName, final String name) {
         checkNotNull(language);
         checkNotNull(entityName);
-        checkNotNull(operationName);
+        checkNotNull(name);
         Optional<String> localization = findLocalization(language, entityName,
-                CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_OPERATION_NAME, operationName));
+                CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_OPERATION_NAME, name));
 
         return localization.orElseGet(() -> findLocalization(language, "default",
-                CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_OPERATION_NAME, operationName))
-                .orElse(operationName));
+                CompiledEntityLocalizations.fnGetByTopicAndKey(DatabaseConstants.L10N_TOPIC_OPERATION_NAME, name))
+                .orElse(name));
     }
 
     public String getQueryTitle(String language, String entityName, final String queryName) {
@@ -153,9 +153,7 @@ public class CompiledLocalizations {
 
     public Optional<String> getFieldTitle(String language, String entityName, String operationName, String name)
     {
-        Optional<String> title = get(language, entityName, operationName, name);
-
-        return title;
+        return get(language, entityName, operationName, name);
     }
 
     public Optional<String> get(String language, String entityName, String queryName, String content) {

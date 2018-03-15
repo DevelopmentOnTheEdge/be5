@@ -38,8 +38,6 @@ public interface UserAwareMeta
 
     String getLocalizedOperationField(String entityName, String operationName, String name);
 
-    String getLocalizedOperationField(String entityName, String name);
-
     /**
      * Returns a localized title of an operation in user's preferred language.
      */

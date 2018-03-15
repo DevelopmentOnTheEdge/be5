@@ -12,8 +12,6 @@ import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test
 
-import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PARAM
-import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.*
 
 
@@ -37,7 +35,7 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "{" +
                 "'/CODE':{'displayName':'Код'}," +
                 "'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]}," +
-                "'/admlevel':{'displayName':'Уроверь','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}," +
+                "'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}," +
                 "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
                 "'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}}",
             oneQuotes(JsonFactory.dpsMeta(dps).toString())
@@ -46,10 +44,44 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(meta.getColumn(meta.getEntity("testTags"), "CODE"))
+        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
+                meta.getColumn(meta.getEntity("testTags"), "CODE"), meta.getEntity("testTags"))
         assertEquals "CODE", property.getName()
         assertEquals String.class, property.getType()
         assertEquals null, property.getValue()
+    }
+
+    @Test
+    void getDynamicPropertyLocalizationTest()
+    {
+        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
+                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
+                meta.getEntity("testTags")
+        )
+
+        assertEquals "Административный уровень", property.getDisplayName()
+    }
+
+    @Test
+    void getDynamicPropertyLocalizationForQueryTest()
+    {
+        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
+                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
+                meta.getEntity("testTags").getQueries().get("TestLocalizQuery")
+        )
+
+        assertEquals "Test Уровень", property.getDisplayName()
+    }
+
+    @Test
+    void getDynamicPropertyLocalizationForOperationTest()
+    {
+        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
+                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
+                meta.getEntity("testTags").getOperations().get("Insert")
+        )
+
+        assertEquals "Уровень", property.getDisplayName()
     }
 
     @Test

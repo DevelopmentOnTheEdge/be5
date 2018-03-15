@@ -95,28 +95,15 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
-    public String getLocalizedOperationTitle(String entity, String operation) {
-        return localizations.getOperationTitle(UserInfoHolder.getLanguage(), entity, operation);
+    public String getLocalizedOperationTitle(String entity, String name)
+    {
+        return localizations.getOperationTitle(UserInfoHolder.getLanguage(), entity, name);
     }
 
     public String getLocalizedOperationField(String entityName, String operationName, String name)
     {
-        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name).orElse(name);
-    }
-
-    /*
-     * use getColumnTitle(entityName, columnName)
-     */
-    @Deprecated
-    public String getLocalizedOperationField(String entityName, String name)
-    {
-        ImmutableList<String> defaultOp = ImmutableList.of("Insert");
-        for (String operationName : defaultOp)
-        {
-            Optional<String> fieldTitle = localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name);
-            if(fieldTitle.isPresent())return fieldTitle.get();
-        }
-        return name;
+        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name)
+                .orElseGet(() -> getColumnTitle(entityName, name));
     }
 
     @Override

@@ -62,16 +62,21 @@ ru:
     - topics: viewName
       entries:
       - All records: Все записи
+    - topics: Insert
+      entries:
+      - admlevel: Уровень
+    - topics: TestLocalizQuery
+      entries:
+      - admlevel: Test Уровень
     - topics: All records
       entries:
       - CODE: Код
       - payable: Оплачиваемая
-      - admlevel: Уроверь
       - referenceTest: Тест выборки
       - Federal: Федеральный
       - Municipal: Муниципальный
       - Regional: Региональный
-      - admLevel: Административный уровень
+      - admlevel: Административный уровень
   - default:
     - topics: operationName
       entries:

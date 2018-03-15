@@ -52,6 +52,12 @@ testTags:
         <if parameter="payable">
           AND payable = '<parameter:payable/>'
         </if>
+  - TestLocalizQuery:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |-
+        SELECT *
+        FROM testTags
   operations:
   - Delete:
       records: 2
