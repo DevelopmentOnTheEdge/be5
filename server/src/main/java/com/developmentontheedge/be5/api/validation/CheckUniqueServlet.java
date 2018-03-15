@@ -25,8 +25,8 @@ import java.util.TreeMap;
  */
 public class CheckUniqueServlet
 {
-    public static final String URI = "json/checkUnique";
-
+//    public static final String URI = "json/checkUnique";
+//
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
 //    {
 //        DatabaseConnector connector = getConnector( request );
@@ -59,14 +59,14 @@ public class CheckUniqueServlet
 //        }
 //        response.getWriter().write( String.valueOf( result ) );
 //    }
-
-    private boolean check( String tableName, String fieldName, String value, Map<String,String> extraParams )
-    {
-
-            tableName = Utils.subst( tableName, "'", "" );
-            fieldName = Utils.subst( fieldName, "'", "" );
-
-            String sql = "SELECT 1 FROM " + tableName + " WHERE " + fieldName + " = ";
+//
+//    private boolean check( String tableName, String fieldName, String value, Map<String,String> extraParams )
+//    {
+//
+//            tableName = Utils.subst( tableName, "'", "" );
+//            fieldName = Utils.subst( fieldName, "'", "" );
+//
+//            String sql = "SELECT 1 FROM " + tableName + " WHERE " + fieldName + " = ";
 //            if( Utils.isNumericColumn( connector, tableName, fieldName ) )
 //            {
 //                sql += Utils.subst( value, "'", "" );
@@ -97,9 +97,9 @@ public class CheckUniqueServlet
 //                    }
 //                }
 //            }
-
-            //new JDBCRecordAdapterAsQuery( connector, sql );
-            return false;
-
-    }
+//
+//            new JDBCRecordAdapterAsQuery( connector, sql );
+//            return false;
+//
+//    }
 }

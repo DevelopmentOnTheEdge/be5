@@ -1,10 +1,5 @@
 package com.developmentontheedge.be5.api.validation;
 
-import com.developmentontheedge.beans.BeanInfoConstants;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 public interface Validation
 {
@@ -53,28 +48,28 @@ public interface Validation
 
     // Default messages.
 
-    class UniqueStruct
-    {
-        public String entity;
-        public String column;
-        public String message;
-
-        public Map<String,String> extraParams;
-    }
-
-    class QueryStruct
-    {
-        public String entity;
-        public String query;
-        public String message;
-
-        public Map<String,String> extraParams;
-    }
-
-    class IntervalStruct
-    {
-        public Object intervalFrom;
-        public Object intervalTo;
-        public String message;
-    }
+//    class UniqueStruct
+//    {
+//        public String entity;
+//        public String column;
+//        public String message;
+//
+//        public Map<String,String> extraParams;
+//    }
+//
+//    class QueryStruct
+//    {
+//        public String entity;
+//        public String query;
+//        public String message;
+//
+//        public Map<String,String> extraParams;
+//    }
+//
+//    class IntervalStruct
+//    {
+//        public Object intervalFrom;
+//        public Object intervalTo;
+//        public String message;
+//    }
 }

@@ -14,9 +14,9 @@ import java.util.TreeMap;
 
 public class CheckQueryServlet
 {
-    public static final String URI = "json/checkQuery";
-
-
+//    public static final String URI = "json/checkQuery";
+//
+//
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
 //    {
 //        DatabaseConnector connector = getConnector( request );
@@ -51,12 +51,12 @@ public class CheckQueryServlet
 //        }
 //        response.getWriter().write( String.valueOf( result ) );
 //    }
-
-    private boolean check(
-        String tableName, String queryName, String paramName, String value, Map<String,String> extraParams )
-    {
-        try
-        {  
+//
+//    private boolean check(
+//        String tableName, String queryName, String paramName, String value, Map<String,String> extraParams )
+//    {
+//        try
+//        {
 //            boolean isAccess = Utils.getAccessibleQuery(
 //                connector, userInfo, tableName, queryName, null ) != null;
 //
@@ -64,13 +64,13 @@ public class CheckQueryServlet
 //            {
 //                return false;
 //            }
-        }  
-        catch( Exception err )
-        {
-            //Logger.error( cat, "Utils.getAccessibleQuery " + tableName + "::" + queryName, err );
-            return false;
-        }
-
+//        }
+//        catch( Exception err )
+//        {
+//            //Logger.error( cat, "Utils.getAccessibleQuery " + tableName + "::" + queryName, err );
+//            return false;
+//        }
+//
 //        QueryExecuter qe = new QueryExecuter( connector, userInfo, Collections.emptyMap(), "" );
 //        try
 //        {
@@ -92,6 +92,6 @@ public class CheckQueryServlet
 //        {
 //            qe.closeIterator();
 //        }
-        return false;
-    }
+//        return false;
+//    }
 }
