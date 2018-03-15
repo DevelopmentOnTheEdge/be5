@@ -6,6 +6,8 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.GroovyOperation;
+import com.developmentontheedge.be5.metadata.model.JavaOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
@@ -262,7 +264,7 @@ public class DpsHelper
                     columnDef.getName()
             ));
         }
-        else if(modelElements instanceof Operation)
+        else if(modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
             dp.setDisplayName(userAwareMeta.getLocalizedOperationField(
                     columnDef.getEntity().getName(),
@@ -820,7 +822,7 @@ public class DpsHelper
         {
             return ((Query)modelElements).getEntity();
         }
-        else if(modelElements instanceof Operation)
+        else if(modelElements.getClass() == JavaOperation.class || modelElements.getClass() == GroovyOperation.class)
         {
             return ((Operation)modelElements).getEntity();
         }
