@@ -93,13 +93,17 @@ public class DPSAttributes
         map.put("PLACEHOLDER", value);
     }
 
+    public void setGROUP_ID(Object value)
+    {
+        map.put("GROUP_ID", value);
+    }
     public void setGROUP_NAME(String value)
     {
         map.put("GROUP_NAME", value);
     }
-    public void setGROUP_ID(Object value)
+    public void setGROUP_CLASSES(String value)
     {
-        map.put("GROUP_ID", value);
+        map.put("GROUP_CLASSES", value);
     }
     public void setDEFAULT_VALUE(Object value)
     {
