@@ -56,7 +56,7 @@ class OperationModelBaseTest extends Be5ProjectTest
             operationName = "ErrorProcessing"
         }
 
-        assertEquals("{'values':{'name':'ok','propertyForAnotherEntity':'text'},'meta':{'/name':{'displayName':'name'},'/propertyForAnotherEntity':{'displayName':'propertyForAnotherEntity'}},'order':['/name','/propertyForAnotherEntity']}",
+        assertEquals("{'values':{'name':'ok','propertyForAnotherEntity':'text'},'meta':{'/name':{'displayName':'name','columnSize':'30'},'/propertyForAnotherEntity':{'displayName':'propertyForAnotherEntity'}},'order':['/name','/propertyForAnotherEntity']}",
                 oneQuotes(JsonFactory.bean(parameters)))
     }
 

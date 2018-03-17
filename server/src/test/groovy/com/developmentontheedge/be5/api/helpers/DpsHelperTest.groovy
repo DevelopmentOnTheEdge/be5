@@ -32,12 +32,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getDpsWithoutAutoIncrementTest()
     {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"))
-        assertEquals "{" +
-                "'/CODE':{'displayName':'Код'}," +
-                "'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]}," +
-                "'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]}," +
-                "'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}," +
-                "'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}}",
+        assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]},'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}}",
             oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 

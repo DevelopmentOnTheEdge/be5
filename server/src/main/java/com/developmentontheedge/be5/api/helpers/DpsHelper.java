@@ -285,6 +285,11 @@ public class DpsHelper
             dp.setCanBeNull(true);
         }
 
+        if(SqlColumnType.TYPE_VARCHAR.equals(columnDef.getType().getTypeName())
+            || SqlColumnType.TYPE_CHAR.equals(columnDef.getType().getTypeName())){
+            dp.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
+        }
+
         if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
 
         return dp;

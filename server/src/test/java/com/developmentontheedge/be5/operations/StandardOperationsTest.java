@@ -58,7 +58,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals("{" +
                         "'values':{'name':'test','value':'1'}," +
                         "'meta':{" +
-                            "'/name':{'displayName':'name'}," +
+                            "'/name':{'displayName':'name','columnSize':'30'}," +
                             "'/value':{'displayName':'value','type':'Integer','canBeNull':true}}," +
                         "'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(first)));

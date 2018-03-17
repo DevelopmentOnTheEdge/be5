@@ -21,7 +21,7 @@ class OperationServiceTest extends SqlMockOperationTest
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = generateOperation(operation).getFirst()
 
-        assertEquals "{'displayName':'name'}",
+        assertEquals "{'displayName':'name','columnSize':'30'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals OperationStatus.GENERATE, operation.getStatus()
@@ -32,7 +32,7 @@ class OperationServiceTest extends SqlMockOperationTest
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = generateOperation(operation, presetValues).getFirst()
 
-        assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
+        assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
         return operation
     }
@@ -83,7 +83,7 @@ class OperationServiceTest extends SqlMockOperationTest
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'generateErrorInProperty']).getFirst()
 
-        assertEquals "{'displayName':'name','status':'error','message':'Error in property (getParameters)'}",
+        assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
@@ -99,7 +99,7 @@ class OperationServiceTest extends SqlMockOperationTest
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'executeErrorInProperty']).getFirst()
 
-        assertEquals "{'displayName':'name','status':'error','message':'Error in property (invoke)'}",
+        assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (invoke)'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
@@ -140,7 +140,7 @@ class OperationServiceTest extends SqlMockOperationTest
         def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'executeErrorStatus']).getFirst()
 
-        assertEquals "{'displayName':'name'}",
+        assertEquals "{'displayName':'name','columnSize':'30'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()

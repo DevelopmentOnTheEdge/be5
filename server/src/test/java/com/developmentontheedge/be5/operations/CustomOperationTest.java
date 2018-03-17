@@ -30,7 +30,7 @@ public class CustomOperationTest extends SqlMockOperationTest
     }
 
     void oneAssert(Either<Object, OperationResult> generate){
-        assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name'},'/value':{'displayName':'value','type':'Integer','readOnly':true,'canBeNull':true}},'order':['/name','/value']}",
+        assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name','columnSize':'30'},'/value':{'displayName':'value','type':'Integer','readOnly':true,'canBeNull':true}},'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(generate.getFirst())));
     }
 }

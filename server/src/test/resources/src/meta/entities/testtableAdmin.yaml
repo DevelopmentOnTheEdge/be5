@@ -10,7 +10,7 @@ testtableAdmin:
         autoIncrement: true
         primaryKey: true
     - name:
-        type: VARCHAR(20)
+        type: VARCHAR(30)
     - value:
         type: INT
         canBeNull: true
