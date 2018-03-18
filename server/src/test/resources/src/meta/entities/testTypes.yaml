@@ -1,0 +1,22 @@
+testTypes:
+  type: table
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - payment:
+        type: CURRENCY
+    - decimal:
+        type: DECIMAL(10,4)
+    - testBigInt:
+        type: BIGINT
+        canBeNull: true
+    - testInt:
+        type: INT
+        canBeNull: true
+  queries:
+  - All records:
+      type: 1D
+      roles: '@AllRoles'
+      code: |2-
+        SELECT * FROM testTypes t

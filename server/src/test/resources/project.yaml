@@ -8,6 +8,7 @@ testProject:
   - testtable
   - testtableAdmin
   - testtUser
+  - testTypes
   - atest
   - meters
   - persons

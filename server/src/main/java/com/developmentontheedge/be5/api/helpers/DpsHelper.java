@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
+import com.developmentontheedge.be5.api.validation.rule.ValidationRules;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
@@ -23,12 +24,14 @@ import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.collect.ImmutableList;
+import com.google.common.math.LongMath;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -42,6 +45,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range;
+import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY;
 
@@ -273,7 +278,6 @@ public class DpsHelper
             ));
         }
 
-
         if(columnDef.getDefaultValue() != null)
         {
             dp.setValue(meta.getColumnDefaultValue(columnDef));
@@ -285,14 +289,88 @@ public class DpsHelper
             dp.setCanBeNull(true);
         }
 
-        if(SqlColumnType.TYPE_VARCHAR.equals(columnDef.getType().getTypeName())
-            || SqlColumnType.TYPE_CHAR.equals(columnDef.getType().getTypeName())){
+        if(SqlColumnType.TYPE_VARCHAR.equals(columnDef.getType().getTypeName()) ||
+           SqlColumnType.TYPE_CHAR.equals(columnDef.getType().getTypeName())){
             dp.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
+        }
+
+        if(SqlColumnType.TYPE_DECIMAL.equals(columnDef.getType().getTypeName()))
+        {
+            int size = columnDef.getType().getSize();
+            dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
+                    getRange(size, false),
+                    step(getPrecision(columnDef.getType().getPrecision()))
+            ));
+        }
+
+        if(SqlColumnType.TYPE_CURRENCY.equals(columnDef.getType().getTypeName()))
+        {
+            dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
+                    getRange(columnDef.getType().getSize(), false),
+                    step(0.01)
+            ));
+        }
+
+        if(SqlColumnType.TYPE_INT.equals(columnDef.getType().getTypeName()) ||
+           SqlColumnType.TYPE_UINT.equals(columnDef.getType().getTypeName()))
+        {
+            boolean unsigned = SqlColumnType.TYPE_UINT.equals(columnDef.getType().getTypeName());
+
+            dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
+                    range(unsigned ? 0 : Integer.MIN_VALUE, Integer.MAX_VALUE),
+                    step(1)
+            ));
+        }
+
+        if(SqlColumnType.TYPE_BIGINT.equals(columnDef.getType().getTypeName()) ||
+           SqlColumnType.TYPE_UBIGINT.equals(columnDef.getType().getTypeName()))
+        {
+            boolean unsigned = SqlColumnType.TYPE_UBIGINT.equals(columnDef.getType().getTypeName());
+
+            dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
+                    range(unsigned ? 0 : Long.MIN_VALUE, Long.MAX_VALUE),
+                    step(1)
+            ));
         }
 
         if(columnDef.getName().endsWith(HIDDEN_COLUMN_PREFIX))dp.setHidden(true);
 
         return dp;
+    }
+
+    public double getPrecision(int precision)
+    {
+        switch (precision){
+            case 0 : return 1;
+            case 1 : return 0.1;
+            case 2 : return 0.01;
+            case 3 : return 0.001;
+            case 4 : return 0.0001;
+            case 5 : return 0.00001;
+            case 6 : return 0.000001;
+            case 7 : return 0.0000001;
+            case 8 : return 0.00000001;
+            case 9 : return 0.000000001;
+            case 10 : return 0.0000000001;
+            case 11 : return 0.00000000001;
+            case 12 : return 0.000000000001;
+            case 13 : return 0.0000000000001;
+            case 14 : return 0.00000000000001;
+            case 15 : return 0.000000000000001;
+            case 16 : return 0.0000000000000001;
+            case 17 : return 0.00000000000000001;
+            case 18 : return 0.000000000000000001;
+            default: return Math.pow(0.1, precision);
+        }
+    }
+
+    public ValidationRules.Rule getRange(int size, boolean unsigned)
+    {
+        if(size <= 18){
+            return range(unsigned ? 0 : -LongMath.pow(10, size), LongMath.pow(10, size));
+        }else{
+            return range(unsigned ? 0 : -Math.pow(10, size), Math.pow(10, size));
+        }
     }
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef)
