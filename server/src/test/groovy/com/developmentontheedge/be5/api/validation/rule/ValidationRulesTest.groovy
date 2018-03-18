@@ -15,32 +15,32 @@ class ValidationRulesTest extends Be5ProjectTest
     void rangeTest()
     {
         def test = range(0, 10)
-        assertEquals("{'attr':{'max':10,'min':0},'type':'range'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':{'max':'10','min':'0'},'type':'range'}", oneQuotes(test.toString()))
 
         test = range(100, 999, 'enter 3 digits')
-        assertEquals("{'attr':{'max':999,'min':100},'customMessage':'enter 3 digits','type':'range'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':{'max':'999','min':'100'},'customMessage':'enter 3 digits','type':'range'}", oneQuotes(test.toString()))
 
         test = range(0, 0.5)
-        assertEquals("{'attr':{'max':0.5,'min':0.0},'type':'range'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':{'max':'0.5','min':'0.0'},'type':'range'}", oneQuotes(test.toString()))
 
         test = range(0, 0.5, 'text')
-        assertEquals("{'attr':{'max':0.5,'min':0.0},'customMessage':'text','type':'range'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':{'max':'0.5','min':'0.0'},'customMessage':'text','type':'range'}", oneQuotes(test.toString()))
     }
 
     @Test
     void stepTest()
     {
         def test = step(10)
-        assertEquals("{'attr':10,'type':'step'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':'10','type':'step'}", oneQuotes(test.toString()))
 
         test = step(10, 'enter an integer')
-        assertEquals("{'attr':10,'customMessage':'enter an integer','type':'step'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':'10','customMessage':'enter an integer','type':'step'}", oneQuotes(test.toString()))
 
         test = step(0.5)
-        assertEquals("{'attr':0.5,'type':'step'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':'0.5','type':'step'}", oneQuotes(test.toString()))
 
         test = step(0.01, 'Must be monetary amount')
-        assertEquals("{'attr':0.01,'customMessage':'Must be monetary amount','type':'step'}", oneQuotes(test.toString()))
+        assertEquals("{'attr':'0.01','customMessage':'Must be monetary amount','type':'step'}", oneQuotes(test.toString()))
     }
 
     @Test

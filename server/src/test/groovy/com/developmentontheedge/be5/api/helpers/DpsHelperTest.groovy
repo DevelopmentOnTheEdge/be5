@@ -238,8 +238,8 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testInt"])
         assertEquals "{'/testInt':{'displayName':'testInt','type':'Integer','canBeNull':true,'validationRules':[" +
-                "{'attr':{'max':2147483647,'min':-2147483648},'type':'range'}," +
-                "{'attr':1,'type':'step'}]}}",
+                "{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'}," +
+                "{'attr':'1','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
@@ -248,8 +248,8 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testBigInt"])
         assertEquals "{'/testBigInt':{'displayName':'testBigInt','type':'Long','canBeNull':true,'validationRules':[" +
-                "{'attr':{'max':9223372036854775807,'min':-9223372036854775808},'type':'range'}," +
-                "{'attr':1,'type':'step'}]}}",
+                "{'attr':{'max':'9223372036854775807','min':'-9223372036854775808'},'type':'range'}," +
+                "{'attr':'1','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
@@ -258,8 +258,8 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["payment"])
         assertEquals "{'/payment':{'displayName':'payment','type':'Double','validationRules':[" +
-                "{'attr':{'max':1000000000000000000,'min':-1000000000000000000},'type':'range'}," +
-                "{'attr':0.01,'type':'step'}]}}",
+                "{'attr':{'max':'1000000000000000000','min':'-1000000000000000000'},'type':'range'}," +
+                "{'attr':'0.01','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
@@ -268,21 +268,21 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["decimal"])
         assertEquals "{'/decimal':{'displayName':'decimal','type':'Double','validationRules':[" +
-                "{'attr':{'max':10000000000,'min':-10000000000},'type':'range'}," +
-                "{'attr':0.00010,'type':'step'}]}}",
+                "{'attr':{'max':'10000000000','min':'-10000000000'},'type':'range'}," +
+                "{'attr':'1.0E-4','type':'step'}]}}",
                 oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
     void getRangeTest()
     {
-        assertEquals "{'attr':{'max':1000000000,'min':0},'type':'range'}",
+        assertEquals "{'attr':{'max':'1000000000','min':'0'},'type':'range'}",
                 oneQuotes(jsonb.toJson(dpsHelper.getRange(9, true)))
 
-        assertEquals "{'attr':{'max':1000000000000000000,'min':-1000000000000000000},'type':'range'}",
+        assertEquals "{'attr':{'max':'1000000000000000000','min':'-1000000000000000000'},'type':'range'}",
                 oneQuotes(jsonb.toJson(dpsHelper.getRange(18, false)))
 
-        assertEquals "{'attr':{'max':1.0E300,'min':-1.0E300},'type':'range'}",
+        assertEquals "{'attr':{'max':'1.0E300','min':'-1.0E300'},'type':'range'}",
                 oneQuotes(jsonb.toJson(dpsHelper.getRange(300, false)))
     }
 

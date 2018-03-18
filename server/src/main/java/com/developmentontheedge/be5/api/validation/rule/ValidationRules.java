@@ -12,7 +12,7 @@ public class ValidationRules
 
     public static Rule range(double min, double max)
     {
-        return new Rule("range", new DoubleRange(min, max));
+        return new Rule("range", new Range(min, max));
     }
 
     public static Rule range(long min, long max, String customMessage)
@@ -22,27 +22,37 @@ public class ValidationRules
 
     public static Rule range(double min, double max, String customMessage)
     {
-        return new Rule("range", new DoubleRange(min, max), customMessage);
+        return new Rule("range", new Range(min, max), customMessage);
+    }
+
+    public static Rule range(String min, String max, String customMessage)
+    {
+        return new Rule("range", new Range(min, max), customMessage);
     }
 
     public static Rule step(long value)
     {
-        return new Rule("step", value);
+        return new Rule("step", Long.toString(value));
     }
 
     public static Rule step(double value)
+    {
+        return new Rule("step", Double.toString(value));
+    }
+
+    public static Rule step(String value)
     {
         return new Rule("step", value);
     }
 
     public static Rule step(long value, String customMessage)
     {
-        return new Rule("step", value, customMessage);
+        return new Rule("step", Long.toString(value), customMessage);
     }
 
     public static Rule step(double value, String customMessage)
     {
-        return new Rule("step", value, customMessage);
+        return new Rule("step", Double.toString(value), customMessage);
     }
 
     public static Rule pattern(String value)
@@ -108,36 +118,28 @@ public class ValidationRules
 
     public static class Range
     {
-        long min,max;
+        String min,max;
 
         Range(long min, long max) {
+            this.min = Long.toString(min);
+            this.max = Long.toString(max);
+        }
+
+        Range(double min, double max) {
+            this.min = Double.toString(min);
+            this.max = Double.toString(max);
+        }
+
+        Range(String min, String max) {
             this.min = min;
             this.max = max;
         }
 
-        public long getMin() {
+        public String getMin() {
             return min;
         }
 
-        public long getMax() {
-            return max;
-        }
-    }
-
-    public static class DoubleRange
-    {
-        double min, max;
-
-        DoubleRange(double min, double max) {
-            this.min = min;
-            this.max = max;
-        }
-
-        public double getMin() {
-            return min;
-        }
-
-        public double getMax() {
+        public String getMax() {
             return max;
         }
     }
