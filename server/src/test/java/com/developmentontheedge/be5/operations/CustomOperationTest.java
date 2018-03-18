@@ -15,7 +15,7 @@ public class CustomOperationTest extends SqlMockOperationTest
     public void getParametersTest()
     {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "CustomOperation", "0", "{}");
+                "testtable", "All records", "CustomOperation", "0", "{}");
 
         oneAssert(generate);
     }
@@ -24,13 +24,13 @@ public class CustomOperationTest extends SqlMockOperationTest
     public void getParametersReload()
     {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "CustomOperation", "0", "{'name':'','value':'2'}");
+                "testtable", "All records", "CustomOperation", "0", "{'name':'','value':'2'}");
 
         oneAssert(generate);
     }
 
     void oneAssert(Either<Object, OperationResult> generate){
-        assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name','columnSize':'30'},'/value':{'displayName':'value','type':'Integer','readOnly':true,'canBeNull':true}},'order':['/name','/value']}",
+        assertEquals("{'values':{'name':'','value':'4'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','readOnly':true,'columnSize':'30'}},'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(generate.getFirst())));
     }
 }

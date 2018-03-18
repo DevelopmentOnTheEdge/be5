@@ -5,79 +5,79 @@ import com.developmentontheedge.beans.json.JsonFactory;
 
 public class ValidationRules
 {
-    public static ValidationRule range(long min, long max)
+    public static Rule range(long min, long max)
     {
-        return new ValidationRule("range", new Range(min, max));
+        return new Rule("range", new Range(min, max));
     }
 
-    public static ValidationRule range(double min, double max)
+    public static Rule range(double min, double max)
     {
-        return new ValidationRule("range", new DoubleRange(min, max));
+        return new Rule("range", new DoubleRange(min, max));
     }
 
-    public static ValidationRule range(long min, long max, String customMessage)
+    public static Rule range(long min, long max, String customMessage)
     {
-        return new ValidationRule("range", new Range(min, max), customMessage);
+        return new Rule("range", new Range(min, max), customMessage);
     }
 
-    public static ValidationRule range(double min, double max, String customMessage)
+    public static Rule range(double min, double max, String customMessage)
     {
-        return new ValidationRule("range", new DoubleRange(min, max), customMessage);
+        return new Rule("range", new DoubleRange(min, max), customMessage);
     }
 
-    public static ValidationRule step(long value)
+    public static Rule step(long value)
     {
-        return new ValidationRule("step", value);
+        return new Rule("step", value);
     }
 
-    public static ValidationRule step(double value)
+    public static Rule step(double value)
     {
-        return new ValidationRule("step", value);
+        return new Rule("step", value);
     }
 
-    public static ValidationRule step(long value, String customMessage)
+    public static Rule step(long value, String customMessage)
     {
-        return new ValidationRule("step", value, customMessage);
+        return new Rule("step", value, customMessage);
     }
 
-    public static ValidationRule step(double value, String customMessage)
+    public static Rule step(double value, String customMessage)
     {
-        return new ValidationRule("step", value, customMessage);
+        return new Rule("step", value, customMessage);
     }
 
-    public static ValidationRule pattern(String value)
+    public static Rule pattern(String value)
     {
-        return new ValidationRule("pattern", value);
+        return new Rule("pattern", value);
     }
 
-    public static ValidationRule pattern(String value, String customMessage)
+    public static Rule pattern(String value, String customMessage)
     {
-        return new ValidationRule("pattern", value, customMessage);
+        return new Rule("pattern", value, customMessage);
     }
 
-    public static ValidationRule unique(String tableName)
+    public static Rule unique(String tableName)
     {
-        return new ValidationRule("unique", new Unique(tableName));
+        return new Rule("unique", new Unique(tableName));
     }
 
-    public static ValidationRule unique(String tableName, String customMessage)
+    public static Rule unique(String tableName, String customMessage)
     {
-        return new ValidationRule("unique", new Unique(tableName), customMessage);
+        return new Rule("unique", new Unique(tableName), customMessage);
     }
 
-    public static class ValidationRule
+    public static class Rule
     {
         private String type;
         private Object attr;
         private String customMessage;
 
-        ValidationRule(String type, Object attr)
+        Rule(String type, Object attr)
         {
             this.type = type;
             this.attr = attr;
         }
 
-        ValidationRule(String type, Object attr, String customMessage)
+        Rule(String type, Object attr, String customMessage)
         {
             this.type = type;
             this.attr = attr;

@@ -60,20 +60,20 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 meta.getQuery("testtable", "TableWithFilter", Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
         assertEquals("{" +
-                "'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'Filter'},'length':1,'operations':[],'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," +
+                "'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'operations':[],'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," +
                 "'included':[" +
                     "{'attributes':{" +
                         "'bean':{'values':{'_search_presets_':'','_search_':true},'meta':{'/_search_presets_':{'displayName':'_search_presets_','hidden':true,'readOnly':true,'canBeNull':true},'/_search_':{'displayName':'_search_','type':'Boolean','hidden':true,'readOnly':true,'canBeNull':true}},'order':['/_search_presets_','/_search_']}," +
                         "'entity':'testtable'," +
                         "'layout':{}," +
-                        "'operation':'Filter','operationParams':{}," +
+                        "'operation':'FilterByParamsInQueryOperation','operationParams':{}," +
                         "'operationResult':{'status':'generate'}," +
                         "'query':'TableWithFilter'," +
                         "'selectedRows':''," +
-                        "'title':'Фильтр'" +
+                        "'title':'FilterByParamsInQueryOperation'" +
                     "}," +
                     "'id':'topForm'," +
-                    "'links':{'self':'form/testtable/TableWithFilter/Filter'}," +
+                    "'links':{'self':'form/testtable/TableWithFilter/FilterByParamsInQueryOperation'}," +
                     "'type':'form'}" +
                 "]" +
                 "}", oneQuotes(jsonb.toJson(document)))

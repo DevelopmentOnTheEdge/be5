@@ -35,7 +35,7 @@ testtable:
             testtable t
   - TableWithFilter:
       type: 1D_unknown
-      layout: '{"topForm":"Filter"}'
+      layout: '{"topForm":"FilterByParamsInQueryOperation"}'
       roles: SystemDeveloper
       code: |-
          SELECT 1
@@ -82,5 +82,23 @@ testtable:
           AND name = <parameter:name refColumn="testtable.unknownColumn" />
   operations:
   - Filter:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.FilterOperation
+  - FilterByParamsInQueryOperation:
       roles: '@AllRoles'
       code: com.developmentontheedge.be5.operations.FilterByParamsInQueryOperation
+  - OldRedirectFilter:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/OldRedirectFilter.groovy
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.SilentEditOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - CustomOperation:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/CustomOperation.groovy

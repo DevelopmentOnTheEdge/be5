@@ -53,24 +53,24 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void insertOperation()
     {
-        Object first = generateOperation("testtableAdmin", "All records", "Insert", "",
+        Object first = generateOperation("testtable", "All records", "Insert", "",
                 "{'name':'test','value':1}").getFirst();
         assertEquals("{" +
                         "'values':{'name':'test','value':'1'}," +
                         "'meta':{" +
-                            "'/name':{'displayName':'name','columnSize':'30'}," +
-                            "'/value':{'displayName':'value','type':'Integer','canBeNull':true}}," +
+                            "'/name':{'displayName':'name','columnSize':'20'}," +
+                            "'/value':{'displayName':'value','columnSize':'30'}}," +
                         "'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(first)));
 
         //OperationResult execute = executeOperation(req);
 
-        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
-                executeOperation("testtableAdmin", "All records", "Insert", "",
-                        "{'name':'test','value':1}").getSecond());
+        assertEquals(OperationResult.redirect("table/testtable/All records"),
+                executeOperation("testtable", "All records", "Insert", "",
+                        "{'name':'test','value':'1'}").getSecond());
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
-                "VALUES (?, ?)", "test", 1);
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
+                "VALUES (?, ?)", "test", "1");
     }
 
     @Test

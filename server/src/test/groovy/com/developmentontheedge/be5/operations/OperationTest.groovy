@@ -153,10 +153,10 @@ class OperationTest extends SqlMockOperationTest
     void testOperationInvokeNullInsteadEmptyString()
     {
         executeOperation("testTags", "All records", "Insert", "",
-                ['CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional','testLong':'']).getSecond()
+                ['CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional']).getSecond()
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel, referenceTest, testLong) VALUES (?, ?, ?, ?, ?)",
-                "01", "yes", "Regional", null, null
+        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel, referenceTest) VALUES (?, ?, ?, ?)",
+                "01", "yes", "Regional", null
         )
     }
 
@@ -167,9 +167,7 @@ class OperationTest extends SqlMockOperationTest
                 "testTags", "All records", "OperationWithCanBeNull", "",
                         ['CODE':'01','referenceTest':'','testLong':'']).getSecond()
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, referenceTest, testLong) VALUES (?, ?, ?)",
-                "01", null, null
-        )
+        assertEquals(null, second.getMessage())
     }
 
     @Test
@@ -179,9 +177,7 @@ class OperationTest extends SqlMockOperationTest
                 "testTags", "All records", "OperationWithCanBeNull", "",
                         ['CODE':'01','referenceTest':' ','testLong':'']).getSecond()
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, referenceTest, testLong) VALUES (?, ?, ?)",
-                "01", " ", null
-        )
+        assertEquals(' ', second.getMessage())
     }
 
     @Test

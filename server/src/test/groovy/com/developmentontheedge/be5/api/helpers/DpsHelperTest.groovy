@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
+import com.developmentontheedge.be5.api.validation.rule.ValidationRules
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
@@ -32,7 +33,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getDpsWithoutAutoIncrementTest()
     {
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"))
-        assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]},'/testLong':{'displayName':'testLong','type':'Long','canBeNull':true}}",
+        assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}}",
             oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 

@@ -99,11 +99,10 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
                 CODE         : "12",
                 payable      : "yes",
                 admlevel     : "Regional",
-                referenceTest: null,
-                testLong     : null,
+                referenceTest: null
         ]
 
-        assertEquals "12,yes,Regional,null,null",
+        assertEquals "12,yes,Regional,null",
                 db.select("SELECT * FROM testTags WHERE CODE = ?", {rs -> resultSetToString(rs)}, "12")
 
         database.getEntity("testTags").remove("12")

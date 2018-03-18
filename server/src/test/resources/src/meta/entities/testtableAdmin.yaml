@@ -28,7 +28,6 @@ testtableAdmin:
       - OldRedirectFilter
       - ErrorProcessing
       - TransactionTestOp
-      - CustomOperation
       - Delete
       - Edit
       - Insert
@@ -118,14 +117,6 @@ testtableAdmin:
   - Filter:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.FilterOperation
-  - OldRedirectFilter:
-      type: Groovy
-      roles: Administrator
-      file: testtableAdmin/OldRedirectFilter.groovy
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
-  - CustomOperation:
-      type: Groovy
-      roles: Administrator
-      file: testtableAdmin/CustomOperation.groovy
