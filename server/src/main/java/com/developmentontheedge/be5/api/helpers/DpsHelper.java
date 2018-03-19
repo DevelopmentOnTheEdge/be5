@@ -338,29 +338,16 @@ public class DpsHelper
         return dp;
     }
 
-    public double getPrecision(int precision)
+    public String getPrecision(int precision)
     {
         switch (precision){
-            case 0 : return 1;
-            case 1 : return 0.1;
-            case 2 : return 0.01;
-            case 3 : return 0.001;
-            case 4 : return 0.0001;
-            case 5 : return 0.00001;
-            case 6 : return 0.000001;
-            case 7 : return 0.0000001;
-            case 8 : return 0.00000001;
-            case 9 : return 0.000000001;
-            case 10 : return 0.0000000001;
-            case 11 : return 0.00000000001;
-            case 12 : return 0.000000000001;
-            case 13 : return 0.0000000000001;
-            case 14 : return 0.00000000000001;
-            case 15 : return 0.000000000000001;
-            case 16 : return 0.0000000000000001;
-            case 17 : return 0.00000000000000001;
-            case 18 : return 0.000000000000000001;
-            default: return Math.pow(0.1, precision);
+            case 0 : return "1";
+            case 1 : return "0.1";
+            case 2 : return "0.01";
+            case 3 : return "0.001";
+            case 4 : return "1.0E-4";
+            default:
+                return "1.0E-" + Integer.toString(precision);
         }
     }
 

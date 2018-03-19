@@ -289,14 +289,14 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getPrecisionTest()
     {
-        assertEquals "1.0", oneQuotes(jsonb.toJson(dpsHelper.getPrecision(0)))
-        assertEquals "0.1", oneQuotes(jsonb.toJson(dpsHelper.getPrecision(1)))
-        assertEquals "0.01", oneQuotes(jsonb.toJson(dpsHelper.getPrecision(2)))
-        assertEquals "0.001", oneQuotes(jsonb.toJson(dpsHelper.getPrecision(3)))
+        assertEquals "1", dpsHelper.getPrecision(0)
+        assertEquals "0.1", dpsHelper.getPrecision(1)
+        assertEquals "0.01", dpsHelper.getPrecision(2)
+        assertEquals "0.001", dpsHelper.getPrecision(3)
         for (int i=4; i<=18;i++){
-            assertEquals "1.0E-${i}".toString(), oneQuotes(jsonb.toJson(dpsHelper.getPrecision(i)))
+            assertEquals "1.0E-${i}".toString(), dpsHelper.getPrecision(i)
         }
-        assertEquals "1.0000000000000166E-300", oneQuotes(jsonb.toJson(dpsHelper.getPrecision(300)))
+        assertEquals "1.0E-300", dpsHelper.getPrecision(300)
     }
 
 }
