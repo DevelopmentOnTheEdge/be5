@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
@@ -12,7 +11,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -86,7 +84,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
 
-        assertEquals("{'name':'TestName','value':1}",
+        assertEquals("{'name':'TestName','value':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 

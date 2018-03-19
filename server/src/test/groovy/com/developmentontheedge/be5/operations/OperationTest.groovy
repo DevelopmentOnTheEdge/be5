@@ -67,7 +67,7 @@ class OperationTest extends SqlMockOperationTest
                                 "number", "0",
                                 FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
-        assertEquals("{'name':'test','number':0}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
+        assertEquals("{'name':'test','number':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
@@ -141,9 +141,9 @@ class OperationTest extends SqlMockOperationTest
 
         assertEquals("{" +
                         "'simple':'testName'," +
-                        "'simpleNumber':1," +
+                        "'simpleNumber':'1'," +
                         "'getOrDefault':'testName2'," +
-                        "'getOrDefaultNumber':2}",
+                        "'getOrDefaultNumber':'2'}",
                 oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
 
         assertFalse(generate.getFirst().toString().contains("error"))

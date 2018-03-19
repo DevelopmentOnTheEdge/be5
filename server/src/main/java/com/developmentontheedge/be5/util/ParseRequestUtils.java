@@ -126,7 +126,7 @@ public class ParseRequestUtils
         return map;
     }
 
-    public static void replaceNullToEmptyString(Object parameters)
+    public static void replaceValuesToString(Object parameters)
     {
         if (parameters instanceof DynamicPropertySet)
         {
@@ -135,6 +135,12 @@ public class ParseRequestUtils
                 if (property.getValue() == null)
                 {
                     property.setValue("");
+                }
+                else if(property.getValue().getClass() != String.class &&
+                        property.getValue().getClass() != Boolean.class &&
+                        !(property.getValue() instanceof String[]))
+                {
+                    property.setValue(property.getValue().toString());
                 }
             }
         }

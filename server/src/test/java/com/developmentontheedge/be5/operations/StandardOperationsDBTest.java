@@ -25,7 +25,7 @@ public class StandardOperationsDBTest extends OperationDBTest
     {
         Object first = generateOperation("testtableAdmin", "All records", "Edit", id.toString(),"{}").getFirst();
 
-        assertEquals("{'name':'TestName','value':1}",
+        assertEquals("{'name':'TestName','value':'1'}",
         oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
     }
 
