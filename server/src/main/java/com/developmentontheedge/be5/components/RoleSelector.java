@@ -12,9 +12,12 @@ import java.util.Collections;
 import java.util.List;
 
 
+/**
+ * use UserInfoComponent
+ */
+@Deprecated
 public class RoleSelector implements Component
 {
-
     public static class RoleSelectorResponse
     {
         private final String username;
