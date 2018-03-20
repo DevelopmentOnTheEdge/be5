@@ -150,7 +150,7 @@ public class LoginServiceImpl implements LoginService
         }
         else
         {
-            saveUser("Guest", Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr, session);
+            saveUser(null, Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr, session);
         }
     }
 
