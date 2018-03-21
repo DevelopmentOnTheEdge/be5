@@ -59,23 +59,23 @@ public class MainServletTest extends Be5ProjectTest
     @Test
     public void testGet() throws Exception
     {
-        when(request.getRequestURI()).thenReturn("/api/roleSelector");
+        when(request.getRequestURI()).thenReturn("/api/userInfo");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
         spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
-        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[],'username':'testUser'}"));
+        verify(writer).append(doubleQuotes("{'availableRoles':['Guest'],'currentRoles':['Guest'],'loggedIn':true,'userName':'testUser'}"));
     }
 
     @Test
     public void testUriPrefix() throws Exception
     {
-        when(request.getRequestURI()).thenReturn("/be5/api/roleSelector");
+        when(request.getRequestURI()).thenReturn("/be5/api/userInfo");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
         spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
-        verify(writer).append(doubleQuotes("{'availableRoles':[],'selectedRoles':[],'username':'testUser'}"));
+        verify(writer).append(doubleQuotes("{'availableRoles':['Guest'],'currentRoles':['Guest'],'loggedIn':true,'userName':'testUser'}"));
     }
 
     @Test

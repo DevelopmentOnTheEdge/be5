@@ -17,14 +17,14 @@ public class UserInfoComponent implements Component
         private final boolean loggedIn;
         private final String userName;
         private final List<String> availableRoles;
-        private final List<String> selectedRoles;
+        private final List<String> currentRoles;
 
-        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> selectedRoles)
+        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles)
         {
             this.loggedIn = loggedIn;
             this.userName = userName;
             this.availableRoles = availableRoles;
-            this.selectedRoles = selectedRoles;
+            this.currentRoles = currentRoles;
         }
 
         public boolean isLoggedIn()
@@ -42,9 +42,9 @@ public class UserInfoComponent implements Component
             return availableRoles;
         }
 
-        public List<String> getSelectedRoles()
+        public List<String> getCurrentRoles()
         {
-            return selectedRoles;
+            return currentRoles;
         }
 
         @Override
@@ -59,7 +59,7 @@ public class UserInfoComponent implements Component
             if (userName != null ? !userName.equals(state.userName) : state.userName != null) return false;
             if (availableRoles != null ? !availableRoles.equals(state.availableRoles) : state.availableRoles != null)
                 return false;
-            return selectedRoles != null ? selectedRoles.equals(state.selectedRoles) : state.selectedRoles == null;
+            return currentRoles != null ? currentRoles.equals(state.currentRoles) : state.currentRoles == null;
         }
 
         @Override
@@ -69,7 +69,7 @@ public class UserInfoComponent implements Component
                     "loggedIn=" + loggedIn +
                     ", userName='" + userName + '\'' +
                     ", availableRoles=" + availableRoles +
-                    ", selectedRoles=" + selectedRoles +
+                    ", currentRoles=" + currentRoles +
                     '}';
         }
     }
