@@ -54,6 +54,7 @@ public abstract class TestUtils
     @Inject private OperationExecutor operationExecutor;
     @Inject protected UserAwareMeta userAwareMeta;
 
+    protected static final String TEST_USER = "testUser";
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
     static final String profileForIntegrationTests = "profileForIntegrationTests";

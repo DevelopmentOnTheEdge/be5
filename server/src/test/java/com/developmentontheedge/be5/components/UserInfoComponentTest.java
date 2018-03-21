@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.components.UserInfoComponent.State;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
@@ -16,6 +16,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 
+import java.util.Collections;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -24,10 +26,13 @@ import static org.mockito.Mockito.verify;
 public class UserInfoComponentTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
+    @Inject private LoginService loginService;
     private static Component component;
 
     @Before
-    public void init(){
+    public void init()
+    {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
         component = injector.getComponent("userInfo");
     }
 
@@ -39,10 +44,26 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getMockRequest(""), response, injector);
 
         verify(response).sendAsRawJson(eq(new State(
-                UserInfoHolder.isLoggedIn(),
-                UserInfoHolder.getUserName(),
-                UserInfoHolder.getAvailableRoles(),
-                UserInfoHolder.getCurrentRoles()
+                true,
+                TEST_USER,
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR)
+        )));
+    }
+
+    @Test
+    public void testGuest() throws Exception
+    {
+        loginService.initGuest(null);
+        Response response = mock(Response.class);
+
+        component.generate(getMockRequest(""), response, injector);
+
+        verify(response).sendAsRawJson(eq(new State(
+                false,
+                RoleType.ROLE_GUEST,
+                Collections.singletonList(RoleType.ROLE_GUEST),
+                Collections.singletonList(RoleType.ROLE_GUEST)
         )));
     }
 
@@ -59,10 +80,10 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         verify(response).sendAsRawJson(eq(
                 new State(
-                        UserInfoHolder.isLoggedIn(),
-                        UserInfoHolder.getUserName(),
-                        UserInfoHolder.getAvailableRoles(),
-                        UserInfoHolder.getCurrentRoles()
+                        true,
+                        TEST_USER,
+                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR)
                 )
         ));
     }
@@ -77,10 +98,10 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         verify(response).sendAsRawJson(eq(
                 new State(
-                        UserInfoHolder.isLoggedIn(),
-                        UserInfoHolder.getUserName(),
-                        UserInfoHolder.getAvailableRoles(),
-                        UserInfoHolder.getCurrentRoles()
+                        true,
+                        TEST_USER,
+                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR)
                 )
         ));
     }
@@ -88,8 +109,6 @@ public class UserInfoComponentTest extends Be5ProjectTest
     @Test
     public void generateSelectRolesAndSendNewState() throws Exception
     {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("selectRoles",

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.api.services.LoginService
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
@@ -21,6 +22,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
 {
     @Inject private DatabaseModel database
     @Inject private SqlService db
+    @Inject private LoginService loginService
     EntityModel table
     String tableName
 
@@ -45,10 +47,17 @@ class SpecialColumnsTest extends Be5ProjectDBTest
     void testInsert() throws Exception
     {
         def id = table << [
-                "name": "test",
-                "value": (Short)1]
+            name : "test",
+            value: (Short)1
+        ]
 
         assertEquals 1, db.getLong("select count(*) from $tableName")
+
+        loginService.initGuest(null)
+        table << [
+            name : "test2",
+            value: (Short)2
+        ]
     }
 
     @Test

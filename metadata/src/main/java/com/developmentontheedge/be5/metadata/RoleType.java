@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.metadata;
 
-public class RoleType
+public interface RoleType
 {
-    public static final String ROLE_ADMINISTRATOR = "Administrator";
-    public static final String ROLE_SYSTEM_DEVELOPER = "SystemDeveloper";
-    public static final String ROLE_GUEST = "Guest";
+    String ROLE_ADMINISTRATOR = "Administrator";
+    String ROLE_SYSTEM_DEVELOPER = "SystemDeveloper";
+    String ROLE_GUEST = "Guest";
 }

@@ -62,6 +62,16 @@ public class UserInfoComponent implements Component
             return selectedRoles != null ? selectedRoles.equals(state.selectedRoles) : state.selectedRoles == null;
         }
 
+        @Override
+        public String toString()
+        {
+            return "State{" +
+                    "loggedIn=" + loggedIn +
+                    ", userName='" + userName + '\'' +
+                    ", availableRoles=" + availableRoles +
+                    ", selectedRoles=" + selectedRoles +
+                    '}';
+        }
     }
 
     @Override

@@ -32,7 +32,7 @@ public abstract class Be5ProjectTest extends TestUtils
     protected void initUserWithRoles(String... roles)
     {
         LoginService loginService = injector.get(LoginService.class);
-        loginService.saveUser("testUser", Arrays.asList(roles), Locale.US, "", new TestSession());
+        loginService.saveUser(TEST_USER, Arrays.asList(roles), Locale.US, "", new TestSession());
     }
 
     public static class SqlMockBinder implements Binder

@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
+
 class LoginTest extends Be5ProjectTest
 {
     @Inject Injector injector
@@ -30,11 +31,10 @@ class LoginTest extends Be5ProjectTest
     @Test
     @Ignore
     void login() throws Exception {
-        String testUser = "testUser"
         String testPass = "testPass"
         Response response = mock(Response.class)
         Request request = getMockRequest("")
-        when(request.get("username")).thenReturn(testUser)
+        when(request.get("username")).thenReturn(TEST_USER)
         when(request.get("password")).thenReturn(testPass)
 
         Injector sp = mock(Injector.class)
@@ -46,7 +46,7 @@ class LoginTest extends Be5ProjectTest
         when(sp.getLoginService()).thenReturn(loginService)
         component.generate(request, response, sp)
 
-        verify(loginService).login(eq(request), eq(testUser), eq(testPass))
+        verify(loginService).login(eq(request), eq(TEST_USER), eq(testPass))
 
         verify(response).sendSuccess()
     }
@@ -54,11 +54,10 @@ class LoginTest extends Be5ProjectTest
     @Test
     @Ignore
     void loginAccessDenied() throws Exception {
-        String testUser = "testUser"
         String testPass = "testPass"
         Response response = mock(Response.class)
         Request request = getMockRequest("")
-        when(request.get("username")).thenReturn(testUser)
+        when(request.get("username")).thenReturn(TEST_USER)
         when(request.get("password")).thenReturn(testPass)
 
         Injector sp = mock(Injector.class)

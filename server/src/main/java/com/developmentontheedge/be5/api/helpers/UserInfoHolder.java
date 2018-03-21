@@ -66,7 +66,7 @@ public class UserInfoHolder
 
     public static boolean isLoggedIn()
     {
-        return getUserInfo().getUserName() != null;
+        return !RoleType.ROLE_GUEST.equals(getUserInfo().getUserName());
     }
 
     public static List<String> getAvailableRoles()
