@@ -74,8 +74,8 @@ public class QueryBuilder implements Component
                         new Be5QueryExecutor(query, parametersMap, injector).getFinalSql()));
 
                 res.sendAsJson(
-                        new ResourceData(TABLE_ACTION, table,
-                                Collections.singletonMap(SELF_LINK, "qBuilder")),
+                        new ResourceData("queryBuilder", table,
+                                Collections.singletonMap(SELF_LINK, "queryBuilder")),
                         new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
                         req.getDefaultMeta()
                 );
@@ -83,7 +83,7 @@ public class QueryBuilder implements Component
             catch (Be5Exception e)
             {
                 res.sendErrorAsJson(
-                        new ErrorModel(e, Collections.singletonMap(SELF_LINK, "qBuilder")),
+                        new ErrorModel(e, Collections.singletonMap(SELF_LINK, "queryBuilder")),
                         new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
                         req.getDefaultMeta()
                 );
@@ -94,7 +94,7 @@ public class QueryBuilder implements Component
         {
             res.sendErrorAsJson(
                     new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
-                            Collections.singletonMap(SELF_LINK, "qBuilder")),
+                            Collections.singletonMap(SELF_LINK, "queryBuilder")),
                     new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
                     req.getDefaultMeta()
             );

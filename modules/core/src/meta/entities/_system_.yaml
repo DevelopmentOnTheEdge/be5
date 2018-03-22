@@ -44,7 +44,7 @@ _system_:
   - Query Builder:
       type: static
       roles: [SystemDeveloper, Administrator]
-      value: qBuilder
+      value: queryBuilder
   operations:
   - SessionVariablesEdit:
       type: Groovy
