@@ -14,17 +14,19 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
 
 
 public class QueryBuilder implements Component
@@ -34,6 +36,8 @@ public class QueryBuilder implements Component
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
+        DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
 
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
@@ -62,21 +66,27 @@ public class QueryBuilder implements Component
             }
             DataElementUtils.save( query );
 
-            Object table;
+            //Object table;
 
             dps.setValue("sql", query.getQuery());
 
             try
             {
-                table = injector.get(DocumentGenerator.class).getTable(query, parametersMap);
-
                 dps.add(new DynamicProperty("finalSql", String.class,
                         new Be5QueryExecutor(query, parametersMap, injector).getFinalSql()));
 
+                JsonApiModel document = documentGenerator.getDocument(query, parametersMap);
+
+                //todo refactor documentGenerator
+                List<ResourceData> resourceData = new ArrayList<>();
+                document.getData().setId("queryTable");
+                resourceData.add(document.getData());
+                resourceData.addAll(Arrays.asList(document.getIncluded()));
+
                 res.sendAsJson(
-                        new ResourceData("queryBuilder", table,
+                        new ResourceData("queryBuilder", JsonFactory.dpsValues(dps),
                                 Collections.singletonMap(SELF_LINK, "queryBuilder")),
-                        new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
+                        resourceData.toArray(new ResourceData[0]),
                         req.getDefaultMeta()
                 );
             }
@@ -95,7 +105,6 @@ public class QueryBuilder implements Component
             res.sendErrorAsJson(
                     new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
                             Collections.singletonMap(SELF_LINK, "queryBuilder")),
-                    new ResourceData[]{new ResourceData("dps", JsonFactory.dpsValues(dps), null)},
                     req.getDefaultMeta()
             );
         }

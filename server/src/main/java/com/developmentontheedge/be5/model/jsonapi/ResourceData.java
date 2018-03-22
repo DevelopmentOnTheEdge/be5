@@ -25,6 +25,11 @@ public class ResourceData
         this.links = links;
     }
 
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
     public String getId()
     {
         return id;
