@@ -113,8 +113,6 @@ public class MenuTest extends Be5ProjectTest
         Menu menu = (Menu)component;
         Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
 
-        assertEquals(true, menuResponse.loggedIn);
-
         assertEquals("testtable", menuResponse.root.get(1).getTitle());
         assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(1).getAction());
         assertNull(menuResponse.root.get(1).getChildren());

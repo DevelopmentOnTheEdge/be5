@@ -26,18 +26,11 @@ public class Menu implements Component {
     
     public static class MenuResponse {
         
-        final boolean loggedIn;
         final List<RootNode> root;
         
-        MenuResponse(boolean loggedIn, List<RootNode> root)
+        MenuResponse(List<RootNode> root)
         {
-            this.loggedIn = loggedIn;
             this.root = root;
-        }
-
-        public boolean isLoggedIn()
-        {
-            return loggedIn;
         }
 
         public List<RootNode> getRoot()
@@ -302,10 +295,9 @@ public class Menu implements Component {
         
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
-        boolean loggedIn = UserInfoHolder.isLoggedIn();
         List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, withIds, entityType);
         
-        return new MenuResponse(loggedIn, entities);
+        return new MenuResponse(entities);
     }
 
     private Action getDefaultAction(Injector injector, EntityType entityType) {
