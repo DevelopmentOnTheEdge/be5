@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.api.validation.rule.ValidationRules
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
@@ -194,21 +193,21 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addLabel(dps, "test")
-        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','labelField':true}},'order':['/infoLabel']}",
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
         dpsHelper.addLabelRaw(dps, "test")
-        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'labelField':true}},'order':['/infoLabel']}",
+        assertEquals "{'values':{'infoLabel':'test'},'meta':{'/infoLabel':{'displayName':'infoLabel','rawValue':true,'canBeNull':true,'labelField':true}},'order':['/infoLabel']}",
                 oneQuotes(JsonFactory.dps(dps).toString())
         dps.remove("infoLabel")
 
         dpsHelper.addLabel(dps, "customName", "test")
-        assertEquals "{'/customName':{'displayName':'customName','labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        assertEquals "{'/customName':{'displayName':'customName','canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
         dps.remove("customName")
 
         dpsHelper.addLabelRaw(dps, "customName", "test")
-        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
+        assertEquals "{'/customName':{'displayName':'customName','rawValue':true,'canBeNull':true,'labelField':true}}", oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
 
     @Test
