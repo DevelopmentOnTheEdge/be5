@@ -99,7 +99,9 @@ public class LanguageSelector implements Component
 
     private LanguageSelectorResponse selectLanguage(Request req, Injector injector)
     {
-        injector.getLoginService().setLanguage(new Locale(req.getNonEmpty("language")));
+        Locale language = injector.getMeta().getLocale(new Locale(req.getNonEmpty("language")));
+        UserInfoHolder.getUserInfo().setLocale(language);
+
         return getState(injector);
     }
 

@@ -16,8 +16,6 @@ public interface LoginService
 
     void initGuest(Request req);
 
-    void setLanguage(Locale locale);
-
     void saveUser(String username, Request req);
 
     UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,

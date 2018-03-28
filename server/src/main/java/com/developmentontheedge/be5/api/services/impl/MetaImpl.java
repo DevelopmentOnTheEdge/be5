@@ -3,9 +3,11 @@ package com.developmentontheedge.be5.api.services.impl;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -253,6 +255,21 @@ public class MetaImpl implements Meta
         }
 
         return "";
+    }
+
+    @Override
+    public Locale getLocale(Locale locale)
+    {
+        List<String> languages = Arrays.asList(projectProvider.getProject().getLanguages());
+
+        if(languages.contains(locale.getLanguage()))
+        {
+            return locale;
+        }
+        else
+        {
+            return new Locale( languages.get(0) );
+        }
     }
 
     private String getMenuName(Query query)

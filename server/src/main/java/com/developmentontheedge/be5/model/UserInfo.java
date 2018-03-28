@@ -15,10 +15,17 @@ import java.util.TimeZone;
 public class UserInfo implements Serializable
 {
     private String userName;
-    private Date creationTime;
-
     private List<String> availableRoles;
     private List<String> currentRoles;
+
+    private Session session;
+
+    private Date creationTime;
+    private Locale locale;
+    private TimeZone timeZone;
+    private String remoteAddr;
+    private Timestamp prevLoggedInTime;
+    private Timestamp loggedInTime;
 
     public String getUserName()
     {
@@ -28,9 +35,10 @@ public class UserInfo implements Serializable
     public UserInfo(String userName, List<String> availableRoles, List<String> currentRoles, Session session)
     {
         this.userName = userName;
-        this.session = session;
         this.availableRoles = new ArrayList<>(availableRoles);
         this.currentRoles = new ArrayList<>(currentRoles);
+
+        this.session = session;
 
         this.creationTime = new Date();
         this.locale = Locale.US;
@@ -41,7 +49,6 @@ public class UserInfo implements Serializable
         this.userName = userName;
     }
 
-    protected Locale locale;
     public Locale getLocale()
     {
         String lang = locale.getLanguage();
@@ -57,7 +64,6 @@ public class UserInfo implements Serializable
         this.locale = locale;
     }
 
-    protected TimeZone timeZone;
     public TimeZone getTimeZone()
     {
         return timeZone;
@@ -73,31 +79,22 @@ public class UserInfo implements Serializable
         this.timeZone = timeZoneID != null ? TimeZone.getTimeZone( timeZoneID ) : null;
     }
 
-    Session session;
     public Session getSession()
     {
         return session;
     }
 
-    public boolean isSessionSafe()
-    {
-        return false;
-    }
 
-
-    protected Timestamp loggedInTime;
     public Timestamp getLoggedInTime()
     {
         return loggedInTime;
     }
 
-    protected Timestamp prevLoggedInTime;
     public Timestamp getPrevLoggedInTime()
     {
         return prevLoggedInTime;
     }
 
-    protected String remoteAddr;
     public String getRemoteAddr()
     {
         return remoteAddr;

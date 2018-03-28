@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -31,6 +32,8 @@ public interface Meta
      * Returns an entity with by its name.
      */
     Entity getEntity(String name);
+
+    Locale getLocale(Locale locale);
 
     List<String> getOperationNames(Entity entity);
     /**

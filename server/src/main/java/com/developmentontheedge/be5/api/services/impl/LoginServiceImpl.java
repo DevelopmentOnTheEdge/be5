@@ -4,15 +4,14 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.services.LoginService;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.SessionConstants;
 import com.developmentontheedge.be5.test.TestSession;
-import one.util.streamex.StreamEx;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
@@ -27,12 +26,12 @@ public class LoginServiceImpl implements LoginService
     public static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
     protected SqlService db;
-    protected ProjectProvider project;
+    protected Meta meta;
 
-    public LoginServiceImpl(SqlService db, ProjectProvider project)
+    public LoginServiceImpl(SqlService db, Meta meta)
     {
         this.db = db;
-        this.project = project;
+        this.meta = meta;
     }
 
     protected boolean login(String username, String password)
@@ -94,25 +93,10 @@ public class LoginServiceImpl implements LoginService
     {
         UserInfo ui = new UserInfo(userName, availableRoles, currentRoles, session);
         ui.setRemoteAddr(remoteAddr);
+        ui.setLocale(meta.getLocale(locale));
 
         UserInfoHolder.setUserInfo(ui);
-        setLanguage(locale);
         return ui;
-    }
-
-    @Override
-    public void setLanguage(Locale locale)
-    {
-        List<String> languages = StreamEx.of(project.getProject().getLanguages()).toList();
-
-        if(languages.contains(locale.getLanguage()))
-        {
-            UserInfoHolder.getUserInfo().setLocale(locale);
-        }
-        else
-        {
-            UserInfoHolder.getUserInfo().setLocale(new Locale( languages.get(0) ));
-        }
     }
 
     @Override
