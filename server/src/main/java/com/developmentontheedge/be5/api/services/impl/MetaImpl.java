@@ -262,13 +262,13 @@ public class MetaImpl implements Meta
     {
         List<String> languages = Arrays.asList(projectProvider.getProject().getLanguages());
 
-        if(languages.contains(locale.getLanguage()))
+        if(locale == null || !languages.contains(locale.getLanguage()))
         {
-            return locale;
+            return new Locale( languages.get(0) );
         }
         else
         {
-            return new Locale( languages.get(0) );
+            return locale;
         }
     }
 

@@ -16,6 +16,6 @@ public class Logout extends GOperationSupport
     {
         loginService.logout(request);
 
-        setResult(OperationResult.redirect(FrontendConstants.REFRESH_ALL));
+        setResult(OperationResult.finished(FrontendConstants.REFRESH_ALL));
     }
 }

@@ -84,7 +84,6 @@ public class UserInfo implements Serializable
         return session;
     }
 
-
     public Timestamp getLoggedInTime()
     {
         return loggedInTime;

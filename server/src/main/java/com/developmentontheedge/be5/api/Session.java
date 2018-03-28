@@ -44,4 +44,8 @@ public interface Session
     {
         set(name, value);
     }
+
+    void remove(String name);
+
+    void invalidate();
 }

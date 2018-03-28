@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.SessionConstants;
 import com.developmentontheedge.be5.test.TestSession;
 
-import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -77,12 +76,12 @@ public class LoginServiceImpl implements LoginService
             availableRoles.addAll(ModuleLoader2.getDevRoles());
         }
 
-        UserInfo ui = saveUser(username, availableRoles, availableRoles, req.getRawRequest().getLocale(), req.getRemoteAddr(), req.getSession());
+        UserInfo ui = saveUser(username, availableRoles, availableRoles, req.getLocale(), req.getRemoteAddr(), req.getSession());
 
-        HttpSession session = req.getRawSession();
-        session.setAttribute("remoteAddr", req.getRemoteAddr());
-        session.setAttribute(SessionConstants.USER_INFO, ui);
-        session.setAttribute(SessionConstants.CURRENT_USER, ui.getUserName());
+        Session session = req.getSession();
+        session.set("remoteAddr", req.getRemoteAddr());
+        session.set(SessionConstants.USER_INFO, ui);
+        session.set(SessionConstants.CURRENT_USER, ui.getUserName());
 
         log.fine("Login user: " + username);
     }
@@ -96,18 +95,18 @@ public class LoginServiceImpl implements LoginService
         ui.setLocale(meta.getLocale(locale));
 
         UserInfoHolder.setUserInfo(ui);
+
         return ui;
     }
 
     @Override
     public void logout(Request req)
     {
-        HttpSession session = req.getRawSession();
-        session.removeAttribute( SessionConstants.USER_INFO );
-        session.invalidate();
+        req.getSession().invalidate();
 
         String username = UserInfoHolder.getUserName();
         UserInfoHolder.setUserInfo(null);
+
         log.info("Logout user: " + username);
     }
 
@@ -120,7 +119,7 @@ public class LoginServiceImpl implements LoginService
         Session session;
         if(req != null)
         {
-            locale = req.getRawRequest().getLocale();
+            locale = req.getLocale();
             remoteAddr = req.getRemoteAddr();
             session = req.getSession();
         }

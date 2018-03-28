@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -22,7 +23,6 @@ import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP
 
 public class RequestImpl implements Request
 {
-
     public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
 
     private final HttpServletRequest rawRequest;
@@ -146,8 +146,14 @@ public class RequestImpl implements Request
     {
         return sessionId;
     }
-    
-	@Override
+
+    @Override
+    public Locale getLocale()
+    {
+        return rawRequest.getLocale();
+    }
+
+    @Override
 	public HttpServletRequest getRawRequest()
     {
 		return rawRequest;

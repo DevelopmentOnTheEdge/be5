@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,4 +73,6 @@ public interface Request extends SessionAccess, ParametersAccess
     String getBody();
 
     Object getDefaultMeta();
+
+    Locale getLocale();
 }

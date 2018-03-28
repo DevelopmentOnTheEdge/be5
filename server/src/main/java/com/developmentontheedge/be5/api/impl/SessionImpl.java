@@ -34,6 +34,12 @@ public class SessionImpl implements Session
     }
 
     @Override
+    public void remove(String name)
+    {
+        set(name, null);
+    }
+
+    @Override
     public HttpSession getRawSession()
     {
         return rawSession;
@@ -44,5 +50,11 @@ public class SessionImpl implements Session
     public List<String> getAttributeNames()
     {
         return Collections.list(rawSession.getAttributeNames());
+    }
+
+    @Override
+    public void invalidate()
+    {
+        rawSession.invalidate();
     }
 }

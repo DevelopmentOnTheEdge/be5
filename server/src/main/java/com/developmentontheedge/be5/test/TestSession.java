@@ -32,6 +32,12 @@ public class TestSession implements Session
     }
 
     @Override
+    public void remove(String name)
+    {
+        set(name, null);
+    }
+
+    @Override
     public HttpSession getRawSession()
     {
         return null;
@@ -41,5 +47,11 @@ public class TestSession implements Session
     public List<String> getAttributeNames()
     {
         return new ArrayList<>(map.keySet());
+    }
+
+    @Override
+    public void invalidate()
+    {
+
     }
 }
