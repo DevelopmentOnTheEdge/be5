@@ -78,7 +78,7 @@ public class LoginServiceImpl implements LoginService
             availableRoles.addAll(ModuleLoader2.getDevRoles());
         }
 
-        UserInfo ui = saveUser(username, availableRoles, req.getRawRequest().getLocale(), req.getRemoteAddr(), req.getSession());
+        UserInfo ui = saveUser(username, availableRoles, availableRoles, req.getRawRequest().getLocale(), req.getRemoteAddr(), req.getSession());
 
         HttpSession session = req.getRawSession();
         session.setAttribute("remoteAddr", req.getRemoteAddr());
@@ -89,9 +89,10 @@ public class LoginServiceImpl implements LoginService
     }
 
     @Override
-    public UserInfo saveUser(String userName, List<String> availableRoles, Locale locale, String remoteAddr, Session session)
+    public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
+                             Locale locale, String remoteAddr, Session session)
     {
-        UserInfo ui = new UserInfo(userName, availableRoles, session);
+        UserInfo ui = new UserInfo(userName, availableRoles, currentRoles, session);
         ui.setRemoteAddr(remoteAddr);
 
         UserInfoHolder.setUserInfo(ui);
@@ -146,11 +147,12 @@ public class LoginServiceImpl implements LoginService
 
         if(ModuleLoader2.getDevRoles().size() > 0)
         {
-            saveUser("dev", ModuleLoader2.getDevRoles(), locale, remoteAddr, session);
+            saveUser("dev", ModuleLoader2.getDevRoles(), ModuleLoader2.getDevRoles(), locale, remoteAddr, session);
         }
         else
         {
-            saveUser(RoleType.ROLE_GUEST, Collections.singletonList(RoleType.ROLE_GUEST), locale, remoteAddr, session);
+            List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
+            saveUser(RoleType.ROLE_GUEST, roles, roles, locale, remoteAddr, session);
         }
     }
 

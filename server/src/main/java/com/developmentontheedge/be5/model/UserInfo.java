@@ -25,12 +25,12 @@ public class UserInfo implements Serializable
         return userName;
     }
 
-    public UserInfo(String userName, List<String> availableRoles, Session session)
+    public UserInfo(String userName, List<String> availableRoles, List<String> currentRoles, Session session)
     {
         this.userName = userName;
         this.session = session;
         this.availableRoles = new ArrayList<>(availableRoles);
-        this.currentRoles = new ArrayList<>(availableRoles);
+        this.currentRoles = new ArrayList<>(currentRoles);
 
         this.creationTime = new Date();
         this.locale = Locale.US;

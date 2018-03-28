@@ -25,7 +25,7 @@ public class UserInfoTest extends Be5ProjectTest
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = loginService.saveUser("test", roles, Locale.US, "", new TestSession());
+        ui = loginService.saveUser("test", roles, roles, Locale.US, "", new TestSession());
 
         assertEquals(roles, ui.getCurrentRoles());
     }
