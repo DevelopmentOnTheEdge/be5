@@ -125,6 +125,11 @@ public class OperationResult
         return new OperationResult(OperationStatus.FINISHED, message, null);
     }
 
+    public static OperationResult finished(String message, Object details)
+    {
+        return new OperationResult(OperationStatus.FINISHED, message, details);
+    }
+
     public static OperationResult redirect(HashUrl hashUrl)
     {
         return redirect(hashUrl.toString());

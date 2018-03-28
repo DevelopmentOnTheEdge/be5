@@ -40,7 +40,7 @@ public class Login extends GOperationSupport
         if (loginService.login(request, dps.getValueAsString("user_name"), dps.getValueAsString("user_pass")))
         {
             postLogin(parameters);
-            setResult(OperationResult.finished(FrontendConstants.UPDATE_USER_INFO));
+            setResult(OperationResult.finished(null, FrontendConstants.UPDATE_USER_INFO));
         }
         else
         {

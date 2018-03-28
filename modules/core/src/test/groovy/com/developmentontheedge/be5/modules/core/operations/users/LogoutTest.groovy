@@ -33,7 +33,8 @@ class LogoutTest extends SqlMockOperationTest
         assertEquals(null, UserInfoHolder.getUserInfo())
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
-        assertEquals FrontendConstants.UPDATE_USER_INFO, second.getMessage()
+        assertEquals null, second.getMessage()
+        assertEquals FrontendConstants.UPDATE_USER_INFO, second.getDetails()
     }
 
 }
