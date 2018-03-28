@@ -63,7 +63,7 @@ class LoginTest extends Be5ProjectTest
                 [user_name: TEST_USER, user_pass: testPass]).getSecond()
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
-        assertEquals FrontendConstants.REFRESH_ALL, second.getMessage()
+        assertEquals FrontendConstants.UPDATE_USER_INFO, second.getMessage()
 
         assertEquals TEST_USER, UserInfoHolder.getUserInfo().userName
         assertEquals Arrays.asList("Test1", "Test2"), UserInfoHolder.getUserInfo().availableRoles
