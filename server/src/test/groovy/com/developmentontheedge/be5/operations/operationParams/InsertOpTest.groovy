@@ -47,7 +47,7 @@ class InsertOpTest extends SqlMockOperationTest
 
     private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, Object> operationParams)
     {
-        def operation = getOperation("testtableAdmin", "PrintParamsInsertOp",
+        def operation = createOperation("testtableAdmin", "PrintParamsInsertOp",
             new OperationContext([] as String[], "", operationParams))
 
         return executeOperation(operation, presetValues)

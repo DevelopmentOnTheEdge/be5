@@ -40,7 +40,7 @@ class GroovyOperationTest extends SqlMockOperationTest
     @Test
     void execute()
     {
-        Operation operation = getOperation("testtableAdmin", "All records", "TestGroovyOp", "0")
+        Operation operation = createOperation("testtableAdmin", "All records", "TestGroovyOp", "0")
         Either<Object, OperationResult> generate = executeOperation(operation,
                 ['beginDate':'2017-12-20','name':'testValue','reason':'fired', 'reasonMulti':['fired','other'] as String[]])
 

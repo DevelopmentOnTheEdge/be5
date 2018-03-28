@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.operations.operationParams
 
-import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
@@ -51,7 +50,7 @@ class CustomOpTest extends SqlMockOperationTest
 
     private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, Object> operationParams)
     {
-        def operation = getOperation("testtableAdmin", "PrintParamsCustomOp",
+        def operation = createOperation("testtableAdmin", "PrintParamsCustomOp",
                 new OperationContext([] as String[], "", operationParams))
 
         return executeOperation(operation, presetValues)

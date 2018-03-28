@@ -544,7 +544,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 //        try
 //        {
 //            assert database.operationExtension[ opID ] != null;
-//            def op = database.operationExtension.getOperation( 'Edit' )
+//            def op = database.operationExtension.createOperation( 'Edit' )
 //            op.records = [ opID ];
 //            op.invoke();
 //            assert database.operationExtension[ opID ] == null;

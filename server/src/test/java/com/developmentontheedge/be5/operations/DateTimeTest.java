@@ -19,7 +19,7 @@ public class DateTimeTest extends SqlMockOperationTest
     @Test
     public void testOperation()
     {
-        Operation operation = getOperation("dateTime", "All records", "Insert", "0");
+        Operation operation = createOperation("dateTime", "All records", "Insert", "0");
         ImmutableMap<String, Object> values = ImmutableMap.of("activeFrom", "1901-02-03");
 
         Either<Object, OperationResult> generate = generateOperation(operation, values);

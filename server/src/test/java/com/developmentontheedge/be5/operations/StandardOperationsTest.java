@@ -37,7 +37,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void insertOperationInitValues()
     {
-        Operation operation = getOperation("testtableAdmin", "All records", "Insert", "");
+        Operation operation = createOperation("testtableAdmin", "All records", "Insert", "");
         assertEquals(OperationStatus.CREATE, operation.getStatus());
 
         Object first = generateOperation(operation, "{}").getFirst();

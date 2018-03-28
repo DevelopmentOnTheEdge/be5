@@ -18,7 +18,7 @@ class FilterOperationTest extends SqlMockOperationTest
     @Test
     void generate()
     {
-        def operation = getOperation("testtable", "All records", "Filter", "")
+        def operation = createOperation("testtable", "All records", "Filter", "")
         Either<Object, OperationResult> generate = generateOperation(operation, [:])
 
         assertEquals("{" +

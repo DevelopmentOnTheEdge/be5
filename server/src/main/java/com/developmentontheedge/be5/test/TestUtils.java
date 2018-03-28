@@ -194,7 +194,7 @@ public abstract class TestUtils
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                           String selectedRows, Map<String, Object> presetValues)
     {
-        return generateOperation(getOperation(entityName, queryName, operationName, selectedRows), presetValues);
+        return generateOperation(createOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
 
     protected Either<Object, OperationResult> generateOperation(Operation operation, String values)
@@ -227,7 +227,7 @@ public abstract class TestUtils
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
                                                                          String selectedRows, Map<String, Object> presetValues)
     {
-        return executeOperation(getOperation(entityName, queryName, operationName, selectedRows), presetValues);
+        return executeOperation(createOperation(entityName, queryName, operationName, selectedRows), presetValues);
     }
 
     protected Either<Object, OperationResult> executeOperation(Operation operation, String values)
@@ -245,14 +245,14 @@ public abstract class TestUtils
         return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
     }
 
-    protected Operation getOperation(String entityName, String operationName, OperationContext context)
+    protected Operation createOperation(String entityName, String operationName, OperationContext context)
     {
         OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
 
         return operationExecutor.create(meta, context);
     }
 
-    protected Operation getOperation(String entityName, String queryName, String operationName, String selectedRows)
+    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
         OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
 //

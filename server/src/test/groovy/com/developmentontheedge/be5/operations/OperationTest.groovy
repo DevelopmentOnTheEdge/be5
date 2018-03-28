@@ -43,7 +43,7 @@ class OperationTest extends SqlMockOperationTest
     @Test
     void withOperationParams() throws Exception
     {
-        OperationResult result = executeOperation(getOperation("testtableAdmin", "TestOperation",
+        OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),
                 ImmutableMap.of("name","testName","number", "1")).getSecond()
         assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation/name=foo"), result)

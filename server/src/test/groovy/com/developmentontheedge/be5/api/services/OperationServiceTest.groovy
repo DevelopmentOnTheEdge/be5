@@ -18,7 +18,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void generate()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = generateOperation(operation).getFirst()
 
         assertEquals "{'displayName':'name','columnSize':'30'}",
@@ -29,7 +29,7 @@ class OperationServiceTest extends SqlMockOperationTest
 
     private Operation propertyError(Map<String, String> presetValues)
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = generateOperation(operation, presetValues).getFirst()
 
         assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
@@ -80,7 +80,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void executeWithGenerateErrorInProperty()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'generateErrorInProperty']).getFirst()
 
         assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
@@ -96,7 +96,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void executePropertyError()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'executeErrorInProperty']).getFirst()
 
         assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (invoke)'}",
@@ -137,7 +137,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void executeErrorStatus()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         Object first = executeOperation(operation, ['name':'executeErrorStatus']).getFirst()
 
         assertEquals "{'displayName':'name','columnSize':'30'}",
@@ -150,7 +150,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test(expected = Be5Exception)
     void generateError()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         generateOperation(operation, ['name':'generateError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
@@ -159,7 +159,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test//(expected = Be5Exception)
     void executeError()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         executeOperation(operation, ['name':'executeError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
@@ -194,7 +194,7 @@ class OperationServiceTest extends SqlMockOperationTest
     @Test
     void generateCallTest()
     {
-        def operation = getOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         generateOperation(operation, ['name': 'generateCall']).getFirst()
     }
 
