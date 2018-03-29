@@ -49,16 +49,6 @@ public class UserInfoHolder
         return getUserInfo().getLocale();
     }
 
-    public static void changeLanguage(String language)
-    {
-        getUserInfo().setLocale(new Locale(language));
-    }
-
-    public static void selectRoles(List<String> roles)
-    {
-        getUserInfo().selectRoles(roles);
-    }
-
     public static String getUserName()
     {
         return getUserInfo().getUserName();

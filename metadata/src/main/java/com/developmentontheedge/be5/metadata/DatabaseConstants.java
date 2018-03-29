@@ -5,24 +5,21 @@ package com.developmentontheedge.be5.metadata;
  */
 public interface DatabaseConstants 
 {
-    // constants from RecordEx,
-    // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer
     String HIDDEN_COLUMN_PREFIX = "___";
     String GLUE_COLUMN_PREFIX = "+";
     String EXTRA_HEADER_COLUMN_PREFIX = ";";
 
-
     String ALL_RECORDS_VIEW = "All records";
     String SELECTION_VIEW = "*** Selection view ***";
 
-    // used in com.developmentontheedge.be5.components.impl.model.TableModel
     String COL_ATTR_AGGREGATE = "aggregate";
     String COL_ATTR_ROLES  = "roles";
     String COL_ATTR_BLANKNULLS = "blankNulls";
 
     String CSS_ROW_CLASS = HIDDEN_COLUMN_PREFIX + "css_class";
 
-    // used in com.developmentontheedge.be5.components.impl.model.PropertiesToRowTransformer
+    String CURRENT_ROLE_LIST = "current-role-list";
+
     String ID_COLUMN_LABEL = HIDDEN_COLUMN_PREFIX + "ID";
 
     //TODO create enum COL_ATTR

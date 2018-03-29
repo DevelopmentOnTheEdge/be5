@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -116,6 +117,16 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, injector);
 
         verify(response).sendAsRawJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));
+
+        verify(SqlServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
+                "('Administrator')",
+                "current-role-list",
+                "testUser");
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO user_prefs VALUES( ?, ?, ? )",
+                "testUser",
+                "current-role-list",
+                "('Administrator')");
 
         initUserWithRoles(RoleType.ROLE_GUEST);
     }

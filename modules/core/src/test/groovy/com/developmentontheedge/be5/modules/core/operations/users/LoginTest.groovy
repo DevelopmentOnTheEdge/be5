@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.env.Injector
+import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.modules.core.services.LoginService
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationStatus
@@ -59,6 +60,10 @@ class LoginTest extends Be5ProjectTest
                 Matchers.<ResultSetParser<String>>any(), eq(TEST_USER)))
                 .thenReturn(Arrays.asList("Test1", "Test2"))
 
+        when(SqlServiceMock.mock.getScalar(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
+                eq(DatabaseConstants.CURRENT_ROLE_LIST), eq(TEST_USER)))
+                .thenReturn("('Test1')")
+
         def second = executeOperation(createOperation("users", "", "Login", ""),
                 [user_name: TEST_USER, user_pass: testPass]).getSecond()
 
@@ -68,6 +73,7 @@ class LoginTest extends Be5ProjectTest
 
         assertEquals TEST_USER, UserInfoHolder.getUserInfo().userName
         assertEquals Arrays.asList("Test1", "Test2"), UserInfoHolder.getUserInfo().availableRoles
+        assertEquals Arrays.asList("Test1"), UserInfoHolder.getUserInfo().currentRoles
         assertEquals session, UserInfoHolder.getUserInfo().session
     }
 

@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
 import java.util.Date;
@@ -54,46 +55,6 @@ public class UserInfoComponent implements Component
         {
             return creationTime;
         }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            State state = (State) o;
-
-            if (loggedIn != state.loggedIn) return false;
-            if (userName != null ? !userName.equals(state.userName) : state.userName != null) return false;
-            if (availableRoles != null ? !availableRoles.equals(state.availableRoles) : state.availableRoles != null)
-                return false;
-            if (currentRoles != null ? !currentRoles.equals(state.currentRoles) : state.currentRoles != null)
-                return false;
-            return creationTime != null ? creationTime.equals(state.creationTime) : state.creationTime == null;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int result = (loggedIn ? 1 : 0);
-            result = 31 * result + (userName != null ? userName.hashCode() : 0);
-            result = 31 * result + (availableRoles != null ? availableRoles.hashCode() : 0);
-            result = 31 * result + (currentRoles != null ? currentRoles.hashCode() : 0);
-            result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
-            return result;
-        }
-
-        @Override
-        public String toString()
-        {
-            return "State{" +
-                    "loggedIn=" + loggedIn +
-                    ", userName='" + userName + '\'' +
-                    ", availableRoles=" + availableRoles +
-                    ", currentRoles=" + currentRoles +
-                    ", creationTime=" + creationTime +
-                    '}';
-        }
     }
 
     @Override
@@ -111,17 +72,18 @@ public class UserInfoComponent implements Component
                 ));
                 return;
             case "selectRoles":
-                selectRolesAndSendNewState(req, res);
+                selectRolesAndSendNewState(req, res, injector);
                 return;
             default:
                 res.sendUnknownActionError();
             }
     }
 
-    private void selectRolesAndSendNewState(Request req, Response res)
+    private void selectRolesAndSendNewState(Request req, Response res, Injector injector)
     {
         String roles = req.getOrEmpty("roles");
-        UserInfoHolder.selectRoles(Splitter.on(',').splitToList(roles));
+
+        injector.get(LoginService.class).setCurrentRoles(Splitter.on(',').splitToList(roles));
 
         res.sendAsRawJson(UserInfoHolder.getCurrentRoles());
     }

@@ -31,7 +31,7 @@ public class UserInfo implements Serializable
     {
         this.userName = userName;
         this.availableRoles = new ArrayList<>(availableRoles);
-        this.currentRoles = selectRoles(currentRoles);
+        this.currentRoles = new ArrayList<>(currentRoles);
 
         this.session = session;
 
@@ -124,16 +124,14 @@ public class UserInfo implements Serializable
         return currentRoles;
     }
 
-    public void setRoles(List<String> roles)
+    public void setAvailableRoles(List<String> availableRoles)
     {
-        this.availableRoles = roles;
-        this.currentRoles = roles;
+        this.availableRoles = availableRoles;
     }
 
-    public List<String> selectRoles(List<String> roles)
+    public void setCurrentRoles(List<String> currentRoles)
     {
-        currentRoles = roles.stream().filter(role -> availableRoles.contains(role)).collect(Collectors.toList());
-        return currentRoles;
+        this.currentRoles = currentRoles;
     }
 
     @Override

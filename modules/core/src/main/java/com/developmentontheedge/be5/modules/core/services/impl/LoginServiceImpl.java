@@ -2,8 +2,11 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.MetadataUtils;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -11,9 +14,14 @@ import com.developmentontheedge.be5.api.SessionConstants;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class LoginServiceImpl implements LoginService
@@ -58,9 +66,9 @@ public class LoginServiceImpl implements LoginService
             availableRoles.addAll(ModuleLoader2.getDevRoles());
         }
 
-        //coreUtils.getUserSetting(username, "");
+        List<String> currentRoles = parseRoles(coreUtils.getUserSetting(username, DatabaseConstants.CURRENT_ROLE_LIST));
 
-        UserInfo ui = userHelper.saveUser(username, availableRoles, availableRoles,
+        UserInfo ui = userHelper.saveUser(username, availableRoles, currentRoles,
                 req.getLocale(), req.getRemoteAddr(), req.getSession());
 
         Session session = req.getSession();
@@ -69,6 +77,35 @@ public class LoginServiceImpl implements LoginService
         session.set(SessionConstants.CURRENT_USER, ui.getUserName());
 
         log.fine("Login user: " + username);
+    }
+
+    @Override
+    public void setCurrentRoles(List<String> roles)
+    {
+        List<String> newCurrentRoles = roles.stream()
+                .filter(role -> UserInfoHolder.getUserInfo().getAvailableRoles().contains(role))
+                .collect(Collectors.toList());
+
+        coreUtils.setUserSetting(UserInfoHolder.getUserName(), DatabaseConstants.CURRENT_ROLE_LIST,
+                MetadataUtils.toInClause(roles));
+
+        UserInfoHolder.getUserInfo().setCurrentRoles(newCurrentRoles);
+    }
+
+    protected List<String> parseRoles( String roles )
+    {
+        TreeSet<String> rolesList = new TreeSet<>();
+        if( roles == null || "()".equals( roles ) )
+        {
+            return Collections.emptyList();
+        }
+        roles = roles.substring( 1, roles.length() - 1 ); // drop starting and trailing '(' ')'
+        StringTokenizer st = new StringTokenizer( roles, "," );
+        while( st.hasMoreTokens() )
+        {
+            rolesList.add( st.nextToken().trim().replaceAll( "'", "" ) );
+        }
+        return new ArrayList<>( rolesList );
     }
 
 }
