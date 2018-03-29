@@ -66,7 +66,17 @@ public class LoginServiceImpl implements LoginService
             availableRoles.addAll(ModuleLoader2.getDevRoles());
         }
 
-        List<String> currentRoles = parseRoles(coreUtils.getUserSetting(username, DatabaseConstants.CURRENT_ROLE_LIST));
+        String savedRoles = coreUtils.getUserSetting(username, DatabaseConstants.CURRENT_ROLE_LIST);
+
+        List<String> currentRoles;
+        if(savedRoles != null)
+        {
+            currentRoles = parseRoles(savedRoles);
+        }
+        else
+        {
+            currentRoles = availableRoles;
+        }
 
         UserInfo ui = userHelper.saveUser(username, availableRoles, currentRoles,
                 req.getLocale(), req.getRemoteAddr(), req.getSession());
