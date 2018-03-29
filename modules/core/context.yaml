@@ -1,4 +1,6 @@
 context:
+  components:
+  - userInfo:         com.developmentontheedge.be5.modules.core.components.UserInfoComponent
   services:
   - coreUtils:
       interface:      com.developmentontheedge.be5.api.services.CoreUtils

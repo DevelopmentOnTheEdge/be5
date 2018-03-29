@@ -3,11 +3,10 @@ package com.developmentontheedge.be5.servlet;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.components.RoleSelector;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -19,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -114,12 +113,12 @@ public class MainServletTest extends Be5ProjectTest
     public void runComponent() throws Exception
     {
         Request req = mock(Request.class);
-        when(req.getRequestUri()).thenReturn("");
+        when(req.getRequestUri()).thenReturn("info.be");
         Response res = mock(Response.class);
 
-        spyMainServlet.runComponent("roleSelector", req, res);
+        spyMainServlet.runComponent("static", req, res);
 
-        verify(res).sendAsRawJson(eq(new RoleSelector.RoleSelectorResponse(UserInfoHolder.getUserName(), Collections.emptyList(), Collections.emptyList())));
+        verify(res).sendAsJson(any(ResourceData.class), any(Map.class));
     }
 
     @Test

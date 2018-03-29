@@ -52,6 +52,8 @@ public class StaticPageComponentTest extends Be5ProjectTest
 //                        new StaticPagePresentation("", "<h1>Info</h1><p>Test text.</p>"))),
 //                eq(ImmutableMap.of(TIMESTAMP_PARAM, "123456789")),
 //                eq(Collections.singletonMap(SELF_LINK, "static/" + page)));
+
+        verify(response).sendAsJson(any(ResourceData.class), any(Map.class));
     }
 
     @Test

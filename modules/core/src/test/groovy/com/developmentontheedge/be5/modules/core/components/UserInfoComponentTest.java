@@ -1,9 +1,8 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.modules.core.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.services.LoginService;
-import com.developmentontheedge.be5.components.UserInfoComponent.State;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -45,7 +44,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         component.generate(getMockRequest(""), response, injector);
 
-        verify(response).sendAsRawJson(new State(
+        verify(response).sendAsRawJson(new UserInfoComponent.State(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -62,7 +61,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         component.generate(getMockRequest(""), response, injector);
 
-        verify(response).sendAsRawJson(new State(
+        verify(response).sendAsRawJson(new UserInfoComponent.State(
                 false,
                 RoleType.ROLE_GUEST,
                 Collections.singletonList(RoleType.ROLE_GUEST),
@@ -82,7 +81,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
                 response, injector);
 
-        verify(response).sendAsRawJson(new State(
+        verify(response).sendAsRawJson(new UserInfoComponent.State(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -99,7 +98,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", "")),
                 response, injector);
 
-        verify(response).sendAsRawJson(new State(
+        verify(response).sendAsRawJson(new UserInfoComponent.State(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),

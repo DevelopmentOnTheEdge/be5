@@ -16,10 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * todo use UserInfoComponent
- */
-@Deprecated
+
 public class LanguageSelector implements Component
 {
 
