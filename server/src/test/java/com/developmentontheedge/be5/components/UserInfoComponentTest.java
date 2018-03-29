@@ -17,7 +17,9 @@ import org.junit.rules.ExpectedException;
 
 
 import java.util.Collections;
+import java.util.Date;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -43,12 +45,13 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         component.generate(getMockRequest(""), response, injector);
 
-        verify(response).sendAsRawJson(eq(new State(
+        verify(response).sendAsRawJson(new State(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR)
-        )));
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                any(Date.class)
+        ));
     }
 
     @Test
@@ -59,12 +62,13 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         component.generate(getMockRequest(""), response, injector);
 
-        verify(response).sendAsRawJson(eq(new State(
+        verify(response).sendAsRawJson(new State(
                 false,
                 RoleType.ROLE_GUEST,
                 Collections.singletonList(RoleType.ROLE_GUEST),
-                Collections.singletonList(RoleType.ROLE_GUEST)
-        )));
+                Collections.singletonList(RoleType.ROLE_GUEST),
+                any(Date.class)
+        ));
     }
 
     @Rule
@@ -78,13 +82,12 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
                 response, injector);
 
-        verify(response).sendAsRawJson(eq(
-                new State(
-                        true,
-                        TEST_USER,
-                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR)
-                )
+        verify(response).sendAsRawJson(new State(
+                true,
+                TEST_USER,
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                any(Date.class)
         ));
     }
 
@@ -96,13 +99,12 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", "")),
                 response, injector);
 
-        verify(response).sendAsRawJson(eq(
-                new State(
-                        true,
-                        TEST_USER,
-                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                        Collections.singletonList(RoleType.ROLE_ADMINISTRATOR)
-                )
+        verify(response).sendAsRawJson(new State(
+                true,
+                TEST_USER,
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
+                any(Date.class)
         ));
     }
 

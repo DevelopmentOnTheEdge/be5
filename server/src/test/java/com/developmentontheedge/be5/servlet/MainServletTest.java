@@ -30,6 +30,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 public class MainServletTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
@@ -59,23 +60,29 @@ public class MainServletTest extends Be5ProjectTest
     @Test
     public void testGet() throws Exception
     {
-        when(request.getRequestURI()).thenReturn("/api/userInfo");
+        when(request.getRequestURI()).thenReturn("/api/static/info.be");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
         spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
-        verify(writer).append(doubleQuotes("{'availableRoles':['Guest'],'currentRoles':['Guest'],'loggedIn':true,'userName':'testUser'}"));
+        verify(writer).append(doubleQuotes("{'data':{'attributes':{" +
+                "'content':'<h1>Info</h1><p>Test text.</p>','title':''}," +
+                "'links':{'self':'static/info.be'}," +
+                "'type':'static'},'meta':{'_ts_':null}}"));
     }
 
     @Test
     public void testUriPrefix() throws Exception
     {
-        when(request.getRequestURI()).thenReturn("/be5/api/userInfo");
+        when(request.getRequestURI()).thenReturn("/be5/api/static/info.be");
         when(request.getParameterMap()).thenReturn(new HashMap<>());
 
         spyMainServlet.doFilter(request, response, mock(FilterChain.class));
 
-        verify(writer).append(doubleQuotes("{'availableRoles':['Guest'],'currentRoles':['Guest'],'loggedIn':true,'userName':'testUser'}"));
+        verify(writer).append(doubleQuotes("{'data':{'attributes':{" +
+                "'content':'<h1>Info</h1><p>Test text.</p>','title':''}," +
+                "'links':{'self':'static/info.be'}," +
+                "'type':'static'},'meta':{'_ts_':null}}"));
     }
 
     @Test

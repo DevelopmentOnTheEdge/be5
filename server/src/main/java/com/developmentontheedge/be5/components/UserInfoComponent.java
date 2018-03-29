@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.google.common.base.Splitter;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -18,13 +19,15 @@ public class UserInfoComponent implements Component
         private final String userName;
         private final List<String> availableRoles;
         private final List<String> currentRoles;
+        private final Date creationTime;
 
-        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles)
+        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Date creationTime)
         {
             this.loggedIn = loggedIn;
             this.userName = userName;
             this.availableRoles = availableRoles;
             this.currentRoles = currentRoles;
+            this.creationTime = creationTime;
         }
 
         public boolean isLoggedIn()
@@ -47,6 +50,11 @@ public class UserInfoComponent implements Component
             return currentRoles;
         }
 
+        public Date getCreationTime()
+        {
+            return creationTime;
+        }
+
         @Override
         public boolean equals(Object o)
         {
@@ -59,7 +67,20 @@ public class UserInfoComponent implements Component
             if (userName != null ? !userName.equals(state.userName) : state.userName != null) return false;
             if (availableRoles != null ? !availableRoles.equals(state.availableRoles) : state.availableRoles != null)
                 return false;
-            return currentRoles != null ? currentRoles.equals(state.currentRoles) : state.currentRoles == null;
+            if (currentRoles != null ? !currentRoles.equals(state.currentRoles) : state.currentRoles != null)
+                return false;
+            return creationTime != null ? creationTime.equals(state.creationTime) : state.creationTime == null;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = (loggedIn ? 1 : 0);
+            result = 31 * result + (userName != null ? userName.hashCode() : 0);
+            result = 31 * result + (availableRoles != null ? availableRoles.hashCode() : 0);
+            result = 31 * result + (currentRoles != null ? currentRoles.hashCode() : 0);
+            result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
+            return result;
         }
 
         @Override
@@ -70,6 +91,7 @@ public class UserInfoComponent implements Component
                     ", userName='" + userName + '\'' +
                     ", availableRoles=" + availableRoles +
                     ", currentRoles=" + currentRoles +
+                    ", creationTime=" + creationTime +
                     '}';
         }
     }
@@ -84,7 +106,8 @@ public class UserInfoComponent implements Component
                         UserInfoHolder.isLoggedIn(),
                         UserInfoHolder.getUserName(),
                         UserInfoHolder.getAvailableRoles(),
-                        UserInfoHolder.getCurrentRoles()
+                        UserInfoHolder.getCurrentRoles(),
+                        UserInfoHolder.getUserInfo().getCreationTime()
                 ));
                 return;
             case "selectRoles":
