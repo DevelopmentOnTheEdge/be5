@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.components.FrontendConstants;
+import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;

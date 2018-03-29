@@ -18,8 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.PrintWriter;
 import java.util.Collections;
 
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
+import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.api.RestApiConstants.TIMESTAMP_PARAM;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;

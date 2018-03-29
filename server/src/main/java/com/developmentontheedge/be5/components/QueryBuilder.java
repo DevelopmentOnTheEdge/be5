@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
@@ -26,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
 public class QueryBuilder implements Component

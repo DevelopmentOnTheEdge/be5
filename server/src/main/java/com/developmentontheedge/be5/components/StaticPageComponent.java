@@ -13,9 +13,8 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
 import java.util.Collections;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.STATIC_ACTION;
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
+import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
+import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
 public class StaticPageComponent implements Component

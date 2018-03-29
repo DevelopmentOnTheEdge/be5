@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.components.SessionConstants;
+import com.developmentontheedge.be5.api.SessionConstants;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;

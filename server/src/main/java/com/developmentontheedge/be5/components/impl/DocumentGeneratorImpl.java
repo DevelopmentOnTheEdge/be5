@@ -45,11 +45,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.components.FrontendConstants.OPERATION_RESULT;
-import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
-import static com.developmentontheedge.be5.components.FrontendConstants.TOP_FORM;
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.api.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.api.FrontendConstants.TOP_FORM;
+import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
 public class DocumentGeneratorImpl implements DocumentGenerator

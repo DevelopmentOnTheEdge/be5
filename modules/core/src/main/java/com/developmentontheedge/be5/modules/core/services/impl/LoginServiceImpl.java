@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.components.SessionConstants;
+import com.developmentontheedge.be5.api.SessionConstants;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 

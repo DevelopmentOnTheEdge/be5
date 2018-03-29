@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.operations.users
 import com.developmentontheedge.be5.api.Request
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
-import com.developmentontheedge.be5.components.FrontendConstants
+import com.developmentontheedge.be5.api.FrontendConstants
 
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest

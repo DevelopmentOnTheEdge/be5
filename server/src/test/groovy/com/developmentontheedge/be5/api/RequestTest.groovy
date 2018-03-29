@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api
 
 import com.developmentontheedge.be5.api.impl.model.Base64File
-import com.developmentontheedge.be5.components.RestApiConstants
 import com.developmentontheedge.be5.test.TestUtils
 import com.google.common.collect.ImmutableMap
 import org.junit.Test

@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.components.FrontendConstants.SEARCH_PRESETS_PARAM;
+import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM;
 
 
 public class FilterHelper

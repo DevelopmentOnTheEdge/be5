@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Response
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
-import com.developmentontheedge.be5.components.FrontendConstants
+import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.env.Injector
 import com.developmentontheedge.be5.modules.core.services.LoginService
 import com.developmentontheedge.be5.metadata.RoleType

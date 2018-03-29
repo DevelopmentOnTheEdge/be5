@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.components.impl.MoreRowsGenerator;
@@ -15,8 +16,8 @@ import com.developmentontheedge.be5.util.HashUrl;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.components.FrontendConstants.TABLE_ACTION;
-import static com.developmentontheedge.be5.components.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
 public class Document implements Component 

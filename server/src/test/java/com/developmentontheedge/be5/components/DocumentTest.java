@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;

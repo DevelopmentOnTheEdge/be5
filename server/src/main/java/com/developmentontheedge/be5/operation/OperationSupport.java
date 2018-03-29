@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.components.FrontendConstants;
+import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;

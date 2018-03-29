@@ -18,7 +18,7 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.google.common.base.Strings;
 import com.google.gson.*;
 
-import static com.developmentontheedge.be5.components.RestApiConstants.TIMESTAMP_PARAM;
+import static com.developmentontheedge.be5.api.RestApiConstants.TIMESTAMP_PARAM;
 
 
 public class RequestImpl implements Request

@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.RestApiConstants;
+import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Inject;

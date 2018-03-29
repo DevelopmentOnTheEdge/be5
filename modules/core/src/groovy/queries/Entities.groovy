@@ -1,4 +1,4 @@
-import com.developmentontheedge.be5.components.FrontendConstants
+import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.components.impl.model.ActionHelper
 import com.developmentontheedge.be5.components.impl.model.TableModel
 import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel
