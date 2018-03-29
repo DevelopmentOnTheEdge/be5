@@ -108,7 +108,7 @@ public class YamlBinder implements Binder
 
             if(loadedClasses.containsKey(entry.getKey()))
             {
-                throw Be5Exception.internal("Redefining in yaml config not allowed.");
+                throw Be5Exception.internal("Redefining in yaml config not allowed: " + entry.getKey());
             }
 
             loadedClasses.put(entry.getKey(), serviceInterface);
@@ -146,7 +146,7 @@ public class YamlBinder implements Binder
 
             if (bindings.containsKey(serviceKeyClass))
             {
-                throw Be5Exception.internal("Redefining in yaml config not allowed.");
+                throw Be5Exception.internal("Redefining in yaml config not allowed: " + serviceKeyClass);
             }
 
             bindings.put(serviceKeyClass, serviceImplementation);
