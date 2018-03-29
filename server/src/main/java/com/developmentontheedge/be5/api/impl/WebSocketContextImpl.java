@@ -1,14 +1,6 @@
 package com.developmentontheedge.be5.api.impl;
 
 import com.developmentontheedge.be5.api.WebSocketContext;
-import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.metadata.SessionConstants;
-import one.util.streamex.EntryStream;
-
-import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
-import java.util.Collections;
-import java.util.Map;
 
 public class WebSocketContextImpl implements WebSocketContext
 {

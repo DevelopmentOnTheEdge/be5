@@ -2,11 +2,12 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.metadata.SessionConstants;
+import com.developmentontheedge.be5.components.SessionConstants;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 
@@ -22,12 +23,14 @@ public class LoginServiceImpl implements LoginService
     protected SqlService db;
     protected Meta meta;
     protected UserHelper userHelper;
+    protected CoreUtils coreUtils;
 
-    public LoginServiceImpl(SqlService db, Meta meta, UserHelper userHelper)
+    public LoginServiceImpl(SqlService db, Meta meta, UserHelper userHelper, CoreUtils coreUtils)
     {
         this.db = db;
         this.meta = meta;
         this.userHelper = userHelper;
+        this.coreUtils = coreUtils;
     }
 
     public boolean loginCheck(String username, String password)
@@ -54,6 +57,8 @@ public class LoginServiceImpl implements LoginService
         {
             availableRoles.addAll(ModuleLoader2.getDevRoles());
         }
+
+        //coreUtils.getUserSetting(username, "");
 
         UserInfo ui = userHelper.saveUser(username, availableRoles, availableRoles,
                 req.getLocale(), req.getRemoteAddr(), req.getSession());
