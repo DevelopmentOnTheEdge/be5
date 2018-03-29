@@ -3,17 +3,17 @@
  <modelVersion>4.0.0</modelVersion>
 
  <artifactId>be5-sql</artifactId>
- <version>0.0.27</version>
+ <version>0.0.28-SNAPSHOT</version>
  <packaging>jar</packaging>
 
  <name>be5 sql</name>
- <description>Parse SQL (select statement only) and builds its AST. 
+ <description>Parse SQL (select statement only) and builds its AST.
  Then DBMS specific SQL select statement can be generated.</description>
 
  <parent>
   <groupId>com.developmentontheedge</groupId>
   <artifactId>be5</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3-SNAPSHOT</version>
  </parent>
 
  <dependencies>
@@ -55,7 +55,7 @@
 
  <build>
   <plugins>
-  
+
    <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>javacc-maven-plugin</artifactId>

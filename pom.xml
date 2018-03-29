@@ -5,7 +5,7 @@
 
  <groupId>com.developmentontheedge</groupId>
  <artifactId>be5</artifactId>
- <version>0.0.2</version>
+ <version>0.0.3-SNAPSHOT</version>
  <packaging>pom</packaging>
  <url>http://developmentontheedge.com/</url>
 
@@ -21,8 +21,22 @@
   <module>modules/core</module>
  </modules>
 
+ <distributionManagement>
+  <repository>
+   <uniqueVersion>false</uniqueVersion>
+   <id>dote</id>
+   <name>DOTE Repository</name>
+   <url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
+  </repository>
+  <snapshotRepository>
+   <uniqueVersion>true</uniqueVersion>
+   <id>dote-snapshots</id>
+   <name>DOTE Snapshots</name>
+   <url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
+  </snapshotRepository>
+ </distributionManagement>
+
  <properties>
-  <maven.deploy.skip>true</maven.deploy.skip>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   <java.version>1.8</java.version>
   <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>

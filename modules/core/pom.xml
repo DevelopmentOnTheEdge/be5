@@ -4,10 +4,25 @@
 
 	<groupId>com.developmentontheedge.be5.modules</groupId>
 	<artifactId>be5-modules-core</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1-SNAPSHOT</version>
 
 	<name>be5 modules core</name>
 	<description>Core database module for be5 applications</description>
+
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>dote</id>
+			<name>DOTE Repository</name>
+			<url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>dote-snapshots</id>
+			<name>DOTE Snapshots</name>
+			<url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -2,19 +2,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.developmentontheedge.be5</groupId>
 	<artifactId>be5-maven-plugin</artifactId>
-	<version>0.1.0</version>
-	<packaging>maven-plugin</packaging>
+	<version>0.1.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>be5 maven plugin</name>
 	<description>Maven plug-ins for be5</description>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-	</properties>
+  <parent>
+    <groupId>com.developmentontheedge</groupId>
+    <artifactId>be5</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+  </parent>
 
 	<dependencies>
 
@@ -30,16 +29,18 @@
 			<version>3.4</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>be5-dbms</artifactId>
 			<version>0.1.0</version>
 		</dependency>
-        <dependency>
-            <groupId>com.developmentontheedge</groupId>
-            <artifactId>be5-metadata</artifactId>
-            <version>0.3.0</version>
-        </dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge</groupId>
+			<artifactId>be5-metadata</artifactId>
+			<version>0.3.1-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -54,7 +55,8 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+
+	</dependencies>
 
 	<build>
 		<plugins>
