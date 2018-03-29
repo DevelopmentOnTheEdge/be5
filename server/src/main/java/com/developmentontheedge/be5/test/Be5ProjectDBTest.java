@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
@@ -9,6 +8,7 @@ import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 
@@ -34,8 +34,7 @@ public abstract class Be5ProjectDBTest extends TestUtils
 
     protected void initUserWithRoles(String... roles)
     {
-        LoginService loginService = injector.get(LoginService.class);
-        loginService.saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+        injector.get(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
                 Locale.US, "", new TestSession());
     }
 

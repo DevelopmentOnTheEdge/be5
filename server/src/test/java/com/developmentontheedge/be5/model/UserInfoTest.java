@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.model;
 
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.TestSession;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,19 +19,20 @@ import static org.junit.Assert.assertEquals;
 public class UserInfoTest extends Be5ProjectTest
 {
     private static UserInfo ui;
-    @Inject private LoginService loginService;
+    @Inject private UserHelper userHelper;
 
     @Before
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = loginService.saveUser("test", roles, roles, Locale.US, "", new TestSession());
+        ui = userHelper.saveUser("test", roles, roles, Locale.US, "", new TestSession());
 
         assertEquals(roles, ui.getCurrentRoles());
     }
 
     @Test
-    public void testSelectRoles(){
+    public void testSelectRoles()
+    {
         ui.selectRoles(Collections.singletonList("1"));
         assertEquals(Collections.singletonList("1"), ui.getCurrentRoles());
     }
@@ -44,8 +45,9 @@ public class UserInfoTest extends Be5ProjectTest
     }
 
     @Test
-    public void testGuestRoles(){
-        loginService.initGuest(null);
+    public void testGuestRoles()
+    {
+        userHelper.initGuest(null);
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getCurrentRoles());
         assertEquals(Collections.singletonList(RoleType.ROLE_GUEST), UserInfoHolder.getAvailableRoles());
 
@@ -54,8 +56,9 @@ public class UserInfoTest extends Be5ProjectTest
     }
 
     @Test
-    public void testGuestLocale(){
-        loginService.initGuest(null);
+    public void testGuestLocale()
+    {
+        userHelper.initGuest(null);
         assertEquals("ru", UserInfoHolder.getLanguage());
     }
 

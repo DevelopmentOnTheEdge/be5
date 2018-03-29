@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.api.services.LoginService
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.api.helpers.UserHelper
 import com.developmentontheedge.beans.BeanInfoConstants
 import org.junit.After
 import org.junit.Before
@@ -22,7 +22,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
 {
     @Inject private DatabaseModel database
     @Inject private SqlService db
-    @Inject private LoginService loginService
+    @Inject private UserHelper userHelper
     EntityModel table
     String tableName
 
@@ -53,7 +53,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
 
         assertEquals 1, db.getLong("select count(*) from $tableName")
 
-        loginService.initGuest(null)
+        userHelper.initGuest(null)
         table << [
             name : "test2",
             value: (Short)2

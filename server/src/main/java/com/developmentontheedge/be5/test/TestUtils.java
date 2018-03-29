@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.components.RestApiConstants;
@@ -21,6 +20,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -65,7 +65,7 @@ public abstract class TestUtils
         Project project = injector.getProject();
         initProfile(project);
 
-        injector.get(LoginService.class).initGuest(null);
+        injector.get(UserHelper.class).initGuest(null);
         return injector;
     }
 

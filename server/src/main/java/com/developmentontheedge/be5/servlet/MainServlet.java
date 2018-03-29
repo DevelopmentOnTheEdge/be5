@@ -33,6 +33,7 @@ import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -146,7 +147,7 @@ public class MainServlet implements Filter
     {
         if (UserInfoHolder.getUserInfo() == null)
         {
-            injector.getLoginService().initGuest(req);
+            injector.get(UserHelper.class).initGuest(req);
         }
 
         try
@@ -175,7 +176,7 @@ public class MainServlet implements Filter
     {
         if (UserInfoHolder.getUserInfo() == null)
         {
-            injector.getLoginService().initGuest(req);
+            injector.get(UserHelper.class).initGuest(req);
         }
 
         try

@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
@@ -11,6 +10,7 @@ import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import org.junit.Before;
 
 import java.util.Arrays;
@@ -31,8 +31,7 @@ public abstract class Be5ProjectTest extends TestUtils
 
     protected void initUserWithRoles(String... roles)
     {
-        LoginService loginService = injector.get(LoginService.class);
-        loginService.saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+        injector.get(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
                 Locale.US, "", new TestSession());
     }
 

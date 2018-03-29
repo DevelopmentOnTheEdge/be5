@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.LoginService;
+import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.components.FrontendConstants;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.operation.GOperationSupport;
@@ -37,8 +37,10 @@ public class Login extends GOperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        if (loginService.login(request, dps.getValueAsString("user_name"), dps.getValueAsString("user_pass")))
+        String username = dps.getValueAsString("user_name");
+        if (loginService.loginCheck(username, dps.getValueAsString("user_pass")))
         {
+            loginService.saveUser(username, request);
             postLogin(parameters);
             setResult(OperationResult.finished(null, FrontendConstants.UPDATE_USER_INFO));
         }

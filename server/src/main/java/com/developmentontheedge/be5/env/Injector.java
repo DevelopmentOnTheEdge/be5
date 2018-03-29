@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ExecutorService;
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -115,11 +114,6 @@ public interface Injector
         return get(LogConfigurator.class);
     }
 
-    default LoginService getLoginService()
-    {
-        return get(LoginService.class);
-    }
-    
     /**
      * Resolves a service by its class.
      * @see Injector ServiceProvider for more information

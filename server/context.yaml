@@ -16,6 +16,7 @@ context:
   - com.developmentontheedge.be5.api.services.impl.LogConfigurator
   - com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
   - com.developmentontheedge.be5.api.helpers.DpsHelper
+  - com.developmentontheedge.be5.api.helpers.UserHelper
   - com.developmentontheedge.be5.api.validation.Validator
   - com.developmentontheedge.be5.api.helpers.OperationHelper
   - com.developmentontheedge.be5.api.services.Be5Caches
@@ -30,9 +31,6 @@ context:
   - databaseService:
       interface:      com.developmentontheedge.be5.api.services.DatabaseService
       implementation: com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl
-  - loginService:
-      interface:      com.developmentontheedge.be5.api.services.LoginService
-      implementation: com.developmentontheedge.be5.api.services.impl.LoginServiceImpl
   - meta:
       interface:      com.developmentontheedge.be5.api.services.Meta
       implementation: com.developmentontheedge.be5.api.services.impl.MetaImpl

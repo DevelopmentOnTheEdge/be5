@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.components.FrontendConstants
 import com.developmentontheedge.be5.env.Injector
-import com.developmentontheedge.be5.api.services.LoginService
+import com.developmentontheedge.be5.modules.core.services.LoginService
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest

@@ -2,11 +2,11 @@ package com.developmentontheedge.be5.modules.core.components;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.services.LoginService;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 public class UserInfoComponentTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
-    @Inject private LoginService loginService;
+    @Inject private UserHelper userHelper;
     private static Component component;
 
     @Before
@@ -56,7 +56,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
     @Test
     public void testGuest() throws Exception
     {
-        loginService.initGuest(null);
+        userHelper.initGuest(null);
         Response response = mock(Response.class);
 
         component.generate(getMockRequest(""), response, injector);
