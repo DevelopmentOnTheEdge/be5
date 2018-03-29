@@ -11,7 +11,7 @@
  Then DBMS specific SQL select statement can be generated.</description>
 
  <parent>
-  <groupId>com.developmentontheedge</groupId>
+  <groupId>com.developmentontheedge.be5</groupId>
   <artifactId>be5</artifactId>
   <version>0.0.3-SNAPSHOT</version>
  </parent>

@@ -3,14 +3,14 @@
  <modelVersion>4.0.0</modelVersion>
 
  <artifactId>be5-dbms</artifactId>
- <version>0.1.0</version>
+ <version>0.1.1-SNAPSHOT</version>
  <packaging>jar</packaging>
 
  <name>be5 DBMS helpers</name>
  <description>DOTE DBMS helpers</description>
 
  <parent>
-  <groupId>com.developmentontheedge</groupId>
+  <groupId>com.developmentontheedge.be5</groupId>
   <artifactId>be5</artifactId>
   <version>0.0.3-SNAPSHOT</version>
  </parent>

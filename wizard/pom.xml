@@ -8,11 +8,11 @@
 
 	<name>be5 project wizard</name>
 
-	<parent>
-		<groupId>com.developmentontheedge</groupId>
-		<artifactId>be5</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.developmentontheedge.be5</groupId>
+    <artifactId>be5</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+  </parent>
 
 	<properties>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -24,9 +24,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.developmentontheedge</groupId>
+			<groupId>com.developmentontheedge.be5</groupId>
 			<artifactId>be5-metadata</artifactId>
-			<version>0.3.0</version>
+			<version>0.3.1-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

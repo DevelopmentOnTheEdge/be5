@@ -3,7 +3,7 @@
    http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
 
- <groupId>com.developmentontheedge</groupId>
+ <groupId>com.developmentontheedge.be5</groupId>
  <artifactId>be5</artifactId>
  <version>0.0.3-SNAPSHOT</version>
  <packaging>pom</packaging>

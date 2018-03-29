@@ -3,14 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>be5-entity-gen</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>be5 entity generation</name>
 	<description>Maven plug-ins for be5</description>
 
   <parent>
-    <groupId>com.developmentontheedge</groupId>
+    <groupId>com.developmentontheedge.be5</groupId>
     <artifactId>be5</artifactId>
     <version>0.0.3-SNAPSHOT</version>
   </parent>
@@ -18,15 +18,15 @@
 	<dependencies>
 
     <dependency>
-        <groupId>com.developmentontheedge.be5.modules</groupId>
-        <artifactId>be5-modules-core</artifactId>
-        <version>0.1.0</version>
+      <groupId>com.developmentontheedge.be5.modules</groupId>
+      <artifactId>be5-modules-core</artifactId>
+      <version>0.1.1-SNAPSHOT</version>
     </dependency>
 
 		<dependency>
-			<groupId>com.developmentontheedge</groupId>
+			<groupId>com.developmentontheedge.be5</groupId>
 			<artifactId>be5-server</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.2-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
