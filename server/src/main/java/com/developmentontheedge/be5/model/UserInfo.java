@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.model;
 
 import com.developmentontheedge.be5.api.Session;
-import one.util.streamex.StreamEx;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -10,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 
 public class UserInfo implements Serializable
@@ -27,21 +27,21 @@ public class UserInfo implements Serializable
     private Timestamp prevLoggedInTime;
     private Timestamp loggedInTime;
 
-    public String getUserName()
-    {
-        return userName;
-    }
-
     public UserInfo(String userName, List<String> availableRoles, List<String> currentRoles, Session session)
     {
         this.userName = userName;
         this.availableRoles = new ArrayList<>(availableRoles);
-        this.currentRoles = new ArrayList<>(currentRoles);
+        this.currentRoles = selectRoles(currentRoles);
 
         this.session = session;
 
         this.creationTime = new Date();
         this.locale = Locale.US;
+    }
+
+    public String getUserName()
+    {
+        return userName;
     }
 
     public void setUserName(String userName )
@@ -130,9 +130,10 @@ public class UserInfo implements Serializable
         this.currentRoles = roles;
     }
 
-    public void selectRoles(List<String> roles)
+    public List<String> selectRoles(List<String> roles)
     {
-        currentRoles = StreamEx.of(roles).filter(role -> availableRoles.contains(role)).toList();
+        currentRoles = roles.stream().filter(role -> availableRoles.contains(role)).collect(Collectors.toList());
+        return currentRoles;
     }
 
     @Override
