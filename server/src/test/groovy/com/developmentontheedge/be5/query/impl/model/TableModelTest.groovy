@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.api.components.impl.model
+package com.developmentontheedge.be5.query.impl.model
 
-import com.developmentontheedge.be5.query.impl.model.TableModel
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import org.junit.Test

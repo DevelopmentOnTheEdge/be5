@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.components.impl.model
+package com.developmentontheedge.be5.components
 
 import com.developmentontheedge.be5.api.Component
 import com.developmentontheedge.be5.api.Response
@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.model.jsonapi.ResourceData
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.google.common.collect.ImmutableMap
+import groovy.transform.TypeChecked
 import org.junit.Before
 import org.junit.Test
 
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 
 
+@TypeChecked
 class FormTest extends Be5ProjectTest
 {
     @Inject private Injector injector

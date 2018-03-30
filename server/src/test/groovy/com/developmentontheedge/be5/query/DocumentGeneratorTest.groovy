@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.api.components.impl
+package com.developmentontheedge.be5.query
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.query.DocumentGenerator
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
