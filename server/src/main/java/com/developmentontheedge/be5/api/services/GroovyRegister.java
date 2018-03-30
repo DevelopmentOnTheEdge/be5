@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.util.Utils;
+import com.github.benmanes.caffeine.cache.Cache;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
@@ -16,27 +17,39 @@ import java.util.Set;
 import java.util.Stack;
 
 
-//move and union caches from operation, query
 public class GroovyRegister
 {
+    private Cache<String, Class> groovyClasses;
     private GroovyClassLoader classLoader;
 
     private Provider<GroovyOperationLoader> groovyOperationLoaderProvider;
 
-    public GroovyRegister(Provider<GroovyOperationLoader> groovyOperationLoaderProvider)
+    public GroovyRegister(Provider<GroovyOperationLoader> groovyOperationLoaderProvider, Be5Caches be5Caches)
     {
         this.groovyOperationLoaderProvider = groovyOperationLoaderProvider;
         initClassLoader();
+
+        groovyClasses = be5Caches.createCache("Groovy classes");
     }
 
-    public GroovyClassLoader getClassLoader()
+    private GroovyClassLoader getClassLoader()
     {
         return classLoader;
     }
 
-    public Class parseClass( String text, String name )
+    private Class parseClass( String text, String name )
     {
         return getClassLoader().parseClass( text, name );
+    }
+
+    public Class getClass( String key, String code, String fileName )
+    {
+        return groovyClasses.get(key, k -> parseClass( code, fileName ));
+    }
+
+    public Cache<String, Class> getGroovyClasses()
+    {
+        return groovyClasses;
     }
 
     public void initClassLoader()

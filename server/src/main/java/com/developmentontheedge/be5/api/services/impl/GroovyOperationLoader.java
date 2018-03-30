@@ -1,13 +1,11 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
-import com.github.benmanes.caffeine.cache.Cache;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,19 +18,15 @@ import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TY
 
 public class GroovyOperationLoader
 {
-    private final Cache<String, Class> groovyOperationClasses;
-
     private final Meta meta;
     private final GroovyRegister groovyRegister;
 
     private Map<String, Operation> groovyOperationsMap;
 
-    public GroovyOperationLoader(Be5Caches be5Caches, Meta meta, GroovyRegister groovyRegister)
+    public GroovyOperationLoader(Meta meta, GroovyRegister groovyRegister)
     {
         this.groovyRegister = groovyRegister;
         this.meta = meta;
-
-        groovyOperationClasses = be5Caches.createCache("Groovy operation classes");
 
         initOperationMap();
     }
@@ -73,13 +67,13 @@ public class GroovyOperationLoader
 
         if (superOperation != null && superOperation.getType().equals(OPERATION_TYPE_GROOVY))
         {
-            if(groovyOperationClasses.getIfPresent(superOperationCanonicalName) == null)
+            if(groovyRegister.getGroovyClasses().getIfPresent(superOperationCanonicalName) == null)
             {
                 ArrayList<String> list = new ArrayList<>(preloadSuperOperation(new OperationInfo(superOperation)));
 
                 list.add(superOperationCanonicalName);
-                groovyOperationClasses.get(superOperationCanonicalName,
-                        k -> groovyRegister.parseClass(superOperation.getCode(), simpleSuperClassName + ".groovy"));
+                groovyRegister.getClass(superOperationCanonicalName,
+                        superOperation.getCode(), simpleSuperClassName + ".groovy");
                 return list;
             }
             return Collections.emptyList();
@@ -96,8 +90,7 @@ public class GroovyOperationLoader
         String canonicalName = fileName.replace("/", ".");
         String simpleName = fileName.substring(fileName.lastIndexOf("/")+1, fileName.length() - ".groovy".length()).trim();
 
-        return groovyOperationClasses.get(canonicalName, k ->
-                groovyRegister.parseClass( operationInfo.getCode(), simpleName + ".groovy" ));
+        return groovyRegister.getClass(canonicalName, operationInfo.getCode(), simpleName + ".groovy");
     }
 
     public String getSimpleSuperClassName(OperationInfo operationInfo)

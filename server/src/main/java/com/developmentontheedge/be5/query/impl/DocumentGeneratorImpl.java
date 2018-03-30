@@ -112,8 +112,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             case GROOVY:
                 try
                 {
-                    Class aClass = groovyQueryClasses.get(query.getEntity() + query.getName(),
-                            k -> groovyRegister.parseClass( query.getQuery(), query.getFileName() ));
+                    Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
+                            query.getQuery(), query.getFileName());
+
                     if(aClass != null) {
                         TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 
