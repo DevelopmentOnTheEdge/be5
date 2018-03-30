@@ -207,6 +207,11 @@ public class Be5Exception extends RuntimeException
         }
     }
 
+    public String getHttpStatusCode()
+    {
+        return code.getHttpStatus();
+    }
+
     @Override
     public boolean equals(Object o)
     {

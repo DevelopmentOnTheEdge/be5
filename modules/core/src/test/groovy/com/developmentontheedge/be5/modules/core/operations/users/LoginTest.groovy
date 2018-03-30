@@ -81,31 +81,31 @@ class LoginTest extends Be5ProjectTest
     @Ignore
     void loginAccessDenied()
     {
-        String testPass = "testPass"
-        Response response = mock(Response.class)
-        Request request = getMockRequest("")
-        when(request.get("username")).thenReturn(TEST_USER)
-        when(request.get("password")).thenReturn(testPass)
-
-        Injector sp = mock(Injector.class)
-
-        LoginService loginService = mock(LoginService.class)
-
-        when(sp.getLoginService()).thenReturn(loginService)
-        component.generate(request, response, sp)
-
-        verify(response).sendError(eq("Access denied"), eq("loginError"))
+//        String testPass = "testPass"
+//        Response response = mock(Response.class)
+//        Request request = getMockRequest("")
+//        when(request.get("username")).thenReturn(TEST_USER)
+//        when(request.get("password")).thenReturn(testPass)
+//
+//        Injector sp = mock(Injector.class)
+//
+//        LoginService loginService = mock(LoginService.class)
+//
+//        when(sp.getLoginService()).thenReturn(loginService)
+//        component.generate(request, response, sp)
+//
+//        verify(response).sendError(eq("Access denied"), eq("loginError"))
     }
 
     @Test
     @Ignore
     void error()
     {
-        Response response = mock(Response.class)
-
-        component.generate(getMockRequest(""), response, injector)
-
-        verify(response).sendError(eq("Empty username or password"), eq("loginError"))
+//        Response response = mock(Response.class)
+//
+//        component.generate(getMockRequest(""), response, injector)
+//
+//        verify(response).sendError(eq("Empty username or password"), eq("loginError"))
     }
 
 }

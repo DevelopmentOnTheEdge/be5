@@ -103,6 +103,18 @@ public enum Be5ErrorCode
         }
     }
 
+    private final static String HTTP_CODE_404 = "404";
+    private final static String HTTP_CODE_403 = "403";
+    private final static String HTTP_CODE_500 = "500";
+
+    public String getHttpStatus()
+    {
+        if (isNotFound())return HTTP_CODE_404;
+        if (isAccessDenied())return HTTP_CODE_403;
+        return HTTP_CODE_500;
+    }
+
+
     public Level getLogLevel()
     {
         return isInternal() ? Level.SEVERE : Level.FINE;

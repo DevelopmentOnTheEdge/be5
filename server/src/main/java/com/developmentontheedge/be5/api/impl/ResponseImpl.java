@@ -78,7 +78,7 @@ public class ResponseImpl implements Response
 //    @Override
 //    public void sendErrorsAsJson(Object[] errors, Object meta)
 //    {
-//        throw new RuntimeException("todo");
+//        throw new RuntimeException("");
 //        //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
 //    }
 
@@ -92,7 +92,7 @@ public class ResponseImpl implements Response
         }
         else
         {
-            errorModel = new ErrorModel("500", "");
+            errorModel = new ErrorModel(e.getHttpStatusCode(), "");
         }
 
         sendErrorAsJson(errorModel, null);

@@ -9,9 +9,9 @@ import java.util.Map;
  */
 public class ErrorModel
 {
-//    private String id;
-    private String status;
-    private String title;
+    //private final String id;
+    private final String status;
+    private final String title;
     private String code;
     private String detail;
     private Map<String, String> links;
@@ -43,18 +43,18 @@ public class ErrorModel
 
     public ErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
-        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
                 Be5Exception.exceptionAsString(e), links);
     }
 
     public ErrorModel(Be5Exception e, Map<String, String> links)
     {
-        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e), links);
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e), links);
     }
 
     public ErrorModel(Be5Exception e)
     {
-        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e), null);
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e), null);
     }
 
     public String getStatus()
@@ -120,14 +120,4 @@ public class ErrorModel
         return result;
     }
 
-    private final static String httpCode404 = "404";
-    private final static String httpCode403 = "403";
-    private final static String httpCode500 = "500";
-
-    private static String getHttpStatusCode(Be5Exception e)
-    {
-        if (e.getCode().isNotFound())return httpCode404;
-        if (e.getCode().isAccessDenied())return httpCode403;
-        return httpCode500;
-    }
 }
