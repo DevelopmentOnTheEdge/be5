@@ -43,7 +43,7 @@ public class ErrorModel
 
     public ErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
-        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e) + " " + additionalMessage,
+        this(getHttpStatusCode(e), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
                 Be5Exception.exceptionAsString(e), links);
     }
 

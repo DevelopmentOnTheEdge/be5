@@ -5,14 +5,13 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -38,7 +37,7 @@ public class QueryBuilderTest extends SqlMockOperationTest
                 "sql", "select * from testtable limit 1",
                 RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), response, injector);
 
-        verify(response).sendAsJson(any(ResourceData.class), any(ResourceData[].class), any(Map.class));
+        verify(response).sendAsJson(any(JsonApiModel.class));
     }
 
 }

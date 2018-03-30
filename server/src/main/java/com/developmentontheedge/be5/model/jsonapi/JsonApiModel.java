@@ -67,6 +67,11 @@ public class JsonApiModel
         return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, links);
     }
 
+    public static JsonApiModel data(ResourceData data, ErrorModel[] errorModels, ResourceData[] included, Object meta, Map<String, String> links)
+    {
+        return new JsonApiModel(data, errorModels, meta, included, links);
+    }
+
     public ResourceData getData()
     {
         return data;
