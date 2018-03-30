@@ -1,11 +1,11 @@
-package com.developmentontheedge.be5.components.impl;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.developmentontheedge.be5.components.impl.model.TableModel;
-import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel;
-import com.developmentontheedge.be5.components.impl.model.TableModel.RowModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.CellModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.RowModel;
 
 public abstract class TableRowsBuilder<RowT, CellT> {
     

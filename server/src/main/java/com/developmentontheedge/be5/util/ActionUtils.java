@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +8,10 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
-import com.developmentontheedge.be5.util.HashLink;
-import com.developmentontheedge.be5.util.HashLinks;
-import com.developmentontheedge.be5.util.HashUrl;
 
-final public class ActionHelper
+
+final public class ActionUtils
 {
-    
     public static Action toAction(Query query) 
     {
         if (isClientSide(query))
@@ -102,7 +99,7 @@ final public class ActionHelper
     
     private static final Pattern ACTION_PATTERN = Pattern.compile("^\\w+$");
     
-    private ActionHelper()
+    private ActionUtils()
     {
         throw new IllegalStateException("Must not be instantiated");
     }

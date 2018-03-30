@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.query.impl.model;
 
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
@@ -15,19 +15,15 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.ColumnAdder;
-import com.developmentontheedge.sql.format.ColumnRef;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
-import com.developmentontheedge.sql.format.FilterApplier;
 import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.QueryContext;
@@ -50,7 +46,6 @@ import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.developmentontheedge.sql.model.Token;
 
-import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 

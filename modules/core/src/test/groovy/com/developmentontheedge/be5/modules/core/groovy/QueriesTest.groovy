@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.core.groovy
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.components.DocumentGenerator
-import com.developmentontheedge.be5.components.impl.model.TableModel
+import com.developmentontheedge.be5.query.DocumentGenerator
+import com.developmentontheedge.be5.query.impl.model.TableModel
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.model.TablePresentation

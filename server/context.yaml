@@ -56,5 +56,5 @@ context:
       interface:      com.developmentontheedge.be5.api.services.OperationExecutor
       implementation: com.developmentontheedge.be5.api.services.impl.OperationExecutorImpl
   - documentGenerator:
-      interface:      com.developmentontheedge.be5.components.DocumentGenerator
-      implementation: com.developmentontheedge.be5.components.impl.DocumentGeneratorImpl
+      interface:      com.developmentontheedge.be5.query.DocumentGenerator
+      implementation: com.developmentontheedge.be5.query.impl.DocumentGeneratorImpl

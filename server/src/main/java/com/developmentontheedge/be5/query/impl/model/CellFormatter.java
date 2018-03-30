@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.query.impl.model;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Injector;

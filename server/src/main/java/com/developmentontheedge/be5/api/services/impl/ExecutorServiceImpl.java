@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.services.ExecutorService;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
-import com.developmentontheedge.be5.components.impl.model.Be5QueryExecutor;
+import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 public class ExecutorServiceImpl implements ExecutorService

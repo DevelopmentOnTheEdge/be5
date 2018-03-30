@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.query.impl.model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
-import com.developmentontheedge.be5.components.impl.model.TableModel.RawCellModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.ColumnModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.RawCellModel;
 import com.developmentontheedge.be5.util.MoreStrings;
 
 /**

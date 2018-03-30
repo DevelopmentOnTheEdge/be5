@@ -1,4 +1,4 @@
-import com.developmentontheedge.be5.components.impl.model.TableModel
+import com.developmentontheedge.be5.query.impl.model.TableModel
 import com.developmentontheedge.be5.query.TableBuilderSupport
 
 

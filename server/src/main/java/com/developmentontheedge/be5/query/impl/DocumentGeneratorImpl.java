@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CoreUtils;
@@ -6,14 +6,14 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.components.DocumentGenerator;
-import com.developmentontheedge.be5.components.impl.model.ActionHelper;
+import com.developmentontheedge.be5.query.DocumentGenerator;
+import com.developmentontheedge.be5.util.ActionUtils;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.components.impl.model.Operations;
-import com.developmentontheedge.be5.components.impl.model.TableModel;
-import com.developmentontheedge.be5.components.impl.model.TableModel.ColumnModel;
+import com.developmentontheedge.be5.query.impl.model.Operations;
+import com.developmentontheedge.be5.query.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.ColumnModel;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -93,7 +93,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         switch (query.getType())
         {
             case STATIC:
-                if (ActionHelper.isStaticPage(query))
+                if (ActionUtils.isStaticPage(query))
                 {
                     return getStatic(query);
                 }

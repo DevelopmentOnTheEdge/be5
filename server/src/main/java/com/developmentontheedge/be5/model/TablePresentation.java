@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.model;
 import java.util.List;
 import java.util.Map;
 
-import com.developmentontheedge.be5.components.impl.InitialRow;
+import com.developmentontheedge.be5.query.impl.InitialRow;
 
 public class TablePresentation
 {

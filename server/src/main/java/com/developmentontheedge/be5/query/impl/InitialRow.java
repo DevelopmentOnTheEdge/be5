@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.List;
 

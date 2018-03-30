@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.components.impl.model.ActionHelper;
+import com.developmentontheedge.be5.util.ActionUtils;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 
 public class Menu implements Component {
 
@@ -375,7 +376,7 @@ public class Menu implements Component {
         {
             // Query in the root, contains an action.
             Id id = null;
-            Action action = ActionHelper.toAction(permittedQueries.get(0));
+            Action action = ActionUtils.toAction(permittedQueries.get(0));
             boolean isDefault = permittedQueries.get(0).isDefaultView();
             
             if (withIds)
@@ -417,7 +418,7 @@ public class Menu implements Component {
                 id = new Id(permittedQuery.getEntity().getName(), permittedQuery.getName());
             }
             
-            children.add(new QueryNode(id, query.title, ActionHelper.toAction(permittedQuery), permittedQuery.isDefaultView()));
+            children.add(new QueryNode(id, query.title, ActionUtils.toAction(permittedQuery), permittedQuery.isDefaultView()));
         }
         
         return children;
@@ -434,7 +435,7 @@ public class Menu implements Component {
             if (insertOperation != null && meta.isAvailableFor(insertOperation, roles))
             {
                 String title = userAwareMeta.getLocalizedOperationTitle(entity.getName(), insertOperationName);
-                Action action = ActionHelper.toAction(DatabaseConstants.ALL_RECORDS_VIEW, insertOperation);
+                Action action = ActionUtils.toAction(DatabaseConstants.ALL_RECORDS_VIEW, insertOperation);
                 OperationId id = withIds ? new OperationId(entity.getName(), insertOperationName) : null;
                 OperationNode operation = new OperationNode(id, title, action);
                 operations.add(operation);

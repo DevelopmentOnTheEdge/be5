@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.query;
 
-import com.developmentontheedge.be5.components.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.StaticPagePresentation;

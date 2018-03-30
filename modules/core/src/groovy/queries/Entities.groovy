@@ -1,7 +1,7 @@
 import com.developmentontheedge.be5.api.FrontendConstants
-import com.developmentontheedge.be5.components.impl.model.ActionHelper
-import com.developmentontheedge.be5.components.impl.model.TableModel
-import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel
+import com.developmentontheedge.be5.util.ActionUtils
+import com.developmentontheedge.be5.query.impl.model.TableModel
+import com.developmentontheedge.be5.query.impl.model.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.query.TableBuilderSupport
@@ -21,7 +21,7 @@ class Entities extends TableBuilderSupport
 
             def name = new CellModel(entity.getName())
             def allRecords = entity.getQueries().get(DatabaseConstants.ALL_RECORDS_VIEW)
-            if(allRecords != null)name.add("link", "url", ActionHelper.toAction(allRecords).arg)
+            if(allRecords != null)name.add("link", "url", ActionUtils.toAction(allRecords).arg)
 
             cells.add(name)
             cells.add(new CellModel(entity.getTypeString()))

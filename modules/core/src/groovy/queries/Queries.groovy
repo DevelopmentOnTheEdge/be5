@@ -1,7 +1,7 @@
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
-import com.developmentontheedge.be5.components.impl.model.ActionHelper
-import com.developmentontheedge.be5.components.impl.model.TableModel
-import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel
+import com.developmentontheedge.be5.util.ActionUtils
+import com.developmentontheedge.be5.query.impl.model.TableModel
+import com.developmentontheedge.be5.query.impl.model.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.query.TableBuilderSupport
 
@@ -39,7 +39,7 @@ class Queries extends TableBuilderSupport
 
             cells.add(new CellModel(entityName))
             cells.add(new CellModel(query.getName())
-                    .add("link", "url", ActionHelper.toAction(query).arg))
+                    .add("link", "url", ActionUtils.toAction(query).arg))
             cells.add(new CellModel(query.getType()))
             cells.add(new CellModel(query.getRoles().getFinalRoles().toString()))
             cells.add(new CellModel(query.getOperationNames().getFinalValues().size().toString()))

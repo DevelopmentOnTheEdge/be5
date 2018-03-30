@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.components.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 /**

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.query.impl.model;
 
 import java.util.Collections;
 import java.util.Locale;

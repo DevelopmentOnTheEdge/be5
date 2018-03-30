@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components.impl.model;
+package com.developmentontheedge.be5.query.impl.model;
 
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.env.Inject;
@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.util.ActionUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -19,7 +20,7 @@ public class ActionHelperTest extends Be5ProjectTest
     {
         Query query = getQuery(QueryType.STATIC, "welfareGroups.redir?_qn_=Муниципальные+услуги");
         assertEquals("table/welfareGroups/Муниципальные услуги",
-                ActionHelper.toAction(query).arg);
+                ActionUtils.toAction(query).arg);
     }
 
     @Test
@@ -27,7 +28,7 @@ public class ActionHelperTest extends Be5ProjectTest
     {
         Query query = getQuery(QueryType.STATIC, "public.households.redir?_qn_=Account+Balance&_on_=OpenReview4Period");
         assertEquals("form/public.households/Account Balance/OpenReview4Period",
-                ActionHelper.toAction(query).arg);
+                ActionUtils.toAction(query).arg);
     }
 
     @Test
@@ -36,7 +37,7 @@ public class ActionHelperTest extends Be5ProjectTest
         Query query = getQuery(QueryType.STATIC, "mspReceiverCategories.redir");
 
         assertEquals("table/mspReceiverCategories",
-                ActionHelper.toAction(query).arg);
+                ActionUtils.toAction(query).arg);
     }
 
     private Query getQuery(QueryType type, String queryCode)

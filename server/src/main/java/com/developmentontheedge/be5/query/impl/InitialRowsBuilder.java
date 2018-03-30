@@ -1,9 +1,9 @@
-package com.developmentontheedge.be5.components.impl;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.List;
 
-import com.developmentontheedge.be5.components.impl.model.TableModel.CellModel;
-import com.developmentontheedge.be5.components.impl.model.TableModel.RowModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.CellModel;
+import com.developmentontheedge.be5.query.impl.model.TableModel.RowModel;
 
 public class InitialRowsBuilder extends TableRowsBuilder<InitialRow, Object>
 {
