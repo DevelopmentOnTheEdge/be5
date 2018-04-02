@@ -49,13 +49,15 @@ public class QueryBuilder implements Component
         {
             String sql = req.get("sql");
 
-            SqlType type = getSqlType(sql);
-
             ResourceData resourceData = new ResourceData("queryBuilder", sql, Collections.singletonMap(SELF_LINK, "queryBuilder"));
+
+            SqlType type = getSqlType(sql);
 
             switch (type){
                 case SELECT: select(sql, req, injector); break;
                 case INSERT: insert(sql, injector); break;
+                case UPDATE: update(sql, injector); break;
+                case DELETE: update(sql, injector); break;
                 default: res.sendUnknownActionError(); return;
             }
 
@@ -87,6 +89,21 @@ public class QueryBuilder implements Component
                 new StaticPagePresentation(
                         "Insert was successful",
                         "primaryKey: " + id
+                ),
+                null
+        ));
+    }
+
+    private void update(String sql, Injector injector)
+    {
+        Object id = injector.getSqlService().update(sql);
+
+        resourceDataList.add(new ResourceData(
+                "result",
+                FrontendConstants.STATIC_ACTION,
+                new StaticPagePresentation(
+                        "Update was successful",
+                        id + "row(s) affected"
                 ),
                 null
         ));
