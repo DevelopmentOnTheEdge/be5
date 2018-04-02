@@ -77,16 +77,26 @@ public class QueryBuilder implements Component
                 }
             }
 
-            ResourceData resourceData = new ResourceData("queryBuilder", sql, Collections.singletonMap(SELF_LINK, "queryBuilder"));
+            ResourceData resourceData = new ResourceData(
+                    "queryBuilder",
+                    new Data(sql, history),
+                    Collections.singletonMap(SELF_LINK, "queryBuilder")
+            );
 
-            SqlType type = getSqlType(sql);
+            try{
+                SqlType type = getSqlType(sql);
 
-            switch (type){
-                case SELECT: select(sql, req, injector); break;
-                case INSERT: insert(sql, injector); break;
-                case UPDATE: update(sql, injector); break;
-                case DELETE: update(sql, injector); break;
-                default: res.sendUnknownActionError(); return;
+                switch (type){
+                    case SELECT: select(sql, req, injector); break;
+                    case INSERT: insert(sql, injector); break;
+                    case UPDATE: update(sql, injector); break;
+                    case DELETE: update(sql, injector); break;
+                    default: res.sendUnknownActionError(); return;
+                }
+            }
+            catch (Throwable e)
+            {
+                errorModelList.add(new ErrorModel(Be5Exception.internal(e)));
             }
 
             res.sendAsJson(JsonApiModel.data(
@@ -214,5 +224,27 @@ public class QueryBuilder implements Component
 
     enum SqlType {
         INSERT, SELECT, UPDATE, DELETE
+    }
+
+    public class Data
+    {
+        String sql;
+        List<String> history;
+
+        public Data(String sql, List<String> history)
+        {
+            this.sql = sql;
+            this.history = history;
+        }
+
+        public String getSql()
+        {
+            return sql;
+        }
+
+        public List<String> getHistory()
+        {
+            return history;
+        }
     }
 }
