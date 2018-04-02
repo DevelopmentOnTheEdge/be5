@@ -68,8 +68,8 @@ public class MoreRowsGenerator {
      */
     private MoreRows generateMoreRows(Query query, Request parameters, Map<String, String> parametersMap, boolean selectable, int draw, int offset, int limit, int totalNumberOfRows) {
         List<List<Object>> rows = runForMoreRows(query, parameters, parametersMap, selectable, offset, limit);
-        
-        return new MoreRows(draw, totalNumberOfRows, totalNumberOfRows, rows);
+        //draw,
+        return new MoreRows(totalNumberOfRows, totalNumberOfRows, rows);
     }
     
     /**

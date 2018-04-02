@@ -103,7 +103,6 @@ public class Table implements Component
                         totalNumberOfRows = TableModel.from(query, parameters, injector).count();
 
                     res.sendAsRawJson(new MoreRows(
-                            0,
                             totalNumberOfRows.intValue(),
                             totalNumberOfRows.intValue(),
                             new MoreRowsBuilder(selectable).build(tableModel)
