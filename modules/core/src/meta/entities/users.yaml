@@ -22,6 +22,7 @@ users:
   - All records:
       type: 1D
       roles: Administrator
+      layout: '{"topForm":"Filter"}'
       operations:
       - Delete
       - Edit
@@ -32,6 +33,10 @@ users:
           u.user_name AS "___ID",
           u.user_name AS "User"
         FROM users u
+        WHERE (1=1)
+        <if parameter="user_name">
+          AND UPPER(u.user_name) LIKE UPPER('%<parameter:user_name />%')
+        </if>
   - Login:
       type: static
       roles: Guest
@@ -50,7 +55,8 @@ users:
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
   - Filter:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.FilterOperation
+      layout: '{"type":"inlineMiniForm", "bsSize":"sm"}'
+      code: com.developmentontheedge.be5.operations.FilterByParamsInQueryOperation
   - Login:
       roles: Guest
       code: com.developmentontheedge.be5.modules.core.operations.users.Login
