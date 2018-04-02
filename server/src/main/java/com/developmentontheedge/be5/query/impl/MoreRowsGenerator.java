@@ -17,6 +17,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
  * 
  * @author asko
  */
+@Deprecated
 public class MoreRowsGenerator {
     
     private final Injector injector;

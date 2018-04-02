@@ -32,6 +32,7 @@ public class TableModel
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
         private boolean selectable;
+        private int offset = 0;
         private int limit = Integer.MAX_VALUE;
 
         private Builder(Query query, Map<String, String> parametersMap, boolean selectable, Injector injector)
@@ -43,12 +44,15 @@ public class TableModel
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
         }
 
+        @Deprecated
         public Builder offset(int offset)
         {
             this.queryExecutor.offset( offset );
+            this.offset = offset;
             return this;
         }
 
+        @Deprecated
         public Builder limit(int limit)
         {
             this.queryExecutor.limit( limit );
@@ -56,6 +60,7 @@ public class TableModel
             return this;
         }
 
+        @Deprecated
         public Builder sortOrder(int sortColumn, boolean desc)
         {
             queryExecutor.sortOrder(sortColumn + (selectable ? -1 : 0), desc);
@@ -84,7 +89,7 @@ public class TableModel
 
             filterWithRoles(columns, rows);
 
-            return new TableModel( columns, rows, selectable, rows.size() < limit ? (long)rows.size() : null , hasAggregate);
+            return new TableModel( columns, rows, selectable, offset + rows.size() < limit ? (long)rows.size() : null , hasAggregate);
         }
 
         /*

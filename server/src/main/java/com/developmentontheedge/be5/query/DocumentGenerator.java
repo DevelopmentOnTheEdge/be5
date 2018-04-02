@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query;
 
+import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.FormPresentation;
@@ -33,11 +34,16 @@ public interface DocumentGenerator
 
     Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);
 
+    JsonApiModel getDocument(Query query, Map<String, String> parameters, TableModel tableModel);
+
     ErrorModel getErrorModel(Throwable e, HashUrl url);
 
     /* JsonApiModel */
 
     JsonApiModel getDocument(Query query, Map<String, String> parameters);
 
+    @Deprecated
     JsonApiModel getDocument(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
+
+    Map<String, Object> getLayoutObject(EntityItem entityItem);
 }

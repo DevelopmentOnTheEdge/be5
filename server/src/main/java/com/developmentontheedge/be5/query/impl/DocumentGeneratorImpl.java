@@ -356,6 +356,33 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
+    public JsonApiModel getDocument(Query query, Map<String, String> parameters, TableModel tableModel)
+    {
+        Object data = getTable(query, parameters, tableModel);
+        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
+
+        List<ResourceData> included = new ArrayList<>();
+
+        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+        if(topForm != null)
+        {
+            com.developmentontheedge.be5.operation.Operation operation =
+                    operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+
+            Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
+            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
+                    dataTopForm.get(),
+                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
+        }
+
+        return JsonApiModel.data(
+                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
+                included.toArray(new ResourceData[0]),
+                null
+        );
+    }
+
+    @Override
     public ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
         String message = Be5Exception.getMessage(e);
@@ -366,11 +393,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
-    private Map<String, Object> getLayoutObject(EntityItem query)
+    @Override
+    public Map<String, Object> getLayoutObject(EntityItem entityItem)
     {
-        if (!query.getLayout().isEmpty())
+        if (!entityItem.getLayout().isEmpty())
         {
-            return JsonFactory.jsonb.fromJson(query.getLayout(),
+            return JsonFactory.jsonb.fromJson(entityItem.getLayout(),
                     new HashMap<String, Object>(){}.getClass().getGenericSuperclass());
         }
         else

@@ -3,6 +3,7 @@ context:
   components:
   - appInfo:          com.developmentontheedge.be5.components.ApplicationInfoComponent
   - document:         com.developmentontheedge.be5.components.Document
+  - table:            com.developmentontheedge.be5.components.Table
   - form:             com.developmentontheedge.be5.components.Form
   - languageSelector: com.developmentontheedge.be5.components.LanguageSelector
   - menu:             com.developmentontheedge.be5.components.Menu

@@ -20,7 +20,10 @@ import java.util.Map;
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
-
+/**
+ * use Table
+ */
+@Deprecated
 public class Document implements Component 
 {
     @Override

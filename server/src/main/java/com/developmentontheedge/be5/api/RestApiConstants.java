@@ -29,15 +29,17 @@ public interface RestApiConstants
      * Selected rows of a table.
      */
     String SELECTED_ROWS = "selectedRows";
-    
-    // MORE ROWS GENERATOR TODO rename as "_name_" and save in hash params on frontend
+
+    String OFFSET = "_offset_";
+    String LIMIT = "_limit_";
+    String ORDER_COLUMN = "_orderColumn_";
+    String ORDER_DIR = "_orderDir_";
 
     String START = "start";
     String LENGTH = "length";
     String DRAW = "draw";
     String SELECTABLE = "selectable";
     String TOTAL_NUMBER_OF_ROWS = "totalNumberOfRows";
-    //TODO add sortColumn, sortNav
 
     // json api
 
