@@ -49,6 +49,7 @@ public class QueryBuilder implements Component
         if(UserInfoHolder.isSystemDeveloper())
         {
             String sql = req.get("sql");
+            boolean execute = sql != null;
 
             List<String> history;
             if(req.getAttribute(QUERY_BUILDER_HISTORY) != null)
@@ -63,9 +64,9 @@ public class QueryBuilder implements Component
             if(sql == null)
             {
                 if(!history.isEmpty()){
-                   sql = history.get(history.size()-1);
+                    sql = history.get(history.size()-1);
                 }else{
-                   sql = "select * from users";
+                    sql = "select * from users";
                 }
             }
             else
@@ -86,12 +87,30 @@ public class QueryBuilder implements Component
             try{
                 SqlType type = getSqlType(sql);
 
-                switch (type){
-                    case SELECT: select(sql, req, injector); break;
-                    case INSERT: insert(sql, injector); break;
-                    case UPDATE: update(sql, injector); break;
-                    case DELETE: update(sql, injector); break;
-                    default: res.sendUnknownActionError(); return;
+                if(type == SqlType.SELECT)
+                {
+                    select(sql, req, injector);
+                }
+                else
+                {
+                    if(execute)
+                    {
+                        switch (type)
+                        {
+                            case INSERT:
+                                insert(sql, injector);
+                                break;
+                            case UPDATE:
+                                update(sql, injector);
+                                break;
+                            case DELETE:
+                                update(sql, injector);
+                                break;
+                            default:
+                                res.sendUnknownActionError();
+                                return;
+                        }
+                    }
                 }
             }
             catch (Throwable e)
