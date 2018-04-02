@@ -223,7 +223,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         dql.log("After FreeMarker", queryText);
         if(queryText.isEmpty())
-            return null;
+            return "";
         AstStart ast;
         try
         {

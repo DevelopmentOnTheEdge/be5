@@ -7,13 +7,13 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.DocumentGenerator;
 import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.api.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
 public class QueryBuilder implements Component
@@ -48,6 +49,33 @@ public class QueryBuilder implements Component
         if(UserInfoHolder.isSystemDeveloper())
         {
             String sql = req.get("sql");
+
+            List<String> history;
+            if(req.getAttribute(QUERY_BUILDER_HISTORY) != null)
+            {
+                history = (List<String>) req.getAttribute(QUERY_BUILDER_HISTORY);
+            }
+            else
+            {
+                history = new ArrayList<>();
+            }
+
+            if(sql == null)
+            {
+                if(!history.isEmpty()){
+                   sql = history.get(history.size()-1);
+                }else{
+                   sql = "select * from users";
+                }
+            }
+            else
+            {
+                if(history.isEmpty() || !history.get(history.size()-1).equals(sql))
+                {
+                    history.add(sql);
+                    req.setAttribute(QUERY_BUILDER_HISTORY, history);
+                }
+            }
 
             ResourceData resourceData = new ResourceData("queryBuilder", sql, Collections.singletonMap(SELF_LINK, "queryBuilder"));
 
@@ -88,7 +116,7 @@ public class QueryBuilder implements Component
                 FrontendConstants.STATIC_ACTION,
                 new StaticPagePresentation(
                         "Insert was successful",
-                        "primaryKey: " + id
+                        "New primaryKey: " + id
                 ),
                 null
         ));
@@ -103,7 +131,7 @@ public class QueryBuilder implements Component
                 FrontendConstants.STATIC_ACTION,
                 new StaticPagePresentation(
                         "Update was successful",
-                        id + "row(s) affected"
+                        id + " row(s) affected"
                 ),
                 null
         ));
@@ -117,18 +145,11 @@ public class QueryBuilder implements Component
 
         Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
-        Entity entity = injector.getMeta().findEntity(entityName).orElseGet(() -> {
-            Entity e = new Entity( entityName, injector.getProject().getApplication(), EntityType.TABLE );
-            DataElementUtils.save( e );
-            return e;
-        });
+        Entity entity = new Entity( entityName, injector.getProject().getApplication(), EntityType.TABLE );
+        DataElementUtils.save( entity );
 
-        Query query = injector.getMeta().findQuery(entityName, userQBuilderQueryName).orElseGet(() -> {
-            Query q = new Query( userQBuilderQueryName, entity );
-            q.setType(QueryType.D1_UNKNOWN);
-            q.setQuery("select * from users");
-            return q;
-        });
+        Query query = new Query( userQBuilderQueryName, entity );
+        query.setType(QueryType.D1_UNKNOWN);
 
         if(sql != null)
         {
@@ -166,6 +187,8 @@ public class QueryBuilder implements Component
         {
             errorModelList.add(new ErrorModel(e));
         }
+
+        entity.getOrigin().remove(entityName);
     }
 
     private static SqlType getSqlType(String sql)
