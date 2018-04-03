@@ -104,7 +104,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         {
             //todo delete defaultPageLimit, use getQuerySettings(query).getMaxRecordsPerPage()
             maxLimit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
-                    injector.get(CoreUtils.class).getSystemSetting("be5_defaultPageLimit", "10")).toString());
+                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
         return TableModel
@@ -160,6 +160,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
+    public TablePresentation getTablePresentation(Query query, Map<String, String> parameters)
+    {
+        return getTablePresentation(query, parameters, getTableModel(query, parameters));
+    }
+
     public TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
@@ -179,11 +184,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows, tableModel.getRows().size(),
                 parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query));
-    }
-
-    public TablePresentation getTablePresentation(Query query, Map<String, String> parameters)
-    {
-        return getTablePresentation(query, parameters, getTableModel(query, parameters));
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)
@@ -233,6 +233,39 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
 
         return new TableOperationPresentation(operation.getName(), title, visibleWhen, false, isClientSide, action);
+    }
+
+    @Override
+    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters)
+    {
+        return getJsonApiModel(query, parameters, getTableModel(query, parameters));
+    }
+
+    @Override
+    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel)
+    {
+        Object data = getTablePresentation(query, parameters, tableModel);
+        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
+
+        List<ResourceData> included = new ArrayList<>();
+
+        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
+        if(topForm != null)
+        {
+            com.developmentontheedge.be5.operation.Operation operation =
+                    operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+
+            Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
+            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
+                    dataTopForm.get(),
+                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
+        }
+
+        return JsonApiModel.data(
+                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
+                included.toArray(new ResourceData[0]),
+                null
+        );
     }
 
     @Override
@@ -303,39 +336,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 return Either.second(result.getSecond());
             }
         }
-    }
-
-    @Override
-    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters)
-    {
-        return getJsonApiModel(query, parameters, getTableModel(query, parameters));
-    }
-
-    @Override
-    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel)
-    {
-        Object data = getTablePresentation(query, parameters, tableModel);
-        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
-
-        List<ResourceData> included = new ArrayList<>();
-
-        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
-        if(topForm != null)
-        {
-            com.developmentontheedge.be5.operation.Operation operation =
-                    operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
-
-            Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
-            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
-                    dataTopForm.get(),
-                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
-        }
-
-        return JsonApiModel.data(
-                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
-                included.toArray(new ResourceData[0]),
-                null
-        );
     }
 
     @Override

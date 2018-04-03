@@ -29,8 +29,6 @@ public interface DocumentGenerator
 
     JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel);
 
-    Map<String, Object> getLayoutObject(EntityItem entityItem);
-
     /* Form */
 
     Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
@@ -38,6 +36,8 @@ public interface DocumentGenerator
     Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);
 
     ErrorModel getErrorModel(Throwable e, HashUrl url);
+
+    Map<String, Object> getLayoutObject(EntityItem entityItem);
 
     //    StaticPagePresentation getStatic(Query query);
 }
