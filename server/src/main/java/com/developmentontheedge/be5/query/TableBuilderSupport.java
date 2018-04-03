@@ -105,18 +105,26 @@ public abstract class TableBuilderSupport implements TableBuilder
 
     public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows)
     {
-        return new TableModel(columns, rows, false, (long) rows.size(), false);
+        return getSimpleTable(columns, rows, false, (long) rows.size(), false);
     }
 
     public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable)
     {
-        return new TableModel(columns, rows, selectable, (long) rows.size(), false);
+        return getSimpleTable(columns, rows, selectable, (long) rows.size(), false);
     }
 
     public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows,
                             boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
-        return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate);
+        return getSimpleTable(columns, rows, selectable, totalNumberOfRows, hasAggregate);
+    }
+
+    //todo support order, limit, offset
+    private TableModel getSimpleTable(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows,
+                            boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    {
+        return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate,
+                            0, Integer.MAX_VALUE, -1, "asc");
     }
 
 }

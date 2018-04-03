@@ -89,7 +89,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private TableModel getSqlTableModel(Query query, Map<String, String> parameters)
     {
         int orderColumn = Integer.parseInt(parameters.getOrDefault(ORDER_COLUMN, "-1"));
-        String orderDir = parameters.get(ORDER_DIR);
+        String orderDir = parameters.getOrDefault(ORDER_DIR, "asc");
         int offset      = Integer.parseInt(parameters.getOrDefault(OFFSET, "0"));
         int limit = Integer.parseInt(parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
@@ -109,7 +109,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         return TableModel
                 .from(query, parameters, injector)
-                .sortOrder(orderColumn, "desc".equals(orderDir))
+                .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))
                 .build();
@@ -182,7 +182,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         if( totalNumberOfRows == null )
             totalNumberOfRows = TableModel.from(query, parameters, injector).count();
 
-        return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows, tableModel.getRows().size(),
+        return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows,
+                tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
                 parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query));
     }
 

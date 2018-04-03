@@ -206,14 +206,7 @@ public class QueryBuilder implements Component
 
         try
         {
-            TableModel tableModel = TableModel
-                    .from(query, parameters, injector)
-//                    .sortOrder(orderColumn, "desc".equals(orderDir))
-//                    .offset(offset)
-//                    .limit(Math.min(limit, maxLimit))
-                    .build();
-
-            JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters, tableModel);
+            JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters);
 
             //todo refactor documentGenerator
             document.getData().setId("result");

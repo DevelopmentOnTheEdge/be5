@@ -31,8 +31,11 @@ public class TableModel
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
+
         private int offset = 0;
         private int limit = Integer.MAX_VALUE;
+        private int orderColumn = -1;
+        private String orderDir = "asc";
 
         private Builder(Query query, Map<String, String> parametersMap, Injector injector)
         {
@@ -56,9 +59,11 @@ public class TableModel
             return this;
         }
 
-        public Builder sortOrder(int orderColumn, boolean desc)
+        public Builder sortOrder(int orderColumn, String orderDir)
         {
-            queryExecutor.order(orderColumn, desc);
+            queryExecutor.order(orderColumn, "desc".equals(orderDir));
+            this.orderColumn = orderColumn;
+            this.orderDir = orderDir;
             return this;
         }
 //
@@ -89,8 +94,8 @@ public class TableModel
                     rows,
                     queryExecutor.getSelectable(),
                     offset + rows.size() < limit ? (long)rows.size() : null,
-                    hasAggregate
-            );
+                    hasAggregate,
+                    offset, limit, orderColumn, orderDir);
         }
 
         /*
@@ -456,13 +461,23 @@ public class TableModel
     private final Long totalNumberOfRows;
     private final boolean hasAggregate;
 
-    public TableModel(List<ColumnModel> columns, List<RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    public final int offset;
+    public final int limit;
+    public final int orderColumn;
+    public final String orderDir;
+
+    public TableModel(List<ColumnModel> columns, List<RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate, int offset, int limit, int orderColumn, String orderDir)
     {
         this.selectable = selectable;
         this.columns = Collections.unmodifiableList( columns );
         this.rows = Collections.unmodifiableList( rows );
         this.totalNumberOfRows = totalNumberOfRows;
         this.hasAggregate = hasAggregate;
+
+        this.offset = offset;
+        this.limit = limit;
+        this.orderColumn = orderColumn;
+        this.orderDir = orderDir;
     }
 
     public boolean isSelectable()

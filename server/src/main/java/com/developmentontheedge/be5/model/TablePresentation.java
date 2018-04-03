@@ -14,7 +14,12 @@ public class TablePresentation
     private final boolean selectable;
     private final List<Object> columns;
     private final List<InitialRow> rows;
+
+    private final int offset;
+    private final int orderColumn;
+    private final String orderDir;
     private final int length;
+
     private final Map<String, String> parameters;
     private final Long totalNumberOfRows;
     private final boolean hasAggregate;
@@ -28,6 +33,9 @@ public class TablePresentation
             boolean selectable,
             List<Object> columns,
             List<InitialRow> rows,
+            int orderColumn,
+            String orderDir,
+            int offset,
             int length,
             Map<String, String> parameters,
             Long totalNumberOfRows,
@@ -41,6 +49,9 @@ public class TablePresentation
         this.selectable = selectable;
         this.columns = columns;
         this.rows = rows;
+        this.orderColumn = orderColumn;
+        this.orderDir = orderDir;
+        this.offset = offset;
         this.length = length;
         this.parameters = parameters;
         this.totalNumberOfRows = totalNumberOfRows;
@@ -81,6 +92,21 @@ public class TablePresentation
     public List<InitialRow> getRows()
     {
         return rows;
+    }
+
+    public int getOrderColumn()
+    {
+        return orderColumn;
+    }
+
+    public String getOrderDir()
+    {
+        return orderDir;
+    }
+
+    public int getOffset()
+    {
+        return offset;
     }
 
     public int getLength()
