@@ -183,22 +183,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private List<DynamicPropertySet> executeQuery()
-    {
-        //todo remove and use QueryRouter.getTableModel - refactoring MoreRowsGenerator
-        switch (query.getType())
-        {
-//        case Query.QUERY_TYPE_CUSTOM:
-//            return streamCustomQuery();
-        case D1:
-        case D1_UNKNOWN:
-            return listDps(getFinalSql());
-        default:
-            // TODO: support other query types
-            throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
-        }
-    }
-
     @Override
     public <T> List<T> execute(ResultSetParser<T> parser) throws Be5Exception
     {
@@ -540,27 +524,27 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public List<DynamicPropertySet> execute()
     {
         executeType = ExecuteType.DEFAULT;
-        return executeQuery();
+        return listDps(getFinalSql());
     }
 
     @Override
     public List<DynamicPropertySet> executeAggregate()
     {
         executeType = ExecuteType.AGGREGATE;
-        return executeQuery();
+        return listDps(getFinalSql());
     }
 
     @Override
     public long count()
     {
         executeType = ExecuteType.COUNT;
-        return (Long)executeQuery().get(0).asMap().get("count");
+        return (Long)listDps(getFinalSql()).get(0).asMap().get("count");
     }
 
     @Override
     public DynamicPropertySet getRow()
     {
-        return executeQuery().get(0);
+        return listDps(getFinalSql()).get(0);
     }
 
     @Override
