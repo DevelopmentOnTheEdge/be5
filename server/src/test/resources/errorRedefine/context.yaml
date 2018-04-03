@@ -1,3 +1,3 @@
 context:
   components:
-  - document: java.util.Map
+  - form: java.util.Map

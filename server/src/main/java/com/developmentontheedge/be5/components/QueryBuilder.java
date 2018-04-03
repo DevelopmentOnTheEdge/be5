@@ -20,6 +20,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -172,7 +173,7 @@ public class QueryBuilder implements Component
 
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
 
-        Map<String, String> parametersMap = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
+        Map<String, String> parameters = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
         Entity entity = new Entity( entityName, injector.getProject().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );
@@ -193,7 +194,7 @@ public class QueryBuilder implements Component
                     FrontendConstants.STATIC_ACTION,
                     new StaticPagePresentation(
                             "Final sql",
-                            new Be5QueryExecutor(query, parametersMap, injector).getFinalSql()
+                            new Be5QueryExecutor(query, parameters, injector).getFinalSql()
                     ),
                     null
             ));
@@ -205,7 +206,14 @@ public class QueryBuilder implements Component
 
         try
         {
-            JsonApiModel document = documentGenerator.getDocument(query, parametersMap);
+            TableModel tableModel = TableModel
+                    .from(query, parameters, injector)
+//                    .sortOrder(orderColumn, "desc".equals(orderDir))
+//                    .offset(offset)
+//                    .limit(Math.min(limit, maxLimit))
+                    .build();
+
+            JsonApiModel document = documentGenerator.getDocument(query, parameters, tableModel);
 
             //todo refactor documentGenerator
             document.getData().setId("result");

@@ -2,8 +2,10 @@ package com.developmentontheedge.be5.query
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
+import com.developmentontheedge.be5.query.impl.model.TableModel
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked
 import org.junit.Test
@@ -55,8 +57,9 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     {
         initUserWithRoles("SystemDeveloper")
 
-        JsonApiModel document = documentGenerator.getDocument(
-                meta.getQuery("testtable", "TableWithFilter", Collections.singletonList("SystemDeveloper")), new HashMap<>())
+        def query = meta.getQuery("testtable", "TableWithFilter", Collections.singletonList("SystemDeveloper"))
+
+        JsonApiModel document = documentGenerator.getDocument(query, new HashMap<>())
 
         assertEquals("{" +
                 "'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'operations':[],'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," +

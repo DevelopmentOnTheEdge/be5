@@ -77,7 +77,6 @@ public class Table implements Component
 
         try
         {
-            //TODO use Be5QueryExecutor as builder
             TableModel tableModel = TableModel
                     .from(query, parameters, injector)
                     .sortOrder(orderColumn, "desc".equals(orderDir))

@@ -34,16 +34,13 @@ public interface DocumentGenerator
 
     Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);
 
-    JsonApiModel getDocument(Query query, Map<String, String> parameters, TableModel tableModel);
-
     ErrorModel getErrorModel(Throwable e, HashUrl url);
 
     /* JsonApiModel */
 
     JsonApiModel getDocument(Query query, Map<String, String> parameters);
 
-    @Deprecated
-    JsonApiModel getDocument(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
+    JsonApiModel getDocument(Query query, Map<String, String> parameters, TableModel tableModel);
 
     Map<String, Object> getLayoutObject(EntityItem entityItem);
 }

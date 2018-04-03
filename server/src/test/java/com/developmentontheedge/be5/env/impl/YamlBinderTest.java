@@ -1,11 +1,10 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
-import com.developmentontheedge.be5.components.Document;
+import com.developmentontheedge.be5.components.Form;
 import com.developmentontheedge.be5.components.StaticPageComponent;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class YamlBinderTest
     {
         yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
 
-        assertEquals(Document.class, loadedClasses.get("document"));
+        assertEquals(Form.class, loadedClasses.get("form"));
         assertEquals(StaticPageComponent.class, loadedClasses.get("static"));
 
         assertEquals(ProjectProviderImpl.class, bindings.get(ProjectProvider.class));
@@ -68,7 +67,7 @@ public class YamlBinderTest
     {
         yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
         yamlBinder.loadModules(getReader("src/test/resources/errorRedefine/" + CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
-        assertEquals(Document.class, loadedClasses.get("document"));
+        assertEquals(Form.class, loadedClasses.get("form"));
     }
 
     @Test
@@ -88,7 +87,7 @@ public class YamlBinderTest
     {
         yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
         yamlBinder.loadModules(getReader("src/test/resources/errorRedefine/contextService.yaml"), bindings, loadedClasses, configurations, requestPreprocessors);
-        assertEquals(Document.class, loadedClasses.get("document"));
+        assertEquals(Form.class, loadedClasses.get("form"));
     }
 
     private BufferedReader getReader(String file)

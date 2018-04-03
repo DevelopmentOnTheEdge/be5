@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class DocumentTest extends SqlMockOperationTest
+public class TableTest extends SqlMockOperationTest
 {
     @Inject private Injector injector;
     private Component component;
@@ -26,7 +26,7 @@ public class DocumentTest extends SqlMockOperationTest
     @Before
     public void init()
     {
-        component = injector.getComponent("document");
+        component = injector.getComponent("table");
     }
 
     @Test

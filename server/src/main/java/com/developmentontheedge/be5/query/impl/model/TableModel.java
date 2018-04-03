@@ -42,7 +42,6 @@ public class TableModel
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
         }
 
-        @Deprecated
         public Builder offset(int offset)
         {
             this.queryExecutor.offset( offset );
@@ -50,7 +49,6 @@ public class TableModel
             return this;
         }
 
-        @Deprecated
         public Builder limit(int limit)
         {
             this.queryExecutor.limit( limit );
@@ -58,7 +56,6 @@ public class TableModel
             return this;
         }
 
-        @Deprecated
         public Builder sortOrder(int orderColumn, boolean desc)
         {
             queryExecutor.order(orderColumn, desc);

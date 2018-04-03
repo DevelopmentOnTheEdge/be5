@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.query.impl.model.Operations;
 import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.be5.query.impl.model.TableModel.ColumnModel;
-import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
@@ -155,13 +154,13 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
-    public TablePresentation getTable(Query query, Map<String, String> parameters, TableModel table)
+    public TablePresentation getTable(Query query, Map<String, String> parameters, TableModel tableModel)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
 
-        List<Object> columns = table.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
-        List<InitialRow> rows = new InitialRowsBuilder(table.isSelectable()).build(table);
-        Long totalNumberOfRows = table.getTotalNumberOfRows();
+        List<Object> columns = tableModel.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
+        List<InitialRow> rows = new InitialRowsBuilder(tableModel.isSelectable()).build(tableModel);
+        Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
 
         String entityName = query.getEntity().getName();
         String queryName = query.getName();
@@ -172,8 +171,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         if( totalNumberOfRows == null )
             totalNumberOfRows = TableModel.from(query, parameters, injector).count();
 
-        return new TablePresentation(title, entityName, queryName, operations, table.isSelectable(), columns, rows, table.getRows().size(),
-                parameters, totalNumberOfRows, table.isHasAggregate(), getLayoutObject(query));
+        return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows, tableModel.getRows().size(),
+                parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query));
     }
 
     public TablePresentation getTable(Query query, Map<String, String> parameters)
@@ -323,34 +322,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public JsonApiModel getDocument(Query query, Map<String, String> parameters)
     {
-        return getDocument(query, parameters, -1, true);
-    }
+        TableModel tableModel = TableModel
+                .from(query, parameters, injector)
+                .build();
 
-    @Override
-    public JsonApiModel getDocument(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
-    {
-        Object data = routeAndRun(query, parameters, sortColumn, sortDesc);
-        HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
-
-        List<ResourceData> included = new ArrayList<>();
-
-        String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
-        if(topForm != null)
-        {
-            com.developmentontheedge.be5.operation.Operation operation =
-                    operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
-
-            Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
-            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
-                    dataTopForm.get(),
-                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
-        }
-
-        return JsonApiModel.data(
-                new ResourceData(TABLE_ACTION, data, Collections.singletonMap(SELF_LINK, url.toString())),
-                included.toArray(new ResourceData[0]),
-                null
-        );
+        return getDocument(query, parameters, tableModel);
     }
 
     @Override
