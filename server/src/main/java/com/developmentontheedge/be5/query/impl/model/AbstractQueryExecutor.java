@@ -7,14 +7,15 @@ import com.developmentontheedge.be5.metadata.model.Query;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+
 public abstract class AbstractQueryExecutor implements QueryExecutor
 {
     protected final Query query;
     
     protected int offset = 0;
     protected int limit = Integer.MAX_VALUE;
-    protected int sortColumn;
-    protected boolean sortDesc;
+    protected int orderColumn = -1;
+    protected boolean orderDesc = false;
     
     public AbstractQueryExecutor(Query query)
     {
@@ -38,11 +39,11 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     }
 
     @Override
-    public final QueryExecutor sortOrder(int sortColumn, boolean desc)
+    public final QueryExecutor order(int column, boolean desc)
     {
-        checkArgument( sortColumn >= -2 );
-        this.sortColumn = sortColumn;
-        this.sortDesc = desc;
+        checkArgument( column >= -2 );
+        this.orderColumn = column;
+        this.orderDesc = desc;
         return this;
     }
 

@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -72,7 +71,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 {
     private static final Logger log = Logger.getLogger(Be5QueryExecutor.class.getName());
 
-    private enum ExtraQuery {
+    private enum ExecuteType
+    {
         DEFAULT, COUNT, AGGREGATE
     }
 
@@ -152,14 +152,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final DatabaseModel database;
     private final Meta meta;
     private final SqlService db;
-    private final UserAwareMeta userAwareMeta;
     private final Context context;
     private final FilterHelper filterHelper;
 
     private ContextApplier contextApplier;
     private final ParserContext parserContext;
     private Set<String> subQueryKeys;
-    private ExtraQuery extraQuery;
+    private ExecuteType executeType;
 
 
     public Be5QueryExecutor(Query query, Map<String, String> parameters, Injector injector)
@@ -169,7 +168,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.database        = injector.get(DatabaseModel.class);
         this.meta            = injector.getMeta();
         this.db              = injector.getSqlService();
-        this.userAwareMeta   = injector.get(UserAwareMeta.class);
         this.filterHelper    = injector.get(FilterHelper.class);
 
         this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
@@ -177,8 +175,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
-        this.extraQuery = ExtraQuery.DEFAULT;
-        this.sortColumn = -1;
+        this.executeType = ExecuteType.DEFAULT;
+        this.orderColumn = -1;
     }
 
     private List<DynamicPropertySet> executeQuery()
@@ -268,11 +266,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         Simplifier.simplify(ast);
         dql.log("Simplified", ast);
 
-        if(extraQuery == ExtraQuery.COUNT){
+        if(executeType == ExecuteType.COUNT)
+        {
             countFromQuery(ast.getQuery());
             dql.log("Count(1) from query", ast);
         }
-        if(extraQuery == ExtraQuery.DEFAULT){
+
+        if(executeType == ExecuteType.DEFAULT)
+        {
             // SORT ORDER
             applySort(dql, ast);
 
@@ -340,7 +341,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void applySort(DebugQueryLogger dql, AstStart ast)
     {
-        if(sortColumn >= 0) {
+        if(orderColumn >= 0) {
             try
             {
                 DynamicProperty[] schema = getSchema(new Formatter().format(ast, context, parserContext));
@@ -360,7 +361,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                         }
                     }
                     AstOrderingElement oe = new AstOrderingElement(AstNumericConstant.of(sortCol));
-                    if(sortDesc) {
+                    if(orderDesc) {
                         oe.setDirectionToken(new Token(0, "DESC"));
                     }
                     orderBy.addChild(oe);
@@ -379,7 +380,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private int getQuerySortingColumn(DynamicProperty[] schema)
     {
         int sortCol = -1;
-        int restCols = sortColumn;
+        int restCols = orderColumn;
         for(int i=0; i<schema.length; i++) {
             if(schema[i].isHidden())continue;
 
@@ -534,20 +535,21 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     @Override
     public List<DynamicPropertySet> execute()
     {
-        extraQuery = ExtraQuery.DEFAULT;
+        executeType = ExecuteType.DEFAULT;
         return executeQuery();
     }
 
     @Override
-    public List<DynamicPropertySet> executeAggregate(){
-        extraQuery = ExtraQuery.AGGREGATE;
+    public List<DynamicPropertySet> executeAggregate()
+    {
+        executeType = ExecuteType.AGGREGATE;
         return executeQuery();
     }
 
     @Override
     public long count()
     {
-        extraQuery = ExtraQuery.COUNT;
+        executeType = ExecuteType.COUNT;
         return (Long)executeQuery().get(0).asMap().get("count");
     }
 

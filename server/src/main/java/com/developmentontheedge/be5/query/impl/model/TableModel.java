@@ -38,7 +38,7 @@ public class TableModel
         private Builder(Query query, Map<String, String> parametersMap, boolean selectable, Injector injector)
         {
             this.query = query;
-            this.selectable = selectable;
+            this.selectable = selectable;//todo move to Be5QueryExecutor
             this.queryExecutor = new Be5QueryExecutor(query, parametersMap, injector);
             this.userAwareMeta = injector.get(UserAwareMeta.class);
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
@@ -63,7 +63,7 @@ public class TableModel
         @Deprecated
         public Builder sortOrder(int sortColumn, boolean desc)
         {
-            queryExecutor.sortOrder(sortColumn + (selectable ? -1 : 0), desc);
+            queryExecutor.order(sortColumn + (selectable ? -1 : 0), desc);
             return this;
         }
 //
