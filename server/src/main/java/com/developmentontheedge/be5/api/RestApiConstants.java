@@ -35,12 +35,6 @@ public interface RestApiConstants
     String ORDER_COLUMN = "_orderColumn_";
     String ORDER_DIR = "_orderDir_";
 
-    String START = "start";
-    String LENGTH = "length";
-    String DRAW = "draw";
-    String SELECTABLE = "selectable";
-    String TOTAL_NUMBER_OF_ROWS = "totalNumberOfRows";
-
     // json api
 
     String TIMESTAMP_PARAM = "_ts_";
