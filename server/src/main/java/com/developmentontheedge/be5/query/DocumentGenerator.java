@@ -20,15 +20,15 @@ public interface DocumentGenerator
 {
     Object routeAndRun(Query query, Map<String, String> parameters);
 
-    Object routeAndRun(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
-
     StaticPagePresentation getStatic(Query query);
+
+    /* Table */
 
     TablePresentation getTable(Query query, Map<String, String> parameters);
 
-    TablePresentation getTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc);
-
     TablePresentation getTable(Query query, Map<String, String> parameters, TableModel tableModel);
+
+    /* Forms */
 
     Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
 

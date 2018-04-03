@@ -88,15 +88,10 @@ public class Table implements Component
             {
                 case "":
                     JsonApiModel document = documentGenerator.getDocument(query, parameters, tableModel);
-                    //JsonApiModel document1 = documentGenerator.getDocument(query, parametersMap, orderColumn, "desc".equals(orderDir));
                     document.setMeta(req.getDefaultMeta());
                     res.sendAsJson(document);
                     return;
                 case "update":
-                    //JsonApiModel document = documentGenerator.getDocument(query, parametersMap, tableModel);
-
-                    //document.setMeta(req.getDefaultMeta());
-
                     Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
                     if( totalNumberOfRows == null )
                         totalNumberOfRows = TableModel.from(query, parameters, injector).count();
@@ -106,8 +101,6 @@ public class Table implements Component
                             totalNumberOfRows.intValue(),
                             new MoreRowsBuilder(selectable).build(tableModel)
                     ));
-
-                    //res.sendAsRawJson(new MoreRowsGenerator(injector).generate(req));
                     return;
                 default:
                     res.sendUnknownActionError();

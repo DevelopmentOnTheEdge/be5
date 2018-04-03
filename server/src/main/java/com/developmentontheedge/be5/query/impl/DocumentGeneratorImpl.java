@@ -6,8 +6,8 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
+import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.DocumentGenerator;
-import com.developmentontheedge.be5.util.ActionUtils;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -20,7 +20,6 @@ import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
@@ -29,12 +28,11 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.query.TableBuilder;
+import com.developmentontheedge.be5.util.ActionUtils;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,10 +51,7 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 public class DocumentGeneratorImpl implements DocumentGenerator
 {
-    private static Cache<String, Class> groovyQueryClasses;
-
     private final UserAwareMeta userAwareMeta;
-    private final Meta meta;
     private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
     private final Injector injector;
@@ -68,46 +63,20 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         this.coreUtils = coreUtils;
         this.userAwareMeta = userAwareMeta;
-        this.meta = meta;
         this.groovyRegister = groovyRegister;
         this.operationService = operationService;
         this.operationExecutor = operationExecutor;
         this.injector = injector;
-
-        groovyQueryClasses = Caffeine.newBuilder()
-                .maximumSize(1_000)
-                .recordStats()
-                .build();
     }
 
     @Override
     public Object routeAndRun(Query query, Map<String, String> parameters)
     {
-        return routeAndRun(query, parameters, -1, true);
-    }
-
-    @Override
-    public Object routeAndRun(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
-    {
         switch (query.getType())
         {
-            case STATIC:
-                if (ActionUtils.isStaticPage(query))
-                {
-                    return getStatic(query);
-                }
-                else
-                {
-                    throw Be5Exception.internalInQuery(new IllegalStateException("Unsupported static request"), query);
-                }
             case D1:
             case D1_UNKNOWN:
-                return getTable(query, parameters, sortColumn, sortDesc);
-            case D2:
-            case CONTAINER:
-            case CUSTOM:
-            case JAVASCRIPT:
-                throw Be5Exception.internal("Not support operation type: " + query.getType());
+                return getTable(query, parameters);
             case GROOVY:
                 try
                 {
@@ -131,6 +100,20 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 {
                     throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
                 }
+            case STATIC:
+                if (ActionUtils.isStaticPage(query))
+                {
+                    return getStatic(query);
+                }
+                else
+                {
+                    throw Be5Exception.internalInQuery(new IllegalStateException("Unsupported static request"), query);
+                }
+            case D2:
+            case CONTAINER:
+            case CUSTOM:
+            case JAVASCRIPT:
+                throw Be5Exception.internal("Not support operation type: " + query.getType());
             default:
                 throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
@@ -177,11 +160,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     public TablePresentation getTable(Query query, Map<String, String> parameters)
     {
-        return getTable(query, parameters, -1, true);
-    }
-
-    public TablePresentation getTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
-    {
         int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
         if (limit == 0)
@@ -193,7 +171,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         TableModel table = TableModel
                 .from(query, parameters, injector)
-                .sortOrder(sortColumn, sortDesc)
                 .limit(limit)
                 .build();
 
