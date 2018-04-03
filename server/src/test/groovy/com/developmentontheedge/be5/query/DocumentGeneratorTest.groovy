@@ -2,10 +2,8 @@ package com.developmentontheedge.be5.query
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
-import com.developmentontheedge.be5.query.impl.model.TableModel
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked
 import org.junit.Test
@@ -23,7 +21,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     void getTablePresentation()
     {
-        TablePresentation table = documentGenerator.getTable(
+        TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
 
         assertEquals("testtable: All records", table.getTitle())
@@ -39,7 +37,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     void testLinkQuick()
     {
-        TablePresentation table = documentGenerator.getTable(
+        TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtable", "LinkQuick", Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
         assertEquals("testtable: LinkQuick", table.getTitle())
@@ -59,7 +57,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
 
         def query = meta.getQuery("testtable", "TableWithFilter", Collections.singletonList("SystemDeveloper"))
 
-        JsonApiModel document = documentGenerator.getDocument(query, new HashMap<>())
+        JsonApiModel document = documentGenerator.getJsonApiModel(query, new HashMap<>())
 
         assertEquals("{" +
                 "'data':{'attributes':{'category':'testtable','columns':['1'],'hasAggregate':false,'layout':{'topForm':'FilterByParamsInQueryOperation'},'length':1,'operations':[],'page':'TableWithFilter','parameters':{},'rows':[{'cells':[{'content':1,'options':{}}]}],'selectable':false,'title':'testtable: TableWithFilter','totalNumberOfRows':1},'links':{'self':'table/testtable/TableWithFilter'},'type':'table'}," +
@@ -88,7 +86,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", 11)
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)
 
-        TablePresentation table = documentGenerator.getTable(
+        TablePresentation table = documentGenerator.getTablePresentation(
                 meta.getQuery("testtableAdmin", "Test null in subQuery",
                         Collections.singletonList("SystemDeveloper")), new HashMap<>())
 
@@ -108,7 +106,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     void groovyTableTest() throws Exception
     {
         def table = (TablePresentation)documentGenerator.
-                routeAndRun(meta.getQueryIgnoringRoles("testtableAdmin", "TestGroovyTable"), new HashMap<>())
+                getTablePresentation(meta.getQueryIgnoringRoles("testtableAdmin", "TestGroovyTable"), new HashMap<>())
 
         assertEquals "['name','value']", oneQuotes(jsonb.toJson(table.getColumns()))
 

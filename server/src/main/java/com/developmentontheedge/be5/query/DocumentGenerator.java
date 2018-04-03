@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
@@ -18,17 +17,21 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
-    Object routeAndRun(Query query, Map<String, String> parameters);
-
-    StaticPagePresentation getStatic(Query query);
-
     /* Table */
 
-    TablePresentation getTable(Query query, Map<String, String> parameters);
+    TableModel getTableModel(Query query, Map<String, String> parameters);
 
-    TablePresentation getTable(Query query, Map<String, String> parameters, TableModel tableModel);
+    TablePresentation getTablePresentation(Query query, Map<String, String> parameters);
 
-    /* Forms */
+    TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel);
+
+    JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters);
+
+    JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel);
+
+    Map<String, Object> getLayoutObject(EntityItem entityItem);
+
+    /* Form */
 
     Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
 
@@ -36,11 +39,5 @@ public interface DocumentGenerator
 
     ErrorModel getErrorModel(Throwable e, HashUrl url);
 
-    /* JsonApiModel */
-
-    JsonApiModel getDocument(Query query, Map<String, String> parameters);
-
-    JsonApiModel getDocument(Query query, Map<String, String> parameters, TableModel tableModel);
-
-    Map<String, Object> getLayoutObject(EntityItem entityItem);
+    //    StaticPagePresentation getStatic(Query query);
 }

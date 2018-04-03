@@ -213,7 +213,7 @@ public class QueryBuilder implements Component
 //                    .limit(Math.min(limit, maxLimit))
                     .build();
 
-            JsonApiModel document = documentGenerator.getDocument(query, parameters, tableModel);
+            JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters, tableModel);
 
             //todo refactor documentGenerator
             document.getData().setId("result");

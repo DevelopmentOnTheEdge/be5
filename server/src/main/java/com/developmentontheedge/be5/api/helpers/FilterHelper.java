@@ -98,7 +98,7 @@ public class FilterHelper
 
     public JsonApiModel filterDocument(Query query, Object parameters)
     {
-        return documentGenerator.getDocument(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));
+        return documentGenerator.getJsonApiModel(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters));
     }
 
     public void applyFilters(AstStart ast, String mainEntityName, Map<String, Object> parameters)

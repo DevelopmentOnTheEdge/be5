@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -22,10 +21,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
-import static com.developmentontheedge.be5.api.RestApiConstants.LIMIT;
-import static com.developmentontheedge.be5.api.RestApiConstants.OFFSET;
-import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_DIR;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
@@ -42,16 +37,6 @@ public class Table implements Component
 
         Map<String, String> parameters = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
-        int orderColumn = Integer.parseInt(parameters.getOrDefault(ORDER_COLUMN, "-1"));
-        String orderDir = parameters.get(ORDER_DIR);
-        int offset      = Integer.parseInt(parameters.getOrDefault(RestApiConstants.OFFSET, "0"));
-        int limit = Integer.parseInt(parameters.getOrDefault(RestApiConstants.LIMIT, Integer.toString(Integer.MAX_VALUE)));
-
-        parameters.remove(ORDER_COLUMN);
-        parameters.remove(ORDER_DIR);
-        parameters.remove(OFFSET);
-        parameters.remove(LIMIT);
-
         HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
 
         Query query;
@@ -66,28 +51,15 @@ public class Table implements Component
         }
 
         final boolean selectable = query.getType() == QueryType.D1 && !query.getOperationNames().isEmpty();
-        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-
-        if (maxLimit == 0)
-        {
-            //todo delete defaultPageLimit, use getQuerySettings(query).getMaxRecordsPerPage()
-            maxLimit = Integer.parseInt(documentGenerator.getLayoutObject(query).getOrDefault("defaultPageLimit",
-                    injector.get(CoreUtils.class).getSystemSetting("be5_defaultPageLimit", "10")).toString());
-        }
 
         try
         {
-            TableModel tableModel = TableModel
-                    .from(query, parameters, injector)
-                    .sortOrder(orderColumn, "desc".equals(orderDir))
-                    .offset(offset)
-                    .limit(Math.min(limit, maxLimit))
-                    .build();
+            TableModel tableModel = documentGenerator.getTableModel(query, parameters);
 
             switch (req.getRequestUri())
             {
                 case "":
-                    JsonApiModel document = documentGenerator.getDocument(query, parameters, tableModel);
+                    JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters, tableModel);
                     document.setMeta(req.getDefaultMeta());
                     res.sendAsJson(document);
                     return;

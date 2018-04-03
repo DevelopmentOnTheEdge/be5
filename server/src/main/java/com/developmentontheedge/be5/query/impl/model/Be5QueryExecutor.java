@@ -185,7 +185,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private List<DynamicPropertySet> executeQuery()
     {
-        //todo remove and use QueryRouter.routeAndRun - refactoring MoreRowsGenerator
+        //todo remove and use QueryRouter.getTableModel - refactoring MoreRowsGenerator
         switch (query.getType())
         {
 //        case Query.QUERY_TYPE_CUSTOM:

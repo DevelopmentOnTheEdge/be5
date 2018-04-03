@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.DocumentGenerator;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -28,7 +27,6 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.query.TableBuilder;
-import com.developmentontheedge.be5.util.ActionUtils;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
@@ -47,6 +45,10 @@ import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESUL
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.api.RestApiConstants.LIMIT;
+import static com.developmentontheedge.be5.api.RestApiConstants.OFFSET;
+import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_DIR;
 
 
 public class DocumentGeneratorImpl implements DocumentGenerator
@@ -70,66 +72,87 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public Object routeAndRun(Query query, Map<String, String> parameters)
+    public TableModel getTableModel(Query query, Map<String, String> parameters)
     {
         switch (query.getType())
         {
             case D1:
             case D1_UNKNOWN:
-                return getTable(query, parameters);
+                return getSqlTableModel(query, parameters);
             case GROOVY:
-                try
-                {
-                    Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
-                            query.getQuery(), query.getFileName());
-
-                    if(aClass != null) {
-                        TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
-
-                        tableBuilder.initialize(query, parameters);
-                        injector.injectAnnotatedFields(tableBuilder);
-
-                        return getTable(query, parameters, tableBuilder.getTableModel());
-                    }
-                    else
-                    {
-                        throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
-                    }
-                }
-                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
-                {
-                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
-                }
-            case STATIC:
-                if (ActionUtils.isStaticPage(query))
-                {
-                    return getStatic(query);
-                }
-                else
-                {
-                    throw Be5Exception.internalInQuery(new IllegalStateException("Unsupported static request"), query);
-                }
-            case D2:
-            case CONTAINER:
-            case CUSTOM:
-            case JAVASCRIPT:
-                throw Be5Exception.internal("Not support operation type: " + query.getType());
+                return getGroovyTableModel(query, parameters);
             default:
                 throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
     }
 
-    @Override
-    public StaticPagePresentation getStatic(Query query)
+    private TableModel getSqlTableModel(Query query, Map<String, String> parameters)
     {
-        String content = query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim());
+        int orderColumn = Integer.parseInt(parameters.getOrDefault(ORDER_COLUMN, "-1"));
+        String orderDir = parameters.get(ORDER_DIR);
+        int offset      = Integer.parseInt(parameters.getOrDefault(OFFSET, "0"));
+        int limit = Integer.parseInt(parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
-        String entityName = query.getEntity().getName();
-        String queryName = query.getName();
-        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
+        parameters.remove(ORDER_COLUMN);
+        parameters.remove(ORDER_DIR);
+        parameters.remove(OFFSET);
+        parameters.remove(LIMIT);
 
-        return new StaticPagePresentation(localizedQueryTitle, content);
+        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
+
+        if (maxLimit == 0)
+        {
+            //todo delete defaultPageLimit, use getQuerySettings(query).getMaxRecordsPerPage()
+            maxLimit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
+                    injector.get(CoreUtils.class).getSystemSetting("be5_defaultPageLimit", "10")).toString());
+        }
+
+        return TableModel
+                .from(query, parameters, injector)
+                .sortOrder(orderColumn, "desc".equals(orderDir))
+                .offset(offset)
+                .limit(Math.min(limit, maxLimit))
+                .build();
     }
+
+    private TableModel getGroovyTableModel(Query query, Map<String, String> parameters)
+    {
+        try
+        {
+            Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
+                    query.getQuery(), query.getFileName());
+
+            if(aClass != null)
+            {
+                TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
+
+                tableBuilder.initialize(query, parameters);
+                injector.injectAnnotatedFields(tableBuilder);
+
+                return tableBuilder.getTableModel();
+            }
+            else
+            {
+                throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
+            }
+        }
+        catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+        {
+            throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+        }
+    }
+//
+//    @Override
+//    public StaticPagePresentation getStatic(Query query)
+//    {
+//        String content = query.getProject().getStaticPageContent(UserInfoHolder.getLanguage(), query.getQuery().trim());
+//
+//        String entityName = query.getEntity().getName();
+//        String queryName = query.getName();
+//        String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
+//
+//        return new StaticPagePresentation(localizedQueryTitle, content);
+//    }
 
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
 //            Operation operation, Map<String, String> presetValues)
@@ -137,7 +160,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
-    public TablePresentation getTable(Query query, Map<String, String> parameters, TableModel tableModel)
+    public TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel)
     {
         List<TableOperationPresentation> operations = collectOperations(query);
 
@@ -158,23 +181,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query));
     }
 
-    public TablePresentation getTable(Query query, Map<String, String> parameters)
+    public TablePresentation getTablePresentation(Query query, Map<String, String> parameters)
     {
-        int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-
-        if (limit == 0)
-        {
-            //todo delete defaultPageLimit, use getQuerySettings(query).getMaxRecordsPerPage()
-            limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
-                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
-        }
-
-        TableModel table = TableModel
-                .from(query, parameters, injector)
-                .limit(limit)
-                .build();
-
-        return getTable(query, parameters, table);
+        return getTablePresentation(query, parameters, getTableModel(query, parameters));
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)
@@ -297,19 +306,15 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public JsonApiModel getDocument(Query query, Map<String, String> parameters)
+    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters)
     {
-        TableModel tableModel = TableModel
-                .from(query, parameters, injector)
-                .build();
-
-        return getDocument(query, parameters, tableModel);
+        return getJsonApiModel(query, parameters, getTableModel(query, parameters));
     }
 
     @Override
-    public JsonApiModel getDocument(Query query, Map<String, String> parameters, TableModel tableModel)
+    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel)
     {
-        Object data = getTable(query, parameters, tableModel);
+        Object data = getTablePresentation(query, parameters, tableModel);
         HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
 
         List<ResourceData> included = new ArrayList<>();

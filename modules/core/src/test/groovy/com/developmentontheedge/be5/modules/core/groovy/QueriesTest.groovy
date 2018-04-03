@@ -23,7 +23,7 @@ class QueriesTest extends Be5ProjectTest
     {
         Query query = meta.getQueryIgnoringRoles("_system_", "Entities")
 
-        def table = (TablePresentation)documentGenerator.routeAndRun(query, Collections.emptyMap())
+        def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 
         assertTrue(table.getRows().stream()
                 .filter({ x -> ((TableModel.CellModel)x.cells.get(0)).getContent() == "users"})
@@ -36,7 +36,7 @@ class QueriesTest extends Be5ProjectTest
         setSession("test", "value")
         Query query = meta.getQueryIgnoringRoles("_system_", "Session variables")
 
-        def table = (TablePresentation)documentGenerator.routeAndRun(query, Collections.emptyMap())
+        def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 
         assertEquals("test", table.getRows().get(0).id)
 
