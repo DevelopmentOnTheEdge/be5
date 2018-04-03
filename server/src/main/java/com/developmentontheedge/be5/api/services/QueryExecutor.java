@@ -28,7 +28,7 @@ public interface QueryExecutor
     /**
      * Sets sort order (changes state). Returns the query executor itself.
      */
-    QueryExecutor order(int orderColumn, boolean desc);
+    QueryExecutor order(int orderColumn, String orderDir);
 
     /**
      * Executes the query.

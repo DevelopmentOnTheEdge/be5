@@ -349,7 +349,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                         }
                     }
                     AstOrderingElement oe = new AstOrderingElement(AstNumericConstant.of(sortCol));
-                    if(orderDesc) {
+                    if("desc".equals(orderDir))
+                    {
                         oe.setDirectionToken(new Token(0, "DESC"));
                     }
                     orderBy.addChild(oe);

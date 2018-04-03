@@ -61,7 +61,7 @@ public class TableModel
 
         public Builder sortOrder(int orderColumn, String orderDir)
         {
-            queryExecutor.order(orderColumn, "desc".equals(orderDir));
+            queryExecutor.order(orderColumn, orderDir);
             this.orderColumn = orderColumn;
             this.orderDir = orderDir;
             return this;

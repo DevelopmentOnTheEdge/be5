@@ -15,7 +15,7 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     protected int offset = 0;
     protected int limit = Integer.MAX_VALUE;
     private int orderColumn = -1;
-    protected boolean orderDesc = false;
+    protected String orderDir = "asc";
     protected Boolean selectable;
     
     public AbstractQueryExecutor(Query query)
@@ -40,11 +40,11 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     }
 
     @Override
-    public final QueryExecutor order(int orderColumn, boolean desc)
+    public final QueryExecutor order(int orderColumn, String orderDir)
     {
         checkArgument( orderColumn >= -2 );
         this.orderColumn = orderColumn;
-        this.orderDesc = desc;
+        this.orderDir = orderDir;
         return this;
     }
 
