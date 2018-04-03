@@ -176,7 +176,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
         this.executeType = ExecuteType.DEFAULT;
-        this.orderColumn = -1;
+
+        if(selectable == null)
+        {
+            selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
+        }
     }
 
     private List<DynamicPropertySet> executeQuery()
@@ -341,7 +345,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void applySort(DebugQueryLogger dql, AstStart ast)
     {
-        if(orderColumn >= 0) {
+        if(getOrderColumn() >= 0) {
             try
             {
                 DynamicProperty[] schema = getSchema(new Formatter().format(ast, context, parserContext));
@@ -380,7 +384,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private int getQuerySortingColumn(DynamicProperty[] schema)
     {
         int sortCol = -1;
-        int restCols = orderColumn;
+        int restCols = getOrderColumn();
         for(int i=0; i<schema.length; i++) {
             if(schema[i].isHidden())continue;
 

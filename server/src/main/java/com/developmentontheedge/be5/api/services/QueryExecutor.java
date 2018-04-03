@@ -28,7 +28,7 @@ public interface QueryExecutor
     /**
      * Sets sort order (changes state). Returns the query executor itself.
      */
-    QueryExecutor order(int sortColumn, boolean desc);
+    QueryExecutor order(int orderColumn, boolean desc);
 
     /**
      * Executes the query.
@@ -58,6 +58,13 @@ public interface QueryExecutor
     List<String> getColumnNames() throws Be5Exception;
 
     List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
+
+    void setSelectable(boolean selectable);
+
+    int getOrderColumn();
+
+    Boolean getSelectable();
+
 
     //QueryExecutor setContextApplier(ContextApplier contextApplier);
 }

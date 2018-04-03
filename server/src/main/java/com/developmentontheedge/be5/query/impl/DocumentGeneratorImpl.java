@@ -183,8 +183,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     public TablePresentation getTable(Query query, Map<String, String> parameters, int sortColumn, boolean sortDesc)
     {
-        List<TableOperationPresentation> operations = collectOperations(query);
-        final boolean selectable = !operations.isEmpty() && query.getType() == QueryType.D1;
         int limit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
         if (limit == 0)
@@ -195,7 +193,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
 
         TableModel table = TableModel
-                .from(query, parameters, selectable, injector)
+                .from(query, parameters, injector)
                 .sortOrder(sortColumn, sortDesc)
                 .limit(limit)
                 .build();

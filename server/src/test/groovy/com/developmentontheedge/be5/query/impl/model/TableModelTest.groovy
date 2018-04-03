@@ -14,7 +14,7 @@ class TableModelTest extends TestTableQueryDBTest
     {
         Query query = projectProvider.getProject().getEntity("testtable").getQueries().get("Sub Query")
         TableModel table = TableModel
-                .from(query, new HashMap<>(), false, injector)
+                .from(query, new HashMap<>(), injector)
                 .limit(20)
                 .build()
 

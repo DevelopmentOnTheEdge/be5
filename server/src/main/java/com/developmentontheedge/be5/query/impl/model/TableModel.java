@@ -31,14 +31,12 @@ public class TableModel
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
-        private boolean selectable;
         private int offset = 0;
         private int limit = Integer.MAX_VALUE;
 
-        private Builder(Query query, Map<String, String> parametersMap, boolean selectable, Injector injector)
+        private Builder(Query query, Map<String, String> parametersMap, Injector injector)
         {
             this.query = query;
-            this.selectable = selectable;//todo move to Be5QueryExecutor
             this.queryExecutor = new Be5QueryExecutor(query, parametersMap, injector);
             this.userAwareMeta = injector.get(UserAwareMeta.class);
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
@@ -61,9 +59,9 @@ public class TableModel
         }
 
         @Deprecated
-        public Builder sortOrder(int sortColumn, boolean desc)
+        public Builder sortOrder(int orderColumn, boolean desc)
         {
-            queryExecutor.order(sortColumn + (selectable ? -1 : 0), desc);
+            queryExecutor.order(orderColumn, desc);
             return this;
         }
 //
@@ -83,13 +81,19 @@ public class TableModel
             List<ColumnModel> columns = new ArrayList<>();
             List<RowModel> rows = new ArrayList<>();
 
-            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.execute(), selectable, columns, rows );
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.execute(), columns, rows );
 
             boolean hasAggregate = addAggregateRowIfNeeded(rows);
 
             filterWithRoles(columns, rows);
 
-            return new TableModel( columns, rows, selectable, offset + rows.size() < limit ? (long)rows.size() : null , hasAggregate);
+            return new TableModel(
+                    columns,
+                    rows,
+                    queryExecutor.getSelectable(),
+                    offset + rows.size() < limit ? (long)rows.size() : null,
+                    hasAggregate
+            );
         }
 
         /*
@@ -143,7 +147,7 @@ public class TableModel
 
             List<RowModel> aggregateRow = new ArrayList<>();
 
-            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), selectable, new ArrayList<>(), aggregateRow );
+            collectColumnsAndRows( query.getEntity().getName(), query.getName(), queryExecutor.executeAggregate(), new ArrayList<>(), aggregateRow );
 
             List<CellModel> firstLine = aggregateRow.get(0).cells;
             double[] resD = new double[firstLine.size()];
@@ -232,24 +236,24 @@ public class TableModel
             return true;
         }
 
-        private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, boolean selectable, List<ColumnModel> columns,
+        private void collectColumnsAndRows(String entityName, String queryName, List<DynamicPropertySet> list, List<ColumnModel> columns,
                                            List<RowModel> rows)
         {
             for (DynamicPropertySet properties : list) {
                 if (columns.isEmpty()) {
                     columns.addAll(new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta).collectColumns());
                 }
-                rows.add(generateRow(entityName, queryName, selectable, properties));
+                rows.add(generateRow(entityName, queryName, properties));
             }
         }
 
-        private RowModel generateRow(String entityName, String queryName, boolean selectable, DynamicPropertySet properties) throws AssertionError
+        private RowModel generateRow(String entityName, String queryName, DynamicPropertySet properties) throws AssertionError
         {
             PropertiesToRowTransformer transformer = new PropertiesToRowTransformer(entityName, queryName, properties, userAwareMeta);
             List<RawCellModel> cells = transformer.collectCells(); // can contain hidden cells
             addRowClass(cells);
             List<CellModel> processedCells = processCells( cells ); // only visible cells
-            String id = selectable ? transformer.getRowId() : null;
+            String id = queryExecutor.getSelectable() ? transformer.getRowId() : null;
 
             return new RowModel( id, processedCells );
         }
@@ -300,14 +304,9 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parametersMap, Injector injector)
+    public static Builder from(Query query, Map<String, String> parameters, Injector injector)
     {
-        return from(query, parametersMap, false, injector);
-    }
-
-    public static Builder from(Query query, Map<String, String> parametersMap, boolean selectable, Injector injector)
-    {
-        return new Builder(query, parametersMap, selectable, injector);
+        return new Builder(query, parameters, injector);
     }
 
     public static class ColumnModel

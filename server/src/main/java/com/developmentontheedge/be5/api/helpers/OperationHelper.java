@@ -182,8 +182,9 @@ public class OperationHelper
             if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
         }
 
+        //TODO        .selectable(false)
         TableModel table = TableModel
-                .from(query, stringStringMap, false, injector)
+                .from(query, stringStringMap, injector)
                 .limit(Integer.MAX_VALUE)
                 .build();
         String[][] stockArr = new String[table.getRows().size()][2];

@@ -79,7 +79,7 @@ public class Table implements Component
         {
             //TODO use Be5QueryExecutor as builder
             TableModel tableModel = TableModel
-                    .from(query, parameters, selectable, injector)
+                    .from(query, parameters, injector)
                     .sortOrder(orderColumn, "desc".equals(orderDir))
                     .offset(offset)
                     .limit(Math.min(limit, maxLimit))
