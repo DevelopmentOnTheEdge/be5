@@ -64,13 +64,9 @@ public class Table implements Component
                     res.sendAsJson(document);
                     return;
                 case "update":
-                    Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
-                    if( totalNumberOfRows == null )
-                        totalNumberOfRows = TableModel.from(query, parameters, injector).count();
-
                     res.sendAsRawJson(new MoreRows(
-                            totalNumberOfRows.intValue(),
-                            totalNumberOfRows.intValue(),
+                            tableModel.getTotalNumberOfRows().intValue(),
+                            tableModel.getTotalNumberOfRows().intValue(),
                             new MoreRowsBuilder(selectable).build(tableModel)
                     ));
                     return;

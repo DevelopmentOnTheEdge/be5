@@ -181,9 +181,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
-        if( totalNumberOfRows == null )
-            totalNumberOfRows = TableModel.from(query, parameters, injector).count();
-
         return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
                 parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query));

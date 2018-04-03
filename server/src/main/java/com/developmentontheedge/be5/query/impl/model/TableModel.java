@@ -28,6 +28,8 @@ public class TableModel
     public static class Builder
     {
         private final Query query;
+        private final Injector injector;
+        private final Map<String, String> parameters;
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
@@ -37,10 +39,13 @@ public class TableModel
         private int orderColumn = -1;
         private String orderDir = "asc";
 
-        private Builder(Query query, Map<String, String> parametersMap, Injector injector)
+        private Builder(Query query, Map<String, String> parameters, Injector injector)
         {
             this.query = query;
-            this.queryExecutor = new Be5QueryExecutor(query, parametersMap, injector);
+            this.parameters = parameters;
+
+            this.injector = injector;
+            this.queryExecutor = new Be5QueryExecutor(query, parameters, injector);
             this.userAwareMeta = injector.get(UserAwareMeta.class);
             this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
         }
@@ -89,11 +94,21 @@ public class TableModel
 
             filterWithRoles(columns, rows);
 
+            Long totalNumberOfRows;
+            if(offset + rows.size() < limit)
+            {
+                totalNumberOfRows = (long)rows.size();
+            }
+            else
+            {
+                totalNumberOfRows = new Be5QueryExecutor(query, parameters, injector).count();
+            }
+
             return new TableModel(
                     columns,
                     rows,
                     queryExecutor.getSelectable(),
-                    offset + rows.size() < limit ? (long)rows.size() : null,
+                    totalNumberOfRows,
                     hasAggregate,
                     offset, limit, orderColumn, orderDir);
         }

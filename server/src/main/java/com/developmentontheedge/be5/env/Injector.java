@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.ExecutorService;
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -101,11 +100,6 @@ public interface Injector
         return get(Meta.class);
     }
 
-    default ExecutorService getExecutorService()
-    {
-        return get(ExecutorService.class);
-    }
-    
     /**
      * Returns a logger service.
      */
