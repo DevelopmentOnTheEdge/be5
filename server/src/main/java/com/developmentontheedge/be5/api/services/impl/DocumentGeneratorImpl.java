@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl;
+package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CoreUtils;
@@ -6,10 +6,12 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.query.DocumentGenerator;
+import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.query.impl.InitialRow;
+import com.developmentontheedge.be5.query.impl.InitialRowsBuilder;
 import com.developmentontheedge.be5.query.impl.model.Operations;
 import com.developmentontheedge.be5.query.impl.model.TableModel;
 import com.developmentontheedge.be5.query.impl.model.TableModel.ColumnModel;

@@ -1,13 +1,11 @@
-package com.developmentontheedge.be5.query
+package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked
 import org.junit.Test
-
 
 import static org.junit.Assert.*
 

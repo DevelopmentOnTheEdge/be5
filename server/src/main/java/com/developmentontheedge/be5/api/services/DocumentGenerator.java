@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query;
+package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.query.impl.model.TableModel;

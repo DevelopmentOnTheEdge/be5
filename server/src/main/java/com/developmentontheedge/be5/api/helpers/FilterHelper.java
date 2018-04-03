@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.query.DocumentGenerator;
+import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.beans.BeanInfoConstants;
