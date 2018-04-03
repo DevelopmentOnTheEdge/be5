@@ -1,20 +1,21 @@
 package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked
 import org.junit.Test
 
-import static org.junit.Assert.*
-
+import static org.junit.Assert.assertEquals
 
 @TypeChecked
 class DocumentGeneratorTest extends TestTableQueryDBTest
 {
     @Inject private Meta meta
     @Inject private DocumentGenerator documentGenerator
+    @Inject private OperationExecutor operationExecutor
 
     @Test
     void getTablePresentation()
@@ -112,5 +113,19 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                 "{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}]}," +
                 "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}]}]"
                 , oneQuotes(jsonb.toJson(table.getRows())))
+    }
+
+    @Test
+    void generateForm()
+    {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+
+        def result = documentGenerator.generateForm(
+                operationExecutor.create("testtable", "All records", "Insert", [] as String[], [:]),
+                [name: "test1", value: "2"])
+
+        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," +
+            "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','selectedRows':'','title':'Добавить'}",
+                oneQuotes(jsonb.toJson(result.getFirst())))
     }
 }
