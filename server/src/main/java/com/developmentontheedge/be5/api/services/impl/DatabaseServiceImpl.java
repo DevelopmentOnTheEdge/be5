@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.dbms.DbmsType;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.naming.Context;
@@ -64,7 +65,10 @@ public class DatabaseServiceImpl implements DatabaseService
             type = profile.getRdbms();
 
             BasicDataSource bds = new BasicDataSource();
-            bds.setDriverClassName(profile.getDriverDefinition());
+            if(Rdbms.MYSQL != profile.getRdbms())
+            {
+                bds.setDriverClassName(profile.getDriverDefinition());
+            }
             bds.setUrl(profile.getConnectionUrl());
             bds.setUsername(profile.getUsername());
             bds.setPassword(profile.getPassword());
