@@ -76,17 +76,17 @@ public class DpsRecordAdapter
                 return null;
             }
 
-            if(object.getClass() == BigDecimal.class && clazz == Double.class)
+            if(clazz == Double.class && object.getClass() == BigDecimal.class)
             {
                 return ((BigDecimal)object).doubleValue();
             }
 
-            if(object.getClass() == BigInteger.class && clazz == Long.class)
+            if(clazz == Long.class && object.getClass() == BigInteger.class)
             {
                 return ((BigInteger)object).longValue();
             }
 
-            if(object.getClass() == Integer.class && clazz == Short.class)
+            if(clazz == Short.class && object.getClass() == Integer.class)
             {
                 return ((Integer)object).shortValue();
             }
