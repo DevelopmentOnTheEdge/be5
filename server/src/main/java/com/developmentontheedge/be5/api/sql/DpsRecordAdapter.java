@@ -91,9 +91,19 @@ public class DpsRecordAdapter
                 return ((Integer)object).shortValue();
             }
 
+            if(clazz == Integer.class && object.getClass() == Long.class)
+            {
+                return ((Long)object).intValue();
+            }
+
+            if(clazz == String.class && object.getClass() == byte[].class)
+            {
+                return new String((byte[])object);
+            }
+
             return clazz.cast(object);
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
             String name = "";
             try
