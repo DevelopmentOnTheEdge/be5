@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.services;
+package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.CoreUtils;

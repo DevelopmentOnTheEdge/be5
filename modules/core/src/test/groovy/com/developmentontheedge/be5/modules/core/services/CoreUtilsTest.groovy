@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.CoreUtils
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Before
 import org.junit.Test
