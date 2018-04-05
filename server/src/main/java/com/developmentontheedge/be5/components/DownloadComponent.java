@@ -24,32 +24,31 @@ import java.io.InputStream;
  */
 public class DownloadComponent implements Component
 {
-
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
         String entity         = req.getNonEmpty("_t_");
-        String ID             = req.get("ID");
-        String typeColumn     = req.get("_typeColumn_");
-        String filenameColumn = req.get("_filenameColumn_");
-        String dataColumn     = req.getNonEmpty("_dataColumn_");
+        String ID             = req.getNonEmpty("ID");
+
+        String typeColumn     = req.getOrDefault("_typeColumn_", "mimeType");
+        String filenameColumn = req.getOrDefault("_filenameColumn_", "name");
+        String dataColumn     = req.getOrDefault("_dataColumn_", "data");
+
         String charsetColumn  = req.get("_charsetColumn_");
-        //String encoding       = req.get("_enc_");
         boolean download      = "yes".equals(req.get("_download_"));
 
         RecordModel record = injector.get(DatabaseModel.class).getEntity(entity).get(ID);
 
 
-        String filename = record.getValueAsString(filenameColumn);
+        String filename    = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
+        Object data        = record.getValue(dataColumn);
         String charset = MoreObjects.
                 firstNonNull(charsetColumn != null ? record.getValueAsString(charsetColumn) : null, Charsets.UTF_8.name());
 
-        Object data = record.getValue(dataColumn);
         InputStream in;
 
-
-        if (data instanceof byte[])
+        if (data instanceof byte[])//postgres, mysql
         {
             in = new ByteArrayInputStream((byte[])data);
         }
@@ -89,5 +88,4 @@ public class DownloadComponent implements Component
             throw Be5Exception.internal(e);
         }
     }
-
 }
