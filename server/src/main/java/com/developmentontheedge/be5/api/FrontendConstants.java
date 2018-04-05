@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.api;
 
 public interface FrontendConstants
 {
-
     /**
      * The first part of the link to the table.
      */
@@ -18,6 +17,7 @@ public interface FrontendConstants
 
     String OPERATION_RESULT = "operationResult";
 
+    String CATEGORY_ID_PARAM = "_cat_";
     String SEARCH_PARAM = "_search_";
     String SEARCH_PRESETS_PARAM = "_search_presets_";
 

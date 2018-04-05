@@ -21,13 +21,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.api.FrontendConstants.RELOAD_CONTROL_NAME;
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM;
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM;
 
 
 public class FilterHelper
 {
-    private static final List<String> keywords = Arrays.asList("category", SEARCH_PARAM, SEARCH_PRESETS_PARAM);
+    private static final List<String> keywords = Arrays.asList("category",
+            SEARCH_PARAM, SEARCH_PRESETS_PARAM, CATEGORY_ID_PARAM, RELOAD_CONTROL_NAME);
 
     private final DpsHelper dpsHelper;
     private final DocumentGenerator documentGenerator;

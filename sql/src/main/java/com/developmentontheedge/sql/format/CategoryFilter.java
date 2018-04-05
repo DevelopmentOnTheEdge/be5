@@ -2,6 +2,7 @@ package com.developmentontheedge.sql.format;
 
 import java.util.Optional;
 
+import com.developmentontheedge.sql.model.AstConcatExpression;
 import com.developmentontheedge.sql.model.AstFieldReference;
 import com.developmentontheedge.sql.model.AstFunNode;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
@@ -9,9 +10,11 @@ import com.developmentontheedge.sql.model.AstJoin;
 import com.developmentontheedge.sql.model.AstNumericConstant;
 import com.developmentontheedge.sql.model.AstQuery;
 import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.AstStringConstant;
 import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.JoinType;
+
 
 public class CategoryFilter
 {
@@ -44,8 +47,10 @@ public class CategoryFilter
         String alias = Optional.ofNullable( ref.getAlias() ).orElse( entity );
         AstFunNode categoryCondition = DefaultParserContext.FUNC_EQ.node( new AstFieldReference( identifier( "classifications" ),
                 identifier( "categoryID" ) ), AstNumericConstant.of( categoryId ) );
-        AstFunNode recordCondition = DefaultParserContext.FUNC_EQ.node( new AstFieldReference( identifier( "classifications" ),
-                identifier( "recordID" ) ), new AstFieldReference( identifier( alias ), identifier( primaryKeyColumn ) ) );
+        AstFunNode recordCondition = DefaultParserContext.FUNC_EQ.node(
+                new AstFieldReference( identifier( "classifications" ), identifier( "recordID" ) ),
+                new AstConcatExpression(new AstStringConstant(entity + "."), new AstFieldReference( identifier( alias ), identifier( primaryKeyColumn ) ))
+        );
         AstJoin join = JoinType.INNER.node( "classifications", DefaultParserContext.FUNC_AND.node( categoryCondition, recordCondition ) );
         ref.appendSibling(join);
     }
