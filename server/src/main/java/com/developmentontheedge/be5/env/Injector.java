@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.env;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.RequestPreprocessor;
-import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -67,15 +66,6 @@ public interface Injector
         return get(DatabaseService.class);
     }
 
-    
-    /**
-     * Returns a service that classifies categories.
-     */
-    default CategoriesService getCategoriesService()
-    {
-        return get(CategoriesService.class);
-    }
-    
     /**
      * Returns a project provider.
      */

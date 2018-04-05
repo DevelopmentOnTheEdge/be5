@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.modules.core.services.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,19 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.developmentontheedge.be5.api.services.CategoriesService.Category;
 
-class MutableCategory {
-    
-    static MutableCategory fromResultSet(ResultSet rs) throws SQLException
+public class MutableCategory
+{
+    public static MutableCategory fromResultSet(ResultSet rs) throws SQLException
     {
         return new MutableCategory(rs.getInt("ID"), rs.getInt("parentID"), rs.getString("name"));
     }
     
     public final int id;
     public final String name;
-    final int parentId;
-    final List<MutableCategory> children;
+    public final int parentId;
+    public final List<MutableCategory> children;
     
     private MutableCategory(int id, int parentId, String name, List<MutableCategory> children)
     {
@@ -33,17 +32,17 @@ class MutableCategory {
         this(id, parentId, name, new ArrayList<>());
     }
     
-    MutableCategory withChildren(List<MutableCategory> children)
+    public MutableCategory withChildren(List<MutableCategory> children)
     {
         return new MutableCategory(id, parentId, name, children);
     }
-    
-    Category toCategory()
+
+    private Category toCategory()
     {
         return new Category(id, name, MutableCategory.toCategories(children));
     }
-    
-    static List<Category> toCategories(List<MutableCategory> categories)
+
+    public static List<Category> toCategories(List<MutableCategory> categories)
     {
         return categories.stream().map(MutableCategory::toCategory).collect(Collectors.toList());
     }

@@ -7,7 +7,6 @@ context:
   - languageSelector: com.developmentontheedge.be5.components.LanguageSelector
   - menu:             com.developmentontheedge.be5.components.Menu
   - static:           com.developmentontheedge.be5.components.StaticPageComponent
-  - categories:       com.developmentontheedge.be5.components.Categories
   - queryBuilder:     com.developmentontheedge.be5.components.QueryBuilder
   - download:         com.developmentontheedge.be5.components.DownloadComponent
   - defaultTemplateProcessor:   com.developmentontheedge.be5.components.TemplateProcessor
@@ -43,9 +42,6 @@ context:
   - qRecServiceImpl:
       interface:      com.developmentontheedge.be5.api.services.QRecService
       implementation: com.developmentontheedge.be5.api.services.impl.QRecServiceImpl
-  - categoriesService:
-      interface:      com.developmentontheedge.be5.api.services.CategoriesService
-      implementation: com.developmentontheedge.be5.api.services.impl.CategoriesServiceImpl
   - operationService:
       interface:      com.developmentontheedge.be5.api.services.OperationService
       implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl

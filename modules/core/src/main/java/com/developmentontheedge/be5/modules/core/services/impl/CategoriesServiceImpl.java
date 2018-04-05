@@ -1,16 +1,18 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.modules.core.services.CategoriesService;
+import com.developmentontheedge.be5.modules.core.services.model.Category;
+import com.developmentontheedge.be5.modules.core.services.model.MutableCategory;
 import com.developmentontheedge.be5.util.Generators;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 import java.util.Optional;
 
+
 public class CategoriesServiceImpl implements CategoriesService
 {
-    
     private final SqlService db;
     
     public CategoriesServiceImpl(SqlService db)
