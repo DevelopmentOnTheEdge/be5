@@ -537,6 +537,8 @@ public class MetaImpl implements Meta
             case SqlColumnType.TYPE_DECIMAL:
             case SqlColumnType.TYPE_CURRENCY:
                 return Double.class;
+            case SqlColumnType.TYPE_BOOL:
+                return String.class;//TODO change to Boolean
             case SqlColumnType.TYPE_DATE:
                 return Date.class;
             case SqlColumnType.TYPE_TIMESTAMP:
