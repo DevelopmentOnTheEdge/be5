@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api.validation;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.impl.model.Base64File;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -206,6 +207,8 @@ public class Validator
             setError(property, msg);
             throw new IllegalArgumentException(msg + toStringProperty(property));
         }
+
+        if (type == Base64File.class)return value;
 
         if (type == String.class)return value;
 
