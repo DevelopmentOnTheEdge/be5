@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.model;
 import java.util.List;
 import java.util.Map;
 
+import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.query.impl.InitialRow;
 
 public class TablePresentation
@@ -10,7 +11,6 @@ public class TablePresentation
     private final String title;
     private final String category;
     private final String page;
-    private final List<TableOperationPresentation> operations;
     private final boolean selectable;
     private final List<Object> columns;
     private final List<InitialRow> rows;
@@ -24,6 +24,9 @@ public class TablePresentation
     private final Long totalNumberOfRows;
     private final boolean hasAggregate;
     private final Object layout;
+
+    private final List<TableOperationPresentation> operations;
+    private final List<Category> categoryNavigation;
 
     public TablePresentation(
             String title,
@@ -40,7 +43,7 @@ public class TablePresentation
             Map<String, String> parameters,
             Long totalNumberOfRows,
             boolean hasAggregate,
-            Object layout)
+            Object layout, List<Category> categoryNavigation)
     {
         this.title = title;
         this.category = category;
@@ -57,6 +60,7 @@ public class TablePresentation
         this.totalNumberOfRows = totalNumberOfRows;
         this.hasAggregate = hasAggregate;
         this.layout = layout;
+        this.categoryNavigation = categoryNavigation;
     }
 
     public String getTitle()
@@ -72,11 +76,6 @@ public class TablePresentation
     public String getPage()
     {
         return page;
-    }
-
-    public List<TableOperationPresentation> getOperations()
-    {
-        return operations;
     }
 
     public boolean isSelectable()
@@ -132,6 +131,16 @@ public class TablePresentation
     public Object getLayout()
     {
         return layout;
+    }
+
+    public List<TableOperationPresentation> getOperations()
+    {
+        return operations;
+    }
+
+    public List<Category> getCategoryNavigation()
+    {
+        return categoryNavigation;
     }
 
     @Override

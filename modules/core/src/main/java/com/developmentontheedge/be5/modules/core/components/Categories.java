@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.modules.core.services.CategoriesService;
+import com.developmentontheedge.be5.api.services.CategoriesService;
 
 
 public class Categories implements Component

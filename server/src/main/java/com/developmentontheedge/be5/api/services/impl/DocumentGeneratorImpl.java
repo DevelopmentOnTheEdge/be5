@@ -1,12 +1,14 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
-import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -42,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.api.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
@@ -61,15 +64,23 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final Injector injector;
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
+    private final CategoriesService categoriesService;
 
-    public DocumentGeneratorImpl(CoreUtils coreUtils, UserAwareMeta userAwareMeta, Meta meta, GroovyRegister groovyRegister,
-                                 OperationService operationService, OperationExecutor operationExecutor, Injector injector)
+    public DocumentGeneratorImpl(
+            CoreUtils coreUtils,
+            UserAwareMeta userAwareMeta,
+            GroovyRegister groovyRegister,
+            OperationService operationService,
+            OperationExecutor operationExecutor,
+            CategoriesService categoriesService,
+            Injector injector)
     {
         this.coreUtils = coreUtils;
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
         this.operationService = operationService;
         this.operationExecutor = operationExecutor;
+        this.categoriesService = categoriesService;
         this.injector = injector;
     }
 
@@ -169,8 +180,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     public TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel)
     {
-        List<TableOperationPresentation> operations = collectOperations(query);
-
         List<Object> columns = tableModel.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
         List<InitialRow> rows = new InitialRowsBuilder(tableModel.isSelectable()).build(tableModel);
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
@@ -181,9 +190,25 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String localizedQueryTitle = userAwareMeta.getLocalizedQueryTitle(entityName, queryName);
         String title = localizedEntityTitle + ": " + localizedQueryTitle;
 
+        List<TableOperationPresentation> operations = collectOperations(query);
+
+        List<Category> categoryNavigation = getCategoryNavigation(entityName, parameters.get(CATEGORY_ID_PARAM));
+
         return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
-                parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query));
+                parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query), categoryNavigation);
+    }
+
+    private List<Category> getCategoryNavigation(String entityName, String categoryID)
+    {
+        if(categoryID != null)
+        {
+            return categoriesService.getCategoryNavigation(Long.parseLong(categoryID));
+        }
+        else
+        {
+            return categoriesService.getRootCategory(entityName);
+        }
     }
 
     private List<TableOperationPresentation> collectOperations(Query query)

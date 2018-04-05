@@ -7,6 +7,9 @@ context:
   - coreUtils:
       interface:      com.developmentontheedge.be5.api.services.CoreUtils
       implementation: com.developmentontheedge.be5.test.mocks.CoreUtilsForTest
+  - categoriesService:
+      interface:      com.developmentontheedge.be5.api.services.CategoriesService
+      implementation: com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest
 config:
   com.developmentontheedge.be5.api.services.impl.LogConfigurator:
     path: '/logging.properties'

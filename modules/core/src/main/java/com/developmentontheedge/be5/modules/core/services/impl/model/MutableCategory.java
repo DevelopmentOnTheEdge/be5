@@ -1,4 +1,6 @@
-package com.developmentontheedge.be5.modules.core.services.model;
+package com.developmentontheedge.be5.modules.core.services.impl.model;
+
+import com.developmentontheedge.be5.api.services.model.Category;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,10 +18,10 @@ public class MutableCategory
     
     public final int id;
     public final String name;
-    public final int parentId;
+    public final Integer parentId;
     public final List<MutableCategory> children;
     
-    private MutableCategory(int id, int parentId, String name, List<MutableCategory> children)
+    private MutableCategory(int id, Integer parentId, String name, List<MutableCategory> children)
     {
         this.id = id;
         this.name = name;

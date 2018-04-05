@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services
 
+import com.developmentontheedge.be5.api.services.CategoriesService
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Before
@@ -16,6 +17,11 @@ class CategoriesServiceTest extends Be5ProjectDBTest
     void setUp() throws Exception
     {
         db.update("DELETE FROM categories")
+
+        database.categories.add([
+                entity  : "anotherCategory",
+                name    : "another root"
+        ])
     }
 
     @Test
@@ -28,11 +34,11 @@ class CategoriesServiceTest extends Be5ProjectDBTest
     @Test
     void test()
     {
-        def parentID = database.categories.add([
+        database.categories.add([
                 entity  : "docTypes",
-                name    : "Root",
-                parentID: "0"
+                name    : "Root"
         ])
+
         def docTypes = categoriesService.getCategoriesForest("docTypes", false)
         assertEquals(1, docTypes.size())
         assertEquals("Root", docTypes.get(0).name)
@@ -43,8 +49,7 @@ class CategoriesServiceTest extends Be5ProjectDBTest
     {
         def rootID = database.categories.add([
                 entity  : "docTypes",
-                name    : "Root",
-                parentID: "0"
+                name    : "Root"
         ])
         def p1ID = database.categories.add([
                 entity  : "docTypes",
@@ -79,8 +84,7 @@ class CategoriesServiceTest extends Be5ProjectDBTest
     {
         def rootID = database.categories.add([
                 entity  : "docTypes",
-                name    : "Root",
-                parentID: "0"
+                name    : "Root"
         ])
         database.categories.add([
                 entity  : "docTypes",
@@ -102,4 +106,49 @@ class CategoriesServiceTest extends Be5ProjectDBTest
         assertEquals("Root", docTypes.get(0).name)
     }
 
+    @Test
+    void getCategoryNavigationTest()
+    {
+        def rootID = database.categories.add([
+                entity  : "docTypes",
+                name    : "Root"
+        ])
+
+        def p1ID = database.categories.add([
+                entity  : "docTypes",
+                name    : "p1",
+                parentID: rootID
+        ])
+        database.categories.add([
+                entity  : "docTypes",
+                name    : "p2",
+                parentID: rootID
+        ])
+
+        database.categories.add([
+                entity  : "docTypes",
+                name    : "c1",
+                parentID: p1ID
+        ])
+        database.categories.add([
+                entity  : "docTypes",
+                name    : "c2",
+                parentID: p1ID
+        ])
+
+        def docTypes = categoriesService.getCategoryNavigation(Long.parseLong(p1ID))
+
+        assertEquals 1, docTypes.size()
+        assertEquals "Root", docTypes.get(0).name
+
+        assertEquals 1, docTypes.get(0).children.size()
+        assertEquals "p1", docTypes.get(0).children.get(0).name
+
+        assertEquals 2, docTypes.get(0).children.get(0).children.size()
+        assertEquals "c2", docTypes.get(0).children.get(0).children.get(0).name
+        assertEquals "c1", docTypes.get(0).children.get(0).children.get(1).name
+
+        assertEquals 0, docTypes.get(0).children.get(0).children.get(0).children.size()
+        assertEquals 0, docTypes.get(0).children.get(0).children.get(1).children.size()
+    }
 }

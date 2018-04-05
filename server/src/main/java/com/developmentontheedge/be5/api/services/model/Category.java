@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.services.model;
+package com.developmentontheedge.be5.api.services.model;
 
 import java.util.List;
 import java.util.Objects;
