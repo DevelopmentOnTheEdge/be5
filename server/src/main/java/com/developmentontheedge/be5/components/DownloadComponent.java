@@ -42,7 +42,9 @@ public class DownloadComponent implements Component
 
         String filename = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
-        String charset = MoreObjects.firstNonNull(record.getValueAsString(charsetColumn), Charsets.UTF_8.name());
+        String charset = MoreObjects.
+                firstNonNull(charsetColumn != null ? record.getValueAsString(charsetColumn) : null, Charsets.UTF_8.name());
+
         Object data = record.getValue(dataColumn);
         InputStream in;
 
