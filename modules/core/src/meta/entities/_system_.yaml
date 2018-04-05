@@ -43,7 +43,7 @@ _system_:
       file: DataSource.groovy
   - Query Builder:
       type: static
-      roles: [SystemDeveloper, Administrator]
+      roles: [SystemDeveloper]
       value: queryBuilder
   operations:
   - SessionVariablesEdit:
