@@ -1,10 +1,9 @@
-package com.developmentontheedge.sql;
+package com.developmentontheedge.be5.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.Dbms;
 import com.developmentontheedge.sql.format.Formatter;

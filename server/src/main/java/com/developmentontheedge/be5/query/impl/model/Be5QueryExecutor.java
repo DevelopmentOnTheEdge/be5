@@ -16,11 +16,11 @@ import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.util.CategoryFilter;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.format.CategoryFilter;
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
@@ -408,11 +408,10 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             }
             catch( NumberFormatException e )
             {
-                IllegalArgumentException e2 = new IllegalArgumentException("Invalid category: " + categoryString, e);
-                log.log(Level.SEVERE, e2.toString() + query.getEntity().getName(), e2);
-                throw Be5Exception.internalInQuery( new IllegalArgumentException( "Invalid category: " + categoryString ),
-                        query );
+                throw Be5Exception.internalInQuery(
+                        new IllegalArgumentException( "Invalid category: " + categoryString, e ), query );
             }
+
             new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply( ast );
             dql.log("With category", ast);
         }
