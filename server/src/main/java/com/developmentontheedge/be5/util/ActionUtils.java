@@ -53,15 +53,21 @@ final public class ActionUtils
                             params.put(split[0], split[1].replace("+", " "));
                         }
                     }
-                    if(params.size() == 0){
-                        return Action.call(new HashUrl("table", parts[0]));
+                    HashUrl hashUrl;
+                    if(params.size() == 0)
+                    {
+                        hashUrl = new HashUrl("table", parts[0]);
                     }
-                    if(params.get("_on_") != null){
-                        return Action.call(new HashUrl("form", parts[0], params.get("_qn_"), params.get("_on_")));
+                    else if(params.get("_on_") != null)
+                    {
+                        hashUrl = new HashUrl("form", parts[0], params.remove("_qn_"), params.remove("_on_"));
                     }
-                    if(params.get("_qn_") != null){
-                        return Action.call(new HashUrl("table", parts[0], params.get("_qn_")));
+                    else //if(params.get("_qn_") != null)
+                    {
+                        hashUrl = new HashUrl("table", parts[0], params.remove("_qn_"));
                     }
+
+                    return Action.call(hashUrl.named(params));
                 }
 
                 return Action.call(new HashUrl("servlet").named("path", query.getQuery()));

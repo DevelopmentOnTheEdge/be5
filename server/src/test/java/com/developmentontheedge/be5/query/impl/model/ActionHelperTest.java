@@ -40,6 +40,14 @@ public class ActionHelperTest extends Be5ProjectTest
                 ActionUtils.toAction(query).arg);
     }
 
+    @Test
+    public void legacyUrlTestWithParams() throws Exception
+    {
+        Query query = getQuery(QueryType.STATIC, "welfareGroups.redir?_qn_=Муниципальные+услуги&value=1");
+        assertEquals("table/welfareGroups/Муниципальные услуги/value=1",
+                ActionUtils.toAction(query).arg);
+    }
+
     private Query getQuery(QueryType type, String queryCode)
     {
         Entity entity = meta.getEntity("testtable");
