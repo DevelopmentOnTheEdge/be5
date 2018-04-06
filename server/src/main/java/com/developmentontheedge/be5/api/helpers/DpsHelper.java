@@ -289,6 +289,11 @@ public class DpsHelper
             dp.setCanBeNull(true);
         }
 
+        if(SqlColumnType.TYPE_TEXT.equals(columnDef.getType().getTypeName()))
+        {
+            dp.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{{"inputType", "textArea"}});
+        }
+
         if(SqlColumnType.TYPE_VARCHAR.equals(columnDef.getType().getTypeName()) ||
            SqlColumnType.TYPE_CHAR.equals(columnDef.getType().getTypeName())){
             dp.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
