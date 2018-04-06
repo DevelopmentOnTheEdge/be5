@@ -135,6 +135,16 @@ public class OperationResult
         return redirect(hashUrl.toString());
     }
 
+    public static OperationResult redirectToOperation(String entityName, String queryName, String operationName, Map<String, String> params)
+    {
+        return redirect(new HashUrl(FrontendConstants.FORM_ACTION, entityName, queryName, operationName).named(params));
+    }
+
+    public static OperationResult redirectToOperation(String entityName, String queryName, String operationName)
+    {
+        return redirectToOperation(entityName, queryName, operationName, Collections.emptyMap());
+    }
+
     public static OperationResult redirectToTable(String entityName, String queryName, Map<String, String> params)
     {
         return redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params));
