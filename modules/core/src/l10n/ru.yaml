@@ -6,6 +6,7 @@ ru:
       - fio: Ф.И.О.
       - no: нет
       - yes: да
+      - Switch to categorized view: Переключиться в режим просмотра по категориям
   - messages.l10n:
     - topics: exception
       entries:
