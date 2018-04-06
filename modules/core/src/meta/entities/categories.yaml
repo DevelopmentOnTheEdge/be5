@@ -10,7 +10,6 @@ categories:
         primaryKey: true
     - entity:
         type: VARCHAR(30)
-        #todo reference: entities
     - publicID:
         type: VARCHAR(100)
         canBeNull: true
@@ -44,6 +43,11 @@ categories:
   - '*** Selection view ***':
       type: 1D
       roles: Administrator
+      operations:
+      - Delete
+      - Edit
+      - Insert
+      - Filter
       code: |-
         SELECT
             c1.ID AS "Code",
@@ -119,10 +123,7 @@ categories:
       type: 1D
       roles: Administrator
       operations:
-      - Clone
       - Delete
-      - Edit
-      - Explain Plan
       - Filter
       - Insert
       code: |-
@@ -162,3 +163,20 @@ categories:
             COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
             COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
             c1.name )
+  operations:
+  - Insert:
+      type: Groovy
+      roles: Administrator
+      file: categories/Insert.groovy
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.SilentDeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.operations.SilentEditOperation
+  - Filter:
+      roles: Administrator
+      layout: '{"type":"modalForm"}'
+      code: com.developmentontheedge.be5.operations.FilterOperation
