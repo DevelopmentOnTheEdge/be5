@@ -42,7 +42,12 @@ public class Login extends GOperationSupport
         {
             loginService.saveUser(username, request);
             postLogin(parameters);
-            setResult(OperationResult.finished(null, FrontendConstants.UPDATE_USER_INFO));
+
+            if(context.getOperationParams().get("withoutUpdateUserInfo") == null){
+                setResult(OperationResult.finished(null, FrontendConstants.UPDATE_USER_INFO));
+            }else{
+                setResult(OperationResult.finished());
+            }
         }
         else
         {
