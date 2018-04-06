@@ -46,18 +46,18 @@ categories:
       roles: Administrator
       code: |-
         SELECT
-                c1.ID AS "Code",
-         CONCAT( '{{{',e.displayName ,'}}}: ' ,
-             COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c7.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c6.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c5.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c4.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c3.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;' ),'' ) ,
-             '{{{' ,c1.name ,'}}}' )
-         AS "Category"
-         from categories c1
+            c1.ID AS "Code",
+            CONCAT(c1.entity ,': ' ,
+                COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
+                c1.name
+            ) AS "Category"
+        FROM categories c1
             LEFT JOIN categories c2 on c1.parentID = c2.ID
             LEFT JOIN categories c3 on c2.parentID = c3.ID
             LEFT JOIN categories c4 on c3.parentID = c4.ID
@@ -65,21 +65,56 @@ categories:
             LEFT JOIN categories c6 on c5.parentID = c6.ID
             LEFT JOIN categories c7 on c6.parentID = c7.ID
             LEFT JOIN categories c8 on c7.parentID = c8.ID
-               ,entities e
-         WHERE e.name = c1.entity
-         <if parameter="rootPublicID">
+        WHERE (1=1)
+        <if parameter="rootPublicID">
             AND '<parameter:rootPublicID />' IN ( c1.publicID, c2.publicID, c3.publicID, c4.publicID, c5.publicID, c6.publicID, c7.publicID, c8.publicID )
-         </if>
-         ORDER BY c1.entity,
-         CONCAT( '{{{',e.displayName ,'}}}: ' ,
-             COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c7.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c6.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c5.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c4.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c3.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;' ),'' ) ,
-             '{{{' ,c1.name ,'}}}' )
+        </if>
+        ORDER BY CONCAT(
+            COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
+            c1.name )
+  - Selection view for entity:
+      type: 1D
+      roles: Administrator
+      code: |-
+        SELECT
+            c1.ID AS "Code",
+            CONCAT(
+                COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
+                COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
+                c1.name
+            ) AS "Category"
+        FROM categories c1
+            LEFT JOIN categories c2 on c1.parentID = c2.ID
+            LEFT JOIN categories c3 on c2.parentID = c3.ID
+            LEFT JOIN categories c4 on c3.parentID = c4.ID
+            LEFT JOIN categories c5 on c4.parentID = c5.ID
+            LEFT JOIN categories c6 on c5.parentID = c6.ID
+            LEFT JOIN categories c7 on c6.parentID = c7.ID
+            LEFT JOIN categories c8 on c7.parentID = c8.ID
+        WHERE c1.entity = '<parameter:entity />'
+        <if parameter="rootPublicID">
+            AND '<parameter:rootPublicID />' IN ( c1.publicID, c2.publicID, c3.publicID, c4.publicID, c5.publicID, c6.publicID, c7.publicID, c8.publicID )
+        </if>
+        ORDER BY CONCAT(
+            COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
+            c1.name )
   - All records:
       type: 1D
       roles: Administrator
@@ -92,19 +127,21 @@ categories:
       - Insert
       code: |-
         SELECT
-         CONCAT( '{{{',e.displayName ,'}}}: ' ,
-             COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c7.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c6.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c5.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c4.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c3.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;' ),'' ) ,
-             '{{{' ,c1.name ,'}}}' )
-         AS "Category",
-                c1.publicID,
-                c1.description AS "Comment"
-         FROM categories c1
+           c1.ID AS "___ID",
+           c1.entity AS "Entity",
+           CONCAT(
+               COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
+               COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
+               COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
+               COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
+               COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
+               COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
+               COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
+               c1.name
+           ) AS "Category",
+           c1.publicID,
+           c1.description AS "Comment"
+        FROM categories c1
             LEFT JOIN categories c2 on c1.parentID = c2.ID
             LEFT JOIN categories c3 on c2.parentID = c3.ID
             LEFT JOIN categories c4 on c3.parentID = c4.ID
@@ -112,18 +149,16 @@ categories:
             LEFT JOIN categories c6 on c5.parentID = c6.ID
             LEFT JOIN categories c7 on c6.parentID = c7.ID
             LEFT JOIN categories c8 on c7.parentID = c8.ID
-               ,entities e
-         WHERE e.name = c1.entity
-         <if parameter="rootPublicID">
+        WHERE (1=1)
+        <if parameter="rootPublicID">
             AND '<parameter:rootPublicID />' IN ( c1.publicID, c2.publicID, c3.publicID, c4.publicID, c5.publicID, c6.publicID, c7.publicID, c8.publicID )
-         </if>
-         ORDER BY c1.entity,
-         CONCAT( '{{{',e.displayName ,'}}}: ' ,
-             COALESCE( CONCAT( '{{{',c8.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c7.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c6.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c5.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c4.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c3.name ,'}}}-&gt;' ),'' ) ,
-             COALESCE( CONCAT( '{{{',c2.name ,'}}}-&gt;' ),'' ) ,
-             '{{{' ,c1.name ,'}}}' )
+        </if>
+        ORDER BY CONCAT(
+            COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
+            COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
+            c1.name )
