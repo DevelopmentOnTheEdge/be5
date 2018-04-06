@@ -22,6 +22,14 @@ class Insert extends GOperationSupport
             TAG_LIST_ATTR = list as String[][]
         }
 
+        if(context.operationParams.get("entity") != null)
+        {
+            dps.edit("parentID") {
+                TAG_LIST_ATTR = helper.getTagsFromCustomSelectionView("categories",
+                        "Selection view for entity", [entity: context.operationParams.get("entity")])
+            }
+        }
+
         return dpsHelper.setOperationParams(dps, context.operationParams)
     }
 

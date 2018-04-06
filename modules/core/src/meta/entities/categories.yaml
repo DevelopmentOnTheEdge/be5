@@ -43,11 +43,6 @@ categories:
   - '*** Selection view ***':
       type: 1D
       roles: Administrator
-      operations:
-      - Delete
-      - Edit
-      - Insert
-      - Filter
       code: |-
         SELECT
             c1.ID AS "Code",
@@ -124,6 +119,7 @@ categories:
       roles: Administrator
       operations:
       - Delete
+      - Edit
       - Filter
       - Insert
       code: |-
