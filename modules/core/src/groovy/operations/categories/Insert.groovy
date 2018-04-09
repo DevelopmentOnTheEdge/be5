@@ -7,8 +7,7 @@ class Insert extends GOperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dpsHelper.addDpForColumns(dps, getInfo().getEntity(),
-                ["entity", "name", "parentID", "description"], presetValues)
+        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues)
 
         def entities = meta.getOrderedEntities(userInfo.getLanguage())
 

@@ -65,8 +65,11 @@ ru:
       - Insert
       - Filter
       entries:
-      - PublicID: Код категориии
-      - Name: Наименование
+      - publicID: Код категориии
+      - parentID: Владелец
+      - name: Наименование
+      - description: Описание
+      - entity: Класс
   - users:
     - topics: displayName
       entries:
