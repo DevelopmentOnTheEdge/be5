@@ -13,7 +13,7 @@ import static org.junit.Assert.*
 class DynamicPropertyMetaClassTest extends Be5ProjectTest
 {
     @Test
-    void leftShift() throws Exception
+    void leftShift()
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport()
 

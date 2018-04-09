@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals
 class DynamicPropertySetMetaClassTest
 {
     @Test
-    void leftShiftTest() throws Exception {
+    void leftShiftTest() {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
 
         DynamicPropertySet dynamicProperties = DynamicPropertySetMetaClass.leftShift(dps, ImmutableMap.of(

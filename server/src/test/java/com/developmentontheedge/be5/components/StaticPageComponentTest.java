@@ -32,7 +32,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
     }
 
     @Test
-    public void generate() throws Exception
+    public void generate()
     {
         Response response = mock(Response.class);
         String page = "info.be";
@@ -50,7 +50,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
     }
 
     @Test
-    public void generateFoo() throws Exception
+    public void generateFoo()
     {
         Response response = mock(Response.class);
 

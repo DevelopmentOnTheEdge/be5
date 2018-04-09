@@ -159,7 +159,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void getValuesTest() throws Exception
+    void getValuesTest()
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"))
         dps.setValue("name", "TestName")
@@ -167,7 +167,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void getDpsTest() throws Exception
+    void getDpsTest()
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"))
         assertNotNull dps.getProperty("value")
@@ -178,7 +178,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void generateInsertSqlTest() throws Exception
+    void generateInsertSqlTest()
     {
         Entity metersEntity = meta.getEntity("meters")
 
@@ -189,7 +189,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void getLabelAndGetLabelRawTest() throws Exception
+    void getLabelAndGetLabelRawTest()
     {
         def dps = new DynamicPropertySetSupport()
         dpsHelper.addLabel(dps, "test")

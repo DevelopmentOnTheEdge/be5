@@ -21,7 +21,7 @@ public class MultiThreadedTest extends Be5ProjectDBTest
     @Inject private SqlService db;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         db.update("DELETE FROM persons" );
     }

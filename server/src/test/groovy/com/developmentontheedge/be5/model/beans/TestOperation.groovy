@@ -9,7 +9,7 @@ class TestOperation extends GOperationSupport implements Operation
 {
 
     @Override
-    Object getParameters(Map<String, Object> presetValues) throws Exception
+    Object getParameters(Map<String, Object> presetValues)
     {
         dps.add {
             name      = "test1"
@@ -29,7 +29,7 @@ class TestOperation extends GOperationSupport implements Operation
     }
 
     @Override
-    void invoke(Object parameters) throws Exception
+    void invoke(Object parameters)
     {
         database.testtableAdmin << [
             "test1": dps["test1"],

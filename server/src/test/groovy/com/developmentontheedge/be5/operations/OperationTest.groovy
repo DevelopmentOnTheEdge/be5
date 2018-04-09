@@ -41,7 +41,7 @@ class OperationTest extends SqlMockOperationTest
     }
 
     @Test
-    void withOperationParams() throws Exception
+    void withOperationParams()
     {
         OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),

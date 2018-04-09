@@ -10,21 +10,21 @@ public class EntityModelTest extends TestCase
 //    private final DatabaseConnector connector = TestDB.getDefaultConnector( "postgresql", "be_test" );
 //
 //    @Override
-//    protected void tearDown() throws Exception
+//    protected void tearDown()
 //    {
 //        super.tearDown();
 //        connector.releaseConnection( null );
 //    }
 //
 //    @Override
-//    protected void setUp() throws Exception
+//    protected void setUp()
 //    {
 //        super.setUp();
 //        TestDB.delete( connector, "persons" );
 //        ReferencesQueriesCache.getInstance().clear();
 //    }
 //
-//    public void testIterator() throws Exception
+//    public void testIterator()
 //    {
 //        DatabaseModel database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
 //        EntityModel persons = database.getEntity( "persons" );
@@ -58,7 +58,7 @@ public class EntityModelTest extends TestCase
 //        assertEquals( "female", database.getEntity( "persons" ).get( personID ).getValue( "SEx" ) );
 //    }
 //
-//    public void testRemove() throws Exception
+//    public void testRemove()
 //    {
 //        DatabaseModel database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
 //
@@ -211,7 +211,7 @@ public class EntityModelTest extends TestCase
 //        }
 //    }
 //
-//    public void testEntityModelInvokeMethod() throws Exception
+//    public void testEntityModelInvokeMethod()
 //    {
 //        if( ExtendedModels.isAvailable( connector ) )
 //        {
@@ -247,7 +247,7 @@ public class EntityModelTest extends TestCase
 //        }
 //    }
 //
-//    public void testEntityModelInvokeMethodWithArgs() throws Exception
+//    public void testEntityModelInvokeMethodWithArgs()
 //    {
 //        if( ExtendedModels.isAvailable( connector ) )
 //        {

@@ -14,6 +14,7 @@ import static org.junit.Assert.*
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.verify
 
+
 class UtilsTest extends Be5ProjectTest
 {
     @Inject SqlService db
@@ -23,7 +24,7 @@ class UtilsTest extends Be5ProjectTest
     private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" )
 
     @Test
-    void inClause() throws Exception
+    void inClause()
     {
         assertEquals "(?, ?, ?, ?, ?)", Utils.inClause(5)
 
@@ -32,14 +33,14 @@ class UtilsTest extends Be5ProjectTest
     }
 
     @Test
-    void addPrefix() throws Exception
+    void addPrefix()
     {
         assertArrayEquals(['companies.1','companies.2'] as String[],
                 Utils.addPrefix(['1','2'] as String[], "companies"))
     }
 
     @Test
-    void isEmptyTest() throws Exception
+    void isEmptyTest()
     {
         assertTrue Utils.isEmpty(null)
         assertTrue Utils.isEmpty("")
@@ -55,14 +56,14 @@ class UtilsTest extends Be5ProjectTest
     }
 
     @Test
-    void changeType() throws Exception
+    void changeType()
     {
         assertEquals 3L, Utils.changeType("3", Long)
         assertEquals 3, Utils.changeType("3", Integer)
     }
 
     @Test
-    void changeTypeDateTime() throws Exception
+    void changeTypeDateTime()
     {
         assertEquals dateFormatter.parse("2017-08-27"), Utils.changeType( "2017-08-27", java.sql.Date.class)
         assertEquals dateFormatter.parse("2017-08-27"), Utils.changeType( "2017-08-27", Date.class)
@@ -74,7 +75,7 @@ class UtilsTest extends Be5ProjectTest
     }
 
     @Test
-    void changeTypeArray() throws Exception
+    void changeTypeArray()
     {
         String[] stringArray = ["1", "2","3"] as String[]
 
@@ -83,7 +84,7 @@ class UtilsTest extends Be5ProjectTest
     }
 
     @Test
-    void testDbUpdateWithChangeType() throws Exception
+    void testDbUpdateWithChangeType()
     {
         String[] records = ["1", "2"]
         db.update("DELETE users WHERE id IN " + Utils.inClause(records.length),

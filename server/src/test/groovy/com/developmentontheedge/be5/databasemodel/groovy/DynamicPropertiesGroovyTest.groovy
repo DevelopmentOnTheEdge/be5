@@ -19,7 +19,7 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     @Inject private DatabaseModel database
 
     @Test
-    void testSetValue() throws Exception
+    void testSetValue()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps[ "property" ] = "value"
@@ -27,7 +27,7 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     }
 
     @Test
-    void testGetValue() throws Exception
+    void testGetValue()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build( "property", String.class ).value( "value" )
@@ -36,7 +36,7 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     }
 
     @Test
-    void testGetProperty() throws Exception
+    void testGetProperty()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build( "property", String.class ).value( "value" )
@@ -46,14 +46,14 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     }
 
     @Test
-    void testGetMissingValue() throws Exception
+    void testGetMissingValue()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         assertNull dps.$property
     }
 
     @Test
-    void testPropertyAccess() throws Exception
+    void testPropertyAccess()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         dps.build( "property", String.class ).value( "value" )
@@ -61,7 +61,7 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     }
 
     @Test
-    void testGetMissingValueWithoutAccessor() throws Exception
+    void testGetMissingValueWithoutAccessor()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
         boolean assertException = false

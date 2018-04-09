@@ -16,7 +16,7 @@ public class ActionHelperTest extends Be5ProjectTest
     @Inject private Meta meta;
 
     @Test
-    public void legacyUrlTest() throws Exception
+    public void legacyUrlTest()
     {
         Query query = getQuery(QueryType.STATIC, "welfareGroups.redir?_qn_=Муниципальные+услуги");
         assertEquals("table/welfareGroups/Муниципальные услуги",
@@ -24,7 +24,7 @@ public class ActionHelperTest extends Be5ProjectTest
     }
 
     @Test
-    public void legacyFormUrlTest() throws Exception
+    public void legacyFormUrlTest()
     {
         Query query = getQuery(QueryType.STATIC, "public.households.redir?_qn_=Account+Balance&_on_=OpenReview4Period");
         assertEquals("form/public.households/Account Balance/OpenReview4Period",
@@ -32,7 +32,7 @@ public class ActionHelperTest extends Be5ProjectTest
     }
 
     @Test
-    public void legacyUrlTest2() throws Exception
+    public void legacyUrlTest2()
     {
         Query query = getQuery(QueryType.STATIC, "mspReceiverCategories.redir");
 
@@ -41,7 +41,7 @@ public class ActionHelperTest extends Be5ProjectTest
     }
 
     @Test
-    public void legacyUrlTestWithParams() throws Exception
+    public void legacyUrlTestWithParams()
     {
         Query query = getQuery(QueryType.STATIC, "welfareGroups.redir?_qn_=Муниципальные+услуги&value=1");
         assertEquals("table/welfareGroups/Муниципальные услуги/value=1",

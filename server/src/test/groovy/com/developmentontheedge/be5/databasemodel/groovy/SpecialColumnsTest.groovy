@@ -44,7 +44,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
     }
 
     @Test
-    void testInsert() throws Exception
+    void testInsert()
     {
         def id = table << [
             name : "test",

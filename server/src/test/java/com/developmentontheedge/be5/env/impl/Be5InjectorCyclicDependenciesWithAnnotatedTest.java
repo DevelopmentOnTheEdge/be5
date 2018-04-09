@@ -24,7 +24,7 @@ public class Be5InjectorCyclicDependenciesWithAnnotatedTest extends Be5ProjectTe
     }
 
     @Test
-    public void injectWithAnnotatedAServiceFirst() throws Exception
+    public void injectWithAnnotatedAServiceFirst()
     {
         injector.get(AService.class).aMethodUseBService();
         verify(SqlServiceMock.mock).update("bMethod sql");
@@ -34,7 +34,7 @@ public class Be5InjectorCyclicDependenciesWithAnnotatedTest extends Be5ProjectTe
     }
 
     @Test
-    public void injectWithAnnotatedBServiceFirst() throws Exception
+    public void injectWithAnnotatedBServiceFirst()
     {
         Injector sqlMockInjector2 = Be5.createInjector(Stage.DEVELOPMENT, new SqlMockBinder());
 

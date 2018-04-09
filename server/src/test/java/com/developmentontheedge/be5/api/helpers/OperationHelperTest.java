@@ -53,7 +53,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void getTagsFromCustomSelectionViewTest() throws Exception
+    public void getTagsFromCustomSelectionViewTest()
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
@@ -63,7 +63,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void getTagsFromCustomSelectionViewWithParamTest() throws Exception
+    public void getTagsFromCustomSelectionViewWithParamTest()
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} };
 
@@ -74,7 +74,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void getTagsFromCustomSelectionViewWithParamTestNull() throws Exception
+    public void getTagsFromCustomSelectionViewWithParamTestNull()
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
@@ -108,7 +108,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void getTagsFromQueryTest() throws Exception
+    public void getTagsFromQueryTest()
     {
         String[][] strings = new String[][]{ {"01", "Regional"},{"02", "Municipal"},{"03", "Federal"}, {"04", "Regional"} };
 
@@ -118,7 +118,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void localizeTags() throws Exception
+    public void localizeTags()
     {
         String[][] tags = helper.localizeTags("testTags", new String[][]{ {"01", "Regional"},{"02", "Municipal"} });
 
@@ -127,7 +127,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void localizeTagsMap() throws Exception
+    public void localizeTagsMap()
     {
         String[][] tags = helper.localizeTags("testTags", ImmutableList.of(
                 ImmutableList.of("01", "Regional"),
@@ -139,7 +139,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void readAsMapTest() throws Exception
+    public void readAsMapTest()
     {
         Map<String, String> values = helper.readAsMap("SELECT code AS \"CODE\", admlevel AS \"NAME\" FROM testTags");
 
@@ -151,7 +151,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void getTagsTest() throws Exception
+    public void getTagsTest()
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
@@ -161,7 +161,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void readAsRecordsTest() throws Exception
+    public void readAsRecordsTest()
     {
         List<DynamicPropertySet> list = helper.readAsRecords("SELECT code, admlevel FROM testTags");
 
@@ -175,7 +175,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void readAsRecordsFromQueryTest() throws Exception
+    public void readAsRecordsFromQueryTest()
     {
         List<DynamicPropertySet> list = helper.readAsRecordsFromQuery("testTags", "With parameter",
                 Collections.emptyMap());
@@ -187,7 +187,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void readOneRecordTest() throws Exception
+    public void readOneRecordTest()
     {
         Map<String, Long> stringLongHashMap = new HashMap<>(Collections.emptyMap());
         QRec qRec = helper.readOneRecord("testTags", "With parameter", stringLongHashMap);
@@ -197,7 +197,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void readAsRecordsFromQuerySqlTest() throws Exception
+    public void readAsRecordsFromQuerySqlTest()
     {
         List<DynamicPropertySet> list = helper.readAsRecordsFromQuery(
                         "SELECT code AS \"ID\", admlevel AS \"NAME\"\n" +
@@ -215,7 +215,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    public void readAsListTest() throws Exception
+    public void readAsListTest()
     {
         List<List<Object>> lists = helper.readAsList("SELECT code, admlevel FROM testTags");
 

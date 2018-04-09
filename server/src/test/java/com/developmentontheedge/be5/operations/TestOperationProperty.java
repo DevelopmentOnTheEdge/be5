@@ -12,7 +12,7 @@ public class TestOperationProperty extends OperationSupport
 {
 
     @Override
-    public Object getParameters(Map<String, Object> presetValues) throws Exception
+    public Object getParameters(Map<String, Object> presetValues)
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
         dps.add(new DynamicProperty("simple", "Name", String.class));
@@ -28,7 +28,7 @@ public class TestOperationProperty extends OperationSupport
     }
 
     @Override
-    public void invoke(Object parameters) throws Exception
+    public void invoke(Object parameters)
     {
         DynamicPropertySet dps = (DynamicPropertySet)parameters;
         db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));

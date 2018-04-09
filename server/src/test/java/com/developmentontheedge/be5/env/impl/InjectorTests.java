@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 public class InjectorTests extends Be5ProjectTest
 {
     @Test
-    public void componentWithInjectAnnotation() throws Exception
+    public void componentWithInjectAnnotation()
     {
         Component component = getComponent("testComponentWithInjectAnnotation");
 

@@ -11,7 +11,7 @@ import static org.junit.Assert.*
 class RequestTest extends TestUtils
 {
     @Test
-    void getValues() throws Exception
+    void getValues()
     {
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
                 "{'name':'test','value':1,'accept':true}")

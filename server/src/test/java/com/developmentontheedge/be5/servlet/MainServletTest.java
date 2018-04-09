@@ -110,7 +110,7 @@ public class MainServletTest extends Be5ProjectTest
     }
 
     @Test
-    public void runComponent() throws Exception
+    public void runComponent()
     {
         Request req = mock(Request.class);
         when(req.getRequestUri()).thenReturn("info.be");
@@ -122,7 +122,7 @@ public class MainServletTest extends Be5ProjectTest
     }
 
     @Test
-    public void runUnknownComponent() throws Exception
+    public void runUnknownComponent()
     {
         String componentId = "foo";
         Request req = mock(Request.class);
@@ -136,7 +136,7 @@ public class MainServletTest extends Be5ProjectTest
     }
 
     @Test
-    public void testSimplify() throws Exception
+    public void testSimplify()
     {
         Map<String, String[]> in = new HashMap<>();
         in.put("testP", new String[]{"p1", "p2"});

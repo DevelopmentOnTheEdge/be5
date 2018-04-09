@@ -46,7 +46,7 @@ public class ResponseTest extends Be5ProjectTest
     }
 
 //    @Test
-//    public void sendErrorsAsJson() throws Exception {
+//    public void sendErrorsAsJson() {
 //        Action call = new Action("call", "test/path");
 //        response.sendErrorsAsJson(call);
 //

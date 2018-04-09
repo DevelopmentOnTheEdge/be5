@@ -109,7 +109,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     }
 
     @Test(expected = NumberFormatException.class)
-    void testInsertError() throws Exception
+    void testInsertError()
     {
         testtableAdmin << [
                 "name": "InsertName",

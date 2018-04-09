@@ -102,7 +102,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    void groovyTableTest() throws Exception
+    void groovyTableTest()
     {
         def table = (TablePresentation)documentGenerator.
                 getTablePresentation(meta.getQueryIgnoringRoles("testtableAdmin", "TestGroovyTable"), new HashMap<>())

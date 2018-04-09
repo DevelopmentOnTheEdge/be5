@@ -37,7 +37,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
                     "fio","Ф.И.О.","no","нет","yes","да"));
 
     @Test
-    public void generate() throws Exception
+    public void generate()
     {
         Response response = mock(Response.class);
 
@@ -51,7 +51,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
-    public void generateLanguageParameterIsAbsent() throws Exception
+    public void generateLanguageParameterIsAbsent()
     {
         expectedEx.expect(Be5Exception.class);
         expectedEx.expectMessage(ErrorTitles.formatTitle(Be5ErrorCode.PARAMETER_ABSENT, "language"));
@@ -62,7 +62,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
     }
 
     @Test
-    public void generateSelect() throws Exception
+    public void generateSelect()
     {
         Response response = mock(Response.class);
 
