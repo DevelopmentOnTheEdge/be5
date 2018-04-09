@@ -10,6 +10,7 @@ categories:
         primaryKey: true
     - entity:
         type: VARCHAR(30)
+        reference: entities
     - publicID:
         type: VARCHAR(100)
         canBeNull: true
@@ -65,43 +66,9 @@ categories:
             LEFT JOIN categories c7 on c6.parentID = c7.ID
             LEFT JOIN categories c8 on c7.parentID = c8.ID
         WHERE (1=1)
-        <if parameter="rootPublicID">
-            AND '<parameter:rootPublicID />' IN ( c1.publicID, c2.publicID, c3.publicID, c4.publicID, c5.publicID, c6.publicID, c7.publicID, c8.publicID )
+        <if parameter="entity">
+            AND c1.entity = '<parameter:entity />'
         </if>
-        ORDER BY CONCAT(
-            COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
-            COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
-            COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
-            COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
-            COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
-            COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
-            COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
-            c1.name )
-  - Selection view for entity:
-      type: 1D
-      roles: Administrator
-      code: |-
-        SELECT
-            c1.ID AS "Code",
-            CONCAT(
-                COALESCE( CONCAT( c8.name ,'->' ),'' ) ,
-                COALESCE( CONCAT( c7.name ,'->' ),'' ) ,
-                COALESCE( CONCAT( c6.name ,'->' ),'' ) ,
-                COALESCE( CONCAT( c5.name ,'->' ),'' ) ,
-                COALESCE( CONCAT( c4.name ,'->' ),'' ) ,
-                COALESCE( CONCAT( c3.name ,'->' ),'' ) ,
-                COALESCE( CONCAT( c2.name ,'->' ),'' ) ,
-                c1.name
-            ) AS "Category"
-        FROM categories c1
-            LEFT JOIN categories c2 on c1.parentID = c2.ID
-            LEFT JOIN categories c3 on c2.parentID = c3.ID
-            LEFT JOIN categories c4 on c3.parentID = c4.ID
-            LEFT JOIN categories c5 on c4.parentID = c5.ID
-            LEFT JOIN categories c6 on c5.parentID = c6.ID
-            LEFT JOIN categories c7 on c6.parentID = c7.ID
-            LEFT JOIN categories c8 on c7.parentID = c8.ID
-        WHERE c1.entity = '<parameter:entity />'
         <if parameter="rootPublicID">
             AND '<parameter:rootPublicID />' IN ( c1.publicID, c2.publicID, c3.publicID, c4.publicID, c5.publicID, c6.publicID, c7.publicID, c8.publicID )
         </if>
@@ -147,6 +114,9 @@ categories:
             LEFT JOIN categories c7 on c6.parentID = c7.ID
             LEFT JOIN categories c8 on c7.parentID = c8.ID
         WHERE (1=1)
+        <if parameter="entity">
+            AND c1.entity = '<parameter:entity />'
+        </if>
         <if parameter="rootPublicID">
             AND '<parameter:rootPublicID />' IN ( c1.publicID, c2.publicID, c3.publicID, c4.publicID, c5.publicID, c6.publicID, c7.publicID, c8.publicID )
         </if>
@@ -161,9 +131,8 @@ categories:
             c1.name )
   operations:
   - Insert:
-      type: Groovy
       roles: Administrator
-      file: categories/Insert.groovy
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
   - Delete:
       records: 2
       roles: Administrator
