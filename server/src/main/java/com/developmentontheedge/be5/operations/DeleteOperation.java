@@ -34,16 +34,19 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
         for (TableReference reference : collectionRefs)
         {
-            //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
-            int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
-                            " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
-                    (Object[]) context.records);
-
-            if( updateCount1 > 0 )
+            if(reference.getTableTo().equals(getInfo().getEntityName()) && reference.getColumnsTo().equals(getInfo().getEntity().getPrimaryKey()))
             {
-                //todo localizedMessage
-                out.append( "" + updateCount1 +
-                        " " + ( "records were deleted from the collection" ) + " <i>" + reference.getTableFrom() + "</i><br />" );
+                //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
+                int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
+                                " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
+                        (Object[]) context.records);
+
+                if (updateCount1 > 0)
+                {
+                    //todo localizedMessage
+                    out.append("" + updateCount1 +
+                            " " + ("records were deleted from the collection") + " <i>" + reference.getTableFrom() + "</i><br />");
+                }
             }
         }
 
@@ -53,15 +56,18 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
             for (TableReference reference : genericCollectionRefs)
             {
-                //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
-                int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
-                                " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
-                        (Object[]) Utils.addPrefix(context.records, getInfo().getEntityName() + "."));
-
-                if( updateCount1 > 0 )
+                if(reference.getColumnsTo() == null)
                 {
-                    out.append( "" + updateCount1 +
-                            " " + ( "records were deleted from the generic collection" ) + " <i>" + reference.getTableFrom() + "</i><br />" );
+                    //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
+                    int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
+                                    " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
+                            (Object[]) Utils.addPrefix(context.records, getInfo().getEntityName() + "."));
+
+                    if (updateCount1 > 0)
+                    {
+                        out.append("" + updateCount1 +
+                                " " + ("records were deleted from the generic collection") + " <i>" + reference.getTableFrom() + "</i><br />");
+                    }
                 }
             }
         }
