@@ -10,6 +10,7 @@ core:
   - categories
   - classifications
   - countries
+  - entities
   - icons
   - languages
   - mimeTypes

@@ -1,9 +1,9 @@
-roles:
+entities:
   type: metadata
-  displayName: Roles
+  displayName: Entities
   primaryKey: _dummy_
   queries:
   - '*** Selection view ***':
       type: Groovy
       roles: [SystemDeveloper, Administrator]
-      file: roles/SelectionView.groovy
+      file: entities/SelectionView.groovy
