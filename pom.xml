@@ -19,6 +19,7 @@
   <module>entitygen</module>
   <module>wizard</module>
   <module>modules/core</module>
+  <module>modules/metaui</module>
  </modules>
 
  <distributionManagement>

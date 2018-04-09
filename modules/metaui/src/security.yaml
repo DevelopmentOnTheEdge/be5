@@ -1,0 +1,10 @@
+security:
+  roles:
+    Administrator: {}
+    CompanyAdmin: {}
+    GroupAdmin: {}
+    Guest: {}
+    ServerAdmin: {}
+    SystemDeveloper: {}
+    User: {}
+  groups: {}

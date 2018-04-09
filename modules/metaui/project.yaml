@@ -1,0 +1,8 @@
+metaui:
+  moduleProject: true
+  features: []
+  l10n: ru
+  projectFileStructure: {}
+  modules: []
+  application:
+  - _metaui_

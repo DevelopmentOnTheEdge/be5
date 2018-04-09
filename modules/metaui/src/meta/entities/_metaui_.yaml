@@ -1,0 +1,22 @@
+_metaui_:
+  type: table
+  displayName: Meta UI
+  order: '91'
+  primaryKey: _dummy_
+  queries:
+  - Entities:
+      type: Groovy
+      roles: [SystemDeveloper, Administrator]
+      operations:
+      - AddEntity
+      - AddQuery
+      file: Entities.groovy
+  operations:
+  - AddEntity:
+      type: Groovy
+      roles: [SystemDeveloper, Administrator]
+      file: metaui/AddEntity.groovy
+  - AddQuery:
+      type: Groovy
+      roles: [SystemDeveloper, Administrator]
+      file: metaui/AddQuery.groovy
