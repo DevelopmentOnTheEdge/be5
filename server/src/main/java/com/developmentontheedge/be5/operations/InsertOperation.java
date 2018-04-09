@@ -1,13 +1,28 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-public class InsertOperation extends SilentInsertOperation
+import java.util.Map;
+
+
+public class InsertOperation extends OperationSupport
 {
+    @Override
+    public Object getParameters(Map<String, Object> presetValues) throws Exception
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(), presetValues);
+
+        return dpsHelper.setOperationParams(dps, context.getOperationParams());
+    }
+
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        super.invoke(parameters);
+        database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet)parameters);
 
         setResult(OperationResult.finished());
     }
