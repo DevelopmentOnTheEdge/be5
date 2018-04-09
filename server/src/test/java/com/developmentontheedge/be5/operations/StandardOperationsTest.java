@@ -24,8 +24,8 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void deleteOperation()
     {
-        assertEquals(OperationResult.finished(),
-                generateOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond());
+        assertEquals(OperationStatus.FINISHED,
+                generateOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
 
         verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
 
