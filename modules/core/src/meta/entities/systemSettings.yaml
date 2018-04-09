@@ -1,5 +1,5 @@
 systemSettings:
-  type: metadata
+  type: dictionary
   displayName: System Settings
   primaryKey: _dummy_
   scheme:

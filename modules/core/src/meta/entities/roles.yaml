@@ -1,0 +1,5 @@
+roles:
+  type: metadata
+  displayName: System Settings
+  primaryKey: _dummy_
+  queries: []

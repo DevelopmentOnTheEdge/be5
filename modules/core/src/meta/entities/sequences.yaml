@@ -1,5 +1,5 @@
 sequences:
-  type: metadata
+  type: dictionary
   displayName: Sequences
   primaryKey: _dummy_
   scheme:
