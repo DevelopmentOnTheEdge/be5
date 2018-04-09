@@ -63,6 +63,12 @@ public interface QueryExecutor
 
     int getOrderColumn();
 
+    String getOrderDir();
+
+    int getOffset();
+
+    int getLimit();
+
     Boolean getSelectable();
 
 

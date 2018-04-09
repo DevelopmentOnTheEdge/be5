@@ -11,12 +11,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 public abstract class AbstractQueryExecutor implements QueryExecutor
 {
     protected final Query query;
-    
+
     protected int offset = 0;
     protected int limit = Integer.MAX_VALUE;
-    private int orderColumn = -1;
+
+    protected int orderColumn = -1;
     protected String orderDir = "asc";
-    protected Boolean selectable;
+
+    protected Boolean selectable = false;
     
     public AbstractQueryExecutor(Query query)
     {
@@ -58,6 +60,24 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     public int getOrderColumn()
     {
         return orderColumn + (selectable ? -1 : 0);
+    }
+
+    @Override
+    public String getOrderDir()
+    {
+        return orderDir;
+    }
+
+    @Override
+    public int getOffset()
+    {
+        return offset;
+    }
+
+    @Override
+    public int getLimit()
+    {
+        return limit;
     }
 
     @Override

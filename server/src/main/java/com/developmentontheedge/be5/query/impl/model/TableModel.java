@@ -34,11 +34,6 @@ public class TableModel
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
-        private int offset = 0;
-        private int limit = Integer.MAX_VALUE;
-        private int orderColumn = -1;
-        private String orderDir = "asc";
-
         private Builder(Query query, Map<String, String> parameters, Injector injector)
         {
             this.query = query;
@@ -53,22 +48,24 @@ public class TableModel
         public Builder offset(int offset)
         {
             this.queryExecutor.offset( offset );
-            this.offset = offset;
             return this;
         }
 
         public Builder limit(int limit)
         {
             this.queryExecutor.limit( limit );
-            this.limit = limit;
             return this;
         }
 
         public Builder sortOrder(int orderColumn, String orderDir)
         {
             queryExecutor.order(orderColumn, orderDir);
-            this.orderColumn = orderColumn;
-            this.orderDir = orderDir;
+            return this;
+        }
+
+        public Builder selectable(boolean selectable)
+        {
+            this.queryExecutor.setSelectable( selectable );
             return this;
         }
 //
@@ -95,7 +92,7 @@ public class TableModel
             filterWithRoles(columns, rows);
 
             Long totalNumberOfRows;
-            if(offset + rows.size() < limit)
+            if(queryExecutor.getOffset() + rows.size() < queryExecutor.getLimit())
             {
                 totalNumberOfRows = (long)rows.size();
             }
@@ -110,7 +107,10 @@ public class TableModel
                     queryExecutor.getSelectable(),
                     totalNumberOfRows,
                     hasAggregate,
-                    offset, limit, orderColumn, orderDir);
+                    queryExecutor.getOffset(),
+                    queryExecutor.getLimit(),
+                    queryExecutor.getOrderColumn(),
+                    queryExecutor.getOrderDir());
         }
 
         /*

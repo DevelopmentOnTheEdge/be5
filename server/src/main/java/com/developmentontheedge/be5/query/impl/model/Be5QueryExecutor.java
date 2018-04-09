@@ -180,10 +180,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.subQueryKeys = Collections.emptySet();
         this.executeType = ExecuteType.DEFAULT;
 
-        if(selectable == null)
-        {
-            selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
-        }
+        selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
     }
 
     @Override
