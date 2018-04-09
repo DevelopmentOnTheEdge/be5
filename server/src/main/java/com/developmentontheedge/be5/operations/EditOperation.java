@@ -20,9 +20,9 @@ public class EditOperation extends OperationSupport
 
         dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(context.records[0]));
 
-        dpsHelper.setOperationParams(dps, context.getOperationParams());
+        dpsHelper.setValues(dps, presetValues);
 
-        return dpsHelper.setValues(dps, presetValues);
+        return dpsHelper.setOperationParams(dps, context.getOperationParams());
     }
 
     @Override
