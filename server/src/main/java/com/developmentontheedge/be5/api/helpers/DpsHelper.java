@@ -82,9 +82,9 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet)
+    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, String> parameters)
     {
-        addDp(dps, modelElements);
+        addDp(dps, modelElements, parameters);
         return setValues(dps, resultSet);
     }
 
@@ -106,13 +106,13 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, ? super Object> values)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, String> parameters, Map<String, ? super Object> values)
     {
-        addDpExcludeAutoIncrement(dps, modelElements);
+        addDpExcludeAutoIncrement(dps, modelElements, parameters);
         return setValues(dps, values);
     }
 
-    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, String> parameters)
     {
         List<String> excludedColumns = Collections.emptyList();
         if(meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()) != null &&
@@ -121,12 +121,12 @@ public class DpsHelper
             excludedColumns = Collections.singletonList(getEntity(modelElements).getPrimaryKey());
         }
 
-        return addDpExcludeColumns(dps, modelElements, excludedColumns);
+        return addDpExcludeColumns(dps, modelElements, excludedColumns, parameters);
     }
 
-    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements)
+    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, Map<String, String> parameters)
     {
-        return addDpExcludeColumns(dps, modelElements, Collections.emptyList());
+        return addDpExcludeColumns(dps, modelElements, Collections.emptyList(), parameters);
     }
 
     public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, BeModelElement modelElements)
@@ -134,21 +134,21 @@ public class DpsHelper
         return addDpsExcludedColumnsWithoutTags(dps, modelElements, Collections.emptyList());
     }
 
-    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements, Collection<String> columnNames)
+    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
     {
         addDpsExcludedColumnsWithoutTags(dps, modelElements, columnNames);
 
-        return addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()));
+        return addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()), parameters);
     }
 
-    private <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames)
+    private <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
         for(String propertyName: columnNames)
         {
             DynamicProperty property = dps.getProperty(propertyName);
             ColumnDef columnDef = columns.get(property.getName());
-            if(columnDef != null)addTags(property, columnDef);
+            if(columnDef != null)addTags(property, columnDef, parameters);
         }
         return dps;
     }
@@ -175,22 +175,26 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, ? super Object> presetValues)
+    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters, Map<String, ? super Object> presetValues)
     {
-        addDpForColumns(dps, modelElements, columnNames);
+        addDpForColumns(dps, modelElements, columnNames, parameters);
+
         setValues(dps, presetValues);
+        setOperationParams(dps, parameters);
+
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames)
+    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
     {
         addDpForColumnsWithoutTags(dps, modelElements, columnNames);
 
-        addTags(dps, modelElements, columnNames);
+        addTags(dps, modelElements, columnNames, parameters);
+
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements, Collection<String> propertyNames)
+    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements, Collection<String> propertyNames, Map<String, String> parameters)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
 
@@ -198,17 +202,21 @@ public class DpsHelper
         {
             ColumnDef columnDef = columns.get(propertyName);
             DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(columnDef, modelElements);
-            addTags(dynamicProperty, columnDef);
+            addTags(dynamicProperty, columnDef, parameters);
 
             dps.add(dynamicProperty);
         }
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, ? super Object> presetValues)
+    public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, BeModelElement modelElements, Collection<String> columnNames,
+                                                                       Map<String, ? super Object> presetValues)
     {
         addDpForColumnsWithoutTags(dps, modelElements, columnNames);
-        return setValues(dps, presetValues);
+
+        setValues(dps, presetValues);
+
+        return dps;
     }
 
     public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, BeModelElement modelElements, Collection<String> columnNames)
@@ -230,7 +238,7 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, BeModelElement modelElements, Query query)
+    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, BeModelElement modelElements, Query query, Map<String, String> parameters)
     {
         AstStart ast;
         try
@@ -245,7 +253,7 @@ public class DpsHelper
 
         List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
 
-        addDpForColumns(dps, modelElements, usedParams);
+        addDpForColumns(dps, modelElements, usedParams, parameters);
 
         return dps;
     }
@@ -365,7 +373,7 @@ public class DpsHelper
         }
     }
 
-    public void addTags(DynamicProperty dp, ColumnDef columnDef)
+    public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, String> parameters)
     {
         if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
@@ -377,7 +385,7 @@ public class DpsHelper
         else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                    operationHelper.getTagsFromSelectionView(columnDef.getTableTo()));
+                    operationHelper.getTagsFromSelectionView(columnDef.getTableTo(), parameters));
         }
     }
 

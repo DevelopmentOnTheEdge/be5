@@ -18,7 +18,7 @@ public class FilterByParamsInQueryOperation extends OperationSupport
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addParamsFromQuery(dps, getInfo().getModel(), getQuery());
+        dpsHelper.addParamsFromQuery(dps, getInfo().getModel(), getQuery(), context.getOperationParams());
 
         return filterHelper.processFilterParams(dps, presetValues, context.getOperationParams());
     }

@@ -48,7 +48,7 @@ class CustomOpTest extends SqlMockOperationTest
         assertEquals("{name=a, value=1}", oneQuotes(res.getSecond().getMessage()))
     }
 
-    private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, Object> operationParams)
+    private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, String> operationParams)
     {
         def operation = createOperation("testtableAdmin", "PrintParamsCustomOp",
                 new OperationContext([] as String[], "", operationParams))

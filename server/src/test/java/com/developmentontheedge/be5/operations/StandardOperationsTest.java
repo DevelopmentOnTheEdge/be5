@@ -12,6 +12,8 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -92,7 +94,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     public void editOperationGenerateStringPrimaryKey()
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("propertyTypes"));
+        dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("propertyTypes"), Collections.emptyMap());
         dps.setValue("name", "TestName");
         dps.setValue("CODE", "02");
         when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);

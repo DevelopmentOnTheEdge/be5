@@ -14,7 +14,8 @@ public class InsertOperation extends OperationSupport
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
-        dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(), presetValues);
+        dps = dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getModel(),
+                                context.getOperationParams(), presetValues);
 
         return dpsHelper.setOperationParams(dps, context.getOperationParams());
     }

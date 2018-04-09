@@ -12,7 +12,7 @@ class TestOperation extends GOperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dps = dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "countryID"])
+        dps = dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "countryID"], context.getOperationParams())
 
         dps.add("name", "Test") {
             RELOAD_ON_CHANGE = true

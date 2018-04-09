@@ -25,7 +25,8 @@ class TestTransactionalOperation extends OperationSupport implements Transaction
         {
             if(databaseService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
 
-            return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), getInfo().getEntity(), presetValues)
+            return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), getInfo().getEntity(),
+                    context.getOperationParams(), presetValues)
         }
     }
 

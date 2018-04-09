@@ -15,7 +15,7 @@ class OldRedirectFilter extends GOperationSupport implements TransactionalOperat
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity())
+        dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), context.getOperationParams())
 
         return filterHelper.processFilterParams(dps, presetValues, context.getOperationParams())
     }

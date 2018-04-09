@@ -31,7 +31,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsWithoutAutoIncrementTest()
     {
-        dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"))
+        dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("testTags"), [:])
         assertEquals "{'/CODE':{'displayName':'Код','columnSize':'2'},'/payable':{'displayName':'Оплачиваемая','canBeNull':true,'tagList':[['yes','да'],['no','нет']]},'/admlevel':{'displayName':'Административный уровень','tagList':[['Federal','Федеральный'],['Municipal','Муниципальный'],['Regional','Региональный']]},'/referenceTest':{'displayName':'Тест выборки','canBeNull':true,'columnSize':'2','tagList':[['01','Региональный'],['02','Муниципальный'],['03','Федеральный'],['04','Региональный']]}}",
             oneQuotes(JsonFactory.dpsMeta(dps).toString())
     }
@@ -82,7 +82,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsForValuesTest()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals 2, dps.size()
         assertNotNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
@@ -92,7 +92,7 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "payable", list.get(1).getName()
 
         dps = new DynamicPropertySetSupport()
-        list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"]).asList()
+        list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"], [:]).asList()
         assertEquals "payable", list.get(0).getName()
         assertEquals "CODE", list.get(1).getName()
     }
@@ -101,13 +101,13 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getDpsForValuesTestOnlyForSpecifiedColumns()
     {
         dps.add(new DynamicProperty("payable", String.class))
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE"], [:])
 
         assertNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
 
         dps = new DynamicPropertySetSupport()
         dps.add(new DynamicProperty("payable", String.class))
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("testTags"), ["payable"])
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("testTags"), ["payable"], [:])
 
         assertNull dps.getProperty("payable").getAttribute(BeanInfoConstants.TAG_LIST_ATTR)
     }
@@ -115,7 +115,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void addDynamicPropertiesTest()
     {
-        dpsHelper.addDynamicProperties(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+        dpsHelper.addDynamicProperties(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals 2, dps.size()
         def list = dps.asList()
@@ -123,7 +123,7 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "payable", list.get(1).getName()
 
         dps = new DynamicPropertySetSupport()
-        list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"]).asList()
+        list = dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["payable", "CODE"], [:]).asList()
         assertEquals "payable", list.get(0).getName()
         assertEquals "CODE", list.get(1).getName()
     }
@@ -132,7 +132,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     void getDpsForColumnsTestWithValues()
     {
         def presetValues = [notContainColumn: "2", testLong: "3", payable: "no"]
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], presetValues)
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], presetValues, [:])
 
         assertEquals 2, dps.size()
         def list = dps.asList()
@@ -161,7 +161,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getValuesTest()
     {
-        dpsHelper.addDp(dps, meta.getEntity("meters"))
+        dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         dps.setValue("name", "TestName")
         assertArrayEquals([null, "TestName", null, null, null, null, null, "no"] as Object[], dpsHelper.getValues(dps))
     }
@@ -169,11 +169,11 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDpsTest()
     {
-        dpsHelper.addDp(dps, meta.getEntity("meters"))
+        dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         assertNotNull dps.getProperty("value")
 
         dps = new DynamicPropertySetSupport()
-        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), Collections.singletonList("value"))
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), Collections.singletonList("value"), [:])
         assertNull dps.getProperty("value")
     }
 
@@ -182,7 +182,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     {
         Entity metersEntity = meta.getEntity("meters")
 
-        String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.addDp(dps, metersEntity))
+        String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.addDp(dps, metersEntity, [:]))
         assertEquals "INSERT INTO meters " +
                 "(ID, name, value, whoInserted___, whoModified___, creationDate___, modificationDate___, isDeleted___) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
@@ -213,7 +213,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getAsMapTest()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         assertEquals([CODE:null, payable:"yes", test: 2], dpsHelper.getAsMap(dps) << [test: 2])
 
@@ -223,7 +223,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void setOperationParamsTest()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTags"), ["CODE", "payable"], [:])
 
         dpsHelper.setOperationParams(dps, [payable:"no"])
 
@@ -235,7 +235,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void testInt()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testInt"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testInt"], [:])
         assertEquals "{'/testInt':{'displayName':'testInt','type':'Integer','canBeNull':true,'validationRules':[" +
                 "{'attr':{'max':'2147483647','min':'-2147483648'},'type':'range'}," +
                 "{'attr':'1','type':'step'}]}}",
@@ -245,7 +245,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void testBigInt()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testBigInt"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["testBigInt"], [:])
         assertEquals "{'/testBigInt':{'displayName':'testBigInt','type':'Long','canBeNull':true,'validationRules':[" +
                 "{'attr':{'max':'9223372036854775807','min':'-9223372036854775808'},'type':'range'}," +
                 "{'attr':'1','type':'step'}]}}",
@@ -255,7 +255,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void testTypesCURRENCY()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["payment"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["payment"], [:])
         assertEquals "{'/payment':{'displayName':'payment','type':'Double','validationRules':[" +
                 "{'attr':{'max':'1000000000000000000','min':'-1000000000000000000'},'type':'range'}," +
                 "{'attr':'0.01','type':'step'}]}}",
@@ -265,7 +265,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void testTypesDECIMAL()
     {
-        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["decimal"])
+        dpsHelper.addDpForColumns(dps, meta.getEntity("testTypes"), ["decimal"], [:])
         assertEquals "{'/decimal':{'displayName':'decimal','type':'Double','validationRules':[" +
                 "{'attr':{'max':'10000000000','min':'-10000000000'},'type':'range'}," +
                 "{'attr':'1.0E-4','type':'step'}]}}",

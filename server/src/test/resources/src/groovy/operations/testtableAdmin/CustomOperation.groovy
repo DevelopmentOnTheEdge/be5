@@ -10,7 +10,7 @@ class CustomOperation extends GOperationSupport implements Operation
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], presetValues)
+        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], context.getOperationParams(), presetValues)
 
         def newCalculatedValue = '4'
 

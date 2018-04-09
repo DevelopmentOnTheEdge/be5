@@ -21,7 +21,7 @@ class ErrorProcessing extends GOperationSupport implements Operation
             return null
         }
 
-        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name"], presetValues)
+        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name"], context.getOperationParams(), presetValues)
 
         dps.add("propertyForAnotherEntity") {
             value = "text"

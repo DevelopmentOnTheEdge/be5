@@ -9,7 +9,7 @@ class PrintParamsCustomOp extends GOperationSupport
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        return dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), presetValues)
+        return dpsHelper.addDpExcludeAutoIncrement(dps, getInfo().getEntity(), context.getOperationParams(), presetValues)
     }
 
     @Override

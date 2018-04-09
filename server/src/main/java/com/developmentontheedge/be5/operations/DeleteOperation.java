@@ -34,6 +34,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
         for (TableReference reference : collectionRefs)
         {
+            //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
             int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
                             " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
                     (Object[]) context.records);
@@ -52,6 +53,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
             for (TableReference reference : genericCollectionRefs)
             {
+                //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
                 int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
                                 " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
                         (Object[]) Utils.addPrefix(context.records, getInfo().getEntityName()));
