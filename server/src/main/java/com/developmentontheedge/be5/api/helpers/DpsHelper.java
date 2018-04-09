@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.annotations.DirtyRealization;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
@@ -26,7 +25,6 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.collect.ImmutableList;
 import com.google.common.math.LongMath;
 
-import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -49,7 +47,6 @@ import java.util.stream.StreamSupport;
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range;
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
-import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_KEY;
 
 
 public class DpsHelper
@@ -712,71 +709,6 @@ public class DpsHelper
             if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))list.add(UserInfoHolder.getRemoteAddr());
         }
         return list.toArray();
-    }
-
-//    private Object[] castToType(SqlColumnType type, Object[] ids)
-//    {
-//        Object[] castedIds = new Object[ids.length];
-//        for (int i = 0; i < ids.length; i++)
-//        {
-//            castedIds[i] = castToType(type, ids[i]);
-//        }
-//        return castedIds;
-//    }
-//
-//    @DirtyRealization(comment = "Use Utils.changeType")
-//    private Object castToType(SqlColumnType type, Object id)
-//    {
-//        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY)){
-//            return Long.parseLong(id.toString());
-//        }
-//        return id;
-//    }
-
-    @DirtyRealization(comment = "refactoring, castPrimaryKey ? add method for one, for many.")
-    public Object[] castToTypePrimaryKey(BeModelElement modelElements, Object[] ids)
-    {
-        SqlColumnType type = meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()).getType();
-        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY))
-        {
-            return (Object[])Utils.changeType(ids, Long[].class);
-        }
-        else
-        {
-            if(ids instanceof Number[])throw Be5Exception.internal("Type should not be a Number");
-        }
-        return ids;
-    }
-
-    public Object castToTypePrimaryKey(BeModelElement modelElements, Object id)
-    {
-        SqlColumnType type = meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()).getType();
-        if(type.isIntegral() || type.getTypeName().equals(TYPE_KEY))
-        {
-            return Utils.changeType(id, Long.class);
-        }
-        else
-        {
-            if(id instanceof Number)throw Be5Exception.internal("Type should not be a Number");
-        }
-
-        return id;
-    }
-
-    public Object castToColumnType(BeModelElement modelElements, ColumnDef columnDef, Object value)
-    {
-        return Utils.changeType(value, meta.getColumnType(columnDef));
-    }
-
-    public Object[] castToColumnType(BeModelElement modelElements, ColumnDef columnDef, Object[] values)
-    {
-        return (Object[])Utils.changeType(values, getArrayClass(meta.getColumnType(columnDef)));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Class<? extends T[]> getArrayClass(Class<T> clazz)
-    {
-        return (Class<? extends T[]>) Array.newInstance(clazz, 0).getClass();
     }
 
     public void checkDpsColumns(BeModelElement modelElements, DynamicPropertySet dps)

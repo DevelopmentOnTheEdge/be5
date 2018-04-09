@@ -17,12 +17,14 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.google.common.collect.ObjectArrays;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -167,7 +169,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     @Override
     public RecordModel get( String id )
     {
-        return get(Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
+        return get(Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
     }
 
     @Override
@@ -179,13 +181,13 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     @Override
     public RecordModel getColumns( List<String> columns, String id )
     {
-        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
+        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
     }
 
     @Override
     public RecordModel getColumns( List<String> columns, Long id )
     {
-        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), dpsHelper.castToTypePrimaryKey(entity, id)));
+        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), id));
     }
 
     @Override
@@ -207,12 +209,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     @Override
     public int remove( String[] ids )
     {
-        Objects.requireNonNull(ids);
-
-        return db.update(dpsHelper.generateDeleteInSql(entity, entity.getPrimaryKey(), ids.length),
-                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        dpsHelper.castToTypePrimaryKey(entity, ids), Object.class)
-        );
+        return removeWhereColumnIn(entity.getPrimaryKey(), ids);
     }
 
     @Override
@@ -223,10 +220,21 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 
         ColumnDef columnDef = meta.getColumn(entity, columnName);
 
-        return db.update(dpsHelper.generateDeleteInSql(entity, columnName, ids.length),
+        return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
                 ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        dpsHelper.castToColumnType(entity, columnDef, ids), Object.class)
+                        castToColumnType(columnDef, ids), Object.class)
         );
+    }
+
+    private Object[] castToColumnType(ColumnDef columnDef, Object[] values)
+    {
+        return (Object[])Utils.changeType(values, getArrayClass(meta.getColumnType(columnDef)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Class<? extends T[]> getArrayClass(Class<T> clazz)
+    {
+        return (Class<? extends T[]>) Array.newInstance(clazz, 0).getClass();
     }
 
     @Override
@@ -368,14 +376,19 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
 
-        Object pkValue = dpsHelper.castToTypePrimaryKey(entity, id);
-
         validator.checkErrorAndCast(dps);
         dpsHelper.addUpdateSpecialColumns(entity, dps);
 
         return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(dpsHelper.getValues(dps), pkValue));
+                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
     }
+
+    private Object getID(String id)
+    {
+        Class<?> primaryKeyColumnType = meta.getColumnType(entity, entity.getPrimaryKey());
+        return Utils.changeType(id, primaryKeyColumnType);
+    }
+
 //
 //    @Override
 //    public void setForceMany(String propertyName, String value, Map<String, String> conditions)
