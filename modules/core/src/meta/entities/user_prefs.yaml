@@ -1,11 +1,12 @@
 user_prefs:
-  type: metadata
+  type: collection
   displayName: User Preferences
   primaryKey: dummy
   scheme:
     columns:
     - user_name:
         type: VARCHAR(100)
+        reference: users
     - pref_name:
         type: VARCHAR(30)
     - pref_value:

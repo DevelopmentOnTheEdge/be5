@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -62,6 +63,17 @@ public class Utils
             throw Be5Exception.internal("Error in function inClause(int), count value: " + count + ", must be > 0");
         }
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
+    }
+
+    public static String[] addPrefix(String[] values, String prefix)
+    {
+        String[] withPrefix = new String[values.length];
+        for (int i=0; i<values.length; i++)
+        {
+            withPrefix[i] = prefix + "." + values[i];
+        }
+
+        return withPrefix;
     }
 
     /**

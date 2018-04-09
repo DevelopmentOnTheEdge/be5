@@ -32,6 +32,13 @@ class UtilsTest extends Be5ProjectTest
     }
 
     @Test
+    void addPrefix() throws Exception
+    {
+        assertArrayEquals(['companies.1','companies.2'] as String[],
+                Utils.addPrefix(['1','2'] as String[], "companies"))
+    }
+
+    @Test
     void isEmptyTest() throws Exception
     {
         assertTrue Utils.isEmpty(null)

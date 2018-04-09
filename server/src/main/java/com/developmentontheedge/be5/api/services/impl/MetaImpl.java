@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
@@ -41,6 +42,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
+import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
@@ -151,6 +153,41 @@ public class MetaImpl implements Meta
         Collections.sort(entities);
 
         return entities.stream().map(e -> e.entity).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Entity> getEntities(EntityType entityType)
+    {
+        List<Entity> entities = new ArrayList<>();
+
+        for (Module module : getProject().getModulesAndApplication())
+        {
+            for (Entity entity : module.getEntities())
+            {
+                if (entityType == null || entity.getType() == entityType)
+                {
+                    entities.add(entity);
+                }
+            }
+        }
+
+        return entities;
+    }
+
+    @Override
+    public List<TableReference> getRefToTable(EntityType entityType, String entityName)
+    {
+        Objects.requireNonNull(entityName);
+
+        return getEntities(entityType).stream()
+                .flatMap(entity -> getRefsToTable(entity, entityName))
+                .collect(Collectors.toList());
+    }
+
+    private Stream<TableReference> getRefsToTable(Entity entity, String entityName)
+    {
+        return entity.getAllReferences().stream()
+                .filter(ref -> entityName.equals(ref.getTableTo()));
     }
 
     @Override

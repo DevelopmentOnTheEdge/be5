@@ -1,5 +1,5 @@
 user_roles:
-  type: metadata
+  type: collection
   displayName: Role assignments
   primaryKey: dummy
   scheme:

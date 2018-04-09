@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,6 +12,7 @@ import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.TableReference;
 
 public interface Meta
 {
@@ -23,6 +23,10 @@ public interface Meta
     List<Entity> getOrderedEntities(String language);
 
     List<Entity> getOrderedEntities(EntityType entityType, String language);
+
+    List<Entity> getEntities(EntityType entityType);
+
+    List<TableReference> getRefToTable(EntityType entityType, String entityName);
 
     Map<String, List<Entity>> getOrderedEntitiesByModules(String language);
 
