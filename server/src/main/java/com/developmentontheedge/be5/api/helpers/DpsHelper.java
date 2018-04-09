@@ -175,7 +175,8 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters, Map<String, ? super Object> presetValues)
+    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames,
+                                            Map<String, String> parameters, Map<String, ? super Object> presetValues)
     {
         addDpForColumns(dps, modelElements, columnNames, parameters);
 
@@ -185,7 +186,8 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames,
+                                                            Map<String, String> parameters)
     {
         addDpForColumnsWithoutTags(dps, modelElements, columnNames);
 

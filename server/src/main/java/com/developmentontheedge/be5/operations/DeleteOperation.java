@@ -56,7 +56,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                 //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
                 int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
                                 " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
-                        (Object[]) Utils.addPrefix(context.records, getInfo().getEntityName()));
+                        (Object[]) Utils.addPrefix(context.records, getInfo().getEntityName() + "."));
 
                 if( updateCount1 > 0 )
                 {

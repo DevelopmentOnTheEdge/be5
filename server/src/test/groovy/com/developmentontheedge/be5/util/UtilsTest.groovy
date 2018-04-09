@@ -36,7 +36,7 @@ class UtilsTest extends Be5ProjectTest
     void addPrefix()
     {
         assertArrayEquals(['companies.1','companies.2'] as String[],
-                Utils.addPrefix(['1','2'] as String[], "companies"))
+                Utils.addPrefix(['1','2'] as String[], "companies."))
     }
 
     @Test

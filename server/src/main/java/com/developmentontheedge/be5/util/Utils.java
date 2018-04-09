@@ -70,7 +70,7 @@ public class Utils
         String[] withPrefix = new String[values.length];
         for (int i=0; i<values.length; i++)
         {
-            withPrefix[i] = prefix + "." + values[i];
+            withPrefix[i] = prefix + values[i];
         }
 
         return withPrefix;
