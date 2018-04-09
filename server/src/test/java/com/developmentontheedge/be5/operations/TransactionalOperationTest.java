@@ -17,7 +17,7 @@ public class TransactionalOperationTest extends OperationDBTest
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                         "{'name':'test', 'value': 5}");
 
-        assertEquals("{'details':'table/testtableAdmin/All records','message':'REDIRECTED','status':'redirect'}",
+        assertEquals("{'details':'table/testtableAdmin/All records','status':'redirect'}",
                 oneQuotes(jsonb.toJson(result.getSecond())));
     }
 
@@ -28,7 +28,7 @@ public class TransactionalOperationTest extends OperationDBTest
                 "testtableAdmin", "All records", "TestTransactionalOperation", "0",
                         "{'nullValues':'yes'}");
 
-        assertEquals("{'details':'table/testtableAdmin/All records','message':'REDIRECTED','status':'redirect'}",
+        assertEquals("{'details':'table/testtableAdmin/All records','status':'redirect'}",
                 oneQuotes(jsonb.toJson(result.getSecond())));
     }
 

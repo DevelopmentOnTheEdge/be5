@@ -32,7 +32,7 @@ public class OperationResult
     
     private OperationResult(OperationStatus status, Object details)
     {
-        this(status, status.name(), details);
+        this(status, null, details);
     }
 
     private OperationResult(OperationStatus status)
@@ -148,16 +148,6 @@ public class OperationResult
     public static OperationResult redirectToTable(String entityName, String queryName, Map<String, String> params)
     {
         return redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params));
-    }
-
-    public static OperationResult redirectToTable(String entityName, String queryName)
-    {
-        return redirectToTable(entityName, queryName, Collections.emptyMap());
-    }
-
-    public static OperationResult redirectToTable(Query query)
-    {
-        return redirectToTable(query, Collections.emptyMap());
     }
 
     public static OperationResult redirectToTable(Query query, Map<String, String> params)
