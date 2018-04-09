@@ -9,6 +9,8 @@ testProject:
   - testtableAdmin
   - testtUser
   - testTypes
+  - testCollection
+  - testGenCollection
   - atest
   - meters
   - persons

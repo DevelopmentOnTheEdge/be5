@@ -30,11 +30,11 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
         out.append( "" + updateCount + " " + ( "records were deleted from" ) + " <i>" + getInfo().getEntityName() + "</i><br />" );
 
-        List<TableReference> collectionRefs = meta.getRefToTable(COLLECTION, getInfo().getEntityName());
+        List<TableReference> collectionRefs = meta.getTableReferences(COLLECTION);
 
         for (TableReference reference : collectionRefs)
         {
-            if(reference.getTableTo().equals(getInfo().getEntityName()) && reference.getColumnsTo().equals(getInfo().getEntity().getPrimaryKey()))
+            if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equals(reference.getColumnsTo()))
             {
                 //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
                 int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
@@ -52,7 +52,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
         if( !GENERIC_COLLECTION.equals( getInfo().getEntity().getType() ) )
         {
-            List<TableReference> genericCollectionRefs = meta.getRefToTable(GENERIC_COLLECTION, getInfo().getEntityName());
+            List<TableReference> genericCollectionRefs = meta.getTableReferences(GENERIC_COLLECTION);
 
             for (TableReference reference : genericCollectionRefs)
             {

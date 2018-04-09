@@ -175,19 +175,11 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    public List<TableReference> getRefToTable(EntityType entityType, String entityName)
+    public List<TableReference> getTableReferences(EntityType entityType)
     {
-        Objects.requireNonNull(entityName);
-
         return getEntities(entityType).stream()
-                .flatMap(entity -> getRefsToTable(entity, entityName))
+                .flatMap(entity -> entity.getAllReferences().stream())
                 .collect(Collectors.toList());
-    }
-
-    private Stream<TableReference> getRefsToTable(Entity entity, String entityName)
-    {
-        return entity.getAllReferences().stream()
-                .filter(ref -> entityName.equals(ref.getTableTo()));
     }
 
     @Override

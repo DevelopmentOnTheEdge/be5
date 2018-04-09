@@ -1,0 +1,18 @@
+testGenCollection:
+  type: genericCollection
+  displayName: testGenCollection
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - recordID:
+        type: VARCHAR(200)
+        reference:
+          to: []
+          view: ''
+    - categoryID:
+        type: KEYTYPE
+        reference: testtable

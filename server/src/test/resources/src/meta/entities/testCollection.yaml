@@ -1,0 +1,13 @@
+testCollection:
+  type: collection
+  displayName: testCollection
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - categoryID:
+        type: KEYTYPE
+        reference: testtableAdmin

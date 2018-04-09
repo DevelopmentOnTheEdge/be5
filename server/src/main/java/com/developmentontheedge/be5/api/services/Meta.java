@@ -26,7 +26,7 @@ public interface Meta
 
     List<Entity> getEntities(EntityType entityType);
 
-    List<TableReference> getRefToTable(EntityType entityType, String entityName);
+    List<TableReference> getTableReferences(EntityType entityType);
 
     Map<String, List<Entity>> getOrderedEntitiesByModules(String language);
 
