@@ -26,6 +26,7 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.collect.ImmutableList;
 import com.google.common.math.LongMath;
 
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -664,7 +665,8 @@ public class DpsHelper
         }
     }
 
-    public String generateDeleteInSql(BeModelElement modelElements, int count) {
+    public String generateDeleteInSql(BeModelElement modelElements, String columnName, int count)
+    {
         String sql;
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
@@ -692,7 +694,7 @@ public class DpsHelper
 //        Ast.delete(modelElements.getName())
 //                .where();
 
-        String whereSql = " WHERE " + getEntity(modelElements).getPrimaryKey() + " IN " + Utils.inClause(count);
+        String whereSql = " WHERE " + columnName + " IN " + Utils.inClause(count);
         return sql + whereSql;
     }
 
@@ -759,6 +761,22 @@ public class DpsHelper
         }
 
         return id;
+    }
+
+    public Object castToColumnType(BeModelElement modelElements, ColumnDef columnDef, Object value)
+    {
+        return Utils.changeType(value, meta.getColumnType(columnDef));
+    }
+
+    public Object[] castToColumnType(BeModelElement modelElements, ColumnDef columnDef, Object[] values)
+    {
+        return (Object[])Utils.changeType(values, getArrayClass(meta.getColumnType(columnDef)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Class<? extends T[]> getArrayClass(Class<T> clazz)
+    {
+        return (Class<? extends T[]>) Array.newInstance(clazz, 0).getClass();
     }
 
     public void checkDpsColumns(BeModelElement modelElements, DynamicPropertySet dps)

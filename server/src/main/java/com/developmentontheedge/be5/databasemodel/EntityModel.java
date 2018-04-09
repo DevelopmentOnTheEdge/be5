@@ -157,6 +157,8 @@ public interface EntityModel<R extends RecordModel>
      */
     int removeAll(Collection<Map<String, ? super Object>> c);
 
+    int removeWhereColumnIn(String columnName, String[] ids);
+
     /**
      * Operation removes all the records
      * @return number of affected rows

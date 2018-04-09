@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
@@ -207,9 +208,24 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     public int remove( String[] ids )
     {
         Objects.requireNonNull(ids);
-        return db.update(dpsHelper.generateDeleteInSql(entity, ids.length),
+
+        return db.update(dpsHelper.generateDeleteInSql(entity, entity.getPrimaryKey(), ids.length),
                 ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
                         dpsHelper.castToTypePrimaryKey(entity, ids), Object.class)
+        );
+    }
+
+    @Override
+    public int removeWhereColumnIn(String columnName, String[] ids)
+    {
+        Objects.requireNonNull(columnName);
+        Objects.requireNonNull(ids);
+
+        ColumnDef columnDef = meta.getColumn(entity, columnName);
+
+        return db.update(dpsHelper.generateDeleteInSql(entity, columnName, ids.length),
+                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
+                        dpsHelper.castToColumnType(entity, columnDef, ids), Object.class)
         );
     }
 

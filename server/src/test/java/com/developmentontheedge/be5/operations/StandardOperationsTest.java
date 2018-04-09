@@ -30,9 +30,12 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 generateOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
 
         verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
+        verify(SqlServiceMock.mock).update("DELETE FROM testCollection WHERE categoryID IN (?)", 1L);
+        verify(SqlServiceMock.mock).update("DELETE FROM testGenCollection WHERE recordID IN (?)", "testtableAdmin.1");
 
         generateOperation("testtableAdmin", "All records", "Delete",
                 "1,2,3", "").getSecond();
+
         verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
     }
 

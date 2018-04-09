@@ -36,10 +36,8 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
         {
             if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equals(reference.getColumnsTo()))
             {
-                //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
-                int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
-                                " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
-                        (Object[]) context.records);
+                int updateCount1 = database.getEntity(reference.getTableFrom())
+                        .removeWhereColumnIn(reference.getColumnsFrom(), context.records);
 
                 if (updateCount1 > 0)
                 {
@@ -58,10 +56,9 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
             {
                 if(reference.getColumnsTo() == null)
                 {
-                    //TODO use utils - DELETE or UPDATE IS_DELETED_COLUMN_NAME
-                    int updateCount1 = db.update("DELETE FROM " + reference.getTableFrom() +
-                                    " WHERE " + reference.getColumnsFrom() + " IN " + Utils.inClause(context.records.length),
-                            (Object[]) Utils.addPrefix(context.records, getInfo().getEntityName() + "."));
+                    int updateCount1 = database.getEntity(reference.getTableFrom())
+                            .removeWhereColumnIn(reference.getColumnsFrom(),
+                                    Utils.addPrefix(context.records, getInfo().getEntityName() + "."));
 
                     if (updateCount1 > 0)
                     {
