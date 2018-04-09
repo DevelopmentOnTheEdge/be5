@@ -32,7 +32,7 @@ class EntitiesTest extends Be5ProjectTest//todo use Be5ProjectDBTest
         when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(123L)
 
         GDynamicPropertySetSupport dps = dpsHelper.addDpForColumns(new GDynamicPropertySetSupport(),
-                entities.provinces.entity, ["name", "countryID"])
+                entities.provinces.entity, ["name", "countryID"], [:])
 
         dps.add("ID") {
             TYPE        = String
