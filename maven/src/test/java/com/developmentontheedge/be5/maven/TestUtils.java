@@ -34,7 +34,8 @@ public abstract class TestUtils
         project = ProjectTestUtils.getProject("test");
         Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
         ProjectTestUtils.createScheme( entity );
-        ProjectTestUtils.createScript( project, "delete from entity;\nINSERT INTO entity (name) VALUES ('foo')" );
+        ProjectTestUtils.createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
+        ProjectTestUtils.createScript( project, "data", "DELETE FROM entity;\nINSERT INTO entity (name) VALUES ('foo')" );
         ProjectTestUtils.createH2Profile(project, "profileTestMavenPlugin");
 
         Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
@@ -62,7 +63,7 @@ public abstract class TestUtils
         Project module = new Project( moduleName, true);
         Entity entity = ProjectTestUtils.createEntity( module, "moduleEntity", "ID" );
         ProjectTestUtils.createScheme( entity );
-        ProjectTestUtils.createScript( module, "delete from moduleEntity;\nINSERT INTO moduleEntity (name) VALUES ('foo')" );
+        ProjectTestUtils.createScript( module, "Post-db", "INSERT INTO moduleEntity (name) VALUES ('foo')" );
         Serialization.save( module, path );
 
         Module appModule = new Module( moduleName, project.getModules() );

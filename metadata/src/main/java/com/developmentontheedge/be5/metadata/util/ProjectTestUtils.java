@@ -66,9 +66,9 @@ public class ProjectTestUtils
         return entity;
     }
 
-    public static void createScript(Project project, String sql)
+    public static void createScript(Project project, String name, String sql)
     {
-        FreemarkerScript script = new FreemarkerScript("Post-db",
+        FreemarkerScript script = new FreemarkerScript(name,
                 project.getApplication().getFreemarkerScripts());
         script.setSource(sql);
         DataElementUtils.save( script );
