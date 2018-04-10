@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operations;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationSupport;
@@ -69,6 +70,13 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
             }
         }
 
-        setResult(OperationResult.finished(out.toString()));
+        if(userInfo.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER))
+        {
+            setResult(OperationResult.finished(out.toString()));
+        }
+        else
+        {
+            setResult(OperationResult.finished());
+        }
     }
 }
