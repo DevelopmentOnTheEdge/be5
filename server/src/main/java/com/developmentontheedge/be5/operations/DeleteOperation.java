@@ -16,6 +16,8 @@ import static com.developmentontheedge.be5.metadata.model.EntityType.GENERIC_COL
 
 public class DeleteOperation extends OperationSupport implements TransactionalOperation
 {
+    protected StringBuilder out = new StringBuilder();
+
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
@@ -25,8 +27,6 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        StringBuilder out = new StringBuilder();
-
         int updateCount = database.getEntity(getInfo().getEntityName()).remove(context.records);
 
         out.append( "" + updateCount + " " + ( "records were deleted from" ) + " <i>" + getInfo().getEntityName() + "</i><br />" );
@@ -35,7 +35,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
 
         for (TableReference reference : collectionRefs)
         {
-            if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equals(reference.getColumnsTo()))
+            if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
             {
                 int updateCount1 = database.getEntity(reference.getTableFrom())
                         .removeWhereColumnIn(reference.getColumnsFrom(), context.records);
