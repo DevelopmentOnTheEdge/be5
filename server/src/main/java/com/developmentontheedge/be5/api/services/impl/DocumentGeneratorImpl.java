@@ -113,11 +113,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
 
-        if (maxLimit == 0)
+        if(limit == Integer.MAX_VALUE)
         {
-            //todo delete defaultPageLimit, use getQuerySettings(query).getMaxRecordsPerPage()
-            maxLimit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
-                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
+            //todo move defaultPageLimit, to getQuerySettings(query)
+            limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
+                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
         return TableModel

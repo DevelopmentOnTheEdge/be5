@@ -8,8 +8,8 @@ import com.developmentontheedge.beans.annot.PropertyName;
 public class QuerySettings extends BeModelElementSupport
 {
     private RoleSet roles = new RoleSet( this );
-    private int maxRecordsPerPage = 0;
-    private int maxRecordsPerPrintPage = 0;
+    private int maxRecordsPerPage = Integer.MAX_VALUE;
+    private int maxRecordsPerPrintPage = Integer.MAX_VALUE;
     private int maxRecordsInDynamicDropDown = 20;
     private Long colorSchemeID = null;
     private int autoRefresh = 0;
