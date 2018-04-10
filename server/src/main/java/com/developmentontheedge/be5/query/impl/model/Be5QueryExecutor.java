@@ -117,20 +117,20 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getParameter(String name)
         {
-            return parametersMap.get(name);
+            return parameters.get(name);
         }
 
         @Override
         public List<String> getListParameter(String name)
         {
-            String value = parametersMap.get(name);
+            String value = parameters.get(name);
             return value == null ? null : Collections.singletonList(value);
         }
 
         @Override
         public Map<String, String> asMap()
         {
-            return parametersMap;
+            return parameters;
         }
 
         @Override
@@ -150,7 +150,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private final Map<String, String> parametersMap;
+    private final Map<String, String> parameters;
     private final DatabaseService databaseService;
     private final DatabaseModel database;
     private final Meta meta;
@@ -173,7 +173,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.db              = injector.getSqlService();
         this.filterHelper    = injector.get(FilterHelper.class);
 
-        this.parametersMap = new HashMap<>( Objects.requireNonNull( parameters ) );
+        this.parameters = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
@@ -229,7 +229,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         // CONTEXT
 
         // FILTERS
-        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parametersMap));
+        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parameters));
 
         // CATEGORY
         applyCategory( dql, ast );
@@ -395,7 +395,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void applyCategory(DebugQueryLogger dql, AstStart ast)
     {
-        String categoryString = parametersMap.get( CATEGORY_ID_PARAM );
+        String categoryString = parameters.get( CATEGORY_ID_PARAM );
         if(categoryString != null)
         {
             long categoryId;
@@ -440,7 +440,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //            QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
 //                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
 //                    // TODO: create and pass ParamHelper
-//                    .newInstance( UserInfoHolder.getUserInfo(), new MapParamHelper(parametersMap), connector, offset, limit );
+//                    .newInstance( UserInfoHolder.getUserInfo(), new MapParamHelper(parameters), connector, offset, limit );
 //
 //            if (iterator instanceof Be5Query)
 //            {
@@ -579,7 +579,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
 //        TableModel table = TableModel
-//                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parametersMap, session, false, injector)
+//                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parameters, session, false, injector)
 //                .setContextApplier(contextApplier)
 //                .build();
 //

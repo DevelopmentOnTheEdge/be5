@@ -37,15 +37,15 @@ public abstract class TableBuilderSupport implements TableBuilder
     protected UserInfo userInfo;
 
     protected Query query;
-    protected Map<String, String> parametersMap;
+    protected Map<String, String> parameters;
 
     protected List<TableModel.ColumnModel> columns = new ArrayList<>();
     protected List<TableModel.RowModel> rows = new ArrayList<>();
 
-    public TableBuilder initialize(Query query, Map<String, String> parametersMap)
+    public TableBuilder initialize(Query query, Map<String, String> parameters)
     {
         this.query = query;
-        this.parametersMap = parametersMap;
+        this.parameters = parameters;
 
         this.request = UserInfoHolder.getRequest();
         this.session = UserInfoHolder.getSession();

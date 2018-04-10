@@ -11,9 +11,9 @@ class Queries extends TableBuilderSupport
     @Override
     TableModel getTableModel()
     {
-        addColumns("EntityName","Name","Type", "Roles", "Operations")
+        addColumns("EntityName", "Name", "Type", "Roles", "Operations")
 
-        def selectEntity = parametersMap.get("entity")
+        def selectEntity = parameters.get("entity")
 
         if(selectEntity)
         {
