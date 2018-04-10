@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.api.SessionConstants;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
@@ -33,6 +34,10 @@ public class UserHelper
         ui.setLocale(meta.getLocale(locale));
 
         UserInfoHolder.setUserInfo(ui);
+
+        session.set("remoteAddr", remoteAddr);
+        session.set(SessionConstants.USER_INFO, ui);
+        session.set(SessionConstants.CURRENT_USER, ui.getUserName());
 
         return ui;
     }

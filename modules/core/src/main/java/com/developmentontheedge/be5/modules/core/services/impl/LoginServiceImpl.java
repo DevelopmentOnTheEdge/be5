@@ -78,13 +78,8 @@ public class LoginServiceImpl implements LoginService
             currentRoles = availableRoles;
         }
 
-        UserInfo ui = userHelper.saveUser(username, availableRoles, currentRoles,
+        userHelper.saveUser(username, availableRoles, currentRoles,
                 req.getLocale(), req.getRemoteAddr(), req.getSession());
-
-        Session session = req.getSession();
-        session.set("remoteAddr", req.getRemoteAddr());
-        session.set(SessionConstants.USER_INFO, ui);
-        session.set(SessionConstants.CURRENT_USER, ui.getUserName());
 
         log.fine("Login user: " + username);
     }
