@@ -35,7 +35,7 @@ users:
         FROM users u
         WHERE (1=1)
         <if parameter="user_name">
-          AND UPPER(u.user_name) LIKE UPPER('%<parameter:user_name />%')
+          AND UPPER(u.user_name) LIKE '%<parameter:user_name changeCase="upper"/>%'
         </if>
   - Login:
       type: static
