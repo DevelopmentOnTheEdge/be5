@@ -139,7 +139,7 @@ public class DpsHelper
         return addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()), parameters);
     }
 
-    private <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
         for(String propertyName: columnNames)
@@ -385,7 +385,8 @@ public class DpsHelper
         else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                    operationHelper.getTagsFromSelectionView(columnDef.getTableTo(), parameters));
+                    operationHelper.getTagsFromSelectionView(columnDef.getTableTo(),
+                            ParseRequestUtils.getOperationParamsWithoutFilter(parameters)));
         }
     }
 

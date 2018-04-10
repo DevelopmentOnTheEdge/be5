@@ -128,6 +128,17 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "CODE", list.get(1).getName()
     }
 
+    /**
+     * without SQLException - Column "TESTTAGS.FILTERCOLUMN" not found
+     */
+    @Test
+    void addTagsFilterOnlyForTableModel()
+    {
+        dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ["referenceTest"])
+
+        dpsHelper.addTags(dps, meta.getEntity("testTags"), ["referenceTest"], [filterColumn: "value", "_search_": "true"])
+    }
+
     @Test
     void getDpsForColumnsTestWithValues()
     {
