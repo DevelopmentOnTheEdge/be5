@@ -28,7 +28,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class AppData extends Be5Mojo<AppData>
 {
     @Parameter(property = "BE5_SCRIPT")
-    private String script = FreemarkerCatalog.POST_DB_STEP;
+    private String script = FreemarkerCatalog.DATA;
 
     @Parameter(property = "BE5_IGNORE_MISSING")
     private boolean ignoreMissing = false;
