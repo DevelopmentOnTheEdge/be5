@@ -330,13 +330,15 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), operation.getUrl());
                 }
 
-                //remove Throwable for prevent adding to json
-                operation.setResult(OperationResult.error(operation.getResult().getMessage(), null));
+                if(operation.getResult().getDetails() != null &&
+                   operation.getResult().getDetails().getClass() == Be5Exception.class &&
+                   ((Be5Exception)(operation.getResult().getDetails())).getCause() != null)
+                {
+                    Throwable cause = ((Be5Exception) (operation.getResult().getDetails())).getCause();
 
-                //todo refactoring, add for prevent json error
-                //java.lang.IllegalAccessException: Class org.eclipse.yasson.internal.model.GetFromGetter can not access a member of class sun.reflect.annotation.AnnotatedTypeFactory$AnnotatedTypeBaseImpl with modifiers "public final"
-                //at sun.reflect.Reflection.ensureMemberAccess(Reflection.java:102)
-                if(operation.getResult().getMessage() != null)
+                    operation.setResult(OperationResult.error(cause.getMessage().split(System.getProperty("line.separator"))[0], null));
+                }
+                else
                 {
                     operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0], null));
                 }
