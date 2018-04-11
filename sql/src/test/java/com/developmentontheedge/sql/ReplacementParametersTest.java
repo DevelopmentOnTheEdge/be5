@@ -1,9 +1,11 @@
 package com.developmentontheedge.sql;
 
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+
 
 public class ReplacementParametersTest
 {
@@ -22,6 +24,14 @@ public class ReplacementParametersTest
         assertEquals(query, SqlQuery.parse( query ).format());
     }
 
+    @Test
+    public void inConcat()
+    {
+        String query = "SELECT id FROM categories WHERE name = CONCAT('user.', ?)";
+        assertEquals(query, SqlQuery.parse( query ).format());
+    }
+
+    @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void testErrorInSelectList()
     {

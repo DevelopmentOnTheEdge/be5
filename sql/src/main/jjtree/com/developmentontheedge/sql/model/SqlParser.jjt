@@ -1405,7 +1405,6 @@ Token CompOperator() : { Token op; }
 void RowValuePredicand() : {}
 {
    ValueExpression()
-   | ReplacementParameter()
 // | <row value constructor predicand>					// @todo
 }
 
@@ -1583,12 +1582,13 @@ void PrimaryExpression() :
     |   LOOKAHEAD(2) Count() [(WindowSpecification()) #WindowFunction(2)]
     |   CaseSpecification()
     |   AnyConstant()
+    |   ReplacementParameter()
     |   Cast()
     |   Extract()
     |   Position()
     |   { pushMode(Mode.CONDITIONAL_VALUE); } BeIfUnlessChain() { popMode(Mode.CONDITIONAL_VALUE); } // BE
     |   BeSql() //BE
-    |   BeCommonTag() //BE 
+    |   BeCommonTag() //BE
 }
 
 /***************************************************************
