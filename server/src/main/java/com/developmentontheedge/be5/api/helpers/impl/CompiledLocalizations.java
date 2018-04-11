@@ -183,11 +183,12 @@ public class CompiledLocalizations {
                     CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
         }
 
-        if(!localization.isPresent())
-        {
-            localization = findLocalization(language, "index",
-                    CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
-        }
+//use for send to frontend
+//        if(!localization.isPresent())
+//        {
+//            localization = findLocalization(language, "index",
+//                    CompiledEntityLocalizations.fnGetByTopicAndKey("page", content));
+//        }
 
         return localization;
     }
