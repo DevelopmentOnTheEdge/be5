@@ -53,7 +53,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
 
         assertEquals 1, db.getLong("select count(*) from $tableName")
 
-        userHelper.initGuest(null)
+        initGuest()
         table << [
             name : "test2",
             value: (Short)2

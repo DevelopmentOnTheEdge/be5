@@ -32,7 +32,7 @@ public class UserInfoTest extends Be5ProjectTest
     @Test
     public void testGuestLocale()
     {
-        userHelper.initGuest(null);
+        initGuest();
         assertEquals("ru", UserInfoHolder.getLanguage());
     }
 

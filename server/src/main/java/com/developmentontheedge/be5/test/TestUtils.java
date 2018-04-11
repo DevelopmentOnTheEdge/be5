@@ -65,7 +65,6 @@ public abstract class TestUtils
         Project project = injector.getProject();
         initProfile(project);
 
-        injector.get(UserHelper.class).initGuest(null);
         return injector;
     }
 

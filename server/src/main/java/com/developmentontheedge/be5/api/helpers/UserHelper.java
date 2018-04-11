@@ -8,12 +8,12 @@ import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.test.TestSession;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 
@@ -65,23 +65,11 @@ public class UserHelper
 
     public void initGuest(Request req)
     {
-        Locale locale = Locale.US;
-        String remoteAddr = "";
-
-        Session session;
-        if(req != null)
-        {
-            locale = req.getLocale();
-            remoteAddr = req.getRemoteAddr();
-            session = req.getSession();
-        }
-        else
-        {
-            session = new TestSession();
-        }
+        Objects.requireNonNull(req);
 
         List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
-        saveUser(RoleType.ROLE_GUEST, roles, roles, locale, remoteAddr, session);
+
+        saveUser(RoleType.ROLE_GUEST, roles, roles, req.getLocale(), req.getRemoteAddr(), req.getSession());
     }
 
 }

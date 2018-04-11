@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
@@ -14,6 +15,7 @@ import com.developmentontheedge.be5.api.helpers.UserHelper;
 import org.junit.Before;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,14 +26,22 @@ public abstract class Be5ProjectTest extends TestUtils
     private static final Injector injector = initInjector(new SqlMockBinder());
 
     @Before
-    public void injectAnnotatedFields()
+    public void setUpBe5ProjectTest()
     {
         injector.injectAnnotatedFields(this);
+        initGuest();
     }
 
     protected void initUserWithRoles(String... roles)
     {
         injector.get(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+                Locale.US, "", new TestSession());
+    }
+
+    protected void initGuest()
+    {
+        List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
+        injector.get(UserHelper.class).saveUser(RoleType.ROLE_GUEST, roles, roles,
                 Locale.US, "", new TestSession());
     }
 

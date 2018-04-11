@@ -57,7 +57,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
     @Test
     public void testGuest() throws Exception
     {
-        userHelper.initGuest(null);
+        initGuest();
         Response response = mock(Response.class);
 
         component.generate(getMockRequest(""), response, injector);

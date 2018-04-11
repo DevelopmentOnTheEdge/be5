@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.maven.AppDb;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
@@ -13,6 +14,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -27,14 +30,22 @@ public abstract class Be5ProjectDBTest extends TestUtils
     @Inject protected SqlService db;
 
     @Before
-    public void injectAnnotatedFields()
+    public void setUpBe5ProjectDBTest()
     {
         injector.injectAnnotatedFields(this);
+        initGuest();
     }
 
     protected void initUserWithRoles(String... roles)
     {
         injector.get(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+                Locale.US, "", new TestSession());
+    }
+
+    protected void initGuest()
+    {
+        List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
+        injector.get(UserHelper.class).saveUser(RoleType.ROLE_GUEST, roles, roles,
                 Locale.US, "", new TestSession());
     }
 
