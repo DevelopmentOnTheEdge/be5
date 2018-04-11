@@ -400,7 +400,7 @@ public class ModuleLoader2
             if(content.get("roles") != null)
             {
                 devRoles = ( List<String> ) content.get("roles");
-                log.info("Dev roles added - " + devRoles.toString());
+                log.info("Dev roles read - " + devRoles.toString());
             }
         }
     }

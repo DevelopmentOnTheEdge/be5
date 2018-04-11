@@ -1,18 +1,13 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.api.SessionConstants;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.api.helpers.UserHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,15 +23,13 @@ public class LoginServiceImpl implements LoginService
 {
     public static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
-    protected SqlService db;
-    protected Meta meta;
-    protected UserHelper userHelper;
-    protected CoreUtils coreUtils;
+    private final SqlService db;
+    private final UserHelper userHelper;
+    private final CoreUtils coreUtils;
 
-    public LoginServiceImpl(SqlService db, Meta meta, UserHelper userHelper, CoreUtils coreUtils)
+    public LoginServiceImpl(SqlService db, UserHelper userHelper, CoreUtils coreUtils)
     {
         this.db = db;
-        this.meta = meta;
         this.userHelper = userHelper;
         this.coreUtils = coreUtils;
     }
@@ -61,10 +54,6 @@ public class LoginServiceImpl implements LoginService
     public void saveUser(String username, Request req)
     {
         List<String> availableRoles = selectAvailableRoles(username);
-        if(ModuleLoader2.getDevRoles().size() > 0)
-        {
-            availableRoles.addAll(ModuleLoader2.getDevRoles());
-        }
 
         String savedRoles = coreUtils.getUserSetting(username, DatabaseConstants.CURRENT_ROLE_LIST);
 
