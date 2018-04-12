@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.model;
 
-
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.io.ByteArrayInputStream;
@@ -10,10 +11,28 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class QRec extends DynamicPropertySetSupport
 {
+    public static QRec fromList(List<DynamicPropertySet> dpsList)
+    {
+        if(dpsList.size() == 0)
+        {
+            return null;
+        }
+        else
+        {
+            QRec qRec = new QRec();
+            for (DynamicProperty property : dpsList.get(0))
+            {
+                qRec.add(property);
+            }
+            return qRec;
+        }
+    }
+
     /**
      * Retrieves first value. Useful when we need only one column
      *

@@ -458,11 +458,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //        }
 //    }
 
-    private List<DynamicPropertySet> listDps(String finalSql)
+    private List<DynamicPropertySet> listDps(String finalSql, Object... params)
     {
         try
         {
-            return db.selectList(finalSql, DpsRecordAdapter::createDps);
+            return db.selectList(finalSql, DpsRecordAdapter::createDps, params);
         }
         catch (RuntimeException e)
         {
@@ -539,6 +539,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     {
         executeType = ExecuteType.COUNT;
         return (Long)listDps(getFinalSql()).get(0).asMap().get("count");
+    }
+
+    @Override
+    public List<DynamicPropertySet> execute(Object... params)
+    {
+        executeType = ExecuteType.DEFAULT;
+        return listDps(getFinalSql(), params);
     }
 
     @Override

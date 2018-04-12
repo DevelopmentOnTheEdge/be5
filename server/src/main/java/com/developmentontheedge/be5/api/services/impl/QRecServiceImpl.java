@@ -1,20 +1,31 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.model.QRec;
+import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
+import java.util.Collections;
+import java.util.List;
+
+
 public class QRecServiceImpl implements QRecService
 {
-    private SqlService db;
+    private final SqlService db;
+    private final Meta meta;
+    private final Injector injector;
 
-    public QRecServiceImpl(SqlService db)
+    public QRecServiceImpl(SqlService db, Meta meta, Injector injector)
     {
         this.db = db;
+        this.meta = meta;
+        this.injector = injector;
     }
 
     @Override
@@ -35,6 +46,15 @@ public class QRecServiceImpl implements QRecService
             }
             return qRec;
         }
+    }
+
+    @Override
+    public QRec beSql(String sql, Object... params)
+    {
+        List<DynamicPropertySet> dpsList = new Be5QueryExecutor( meta.createQueryFromSql(sql), Collections.emptyMap(),
+                injector).execute(params);
+
+        return QRec.fromList(dpsList);
     }
 
     public QRec withCache( String sql, Object... params )

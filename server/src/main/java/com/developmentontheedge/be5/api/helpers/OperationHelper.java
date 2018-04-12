@@ -577,21 +577,9 @@ public class OperationHelper
 
     public QRec readOneRecord(Query query, Map<String, ?> parameters)
     {
-        List<DynamicPropertySet> dps = readAsRecordsFromQuery(query, parameters);
+        List<DynamicPropertySet> dpsList = readAsRecordsFromQuery(query, parameters);
 
-        if(dps.size() == 0)
-        {
-            return null;
-        }
-        else
-        {
-            QRec qRec = new QRec();
-            for (DynamicProperty property : dps.get(0))
-            {
-                qRec.add(property);
-            }
-            return qRec;
-        }
+        return QRec.fromList(dpsList);
     }
 
     public List<List<Object>> readAsList( String sql, Object... params )

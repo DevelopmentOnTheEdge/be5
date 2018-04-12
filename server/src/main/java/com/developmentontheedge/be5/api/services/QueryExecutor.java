@@ -35,6 +35,8 @@ public interface QueryExecutor
      */
     List<DynamicPropertySet> execute() throws Be5Exception;
 
+    List<DynamicPropertySet> execute(Object... params) throws Be5Exception;
+
     /**
      * Executes the query for aggregate.
      */

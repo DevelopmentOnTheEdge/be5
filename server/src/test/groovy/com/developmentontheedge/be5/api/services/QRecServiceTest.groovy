@@ -36,6 +36,16 @@ class QRecServiceTest extends Be5ProjectDBTest
     }
 
     @Test
+    void testBeSql()
+    {
+        String id = database.testtableAdmin << [ "name": "1234567890", "value": "1"]
+
+        assertEquals "10", qRec.beSql("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
+
+        assertEquals "10", qRec.beSql("SELECT TO_CHAR(LEN(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
+    }
+
+    @Test
     void testGetters()
     {
         String id = database.testtableAdmin << [ "name": "TestName", "value": 123]
