@@ -6,9 +6,11 @@ import java.util.Set;
 
 import one.util.streamex.StreamEx;
 
+
 public class AstBeSessionTag extends AstBeNode
 {
-    private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of( "refColumn", "default", "type" ).toSet();
+    private static final Set<String> ALLOWED_PARAMETERS = StreamEx.of(
+            "refColumn", "default", "type", "multiple" ).toSet();
     
     public AstBeSessionTag(int id)
     {
@@ -43,6 +45,11 @@ public class AstBeSessionTag extends AstBeNode
     public String getType()
     {
         return getParameter( "type" );
+    }
+
+    public String getMultiple()
+    {
+        return getParameter( "multiple" );
     }
 }
 /* JavaCC - OriginalChecksum=5bfac9a483d6aca0b9aacdc100e73d4e (do not edit this line) */

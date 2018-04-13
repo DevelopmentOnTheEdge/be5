@@ -21,32 +21,31 @@ public class SqlTypeUtils
                 "java.lang.Float".equals(className);
     }
 
-    public static Object parseValue(String value, String className)
+    public static Object parseValue(Object value, String className)
     {
-        if("java.lang.Long".equals(className))
+        if(value.getClass() == String.class)
         {
-            return Long.valueOf(value);
+            if ("java.lang.Long".equals(className))
+            {
+                return Long.valueOf((String) value);
+            } else if ("java.lang.Integer".equals(className))
+            {
+                return Integer.valueOf((String) value);
+            }
+            if ("java.lang.Short".equals(className))
+            {
+                return Short.valueOf((String) value);
+            } else if ("java.lang.Double".equals(className))
+            {
+                return Double.valueOf((String) value);
+            }
+            if ("java.lang.Float".equals(className))
+            {
+                return Float.valueOf((String) value);
+            }
         }
-        else if("java.lang.Integer".equals(className))
-        {
-            return Integer.valueOf(value);
-        }
-        if("java.lang.Short".equals(className))
-        {
-            return Short.valueOf(value);
-        }
-        else if("java.lang.Double".equals(className))
-        {
-            return Double.valueOf(value);
-        }
-        if("java.lang.Float".equals(className))
-        {
-            return Float.valueOf(value);
-        }
-        else
-        {
-            return value;
-        }
+
+        return value;
     }
 
 }

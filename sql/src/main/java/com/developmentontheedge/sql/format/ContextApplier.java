@@ -324,39 +324,80 @@ public class ContextApplier
     {
         String name = child.getName();
         Object value = context.getSessionVariable( name );
+        boolean multiple = "true".equals(child.getMultiple());
 
-        if(value == null)
+        if(!multiple)
         {
-            if(child.getDefault() != null)
+            if (value == null)
             {
-                value = SqlTypeUtils.parseValue(child.getDefault(), child.getType());
+                if (child.getDefault() != null)
+                {
+                    value = SqlTypeUtils.parseValue(child.getDefault(), child.getType());
+                } else
+                {
+                    value = "";
+                }
             }
-            else
-            {
-                value = "";
-            }
-        }
 
-        SimpleNode replacement;
-
-        // TODO: support refColumn; smart quoting - in server module
-        if( child.jjtGetParent() instanceof AstStringConstant )
-        {
-            replacement = new AstStringPart(value.toString());
+            child.replaceWith( applySessionParameters(child, value) );
         }
         else
         {
-            if(SqlTypeUtils.isNumber(value.getClass()))
+            if (child.jjtGetParent() instanceof AstInValueList)
             {
-                replacement = AstNumericConstant.of( (Number) value );
+                SimpleNode[] objects;
+
+                if(value instanceof List)
+                {
+                    List list = (List) value;
+                    objects = new SimpleNode[list.size()];
+                    for (int i=0; i<list.size(); i++)
+                    {
+                        objects[i] = applySessionParameters(child, list.get(i));
+                    }
+                }else{
+                    objects = (Arrays.stream((Object[]) value))
+                            .map(val -> applySessionParameters(child, val))
+                            .toArray(SimpleNode[]::new);
+                }
+
+                child.replaceWith(objects);
+                return;
+            }
+            if( ! ( child.jjtGetParent() instanceof AstInPredicate ) )
+                throw new IllegalArgumentException( "Parameter Multiple can only be put inside InPredicate" );
+
+            AstInValueList list = new AstInValueList( SqlParserTreeConstants.JJTINVALUELIST );
+            List<String> values = context.getListParameter( child.getName() );
+
+            if( values != null )
+            {
+                for( String val : values )
+                {
+                    list.addChild( applySessionParameters( child, val ) );
+                }
+            }
+            list.inheritFrom( child );
+        }
+    }
+
+    private SimpleNode applySessionParameters(AstBeSessionTag node, Object value)
+    {
+        if (node.jjtGetParent() instanceof AstStringConstant)
+        {
+            return new AstStringPart(value.toString());
+        }
+        else
+        {
+            if (SqlTypeUtils.isNumber(value.getClass()))
+            {
+                return AstNumericConstant.of((Number) value);
             }
             else
             {
-                replacement = new AstStringConstant( value.toString() );
+                return new AstStringConstant(value.toString());
             }
         }
-
-        child.replaceWith( replacement );
     }
 
     private void applyPlaceHolder(AstBePlaceHolder placeholderNode)
