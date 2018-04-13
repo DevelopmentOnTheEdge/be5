@@ -324,9 +324,9 @@ public class ContextApplier
     {
         String name = child.getName();
         Object value = context.getSessionVariable( name );
-        String multiple = child.getMultiple();
+        boolean multiple = "true".equals(child.getMultiple());
 
-        if( multiple == null )
+        if(!multiple)
         {
             if (value == null)
             {
