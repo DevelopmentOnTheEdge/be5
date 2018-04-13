@@ -206,16 +206,6 @@ FROM utilities u, utilities2providers up
 WHERE up.utilityID = u.ID AND up.companyID = 123]]></format>
   </parser>
  </test>
- <test name="session-multiple">
-  <parser>
-   <query><![CDATA[SELECT name FROM table WHERE id IN (<session:recordID refColumn='companies.ID' multiple="true"/>)]]></query>
-   <applyContext>
-    <sessionVar name="recordID" value="123" />
-    <sessionVar name="recordID" value="456" />
-   </applyContext>
-   <format dbms="oracle"><![CDATA[SELECT name FROM table WHERE id IN (123, 456)]]></format>
-  </parser>
- </test>
  <test name="parameter-multiple">
   <parser>
    <query><![CDATA[SELECT name FROM table WHERE id IN <parameter:recordID multiple="true"/>]]></query>

@@ -121,13 +121,13 @@ public class BasicQueryContext implements QueryContext
             return this;
         }
 
-        public Builder sessionVar(String name, String value)
+        public Builder sessionVar(String name, Object value)
         {
             sessionVar(name, value, null);
             return this;
         }
 
-        public Builder sessionVar(String name, String value, String className)
+        public Builder sessionVar(String name, Object value, String className)
         {
             sessionVariables.put( name, SqlTypeUtils.parseValue(value, className) );
 

@@ -345,8 +345,23 @@ public class ContextApplier
         {
             if (child.jjtGetParent() instanceof AstInValueList)
             {
-                //List<String> values = context.getListParameter(paramNode.getName());
-                child.replaceWith(StreamEx.of(value).map(val -> applySessionParameters( child, val )).toArray(SimpleNode[]::new));
+                SimpleNode[] objects;
+
+                if(value instanceof List)
+                {
+                    List list = (List) value;
+                    objects = new SimpleNode[list.size()];
+                    for (int i=0; i<list.size(); i++)
+                    {
+                        objects[i] = applySessionParameters(child, list.get(i));
+                    }
+                }else{
+                    objects = (Arrays.stream((Object[]) value))
+                            .map(val -> applySessionParameters(child, val))
+                            .toArray(SimpleNode[]::new);
+                }
+
+                child.replaceWith(objects);
                 return;
             }
             if( ! ( child.jjtGetParent() instanceof AstInPredicate ) )
@@ -368,16 +383,17 @@ public class ContextApplier
 
     private SimpleNode applySessionParameters(AstBeSessionTag node, Object value)
     {
-        // TODO: support refColumn; smart quoting - in server module
         if (node.jjtGetParent() instanceof AstStringConstant)
         {
             return new AstStringPart(value.toString());
-        } else
+        }
+        else
         {
             if (SqlTypeUtils.isNumber(value.getClass()))
             {
                 return AstNumericConstant.of((Number) value);
-            } else
+            }
+            else
             {
                 return new AstStringConstant(value.toString());
             }
