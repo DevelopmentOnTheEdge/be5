@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.exceptions;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.model.Operation;
+import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.Utils;
 
@@ -102,6 +103,11 @@ public class Be5Exception extends RuntimeException
     public static Be5Exception internalInOperation(Throwable t, Operation o)
     {
         return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName());
+    }
+
+    public static Be5Exception internalInOperationExtender(Throwable t, OperationExtender operationExtender)
+    {
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow( t, operationExtender.getClassName());
     }
     
     public static Be5Exception invalidRequestParameter(String parameterName, String invalidValue)

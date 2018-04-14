@@ -3,20 +3,27 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationExtender;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.*;
 
@@ -30,14 +37,16 @@ public class OperationExecutorImpl implements OperationExecutor
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
     private final UserAwareMeta userAwareMeta;
+    private final Meta meta;
 
-    public OperationExecutorImpl(Injector injector, DatabaseService databaseService, Validator validator, GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta)
+    public OperationExecutorImpl(Injector injector, DatabaseService databaseService, Validator validator, GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta, Meta meta)
     {
         this.injector = injector;
         this.databaseService = databaseService;
         this.validator = validator;
         this.groovyOperationLoader = groovyOperationLoader;
         this.userAwareMeta = userAwareMeta;
+        this.meta = meta;
     }
 
     @Override
@@ -102,7 +111,7 @@ public class OperationExecutorImpl implements OperationExecutor
     {
         try
         {
-            operation.invoke(parameters);
+            doInvokeOperation(operation, parameters);
 
             if(operation.getStatus() == OperationStatus.ERROR)
             {
@@ -137,6 +146,77 @@ public class OperationExecutorImpl implements OperationExecutor
             operation.setResult(OperationResult.error(be5Exception));
             return parameters;
         }
+    }
+
+    private void doInvokeOperation(Operation op, Object parameters) throws Exception
+    {
+        List<OperationExtender> operationExtenders = loadOperationExtenders(op);
+        invokeExtenders( "preInvoke", op, operationExtenders, parameters);
+        if( !invokeExtenders( "skipInvoke", op, operationExtenders, parameters) )
+        {
+            op.invoke(parameters);
+            invokeExtenders( "postInvoke", op, operationExtenders, parameters);
+        }
+        else
+        {
+            if(OperationStatus.EXECUTE == op.getStatus())
+            {
+                op.setResult(OperationResult.finished("Invokation of operation is cancelled by extender"));
+            }
+        }
+    }
+
+    private List<OperationExtender> loadOperationExtenders(Operation operation)
+    {
+        if(operation.getInfo().getModel().getExtenders() == null) return Collections.emptyList();
+
+        List<com.developmentontheedge.be5.metadata.model.OperationExtender> operationExtenderModels =
+                operation.getInfo().getModel().getExtenders().getAvailableElements()
+                        .stream()
+                        .sorted(Comparator.comparing(com.developmentontheedge.be5.metadata.model.
+                                OperationExtender::getInvokeOrder))
+                        .collect(Collectors.toList());
+
+        List<OperationExtender> operationExtenders = new ArrayList<>();
+
+        for (com.developmentontheedge.be5.metadata.model.OperationExtender
+                operationExtenderModel : operationExtenderModels)
+        {
+            try
+            {
+                OperationExtender operationExtender =
+                        (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
+
+                injector.injectAnnotatedFields(operationExtender);
+
+                operationExtenders.add(operationExtender);
+            }
+            catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+            {
+                throw Be5Exception.internalInOperationExtender(e, operationExtenderModel);
+            }
+        }
+
+        return operationExtenders;
+    }
+
+    private boolean invokeExtenders(String action, Operation curOp, List<OperationExtender> operationExtenders, Object parameters) throws Exception
+    {
+        for( OperationExtender ext : operationExtenders )
+        {
+            switch (action)
+            {
+                case "skipInvoke":
+                    return ext.skipInvoke(curOp, parameters);
+                case "preInvoke":
+                    ext.preInvoke(curOp, parameters);
+                    break;
+                case "postInvoke":
+                    ext.postInvoke(curOp, parameters);
+                    break;
+            }
+        }
+        return false;
     }
 
     @Override

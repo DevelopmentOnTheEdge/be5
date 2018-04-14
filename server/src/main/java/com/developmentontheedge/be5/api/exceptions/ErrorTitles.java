@@ -25,6 +25,7 @@ public class ErrorTitles
 		TITLES.put(ACCESS_DENIED_TO_QUERY, "Access denied to query $1.$2");
 		TITLES.put(ACCESS_DENIED_TO_OPERATION, "Access denied to operation $1.$2");
 		TITLES.put(INTERNAL_ERROR_IN_OPERATION, "Internal error occured during operation $1.$2");
+		TITLES.put(INTERNAL_ERROR_IN_OPERATION_EXTENDER, "Internal error occured during operation extender $1");
         TITLES.put(INTERNAL_ERROR_IN_QUERY, "Internal error occured during query $1.$2");
         TITLES.put(NOT_FOUND, "Element not found: $1");
 		

@@ -102,6 +102,22 @@ testtable:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - InsertWithExtender:
+      roles: Administrator
+      extenders:
+      - className: com.developmentontheedge.be5.operations.extenders.TestExtender
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - InsertWithSkipExtender:
+      roles: Administrator
+      extenders:
+      - className: com.developmentontheedge.be5.operations.extenders.TestSkipExtender
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+  - InsertWithExtenders:
+      roles: Administrator
+      extenders:
+      - className: com.developmentontheedge.be5.operations.extenders.TestExtender
+      - file: TestGroovyExtender.groovy
+      code: com.developmentontheedge.be5.operations.SilentInsertOperation
   - CustomOperation:
       type: Groovy
       roles: Administrator
