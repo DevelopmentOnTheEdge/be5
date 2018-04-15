@@ -40,7 +40,7 @@ public class ExtendersTest extends SqlMockOperationTest
                 executeOperation("testtable", "All records", "InsertWithSkipExtender", "",
                         "{'name':'test','value':'1'}").getSecond());
 
-        verify(SqlServiceMock.mock).update("update testTable name = 'preInvokeAfterSkip' WHERE 1=2");
+        verify(SqlServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkip' WHERE 1=2");
 
         verify(SqlServiceMock.mock, times(1)).update(anyString());
 

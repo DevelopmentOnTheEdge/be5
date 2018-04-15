@@ -10,7 +10,7 @@ public class TestSkipExtender extends OperationExtenderSupport
     @Override
     public void preInvoke(Operation op, Object parameters) throws Exception
     {
-        db.update("update testTable name = 'preInvokeAfterSkip' WHERE 1=2");
+        db.update("update testTable name = 'preInvokeBeforeSkip' WHERE 1=2");
     }
 
     @Override
