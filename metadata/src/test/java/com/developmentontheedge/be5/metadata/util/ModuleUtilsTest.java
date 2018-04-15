@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +30,12 @@ import org.junit.rules.TemporaryFolder;
 
 public class ModuleUtilsTest
 {
+    @After
+    public void tearDown()
+    {
+        ModuleLoader2.clearModulesMap();
+    }
+
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
