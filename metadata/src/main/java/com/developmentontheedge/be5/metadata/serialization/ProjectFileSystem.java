@@ -357,6 +357,8 @@ public class ProjectFileSystem
             return getGroovyOperationsFolder();
         case SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER:
             return getJavaScriptExtendersFolder();
+        case SourceFileCollection.NAMESPACE_GROOVY_EXTENDER:
+            return getGroovyExtendersFolder();
         default:
             throw new IllegalArgumentException( nameSpace );
         }
@@ -386,6 +388,11 @@ public class ProjectFileSystem
     {
         return resolve( root, structure.getJsExtendersDir() );
     }
+
+    public Path getGroovyExtendersFolder()
+    {
+        return resolve( root, structure.getGroovyExtendersDir() );
+    }
     
     public Path getJavaScriptFormsFolder()
     {
@@ -410,6 +417,11 @@ public class ProjectFileSystem
     public Path getJavaScriptExtenderFile( final String name )
     {
         return getJavaScriptExtendersFolder().resolve( name );
+    }
+
+    public Path getGroovyExtenderFile( final String name )
+    {
+        return getGroovyExtendersFolder().resolve( name );
     }
     
     public Path getEntityFile( final Entity entity )

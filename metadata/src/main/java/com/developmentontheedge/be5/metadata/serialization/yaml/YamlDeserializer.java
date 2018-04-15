@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import one.util.streamex.StreamEx;
 
 import org.yaml.snakeyaml.Yaml;
@@ -1014,29 +1015,45 @@ public class YamlDeserializer
                 }
                 else
                 {
-                    SourceFile sourceFile;
-                    try
+                    final String filepath = ( String ) extenderElement.get( ATTR_FILEPATH );
+
+                    if(filepath == null)
                     {
-                        final String filepath = ( String ) extenderElement.get( ATTR_FILEPATH );
-                        if ( filepath == null ) // error
-                        {
-                            throw new ReadException( path, "Extender: no "+ATTR_FILEPATH+" attribute found" ); 
-                        }
-                        sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
+                        loadContext.addWarning( new ReadException(path, "Extender: no "+ATTR_FILEPATH+" attribute found").attachElement( operation ) );
+                        continue;
+                    }
+
+                    if(filepath.endsWith(".js"))
+                    {
+                        SourceFile sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
                         if(sourceFile == null)
                         {
                             sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
                             sourceFile.setLinkedFile( getFileSystem().getJavaScriptExtenderFile( filepath ) );
                         }
+
+                        final JavaScriptOperationExtender jsExtender = new JavaScriptOperationExtender( operation, getProjectOrigin() );
+                        jsExtender.setFileName( sourceFile.getName() );
+                        extender = jsExtender;
                     }
-                    catch ( ReadException e )
+                    else if(filepath.endsWith(".groovy"))
                     {
-                        loadContext.addWarning( e.attachElement( operation ) );
+                        SourceFile sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, filepath );
+                        if(sourceFile == null)
+                        {
+                            sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, filepath );
+                            sourceFile.setLinkedFile( getFileSystem().getGroovyExtenderFile( filepath ) );
+                        }
+
+                        final GroovyOperationExtender groovyExtender = new GroovyOperationExtender( operation, getProjectOrigin() );
+                        groovyExtender.setFileName( sourceFile.getName() );
+                        extender = groovyExtender;
+                    }
+                    else
+                    {
+                        loadContext.addWarning( new ReadException(path, "Not supported file extention.").attachElement( operation ) );
                         continue;
                     }
-                    final JavaScriptOperationExtender jsExtender = new JavaScriptOperationExtender( operation, getProjectOrigin() );
-                    extender = jsExtender;
-                    jsExtender.setFileName( sourceFile.getName() );
                 }
                 readFields( extender, extenderElement, Fields.extender() );
                 DataElementUtils.saveQuiet( extender );

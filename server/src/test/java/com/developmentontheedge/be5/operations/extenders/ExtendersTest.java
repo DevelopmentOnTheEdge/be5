@@ -46,4 +46,17 @@ public class ExtendersTest extends SqlMockOperationTest
 
         verify(SqlServiceMock.mock, times(0)).insert(anyString(), anyVararg());
     }
+
+    @Test
+    public void testInsertWithGroovyExtender()
+    {
+        assertEquals(OperationResult.redirect("table/testtable/All records"),
+                executeOperation("testtable", "All records", "InsertWithGroovyExtender", "",
+                        "{'name':'test','value':'1'}").getSecond());
+
+        verify(SqlServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkipGroovy' WHERE 1=2");
+
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
+                "VALUES (?, ?)", "test", "1");
+    }
 }

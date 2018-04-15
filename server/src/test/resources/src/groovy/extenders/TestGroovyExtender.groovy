@@ -6,8 +6,8 @@ import com.developmentontheedge.be5.operation.OperationExtenderSupport
 class TestGroovyExtender extends OperationExtenderSupport
 {
     @Override
-    boolean skipInvoke(Operation op, Object parameters)
+    void preInvoke(Operation op, Object parameters) throws Exception
     {
-        return true
+        db.update("update testTable name = 'preInvokeBeforeSkipGroovy' WHERE 1=2")
     }
 }

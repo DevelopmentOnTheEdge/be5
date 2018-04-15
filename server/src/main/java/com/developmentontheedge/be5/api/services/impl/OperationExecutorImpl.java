@@ -3,10 +3,12 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationExtender;
@@ -37,16 +39,18 @@ public class OperationExecutorImpl implements OperationExecutor
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
     private final UserAwareMeta userAwareMeta;
-    private final Meta meta;
+    private final GroovyRegister groovyRegister;
 
-    public OperationExecutorImpl(Injector injector, DatabaseService databaseService, Validator validator, GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta, Meta meta)
+    public OperationExecutorImpl(Injector injector, DatabaseService databaseService, Validator validator,
+                                 GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta,
+                                 GroovyRegister groovyRegister)
     {
         this.injector = injector;
         this.databaseService = databaseService;
         this.validator = validator;
         this.groovyOperationLoader = groovyOperationLoader;
         this.userAwareMeta = userAwareMeta;
-        this.meta = meta;
+        this.groovyRegister = groovyRegister;
     }
 
     @Override
@@ -182,19 +186,50 @@ public class OperationExecutorImpl implements OperationExecutor
         for (com.developmentontheedge.be5.metadata.model.OperationExtender
                 operationExtenderModel : operationExtenderModels)
         {
-            try
-            {
-                OperationExtender operationExtender =
-                        (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
+            OperationExtender operationExtender;
 
-                injector.injectAnnotatedFields(operationExtender);
-
-                operationExtenders.add(operationExtender);
-            }
-            catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+            if(operationExtenderModel.getClass() == GroovyOperationExtender.class)
             {
-                throw Be5Exception.internalInOperationExtender(e, operationExtenderModel);
+                GroovyOperationExtender groovyExtender = (GroovyOperationExtender)operationExtenderModel;
+                try
+                {
+                    Class aClass = groovyRegister.getClass("groovyExtender-" + groovyExtender.getFileName(),
+                            groovyExtender.getCode(), groovyExtender.getFileName());
+                    if(aClass != null)
+                    {
+                        operationExtender = ( OperationExtender ) aClass.newInstance();
+                    }
+                    else
+                    {
+                        throw Be5Exception.internalInOperationExtender(
+                                new Error("Class " + groovyExtender.getCode() + " is null."), groovyExtender);
+                    }
+                }
+                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+                {
+                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                }
+                catch ( Throwable e )
+                {
+                    throw Be5Exception.internalInOperationExtender(e, groovyExtender);
+                }
             }
+            else
+            {
+                try
+                {
+                    operationExtender =
+                            (OperationExtender) Class.forName(operationExtenderModel.getClassName()).newInstance();
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                {
+                    throw Be5Exception.internalInOperationExtender(e, operationExtenderModel);
+                }
+            }
+
+            injector.injectAnnotatedFields(operationExtender);
+
+            operationExtenders.add(operationExtender);
         }
 
         return operationExtenders;

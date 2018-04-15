@@ -53,7 +53,7 @@ import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForm;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
-import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
+import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
 import com.developmentontheedge.be5.metadata.model.LocalizationElement;
@@ -1149,8 +1149,8 @@ public class YamlSerializer
             final Map<String, Object> serializedExtender = map();
             serializeFields( extender, Fields.extender(), serializedExtender );
             
-            if ( extender instanceof JavaScriptOperationExtender )
-                serializedExtender.put( ATTR_FILEPATH, ( ( JavaScriptOperationExtender ) extender ).getFileName() );
+            if ( extender instanceof SourceFileOperationExtender)
+                serializedExtender.put( ATTR_FILEPATH, ( ( SourceFileOperationExtender ) extender ).getFileName() );
             else
                 serializedExtender.put( ATTR_CLASS_NAME, extender.getClassName() );
             

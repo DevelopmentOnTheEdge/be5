@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -200,6 +201,10 @@ public class ReadModelFromXmlTest
         DataElementUtils.saveQuiet( ex2 );
         ex2.setFileName( "MyExtender.js" );
         ex2.setCode( "Hello world!" );
+        final GroovyOperationExtender ex3 = new GroovyOperationExtender( op, module.getName() );
+        DataElementUtils.saveQuiet( ex3 );
+        ex3.setFileName( "MyExtender.groovy" );
+        ex3.setCode( "Hello world!" );
         
         final Path tempFolder = Files.createTempDirectory("be4-temp");
         Serialization.save( project, tempFolder );
@@ -207,7 +212,7 @@ public class ReadModelFromXmlTest
         final Project readProject = Serialization.load( tempFolder );
         final Entity readEntity = readProject.getApplication().getEntity( "table" );
         final BeModelCollection<OperationExtender> extenders = readEntity.getOperations().get( "op" ).getExtenders();
-        assertEquals(2, extenders.getSize());
+        assertEquals(3, extenders.getSize());
         final OperationExtender readEx1 = extenders.get( "application - 0001" );
         assertEquals("test.class.name", readEx1.getClassName());
         assertEquals(1, readEx1.getInvokeOrder());
@@ -215,6 +220,11 @@ public class ReadModelFromXmlTest
         assertEquals(0, readEx2.getInvokeOrder());
         assertEquals("MyExtender.js", readEx2.getFileName());
         assertEquals("Hello world!", readEx2.getCode());
+
+        final GroovyOperationExtender readEx3 = ( GroovyOperationExtender ) extenders.get( "application - 0003" );
+        assertEquals(0, readEx3.getInvokeOrder());
+        assertEquals("MyExtender.groovy", readEx3.getFileName());
+        assertEquals("Hello world!", readEx3.getCode());
         
         FileUtils.deleteRecursively( tempFolder );
     }

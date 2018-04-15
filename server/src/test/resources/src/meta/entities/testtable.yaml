@@ -112,10 +112,9 @@ testtable:
       extenders:
       - className: com.developmentontheedge.be5.operations.extenders.TestSkipExtender
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
-  - InsertWithExtenders:
+  - InsertWithGroovyExtender:
       roles: Administrator
       extenders:
-      - className: com.developmentontheedge.be5.operations.extenders.TestExtender
       - file: TestGroovyExtender.groovy
       code: com.developmentontheedge.be5.operations.SilentInsertOperation
   - CustomOperation:
