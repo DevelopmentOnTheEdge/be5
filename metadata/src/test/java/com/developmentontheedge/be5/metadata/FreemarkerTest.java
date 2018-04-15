@@ -18,6 +18,7 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import junit.framework.TestCase;
 import freemarker.template.Configuration;
 
+
 public class FreemarkerTest extends TestCase
 {
     public void testBasics() throws ProjectElementException
