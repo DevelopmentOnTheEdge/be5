@@ -68,6 +68,17 @@ public class ProjectTestUtils
         return entity;
     }
 
+    public static StaticPage createStaticPage(Project project, String lang, String name, String content)
+    {
+        LanguageStaticPages lsp = new LanguageStaticPages( "en", project.getApplication().getStaticPageCollection() );
+        DataElementUtils.save( lsp );
+        StaticPage staticPage = new StaticPage(name, lsp);
+        DataElementUtils.save( staticPage );
+        staticPage.setComment( "Comment" );
+        staticPage.setContent( content );
+        return staticPage;
+    }
+
     public static void createScript(Project project, String name, String sql)
     {
         FreemarkerScript script = new FreemarkerScript(name,

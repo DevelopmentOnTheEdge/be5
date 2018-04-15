@@ -5,12 +5,13 @@ import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.PageCustomization;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
+import com.developmentontheedge.be5.metadata.model.StaticPage;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import one.util.streamex.StreamEx;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -34,11 +36,12 @@ public class SerializationTest
     public void testSerializationBasics() throws Exception
     {
         Path path = tmp.newFolder().toPath();
-        Project project = ProjectTestUtils.getProject("test");
-        ProjectTestUtils.createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
+        Project project = getProject("test");
+        createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
+        StaticPage staticPage = createStaticPage(project, "en", "page", "Content");
 
-        Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
-        TableDef scheme = ProjectTestUtils.createScheme(entity);
+        Entity entity = createEntity( project, "entity", "ID" );
+        TableDef scheme = createScheme(entity);
 
         //only for test SqlColumnType getType( Collection<ColumnDef> stack )
         ColumnDef column3 = new ColumnDef( "column3", scheme.getColumns() );
@@ -46,13 +49,13 @@ public class SerializationTest
         column3.setColumnsTo( "ID" );
         DataElementUtils.save(column3);
 
-        Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
+        Query query = createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
         query.getOperationNames().setValues( Collections.singleton( "op" ) );
 
-        ProjectTestUtils.createOperation( entity );
+        createOperation( entity );
 
         Path modulePath = tmp.newFolder().toPath();
-        Project moduleProject = ProjectTestUtils.createModule(project, "testModule", modulePath);
+        Project moduleProject = createModule(project, "testModule", modulePath);
 
         final FreemarkerScript script = new FreemarkerScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY, moduleProject.getMacroCollection() );
         script.setSource( "<#macro distinct column>SELECT DISTINCT ${column} FROM ${entity.getName()}</#macro>" );
@@ -78,6 +81,8 @@ public class SerializationTest
         assertEquals("INSERT INTO entity (name) VALUES ('foo')",
                 project.mergeTemplate( project2.getApplication().getFreemarkerScripts().getScripts().get(0) ).validate());
 
+        assertEquals("Content", project2.getStaticPageContent( "en", "page" ));
+
         Project moduleProject2 = Serialization.load( modulePath, lc );
 
         ArrayList<URL> urls = new ArrayList<>();
@@ -88,6 +93,27 @@ public class SerializationTest
         ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject2 ), lc );
 
         Serialization.loadModuleMacros(project2.getModule("testModule"));
+    }
+
+    @Test
+    public void testStaticPageWithPageCustomization() throws Exception
+    {
+        Path path = tmp.newFolder().toPath();
+        Project project = getProject("test");
+        StaticPage staticPage = createStaticPage(project, "en", "page", "Content");
+
+        PageCustomization pcSp = new PageCustomization( "css", PageCustomization.DOMAIN_OPERATION_BUTTONS_HEADER, staticPage.getOrCreateCollection(
+                PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class ) );
+        DataElementUtils.save( pcSp );
+
+        Serialization.save( project, path );
+
+        LoadContext lc = new LoadContext();
+        Project project2 = Serialization.load( path, lc );
+        project2.setDatabaseSystem( Rdbms.POSTGRESQL );
+        lc.check();
+
+        assertEquals("Content", project2.getStaticPageContent( "en", "page" ));
     }
 
 }
