@@ -154,12 +154,14 @@ public class ProjectFileSystem
                 structure.getCustomizationFile(), structure.getSelectedProfileFile() );
         StreamEx.of( files ).map( path -> resolve( root, path ) ).map( Path::getParent ).forEach( p -> result.put( p, false ) );
         
-        List<String> dirs = Arrays.asList( structure.getDataDir(), structure.getEntitiesDir(), structure.getJsExtendersDir(),
-                structure.getJsFormsDir(), structure.getJsOperationsDir(), structure.getJsQueriesDir(), structure.getL10nDir());
+        List<String> dirs = Arrays.asList(
+                structure.getDataDir(), structure.getEntitiesDir(),
+                structure.getJsExtendersDir(), structure.getJsFormsDir(), structure.getJsOperationsDir(), structure.getJsQueriesDir(),
+                structure.getL10nDir());
         StreamEx.of( dirs ).map( path -> resolve( root, path ) ).append( root ).forEach( p -> result.put( p, false ) );
         
         List<String> recursiveDirs = Arrays.asList( structure.getScriptsDir(), structure.getModulesDir(), structure.getMacroDir(),
-                structure.getGroovyOperationsDir(), structure.getGroovyQueriesDir(),
+                structure.getGroovyOperationsDir(), structure.getGroovyExtendersDir(), structure.getGroovyQueriesDir(),
                 structure.getPagesDir());
         StreamEx.of( recursiveDirs ).map( path -> resolve( root, path ) ).forEach( p -> {
             result.keySet().removeIf( pp -> pp.startsWith(p) );

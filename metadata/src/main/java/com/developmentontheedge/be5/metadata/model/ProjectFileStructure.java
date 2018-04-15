@@ -13,13 +13,17 @@ public class ProjectFileStructure extends BeModelElementSupport
     
     private String htmlDir             = "src/html";
     private String javaSourcesDir      = "src/main/java";
+
     private String jsDir               = "src/js";
     private String jsFormsDir          = "src/js/forms";
-    private String jsOperationsDir     = "src/js/operations";
-    private String groovyOperationsDir = "src/groovy/operations";
-    private String groovyQueriesDir    = "src/groovy/queries";
     private String jsQueriesDir        = "src/js/queries";
+    private String jsOperationsDir     = "src/js/operations";
     private String jsExtendersDir      = "src/js/extenders";
+
+    private String groovyQueriesDir    = "src/groovy/queries";
+    private String groovyOperationsDir = "src/groovy/operations";
+    private String groovyExtendersDir  = "src/groovy/extenders";
+
     private String scriptsDir          = "src/ftl";
     private String iconsDir            = "src/icons";
     private String entitiesDir         = "src/meta/entities";
@@ -35,7 +39,7 @@ public class ProjectFileStructure extends BeModelElementSupport
     private String massChangesFile     = "src/massChanges.yaml";
     private String localConnectionProfilesFile = "src/connectionProfiles.local.yaml";
     private String remoteConnectionProfilesFile = "src/connectionProfiles.remote.yaml";
-    private String macroDir        = "src/include";
+    private String macroDir            = "src/include";
     private String selectedProfileFile = "src/profile.local";
     
     public ProjectFileStructure( final Project project )
@@ -106,6 +110,18 @@ public class ProjectFileStructure extends BeModelElementSupport
     public void setJsExtendersDir( final String jsExtendersDir )
     {
         this.jsExtendersDir = jsExtendersDir;
+        fireChanged();
+    }
+
+    @PropertyName("Directory for Groovy extenders")
+    public String getGroovyExtendersDir()
+    {
+        return groovyExtendersDir;
+    }
+
+    public void setGroovyExtendersDir( final String groovyExtendersDir )
+    {
+        this.groovyExtendersDir = groovyExtendersDir;
         fireChanged();
     }
 
