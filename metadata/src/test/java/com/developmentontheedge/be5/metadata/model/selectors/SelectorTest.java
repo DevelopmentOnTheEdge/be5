@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -17,6 +19,12 @@ import com.developmentontheedge.be5.metadata.model.selectors.parser.ParseExcepti
 
 public class SelectorTest
 {
+    @Before
+    public void setUp()
+    {
+        ModuleLoader2.clearModulesMap();
+    }
+
     @Test
     public void testParser() throws ParseException
     {

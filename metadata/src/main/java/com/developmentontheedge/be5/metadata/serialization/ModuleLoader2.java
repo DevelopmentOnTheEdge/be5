@@ -44,9 +44,9 @@ public class ModuleLoader2
         return modulesMap;
     }
 
-    public static Map<String, Project> clearModulesMap()
+    public static void clearModulesMap()
     {
-        return modulesMap = new HashMap<>();
+        modulesMap = new HashMap<>();
     }
 
     private static synchronized void loadAllProjects(boolean dirty)
