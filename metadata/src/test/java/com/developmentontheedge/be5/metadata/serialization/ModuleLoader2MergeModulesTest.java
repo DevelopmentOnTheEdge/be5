@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.RoleGroup;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,12 +24,6 @@ import static org.junit.Assert.assertEquals;
 
 public class ModuleLoader2MergeModulesTest
 {
-    @After
-    public void tearDown()
-    {
-        ModuleLoader2.clearModulesMap();
-    }
-
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 

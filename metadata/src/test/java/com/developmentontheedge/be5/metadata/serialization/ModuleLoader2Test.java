@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.Project;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,12 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ModuleLoader2Test
 {
-    @After
-    public void tearDown()
-    {
-        ModuleLoader2.clearModulesMap();
-    }
-
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 

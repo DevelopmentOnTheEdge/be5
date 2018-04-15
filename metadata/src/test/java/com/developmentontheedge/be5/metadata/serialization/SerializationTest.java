@@ -15,7 +15,6 @@ import com.developmentontheedge.be5.metadata.model.StaticPage;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import one.util.streamex.StreamEx;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -32,12 +31,6 @@ import static org.junit.Assert.assertTrue;
 
 public class SerializationTest
 {
-    @After
-    public void tearDown()
-    {
-        ModuleLoader2.clearModulesMap();
-    }
-
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
