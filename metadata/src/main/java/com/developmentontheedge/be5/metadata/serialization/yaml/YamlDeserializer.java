@@ -446,7 +446,7 @@ public class YamlDeserializer
             {
                 if ( !allowed.contains( name ) )
                 {
-                    String message = "Unknown child element found: " + name + "possible values: " + allowed;
+                    String message = "Unknown child element found: " + name + ", possible values: " + allowed;
                     loadContext.addWarning( new ReadException( context, path, message ) );
                 }
             }
