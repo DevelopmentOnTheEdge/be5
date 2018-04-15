@@ -30,12 +30,6 @@ import org.junit.rules.TemporaryFolder;
 
 public class ModuleUtilsTest
 {
-    @After
-    public void tearDown()
-    {
-        ModuleLoader2.clearModulesMap();
-    }
-
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
