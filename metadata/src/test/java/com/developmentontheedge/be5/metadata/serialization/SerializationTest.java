@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.metadata.serialization;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
+import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
@@ -14,7 +16,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -50,11 +54,17 @@ public class SerializationTest
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = ProjectTestUtils.createModule(project, "testModule", modulePath);
 
-        Serialization.save( project, path );
-        assertEquals(path, project.getLocation());
-        LoadContext lc = new LoadContext();
-        ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject ), lc );
+        final FreemarkerScript script = new FreemarkerScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY, moduleProject.getMacroCollection() );
+        script.setSource( "<#macro distinct column>SELECT DISTINCT ${column} FROM ${entity.getName()}</#macro>" );
+        DataElementUtils.saveQuiet( script );
 
+
+        Serialization.save( project, path );
+        Serialization.save( moduleProject, modulePath );
+        assertEquals(path, project.getLocation());
+        //ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject ), lc );
+
+        LoadContext lc = new LoadContext();
         Project project2 = Serialization.load( path, lc );
         project2.setDatabaseSystem( Rdbms.POSTGRESQL );
         lc.check();
@@ -67,6 +77,17 @@ public class SerializationTest
 
         assertEquals("INSERT INTO entity (name) VALUES ('foo')",
                 project.mergeTemplate( project2.getApplication().getFreemarkerScripts().getScripts().get(0) ).validate());
+
+        Project moduleProject2 = Serialization.load( modulePath, lc );
+
+        ArrayList<URL> urls = new ArrayList<>();
+        urls.add(modulePath.resolve("project.yaml").toUri().toURL());
+        urls.add(path.resolve("project.yaml").toUri().toURL());
+        ModuleLoader2.loadAllProjects(urls);
+
+        ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject2 ), lc );
+
+        Serialization.loadModuleMacros(project2.getModule("testModule"));
     }
 
 }
