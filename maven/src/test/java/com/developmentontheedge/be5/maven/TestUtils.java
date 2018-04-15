@@ -41,7 +41,7 @@ public abstract class TestUtils
         Query query = ProjectTestUtils.createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
         query.getOperationNames().setValues( Collections.singleton( "op" ) );
 
-        ProjectTestUtils.createOperation( entity );
+        ProjectTestUtils.createOperation( entity, "op" );
 
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = createModule(project, "testModule", modulePath);

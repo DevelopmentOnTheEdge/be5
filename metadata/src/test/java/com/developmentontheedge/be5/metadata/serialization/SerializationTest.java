@@ -1,10 +1,12 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.MassChange;
 import com.developmentontheedge.be5.metadata.model.PageCustomization;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -40,6 +42,10 @@ public class SerializationTest
         createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
         StaticPage staticPage = createStaticPage(project, "en", "page", "Content");
 
+        MassChange mc = new MassChange( "Query[name*=\"All records\"]", project.getApplication().getMassChangeCollection(),
+                Collections.singletonMap( "type", QueryType.D2 ) );
+        DataElementUtils.save(mc);
+
         Entity entity = createEntity( project, "entity", "ID" );
         TableDef scheme = createScheme(entity);
 
@@ -52,7 +58,7 @@ public class SerializationTest
         Query query = createQuery(entity, "All records", Arrays.asList('@' + SpecialRoleGroup.ALL_ROLES_EXCEPT_GUEST_GROUP, "-User"));
         query.getOperationNames().setValues( Collections.singleton( "op" ) );
 
-        createOperation( entity );
+        createOperation( entity, "op" );
 
         Path modulePath = tmp.newFolder().toPath();
         Project moduleProject = createModule(project, "testModule", modulePath);
@@ -82,6 +88,9 @@ public class SerializationTest
                 project.mergeTemplate( project2.getApplication().getFreemarkerScripts().getScripts().get(0) ).validate());
 
         assertEquals("Content", project2.getStaticPageContent( "en", "page" ));
+
+        project2.applyMassChanges( lc );
+        assertEquals(QueryType.D2, entity2.getQueries().get( "All records" ).getType());
 
         Project moduleProject2 = Serialization.load( modulePath, lc );
 

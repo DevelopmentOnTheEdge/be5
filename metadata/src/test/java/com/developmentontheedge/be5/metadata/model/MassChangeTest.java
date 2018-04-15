@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createOperation;
 import static org.junit.Assert.*;
 
 import java.util.Collections;
@@ -34,5 +35,29 @@ public class MassChangeTest
         context.check();
         assertEquals(QueryType.D2, entity.getQueries().get( "queryToChange" ).getType());
         assertEquals(QueryType.D1, entity.getQueries().get( "query" ).getType());
+    }
+
+    @Test
+    @Ignore
+    public void testMassChangeOperations()
+    {
+        Project project = new Project( "test" );
+        Entity entity = new Entity( "entity", project.getApplication(), EntityType.TABLE );
+
+        Operation operation = createOperation(entity, "op");
+        Operation operation2 = createOperation(entity, "op2");
+
+        MassChange mc = new MassChange( "Operation[name*=\"op\"]", project.getApplication().getMassChangeCollection(),
+                Collections.singletonMap( "records", 1 ) );
+        assertEquals("records", mc.getPropertiesString());
+        assertEquals("Operation[name*=op]", mc.getSelectorString());
+        DataElementUtils.save(mc);
+        assertEquals(0, operation.getRecords());
+        assertEquals(0, operation2.getRecords());
+        LoadContext context = new LoadContext();
+        project.applyMassChanges( context );
+        context.check();
+        assertEquals(1, entity.getOperations().get( "op" ).getRecords());
+        assertEquals(0, entity.getOperations().get( "op2" ).getRecords());
     }
 }
