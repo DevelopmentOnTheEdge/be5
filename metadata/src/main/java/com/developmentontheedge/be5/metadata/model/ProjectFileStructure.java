@@ -139,16 +139,21 @@ public class ProjectFileStructure extends BeModelElementSupport
         return jsQueriesDir;
     }
 
+    public void setJsQueriesDir( String jsQueriesDir )
+    {
+        this.jsQueriesDir = jsQueriesDir;
+        fireChanged();
+    }
+
     @PropertyName("Directory for Groovy queries")
     public String getGroovyQueriesDir()
     {
         return groovyQueriesDir;
     }
-    
-    public void setJsQueriesDir( String jsQueriesDir )
+
+    public void setGroovyQueriesDir(String groovyQueriesDir)
     {
-        this.jsQueriesDir = jsQueriesDir;
-        fireChanged();
+        this.groovyQueriesDir = groovyQueriesDir;
     }
 
     @PropertyName("Directory for FTL scripts")
