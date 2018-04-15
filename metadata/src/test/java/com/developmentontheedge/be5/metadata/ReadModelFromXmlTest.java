@@ -6,7 +6,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
+import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
+import com.developmentontheedge.be5.metadata.model.TableRef;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -54,40 +57,44 @@ public class ReadModelFromXmlTest
         DataElementUtils.saveQuiet(query);
         query.setQuery("<@distinct \"name\"/>");
         query.setParametrizingOperation(op);
-//TODO
-//        project.getMacroCollection().optScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY )
-//                .setSource( "<#macro distinct column>SELECT DISTINCT ${column} FROM ${entity.getName()}</#macro>" );
-//        final BeModelCollection<TableRef> tableRefs = table.getOrCreateTableReferences();
-//        final TableRef tableRef = new TableRef("ref1", "user", tableRefs);
-//        tableRef.setTableTo("users");
-//        tableRef.setColumnsTo("userName");
-//        DataElementUtils.saveQuiet(tableRef);
-//
-//        final Path tempFolder = Files.createTempDirectory("be4-temp");
-//        Serialization.save( project, tempFolder );
-//
-//        final Project project2 = Serialization.load( tempFolder );
-//        assertEquals(new HashSet<>(Arrays.asList( "Admin", "Guest" )), project2.getRoles());
-//        assertEquals( project.getMacroCollection().optScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY ).getSource(),
-//                project2.getMacroCollection().optScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY ).getSource() );
-//        final Entity table2 = project2.getApplication().getEntity( "testTable" );
-//        assertNotNull(table2);
-//        assertEquals(table, table2);
-//        assertEquals(table2, table);
-//        final Query query2 = table2.getQueries().get("All records");
-//        assertNotNull(query2);
-//        assertEquals("<@distinct \"name\"/>", query2.getQuery());
-//        final Operation op2 = table2.getOperations().get("Insert");
-//        assertNotNull(op2);
-//        assertEquals(op, op2);
-//        assertSame(op2, query2.getParametrizingOperation());
-//
-//        final BeModelCollection<TableRef> tableReferences = project.getEntity("testTable").getOrCreateTableReferences();
-//        final BeModelCollection<TableRef> tableReferences2 = project2.getEntity("testTable").getOrCreateTableReferences();
-//        assertEquals(tableReferences.getSize(), tableReferences2.getSize());
-//        assertEquals(tableReferences.iterator().next().getColumnsFrom(), tableReferences2.iterator().next().getColumnsFrom());
-//
-//        FileUtils.deleteRecursively( tempFolder );
+
+        final FreemarkerScript script = new FreemarkerScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY, project.getMacroCollection() );
+        script.setSource( "" );
+        DataElementUtils.saveQuiet( script );
+
+        project.getMacroCollection().optScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY )
+                .setSource( "<#macro distinct column>SELECT DISTINCT ${column} FROM ${entity.getName()}</#macro>" );
+        final BeModelCollection<TableRef> tableRefs = table.getOrCreateTableReferences();
+        final TableRef tableRef = new TableRef("ref1", "user", tableRefs);
+        tableRef.setTableTo("users");
+        tableRef.setColumnsTo("userName");
+        DataElementUtils.saveQuiet(tableRef);
+
+        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        Serialization.save( project, tempFolder );
+
+        final Project project2 = Serialization.load( tempFolder );
+        assertEquals(new HashSet<>(Arrays.asList( "Admin", "Guest" )), project2.getRoles());
+        assertEquals( project.getMacroCollection().optScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY ).getSource(),
+                project2.getMacroCollection().optScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY ).getSource() );
+        final Entity table2 = project2.getApplication().getEntity( "testTable" );
+        assertNotNull(table2);
+        assertEquals(table, table2);
+        assertEquals(table2, table);
+        final Query query2 = table2.getQueries().get("All records");
+        assertNotNull(query2);
+        assertEquals("<@distinct \"name\"/>", query2.getQuery());
+        final Operation op2 = table2.getOperations().get("Insert");
+        assertNotNull(op2);
+        assertEquals(op, op2);
+        assertSame(op2, query2.getParametrizingOperation());
+
+        final BeModelCollection<TableRef> tableReferences = project.getEntity("testTable").getOrCreateTableReferences();
+        final BeModelCollection<TableRef> tableReferences2 = project2.getEntity("testTable").getOrCreateTableReferences();
+        assertEquals(tableReferences.getSize(), tableReferences2.getSize());
+        assertEquals(tableReferences.iterator().next().getColumnsFrom(), tableReferences2.iterator().next().getColumnsFrom());
+
+        FileUtils.deleteRecursively( tempFolder );
     }
 
     /**

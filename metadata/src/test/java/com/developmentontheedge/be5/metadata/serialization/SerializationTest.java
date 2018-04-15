@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
-import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
-import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -16,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,10 +27,12 @@ public class SerializationTest
     public TemporaryFolder tmp = new TemporaryFolder();
 
     @Test
-    public void testSerializationBasics() throws IOException, ProjectSaveException, ProjectLoadException
+    public void testSerializationBasics() throws Exception
     {
         Path path = tmp.newFolder().toPath();
         Project project = ProjectTestUtils.getProject("test");
+        ProjectTestUtils.createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
+
         Entity entity = ProjectTestUtils.createEntity( project, "entity", "ID" );
         TableDef scheme = ProjectTestUtils.createScheme(entity);
 
@@ -48,9 +47,13 @@ public class SerializationTest
 
         ProjectTestUtils.createOperation( entity );
 
+        Path modulePath = tmp.newFolder().toPath();
+        Project moduleProject = ProjectTestUtils.createModule(project, "testModule", modulePath);
+
         Serialization.save( project, path );
         assertEquals(path, project.getLocation());
         LoadContext lc = new LoadContext();
+        ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject ), lc );
 
         Project project2 = Serialization.load( path, lc );
         project2.setDatabaseSystem( Rdbms.POSTGRESQL );
@@ -61,6 +64,9 @@ public class SerializationTest
         assertEquals("VARCHAR(20)", entity2.findTableDefinition().getColumns().get("name").getTypeString());
         assertEquals( StreamEx.of( "Administrator", "Operator" ).toSet(), entity2.getQueries().get( "All records" ).getRoles().getFinalValues() );
         assertEquals( "op", entity2.getQueries().get( "All records" ).getOperationNames().getFinalValuesString() );
+
+        assertEquals("INSERT INTO entity (name) VALUES ('foo')",
+                project.mergeTemplate( project2.getApplication().getFreemarkerScripts().getScripts().get(0) ).validate());
     }
 
 }

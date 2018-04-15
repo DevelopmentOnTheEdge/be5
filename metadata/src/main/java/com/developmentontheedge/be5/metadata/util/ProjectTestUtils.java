@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.metadata.util;
 
 import com.developmentontheedge.be5.metadata.model.*;
+import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -83,4 +85,20 @@ public class ProjectTestUtils
         profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
         DataElementUtils.save(profile);
     }
+
+    public static Project createModule(Project project, String moduleName, Path path) throws Exception
+    {
+        Project module = new Project( moduleName, true);
+        Entity entity = ProjectTestUtils.createEntity( module, "moduleEntity", "ID" );
+        createScheme( entity );
+        createScript( module, "Post-db", "INSERT INTO moduleEntity (name) VALUES ('foo')" );
+        Serialization.save( module, path );
+
+        Module appModule = new Module( moduleName, project.getModules() );
+        project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
+        DataElementUtils.save( appModule );
+
+        return module;
+    }
+
 }
