@@ -44,6 +44,13 @@ public class ModuleLoader2
         return modulesMap;
     }
 
+    public static void clear()
+    {
+        modulesMap = new HashMap<>();
+        pathsToProjectsToHotReload = new HashMap<>();
+        devRoles = new ArrayList<>();
+    }
+
     private static synchronized void loadAllProjects(boolean dirty)
     {
         if( modulesMap != null && !dirty)

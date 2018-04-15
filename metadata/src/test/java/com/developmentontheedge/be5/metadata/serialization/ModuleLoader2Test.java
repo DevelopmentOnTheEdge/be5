@@ -57,6 +57,7 @@ public class ModuleLoader2Test
 
         ModuleLoader2.getFileSystem(loadProject, "test");
 
+        ModuleLoader2.clear();
     }
 
 }
