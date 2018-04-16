@@ -33,31 +33,31 @@ public interface QueryExecutor
     /**
      * Executes the query.
      */
-    List<DynamicPropertySet> execute() throws Be5Exception;
-
-    List<DynamicPropertySet> execute(Object... params) throws Be5Exception;
+    List<DynamicPropertySet> execute();
+    
+    List<DynamicPropertySet> execute(Object... params);
 
     /**
      * Executes the query for aggregate.
      */
-    List<DynamicPropertySet> executeAggregate() throws Be5Exception;
+    List<DynamicPropertySet> executeAggregate();
     
     /**
      * Executes the query.
      */
-    <T> List<T> execute(ResultSetParser<T> parser) throws Be5Exception;
+    <T> List<T> execute(ResultSetParser<T> parser, Object... params);
 
     /**
      * Counts the number of resulting rows.
      */
-    long count() throws Be5Exception;
+    long count();
 
     DynamicPropertySet getRow();
 
     /**
      * Returns a list of column names.
      */
-    List<String> getColumnNames() throws Be5Exception;
+    List<String> getColumnNames();
 
     List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
 

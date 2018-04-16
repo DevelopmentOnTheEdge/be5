@@ -184,10 +184,20 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public <T> List<T> execute(ResultSetParser<T> parser) throws Be5Exception
+    public <T> List<T> execute(ResultSetParser<T> parser, Object... params)
     {
-        if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN ) )
-            return getResults(getFinalSql(), parser);
+        if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN ))
+        {
+            try
+            {
+                return db.selectList(getFinalSql(), parser, params);
+            }
+            catch (RuntimeException e)
+            {
+                throw Be5Exception.internalInQuery(e, query);
+            }
+        }
+
         throw new UnsupportedOperationException("Query type " + query.getType() + " is not supported yet");
     }
 
@@ -275,7 +285,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void resolveTypeOfRefColumn(AstStart ast)
     {
-        ast.tree().select(AstBeParameterTag.class).forEach(tag -> {
+        ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
             if(tag.getRefColumn() != null)
             {
                 String[] split = tag.getRefColumn().split("\\.");
@@ -414,11 +424,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private <T> List<T> getResults(String sql, ResultSetParser<T> parser)
-    {
-        return db.selectList(sql, parser);
-    }
-
     private List<String> getColumnNames(String sql)
     {
         return db.select(sql, rs -> {
@@ -457,18 +462,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //            throw Be5Exception.internalInQuery( e, query );
 //        }
 //    }
-
-    private List<DynamicPropertySet> listDps(String finalSql, Object... params)
-    {
-        try
-        {
-            return db.selectList(finalSql, DpsRecordAdapter::createDps, params);
-        }
-        catch (RuntimeException e)
-        {
-            throw Be5Exception.internalInQuery(e, query);
-        }
-    }
 
 //    private void processMeta(Object value, Map<String, Map<String, String>> meta)
 //    {
@@ -524,34 +517,34 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     public List<DynamicPropertySet> execute()
     {
         executeType = ExecuteType.DEFAULT;
-        return listDps(getFinalSql());
+        return execute(DpsRecordAdapter::createDps);
     }
 
     @Override
     public List<DynamicPropertySet> executeAggregate()
     {
         executeType = ExecuteType.AGGREGATE;
-        return listDps(getFinalSql());
+        return execute(DpsRecordAdapter::createDps);
     }
 
     @Override
     public long count()
     {
         executeType = ExecuteType.COUNT;
-        return (Long)listDps(getFinalSql()).get(0).asMap().get("count");
+        return (Long)execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
     }
 
     @Override
     public List<DynamicPropertySet> execute(Object... params)
     {
         executeType = ExecuteType.DEFAULT;
-        return listDps(getFinalSql(), params);
+        return execute(DpsRecordAdapter::createDps, params);
     }
 
     @Override
     public DynamicPropertySet getRow()
     {
-        return listDps(getFinalSql()).get(0);
+        return execute(DpsRecordAdapter::createDps).get(0);
     }
 
     @Override
@@ -570,7 +563,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         try
         {
-            dynamicPropertySets = listDps(finalSql);
+            dynamicPropertySets = db.selectList(finalSql, DpsRecordAdapter::createDps);
         }
         catch (Throwable e)
         {
