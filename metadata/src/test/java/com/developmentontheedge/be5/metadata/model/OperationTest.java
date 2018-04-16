@@ -35,7 +35,6 @@ public class OperationTest
     }
     
     @Test
-    @Ignore
     public void testPrototype()
     {
         Project prj = new Project("test");

@@ -22,19 +22,19 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     private Long categoryID;
     private boolean secure = false;
     private String layout = "";
-    
+
     public EntityItem(String name, BeModelCollection<?> origin)
     {
         super(name, BeModelElement.class, origin);
         this.originModule = getModule().getName();
         this.icon.setOriginModuleName( originModule );
     }
-    
+
     public Entity getEntity()
     {
         return (Entity)(getOrigin().getOrigin());
     }
-    
+
     abstract public String getEntityItemType();
 
     @PropertyName("Icon")
@@ -52,7 +52,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         roles.setPrototype( true, ( ( EntityItem ) prototype ).getRoles() );
         return roles;
     }
-    
+
     /**
      * Stub method necessary for bean info
      * @param roles roles to set (ignored)
@@ -61,7 +61,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     {
         throw new UnsupportedOperationException();
     }
-    
+
     @PropertyName("Module")
     @Override
     public String getOriginModuleName()
@@ -75,13 +75,13 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         this.originModule = name;
         fireChanged();
     }
-    
+
     @PropertyName("Well-known name")
     public String getWellKnownName()
     {
-        return wellKnownName;
+        return getValue( "wellKnownName", wellKnownName, "" );
     }
-    
+
     public void setWellKnownName(String wellKnownName)
     {
         this.wellKnownName = customizeProperty( "wellKnownName", this.wellKnownName, Strings2.nullToEmpty( wellKnownName ) );
@@ -91,9 +91,9 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Not supported message")
     public String getNotSupported()
     {
-        return notSupported;
+        return getValue( "notSupported", notSupported );
     }
-    
+
     public void setNotSupported(String notSupported)
     {
         this.notSupported = customizeProperty( "notSupported", this.notSupported, notSupported );
@@ -103,9 +103,9 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Secure")
     public boolean isSecure()
     {
-        return secure;
+        return getValue( "secure", secure, false );
     }
-    
+
     public void setSecure(boolean secure)
     {
         this.secure = customizeProperty( "secure", this.secure, secure );
@@ -115,9 +115,9 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Context ID")
     public Long getContextID()
     {
-        return contextID;
+        return getValue( "contextID", contextID );
     }
-    
+
     public void setContextID(Long contextID)
     {
         this.contextID = customizeProperty( "contextID", this.contextID, contextID );
@@ -127,9 +127,9 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Category ID")
     public Long getCategoryID()
     {
-        return categoryID;
+        return getValue( "categoryID", categoryID );
     }
-    
+
     public void setCategoryID(Long categoryID)
     {
         this.categoryID = customizeProperty( "categoryID", this.categoryID, categoryID );
@@ -255,20 +255,20 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
         super.internalCustomizeProperty( propertyName );
         moveToApplication();
     }
-    
+
     @Override
     protected void fireChanged()
     {
         if ( !customizing )
             getEntity().fireCodeChanged();
     }
-        
+
     public void moveToApplication()
     {
         setOriginModuleName( getProject().getProjectOrigin() );
         fireChanged();
     }
-    
+
     @Override
     protected void mergeThis( BeModelElement other, boolean inherit )
     {
@@ -279,7 +279,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
 
     public String getLayout()
     {
-        return layout;
+        return getValue( "layout", layout, "" );
     }
 
     public void setLayout(String layout)
