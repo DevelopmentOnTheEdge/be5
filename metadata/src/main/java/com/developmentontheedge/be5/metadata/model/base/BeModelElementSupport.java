@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Module;
@@ -19,6 +20,7 @@ import com.developmentontheedge.beans.model.ComponentFactory;
 import com.developmentontheedge.beans.model.ComponentModel;
 import com.developmentontheedge.beans.model.Property;
 import com.developmentontheedge.beans.util.Beans;
+
 
 public abstract class BeModelElementSupport implements BeModelElement
 {
@@ -301,7 +303,26 @@ public abstract class BeModelElementSupport implements BeModelElement
         customizedProperties.add( propertyName );
     }
 
-    protected <V> V getValue( String propertyName, V value, V defaultValue )
+//    protected <V> V getValueWithReflection( String propertyName, V value, V defaultValue )
+//    {
+//        if ( customizedProperties != null && customizedProperties.contains( propertyName ) )
+//            return value;
+//        if ( prototype == null )
+//            return defaultValue;
+//        try
+//        {
+//            @SuppressWarnings( "unchecked" )
+//            V result = ( V ) Beans.getBeanPropertyValue( prototype, propertyName );
+//            return result;
+//        }
+//        catch ( Exception e )
+//        {
+//            throw new RuntimeException( "Unexpected exception when retrieving property '" + propertyName + "' of " + getCompletePath() + ": "
+//                + e, e );
+//        }
+//    }
+
+    protected <V> V getValue(String propertyName, V value, V defaultValue, Supplier<V> getPrototypeValue)
     {
         if ( customizedProperties != null && customizedProperties.contains( propertyName ) )
             return value;
@@ -310,19 +331,19 @@ public abstract class BeModelElementSupport implements BeModelElement
         try
         {
             @SuppressWarnings( "unchecked" )
-            V result = ( V ) Beans.getBeanPropertyValue( prototype, propertyName );
+            V result = getPrototypeValue.get();
             return result;
         }
         catch ( Exception e )
         {
             throw new RuntimeException( "Unexpected exception when retrieving property '" + propertyName + "' of " + getCompletePath() + ": "
-                + e, e );
+                    + e, e );
         }
     }
 
-    protected <V> V getValue( String propertyName, V value )
+    protected <V> V getValue( String propertyName, V value, Supplier<V> getPrototypeValue )
     {
-        return getValue( propertyName, value, null );
+        return getValue( propertyName, value, null, getPrototypeValue );
     }
 
     protected <V> V customizeProperty( String propertyName, V oldValue, V newValue )

@@ -44,7 +44,8 @@ public class ColumnDef extends TableRef
     
     public SqlColumnType getRawType()
     {
-        return getValue( "type", type, null );
+        return getValue( "type", type, null,
+                () -> ((ColumnDef)prototype).getRawType() );
     }
     
     @PropertyName( "Type" )
@@ -127,7 +128,8 @@ public class ColumnDef extends TableRef
     @PropertyName("Can be null")
     public boolean isCanBeNull()
     {
-        return getValue( "canBeNull", canBeNull, false );
+        return getValue( "canBeNull", canBeNull, false,
+                () -> ((ColumnDef)prototype).isCanBeNull() );
     }
 
     public void setCanBeNull( boolean canBeNull )
@@ -153,7 +155,8 @@ public class ColumnDef extends TableRef
     @PropertyName("Default value")
     public String getDefaultValue()
     {
-        return getValue( "defaultValue", defaultValue );
+        return getValue( "defaultValue", defaultValue,
+                () -> ((ColumnDef)prototype).getDefaultValue() );
     }
 
     public void setDefaultValue( String defaultValue )

@@ -181,7 +181,8 @@ public class Operation extends EntityItem
     @PropertyDescription("Operation code")
     public String getCode()
     {
-        return getValue( "code", code, "" );
+        return getValue( "code", code, "",
+                () -> ((Operation)prototype).getCode() );
     }
     
     public void setCode(String code)
@@ -194,7 +195,8 @@ public class Operation extends EntityItem
     @PropertyDescription("Number of records which must be selected to perform an operation")
     public int getRecords()
     {
-        return getValue( "records", records, VISIBLE_ALWAYS );
+        return getValue( "records", records, VISIBLE_ALWAYS,
+                () -> ((Operation)prototype).getRecords() );
     }
     
     public void setRecords(int records)
@@ -227,7 +229,8 @@ public class Operation extends EntityItem
     @PropertyDescription("Default value is 999999")
     public int getExecutionPriority()
     {
-        return getValue( "executionPriority", executionPriority, 999999 );
+        return getValue("executionPriority", executionPriority, 999999,
+                () -> ((Operation)prototype).getExecutionPriority());
     }
     
     public void setExecutionPriority(int executionPriority)
@@ -240,7 +243,8 @@ public class Operation extends EntityItem
     @PropertyDescription("Logging")
     public String getLogging()
     {
-        return getValue( "logging", logging, OPERATION_LOGGING_NONE );
+        return getValue( "logging", logging, OPERATION_LOGGING_NONE,
+                () -> ((Operation)prototype).getLogging() );
     }
     
     public void setLogging(String logging)
@@ -252,7 +256,8 @@ public class Operation extends EntityItem
     @PropertyName("Need to confirm operation")
     public boolean isConfirm()
     {
-        return getValue( "confirm", confirm, false );
+        return getValue( "confirm", confirm, false,
+                () -> ((Operation)prototype).isConfirm());
     }
     
     public void setConfirm(boolean confirm)

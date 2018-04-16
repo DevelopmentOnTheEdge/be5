@@ -99,7 +99,9 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Menu name")
     public String getMenuName()
     {
-        return getValue( "menuName", menuName, "" );
+        return getValue( "menuName", menuName, "",
+                () -> ((Query)prototype).getMenuName() );
+
     }
     
     public void setMenuName(String menuName)
@@ -111,7 +113,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Title")
     public String getTitleName()
     {
-        return getValue( "titleName", titleName );
+        return getValue( "titleName", titleName,
+                () -> ((Query)prototype).getTitleName() );
     }
     
     public void setTitleName(String titleName)
@@ -124,7 +127,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyDescription("Query type")
     public QueryType getType()
     {
-        return getValue( "type", type, QueryType.D1 );
+        return getValue( "type", type, QueryType.D1,
+                () -> ((Query)prototype).getType() );
     }
     
     public String getTypeForBeCore()
@@ -159,7 +163,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Query code (freemarker template)")
     public String getQuery()
     {
-        return getValue( "query", query, " " );
+        return getValue( "query", query, " ",
+                () -> ((Query)prototype).getQuery() );
     }
     
     public void setQuery(String code)
@@ -178,7 +183,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Query to check new data")
     public String getNewDataCheckQuery()
     {
-        return getValue( "newDataCheckQuery", newDataCheckQuery );
+        return getValue( "newDataCheckQuery", newDataCheckQuery,
+                () -> ((Query)prototype).getNewDataCheckQuery() );
     }
     
     public void setNewDataCheckQuery(String newDataCheckQuery)
@@ -190,7 +196,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Invisible view")
     public boolean isInvisible()
     {
-        return getValue( "invisible", invisible, DatabaseConstants.SELECTION_VIEW.equals( getName() ) );
+        return getValue( "invisible", invisible, DatabaseConstants.SELECTION_VIEW.equals( getName() ),
+                () -> ((Query)prototype).isInvisible() );
     }
     
     public void setInvisible(boolean invisible)
@@ -202,7 +209,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Slow view")
     public boolean isSlow()
     {
-        return getValue( "slow", slow, false );
+        return getValue( "slow", slow, false,
+                () -> ((Query)prototype).isSlow() );
     }
     
     public void setSlow(boolean slow)
@@ -214,7 +222,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Cacheable view")
     public boolean isCacheable()
     {
-        return getValue( "cacheable", cacheable, false );
+        return getValue( "cacheable", cacheable, false,
+                () -> ((Query)prototype).isCacheable() );
     }
     
     public void setCacheable(boolean cacheable)
@@ -226,7 +235,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Default view")
     public boolean isDefaultView()
     {
-        return getValue( "defaultView", defaultView, false );
+        return getValue( "defaultView", defaultView, false,
+                () -> ((Query)prototype).isDefaultView() );
     }
 
     public void setDefaultView( boolean defaultView )
@@ -238,7 +248,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Replicated view")
     public boolean isReplicated()
     {
-        return getValue( "replicated", replicated, false );
+        return getValue( "replicated", replicated, false,
+                () -> ((Query)prototype).isReplicated() );
     }
     
     public void setReplicated(boolean replicated)
@@ -250,7 +261,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Template query")
     public String getTemplateQueryName()
     {
-        return getValue( "templateQueryName", templateQueryName, "" );
+        return getValue( "templateQueryName", templateQueryName, "",
+                () -> ((Query)prototype).getTemplateQueryName() );
     }
     
     public void setTemplateQueryName(String templateQueryName)
@@ -262,7 +274,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Short description")
     public String getShortDescription()
     {
-        return getValue( "shortDescription", shortDescription );
+        return getValue( "shortDescription", shortDescription,
+                () -> ((Query)prototype).getShortDescription() );
     }
     
     public void setShortDescription(String shortDescription)
@@ -274,7 +287,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Message when empty")
     public String getMessageWhenEmpty()
     {
-        return getValue( "messageWhenEmpty", messageWhenEmpty );
+        return getValue( "messageWhenEmpty", messageWhenEmpty,
+                () -> ((Query)prototype).getMessageWhenEmpty() );
     }
     
     public void setMessageWhenEmpty(String messageWhenEmpty)
@@ -328,7 +342,8 @@ public class Query extends EntityItem implements TemplateElement
     {
         return getValue( "querySettings",
                 querySettings == null ? new QuerySettings[0] : querySettings.toArray( new QuerySettings[querySettings.size()] ),
-                new QuerySettings[0] );
+                new QuerySettings[0],
+                () -> ((Query)prototype).getQuerySettings() );
     }
     
     protected Map<String, QuerySettings> getQuerySettingsPerRole()
@@ -385,7 +400,8 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Parametrizing operation")
     public String getParametrizingOperationName()
     {
-        return getValue( "parametrizingOperationName", parametrizingOperationName, "" );
+        return getValue( "parametrizingOperationName", parametrizingOperationName, "",
+                () -> ((Query)prototype).getParametrizingOperationName() );
     }
     
     public void setParametrizingOperationName(String name)

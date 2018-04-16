@@ -79,7 +79,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Well-known name")
     public String getWellKnownName()
     {
-        return getValue( "wellKnownName", wellKnownName, "" );
+        return getValue( "wellKnownName", wellKnownName, "",
+                () -> ((EntityItem)prototype).getWellKnownName() );
     }
 
     public void setWellKnownName(String wellKnownName)
@@ -91,7 +92,9 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Not supported message")
     public String getNotSupported()
     {
-        return getValue( "notSupported", notSupported );
+        return getValue( "notSupported", notSupported,
+                () -> ((EntityItem)prototype).getNotSupported()
+        );
     }
 
     public void setNotSupported(String notSupported)
@@ -103,7 +106,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Secure")
     public boolean isSecure()
     {
-        return getValue( "secure", secure, false );
+        return getValue( "secure", secure, false,
+                () -> ((EntityItem)prototype).isSecure());
     }
 
     public void setSecure(boolean secure)
@@ -115,7 +119,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Context ID")
     public Long getContextID()
     {
-        return getValue( "contextID", contextID );
+        return getValue( "contextID", contextID,
+                () -> ((EntityItem)prototype).getContextID());
     }
 
     public void setContextID(Long contextID)
@@ -127,7 +132,8 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Category ID")
     public Long getCategoryID()
     {
-        return getValue( "categoryID", categoryID );
+        return getValue( "categoryID", categoryID,
+                () -> ((EntityItem)prototype).getCategoryID());
     }
 
     public void setCategoryID(Long categoryID)
@@ -279,7 +285,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
 
     public String getLayout()
     {
-        return getValue( "layout", layout, "" );
+        return getValue("layout", layout, "", () -> ((EntityItem)prototype).getLayout());
     }
 
     public void setLayout(String layout)

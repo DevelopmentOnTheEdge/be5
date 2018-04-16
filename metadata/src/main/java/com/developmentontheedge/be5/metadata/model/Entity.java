@@ -135,7 +135,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     @PropertyName( "Type" )
     public EntityType getType()
     {
-        return getValue( "type", type, EntityType.TABLE );
+        return getValue( "type", type, EntityType.TABLE,
+                () -> ((Entity)prototype).getType() );
     }
     
     public void setType( EntityType type )
@@ -291,7 +292,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     @PropertyName("Display name")
     public String getDisplayName()
     {
-        return getValue( "displayName", displayName, "" );
+        return getValue( "displayName", displayName, "",
+                () -> ((Entity)prototype).getDisplayName() );
     }
     
     public void setDisplayName(final String displayName)
@@ -303,7 +305,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     @PropertyName("Primary key")
     public String getPrimaryKey()
     {
-        return getValue("primaryKey", primaryKey, "");
+        return getValue("primaryKey", primaryKey, "",
+                () -> ((Entity)prototype).getPrimaryKey());
     }
 
     public void setPrimaryKey( final String primaryKey )
@@ -321,7 +324,8 @@ public class Entity extends BeVectorCollection<BeModelElement> implements BeFile
     @PropertyName("Order")
     public String getOrder()
     {
-        return getValue( "order", order, "" );
+        return getValue( "order", order, "",
+                () -> ((Entity)prototype).getOrder() );
     }
     public void setOrder( final String order )
     {
