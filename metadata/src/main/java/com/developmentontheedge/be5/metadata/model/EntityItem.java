@@ -79,7 +79,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Well-known name")
     public String getWellKnownName()
     {
-        return getValue( "wellKnownName", wellKnownName, "" );
+        return wellKnownName;
     }
     
     public void setWellKnownName(String wellKnownName)
