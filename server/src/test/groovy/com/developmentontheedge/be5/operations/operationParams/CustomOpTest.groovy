@@ -51,7 +51,7 @@ class CustomOpTest extends SqlMockOperationTest
     private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, String> operationParams)
     {
         def operation = createOperation("testtableAdmin", "PrintParamsCustomOp",
-                new OperationContext([] as String[], "", operationParams))
+                new OperationContext([] as String[], "All records", operationParams))
 
         return executeOperation(operation, presetValues)
     }

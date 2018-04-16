@@ -36,7 +36,7 @@ class LoginTest extends Be5ProjectTest
     @Test
     void generate()
     {
-        def first = generateOperation(createOperation("users", "", "Login", "")).getFirst()
+        def first = generateOperation(createOperation("users", "All records", "Login", "")).getFirst()
 
         assertEquals("{'values':{'user_name':'','user_pass':''},'meta':{'/user_name':{'displayName':'Логин','columnSize':'100'},'/user_pass':{'displayName':'Пароль','passwordField':true,'columnSize':'50'}},'order':['/user_name','/user_pass']}",
                 oneQuotes(JsonFactory.bean(first)))
@@ -64,7 +64,7 @@ class LoginTest extends Be5ProjectTest
                 eq(DatabaseConstants.CURRENT_ROLE_LIST), eq(TEST_USER)))
                 .thenReturn("('Test1')")
 
-        def second = executeOperation(createOperation("users", "", "Login", ""),
+        def second = executeOperation(createOperation("users", "All records", "Login", ""),
                 [user_name: TEST_USER, user_pass: testPass]).getSecond()
 
         assertEquals OperationStatus.FINISHED, second.getStatus()

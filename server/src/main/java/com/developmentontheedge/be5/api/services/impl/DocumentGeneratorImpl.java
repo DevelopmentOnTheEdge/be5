@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.query.impl.InitialRow;
 import com.developmentontheedge.be5.query.impl.InitialRowsBuilder;
 import com.developmentontheedge.be5.query.impl.model.Operations;
@@ -277,8 +278,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
         if(topForm != null)
         {
+            OperationInfo operationInfo = userAwareMeta.getOperation(query.getEntity().getName(), topForm);
             com.developmentontheedge.be5.operation.Operation operation =
-                    operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+                    operationExecutor.create(operationInfo, query.getName(), new String[]{}, parameters);
 
             Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
             included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,

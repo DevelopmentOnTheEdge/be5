@@ -318,41 +318,36 @@ public class MetaImpl implements Meta
                 .map(BeModelElementSupport::getName).toList();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.beanexplorer.enterprise.components.Meta#getOperation(boolean,
-     * java.lang.String, java.lang.String, java.lang.String)
-     */
     @Override
-    public Operation getOperation(boolean useQueryName, String entity, String queryName, String name,
-            List<String> availableRoles)
+    public Operation getOperation(String entityName, String queryName, String name, List<String> roles)
     {
-        if (useQueryName)
-            return getOperation(entity, queryName, name, availableRoles);
-        return getOperation(entity, name, availableRoles);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.beanexplorer.enterprise.components.Meta#getOperation(java.lang.
-     * String, java.lang.String)
-     */
-    @Override
-    public Operation getOperation(String entityName, String name, List<String> availableRoles)
-    {
-        return getOperation(getProject().getEntity(entityName), name, availableRoles);
-    }
-
-    @Override
-    public Operation getOperation(Entity entity, String name, List<String> availableRoles)
-    {
-        Operation operation = entity.getOperations().get(name);
+        Operation operation = getProject().findOperation(entityName, queryName, name);
         if (operation == null)
-            throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entity, name);
-        if (!hasAccess(operation.getRoles(), availableRoles))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entity, name);
+        {
+            if(getProject().findOperation(entityName, name) != null)
+            {
+                throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);//todo add - for current query
+            }
+            else
+            {
+                throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, name);
+            }
+        }
+        if (!hasAccess(operation.getRoles(), roles))
+            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);//todo add - for current roles
+        return operation;
+    }
+
+    @Override
+    public Operation getOperation(String entityName, String name, List<String> roles)
+    {
+        Operation operation = getProject().findOperation(entityName, name);
+        if (operation == null)
+        {
+            throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, name);
+        }
+        if (!hasAccess(operation.getRoles(), roles))
+            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
         return operation;
     }
 
@@ -366,18 +361,6 @@ public class MetaImpl implements Meta
     public Operation getOperationIgnoringRoles(Entity entity, String name)
     {
         return entity.getOperations().get(name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.beanexplorer.enterprise.components.Meta#getOperation(java.lang.
-     * String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public Operation getOperation(String entity, String queryName, String name, List<String> availableRoles)
-    {
-        return getOperation(entity, name, availableRoles);
     }
 
     /*

@@ -28,6 +28,8 @@ users:
       - Edit
       - Insert
       - Filter
+      - Login
+      - Logout
       code: |-
         SELECT
           u.user_name AS "___ID",

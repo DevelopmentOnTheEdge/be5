@@ -30,6 +30,10 @@ testtableAdmin:
       - TransactionTestOp
       - Delete
       - Edit
+      - PrintParamsInsertOp
+      - PrintParamsCustomOp
+      - TestTransactionalOperation
+      - TestOperationProperty
       - Insert
       code: |2-
             SELECT
@@ -38,6 +42,15 @@ testtableAdmin:
               t.value AS "Value"
             FROM
               testtable t
+  - Query without operations:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |-
+        SELECT
+          t.name AS "Name",
+          t.value AS "Value"
+        FROM
+          testtable t
   - Test 1D unknown:
       type: 1D_unknown
       roles: Administrator

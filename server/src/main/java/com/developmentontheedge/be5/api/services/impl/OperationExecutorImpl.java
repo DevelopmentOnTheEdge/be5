@@ -255,16 +255,19 @@ public class OperationExecutorImpl implements OperationExecutor
     }
 
     @Override
-    public Operation create(String entityName, String queryName, String operationName)
+    public Operation create(OperationInfo operationInfo, String queryName,
+                            String[] selectedRows, Map<String, String> operationParams)
     {
-        return create(entityName, queryName, operationName, new String[]{}, Collections.emptyMap());
+        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+
+        return create(operationInfo, operationContext);
     }
 
     @Override
     public Operation create(String entityName, String queryName, String operationName,
                             String[] selectedRows, Map<String, String> operationParams)
     {
-        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, operationName);
+        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
 
         OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
 

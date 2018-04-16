@@ -64,10 +64,10 @@ class GetRedirectParamsTest extends SqlMockOperationTest
         assertEquals("[test:c, name:a]", op.getRedirectParams().toString())
     }
 
-    private Operation getOperation(Map<String, Object> operationParams)
+    private Operation getOperation(Map<String, String> operationParams)
     {
         return createOperation("testtableAdmin", "PrintParamsCustomOp",
-            new OperationContext([] as String[], "", operationParams))
+            new OperationContext([] as String[], "All records", operationParams))
     }
 }
 

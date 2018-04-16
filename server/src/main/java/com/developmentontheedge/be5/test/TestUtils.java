@@ -246,14 +246,14 @@ public abstract class TestUtils
 
     protected Operation createOperation(String entityName, String operationName, OperationContext context)
     {
-        OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
+        OperationInfo meta = userAwareMeta.getOperation(entityName, context.getQueryName(), operationName);
 
         return operationExecutor.create(meta, context);
     }
 
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
-        OperationInfo meta = userAwareMeta.getOperation(entityName, operationName);
+        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
 //
 //        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
 //        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));

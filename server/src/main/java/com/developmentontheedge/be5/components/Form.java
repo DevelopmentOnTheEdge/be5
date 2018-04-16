@@ -5,12 +5,14 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.util.Either;
@@ -33,6 +35,7 @@ public class Form implements Component
     {
         OperationExecutor operationExecutor = injector.get(OperationExecutor.class);
         DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -44,7 +47,8 @@ public class Form implements Component
         Operation operation;
         try
         {
-            operation = operationExecutor.create(entityName, queryName, operationName, selectedRows, operationParams);
+            OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
+            operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
         }
         catch (Be5Exception e)
         {

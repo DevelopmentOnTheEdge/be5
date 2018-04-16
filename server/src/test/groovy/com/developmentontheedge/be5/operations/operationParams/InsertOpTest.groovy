@@ -45,10 +45,10 @@ class InsertOpTest extends SqlMockOperationTest
         assertEquals("{name=b, value=1}", oneQuotes(res.getSecond().getMessage()))
     }
 
-    private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, Object> operationParams)
+    private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, String> operationParams)
     {
         def operation = createOperation("testtableAdmin", "PrintParamsInsertOp",
-            new OperationContext([] as String[], "", operationParams))
+            new OperationContext([] as String[], "All records", operationParams))
 
         return executeOperation(operation, presetValues)
     }

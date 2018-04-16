@@ -944,14 +944,12 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
             return null;
         }
 
-        if ( !Arrays.asList( query.getOperationNames() ).contains( opearationName ) )
+        if ( !query.getOperationNames().getFinalValues().contains(opearationName) )
         {
             return null;
         }
 
-        Operation operation = entity.getOperations().get( opearationName );
-
-        return operation;
+        return entity.getOperations().get( opearationName );
     }
     
     /**
@@ -968,10 +966,8 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         {
             return null;
         }
-        
-        Operation operation = entity.getOperations().get( opearationName );
-        
-        return operation;
+
+        return entity.getOperations().get( opearationName );
     }
     
     /**

@@ -20,7 +20,12 @@ testtable:
       operations:
       - Edit
       - Insert
+      - Filter
+      - OldRedirectFilter
       - CustomOperation
+      - InsertWithExtender
+      - InsertWithSkipExtender
+      - InsertWithGroovyExtender
       code: |-
         SELECT
           t.name AS "Name",

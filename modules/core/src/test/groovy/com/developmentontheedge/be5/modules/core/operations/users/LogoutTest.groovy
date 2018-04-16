@@ -26,7 +26,7 @@ class LogoutTest extends SqlMockOperationTest
         def session = mock(Session.class)
         when(request.getSession()).thenReturn(session)
 
-        def second = generateOperation(createOperation("users", "", "Logout", "")).getSecond()
+        def second = generateOperation(createOperation("users", "All records", "Logout", "")).getSecond()
 
         verify(session).invalidate()
 

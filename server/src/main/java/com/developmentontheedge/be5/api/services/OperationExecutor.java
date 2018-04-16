@@ -13,7 +13,8 @@ public interface OperationExecutor
 
     Object execute(Operation operation, Map<String, Object> presetValues);
 
-    Operation create(String entityName, String queryName, String operationName);
+    Operation create(OperationInfo operationInfo, String queryName,
+                     String[] selectedRows, Map<String, String> operationParams);
 
     Operation create(String entityName, String queryName, String operationName,
                      String[] selectedRows, Map<String, String> operationParams);

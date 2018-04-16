@@ -40,23 +40,6 @@ public interface Meta
     Locale getLocale(Locale locale);
 
     List<String> getOperationNames(Entity entity);
-    /**
-     * Returns an operation by its name.
-     * Throws an exception if there's no operation with this name.
-     */
-    Operation getOperation(boolean useQueryName, String entityName, String queryName, String name, List<String> availableRoles);
-
-    /**
-     * Returns an operation by its name.
-     * Throws an exception if there's no operation with this name.
-     */
-    Operation getOperation(String entityName, String name, List<String> roles);
-
-    Operation getOperation(Entity entity, String name, List<String> roles);
-
-    Operation getOperationIgnoringRoles(String entityName, String name);
-
-    Operation getOperationIgnoringRoles(Entity entity, String name);
 
     /**
      * Returns an operation by its name.
@@ -64,6 +47,12 @@ public interface Meta
      * Throws an exception if there's no query with this name or this query hasn't this operation.
      */
     Operation getOperation(String entityName, String queryName, String name, List<String> roles);
+
+    Operation getOperation(String entityName, String name, List<String> roles);
+
+    Operation getOperationIgnoringRoles(String entityName, String name);
+
+    Operation getOperationIgnoringRoles(Entity entity, String name);
 
     /**
      * Returns a list of all queries of the entity that a user with the given roles can run.
