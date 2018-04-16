@@ -520,6 +520,13 @@ public class MetaImpl implements Meta
         Objects.requireNonNull(entity);
         Objects.requireNonNull(columnName);
 
+        ColumnDef columnDef = getColumns(entity).get(columnName);
+
+        if(columnDef == null)
+        {
+            throw Be5Exception.internal("Column '"+columnName+"' not found in '" + entity.getName() + "'");
+        }
+
         return getColumns(entity).get(columnName);
     }
 
@@ -529,7 +536,7 @@ public class MetaImpl implements Meta
         Objects.requireNonNull(entity);
         Objects.requireNonNull(columnName);
 
-        return getColumnType(getColumns(entity).get(columnName));
+        return getColumnType(getColumn(entity, columnName));
     }
 
     @Override

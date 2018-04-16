@@ -99,7 +99,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
         be5QueryExecutor.execute();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = Be5Exception.class)
     public void testResolveTypeOfRefColumnNPE()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
