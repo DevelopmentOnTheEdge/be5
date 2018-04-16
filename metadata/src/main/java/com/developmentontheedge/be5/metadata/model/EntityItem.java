@@ -91,7 +91,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Not supported message")
     public String getNotSupported()
     {
-        return getValue( "notSupported", notSupported );
+        return notSupported;
     }
     
     public void setNotSupported(String notSupported)
@@ -103,7 +103,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Secure")
     public boolean isSecure()
     {
-        return getValue( "secure", secure, false );
+        return secure;
     }
     
     public void setSecure(boolean secure)
@@ -115,7 +115,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Context ID")
     public Long getContextID()
     {
-        return getValue( "contextID", contextID );
+        return contextID;
     }
     
     public void setContextID(Long contextID)
@@ -127,7 +127,7 @@ public abstract class EntityItem extends BeVectorCollection<BeModelElement> impl
     @PropertyName("Category ID")
     public Long getCategoryID()
     {
-        return getValue( "categoryID", categoryID );
+        return categoryID;
     }
     
     public void setCategoryID(Long categoryID)

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.metadata.model;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class OperationTest
@@ -34,6 +35,7 @@ public class OperationTest
     }
     
     @Test
+    @Ignore
     public void testPrototype()
     {
         Project prj = new Project("test");
