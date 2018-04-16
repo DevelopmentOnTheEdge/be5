@@ -6,6 +6,7 @@ core:
   modules: []
   application:
   - _logout_
+  - _categoriesService_
   - _system_
   - categories
   - classifications
