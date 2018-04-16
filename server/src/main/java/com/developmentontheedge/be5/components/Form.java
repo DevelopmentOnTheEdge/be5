@@ -35,7 +35,6 @@ public class Form implements Component
     {
         OperationExecutor operationExecutor = injector.get(OperationExecutor.class);
         DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
-        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -47,8 +46,7 @@ public class Form implements Component
         Operation operation;
         try
         {
-            OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
-            operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
+            operation = operationExecutor.create(entityName, queryName, operationName, selectedRows, operationParams);
         }
         catch (Be5Exception e)
         {

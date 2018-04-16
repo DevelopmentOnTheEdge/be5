@@ -43,6 +43,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
@@ -270,7 +271,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel)
     {
-        Object data = getTablePresentation(query, parameters, tableModel);
+        TablePresentation data = getTablePresentation(query, parameters, tableModel);
         HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);
 
         List<ResourceData> included = new ArrayList<>();
@@ -278,14 +279,22 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String topForm = (String) ParseRequestUtils.getValuesFromJson(query.getLayout()).get(TOP_FORM);
         if(topForm != null)
         {
-            OperationInfo operationInfo = userAwareMeta.getOperation(query.getEntity().getName(), topForm);
-            com.developmentontheedge.be5.operation.Operation operation =
-                    operationExecutor.create(operationInfo, query.getName(), new String[]{}, parameters);
+            Optional<TableOperationPresentation> topFormOperationPresentation =
+                    data.getOperations().stream().filter(x -> x.getName().equals(topForm)).findAny();
 
-            Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
-            included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
-                    dataTopForm.get(),
-                    Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
+            if(topFormOperationPresentation.isPresent())
+            {
+                com.developmentontheedge.be5.operation.Operation operation =
+                        operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+
+                Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
+                included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
+                        dataTopForm.get(),
+                        Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
+
+
+                data.getOperations().remove(topFormOperationPresentation.get());
+            }
         }
 
         return JsonApiModel.data(

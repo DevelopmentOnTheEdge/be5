@@ -253,15 +253,15 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         return false;
     }
-
-    @Override
-    public Operation create(OperationInfo operationInfo, String queryName,
-                            String[] selectedRows, Map<String, String> operationParams)
-    {
-        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
-
-        return create(operationInfo, operationContext);
-    }
+//
+//    @Override
+//    public Operation create(OperationInfo operationInfo, String queryName,
+//                            String[] selectedRows, Map<String, String> operationParams)
+//    {
+//        OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
+//
+//        return create(operationInfo, operationContext);
+//    }
 
     @Override
     public Operation create(String entityName, String queryName, String operationName,

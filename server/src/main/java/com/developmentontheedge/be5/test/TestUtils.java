@@ -254,11 +254,6 @@ public abstract class TestUtils
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
-//
-//        HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
-//        when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
-//
-//        UserInfoHolder.setRequest(Mockito.spy(new RequestImpl(httpServletRequest, null, Collections.emptyMap())));
 
         return operationExecutor.create(meta, new OperationContext(ParseRequestUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
     }

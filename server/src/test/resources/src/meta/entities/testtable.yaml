@@ -45,6 +45,8 @@ testtable:
   - TableWithFilter:
       type: 1D_unknown
       layout: '{"topForm":"FilterByParamsInQueryOperation"}'
+      operations:
+      - FilterByParamsInQueryOperation
       roles: SystemDeveloper
       code: |-
          SELECT 1
