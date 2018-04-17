@@ -97,6 +97,11 @@ public abstract class SourceFileOperationExtender extends OperationExtender
         fireChanged();
     }
 
+    public String getNamespace()
+    {
+        return namespace;
+    }
+
     @Override
     public boolean equals( Object obj )
     {
