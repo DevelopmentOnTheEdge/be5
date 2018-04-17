@@ -48,15 +48,6 @@ public class QRecServiceImpl implements QRecService
         }
     }
 
-    @Override
-    public QRec beSql(String sql, Object... params)
-    {
-        List<DynamicPropertySet> dpsList = new Be5QueryExecutor( meta.createQueryFromSql(sql), Collections.emptyMap(),
-                injector).execute(params);
-
-        return QRec.fromList(dpsList);
-    }
-
     public QRec withCache( String sql, Object... params )
     {
         throw Be5Exception.internal("not implemented");

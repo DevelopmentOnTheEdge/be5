@@ -40,9 +40,9 @@ class QRecServiceTest extends Be5ProjectDBTest
     {
         String id = database.testtableAdmin << [ "name": "1234567890", "value": "1"]
 
-        assertEquals "10", qRec.beSql("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
+        assertEquals "10", qRec.of("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
 
-        assertEquals "10", qRec.beSql("SELECT TO_CHAR(LEN(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
+        assertEquals "10", qRec.of("SELECT CAST(LEN(name) AS VARCHAR) FROM testtableAdmin WHERE id = ?", id).getValue()
     }
 
     @Test
