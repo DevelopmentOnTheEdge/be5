@@ -8,11 +8,14 @@ import java.util.LinkedHashMap;
 
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.metadata.model.TableRef;
 import org.junit.Assume;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.yaml.snakeyaml.Yaml;
 
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
@@ -37,11 +40,12 @@ import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
-/**
- * Reads metadata model from XML files.
- */
-public class ReadModelFromXmlTest
+
+public class ReadModelTest
 {
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder();
+
     @Test
     public void testWriteReadCompareXmlProject() throws Exception
     {
@@ -210,7 +214,7 @@ public class ReadModelFromXmlTest
         ex2.setCode( "Hello world!" );
         final GroovyOperationExtender ex3 = new GroovyOperationExtender( op, module.getName() );
         DataElementUtils.saveQuiet( ex3 );
-        ex3.setFileName( "MyExtender.groovy" );
+        ex3.setFileName( "test.MyExtender.groovy" );
         ex3.setCode( "Hello world!" );
         
         final Path tempFolder = Files.createTempDirectory("be4-temp");
@@ -230,10 +234,29 @@ public class ReadModelFromXmlTest
 
         final GroovyOperationExtender readEx3 = ( GroovyOperationExtender ) extenders.get( "application - 0003" );
         assertEquals(0, readEx3.getInvokeOrder());
-        assertEquals("MyExtender.groovy", readEx3.getFileName());
+        assertEquals("test/MyExtender.groovy", readEx3.getFileName());
         assertEquals("Hello world!", readEx3.getCode());
         
         FileUtils.deleteRecursively( tempFolder );
+    }
+
+    @Test
+    public void testGroovyFileName() throws Exception
+    {
+        Project prj = new Project("test");
+        Entity e = new Entity( "e", prj.getApplication(), EntityType.TABLE );
+        DataElementUtils.save( e );
+
+        final GroovyOperation groovyOp = (GroovyOperation)Operation.createOperation( "groovyOp", Operation.OPERATION_TYPE_GROOVY, e );
+        groovyOp.setFileName("test.GroovyOp.groovy");
+        groovyOp.setCode("test");
+        DataElementUtils.saveQuiet( groovyOp );
+        Path path = tmp.newFolder().toPath();
+        Serialization.save( prj, path );
+
+        final Project readProject = Serialization.load( path );
+        GroovyOperation operation = (GroovyOperation) readProject.getProject().findOperation("e", "groovyOp");
+        assertEquals("test/GroovyOp.groovy", operation.getFileName());
     }
 
     @Test

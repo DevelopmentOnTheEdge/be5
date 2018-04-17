@@ -5,6 +5,10 @@ import com.developmentontheedge.beans.annot.PropertyName;
 public abstract class SourceFileOperationExtender extends OperationExtender
 {
     protected String namespace;
+    private String fileName = getOperation().getEntity().getName() + " - " + getOperation().getName() + " - " + getName() + getFileExtension();
+    private SourceFile file;
+
+    abstract public String getFileExtension();
 
     public SourceFileOperationExtender(Operation owner, String module)
     {
@@ -33,9 +37,6 @@ public abstract class SourceFileOperationExtender extends OperationExtender
 //    {
 //        super( owner, orig );
 //    }
-
-    private String fileName = getOperation().getEntity().getName() + " - " + getOperation().getName() + " - " + getName() + ".js";
-    private SourceFile file;
 
     @PropertyName("Source file name")
     public String getFileName()

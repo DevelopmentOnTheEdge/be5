@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.metadata.serialization.yaml;
 
+import static com.developmentontheedge.be5.metadata.MetadataUtils.classPathToFileName;
 import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.*;
 
 import java.io.StringReader;
@@ -972,7 +973,7 @@ public class YamlDeserializer
                 if ( operationElement.containsKey( ATTR_FILEPATH ) )
                 {
                     final SourceFileOperation fileOperation = (SourceFileOperation)operation;
-                    final String filepath = ( String ) operationElement.get( ATTR_FILEPATH );
+                    final String filepath = classPathToFileName(( String ) operationElement.get( ATTR_FILEPATH ), fileOperation.getFileExtension());
                     final String nameSpace = fileOperation.getFileNameSpace();
                     SourceFile sourceFile = project.getApplication().getSourceFile( nameSpace, filepath );
                     if(sourceFile == null)
@@ -1025,7 +1026,8 @@ public class YamlDeserializer
 
                     if(filepath.endsWith(".js"))
                     {
-                        SourceFile sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
+                        SourceFile sourceFile = project.getApplication().
+                                getSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, classPathToFileName(filepath, ".js") );
                         if(sourceFile == null)
                         {
                             sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
@@ -1038,10 +1040,12 @@ public class YamlDeserializer
                     }
                     else if(filepath.endsWith(".groovy"))
                     {
-                        SourceFile sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, filepath );
+                        SourceFile sourceFile = project.getApplication().
+                                getSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, classPathToFileName(filepath, ".groovy") );
                         if(sourceFile == null)
                         {
-                            sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, filepath );
+                            sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER,
+                                    classPathToFileName(filepath, ".groovy") );
                             sourceFile.setLinkedFile( getFileSystem().getGroovyExtenderFile( filepath ) );
                         }
 

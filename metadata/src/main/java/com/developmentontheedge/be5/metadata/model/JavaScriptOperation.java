@@ -17,7 +17,7 @@ public class JavaScriptOperation extends SourceFileOperation
     }
 
     @Override
-    public String getDefaultExtension()
+    public String getFileExtension()
     {
         return ".js";
     }

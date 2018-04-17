@@ -8,4 +8,10 @@ public class GroovyOperationExtender extends SourceFileOperationExtender
         super(owner, module);
         namespace = SourceFileCollection.NAMESPACE_GROOVY_EXTENDER;
     }
+
+    @Override
+    public String getFileExtension()
+    {
+        return ".groovy";
+    }
 }

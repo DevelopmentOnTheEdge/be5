@@ -12,11 +12,11 @@ public abstract class SourceFileOperation extends Operation
     }
     
     abstract public String getFileNameSpace();
-    abstract public String getDefaultExtension();
+    abstract public String getFileExtension();
 
     protected String getDefaultFileName()
     {
-        return SourceFile.makeSafeFileName(getEntity().getName() + " - " + getName() + getDefaultExtension());
+        return SourceFile.makeSafeFileName(getEntity().getName() + " - " + getName() + getFileExtension());
     }
 
     @PropertyName( "Source file name" )
