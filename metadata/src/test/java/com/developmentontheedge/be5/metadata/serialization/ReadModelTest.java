@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.metadata;
+package com.developmentontheedge.be5.metadata.serialization;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,8 +31,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.metadata.model.QuickFilter;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
-import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 
@@ -74,7 +71,7 @@ public class ReadModelTest
         tableRef.setColumnsTo("userName");
         DataElementUtils.saveQuiet(tableRef);
 
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
 
         final Project project2 = Serialization.load( tempFolder );
@@ -97,8 +94,6 @@ public class ReadModelTest
         final BeModelCollection<TableRef> tableReferences2 = project2.getEntity("testTable").getOrCreateTableReferences();
         assertEquals(tableReferences.getSize(), tableReferences2.getSize());
         assertEquals(tableReferences.iterator().next().getColumnsFrom(), tableReferences2.iterator().next().getColumnsFrom());
-
-        FileUtils.deleteRecursively( tempFolder );
     }
 
     /**
@@ -152,7 +147,7 @@ public class ReadModelTest
         DataElementUtils.saveQuiet( q2 );
         assertTrue(module.isCustomized());
         
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
         
         final Project project2 = Serialization.load( tempFolder );
@@ -166,8 +161,6 @@ public class ReadModelTest
         assertNotNull(readTable.getOperations().get("custop"));
         assertEquals(1, readTable.getQueries().getSize());
         assertNotNull(readTable.getQueries().get("custq"));
-        
-        FileUtils.deleteRecursively( tempFolder );
     }
 
     @Test
@@ -184,14 +177,12 @@ public class ReadModelTest
         DataElementUtils.saveQuiet( query );
         query.getOperationNames().add( "op" );
         
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
 
         final Project readProject = Serialization.load( tempFolder );
         final Entity readEntity = readProject.getApplication().getEntity( "table" );
         assertEquals( "op", readEntity.getQueries().get( "q" ).getOperationNames().getValuesArray()[0] );
-        
-        FileUtils.deleteRecursively( tempFolder );
     }
 
     @Test
@@ -217,7 +208,7 @@ public class ReadModelTest
         ex3.setFileName( "test.MyExtender.groovy" );
         ex3.setCode( "Hello world!" );
         
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
 
         final Project readProject = Serialization.load( tempFolder );
@@ -236,8 +227,6 @@ public class ReadModelTest
         assertEquals(0, readEx3.getInvokeOrder());
         assertEquals("test/MyExtender.groovy", readEx3.getFileName());
         assertEquals("Hello world!", readEx3.getCode());
-        
-        FileUtils.deleteRecursively( tempFolder );
     }
 
     @Test
@@ -283,7 +272,7 @@ public class ReadModelTest
         qf2.setQueryParam( "param2" );
         DataElementUtils.saveQuiet( qf2 );
         
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
 
         final Project readProject = Serialization.load( tempFolder );
@@ -296,8 +285,6 @@ public class ReadModelTest
         assertEquals( "param2", readEntity.getQueries().get( "q2" ).getQuickFilters()[0].getQueryParam() );
         assertNull( readEntity.getQueries().get( "q2" ).getQuickFilters()[0].getFilteringClass() );
         assertSame( readEntity.getQueries().get("filter query"), readEntity.getQueries().get( "q2" ).getQuickFilters()[0].getTargetQuery() );
-        
-        FileUtils.deleteRecursively( tempFolder );
     }
 
     @Test
@@ -327,7 +314,7 @@ public class ReadModelTest
         set3.getRoles().setValues( Arrays.asList( "User" ) );
         query2.setQuerySettings( new QuerySettings[] {set2, set3} );
         
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
 
         final Project readProject = Serialization.load( tempFolder );
@@ -347,8 +334,6 @@ public class ReadModelTest
         //TODO assertEquals(null, querySettings[1].getBeautifier());
         assertEquals(0, querySettings[1].getAutoRefresh());
         assertEquals( new HashSet<>( Arrays.asList( "User" ) ), querySettings[1].getRoles().getFinalRoles() );
-        
-        FileUtils.deleteRecursively( tempFolder );
     }
 
     @Test
@@ -360,7 +345,7 @@ public class ReadModelTest
         localizations.addLocalization( "de", "entity", Arrays.asList("topic", "topic2"), "hello", "Guten Tag!" );
         localizations.addLocalization( "it", "entity", Arrays.asList("topic2"), "hello", "Buon giorno!" );
         
-        final Path tempFolder = Files.createTempDirectory("be4-temp");
+        final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
         
         final Project project2 = Serialization.load( tempFolder );
@@ -368,7 +353,5 @@ public class ReadModelTest
         assertEquals("Hello!", localizations2.get( "en" ).get("entity").elements().iterator().next().getValue());
         assertEquals("Guten Tag!", localizations2.get( "de" ).get("entity").elements().iterator().next().getValue());
         assertEquals("Buon giorno!", localizations2.get( "it" ).get("entity").elements().iterator().next().getValue());
-        
-        FileUtils.deleteRecursively( tempFolder );
     }
 } 
