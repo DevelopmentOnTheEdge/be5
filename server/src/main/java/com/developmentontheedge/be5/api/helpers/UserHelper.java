@@ -11,9 +11,11 @@ import com.developmentontheedge.be5.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
 
 
@@ -35,9 +37,12 @@ public class UserHelper
     {
         if(stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
         {
+            Set<String> hs = new HashSet<>();
+            hs.addAll(availableRoles);
+            hs.addAll(ModuleLoader2.getDevRoles());
+
+            availableRoles = new ArrayList<>(hs);
             log.info("Dev roles added - " + ModuleLoader2.getDevRoles().toString());
-            availableRoles = new ArrayList<>(availableRoles);
-            availableRoles.addAll(ModuleLoader2.getDevRoles());
         }
 
         UserInfo ui = new UserInfo(userName, availableRoles, currentRoles, session);
