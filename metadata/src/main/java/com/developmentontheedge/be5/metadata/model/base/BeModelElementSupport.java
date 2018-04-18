@@ -328,17 +328,8 @@ public abstract class BeModelElementSupport implements BeModelElement
             return value;
         if ( prototype == null )
             return defaultValue;
-        try
-        {
-            @SuppressWarnings( "unchecked" )
-            V result = getPrototypeValue.get();
-            return result;
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( "Unexpected exception when retrieving property '" + propertyName + "' of " + getCompletePath() + ": "
-                    + e, e );
-        }
+
+        return getPrototypeValue.get();
     }
 
     protected <V> V getValue( String propertyName, V value, Supplier<V> getPrototypeValue )
