@@ -10,10 +10,7 @@ import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.assertEquals
 
-/**
- * здесь везде в параметрах приходит 'a', потому что сейчас для использования operationParams
- * необходимо вручную добавлять в свои операции dpsHelper.setOperationParams(dps, context.getOperationParams())
- */
+
 class CustomOpTest extends SqlMockOperationTest
 {
     @Test
@@ -29,7 +26,7 @@ class CustomOpTest extends SqlMockOperationTest
     {
         def res = getResult([name:"a", value:"1"], [name:"b"])
 
-        assertEquals("{name=a, value=1}", oneQuotes(res.getSecond().getMessage()))
+        assertEquals("{name=b, value=1}", oneQuotes(res.getSecond().getMessage()))
     }
 
     @Test
@@ -45,7 +42,7 @@ class CustomOpTest extends SqlMockOperationTest
     {
         def res = getResult([name:"a", value:"1"], [name:"b", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "name"])
 
-        assertEquals("{name=a, value=1}", oneQuotes(res.getSecond().getMessage()))
+        assertEquals("{name=b, value=1}", oneQuotes(res.getSecond().getMessage()))
     }
 
     private Either<Object, OperationResult> getResult(Map<String, Object> presetValues, Map<String, String> operationParams)
