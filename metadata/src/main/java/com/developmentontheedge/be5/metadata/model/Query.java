@@ -99,9 +99,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Menu name")
     public String getMenuName()
     {
-        return getValue( "menuName", menuName, "",
-                () -> ((Query)prototype).getMenuName() );
-
+        return getValue( "menuName", menuName, "", () -> ((Query)prototype).getMenuName() );
     }
     
     public void setMenuName(String menuName)
@@ -113,8 +111,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Title")
     public String getTitleName()
     {
-        return getValue( "titleName", titleName,
-                () -> ((Query)prototype).getTitleName() );
+        return getValue( "titleName", titleName, () -> ((Query)prototype).getTitleName() );
     }
     
     public void setTitleName(String titleName)
@@ -127,8 +124,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyDescription("Query type")
     public QueryType getType()
     {
-        return getValue( "type", type, QueryType.D1,
-                () -> ((Query)prototype).getType() );
+        return getValue( "type", type, QueryType.D1, () -> ((Query)prototype).getType() );
     }
     
     public String getTypeForBeCore()
@@ -163,8 +159,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Query code (freemarker template)")
     public String getQuery()
     {
-        return getValue( "query", query, " ",
-                () -> ((Query)prototype).getQuery() );
+        return getValue( "query", query, " ", () -> ((Query)prototype).getQuery() );
     }
     
     public void setQuery(String code)
@@ -209,8 +204,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Slow view")
     public boolean isSlow()
     {
-        return getValue( "slow", slow, false,
-                () -> ((Query)prototype).isSlow() );
+        return getValue( "slow", slow, false, () -> ((Query)prototype).isSlow() );
     }
     
     public void setSlow(boolean slow)
@@ -222,8 +216,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Cacheable view")
     public boolean isCacheable()
     {
-        return getValue( "cacheable", cacheable, false,
-                () -> ((Query)prototype).isCacheable() );
+        return getValue( "cacheable", cacheable, false, () -> ((Query)prototype).isCacheable() );
     }
     
     public void setCacheable(boolean cacheable)
@@ -235,8 +228,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Default view")
     public boolean isDefaultView()
     {
-        return getValue( "defaultView", defaultView, false,
-                () -> ((Query)prototype).isDefaultView() );
+        return getValue( "defaultView", defaultView, false, () -> ((Query)prototype).isDefaultView() );
     }
 
     public void setDefaultView( boolean defaultView )
@@ -248,8 +240,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Replicated view")
     public boolean isReplicated()
     {
-        return getValue( "replicated", replicated, false,
-                () -> ((Query)prototype).isReplicated() );
+        return getValue( "replicated", replicated, false, () -> ((Query)prototype).isReplicated() );
     }
     
     public void setReplicated(boolean replicated)
@@ -261,8 +252,7 @@ public class Query extends EntityItem implements TemplateElement
     @PropertyName("Template query")
     public String getTemplateQueryName()
     {
-        return getValue( "templateQueryName", templateQueryName, "",
-                () -> ((Query)prototype).getTemplateQueryName() );
+        return getValue( "templateQueryName", templateQueryName, "", () -> ((Query)prototype).getTemplateQueryName() );
     }
     
     public void setTemplateQueryName(String templateQueryName)
