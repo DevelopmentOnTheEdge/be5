@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.metadata.serialization.yaml;
 
-import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.*;
-
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -17,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import one.util.streamex.StreamEx;
 
 import org.yaml.snakeyaml.Yaml;
@@ -50,6 +47,8 @@ import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForm;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
 import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
+import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
+import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
 import com.developmentontheedge.be5.metadata.model.Localizations;
@@ -70,7 +69,6 @@ import com.developmentontheedge.be5.metadata.model.Role;
 import com.developmentontheedge.be5.metadata.model.RoleGroup;
 import com.developmentontheedge.be5.metadata.model.SecurityCollection;
 import com.developmentontheedge.be5.metadata.model.SourceFile;
-import com.developmentontheedge.be5.metadata.model.SourceFileCollection;
 import com.developmentontheedge.be5.metadata.model.SourceFileOperation;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 import com.developmentontheedge.be5.metadata.model.StaticPage;
@@ -95,6 +93,10 @@ import com.developmentontheedge.be5.metadata.serialization.SerializationConstant
 import com.developmentontheedge.be5.metadata.util.ObjectCache;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.util.Beans;
+
+import static com.developmentontheedge.be5.metadata.MetadataUtils.classPathToFileName;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.*;
+
 
 public class YamlDeserializer
 {
@@ -972,7 +974,7 @@ public class YamlDeserializer
                 if ( operationElement.containsKey( ATTR_FILEPATH ) )
                 {
                     final SourceFileOperation fileOperation = (SourceFileOperation)operation;
-                    final String filepath = ( String ) operationElement.get( ATTR_FILEPATH );
+                    final String filepath = classPathToFileName(( String ) operationElement.get( ATTR_FILEPATH ), fileOperation.getFileExtension());
                     final String nameSpace = fileOperation.getFileNameSpace();
                     SourceFile sourceFile = project.getApplication().getSourceFile( nameSpace, filepath );
                     if(sourceFile == null)
@@ -1023,31 +1025,29 @@ public class YamlDeserializer
                         continue;
                     }
 
-                    if(filepath.endsWith(".js"))
+                    if(filepath.endsWith(".js") || filepath.endsWith(".groovy"))
                     {
-                        SourceFile sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
-                        if(sourceFile == null)
+                        SourceFileOperationExtender fileExtender;
+                        if(filepath.endsWith(".js"))
                         {
-                            sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_JAVASCRIPT_EXTENDER, filepath );
-                            sourceFile.setLinkedFile( getFileSystem().getJavaScriptExtenderFile( filepath ) );
+                            fileExtender = new JavaScriptOperationExtender( operation, getProjectOrigin() );
+                        }
+                        else
+                        {
+                            fileExtender = new GroovyOperationExtender( operation, getProjectOrigin() );
                         }
 
-                        final JavaScriptOperationExtender jsExtender = new JavaScriptOperationExtender( operation, getProjectOrigin() );
-                        jsExtender.setFileName( sourceFile.getName() );
-                        extender = jsExtender;
-                    }
-                    else if(filepath.endsWith(".groovy"))
-                    {
-                        SourceFile sourceFile = project.getApplication().getSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, filepath );
+                        SourceFile sourceFile = project.getApplication().
+                                getSourceFile( fileExtender.getNamespace(), classPathToFileName(filepath, fileExtender.getFileExtension()) );
                         if(sourceFile == null)
                         {
-                            sourceFile = project.getApplication().addSourceFile( SourceFileCollection.NAMESPACE_GROOVY_EXTENDER, filepath );
-                            sourceFile.setLinkedFile( getFileSystem().getGroovyExtenderFile( filepath ) );
+                            sourceFile = project.getApplication().addSourceFile( fileExtender.getNamespace(),
+                                    classPathToFileName(filepath, fileExtender.getFileExtension()) );
+                            sourceFile.setLinkedFile( getFileSystem().getNameSpaceFile( fileExtender.getNamespace(), filepath ) );
                         }
 
-                        final GroovyOperationExtender groovyExtender = new GroovyOperationExtender( operation, getProjectOrigin() );
-                        groovyExtender.setFileName( sourceFile.getName() );
-                        extender = groovyExtender;
+                        fileExtender.setFileName( sourceFile.getName() );
+                        extender = fileExtender;
                     }
                     else
                     {

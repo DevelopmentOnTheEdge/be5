@@ -21,4 +21,10 @@ public class JavaScriptOperationExtender extends SourceFileOperationExtender
     {
         return JAVASCRIPT_EXTENDER_CLASS_NAME;
     }
+
+    @Override
+    public String getFileExtension()
+    {
+        return ".js";
+    }
 }

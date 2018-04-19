@@ -17,7 +17,7 @@ public class GroovyOperation extends SourceFileOperation
     }
 
     @Override
-    public String getDefaultExtension()
+    public String getFileExtension()
     {
         return ".groovy";
     }

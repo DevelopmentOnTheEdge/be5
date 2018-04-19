@@ -16,7 +16,5 @@ public interface QRecService
 {
     QRec of(String sql, Object... params);
 
-    QRec beSql(String sql, Object... params);
-
     QRec withCache(String sql, Object... params);
 }

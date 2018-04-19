@@ -111,4 +111,10 @@ public class MetadataUtils
         return clause.toString();
     }
 
+    public static String classPathToFileName(String fileName, String fileExtension)
+    {
+        return fileName.substring(0, fileName.length() - fileExtension.length())
+                .replace(".", "/") + fileExtension;
+    }
+
 }
