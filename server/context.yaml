@@ -48,6 +48,9 @@ context:
   - operationExecutor:
       interface:      com.developmentontheedge.be5.api.services.OperationExecutor
       implementation: com.developmentontheedge.be5.api.services.impl.OperationExecutorImpl
+  - tableModelService:
+      interface:      com.developmentontheedge.be5.api.services.TableModelService
+      implementation: com.developmentontheedge.be5.api.services.impl.TableModelServiceImpl
   - documentGenerator:
       interface:      com.developmentontheedge.be5.api.services.DocumentGenerator
       implementation: com.developmentontheedge.be5.api.services.impl.DocumentGeneratorImpl

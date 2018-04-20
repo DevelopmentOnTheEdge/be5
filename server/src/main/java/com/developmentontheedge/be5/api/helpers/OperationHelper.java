@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -39,18 +39,18 @@ public class OperationHelper
     private final UserAwareMeta userAwareMeta;
     private final Provider<QueryService> queryService;
     private final Injector injector;
-    private final Provider<DocumentGenerator> documentGenerator;
+    private final TableModelService tableModelService;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           Provider<DocumentGenerator> documentGenerator, Injector injector, Provider<QueryService> queryService)
+                           TableModelService tableModelService, Injector injector, Provider<QueryService> queryService)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
-        this.documentGenerator = documentGenerator;
+        this.tableModelService = tableModelService;
         this.queryService = queryService;
         this.injector = injector;
 
@@ -193,7 +193,7 @@ public class OperationHelper
         TableModel tableModel;
         if(query.getType() == QueryType.GROOVY)
         {
-            tableModel = documentGenerator.get().getTableModel(query, stringStringMap);
+            tableModel = tableModelService.getTableModel(query, stringStringMap);
         }
         else
         {
