@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -18,7 +17,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import com.github.benmanes.caffeine.cache.Cache;
 
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,14 +35,14 @@ public class OperationHelper
     private final SqlService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final Provider<QueryService> queryService;
+    private final QueryService queryService;
     private final TableModelService tableModelService;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           TableModelService tableModelService, Provider<QueryService> queryService)
+                           TableModelService tableModelService, QueryService queryService)
     {
         this.db = db;
         this.meta = meta;
@@ -562,7 +560,7 @@ public class OperationHelper
         {
             if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
         }
-        return queryService.get().build(query, stringStringMap).execute();
+        return queryService.build(query, stringStringMap).execute();
     }
 
     public QRec readOneRecord(String sql, Map<String, ?> parameters)
