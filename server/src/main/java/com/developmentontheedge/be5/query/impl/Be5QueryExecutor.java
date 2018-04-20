@@ -49,6 +49,7 @@ import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
+import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
@@ -137,7 +138,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
-            EntityModel entityModel = database.getEntity(tagName);
+            EntityModel entityModel = database.get().getEntity(tagName);
             RecordModel row = entityModel.get(conditions);
 
             String value = row.getValue(name).toString();
@@ -152,7 +153,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private final DatabaseService databaseService;
-    private final DatabaseModel database;
+    private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
 
@@ -166,7 +167,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
     public Be5QueryExecutor(Query query, Map<String, String> parameters, DatabaseService databaseService,
-                            DatabaseModel database, Meta meta, SqlService db)
+                            Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
         super(query);
         this.databaseService = databaseService;

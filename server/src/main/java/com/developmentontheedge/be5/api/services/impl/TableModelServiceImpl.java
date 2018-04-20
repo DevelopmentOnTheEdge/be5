@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -25,13 +26,15 @@ public class TableModelServiceImpl implements TableModelService
     private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
     private final Injector injector;
+    private final QueryService queryService;
 
-    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister, Injector injector)
+    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister, Injector injector, QueryService queryService)
     {
         this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
         this.groovyRegister = groovyRegister;
         this.injector = injector;
+        this.queryService = queryService;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class TableModelServiceImpl implements TableModelService
     @Override
     public TableModel.Builder builder(Query query, Map<String, String> parameters)
     {
-        return TableModel.from(query, parameters, injector);
+        return TableModel.from(query, parameters, queryService, userAwareMeta);
     }
 
     private TableModel getSqlTableModel(Query query, Map<String, String> parameters)
@@ -77,7 +80,7 @@ public class TableModelServiceImpl implements TableModelService
         }
 
         return TableModel
-                .from(query, parameters, injector)
+                .from(query, parameters, queryService, userAwareMeta)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))
