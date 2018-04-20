@@ -1,11 +1,9 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
@@ -19,11 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class Be5QueryExecutorTest extends Be5ProjectDBTest
+public class QueryServiceTest extends Be5ProjectDBTest
 {
     @Inject private ProjectProvider projectProvider;
     @Inject private SqlService db;
-    @Inject private Injector injector;
+    @Inject private QueryService queryService;
 
     private Query query;
 
@@ -39,8 +37,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     @Test
     public void testExecute()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
-        List<DynamicPropertySet> dps = be5QueryExecutor.execute();
+        List<DynamicPropertySet> dps = queryService.build(query).execute();
         assertTrue(dps.size() > 0);
 
         assertEquals(String.class, dps.get(0).getProperty("name").getType());
@@ -49,8 +46,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     @Test
     public void testColumnNames()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
-        List<String> columnNames = be5QueryExecutor.getColumnNames();
+        List<String> columnNames = queryService.build(query).getColumnNames();
         assertEquals(2, columnNames.size());
         assertEquals("NAME", columnNames.get(0));
     }
@@ -58,7 +54,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     @Test
     public void testCountFromQuery()
     {
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
+        Be5QueryExecutor be5QueryExecutor = queryService.build(query);
 
         assertTrue(be5QueryExecutor.count() > 0);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM (SELECT\n" +
@@ -72,29 +68,25 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     public void testResolveTypeOfRefColumn()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumn");
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, Collections.singletonMap("name", "test"), injector);
-
-        be5QueryExecutor.execute();
 
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
-                "WHERE name = 'test' LIMIT 2147483647", be5QueryExecutor.getFinalSql());
+                "WHERE name = 'test' LIMIT 2147483647", queryService.
+                    build(query, Collections.singletonMap("name", "test")).getFinalSql());
     }
 
     @Test(expected = RuntimeException.class)
     public void testResolveUnknownColumn()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumn");
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, Collections.singletonMap("unknownColumn", "test"), injector);
-
-        be5QueryExecutor.execute();
+        queryService.build(query, Collections.singletonMap("unknownColumn", "test")).execute();
     }
 
     @Test(expected = Be5Exception.class)
     public void testResolveTypeOfRefColumnError()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
+        Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();
     }
@@ -103,7 +95,7 @@ public class Be5QueryExecutorTest extends Be5ProjectDBTest
     public void testResolveTypeOfRefColumnNPE()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
-        Be5QueryExecutor be5QueryExecutor = new Be5QueryExecutor(query, new HashMap<>(), injector);
+        Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();
         assertEquals("", be5QueryExecutor.getFinalSql());

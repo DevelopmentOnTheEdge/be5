@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
+import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -168,15 +169,24 @@ public abstract class TestUtils
         return list.stream().collect(Collectors.joining(","));
     }
 
-    public static DynamicPropertySet getDps(Map<String, Object> nameValues)
+    public static DynamicPropertySetSupport getDpsS(Map<String, Object> nameValues)
     {
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        for(Map.Entry<String, Object> entry : nameValues.entrySet()){
+        return getDps(new DynamicPropertySetSupport(), nameValues);
+    }
+
+    public static QRec getQRec(Map<String, Object> nameValues)
+    {
+        return getDps(new QRec(), nameValues);
+    }
+
+    public static <T extends DynamicPropertySet> T getDps(T dps, Map<String, Object> nameValues)
+    {
+        for(Map.Entry<String, Object> entry : nameValues.entrySet())
+        {
             dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
         }
         return dps;
     }
-
 
     protected Either<Object, OperationResult> generateOperation(String entityName, String queryName, String operationName,
                                                                           String selectedRows)

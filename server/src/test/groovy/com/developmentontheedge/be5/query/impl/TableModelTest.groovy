@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model
+package com.developmentontheedge.be5.query.impl
 
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest

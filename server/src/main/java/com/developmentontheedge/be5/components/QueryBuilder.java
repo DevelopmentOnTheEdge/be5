@@ -7,10 +7,10 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
-import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -193,7 +193,7 @@ public class QueryBuilder implements Component
                     FrontendConstants.STATIC_ACTION,
                     new StaticPagePresentation(
                             "Final sql",
-                            new Be5QueryExecutor(query, parameters, injector).getFinalSql()
+                            injector.get(QueryService.class).build(query, parameters).getFinalSql()
                     ),
                     null
             ));

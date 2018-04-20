@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -28,7 +27,7 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final QueryExecutor queryExecutor;
 
-    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta, Injector injector)
+    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta)
     {
         this.query = query;
         this.userAwareMeta = userAwareMeta;

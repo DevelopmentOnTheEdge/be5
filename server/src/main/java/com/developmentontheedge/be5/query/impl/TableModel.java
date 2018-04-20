@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
@@ -30,6 +31,7 @@ public class TableModel
         private final Query query;
         private final Injector injector;
         private final Map<String, String> parameters;
+        private final QueryService queryService;
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
@@ -40,9 +42,10 @@ public class TableModel
             this.parameters = parameters;
 
             this.injector = injector;
-            this.queryExecutor = new Be5QueryExecutor(query, parameters, injector);
+            this.queryService = injector.get(QueryService.class);
+            this.queryExecutor = queryService.build(query, parameters);
             this.userAwareMeta = injector.get(UserAwareMeta.class);
-            this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
+            this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta);
         }
 
         public Builder offset(int offset)
@@ -98,7 +101,7 @@ public class TableModel
             }
             else
             {
-                totalNumberOfRows = new Be5QueryExecutor(query, parameters, injector).count();
+                totalNumberOfRows = queryService.build(query, parameters).count();
             }
 
             return new TableModel(

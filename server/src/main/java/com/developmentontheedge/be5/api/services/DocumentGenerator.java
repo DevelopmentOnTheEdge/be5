@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.metadata.model.EntityItem;
-import com.developmentontheedge.be5.query.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;

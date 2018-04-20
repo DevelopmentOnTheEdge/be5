@@ -129,7 +129,10 @@ public class Be5Injector implements Injector
      */
     private <T> T resolveService(Class<T> serviceClass, List<Class<?>> stack)
     {
-        checkState(!stack.contains(serviceClass), "Cyclic service dependency: " + stack.toString() + ", " + serviceClass.toString());
+        checkState(!stack.contains(serviceClass), "Cyclic service dependency: " + stack.toString()
+                .replace(", ", ",\n    ")
+                .replace("[", "[\n    ")
+                .replace("]", "\n]\n")+ ", " + serviceClass.toString());
         stack.add(serviceClass);
         
         T service;

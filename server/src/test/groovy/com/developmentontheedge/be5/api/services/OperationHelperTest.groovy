@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
+import com.developmentontheedge.be5.api.helpers.OperationHelper
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter
 import com.developmentontheedge.be5.env.Inject
 import com.developmentontheedge.be5.model.QRec
@@ -12,14 +13,16 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
-class QRecServiceTest extends Be5ProjectDBTest
+
+class OperationHelperTest extends Be5ProjectDBTest
 {
     @Inject private SqlService db
-    @Inject private QRecService qRec
     @Inject private DatabaseModel database
+    @Inject private OperationHelper helper
 
     @Before
-    void before(){
+    void before()
+    {
         database.testtableAdmin.removeAll()
     }
 
@@ -28,7 +31,7 @@ class QRecServiceTest extends Be5ProjectDBTest
     {
         String id = database.testtableAdmin << [ "name": "TestName", "value": "1"]
 
-        def rec = qRec.of("SELECT * FROM testtableAdmin WHERE id = ?", id)
+        def rec = helper.qRec("SELECT * FROM testtableAdmin WHERE id = ?", id)
 
         assertNotNull rec
         assertEquals "TestName", rec.getProperty("name").getValue()
@@ -40,9 +43,9 @@ class QRecServiceTest extends Be5ProjectDBTest
     {
         String id = database.testtableAdmin << [ "name": "1234567890", "value": "1"]
 
-        assertEquals "10", qRec.of("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
+        assertEquals "10", helper.qRec("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
 
-        assertEquals "10", qRec.of("SELECT CAST(LEN(name) AS VARCHAR) FROM testtableAdmin WHERE id = ?", id).getValue()
+        assertEquals "10", helper.qRec("SELECT CAST(LEN(name) AS VARCHAR) FROM testtableAdmin WHERE id = ?", id).getValue()
     }
 
     @Test
@@ -50,7 +53,7 @@ class QRecServiceTest extends Be5ProjectDBTest
     {
         String id = database.testtableAdmin << [ "name": "TestName", "value": 123]
 
-        QRec rec = qRec.of("SELECT * FROM testtableAdmin WHERE id = ?", id)
+        QRec rec = helper.qRec("SELECT * FROM testtableAdmin WHERE id = ?", id)
 
         if(rec != null)//Can easily check there is no record, when the field can be null
         {
@@ -74,7 +77,7 @@ class QRecServiceTest extends Be5ProjectDBTest
     @Test
     void testNullIfNoRecords()
     {
-        assertEquals null, qRec.of("SELECT * FROM testtableAdmin WHERE name = ?", "not contain name")
+        assertEquals null, helper.qRec("SELECT * FROM testtableAdmin WHERE name = ?", "not contain name")
     }
 
 
