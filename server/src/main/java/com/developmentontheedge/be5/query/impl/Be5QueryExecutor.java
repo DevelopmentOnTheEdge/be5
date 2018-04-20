@@ -78,6 +78,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         DEFAULT, COUNT, AGGREGATE
     }
 
+    //todo move to separate file
     private final class ExecutorQueryContext implements QueryContext
     {
         private final Map<String, AstBeSqlSubQuery> subQueries = new HashMap<>();
@@ -185,13 +186,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public <T> List<T> execute(ResultSetParser<T> parser, Object... params)
+    public <T> List<T> execute(ResultSetParser<T> parser)
     {
         if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN ))
         {
             try
             {
-                return db.selectList(getFinalSql(), parser, params);
+                return db.selectList(getFinalSql(), parser);
             }
             catch (RuntimeException e)
             {
@@ -534,13 +535,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         executeType = ExecuteType.COUNT;
         return (Long)execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
     }
-
-    @Override
-    public List<DynamicPropertySet> execute(Object... params)
-    {
-        executeType = ExecuteType.DEFAULT;
-        return execute(DpsRecordAdapter::createDps, params);
-    }
+//
+//    @Override
+//    public List<DynamicPropertySet> execute(Object... params)
+//    {
+//        executeType = ExecuteType.DEFAULT;
+//        return execute(DpsRecordAdapter::createDps, params);
+//    }
 
     @Override
     public DynamicPropertySet getRow()

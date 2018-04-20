@@ -39,13 +39,13 @@ public class OperationHelper
     private final UserAwareMeta userAwareMeta;
     private final Provider<QueryService> queryService;
     private final Injector injector;
-    private final DocumentGenerator documentGenerator;
+    private final Provider<DocumentGenerator> documentGenerator;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           DocumentGenerator documentGenerator, Injector injector, Provider<QueryService> queryService)
+                           Provider<DocumentGenerator> documentGenerator, Injector injector, Provider<QueryService> queryService)
     {
         this.db = db;
         this.meta = meta;
@@ -193,7 +193,7 @@ public class OperationHelper
         TableModel tableModel;
         if(query.getType() == QueryType.GROOVY)
         {
-            tableModel = documentGenerator.getTableModel(query, stringStringMap);
+            tableModel = documentGenerator.get().getTableModel(query, stringStringMap);
         }
         else
         {

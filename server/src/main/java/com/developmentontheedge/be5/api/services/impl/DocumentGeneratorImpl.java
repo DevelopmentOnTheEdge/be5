@@ -35,6 +35,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -64,7 +65,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final Injector injector;
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
-    private final CategoriesService categoriesService;
+    private final Provider<CategoriesService> categoriesService;
 
     public DocumentGeneratorImpl(
             CoreUtils coreUtils,
@@ -72,7 +73,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             GroovyRegister groovyRegister,
             OperationService operationService,
             OperationExecutor operationExecutor,
-            CategoriesService categoriesService,
+            Provider<CategoriesService> categoriesService,
             Injector injector)
     {
         this.coreUtils = coreUtils;
@@ -203,11 +204,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         if(categoryID != null)
         {
-            return categoriesService.getCategoryNavigation(Long.parseLong(categoryID));
+            return categoriesService.get().getCategoryNavigation(Long.parseLong(categoryID));
         }
         else
         {
-            return categoriesService.getRootCategory(entityName);
+            return categoriesService.get().getRootCategory(entityName);
         }
     }
 

@@ -34,7 +34,7 @@ public interface QueryExecutor
      */
     List<DynamicPropertySet> execute();
     
-    List<DynamicPropertySet> execute(Object... params);
+    //List<DynamicPropertySet> execute(Object... params);
 
     /**
      * Executes the query for aggregate.
@@ -44,7 +44,7 @@ public interface QueryExecutor
     /**
      * Executes the query.
      */
-    <T> List<T> execute(ResultSetParser<T> parser, Object... params);
+    <T> List<T> execute(ResultSetParser<T> parser);
 
     /**
      * Counts the number of resulting rows.

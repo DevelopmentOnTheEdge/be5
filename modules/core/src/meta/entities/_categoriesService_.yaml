@@ -6,11 +6,11 @@ _categoriesService_:
   - getCategoriesForest:
       type: 1D_unknown
       code: |-
-        SELECT * FROM categories WHERE entity = ?
+        SELECT * FROM categories WHERE entity = '<parameter:entity />'
   - getRootCategory:
       type: 1D_unknown
       code: |-
-        SELECT ID, name FROM categories WHERE entity = ? AND (parentID IS NULL OR parentID = 0)
+        SELECT ID, name FROM categories WHERE entity = '<parameter:entity />' AND (parentID IS NULL OR parentID = 0)
   - getCategoryNavigation:
       type: 1D_unknown
       code: |-
@@ -22,8 +22,8 @@ _categoriesService_:
         LEFT JOIN categories c6 on c6.parentID = c5.ID
         LEFT JOIN categories c7 on c7.parentID = c6.ID
         LEFT JOIN categories c8 on c8.parentID = c7.ID
-        WHERE ? IN ( c1.ID, c2.ID, c3.ID, c4.ID, c5.ID, c6.ID, c7.ID, c8.ID ) OR (c1.parentID = ?)
+        WHERE <parameter:categoryID /> IN ( c1.ID, c2.ID, c3.ID, c4.ID, c5.ID, c6.ID, c7.ID, c8.ID ) OR (c1.parentID = <parameter:categoryID />)
   - hasAnyItem:
       type: 1D_unknown
       code: |-
-        SELECT COUNT(*) FROM classifications WHERE categoryID = ?
+        SELECT COUNT(*) AS "count" FROM classifications WHERE categoryID = <parameter:categoryID />

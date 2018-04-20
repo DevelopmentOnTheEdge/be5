@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
@@ -16,22 +15,22 @@ import java.util.Optional;
 
 public class CategoriesServiceImpl implements CategoriesService
 {
-    private final SqlService db;
     private final Meta meta;
-    
-    public CategoriesServiceImpl(SqlService db, OperationHelper operationHelper, Meta meta)
+    private final QueryService queryService;
+
+    public CategoriesServiceImpl(Meta meta, QueryService queryService)
     {
-        this.db = db;
         this.meta = meta;
+        this.queryService = queryService;
     }
 
     @Override
     public List<Category> getCategoriesForest(String entityName, boolean hideEmpty)
     {
-        List<MutableCategory> categories = db.selectList(
-                meta.getQueryIgnoringRoles("_categoriesService_", "getCategoriesForest").getQuery(),
-                MutableCategory::fromResultSet, entityName);
-        //todo Be5QueryService
+        List<MutableCategory> categories = queryService
+                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getCategoriesForest"),
+                       Collections.singletonMap("entity", entityName))
+                .execute(MutableCategory::fromResultSet);
 
         return getCategories(categories, hideEmpty);
     }
@@ -39,16 +38,20 @@ public class CategoriesServiceImpl implements CategoriesService
     @Override
     public List<Category> getRootCategory(String entityName)
     {
-        return db.selectList(meta.getQueryIgnoringRoles("_categoriesService_", "getRootCategory").getQuery(),
-                rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()), entityName);
+        return queryService
+                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getRootCategory"),
+                       Collections.singletonMap("entity", entityName))
+                .execute(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
     }
 
     @Override
     public List<Category> getCategoryNavigation(long categoryID)
     {
-        String sql = meta.getQueryIgnoringRoles("_categoriesService_", "getCategoryNavigation").getQuery();
+        List<MutableCategory> categories = queryService
+                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getCategoryNavigation"),
+                        Collections.singletonMap("categoryID", "" + categoryID))
+                .execute(MutableCategory::fromResultSet);
 
-        List<MutableCategory> categories = db.selectList(sql, MutableCategory::fromResultSet, categoryID, categoryID);
         return getCategories(categories, false);
     }
 
@@ -101,7 +104,10 @@ public class CategoriesServiceImpl implements CategoriesService
     
     private boolean hasAnyItem(MutableCategory category)
     {
-        return db.getLong(meta.getQueryIgnoringRoles("_categoriesService_", "hasAnyItem").getQuery(), category.id) > 0;
+        return (Long)queryService
+                .build(meta.getQueryIgnoringRoles("_categoriesService_", "hasAnyItem"),
+                        Collections.singletonMap("categoryID", "" + category.id))
+                .execute().get(0).asMap().get("count") > 0;
     }
     
 }
