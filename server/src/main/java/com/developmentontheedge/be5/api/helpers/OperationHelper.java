@@ -38,21 +38,19 @@ public class OperationHelper
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final Provider<QueryService> queryService;
-    private final Injector injector;
     private final TableModelService tableModelService;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           TableModelService tableModelService, Injector injector, Provider<QueryService> queryService)
+                           TableModelService tableModelService, Provider<QueryService> queryService)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.tableModelService = tableModelService;
         this.queryService = queryService;
-        this.injector = injector;
 
         tagsCache = be5Caches.createCache("Tags");
     }
@@ -197,8 +195,7 @@ public class OperationHelper
         }
         else
         {
-            tableModel = TableModel
-                .from(query, stringStringMap, injector)
+            tableModel = tableModelService.builder(query, stringStringMap)
                 .limit(Integer.MAX_VALUE)
                 .selectable(false)
                 .build();

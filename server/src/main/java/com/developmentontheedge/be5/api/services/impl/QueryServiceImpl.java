@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
@@ -19,22 +18,20 @@ public class QueryServiceImpl implements QueryService
     private final DatabaseModel database;
     private final Meta meta;
     private final SqlService db;
-    private final FilterHelper filterHelper;
 
     public QueryServiceImpl(DatabaseService databaseService, DatabaseModel database,
-                            Meta meta, SqlService db, FilterHelper filterHelper)
+                            Meta meta, SqlService db)
     {
         this.databaseService = databaseService;
         this.database = database;
         this.meta = meta;
         this.db = db;
-        this.filterHelper = filterHelper;
     }
 
     @Override
     public Be5QueryExecutor build(Query query, Map<String, String> parameters)
     {
-        return new Be5QueryExecutor(query, parameters, databaseService, database, meta, db, filterHelper);
+        return new Be5QueryExecutor(query, parameters, databaseService, database, meta, db);
     }
 
     @Override

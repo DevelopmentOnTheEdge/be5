@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.CategoryFilter;
+import com.developmentontheedge.be5.util.FilterUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -154,7 +155,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final DatabaseModel database;
     private final Meta meta;
     private final SqlService db;
-    private final FilterHelper filterHelper;
 
     private final Map<String, String> parameters;
 
@@ -166,14 +166,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
     public Be5QueryExecutor(Query query, Map<String, String> parameters, DatabaseService databaseService,
-                            DatabaseModel database, Meta meta, SqlService db, FilterHelper filterHelper)
+                            DatabaseModel database, Meta meta, SqlService db)
     {
         super(query);
         this.databaseService = databaseService;
         this.database = database;
         this.meta = meta;
         this.db = db;
-        this.filterHelper = filterHelper;
 
         this.parameters = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
@@ -241,7 +240,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         // CONTEXT
 
         // FILTERS
-        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parameters));
+        FilterUtils.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parameters));
 
         // CATEGORY
         applyCategory( dql, ast );

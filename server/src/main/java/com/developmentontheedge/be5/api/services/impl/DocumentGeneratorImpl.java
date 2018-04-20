@@ -15,7 +15,6 @@ import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
 import com.developmentontheedge.be5.query.impl.Operations;
 import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.query.impl.TableModel.ColumnModel;
-import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -34,11 +33,9 @@ import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,14 +56,14 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
-    private final Provider<CategoriesService> categoriesService;//TODO remove Provider
+    private final CategoriesService categoriesService;
 
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
             GroovyRegister groovyRegister,
             OperationService operationService,
             OperationExecutor operationExecutor,
-            Provider<CategoriesService> categoriesService,
+            CategoriesService categoriesService,
             TableModelService tableModelService)
     {
         this.userAwareMeta = userAwareMeta;
@@ -126,11 +123,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         if(categoryID != null)
         {
-            return categoriesService.get().getCategoryNavigation(Long.parseLong(categoryID));
+            return categoriesService.getCategoryNavigation(Long.parseLong(categoryID));
         }
         else
         {
-            return categoriesService.get().getRootCategory(entityName);
+            return categoriesService.getRootCategory(entityName);
         }
     }
 

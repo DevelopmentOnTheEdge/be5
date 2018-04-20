@@ -49,6 +49,12 @@ public class TableModelServiceImpl implements TableModelService
         }
     }
 
+    @Override
+    public TableModel.Builder builder(Query query, Map<String, String> parameters)
+    {
+        return TableModel.from(query, parameters, injector);
+    }
+
     private TableModel getSqlTableModel(Query query, Map<String, String> parameters)
     {
         int orderColumn = Integer.parseInt(parameters.getOrDefault(ORDER_COLUMN, "-1"));
