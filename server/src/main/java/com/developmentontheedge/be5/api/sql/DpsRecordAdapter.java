@@ -32,14 +32,25 @@ public class DpsRecordAdapter
 
     public static DynamicPropertySet createDps(ResultSet resultSet)
     {
-        return createDps(resultSet, (a,b)->{});
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        return addDp(dps, resultSet, (a,b)->{});
     }
 
-    public static DynamicPropertySet createDps(ResultSet resultSet, MetaProcessor metaProcessor)
+    public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet)
+    {
+        return addDp(dps, resultSet, (a,b)->{});
+    }
+
+//    public static DynamicPropertySet createDps(ResultSet resultSet, MetaProcessor metaProcessor)
+//    {
+//        DynamicPropertySet dps = new DynamicPropertySetSupport();
+//        return addDp(dps, resultSet, metaProcessor);
+//    }
+
+    public static <T extends DynamicPropertySet> T addDp(T dps, ResultSet resultSet, MetaProcessor metaProcessor)
     {
         try {
             DynamicProperty[] schema = createSchema(resultSet.getMetaData());
-            DynamicPropertySet row = new DynamicPropertySetSupport();
             for( int i = 0; i < schema.length; i++ )
             {
                 DynamicProperty dp = schema[i];
@@ -59,9 +70,9 @@ public class DpsRecordAdapter
                 //metaProcessor.process(val, metaInfo);
                 DynamicProperty property = DynamicPropertySetSupport.cloneProperty( dp );
                 property.setValue( val );
-                row.add( property );
+                dps.add( property );
             }
-            return row;
+            return dps;
         }catch (Exception e){
             throw Be5Exception.internal(e);
         }
