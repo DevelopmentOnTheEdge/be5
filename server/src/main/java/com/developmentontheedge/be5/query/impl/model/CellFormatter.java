@@ -28,7 +28,7 @@ public class CellFormatter
     private final UserAwareMeta userAwareMeta;
     private final QueryExecutor queryExecutor;
 
-    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta, Injector injector)
+    CellFormatter(Query query, QueryExecutor queryExecutor, UserAwareMeta userAwareMeta)
     {
         this.query = query;
         this.userAwareMeta = userAwareMeta;

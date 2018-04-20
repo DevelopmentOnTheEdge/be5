@@ -39,6 +39,9 @@ context:
   - sqlService:
       interface:      com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
+  - queryService:
+      interface:      com.developmentontheedge.be5.api.services.QueryService
+      implementation: com.developmentontheedge.be5.api.services.impl.QueryServiceImpl
   - operationService:
       interface:      com.developmentontheedge.be5.api.services.OperationService
       implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl

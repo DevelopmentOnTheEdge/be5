@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
@@ -150,28 +149,30 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private final Map<String, String> parameters;
     private final DatabaseService databaseService;
     private final DatabaseModel database;
     private final Meta meta;
     private final SqlService db;
-    private final Context context;
     private final FilterHelper filterHelper;
 
+    private final Map<String, String> parameters;
+
+    private final Context context;
     private ContextApplier contextApplier;
     private final ParserContext parserContext;
     private Set<String> subQueryKeys;
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, String> parameters, Injector injector)
+    public Be5QueryExecutor(Query query, Map<String, String> parameters, DatabaseService databaseService,
+                            DatabaseModel database, Meta meta, SqlService db, FilterHelper filterHelper)
     {
         super(query);
-        this.databaseService = injector.getDatabaseService();
-        this.database        = injector.get(DatabaseModel.class);
-        this.meta            = injector.getMeta();
-        this.db              = injector.getSqlService();
-        this.filterHelper    = injector.get(FilterHelper.class);
+        this.databaseService = databaseService;
+        this.database = database;
+        this.meta = meta;
+        this.db = db;
+        this.filterHelper = filterHelper;
 
         this.parameters = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
