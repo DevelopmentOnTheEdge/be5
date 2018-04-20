@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
-import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;

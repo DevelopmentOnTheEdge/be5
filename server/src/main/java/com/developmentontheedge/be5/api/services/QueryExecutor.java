@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.query.impl.model.CellFormatter;
+import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;

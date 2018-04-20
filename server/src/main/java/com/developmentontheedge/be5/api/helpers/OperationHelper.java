@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.query.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;

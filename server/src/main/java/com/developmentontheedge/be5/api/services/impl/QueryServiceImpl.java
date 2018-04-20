@@ -5,9 +5,9 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
 
 import java.util.Collections;
 import java.util.Map;

@@ -1,7 +1,7 @@
 import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.util.ActionUtils
-import com.developmentontheedge.be5.query.impl.model.TableModel
-import com.developmentontheedge.be5.query.impl.model.TableModel.CellModel
+import com.developmentontheedge.be5.query.impl.TableModel
+import com.developmentontheedge.be5.query.impl.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.query.TableBuilderSupport

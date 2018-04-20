@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;

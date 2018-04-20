@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.env.Inject;
@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.util.ActionUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

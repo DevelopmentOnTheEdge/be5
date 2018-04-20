@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
