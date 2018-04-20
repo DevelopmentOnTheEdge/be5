@@ -65,7 +65,7 @@ public class TableModel
 
         public Builder selectable(boolean selectable)
         {
-            this.queryExecutor.setSelectable( selectable );
+            queryExecutor.selectable( selectable );
             return this;
         }
 //

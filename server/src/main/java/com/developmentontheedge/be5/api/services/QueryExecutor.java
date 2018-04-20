@@ -29,6 +29,8 @@ public interface QueryExecutor
      */
     QueryExecutor order(int orderColumn, String orderDir);
 
+    QueryExecutor selectable(boolean selectable);
+
     /**
      * Executes the query.
      */
@@ -59,8 +61,6 @@ public interface QueryExecutor
     List<String> getColumnNames();
 
     List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
-
-    void setSelectable(boolean selectable);
 
     int getOrderColumn();
 

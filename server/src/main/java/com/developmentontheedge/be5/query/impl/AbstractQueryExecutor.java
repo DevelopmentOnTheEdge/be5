@@ -51,9 +51,10 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     }
 
     @Override
-    public void setSelectable(boolean selectable)
+    public final QueryExecutor selectable(boolean selectable)
     {
         this.selectable = selectable;
+        return this;
     }
 
     @Override
