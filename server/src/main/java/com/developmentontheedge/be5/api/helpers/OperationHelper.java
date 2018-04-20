@@ -582,6 +582,17 @@ public class OperationHelper
         return QRec.fromList(dpsList);
     }
 
+    public QRec qRec(String sql, Object... params)
+    {
+        return db.select(sql, (rs) -> DpsRecordAdapter.addDp(new QRec(), rs), params);
+    }
+
+//    public QRec withCache( String sql, Object... params )
+//    {
+//        throw Be5Exception.internal("not implemented");
+//        //return withCache( sql, null );
+//    }
+
     public List<List<Object>> readAsList( String sql, Object... params )
     {
         List<List<Object>> vals = new ArrayList<>();

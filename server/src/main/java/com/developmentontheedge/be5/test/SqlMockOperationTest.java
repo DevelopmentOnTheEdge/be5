@@ -42,7 +42,7 @@ public abstract class SqlMockOperationTest extends Be5ProjectTest
     public static void whenSelectListTagsContains(String containsSql, String... tagValues)
     {
         List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
-                .map(tagValue -> getDps(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
+                .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
 
         when(SqlServiceMock.mock.selectList(contains(containsSql),
                 Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);

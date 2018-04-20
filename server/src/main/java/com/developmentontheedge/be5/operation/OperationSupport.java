@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.QRecService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
@@ -27,7 +26,6 @@ public abstract class OperationSupport implements Operation
 {
     @Inject public DatabaseModel database;
     @Inject public SqlService db;
-    @Inject public QRecService qRec;
     @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
     @Inject public OperationHelper helper;

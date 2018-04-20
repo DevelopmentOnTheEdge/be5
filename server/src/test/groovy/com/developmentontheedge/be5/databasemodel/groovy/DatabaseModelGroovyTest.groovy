@@ -250,7 +250,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         assertEquals "TestName3", record.$name
         assertEquals "TestName3", testtableAdmin[id].$name
 
-        testtableAdmin[id] = getDps("name": "TestName4")//putAt(id, map)
+        testtableAdmin[id] = getDpsS("name": "TestName4")//putAt(id, map)
 
         assertEquals "TestName4", testtableAdmin[id].$name
     }
