@@ -1,16 +1,13 @@
-package com.developmentontheedge.be5.util;
+package com.developmentontheedge.be5.modules.core.utils;
 
 import static java.util.Objects.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 
 import one.util.streamex.StreamEx;
 
