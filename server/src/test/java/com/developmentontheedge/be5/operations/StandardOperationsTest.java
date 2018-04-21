@@ -79,7 +79,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     @Test
     public void editOperationGenerate()
     {
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
                 "value", 1,
                 "ID", 12L
@@ -139,7 +139,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
     private void executeEditWithParams(String params)
     {
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDps(ImmutableMap.of(
+        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
                 "value", 12345,
                 "ID", 12L

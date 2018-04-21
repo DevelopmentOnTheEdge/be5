@@ -2,23 +2,19 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
-import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.operation.OperationInfo;
-import com.developmentontheedge.be5.query.impl.InitialRow;
-import com.developmentontheedge.be5.query.impl.InitialRowsBuilder;
-import com.developmentontheedge.be5.query.impl.model.Operations;
-import com.developmentontheedge.be5.query.impl.model.TableModel;
-import com.developmentontheedge.be5.query.impl.model.TableModel.ColumnModel;
-import com.developmentontheedge.be5.metadata.model.EntityItem;
+import com.developmentontheedge.be5.query.model.InitialRow;
+import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
+import com.developmentontheedge.be5.query.impl.Operations;
+import com.developmentontheedge.be5.query.impl.TableModel;
+import com.developmentontheedge.be5.query.impl.TableModel.ColumnModel;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -31,16 +27,15 @@ import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
-import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,110 +47,33 @@ import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESUL
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.api.RestApiConstants.LIMIT;
-import static com.developmentontheedge.be5.api.RestApiConstants.OFFSET;
-import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_DIR;
 
 
 public class DocumentGeneratorImpl implements DocumentGenerator
 {
     private final UserAwareMeta userAwareMeta;
-    private final CoreUtils coreUtils;
     private final GroovyRegister groovyRegister;
-    private final Injector injector;
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
+    private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
 
     public DocumentGeneratorImpl(
-            CoreUtils coreUtils,
             UserAwareMeta userAwareMeta,
             GroovyRegister groovyRegister,
             OperationService operationService,
             OperationExecutor operationExecutor,
             CategoriesService categoriesService,
-            Injector injector)
+            TableModelService tableModelService)
     {
-        this.coreUtils = coreUtils;
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
         this.operationService = operationService;
         this.operationExecutor = operationExecutor;
         this.categoriesService = categoriesService;
-        this.injector = injector;
+        this.tableModelService = tableModelService;
     }
 
-    @Override
-    public TableModel getTableModel(Query query, Map<String, String> parameters)
-    {
-        switch (query.getType())
-        {
-            case D1:
-            case D1_UNKNOWN:
-                return getSqlTableModel(query, parameters);
-            case GROOVY:
-                return getGroovyTableModel(query, parameters);
-            default:
-                throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
-        }
-    }
-
-    private TableModel getSqlTableModel(Query query, Map<String, String> parameters)
-    {
-        int orderColumn = Integer.parseInt(parameters.getOrDefault(ORDER_COLUMN, "-1"));
-        String orderDir = parameters.getOrDefault(ORDER_DIR, "asc");
-        int offset      = Integer.parseInt(parameters.getOrDefault(OFFSET, "0"));
-        int limit = Integer.parseInt(parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
-
-        parameters.remove(ORDER_COLUMN);
-        parameters.remove(ORDER_DIR);
-        parameters.remove(OFFSET);
-        parameters.remove(LIMIT);
-
-        int maxLimit = userAwareMeta.getQuerySettings(query).getMaxRecordsPerPage();
-
-        if(limit == Integer.MAX_VALUE)
-        {
-            //todo move defaultPageLimit, to getQuerySettings(query)
-            limit = Integer.parseInt(getLayoutObject(query).getOrDefault("defaultPageLimit",
-                    coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
-        }
-
-        return TableModel
-                .from(query, parameters, injector)
-                .sortOrder(orderColumn, orderDir)
-                .offset(offset)
-                .limit(Math.min(limit, maxLimit))
-                .build();
-    }
-
-    private TableModel getGroovyTableModel(Query query, Map<String, String> parameters)
-    {
-        try
-        {
-            Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
-                    query.getQuery(), query.getFileName());
-
-            if(aClass != null)
-            {
-                TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
-
-                tableBuilder.initialize(query, parameters);
-                injector.injectAnnotatedFields(tableBuilder);
-
-                return tableBuilder.getTableModel();
-            }
-            else
-            {
-                throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
-            }
-        }
-        catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
-        {
-            throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
-        }
-    }
 //
 //    @Override
 //    public StaticPagePresentation getStatic(Query query)
@@ -177,7 +95,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     public TablePresentation getTablePresentation(Query query, Map<String, String> parameters)
     {
-        return getTablePresentation(query, parameters, getTableModel(query, parameters));
+        return getTablePresentation(query, parameters, tableModelService.getTableModel(query, parameters));
     }
 
     public TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel)
@@ -198,7 +116,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
-                parameters, totalNumberOfRows, tableModel.isHasAggregate(), getLayoutObject(query), categoryNavigation);
+                parameters, totalNumberOfRows, tableModel.isHasAggregate(), LayoutUtils.getLayoutObject(query), categoryNavigation);
     }
 
     private List<Category> getCategoryNavigation(String entityName, String categoryID)
@@ -265,7 +183,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters)
     {
-        return getJsonApiModel(query, parameters, getTableModel(query, parameters));
+        return getJsonApiModel(query, parameters, tableModelService.getTableModel(query, parameters));
     }
 
     @Override
@@ -366,7 +284,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     operation.getContext(),
                     userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                     JsonFactory.bean(result.getFirst()),
-                    getLayoutObject(operation.getInfo().getModel()),
+                    LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
                     operation.getResult(),
                     errorModel
             ));
@@ -393,17 +311,4 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
-    @Override
-    public Map<String, Object> getLayoutObject(EntityItem entityItem)
-    {
-        if (!entityItem.getLayout().isEmpty())
-        {
-            return JsonFactory.jsonb.fromJson(entityItem.getLayout(),
-                    new HashMap<String, Object>(){}.getClass().getGenericSuperclass());
-        }
-        else
-        {
-            return new HashMap<>();
-        }
-    }
 }

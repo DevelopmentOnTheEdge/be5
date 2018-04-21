@@ -39,15 +39,18 @@ context:
   - sqlService:
       interface:      com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
-  - qRecServiceImpl:
-      interface:      com.developmentontheedge.be5.api.services.QRecService
-      implementation: com.developmentontheedge.be5.api.services.impl.QRecServiceImpl
+  - queryService:
+      interface:      com.developmentontheedge.be5.api.services.QueryService
+      implementation: com.developmentontheedge.be5.api.services.impl.QueryServiceImpl
   - operationService:
       interface:      com.developmentontheedge.be5.api.services.OperationService
       implementation: com.developmentontheedge.be5.api.services.impl.OperationServiceImpl
   - operationExecutor:
       interface:      com.developmentontheedge.be5.api.services.OperationExecutor
       implementation: com.developmentontheedge.be5.api.services.impl.OperationExecutorImpl
+  - tableModelService:
+      interface:      com.developmentontheedge.be5.api.services.TableModelService
+      implementation: com.developmentontheedge.be5.api.services.impl.TableModelServiceImpl
   - documentGenerator:
       interface:      com.developmentontheedge.be5.api.services.DocumentGenerator
       implementation: com.developmentontheedge.be5.api.services.impl.DocumentGeneratorImpl

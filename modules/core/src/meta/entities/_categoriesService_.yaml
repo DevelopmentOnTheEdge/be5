@@ -1,0 +1,29 @@
+_categoriesService_:
+  type: table
+  displayName: Category service queries
+  primaryKey: _dummy_
+  queries:
+  - getCategoriesForest:
+      type: 1D_unknown
+      code: |-
+        SELECT * FROM categories WHERE entity = '<parameter:entity />'
+  - getRootCategory:
+      type: 1D_unknown
+      code: |-
+        SELECT ID, name FROM categories WHERE entity = '<parameter:entity />' AND (parentID IS NULL OR parentID = 0)
+  - getCategoryNavigation:
+      type: 1D_unknown
+      code: |-
+        SELECT DISTINCT c1.ID, c1.name, c1.parentId from categories c1
+        LEFT JOIN categories c2 on c2.parentID = c1.ID
+        LEFT JOIN categories c3 on c3.parentID = c2.ID
+        LEFT JOIN categories c4 on c4.parentID = c3.ID
+        LEFT JOIN categories c5 on c5.parentID = c4.ID
+        LEFT JOIN categories c6 on c6.parentID = c5.ID
+        LEFT JOIN categories c7 on c7.parentID = c6.ID
+        LEFT JOIN categories c8 on c8.parentID = c7.ID
+        WHERE <parameter:categoryID /> IN ( c1.ID, c2.ID, c3.ID, c4.ID, c5.ID, c6.ID, c7.ID, c8.ID ) OR (c1.parentID = <parameter:categoryID />)
+  - hasAnyItem:
+      type: 1D_unknown
+      code: |-
+        SELECT COUNT(*) AS "count" FROM classifications WHERE categoryID = <parameter:categoryID />

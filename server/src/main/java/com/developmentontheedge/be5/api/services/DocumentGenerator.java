@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.metadata.model.EntityItem;
-import com.developmentontheedge.be5.query.impl.model.TableModel;
+import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
@@ -17,10 +16,6 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
-    /* Table */
-
-    TableModel getTableModel(Query query, Map<String, String> parameters);
-
     TablePresentation getTablePresentation(Query query, Map<String, String> parameters);
 
     TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel);
@@ -36,8 +31,6 @@ public interface DocumentGenerator
     Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);
 
     ErrorModel getErrorModel(Throwable e, HashUrl url);
-
-    Map<String, Object> getLayoutObject(EntityItem entityItem);
 
     //    StaticPagePresentation getStatic(Query query);
 }

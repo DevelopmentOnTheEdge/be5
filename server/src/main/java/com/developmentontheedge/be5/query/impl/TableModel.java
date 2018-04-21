@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,16 +10,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
 
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.QueryExecutor;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 
@@ -28,21 +28,21 @@ public class TableModel
     public static class Builder
     {
         private final Query query;
-        private final Injector injector;
         private final Map<String, String> parameters;
+        private final QueryService queryService;
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
-        private Builder(Query query, Map<String, String> parameters, Injector injector)
+        private Builder(Query query, Map<String, String> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
         {
             this.query = query;
             this.parameters = parameters;
 
-            this.injector = injector;
-            this.queryExecutor = new Be5QueryExecutor(query, parameters, injector);
-            this.userAwareMeta = injector.get(UserAwareMeta.class);
-            this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta, injector);
+            this.queryService = queryService;
+            this.queryExecutor = queryService.build(query, parameters);
+            this.userAwareMeta = userAwareMeta;
+            this.cellFormatter = new CellFormatter(query, queryExecutor, userAwareMeta);
         }
 
         public Builder offset(int offset)
@@ -65,7 +65,7 @@ public class TableModel
 
         public Builder selectable(boolean selectable)
         {
-            this.queryExecutor.setSelectable( selectable );
+            queryExecutor.selectable( selectable );
             return this;
         }
 //
@@ -98,7 +98,7 @@ public class TableModel
             }
             else
             {
-                totalNumberOfRows = new Be5QueryExecutor(query, parameters, injector).count();
+                totalNumberOfRows = queryService.build(query, parameters).count();
             }
 
             return new TableModel(
@@ -321,9 +321,9 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parameters, Injector injector)
+    public static Builder from(Query query, Map<String, String> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
     {
-        return new Builder(query, parameters, injector);
+        return new Builder(query, parameters, queryService, userAwareMeta);
     }
 
     public static class ColumnModel

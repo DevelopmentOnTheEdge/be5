@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
@@ -17,6 +16,7 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.util.CategoryFilter;
+import com.developmentontheedge.be5.util.FilterUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -49,6 +49,7 @@ import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
+import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
@@ -79,6 +80,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         DEFAULT, COUNT, AGGREGATE
     }
 
+    //todo move to separate file
     private final class ExecutorQueryContext implements QueryContext
     {
         private final Map<String, AstBeSqlSubQuery> subQueries = new HashMap<>();
@@ -136,7 +138,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
-            EntityModel entityModel = database.getEntity(tagName);
+            EntityModel entityModel = database.get().getEntity(tagName);
             RecordModel row = entityModel.get(conditions);
 
             String value = row.getValue(name).toString();
@@ -150,28 +152,28 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private final Map<String, String> parameters;
     private final DatabaseService databaseService;
-    private final DatabaseModel database;
+    private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
-    private final Context context;
-    private final FilterHelper filterHelper;
 
+    private final Map<String, String> parameters;
+
+    private final Context context;
     private ContextApplier contextApplier;
     private final ParserContext parserContext;
     private Set<String> subQueryKeys;
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, String> parameters, Injector injector)
+    public Be5QueryExecutor(Query query, Map<String, String> parameters, DatabaseService databaseService,
+                            Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
         super(query);
-        this.databaseService = injector.getDatabaseService();
-        this.database        = injector.get(DatabaseModel.class);
-        this.meta            = injector.getMeta();
-        this.db              = injector.getSqlService();
-        this.filterHelper    = injector.get(FilterHelper.class);
+        this.databaseService = databaseService;
+        this.database = database;
+        this.meta = meta;
+        this.db = db;
 
         this.parameters = new HashMap<>( Objects.requireNonNull( parameters ) );
         this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
@@ -184,13 +186,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public <T> List<T> execute(ResultSetParser<T> parser, Object... params)
+    public <T> List<T> execute(ResultSetParser<T> parser)
     {
         if ( query.getType().equals(QueryType.D1) || query.getType().equals(QueryType.D1_UNKNOWN ))
         {
             try
             {
-                return db.selectList(getFinalSql(), parser, params);
+                return db.selectList(getFinalSql(), parser);
             }
             catch (RuntimeException e)
             {
@@ -239,7 +241,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         // CONTEXT
 
         // FILTERS
-        filterHelper.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parameters));
+        FilterUtils.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parameters));
 
         // CATEGORY
         applyCategory( dql, ast );
@@ -533,13 +535,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         executeType = ExecuteType.COUNT;
         return (Long)execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
     }
-
-    @Override
-    public List<DynamicPropertySet> execute(Object... params)
-    {
-        executeType = ExecuteType.DEFAULT;
-        return execute(DpsRecordAdapter::createDps, params);
-    }
+//
+//    @Override
+//    public List<DynamicPropertySet> execute(Object... params)
+//    {
+//        executeType = ExecuteType.DEFAULT;
+//        return execute(DpsRecordAdapter::createDps, params);
+//    }
 
     @Override
     public DynamicPropertySet getRow()

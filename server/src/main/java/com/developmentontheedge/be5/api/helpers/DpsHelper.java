@@ -132,11 +132,25 @@ public class DpsHelper
         return addDpsExcludedColumnsWithoutTags(dps, modelElements, Collections.emptyList());
     }
 
+    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements,
+                Collection<String> columnNames, Map<String, String> parameters, Map<String, ? super Object> presetValues)
+    {
+        addDpExcludeColumns(dps, modelElements, columnNames, parameters);
+
+        setValues(dps, presetValues);
+        setOperationParams(dps, parameters);
+
+        return dps;
+    }
+
     public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
     {
         addDpsExcludedColumnsWithoutTags(dps, modelElements, columnNames);
 
-        return addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()), parameters);
+        addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()), parameters);
+        setOperationParams(dps, parameters);
+
+        return dps;
     }
 
     public <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
@@ -190,6 +204,7 @@ public class DpsHelper
         addDpForColumnsWithoutTags(dps, modelElements, columnNames);
 
         addTags(dps, modelElements, columnNames, parameters);
+        setOperationParams(dps, parameters);
 
         return dps;
     }

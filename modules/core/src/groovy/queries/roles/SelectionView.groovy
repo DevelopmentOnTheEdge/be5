@@ -1,7 +1,7 @@
 package roles
 
 import com.developmentontheedge.be5.query.TableBuilderSupport
-import com.developmentontheedge.be5.query.impl.model.TableModel
+import com.developmentontheedge.be5.query.impl.TableModel
 
 
 class SelectionView extends TableBuilderSupport

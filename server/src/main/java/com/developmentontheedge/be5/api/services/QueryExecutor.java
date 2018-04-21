@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.query.impl.model.CellFormatter;
+import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
@@ -30,12 +29,14 @@ public interface QueryExecutor
      */
     QueryExecutor order(int orderColumn, String orderDir);
 
+    QueryExecutor selectable(boolean selectable);
+
     /**
      * Executes the query.
      */
     List<DynamicPropertySet> execute();
     
-    List<DynamicPropertySet> execute(Object... params);
+    //List<DynamicPropertySet> execute(Object... params);
 
     /**
      * Executes the query for aggregate.
@@ -45,7 +46,7 @@ public interface QueryExecutor
     /**
      * Executes the query.
      */
-    <T> List<T> execute(ResultSetParser<T> parser, Object... params);
+    <T> List<T> execute(ResultSetParser<T> parser);
 
     /**
      * Counts the number of resulting rows.
@@ -60,8 +61,6 @@ public interface QueryExecutor
     List<String> getColumnNames();
 
     List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
-
-    void setSelectable(boolean selectable);
 
     int getOrderColumn();
 

@@ -7,14 +7,15 @@ import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.query.impl.MoreRows;
-import com.developmentontheedge.be5.query.impl.MoreRowsBuilder;
-import com.developmentontheedge.be5.query.impl.model.TableModel;
+import com.developmentontheedge.be5.query.model.MoreRows;
+import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
+import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.Collections;
@@ -54,7 +55,7 @@ public class Table implements Component
 
         try
         {
-            TableModel tableModel = documentGenerator.getTableModel(query, parameters);
+            TableModel tableModel = injector.get(TableModelService.class).getTableModel(query, parameters);
 
             switch (req.getRequestUri())
             {

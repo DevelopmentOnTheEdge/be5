@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.query.impl.model;
+package com.developmentontheedge.be5.query.impl;
 
 import java.util.Objects;
 
@@ -51,9 +51,10 @@ public abstract class AbstractQueryExecutor implements QueryExecutor
     }
 
     @Override
-    public void setSelectable(boolean selectable)
+    public final QueryExecutor selectable(boolean selectable)
     {
         this.selectable = selectable;
+        return this;
     }
 
     @Override

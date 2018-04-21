@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.query.impl.model.Be5QueryExecutor;
-import com.developmentontheedge.be5.query.impl.model.TableModel;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -36,20 +35,20 @@ public class OperationHelper
     private final SqlService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final Injector injector;
-    private final DocumentGenerator documentGenerator;
+    private final QueryService queryService;
+    private final TableModelService tableModelService;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           DocumentGenerator documentGenerator, Injector injector)
+                           TableModelService tableModelService, QueryService queryService)
     {
         this.db = db;
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
-        this.documentGenerator = documentGenerator;
-        this.injector = injector;
+        this.tableModelService = tableModelService;
+        this.queryService = queryService;
 
         tagsCache = be5Caches.createCache("Tags");
     }
@@ -190,12 +189,11 @@ public class OperationHelper
         TableModel tableModel;
         if(query.getType() == QueryType.GROOVY)
         {
-            tableModel = documentGenerator.getTableModel(query, stringStringMap);
+            tableModel = tableModelService.getTableModel(query, stringStringMap);
         }
         else
         {
-            tableModel = TableModel
-                .from(query, stringStringMap, injector)
+            tableModel = tableModelService.builder(query, stringStringMap)
                 .limit(Integer.MAX_VALUE)
                 .selectable(false)
                 .build();
@@ -562,7 +560,7 @@ public class OperationHelper
         {
             if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
         }
-        return new Be5QueryExecutor(query, stringStringMap, injector).execute();
+        return queryService.build(query, stringStringMap).execute();
     }
 
     public QRec readOneRecord(String sql, Map<String, ?> parameters)
@@ -581,6 +579,17 @@ public class OperationHelper
 
         return QRec.fromList(dpsList);
     }
+
+    public QRec qRec(String sql, Object... params)
+    {
+        return db.select(sql, (rs) -> DpsRecordAdapter.addDp(new QRec(), rs), params);
+    }
+
+//    public QRec withCache( String sql, Object... params )
+//    {
+//        throw Be5Exception.internal("not implemented");
+//        //return withCache( sql, null );
+//    }
 
     public List<List<Object>> readAsList( String sql, Object... params )
     {
