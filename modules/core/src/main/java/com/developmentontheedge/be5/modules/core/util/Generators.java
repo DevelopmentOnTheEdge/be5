@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.utils;
+package com.developmentontheedge.be5.modules.core.util;
 
 import static java.util.Objects.*;
 

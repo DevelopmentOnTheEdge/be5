@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
-import com.developmentontheedge.be5.modules.core.utils.Generators;
+import com.developmentontheedge.be5.modules.core.util.Generators;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collections;
