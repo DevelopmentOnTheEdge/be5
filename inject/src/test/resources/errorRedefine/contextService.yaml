@@ -1,0 +1,5 @@
+context:
+  services:
+  - testService:
+      interface:      java.util.Map
+      implementation: java.util.HashMap

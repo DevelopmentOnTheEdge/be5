@@ -1,0 +1,14 @@
+context:
+  components:
+  - testComponent: com.developmentontheedge.be5.env.impl.testComponents.TestComponent
+  services:
+  - com.developmentontheedge.be5.env.impl.testServices.AService
+  - com.developmentontheedge.be5.env.impl.testServices.BService
+  - com.developmentontheedge.be5.env.services.ConfigurableService
+  - testService:
+      interface:      com.developmentontheedge.be5.env.services.TestService
+      implementation: com.developmentontheedge.be5.env.services.impl.TestServiceMock
+config:
+  com.developmentontheedge.be5.env.services.ConfigurableService:
+    count: 5
+    url: 'test.url'

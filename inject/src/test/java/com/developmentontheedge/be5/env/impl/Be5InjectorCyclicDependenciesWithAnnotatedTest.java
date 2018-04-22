@@ -1,48 +1,46 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.util.Be5;
-import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.testServices.AService;
 import com.developmentontheedge.be5.env.impl.testServices.BService;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.env.services.impl.TestServiceMock;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.verify;
 
 
-public class Be5InjectorCyclicDependenciesWithAnnotatedTest extends Be5ProjectTest
+public class Be5InjectorCyclicDependenciesWithAnnotatedTest
 {
-    @Inject private Injector injector;
-
     @Before
-    public void before(){
-        SqlServiceMock.clearMock();
+    public void before()
+    {
+        TestServiceMock.clearMock();
     }
 
     @Test
     public void injectWithAnnotatedAServiceFirst()
     {
+        Injector injector = new Be5Injector(Stage.DEVELOPMENT, new YamlBinder());
+
         injector.get(AService.class).aMethodUseBService();
-        verify(SqlServiceMock.mock).update("bMethod sql");
+        verify(TestServiceMock.mock).call("bMethod");
 
         injector.get(BService.class).bMethodUseAService();
-        verify(SqlServiceMock.mock).update("aMethod sql");
+        verify(TestServiceMock.mock).call("aMethod");
     }
 
     @Test
     public void injectWithAnnotatedBServiceFirst()
     {
-        Injector sqlMockInjector2 = Be5.createInjector(Stage.DEVELOPMENT, new SqlMockBinder());
+        Injector sqlMockInjector2 = new Be5Injector(Stage.DEVELOPMENT, new YamlBinder());
 
         sqlMockInjector2.get(BService.class).bMethodUseAService();
-        verify(SqlServiceMock.mock).update("aMethod sql");
+        verify(TestServiceMock.mock).call("aMethod");
 
         sqlMockInjector2.get(AService.class).aMethodUseBService();
-        verify(SqlServiceMock.mock).update("bMethod sql");
+        verify(TestServiceMock.mock).call("bMethod");
     }
 
 }

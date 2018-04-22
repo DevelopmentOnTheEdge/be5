@@ -1,9 +1,5 @@
 context:
-  components:
-  - testComponentWithInjectAnnotation: com.developmentontheedge.be5.env.impl.testComponents.TestComponentWithInjectAnnotation
   services:
-  - com.developmentontheedge.be5.env.impl.testServices.AService
-  - com.developmentontheedge.be5.env.impl.testServices.BService
   - coreUtils:
       interface:      com.developmentontheedge.be5.api.services.CoreUtils
       implementation: com.developmentontheedge.be5.test.mocks.CoreUtilsForTest

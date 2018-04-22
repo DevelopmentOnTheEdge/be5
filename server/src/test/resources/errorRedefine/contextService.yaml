@@ -1,5 +1,0 @@
-context:
-  services:
-  - errorRedifine:
-      interface:      com.developmentontheedge.be5.api.services.ProjectProvider
-      implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl

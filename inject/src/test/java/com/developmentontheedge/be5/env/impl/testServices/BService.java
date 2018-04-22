@@ -1,22 +1,22 @@
 package com.developmentontheedge.be5.env.impl.testServices;
 
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.services.TestService;
 
 public class BService
 {
     @Inject private AService aService;
 
-    private SqlService db;
+    private final TestService testService;
 
-    public BService(SqlService db)
+    public BService(TestService testService)
     {
-        this.db = db;
+        this.testService = testService;
     }
 
     public void bMethod()
     {
-        db.update("bMethod sql");
+        testService.call("bMethod");
     }
 
     public void bMethodUseAService()
