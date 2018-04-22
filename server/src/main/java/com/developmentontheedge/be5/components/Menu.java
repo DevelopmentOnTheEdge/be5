@@ -296,7 +296,7 @@ public class Menu implements Component {
         
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
-        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, withIds, entityType);
+        List<RootNode> entities = collectEntities(injector.get(Meta.class), userAwareMeta, language, roles, withIds, entityType);
         
         return new MenuResponse(entities);
     }
@@ -306,7 +306,7 @@ public class Menu implements Component {
 
         List<String> roles = UserInfoHolder.getCurrentRoles();
         String language = UserInfoHolder.getLanguage();
-        List<RootNode> entities = collectEntities(injector.getMeta(), userAwareMeta, language, roles, false, entityType);
+        List<RootNode> entities = collectEntities(injector.get(Meta.class), userAwareMeta, language, roles, false, entityType);
 
         for (RootNode rootNode: entities)
         {

@@ -59,7 +59,7 @@ public class Be5Injector implements Injector
     private void init(Binder binder)
     {
         binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
-        getLogger();
+
         log.info(JULLogger.infoBlock(
                 "Load classes: " + binder.getClass().getName() +
                     (!binder.getInfo().isEmpty() ? " - " + binder.getInfo() : "") + "\n" +

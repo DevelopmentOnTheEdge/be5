@@ -64,7 +64,7 @@ public class GdslGenegator
     {
         Template serviceTpl = cfg.getTemplate("gdsl/entities.ftl");
 
-        Meta meta = injector.getMeta();
+        Meta meta = injector.get(Meta.class);
         List<Entity> entities = meta.getOrderedEntities("ru");
 
         Map<String, Object> input = new HashMap<>();

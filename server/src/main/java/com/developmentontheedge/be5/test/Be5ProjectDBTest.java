@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.test;
 
+import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.env.Inject;
@@ -51,10 +53,10 @@ public abstract class Be5ProjectDBTest extends TestUtils
 
     static
     {
-        Project project = injector.getProject();
+        Project project = injector.get(ProjectProvider.class).getProject();
 
-        if(injector.getDatabaseService().getConnectionProfileName() != null &&
-                profileForIntegrationTests.equals(injector.getDatabaseService().getConnectionProfileName()))
+        if(injector.get(DatabaseService.class).getConnectionProfileName() != null &&
+                profileForIntegrationTests.equals(injector.get(DatabaseService.class).getConnectionProfileName()))
         {
             try
             {

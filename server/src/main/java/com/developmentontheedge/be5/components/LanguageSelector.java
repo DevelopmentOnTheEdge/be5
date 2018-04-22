@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -96,7 +98,7 @@ public class LanguageSelector implements Component
 
     private LanguageSelectorResponse selectLanguage(Request req, Injector injector)
     {
-        Locale language = injector.getMeta().getLocale(new Locale(req.getNonEmpty("language")));
+        Locale language = injector.get(Meta.class).getLocale(new Locale(req.getNonEmpty("language")));
         UserInfoHolder.getUserInfo().setLocale(language);
 
         return getState(injector);
@@ -104,7 +106,7 @@ public class LanguageSelector implements Component
 
     private LanguageSelectorResponse getState(Injector injector)
     {
-        Project project = injector.getProject();
+        Project project = injector.get(ProjectProvider.class).getProject();
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 

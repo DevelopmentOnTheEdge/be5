@@ -95,7 +95,7 @@ public class EntityModels
     {
         Template entityTpl = cfg.getTemplate("entity.ftl");
 
-        Meta meta = injector.getMeta();
+        Meta meta = injector.get(Meta.class);
         List<Entity> entities = meta.getOrderedEntities("ru");
         for(Entity entity : entities)
         {
@@ -123,7 +123,7 @@ public class EntityModels
     {
         Template serviceTpl = cfg.getTemplate("service.ftl");
 
-        Meta meta = injector.getMeta();
+        Meta meta = injector.get(Meta.class);
         List<Entity> entities = meta.getOrderedEntities("ru");
 
         Map<String, Object> input = new HashMap<>();

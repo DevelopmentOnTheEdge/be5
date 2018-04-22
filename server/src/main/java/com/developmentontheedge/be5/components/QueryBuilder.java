@@ -7,7 +7,9 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryService;
+import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
@@ -138,7 +140,7 @@ public class QueryBuilder implements Component
 
     private void insert(String sql, Injector injector)
     {
-        Object id = injector.getSqlService().insert(sql);
+        Object id = injector.get(SqlService.class).insert(sql);
 
         resourceDataList.add(new ResourceData(
                 "result",
@@ -153,7 +155,7 @@ public class QueryBuilder implements Component
 
     private void update(String sql, Injector injector)
     {
-        Object id = injector.getSqlService().update(sql);
+        Object id = injector.get(SqlService.class).update(sql);
 
         resourceDataList.add(new ResourceData(
                 "result",
@@ -174,7 +176,7 @@ public class QueryBuilder implements Component
 
         Map<String, String> parameters = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
 
-        Entity entity = new Entity( entityName, injector.getProject().getApplication(), EntityType.TABLE );
+        Entity entity = new Entity( entityName, injector.get(ProjectProvider.class).getProject().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );
 
         Query query = new Query( userQBuilderQueryName, entity );
