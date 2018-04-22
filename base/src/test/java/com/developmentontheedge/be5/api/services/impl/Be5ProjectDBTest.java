@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 
@@ -37,6 +38,8 @@ public abstract class Be5ProjectDBTest
 
     static Injector initInjector(Binder binder)
     {
+        LogManager.getLogManager().reset();
+
         Injector injector = new Be5Injector(Stage.TEST, binder);
         Project project = injector.get(ProjectProvider.class).getProject();
         initProfile(project);
