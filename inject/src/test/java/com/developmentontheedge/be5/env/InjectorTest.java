@@ -26,17 +26,21 @@ public class InjectorTest
     @Test
     public void test()
     {
-        Injector injector = new Be5Injector(Stage.TEST, new YamlBinder());
+        Injector injector = new Be5Injector(Stage.PRODUCTION, new YamlBinder());
 
         assertEquals(TestComponent.class, injector.getComponent("testComponent").getClass());
 
         assertEquals(TestServiceMock.class, injector.get(TestService.class).getClass());
+
+        assertEquals(Stage.PRODUCTION, injector.get(Stage.class));
+
+        assertEquals(Be5Injector.class, injector.get(Injector.class).getClass());
     }
 
     @Test
     public void testConfigurable()
     {
-        Injector injector = new Be5Injector(Stage.TEST, new YamlBinder());
+        Injector injector = new Be5Injector(new YamlBinder());
 
         injector.get(ConfigurableService.class);
 

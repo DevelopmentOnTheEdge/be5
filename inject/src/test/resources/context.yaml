@@ -4,6 +4,8 @@ context:
   services:
   - com.developmentontheedge.be5.env.impl.testServices.AService
   - com.developmentontheedge.be5.env.impl.testServices.BService
+  - com.developmentontheedge.be5.env.impl.testServicesProvider.AServiceProvider
+  - com.developmentontheedge.be5.env.impl.testServicesProvider.BServiceProvider
   - com.developmentontheedge.be5.env.services.ConfigurableService
   - testService:
       interface:      com.developmentontheedge.be5.env.services.TestService
