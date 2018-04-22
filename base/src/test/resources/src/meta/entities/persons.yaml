@@ -1,0 +1,25 @@
+persons:
+  type: table
+  displayName: Persons
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(255)
+    - password:
+        type: VARCHAR(255)
+    - email:
+        type: VARCHAR(255)
+        canBeNull: true
+  queries:
+  - '*** Selection view ***':
+      type: 1D_unknown
+      roles: '@AllRolesExceptGuest'
+      code: |-
+        SELECT
+            p.ID AS "Code", p.name AS "Name"
+        FROM persons p

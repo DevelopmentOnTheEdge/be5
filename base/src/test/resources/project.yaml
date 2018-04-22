@@ -4,6 +4,7 @@ testProject:
   projectFileStructure: {}
   modules: []
   application:
+  - persons
   - testtable
   scripts:
   - Post-db
