@@ -31,6 +31,7 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import java.util.ArrayList;
@@ -307,7 +308,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
 
-        return new ErrorModel("500", e.getMessage(), message, Be5Exception.exceptionAsString(e),
+        return new ErrorModel("500", e.getMessage(), message, Utils.exceptionAsString(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 

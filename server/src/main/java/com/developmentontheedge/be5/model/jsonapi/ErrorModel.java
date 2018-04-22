@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.util.Utils;
 
 import java.util.Map;
 
@@ -44,17 +45,17 @@ public class ErrorModel
     public ErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
         this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
-                Be5Exception.exceptionAsString(e), links);
+                Utils.exceptionAsString(e), links);
     }
 
     public ErrorModel(Be5Exception e, Map<String, String> links)
     {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e), links);
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Utils.exceptionAsString(e), links);
     }
 
     public ErrorModel(Be5Exception e)
     {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Be5Exception.exceptionAsString(e), null);
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Utils.exceptionAsString(e), null);
     }
 
     public String getStatus()

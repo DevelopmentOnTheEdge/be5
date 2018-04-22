@@ -15,6 +15,7 @@
   <module>freemarker-patched</module>
   <module>metadata</module>
   <module>inject</module>
+  <module>base</module>
   <module>server</module>
   <module>maven</module>
   <module>entitygen</module>

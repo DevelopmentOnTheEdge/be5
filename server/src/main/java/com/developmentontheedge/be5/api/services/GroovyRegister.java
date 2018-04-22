@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
+import com.developmentontheedge.be5.api.ulit.HtmlUtils;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.util.Utils;
 import com.github.benmanes.caffeine.cache.Cache;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
@@ -158,7 +158,7 @@ public class GroovyRegister
         String code = groovyOperationLoaderProvider.get()
                 .getByFullName(className + ".groovy")
                 .getCode();
-        String lines[] = Utils.escapeHTML(code).split("\\r?\\n");
+        String lines[] = HtmlUtils.escapeHTML(code).split("\\r?\\n");
 
         sb.append("\n\n<code>");
         for (int i = Math.max(0, lineID - 4); i < Math.min(lineID + 3, lines.length); i++)

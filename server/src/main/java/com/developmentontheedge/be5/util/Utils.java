@@ -9,6 +9,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -693,22 +695,6 @@ public class Utils
 //        return UserInfoHolder.isSystemDeveloper() || ModuleLoader2.getPathsToProjectsToHotReload().size() > 0;
 //    }
 
-    public static String escapeHTML(String s)
-    {
-        StringBuilder out = new StringBuilder(Math.max(16, s.length()));
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
-                out.append("&#");
-                out.append((int) c);
-                out.append(';');
-            } else {
-                out.append(c);
-            }
-        }
-        return out.toString();
-    }
-
     public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper)
@@ -720,4 +706,21 @@ public class Utils
                 LinkedHashMap::new);
     }
 
+    public static String exceptionAsString(Throwable e)
+    {
+        if(UserInfoHolder.isSystemDeveloper())
+        {
+            StringWriter sw = new StringWriter();
+            if (e instanceof Be5Exception && e.getCause() != null)
+            {
+                e.getCause().printStackTrace(new PrintWriter(sw));
+            } else
+            {
+                e.printStackTrace(new PrintWriter(sw));
+            }
+            return sw.toString();
+        }else{
+            return null;
+        }
+    }
 }
