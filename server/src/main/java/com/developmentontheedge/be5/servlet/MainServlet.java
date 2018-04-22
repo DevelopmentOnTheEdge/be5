@@ -30,7 +30,7 @@ import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.components.TemplateProcessor;
-import com.developmentontheedge.be5.env.Be5;
+import com.developmentontheedge.be5.util.Be5;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;

@@ -1,6 +1,9 @@
-package com.developmentontheedge.be5.env;
+package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
+import com.developmentontheedge.be5.env.Binder;
+import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.Be5Injector;
 
 

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.env.Be5;
+import com.developmentontheedge.be5.util.Be5;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
