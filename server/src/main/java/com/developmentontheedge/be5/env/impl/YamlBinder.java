@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.env.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
 import org.yaml.snakeyaml.Yaml;
 
@@ -14,13 +13,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class YamlBinder implements Binder
 {
-    private static final Logger log = Logger.getLogger(YamlBinder.class.getName());
-
     static final String CONTEXT_FILE = "context.yaml";
     private final Map<String, Class<?>> serviceKeys = new HashMap<>();
 
@@ -49,7 +45,7 @@ public class YamlBinder implements Binder
         }
         catch (IOException e)
         {
-            throw Be5Exception.internal(e, "Can't load server modules.");
+            throw new RuntimeException("Can't load server modules.", e);
         }
 
     }
@@ -108,7 +104,7 @@ public class YamlBinder implements Binder
 
             if(loadedClasses.containsKey(entry.getKey()))
             {
-                throw Be5Exception.internal("Redefining in yaml config not allowed: " + entry.getKey());
+                throw new RuntimeException("Redefining in yaml config not allowed: " + entry.getKey());
             }
 
             loadedClasses.put(entry.getKey(), serviceInterface);
@@ -134,7 +130,7 @@ public class YamlBinder implements Binder
 
                 if (serviceKeys.containsKey(key))
                 {
-                    throw Be5Exception.internal("Equals key not allowed.");
+                    throw new RuntimeException("Equals key not allowed.");
                 }
             }
             else
@@ -146,7 +142,7 @@ public class YamlBinder implements Binder
 
             if (bindings.containsKey(serviceKeyClass))
             {
-                throw Be5Exception.internal("Redefining in yaml config not allowed: " + serviceKeyClass);
+                throw new RuntimeException("Redefining in yaml config not allowed: " + serviceKeyClass);
             }
 
             bindings.put(serviceKeyClass, serviceImplementation);
@@ -161,8 +157,7 @@ public class YamlBinder implements Binder
         }
         catch (ClassNotFoundException e)
         {
-            throw Be5Exception.internal(log, e,
-                    "ClassNotFoundException by path='" + path + "' in " + CONTEXT_FILE);
+            throw new RuntimeException("ClassNotFoundException by path='" + path + "' in " + CONTEXT_FILE, e);
         }
     }
 

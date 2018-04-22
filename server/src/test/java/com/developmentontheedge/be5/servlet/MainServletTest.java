@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
@@ -130,7 +131,7 @@ public class MainServletTest extends Be5ProjectTest
 
         spyMainServlet.runComponent(componentId, req, res);
 
-        verify(req).setAttribute("testRequestPreprocessor", "testProject");
+        verify(req).setAttribute("testRequestPreprocessor", Stage.TEST.toString());
 
         verify(res).sendError(eq(Be5Exception.unknownComponent("foo")));
     }

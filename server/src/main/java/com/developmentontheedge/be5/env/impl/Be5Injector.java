@@ -15,13 +15,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.developmentontheedge.be5.api.RequestPreprocessor;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
-import com.developmentontheedge.be5.api.Configurable;
+import com.developmentontheedge.be5.env.Configurable;
 import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.gson.Gson;
 
 import javax.inject.Provider;
@@ -58,10 +56,9 @@ public class Be5Injector implements Injector
     {
         binder.configure(loadedClasses, bindings, configurations, requestPreprocessors);
 
-        log.info(JULLogger.infoBlock(
-                "Load classes: " + binder.getClass().getName() +
+        log.info("Load classes: " + binder.getClass().getName() +
                     (!binder.getInfo().isEmpty() ? " - " + binder.getInfo() : "") + "\n" +
-                 stage + " stage"));
+                 stage + " stage");
 
         if (stage == Stage.PRODUCTION)
         {
@@ -206,13 +203,13 @@ public class Be5Injector implements Injector
         {
             Class<?> klass = getComponentClass(componentId);
             Object component = klass.newInstance();
-            configureIfConfigurable(component, configurations);
             injectAnnotatedFields(component);
+            configureIfConfigurable(component, configurations);
             return component;
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
         {
-            throw Be5Exception.internal(e, "Can't create component");
+            throw new RuntimeException("Can't create component", e);
         }
     }
 
@@ -234,7 +231,7 @@ public class Be5Injector implements Injector
     {
         if(!hasComponent(componentId))
         {
-            throw Be5Exception.unknownComponent( componentId );
+            throw new RuntimeException("unknownComponent: " + componentId);
         }
         return loadedClasses.get(componentId);
     }
@@ -265,6 +262,7 @@ public class Be5Injector implements Injector
             return null;
         }
 
+        //todo use json-b
         String componentConfigJson = new Gson().toJson(config);
 
         return new Gson().fromJson(componentConfigJson, configClass);
@@ -288,7 +286,7 @@ public class Be5Injector implements Injector
                     }
                     catch (IllegalAccessException e)
                     {
-                        throw Be5Exception.internal(e);
+                        throw new RuntimeException("Error on injectAnnotatedFields", e);
                     }
                 }
             }

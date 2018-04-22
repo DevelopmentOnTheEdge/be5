@@ -1,16 +1,20 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Stage;
 
 
 public class TestRequestPreprocessor implements RequestPreprocessor
 {
-    @Inject ProjectProvider projectProvider;
+    private final Stage stage;
+
+    public TestRequestPreprocessor(Stage stage)
+    {
+        this.stage = stage;
+    }
 
     @Override
     public void preprocessUrl(String componentId, Request req, Response res)
     {
-        req.setAttribute("testRequestPreprocessor", projectProvider.getProject().getName());
+        req.setAttribute("testRequestPreprocessor", stage.toString());
     }
 }

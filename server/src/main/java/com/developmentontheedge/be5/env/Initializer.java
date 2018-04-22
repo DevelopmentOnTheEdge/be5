@@ -1,6 +1,4 @@
-package com.developmentontheedge.be5.api;
-
-import com.developmentontheedge.be5.env.Injector;
+package com.developmentontheedge.be5.env;
 
 /**
  * This class can be used to initialize module state.

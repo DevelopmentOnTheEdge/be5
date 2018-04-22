@@ -1,6 +1,4 @@
-package com.developmentontheedge.be5.api;
-
-import com.developmentontheedge.be5.env.Injector;
+package com.developmentontheedge.be5.env;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -40,11 +38,10 @@ import java.lang.reflect.Type;
  * 
  * <p>Any way your class implements <code>{@code Configurable<MyConfiguration>}</code>,
  * and the <code>MyConfiguration</code> will be created and filled automatically, then the <code>void configure(MyConfiguration config)</code> will be called.
- * It is called before the {@link Initializer#initialize(InitializerContext, Injector)}, {@link Component#generate(Request, Response, Injector)}
+ * It is called after newInstance and injectAnnotatedFields
  * or right after creation of the service. The concrete configuration will be parsed with Gson, so it can contain strings, numbers, lists, maps, your POJO classes, etc.
  * </p>
- * 
- * @see Component
+ *
  * @see Initializer
  * @see Configurable#getConfigurationClass()
  * @see Configurable#configure(Object)
@@ -89,7 +86,7 @@ public interface Configurable<T> {
     }
     
     /**
-     * <p>This will be called right before calling the {@link Component#generate(Request, Response, Injector)},
+     * <p>This will be called right after newInstance and injectAnnotatedFields,
      * {@link Initializer#initialize(InitializerContext, Injector)} or after creation of a service.
      * A part of a configuration file will be parsed to the passed object. This object is created in any case,
      * even if there's no section in the configuration file for this component, therefore it can't be null.</p>
