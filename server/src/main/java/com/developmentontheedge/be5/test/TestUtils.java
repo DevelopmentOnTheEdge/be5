@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Be5;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Inject;
@@ -63,7 +64,7 @@ public abstract class TestUtils
     static Injector initInjector(Binder binder)
     {
         Injector injector = Be5.createInjector(Stage.TEST, binder);
-        Project project = injector.getProject();
+        Project project = injector.get(ProjectProvider.class).getProject();
         initProfile(project);
 
         return injector;

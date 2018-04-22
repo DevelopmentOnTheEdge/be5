@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.exceptions.ErrorTitles;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.api.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -24,7 +25,7 @@ public class StaticPageComponent implements Component
     {
         String language = UserInfoHolder.getLanguage();
         String page = req.getRequestUri();
-        String staticPageContent = injector.getProject().getStaticPageContent(language, page);
+        String staticPageContent = injector.get(ProjectProvider.class).getProject().getStaticPageContent(language, page);
 
         if (staticPageContent == null)
         {
