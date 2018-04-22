@@ -1,0 +1,9 @@
+testProject:
+  features: logging
+  l10n: ru
+  projectFileStructure: {}
+  modules: []
+  application:
+  - testtable
+  scripts:
+  - Post-db

@@ -38,7 +38,6 @@ public class DatabaseServiceImpl implements DatabaseService
     private Rdbms type;
     private BeConnectionProfile profile = null;
 
-    //todo remove injector, add and use Provider<ProjectProvider> projectProvider, and remove injector in ProjectProviderImpl
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
         Project project = projectProvider.getProject();
