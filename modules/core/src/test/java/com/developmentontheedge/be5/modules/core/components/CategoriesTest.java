@@ -23,11 +23,11 @@ public class CategoriesTest extends Be5ProjectTest
     @Before
     public void init()
     {
-        component = injector.getComponent("categories");
+        component = (Component)injector.getComponent("categories");
     }
 
     @Test
-    public void generate() throws Exception
+    public void generate()
     {
         Response response = mock(Response.class);
 
@@ -37,7 +37,7 @@ public class CategoriesTest extends Be5ProjectTest
     }
 
     @Test
-    public void sendUnknownActionError() throws Exception
+    public void sendUnknownActionError()
     {
         Response response = mock(Response.class);
 

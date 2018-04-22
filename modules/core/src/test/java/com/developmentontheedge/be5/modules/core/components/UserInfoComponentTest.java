@@ -35,11 +35,11 @@ public class UserInfoComponentTest extends Be5ProjectTest
     public void init()
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
-        component = injector.getComponent("userInfo");
+        component = (Component)injector.getComponent("userInfo");
     }
 
     @Test
-    public void generate() throws Exception
+    public void generate()
     {
         Response response = mock(Response.class);
 
@@ -55,7 +55,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
     }
 
     @Test
-    public void testGuest() throws Exception
+    public void testGuest()
     {
         initGuest();
         Response response = mock(Response.class);
