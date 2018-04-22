@@ -183,6 +183,10 @@ public class MainServlet implements Filter
         try
         {
             runRequestPreprocessors(componentId, req, res);
+            if(!getInjector().hasComponent(componentId))
+            {
+                throw Be5Exception.unknownComponent( componentId );
+            }
             Component component = (Component)getInjector().getComponent(componentId);
             component.generate( req, res, getInjector() );
         }
@@ -204,10 +208,10 @@ public class MainServlet implements Filter
 
     private void runRequestPreprocessors(String componentId, Request req, Response res)
     {
-        List<RequestPreprocessor> requestPreprocessors = getInjector().getRequestPreprocessors();
-        for (RequestPreprocessor preprocessor : requestPreprocessors)
+        List<Object> requestPreprocessors = getInjector().getRequestPreprocessors();
+        for (Object preprocessor : requestPreprocessors)
         {
-            preprocessor.preprocessUrl(componentId, req, res);
+            ((RequestPreprocessor)preprocessor).preprocessUrl(componentId, req, res);
         }
     }
 

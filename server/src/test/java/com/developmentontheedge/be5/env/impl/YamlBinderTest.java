@@ -62,7 +62,7 @@ public class YamlBinderTest
         assertEquals(1, requestPreprocessors.size());
     }
 
-    @Test(expected = Be5Exception.class)
+    @Test(expected = RuntimeException.class)
     public void testLoadTryRedefine()
     {
         yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);
@@ -82,7 +82,7 @@ public class YamlBinderTest
         assertFalse(yamlBinder.isServer(getReader("src/test/resources/errorRedefine/" + CONTEXT_FILE)));
     }
 
-    @Test(expected = Be5Exception.class)
+    @Test(expected = RuntimeException.class)
     public void testLoadTryRedefineServices()
     {
         yamlBinder.loadModules(getReader(CONTEXT_FILE), bindings, loadedClasses, configurations, requestPreprocessors);

@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.env;
 
-import com.developmentontheedge.be5.api.RequestPreprocessor;
-
 import java.util.List;
 
 /**
@@ -49,7 +47,7 @@ public interface Injector
 
     Object getComponent(String componentId);
 
-    List<RequestPreprocessor> getRequestPreprocessors();
+    List<Object> getRequestPreprocessors();
 
     boolean hasComponent(String componentId);
 

@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.env.Binder;
 import com.developmentontheedge.be5.env.Configurable;
 import com.developmentontheedge.be5.env.Inject;
@@ -213,11 +212,15 @@ public class Be5Injector implements Injector
         }
     }
 
+    /**
+     * todo refactor #36
+     * @return
+     */
     @Override
-    public List<RequestPreprocessor> getRequestPreprocessors()
+    public List<Object> getRequestPreprocessors()
     {
         return requestPreprocessors.stream()
-                .map(clazz -> (RequestPreprocessor)get(clazz))
+                .map(clazz -> (Object)get(clazz))
                 .collect(Collectors.toList());
     }
 
