@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -23,11 +24,12 @@ public class GroovyOperationLoader
 
     private Map<String, Operation> groovyOperationsMap;
 
-    public GroovyOperationLoader(Meta meta, GroovyRegister groovyRegister)
+    public GroovyOperationLoader(ProjectProvider projectProvider, Meta meta, GroovyRegister groovyRegister)
     {
         this.groovyRegister = groovyRegister;
         this.meta = meta;
 
+        projectProvider.addToReload(this::initOperationMap);
         initOperationMap();
     }
 

@@ -1,10 +1,8 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
@@ -14,6 +12,8 @@ import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 
 import javax.inject.Provider;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -21,6 +21,7 @@ public class ProjectProviderImpl implements ProjectProvider
 {
     private Project project;
     private Map<String, Project> initModulesMap;
+    private List<Runnable> callOnReload = new ArrayList<>();
 
     private WatchDir watcher = null;
 
@@ -28,22 +29,19 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private final Stage stage;
     private final Be5Caches be5Caches;
-    private final GroovyRegister groovyRegister;
     private final Provider<DatabaseService> databaseServiceProvider;
-    private final Provider<UserAwareMeta> userAwareMetaProvider;
-    private final Provider<GroovyOperationLoader> groovyOperationLoaderProvider;
 
-    public ProjectProviderImpl(Stage stage, Be5Caches be5Caches, GroovyRegister groovyRegister,
-                               Provider<DatabaseService> databaseServiceProvider,
-                               Provider<UserAwareMeta> userAwareMetaProvider,
-                               Provider<GroovyOperationLoader> groovyOperationLoaderProvider)
+    public ProjectProviderImpl(Stage stage, Be5Caches be5Caches,
+                               Provider<DatabaseService> databaseServiceProvider)
     {
         this.stage = stage;
         this.be5Caches = be5Caches;
-        this.groovyRegister = groovyRegister;
         this.databaseServiceProvider = databaseServiceProvider;
-        this.userAwareMetaProvider = userAwareMetaProvider;
-        this.groovyOperationLoaderProvider = groovyOperationLoaderProvider;
+    }
+
+    public void addToReload(Runnable supplier)
+    {
+        callOnReload.add(supplier);
     }
 
     @Override
@@ -60,10 +58,7 @@ public class ProjectProviderImpl implements ProjectProvider
             if(oldProject != null)
             {
                 be5Caches.clearAll();
-                userAwareMetaProvider.get().compileLocalizations();//todo refactoring and add to be5Caches
-                groovyOperationLoaderProvider.get().initOperationMap();//todo refactoring and add to be5Caches
-
-                groovyRegister.initClassLoader();
+                callOnReload.forEach(Runnable::run);
                 updateDatabaseSystem();
             }
         }

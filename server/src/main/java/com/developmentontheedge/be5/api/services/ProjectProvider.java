@@ -13,4 +13,5 @@ public interface ProjectProvider
 
     void reloadProject();
 
+    void addToReload(Runnable runnable);
 }

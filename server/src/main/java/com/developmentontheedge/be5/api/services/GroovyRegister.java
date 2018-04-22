@@ -24,9 +24,11 @@ public class GroovyRegister
 
     private Provider<GroovyOperationLoader> groovyOperationLoaderProvider;
 
-    public GroovyRegister(Provider<GroovyOperationLoader> groovyOperationLoaderProvider, Be5Caches be5Caches)
+    public GroovyRegister(ProjectProvider projectProvider, Provider<GroovyOperationLoader> groovyOperationLoaderProvider, Be5Caches be5Caches)
     {
         this.groovyOperationLoaderProvider = groovyOperationLoaderProvider;
+
+        projectProvider.addToReload(this::initClassLoader);
         initClassLoader();
 
         groovyClasses = be5Caches.createCache("Groovy classes");
