@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Stage;
@@ -28,14 +27,11 @@ public class ProjectProviderImpl implements ProjectProvider
     private volatile boolean dirty = false;
 
     private final Stage stage;
-    private final Be5Caches be5Caches;
     private final Provider<DatabaseService> databaseServiceProvider;
 
-    public ProjectProviderImpl(Stage stage, Be5Caches be5Caches,
-                               Provider<DatabaseService> databaseServiceProvider)
+    public ProjectProviderImpl(Stage stage, Provider<DatabaseService> databaseServiceProvider)
     {
         this.stage = stage;
-        this.be5Caches = be5Caches;
         this.databaseServiceProvider = databaseServiceProvider;
     }
 
@@ -57,7 +53,6 @@ public class ProjectProviderImpl implements ProjectProvider
 
             if(oldProject != null)
             {
-                be5Caches.clearAll();
                 callOnReload.forEach(Runnable::run);
                 updateDatabaseSystem();
             }

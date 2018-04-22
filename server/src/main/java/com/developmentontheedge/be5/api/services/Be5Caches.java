@@ -14,9 +14,11 @@ public class Be5Caches
 
     private Be5MainSettings be5MainSettings;
 
-    public Be5Caches(Be5MainSettings be5MainSettings)
+    public Be5Caches(Be5MainSettings be5MainSettings, ProjectProvider projectProvider)
     {
         this.be5MainSettings = be5MainSettings;
+
+        projectProvider.addToReload(this::clearAll);
     }
 
     public void registerCache(String name, Cache cache)
