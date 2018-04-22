@@ -23,7 +23,7 @@ public class DownloadComponentTest extends Be5ProjectTest
     @Before
     public void init()
     {
-        component = injector.getComponent("download");
+        component = (Component)injector.getComponent("download");
     }
 
     @Test

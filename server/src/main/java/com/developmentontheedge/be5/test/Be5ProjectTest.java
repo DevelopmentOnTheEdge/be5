@@ -66,7 +66,7 @@ public abstract class Be5ProjectTest extends TestUtils
 
     public Component getComponent(String componentId)
     {
-        return injector.getComponent(componentId);
+        return (Component)injector.getComponent(componentId);
     }
 
 }

@@ -26,7 +26,7 @@ public class QueryBuilderTest extends SqlMockOperationTest
     @Before
     public void init()
     {
-        component = injector.getComponent("queryBuilder");
+        component = (Component)injector.getComponent("queryBuilder");
     }
 
     @Test

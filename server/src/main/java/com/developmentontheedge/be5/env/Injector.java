@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.env;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Configurable;
 import com.developmentontheedge.be5.api.RequestPreprocessor;
 
@@ -49,7 +48,7 @@ public interface Injector
      */
     <T> T get(Class<T> serviceClass);
 
-    Component getComponent(String componentId);
+    Object getComponent(String componentId);
 
     List<RequestPreprocessor> getRequestPreprocessors();
 

@@ -30,7 +30,7 @@ class FormTest extends Be5ProjectTest
     @Before
     void setUp()
     {
-        component = injector.getComponent("form")
+        component = (Component)injector.getComponent("form")
         response = mock(Response.class)
     }
 

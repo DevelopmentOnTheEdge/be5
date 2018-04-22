@@ -26,7 +26,7 @@ public class MenuTest extends Be5ProjectTest
     @Before
     public void init(){
         initUserWithRoles(RoleType.ROLE_GUEST);
-        component = injector.getComponent("menu");
+        component = (Component)injector.getComponent("menu");
     }
 
     @Test

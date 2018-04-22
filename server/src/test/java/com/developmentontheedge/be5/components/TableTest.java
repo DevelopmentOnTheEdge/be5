@@ -26,7 +26,7 @@ public class TableTest extends SqlMockOperationTest
     @Before
     public void init()
     {
-        component = injector.getComponent("table");
+        component = (Component)injector.getComponent("table");
     }
 
     @Test

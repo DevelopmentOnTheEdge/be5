@@ -28,7 +28,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
 
     @Before
     public void init(){
-        component = injector.getComponent("languageSelector");
+        component = (Component)injector.getComponent("languageSelector");
     }
 
     private LanguageSelector.LanguageSelectorResponse languageSelectorResponse =

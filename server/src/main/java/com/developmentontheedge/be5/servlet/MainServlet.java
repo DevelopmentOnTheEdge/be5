@@ -183,7 +183,7 @@ public class MainServlet implements Filter
         try
         {
             runRequestPreprocessors(componentId, req, res);
-            Component component = getInjector().getComponent(componentId);
+            Component component = (Component)getInjector().getComponent(componentId);
             component.generate( req, res, getInjector() );
         }
         catch ( Be5Exception e )

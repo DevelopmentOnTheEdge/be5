@@ -28,7 +28,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
 
     @Before
     public void init(){
-        component = injector.getComponent("static");
+        component = (Component)injector.getComponent("static");
     }
 
     @Test

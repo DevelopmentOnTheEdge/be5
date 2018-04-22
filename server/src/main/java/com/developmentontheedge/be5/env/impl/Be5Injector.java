@@ -11,11 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.env.Binder;
@@ -33,7 +31,7 @@ public class Be5Injector implements Injector
 {
     private static final Logger log = Logger.getLogger(Be5Injector.class.getName());
 
-    private Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
+    private Map<String, Class<?>> loadedClasses = new HashMap<>();
     private final Map<Class<?>, Class<?>> bindings = new HashMap<>();
 
     private final List<Class<?>> requestPreprocessors = new ArrayList<>();
@@ -83,9 +81,6 @@ public class Be5Injector implements Injector
     {
         return get(serviceClass, new ArrayList<>());
     }
-
-    //todo EgissoLogin egissoLogin = injector.get(EgissoLogin.class); - load component by class?
-    //need refactoring add Module as in Guice with methods: bind()
 
     private <T> T get(Class<T> serviceClass, List<Class<?>> stack)
     {
@@ -205,12 +200,12 @@ public class Be5Injector implements Injector
      * Returns a created component.
      */
     @Override
-    public Component getComponent(String componentId)
+    public Object getComponent(String componentId)
     {
         try
         {
             Class<?> klass = getComponentClass(componentId);
-            Component component = (Component) klass.newInstance();
+            Object component = klass.newInstance();
             configureIfConfigurable(component, configurations);
             injectAnnotatedFields(component);
             return component;
@@ -237,13 +232,9 @@ public class Be5Injector implements Injector
 
     private Class<?> getComponentClass(String componentId)
     {
-        if(!hasComponent(componentId)){
-            if("login".equals(componentId) || "logout".equals(componentId)){
-                throw Be5Exception.unknownComponent("Component '"+componentId+"' is not specified in 'context.yaml'. " +
-                        "You can specify the default implementation, for example: be5/modules/core/src/test/resources/context.yaml.");
-            }else{
-                throw Be5Exception.unknownComponent( componentId );
-            }
+        if(!hasComponent(componentId))
+        {
+            throw Be5Exception.unknownComponent( componentId );
         }
         return loadedClasses.get(componentId);
     }
