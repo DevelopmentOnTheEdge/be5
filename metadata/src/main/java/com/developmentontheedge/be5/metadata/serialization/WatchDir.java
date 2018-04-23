@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 
 import com.developmentontheedge.be5.metadata.model.Project;
 
-import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.be5.metadata.util.ProcessController;
 import one.util.streamex.StreamEx;
 
 public class WatchDir
 {
+    private static final Logger log = Logger.getLogger(WatchDir.class.getName());
+
     private final WatchService watcher;
     private final Map<WatchKey,Path> keys;
     private final boolean recursive;
@@ -141,7 +141,7 @@ public class WatchDir
                 registerAll(projectFileSystem);
             }
         }
-        System.out.println("Watch project: " + watchProject.stream().collect(Collectors.joining(", ")));
+        log.info("Watch projects: " + watchProject.stream().collect(Collectors.joining(", ")));
     }
     
     public WatchDir onModify(Consumer<Path> onModify) {

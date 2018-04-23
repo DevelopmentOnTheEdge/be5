@@ -42,7 +42,6 @@ import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
 
-import one.util.streamex.IntStreamEx;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -438,7 +437,7 @@ public class AppSync extends Be5Mojo<AppSync>
             }
             else
             {
-                System.out.println("Skip table with schema: " + newScheme.getEntityName());
+                getLog().info("Skip table with schema: " + newScheme.getEntityName());
             }
         }
         
@@ -451,7 +450,7 @@ public class AppSync extends Be5Mojo<AppSync>
 //
 //                if( !oldScheme.withoutDbScheme() )
 //                {
-//                    System.out.println("Skip table with schema: " + oldScheme.getEntityName());
+//                    getLog().info("Skip table with schema: " + oldScheme.getEntityName());
 //                    continue;
 //                }
 //
