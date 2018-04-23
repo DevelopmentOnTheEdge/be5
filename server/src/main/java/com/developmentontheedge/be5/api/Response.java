@@ -43,6 +43,10 @@ public interface Response
 
     void sendAsRawJson(Object value);
 
+    void sendError(Object value, int status);
+
+    void setStatus(int status);
+
     void sendJson(String json);
 
     void sendHtml(String json);

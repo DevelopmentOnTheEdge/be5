@@ -105,6 +105,19 @@ public class ResponseImpl implements Response
     }
 
     @Override
+    public void sendError(Object value, int status)
+    {
+        setStatus(status);
+        sendJson(jsonb.toJson(value));
+    }
+
+    @Override
+    public void setStatus(int status)
+    {
+        response.setStatus(status);
+    }
+
+    @Override
     public void sendJson(String json)
     {
         // The MIME media type for JSON text is 'application/json'.
