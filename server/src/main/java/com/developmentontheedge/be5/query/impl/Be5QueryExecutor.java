@@ -62,6 +62,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
 
@@ -292,6 +293,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void resolveTypeOfRefColumn(AstStart ast)
     {
+//todo ignore subquery
+//        Map<String, String> aliasToTable = ast.tree()
+//                .select(AstTableRef.class)
+//                .filter(t -> t.getAlias() != null)
+//                .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable));
+
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
             if(tag.getRefColumn() != null)
             {
@@ -311,7 +318,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                 {
                     return;
                 }
-                Entity entity = meta.getEntity(table);
+                Entity entity;
+
+//                if(aliasToTable.get(table) != null)
+//                    entity = meta.getEntity(aliasToTable.get(table));
+//                else
+
+                entity = meta.getEntity(table);
+
                 if(entity != null)
                 {
                     tag.setType(meta.getColumnType(entity, column).getName());

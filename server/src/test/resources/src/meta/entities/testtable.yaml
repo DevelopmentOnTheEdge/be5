@@ -91,6 +91,15 @@ testtable:
         FROM testtable
         WHERE 1=1
           AND name = <parameter:name refColumn="testtable.name" />
+  - TestResolveRefColumnByAlias:
+      type: 1D_unknown
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        SELECT *
+        FROM testtable t
+        WHERE 1=1
+          AND name = <parameter:name refColumn="t.name" />
   - TestResolveRefColumnIllegalAE:
       type: 1D_unknown
       invisible: true

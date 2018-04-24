@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -96,6 +97,18 @@ public class QueryServiceTest extends Be5ProjectDBTest
                 "FROM testtable\n" +
                 "WHERE name = 'test' LIMIT 2147483647", queryService.
                     build(query, Collections.singletonMap("name", "test")).getFinalSql());
+    }
+
+    @Test
+    @Ignore
+    public void testTestResolveRefColumnByAlias()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnByAlias");
+
+        assertEquals("SELECT *\n" +
+                "FROM testtable t\n" +
+                "WHERE name = 'test' LIMIT 2147483647", queryService.
+                build(query, Collections.singletonMap("name", "test")).getFinalSql());
     }
 
     @Test(expected = RuntimeException.class)
