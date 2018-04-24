@@ -29,8 +29,9 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.components.TemplateProcessor;
-import com.developmentontheedge.be5.util.Be5;
+import com.developmentontheedge.be5.env.impl.Be5Injector;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
@@ -57,8 +58,9 @@ public class MainServlet implements Filter
 
         boolean mode = MainServlet.class.getClassLoader().getResource("dev.yaml") != null;
 
-        injector = Be5.createInjector(mode ? Stage.DEVELOPMENT : Stage.PRODUCTION, new YamlBinder());
+        injector = new Be5Injector(mode ? Stage.DEVELOPMENT : Stage.PRODUCTION, new YamlBinder());
 
+        injector.get(LogConfigurator.class);
         injector.get(DatabaseService.class);
     }
 

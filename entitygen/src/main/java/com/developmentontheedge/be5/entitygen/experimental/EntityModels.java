@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.entitygen.experimental;
 
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.entitygen.Utils;
-import com.developmentontheedge.be5.util.Be5;
+import com.developmentontheedge.be5.env.impl.Be5Injector;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
@@ -56,7 +56,7 @@ public class EntityModels
         else
         {
             log.info("File '"+file.toString()+"' not found, generate...");
-            injector = Be5.createInjector(Stage.TEST, new YamlBinder());
+            injector = new Be5Injector(Stage.TEST, new YamlBinder());
 
             Utils.createFile(generatedSourcesPath,"","package-info.java", cfg.getTemplate("root.ftl"), Collections.emptyMap());
 

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.entitygen;
 
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.util.Be5;
+import com.developmentontheedge.be5.env.impl.Be5Injector;
 import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
@@ -52,7 +52,7 @@ public class GdslGenegator
         }
 
         log.info("File '"+file.toString()+"' not found, generate...");
-        injector = Be5.createInjector(Stage.TEST, new YamlBinder());
+        injector = new Be5Injector(Stage.TEST, new YamlBinder());
 
         createService(generatedSourcesPath, packageName, serviceClassName, cfg);
 
