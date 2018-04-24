@@ -36,7 +36,7 @@ public class Table implements Component
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
 
-        Map<String, String> parameters = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
+        Map<String, Object> parameters = req.getValuesFromJson(RestApiConstants.VALUES);
 
         HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
 

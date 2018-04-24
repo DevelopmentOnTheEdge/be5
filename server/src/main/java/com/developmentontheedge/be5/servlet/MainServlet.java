@@ -121,7 +121,7 @@ public class MainServlet implements Filter
                 templateComponentID = "defaultTemplateProcessor";
             }
 
-            RequestImpl req = new RequestImpl(request, requestUri, simplify(parameters));
+            RequestImpl req = new RequestImpl(request, requestUri, arrayToList(parameters));
             UserInfoHolder.setRequest(req);
             runTemplateProcessor(templateComponentID, req, res);
             return true;
@@ -138,7 +138,7 @@ public class MainServlet implements Filter
         String subRequestUri = Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
         String componentId = uriParts[ind + 1];
 
-        Request req = new RequestImpl(request, subRequestUri, simplify(parameters));
+        Request req = new RequestImpl(request, subRequestUri, arrayToList(parameters));
         UserInfoHolder.setRequest(req);
         runComponent(componentId, req, res);
         return true;
@@ -299,23 +299,23 @@ public class MainServlet implements Filter
     // misc
     //
 
-    /**
-     * Transforms a parameters from a multimap to a simple map,
-     * ignoring parameters with several values.
-     */
-    Map<String, String> simplify(Map<String, String[]> parameters)
+    Map<String, Object> arrayToList(Map<String, String[]> parameters)
     {
-        Map<String, String> simplified = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         for( Map.Entry<String, String[]> parameter : parameters.entrySet() )
         {
             if( parameter.getValue().length == 1 )
             {
-                simplified.put( parameter.getKey(), parameter.getValue()[0] );
+                map.put( parameter.getKey(), parameter.getValue()[0] );
+            }
+            else
+            {
+                map.put( parameter.getKey(), Arrays.asList(parameter.getValue()) );
             }
         }
 
-        return simplified;
+        return map;
     }
 
 }

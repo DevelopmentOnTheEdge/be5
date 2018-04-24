@@ -143,7 +143,7 @@ public class MainServletTest extends Be5ProjectTest
         in.put("testP", new String[]{"p1", "p2"});
         in.put("testZ", new String[]{"z1"});
 
-        Map<String, String> out = new MainServlet().simplify(in);
+        Map<String, Object> out = new MainServlet().arrayToList(in);
         assertEquals("z1", out.get("testZ"));
     }
 

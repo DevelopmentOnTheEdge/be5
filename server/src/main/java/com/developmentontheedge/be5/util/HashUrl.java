@@ -44,7 +44,7 @@ public class HashUrl {
 		return new HashUrl(components, StreamEx.of( keyValues ).append( key, value ).toArray( String[]::new ));
 	}
 	
-	public HashUrl named(Map<String, String> args) {
+	public HashUrl named(Map<String, ?> args) {
 	    if(args == null)
 	        return this;
 	    return new HashUrl(components, EntryStream.of(args).flatMap( entry -> Stream.of(entry.getKey(), entry.getValue()) ).

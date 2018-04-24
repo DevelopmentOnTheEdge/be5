@@ -12,9 +12,9 @@ public class OperationContext
 
     public final String[] records;
     public final String queryName;
-    private final Map<String, String> operationParams;
+    private final Map<String, Object> operationParams;
 
-    public OperationContext(String[] records, String queryName, Map<String, String> operationParams)
+    public OperationContext(String[] records, String queryName, Map<String, Object> operationParams)
     {
         Objects.requireNonNull(records);
         Objects.requireNonNull(operationParams);
@@ -41,7 +41,7 @@ public class OperationContext
      *
      * @return map of parameters
      */
-    public Map<String, String> getOperationParams()
+    public Map<String, Object> getOperationParams()
     {
         return operationParams;
     }

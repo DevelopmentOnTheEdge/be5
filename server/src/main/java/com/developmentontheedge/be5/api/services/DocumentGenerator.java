@@ -16,13 +16,13 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
-    TablePresentation getTablePresentation(Query query, Map<String, String> parameters);
+    TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
 
-    TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel);
+    TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel);
 
-    JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters);
+    JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters);
 
-    JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel);
+    JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel);
 
     /* Form */
 

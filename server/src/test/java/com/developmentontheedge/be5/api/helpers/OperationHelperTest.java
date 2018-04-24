@@ -78,7 +78,7 @@ public class OperationHelperTest extends Be5ProjectDBTest
     {
         String[][] strings = new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"},{"03", "Федеральный"}, {"04", "Региональный"} };
 
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        HashMap<String, Object> stringStringHashMap = new HashMap<>();
         stringStringHashMap.put("payable", null);
 
         String[][] tagsFromEnum = helper.getTagsFromCustomSelectionView("testTags", "With parameter",

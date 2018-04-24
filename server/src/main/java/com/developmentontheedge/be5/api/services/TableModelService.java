@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface TableModelService
 {
-    TableModel getTableModel(Query query, Map<String, String> parameters);
+    TableModel getTableModel(Query query, Map<String, ?> parameters);
 
-    TableModel.Builder builder(Query query, Map<String, String> parameters);
+    TableModel.Builder builder(Query query, Map<String, ?> parameters);
 }

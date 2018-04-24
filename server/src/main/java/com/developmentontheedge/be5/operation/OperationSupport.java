@@ -131,13 +131,13 @@ public abstract class OperationSupport implements Operation
     }
 
     @Override
-    public Map<String, String> getRedirectParams()
+    public Map<String, Object> getRedirectParams()
     {
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
-        for (Map.Entry<String, String> entry : context.getOperationParams().entrySet())
+        for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
         {
-            if(entry.getValue() != null)stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+            if(entry.getValue() != null)map.put(entry.getKey(), entry.getValue().toString());
         }
 
         for (Map.Entry<String, Object> entry : redirectParams.entrySet())
@@ -146,15 +146,15 @@ public abstract class OperationSupport implements Operation
             {
                 if(!entry.getValue().toString().isEmpty())
                 {
-                    stringStringHashMap.put(entry.getKey(), entry.getValue().toString());
+                    map.put(entry.getKey(), entry.getValue().toString());
                 }
                 else
                 {
-                    stringStringHashMap.remove(entry.getKey());
+                    map.remove(entry.getKey());
                 }
             }
         }
-        return stringStringHashMap;
+        return map;
     }
 
     /**

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface TableBuilder
 {
-    TableBuilder initialize(Query query, Map<String, String> parameters);
+    TableBuilder initialize(Query query, Map<String, Object> parameters);
 
     TableModel getTableModel();
 }

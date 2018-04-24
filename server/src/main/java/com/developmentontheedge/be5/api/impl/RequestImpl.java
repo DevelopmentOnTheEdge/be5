@@ -27,11 +27,11 @@ public class RequestImpl implements Request
 
     private final HttpServletRequest rawRequest;
     private final String requestUri;
-    private final Map<String, String> parameters;
+    private final Map<String, Object> parameters;
     private final String remoteAddr;
     private final String sessionId;
     
-    public RequestImpl(HttpServletRequest rawRequest, String requestUri, Map<String, String> parameters)
+    public RequestImpl(HttpServletRequest rawRequest, String requestUri, Map<String, Object> parameters)
     {
         this.rawRequest = rawRequest;
         this.requestUri = requestUri;
@@ -124,7 +124,7 @@ public class RequestImpl implements Request
     }
 
 	@Override
-    public Map<String, String> getParameters()
+    public Map<String, Object> getParameters()
     {
         return Collections.unmodifiableMap(parameters);
     }

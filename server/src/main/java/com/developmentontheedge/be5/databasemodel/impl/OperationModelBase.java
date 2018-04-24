@@ -28,7 +28,7 @@ public class OperationModelBase implements OperationModel
     private String operationName;
 
     private Map<String, ?> presetValues = Collections.emptyMap();
-    private Map<String, String> operationParams = Collections.emptyMap();
+    private Map<String, Object> operationParams = Collections.emptyMap();
 
     OperationModelBase( Meta meta, OperationExecutor operationExecutor )
     {
@@ -72,7 +72,7 @@ public class OperationModelBase implements OperationModel
     }
 
     @Override
-    public OperationModel setOperationParams( Map<String, String> operationParams )
+    public OperationModel setOperationParams( Map<String, Object> operationParams )
     {
         this.operationParams = operationParams;
         return this;

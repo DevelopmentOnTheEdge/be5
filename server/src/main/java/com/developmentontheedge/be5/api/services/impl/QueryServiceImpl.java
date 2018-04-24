@@ -48,6 +48,8 @@ public class QueryServiceImpl implements QueryService
 
     private List<String> getParameterList(Object parameter)
     {
+        if(parameter == null)return null;
+
         if(parameter.getClass() == String.class)
         {
             return Collections.singletonList((String) parameter);
