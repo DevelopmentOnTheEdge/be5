@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.api.validation;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.model.Base64File;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -208,12 +207,7 @@ public class Validator
             throw new IllegalArgumentException(msg + toStringProperty(property));
         }
 
-        if (type == Base64File.class)return value;
-
-        if (type == String.class)return value;
-
-        //todo проверить в be3
-        throw new IllegalArgumentException("Unknown type, Возможно тип был автоматически определён из массива(при MULTIPLE_SELECTION_LIST) - тогда вручную укажите тип этемента." + toStringProperty(property));
+        return value;
     }
 
     public void isError(Object parameters)
