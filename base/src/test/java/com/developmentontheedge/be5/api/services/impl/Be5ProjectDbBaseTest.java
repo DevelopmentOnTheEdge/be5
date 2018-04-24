@@ -11,11 +11,15 @@ import com.developmentontheedge.be5.metadata.util.JULLogger;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 
 public abstract class Be5ProjectDbBaseTest
 {
+    static {
+        LogManager.getLogManager().reset();
+    }
     private static final Injector injector = new Be5Injector(Stage.TEST, new YamlBinder());
 
     @Before
