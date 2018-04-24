@@ -31,7 +31,7 @@ public class FilterHelper
     }
 
     public <T extends DynamicPropertySet> T processFilterParams(T dps, Map<String, Object> presetValues,
-                                                                Map<String, String> operationParams)
+                                                                Map<String, Object> operationParams)
     {
         Map<String, Object> filterPresetValues = new HashMap<>(operationParams);
         filterPresetValues.putAll(presetValues);

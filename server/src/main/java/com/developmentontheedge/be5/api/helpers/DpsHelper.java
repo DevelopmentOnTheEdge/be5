@@ -80,9 +80,9 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
     {
-        addDp(dps, modelElements, parameters);
+        addDp(dps, modelElements, operationParams);
         return setValues(dps, resultSet);
     }
 
@@ -104,13 +104,14 @@ public class DpsHelper
 //        return setValues(dps, resultSet);
 //    }
 
-    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, String> parameters, Map<String, ? super Object> values)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, 
+                                                  Map<String, Object> operationParams, Map<String, ? super Object> values)
     {
-        addDpExcludeAutoIncrement(dps, modelElements, parameters);
+        addDpExcludeAutoIncrement(dps, modelElements, operationParams);
         return setValues(dps, values);
     }
 
-    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
     {
         List<String> excludedColumns = Collections.emptyList();
         if(meta.getColumn(getEntity(modelElements), getEntity(modelElements).getPrimaryKey()) != null &&
@@ -119,12 +120,12 @@ public class DpsHelper
             excludedColumns = Collections.singletonList(getEntity(modelElements).getPrimaryKey());
         }
 
-        return addDpExcludeColumns(dps, modelElements, excludedColumns, parameters);
+        return addDpExcludeColumns(dps, modelElements, excludedColumns, operationParams);
     }
 
-    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
     {
-        return addDpExcludeColumns(dps, modelElements, Collections.emptyList(), parameters);
+        return addDpExcludeColumns(dps, modelElements, Collections.emptyList(), operationParams);
     }
 
     public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, BeModelElement modelElements)
@@ -133,34 +134,35 @@ public class DpsHelper
     }
 
     public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements,
-                Collection<String> columnNames, Map<String, String> parameters, Map<String, ? super Object> presetValues)
+                Collection<String> columnNames, Map<String, Object> operationParams, Map<String, ? super Object> presetValues)
     {
-        addDpExcludeColumns(dps, modelElements, columnNames, parameters);
+        addDpExcludeColumns(dps, modelElements, columnNames, operationParams);
 
         setValues(dps, presetValues);
-        setOperationParams(dps, parameters);
+        setOperationParams(dps, operationParams);
 
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addDpExcludeColumns(T dps, BeModelElement modelElements, 
+                                                    Collection<String> columnNames, Map<String, Object> operationParams)
     {
         addDpsExcludedColumnsWithoutTags(dps, modelElements, columnNames);
 
-        addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()), parameters);
-        setOperationParams(dps, parameters);
+        addTags(dps, modelElements, dps.asMap().keySet().stream().filter(i -> !columnNames.contains(i)).collect(Collectors.toList()), operationParams);
+        setOperationParams(dps, operationParams);
 
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, Object> operationParams)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
         for(String propertyName: columnNames)
         {
             DynamicProperty property = dps.getProperty(propertyName);
             ColumnDef columnDef = columns.get(property.getName());
-            if(columnDef != null)addTags(property, columnDef, parameters);
+            if(columnDef != null)addTags(property, columnDef, operationParams);
         }
         return dps;
     }
@@ -188,28 +190,29 @@ public class DpsHelper
     }
 
     public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames,
-                                            Map<String, String> parameters, Map<String, ? super Object> presetValues)
+                                            Map<String, Object> operationParams, Map<String, ? super Object> presetValues)
     {
-        addDpForColumns(dps, modelElements, columnNames, parameters);
+        addDpForColumns(dps, modelElements, columnNames, operationParams);
 
         setValues(dps, presetValues);
-        setOperationParams(dps, parameters);
+        setOperationParams(dps, operationParams);
 
         return dps;
     }
 
     public <T extends DynamicPropertySet> T addDpForColumns(T dps, BeModelElement modelElements, Collection<String> columnNames,
-                                                            Map<String, String> parameters)
+                                                            Map<String, Object> operationParams)
     {
         addDpForColumnsWithoutTags(dps, modelElements, columnNames);
 
-        addTags(dps, modelElements, columnNames, parameters);
-        setOperationParams(dps, parameters);
+        addTags(dps, modelElements, columnNames, operationParams);
+        setOperationParams(dps, operationParams);
 
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements, Collection<String> propertyNames, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements, 
+                                                     Collection<String> propertyNames, Map<String, Object> operationParams)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
 
@@ -217,7 +220,7 @@ public class DpsHelper
         {
             ColumnDef columnDef = columns.get(propertyName);
             DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(columnDef, modelElements);
-            addTags(dynamicProperty, columnDef, parameters);
+            addTags(dynamicProperty, columnDef, operationParams);
 
             dps.add(dynamicProperty);
         }
@@ -253,7 +256,8 @@ public class DpsHelper
         return dps;
     }
 
-    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, BeModelElement modelElements, Query query, Map<String, String> parameters)
+    public <T extends DynamicPropertySet> T addParamsFromQuery(T dps, BeModelElement modelElements, 
+                                                               Query query, Map<String, Object> operationParams)
     {
         AstStart ast;
         try
@@ -268,7 +272,7 @@ public class DpsHelper
 
         List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
 
-        addDpForColumns(dps, modelElements, usedParams, parameters);
+        addDpForColumns(dps, modelElements, usedParams, operationParams);
 
         return dps;
     }
@@ -388,7 +392,7 @@ public class DpsHelper
         }
     }
 
-    public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, String> parameters)
+    public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
         if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
@@ -401,7 +405,7 @@ public class DpsHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(columnDef.getTableTo(),
-                            ParseRequestUtils.getOperationParamsWithoutFilter(parameters)));
+                            ParseRequestUtils.getOperationParamsWithoutFilter(operationParams)));
         }
     }
 
@@ -821,9 +825,9 @@ public class DpsHelper
         return values;
     }
 
-    public Map<String, String> getAsMapStringValues(DynamicPropertySet dps)
+    public Map<String, Object> getAsMapStringValues(DynamicPropertySet dps)
     {
-        Map<String, String> values = new HashMap<>();
+        Map<String, Object> values = new HashMap<>();
         dps.forEach(p -> {
             if(p.getValue() != null && !p.getBooleanAttribute(BeanInfoConstants.LABEL_FIELD))
             {
@@ -848,7 +852,7 @@ public class DpsHelper
         }
     }
 
-    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, String> operationParams)
+    public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
     {
         Map<String, ?> params = ParseRequestUtils.getOperationParamsWithoutFilter(operationParams);
 

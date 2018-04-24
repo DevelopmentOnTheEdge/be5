@@ -174,7 +174,7 @@ public class QueryBuilder implements Component
 
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
 
-        Map<String, String> parameters = req.getValuesFromJsonAsStrings(RestApiConstants.VALUES);
+        Map<String, Object> parameters = req.getValuesFromJson(RestApiConstants.VALUES);
 
         Entity entity = new Entity( entityName, injector.get(ProjectProvider.class).getProject().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );

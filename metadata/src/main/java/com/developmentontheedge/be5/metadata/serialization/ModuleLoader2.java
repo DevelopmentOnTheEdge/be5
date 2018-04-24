@@ -31,6 +31,8 @@ import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import org.yaml.snakeyaml.Yaml;
 
+import static java.util.stream.Collectors.joining;
+
 public class ModuleLoader2
 {
     private static final Logger log = Logger.getLogger(ModuleLoader2.class.getName());
@@ -301,27 +303,22 @@ public class ModuleLoader2
         StringBuilder sb = new StringBuilder();
         if(project.isModuleProject())
         {
-            sb.append(JULLogger.infoBlock("Loaded module:"));
+            sb.append("Module      : ");
         }
         else
         {
-            sb.append(JULLogger.infoBlock("Loaded project:"));
+            sb.append("Project     : ");
         }
 
-        sb.append("\nName: ").append(project.getName());
+        sb.append(project.getName());
 
         if(project.getModules().getSize()>0)
         {
-            sb.append("\nModules: ");
-            for (Module module : project.getModules())
-            {
-                sb.append("\n - "); sb.append(module.getName());
-            }
+            sb.append("\nModules     : ").append(project.getModules().getNameList().stream().collect(joining(", ")));
         }
         sb.append("\nLoading time: ")
                 .append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
-        sb.append("\n");
-        return sb.toString();
+        return JULLogger.infoBlock(sb.toString());
     }
 
     /**

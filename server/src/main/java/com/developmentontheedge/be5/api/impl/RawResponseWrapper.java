@@ -35,6 +35,11 @@ public class RawResponseWrapper {
         contentTypeIsSet = true;
     }
 
+    public void setStatus(int status)
+    {
+        rawResponse.setStatus(status);
+    }
+
 //    void setCharacterEncoding(Charset charset)
 //    {
 //        checkNotNull(charset);

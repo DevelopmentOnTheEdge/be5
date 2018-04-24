@@ -28,13 +28,13 @@ public class TableModel
     public static class Builder
     {
         private final Query query;
-        private final Map<String, String> parameters;
+        private final Map<String, Object> parameters;
         private final QueryService queryService;
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
-        private Builder(Query query, Map<String, String> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
+        private Builder(Query query, Map<String, Object> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
         {
             this.query = query;
             this.parameters = parameters;
@@ -321,7 +321,7 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, String> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
+    public static Builder from(Query query, Map<String, Object> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
     {
         return new Builder(query, parameters, queryService, userAwareMeta);
     }

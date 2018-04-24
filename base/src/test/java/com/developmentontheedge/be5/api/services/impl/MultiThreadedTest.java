@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertEquals;
 
 
-public class MultiThreadedTest extends Be5ProjectDBTest
+public class MultiThreadedTest extends Be5ProjectDbBaseTest
 {
     @Inject private SqlService db;
 

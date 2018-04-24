@@ -10,6 +10,8 @@ import com.developmentontheedge.be5.metadata.model.Query;
 
 import javax.inject.Provider;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -30,9 +32,12 @@ public class QueryServiceImpl implements QueryService
     }
 
     @Override
-    public Be5QueryExecutor build(Query query, Map<String, String> parameters)
+    public Be5QueryExecutor build(Query query, Map<String, ?> parameters)
     {
-        return new Be5QueryExecutor(query, parameters, databaseService, database, meta, db);
+        Map<String, List<String>> listParams = new HashMap<>();
+        parameters.forEach((k,v) -> listParams.put(k, getParameterList(v)));
+
+        return new Be5QueryExecutor(query, listParams, databaseService, database, meta, db);
     }
 
     @Override
@@ -40,4 +45,19 @@ public class QueryServiceImpl implements QueryService
     {
         return build(query, Collections.emptyMap());
     }
+
+    private List<String> getParameterList(Object parameter)
+    {
+        if(parameter == null)return null;
+
+        if(parameter.getClass() == String.class)
+        {
+            return Collections.singletonList((String) parameter);
+        }
+        else
+        {
+            return (List<String>) parameter;
+        }
+    }
+
 }

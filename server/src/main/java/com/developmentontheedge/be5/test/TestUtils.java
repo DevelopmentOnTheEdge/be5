@@ -103,12 +103,12 @@ public abstract class TestUtils
         return getSpyMockRequest(requestUri, new HashMap<>(), new HashMap<>());
     }
 
-    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters)
+    protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters)
     {
         return getSpyMockRequest(requestUri, parameters, new HashMap<>());
     }
 
-    protected Request getSpyMockRequest(String requestUri, Map<String, String> parameters, Map<String, Object> sessionValues)
+    protected Request getSpyMockRequest(String requestUri, Map<String, Object> parameters, Map<String, Object> sessionValues)
     {
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));

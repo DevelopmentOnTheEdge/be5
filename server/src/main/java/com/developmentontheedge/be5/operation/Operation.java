@@ -64,7 +64,7 @@ public interface Operation extends Serializable
 
     void addRedirectParam(String name, Object value);
 
-    Map<String, String> getRedirectParams();
+    Map<String, Object> getRedirectParams();
 
     //todo Map<String, String> validate( Object parameters );
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface QueryService
 {
-    Be5QueryExecutor build(Query query, Map<String, String> parameters);
+    Be5QueryExecutor build(Query query, Map<String, ?> parameters);
 
     Be5QueryExecutor build(Query query);
 }

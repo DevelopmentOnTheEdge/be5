@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -59,11 +58,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
 
@@ -119,20 +118,24 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getParameter(String name)
         {
-            return parameters.get(name);
+            if( parameters.get( name ) == null )
+                return null;
+            if( parameters.get( name ).size() != 1 )
+                throw new IllegalStateException( name+ " contains more than one value" );
+            else
+                return parameters.get( name ).get( 0 );
         }
 
         @Override
         public List<String> getListParameter(String name)
         {
-            String value = parameters.get(name);
-            return value == null ? null : Collections.singletonList(value);
+            return parameters.get(name);
         }
 
         @Override
         public Map<String, String> asMap()
         {
-            return parameters;
+            return StreamEx.ofKeys( parameters ).toMap( this::getParameter );
         }
 
         @Override
@@ -157,26 +160,29 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final Meta meta;
     private final SqlService db;
 
-    private final Map<String, String> parameters;
+    private final Map<String, List<String>> parameters;
 
     private final Context context;
+    private ExecutorQueryContext executorQueryContext;
     private ContextApplier contextApplier;
     private final ParserContext parserContext;
     private Set<String> subQueryKeys;
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, String> parameters, DatabaseService databaseService,
+    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, DatabaseService databaseService,
                             Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
         super(query);
+
+        this.parameters = parameters;
         this.databaseService = databaseService;
         this.database = database;
         this.meta = meta;
         this.db = db;
 
-        this.parameters = new HashMap<>( Objects.requireNonNull( parameters ) );
-        this.contextApplier = new ContextApplier( new ExecutorQueryContext() );
+        this.executorQueryContext = new ExecutorQueryContext();
+        this.contextApplier = new ContextApplier( executorQueryContext );
         this.context = new Context( databaseService.getRdbms().getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
@@ -287,6 +293,12 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void resolveTypeOfRefColumn(AstStart ast)
     {
+//todo ignore subquery
+//        Map<String, String> aliasToTable = ast.tree()
+//                .select(AstTableRef.class)
+//                .filter(t -> t.getAlias() != null)
+//                .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable));
+
         ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
             if(tag.getRefColumn() != null)
             {
@@ -306,7 +318,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                 {
                     return;
                 }
-                Entity entity = meta.getEntity(table);
+                Entity entity;
+
+//                if(aliasToTable.get(table) != null)
+//                    entity = meta.getEntity(aliasToTable.get(table));
+//                else
+
+                entity = meta.getEntity(table);
+
                 if(entity != null)
                 {
                     tag.setType(meta.getColumnType(entity, column).getName());
@@ -407,7 +426,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void applyCategory(DebugQueryLogger dql, AstStart ast)
     {
-        String categoryString = parameters.get( CATEGORY_ID_PARAM );
+        String categoryString = executorQueryContext.getParameter(CATEGORY_ID_PARAM);
         if(categoryString != null)
         {
             long categoryId;

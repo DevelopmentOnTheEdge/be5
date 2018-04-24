@@ -12,12 +12,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
 @Mojo( name = "generate-context")
 public class GenerateContext extends Be5Mojo<GenerateContext>
 {
+    private static final Logger log = Logger.getLogger(GenerateContext.class.getName());
+
     @Parameter(property = "GENERATE_CONTEXT_PATH")
     private String generateContextPath;
 
@@ -31,7 +34,7 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
     {
         if(skipGenerateContextPath)
         {
-            System.out.println("Generate context.xml skipped");
+            log.info("Generate context.xml skipped");
             return;
         }
 
@@ -43,7 +46,7 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
 
         if(file.exists() && !file.isDirectory())
         {
-            System.out.println("Generate context.xml skipped, file exists: " + generateFilePath);
+            log.info("Generate context.xml skipped, file exists: " + generateFilePath);
             return;
         }
 

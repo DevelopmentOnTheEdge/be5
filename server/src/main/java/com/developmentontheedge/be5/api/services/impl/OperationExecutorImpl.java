@@ -265,7 +265,7 @@ public class OperationExecutorImpl implements OperationExecutor
 
     @Override
     public Operation create(String entityName, String queryName, String operationName,
-                            String[] selectedRows, Map<String, String> operationParams)
+                            String[] selectedRows, Map<String, Object> operationParams)
     {
         OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
 

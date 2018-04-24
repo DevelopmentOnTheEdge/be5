@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.env.Injector;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -14,9 +13,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class GdslGenegator
 {
+    private static final Logger log = Logger.getLogger(GdslGenegator.class.getName());
+
     private Injector injector;
     private int entityCount = 0;
 
@@ -45,18 +47,16 @@ public class GdslGenegator
 
         if(file.exists() && !file.isDirectory())
         {
-            System.out.println("Generate skipped, file exists: " + packageName + "." + serviceClassName);
+            log.info("Generate skipped, file exists: " + packageName + "." + serviceClassName);
             return;
         }
 
-        System.out.println("File '"+file.toString()+"' not found, generate...");
+        log.info("File '"+file.toString()+"' not found, generate...");
         injector = Be5.createInjector(Stage.TEST, new YamlBinder());
 
         createService(generatedSourcesPath, packageName, serviceClassName, cfg);
 
-        System.out.println("------" + JULLogger.infoBlock(
-                "Generate successful: " + entityCount + " entities added.\n" +
-                        packageName + serviceClassName));
+        log.info("Generate successful: " + entityCount + " entities added.\n" + packageName + serviceClassName);
     }
 
     private void createService(String generatedSourcesPath, String packageName,

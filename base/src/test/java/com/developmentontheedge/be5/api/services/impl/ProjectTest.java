@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -11,9 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-public class ProjectTest extends Be5ProjectDBTest
+public class ProjectTest
 {
-    @Inject private ProjectProvider projectProvider;
+    private static ProjectProvider projectProvider = new ProjectProviderImpl(Stage.TEST);
 
     @Test
     public void testGetQuery()

@@ -145,12 +145,12 @@ public class OperationResult
         return redirectToOperation(entityName, queryName, operationName, Collections.emptyMap());
     }
 
-    public static OperationResult redirectToTable(String entityName, String queryName, Map<String, String> params)
+    public static OperationResult redirectToTable(String entityName, String queryName, Map<String, Object> params)
     {
         return redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params));
     }
 
-    public static OperationResult redirectToTable(Query query, Map<String, String> params)
+    public static OperationResult redirectToTable(Query query, Map<String, Object> params)
     {
         return redirectToTable(query.getEntity().getName(), query.getName(), params);
     }

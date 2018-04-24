@@ -38,32 +38,32 @@ public class TableModelServiceImpl implements TableModelService
     }
 
     @Override
-    public TableModel getTableModel(Query query, Map<String, String> parameters)
+    public TableModel getTableModel(Query query, Map<String, ?> parameters)
     {
         switch (query.getType())
         {
             case D1:
             case D1_UNKNOWN:
-                return getSqlTableModel(query, parameters);
+                return getSqlTableModel(query, (Map<String, Object>) parameters);
             case GROOVY:
-                return getGroovyTableModel(query, parameters);
+                return getGroovyTableModel(query, (Map<String, Object>) parameters);
             default:
                 throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
     }
 
     @Override
-    public TableModel.Builder builder(Query query, Map<String, String> parameters)
+    public TableModel.Builder builder(Query query, Map<String, ?> parameters)
     {
-        return TableModel.from(query, parameters, queryService, userAwareMeta);
+        return TableModel.from(query, (Map<String, Object>) parameters, queryService, userAwareMeta);
     }
 
-    private TableModel getSqlTableModel(Query query, Map<String, String> parameters)
+    private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
     {
-        int orderColumn = Integer.parseInt(parameters.getOrDefault(ORDER_COLUMN, "-1"));
-        String orderDir = parameters.getOrDefault(ORDER_DIR, "asc");
-        int offset      = Integer.parseInt(parameters.getOrDefault(OFFSET, "0"));
-        int limit = Integer.parseInt(parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
+        int orderColumn = Integer.parseInt((String) parameters.getOrDefault(ORDER_COLUMN, "-1"));
+        String orderDir = (String) parameters.getOrDefault(ORDER_DIR, "asc");
+        int offset      = Integer.parseInt((String) parameters.getOrDefault(OFFSET, "0"));
+        int limit = Integer.parseInt((String) parameters.getOrDefault(LIMIT, Integer.toString(Integer.MAX_VALUE)));
 
         parameters.remove(ORDER_COLUMN);
         parameters.remove(ORDER_DIR);
@@ -87,7 +87,7 @@ public class TableModelServiceImpl implements TableModelService
                 .build();
     }
 
-    private TableModel getGroovyTableModel(Query query, Map<String, String> parameters)
+    private TableModel getGroovyTableModel(Query query, Map<String, Object> parameters)
     {
         try
         {

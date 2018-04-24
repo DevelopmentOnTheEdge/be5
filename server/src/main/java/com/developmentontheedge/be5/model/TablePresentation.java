@@ -20,7 +20,7 @@ public class TablePresentation
     private final String orderDir;
     private final int length;
 
-    private final Map<String, String> parameters;
+    private final Map<String, Object> parameters;
     private final Long totalNumberOfRows;
     private final boolean hasAggregate;
     private final Object layout;
@@ -40,7 +40,7 @@ public class TablePresentation
             String orderDir,
             int offset,
             int length,
-            Map<String, String> parameters,
+            Map<String, Object> parameters,
             Long totalNumberOfRows,
             boolean hasAggregate,
             Object layout, List<Category> categoryNavigation)
@@ -113,7 +113,7 @@ public class TablePresentation
         return length;
     }
 
-    public Map<String, String> getParameters()
+    public Map<String, Object> getParameters()
     {
         return parameters;
     }

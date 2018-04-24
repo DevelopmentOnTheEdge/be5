@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
@@ -9,15 +8,18 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
 
-import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ProjectProviderImpl implements ProjectProvider
 {
+    private static final Logger log = Logger.getLogger(ProjectProviderImpl.class.getName());
+
     private Project project;
     private Map<String, Project> initModulesMap;
     private List<Runnable> callOnReload = new ArrayList<>();
@@ -27,34 +29,29 @@ public class ProjectProviderImpl implements ProjectProvider
     private volatile boolean dirty = false;
 
     private final Stage stage;
-    private final Provider<DatabaseService> databaseServiceProvider;
 
-    public ProjectProviderImpl(Stage stage, Provider<DatabaseService> databaseServiceProvider)
+    public ProjectProviderImpl(Stage stage)
     {
         this.stage = stage;
-        this.databaseServiceProvider = databaseServiceProvider;
     }
 
+    @Override
     public void addToReload(Runnable supplier)
     {
         callOnReload.add(supplier);
     }
 
     @Override
-    synchronized public Project getProject()
+    public synchronized Project getProject()
     {
     	if(dirty || project == null)
     	{
     	    Project oldProject = project;
 			project = loadProject();
 
-            //String path = new File(".").getCanonicalPath();
-			//CopyGroovy.copyFolder();
-
             if(oldProject != null)
             {
                 callOnReload.forEach(Runnable::run);
-                updateDatabaseSystem();
             }
         }
 
@@ -68,17 +65,20 @@ public class ProjectProviderImpl implements ProjectProvider
             if(watcher != null)watcher.stop();
             Project newProject = null;
 
-            try{
+            try
+            {
                 newProject = ModuleLoader2.findAndLoadProjectWithModules();
-            }catch (RuntimeException e){
-                System.out.println("Can't load project.\n" + e.toString());
-                if(project == null){
-                    e.printStackTrace();
+            }
+            catch (RuntimeException e)
+            {
+                log.log(Level.SEVERE, "Can't load project.\n", e);
+
+                if(project == null)
+                {
                     System.exit(0);
                 }
             }
 
-            //todo move to ModuleLoader2 - find dev.yaml only in current project,
             if (stage == Stage.DEVELOPMENT)
             {
                 if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
@@ -104,11 +104,6 @@ public class ProjectProviderImpl implements ProjectProvider
     {
         this.dirty = true;
         getProject();
-    }
-
-    private void updateDatabaseSystem()
-    {
-        project.setDatabaseSystem(databaseServiceProvider.get().getRdbms());
     }
 
 }

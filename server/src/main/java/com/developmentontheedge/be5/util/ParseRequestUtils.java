@@ -68,6 +68,7 @@ public class ParseRequestUtils
                     arrValues[i] = value.get(i).getAsString();
                 }
 
+                //todo List?
                 fieldValues.put(name, arrValues);
             }
             else if(entry.getValue() instanceof JsonObject)
@@ -146,7 +147,7 @@ public class ParseRequestUtils
         }
     }
 
-    public static Map<String, String> getOperationParamsWithoutFilter(Map<String, String> operationParams)
+    public static Map<String, Object> getOperationParamsWithoutFilter(Map<String, Object> operationParams)
     {
         if (!operationParams.containsKey(SEARCH_PARAM))
         {
@@ -158,7 +159,7 @@ public class ParseRequestUtils
             return Collections.emptyMap();
         }
 
-        List<String> notFilterParams = Arrays.asList((operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
+        List<String> notFilterParams = Arrays.asList(((String)operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
 
         return operationParams.entrySet()
                 .stream()

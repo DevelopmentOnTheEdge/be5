@@ -20,7 +20,6 @@ import com.github.benmanes.caffeine.cache.Cache;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,7 +164,7 @@ public class OperationHelper
         return values;
     }
 //
-//    public Map<String, String> getTagsMapFromQuery( Map<String, String> parameters, String query, Object... params )
+//    public Map<String, String> getTagsMapFromQuery( Map<String, Object> parameters, String query, Object... params )
 //    {
 //        //return getTagsListFromQuery( Collections.emptyMap(), query, params );
 //        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
@@ -178,22 +177,15 @@ public class OperationHelper
     private String[][] getTagsFromCustomSelectionViewExecute(Query query, Map<String, ?> parameters)
     {
         String entityName = query.getEntity().getName();
-        //todo refactoring Be5QueryExecutor,
-        Map<String, String> stringStringMap = new HashMap<>();
-        //parameters.forEach((key, value) -> stringStringMap.put(key, value.toString()));
-        for( Map.Entry<String, ?> entry : parameters.entrySet())
-        {
-            if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
-        }
 
         TableModel tableModel;
         if(query.getType() == QueryType.GROOVY)
         {
-            tableModel = tableModelService.getTableModel(query, stringStringMap);
+            tableModel = tableModelService.getTableModel(query, parameters);
         }
         else
         {
-            tableModel = tableModelService.builder(query, stringStringMap)
+            tableModel = tableModelService.builder(query, parameters)
                 .limit(Integer.MAX_VALUE)
                 .selectable(false)
                 .build();
@@ -542,38 +534,32 @@ public class OperationHelper
         return db.selectList(sql, DpsRecordAdapter::createDps, params);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, ?> parameters )
+    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, Object> parameters )
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, ?> parameters)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, Object> parameters)
     {
         return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, Object> parameters)
     {
-        //todo refactoring Be5QueryExecutor,
-        Map<String, String> stringStringMap = new HashMap<>();
-        for( Map.Entry<String, ?> entry : parameters.entrySet())
-        {
-            if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
-        }
-        return queryService.build(query, stringStringMap).execute();
+        return queryService.build(query, parameters).execute();
     }
 
-    public QRec readOneRecord(String sql, Map<String, ?> parameters)
+    public QRec readOneRecord(String sql, Map<String, Object> parameters)
     {
         return readOneRecord(meta.createQueryFromSql(sql), parameters);
     }
 
-    public QRec readOneRecord(String tableName, String queryName, Map<String, ?> parameters)
+    public QRec readOneRecord(String tableName, String queryName, Map<String, Object> parameters)
     {
         return readOneRecord(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public QRec readOneRecord(Query query, Map<String, ?> parameters)
+    public QRec readOneRecord(Query query, Map<String, Object> parameters)
     {
         List<DynamicPropertySet> dpsList = readAsRecordsFromQuery(query, parameters);
 

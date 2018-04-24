@@ -94,12 +94,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
-    public TablePresentation getTablePresentation(Query query, Map<String, String> parameters)
+    public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
     {
         return getTablePresentation(query, parameters, tableModelService.getTableModel(query, parameters));
     }
 
-    public TablePresentation getTablePresentation(Query query, Map<String, String> parameters, TableModel tableModel)
+    public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         List<Object> columns = tableModel.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
         List<InitialRow> rows = new InitialRowsBuilder(tableModel.isSelectable()).build(tableModel);
@@ -113,7 +113,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         List<TableOperationPresentation> operations = collectOperations(query);
 
-        List<Category> categoryNavigation = getCategoryNavigation(entityName, parameters.get(CATEGORY_ID_PARAM));
+        List<Category> categoryNavigation = getCategoryNavigation(entityName, (String) parameters.get(CATEGORY_ID_PARAM));
 
         return new TablePresentation(title, entityName, queryName, operations, tableModel.isSelectable(), columns, rows,
                 tableModel.orderColumn, tableModel.orderDir, tableModel.offset, tableModel.getRows().size(),
@@ -182,13 +182,13 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters)
+    public JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters)
     {
         return getJsonApiModel(query, parameters, tableModelService.getTableModel(query, parameters));
     }
 
     @Override
-    public JsonApiModel getJsonApiModel(Query query, Map<String, String> parameters, TableModel tableModel)
+    public JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         TablePresentation data = getTablePresentation(query, parameters, tableModel);
         HashUrl url = new HashUrl(TABLE_ACTION, query.getEntity().getName(), query.getName()).named(parameters);

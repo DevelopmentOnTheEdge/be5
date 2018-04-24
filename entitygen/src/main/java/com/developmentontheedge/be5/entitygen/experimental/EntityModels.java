@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.env.Stage;
 import com.developmentontheedge.be5.env.impl.YamlBinder;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.google.inject.internal.util.Strings;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -21,10 +20,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 public class EntityModels
 {
+    private static final Logger log = Logger.getLogger(EntityModels.class.getName());
+
     private Injector injector;
     private int entityCount = 0;
 
@@ -49,11 +51,11 @@ public class EntityModels
         File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + "/" + serviceClassName + ".java").toFile();
         if(file.exists() && !file.isDirectory())
         {
-            System.out.println("Generate skipped, file exists: " + packageName + "." + serviceClassName);
+            log.info("Generate skipped, file exists: " + packageName + "." + serviceClassName);
         }
         else
         {
-            System.out.println("File '"+file.toString()+"' not found, generate...");
+            log.info("File '"+file.toString()+"' not found, generate...");
             injector = Be5.createInjector(Stage.TEST, new YamlBinder());
 
             Utils.createFile(generatedSourcesPath,"","package-info.java", cfg.getTemplate("root.ftl"), Collections.emptyMap());
@@ -61,10 +63,8 @@ public class EntityModels
             createEntities(generatedSourcesPath, packageName + ".entities", cfg);
             createService(generatedSourcesPath, packageName, serviceClassName, cfg);
 
-            System.out.println("------" + JULLogger.infoBlock(
-                    "Generate successful: " + entityCount + " entities created.\n" +
-                            "Add service to context.yaml: " +
-                            packageName + "." + serviceClassName));
+            log.info("Generate successful: " + entityCount + " entities created.\n" +
+                            "Add service to context.yaml: " + packageName + "." + serviceClassName);
         }
     }
 
