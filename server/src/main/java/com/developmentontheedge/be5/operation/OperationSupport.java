@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.env.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.HashUrlUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -98,7 +99,7 @@ public abstract class OperationSupport implements Operation
     //todo rename - remove 'setResult'
     public void setResultRedirectThisOperation()
     {
-        setResult(OperationResult.redirect(getUrl().toString()));
+        setResult(OperationResult.redirect(HashUrlUtils.getUrl(this).toString()));
     }
 
     //todo rename - remove 'setResult'
@@ -120,19 +121,6 @@ public abstract class OperationSupport implements Operation
     public Query getQuery()
     {
         return meta.getQuery(getInfo().getEntityName(), context.getQueryName(), userInfo.getCurrentRoles());
-    }
-
-    @Override
-    public HashUrl getUrl()
-    {
-        HashUrl hashUrl = new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
-                .named(getRedirectParams());
-        if(context.getRecords().length > 0)
-        {
-            hashUrl = hashUrl.named("selectedRows", Arrays.stream(context.getRecords()).collect(Collectors.joining(",")));
-        }
-
-        return hashUrl;
     }
 
     public HashUrl getUrlForNewRecordId(Object newID)

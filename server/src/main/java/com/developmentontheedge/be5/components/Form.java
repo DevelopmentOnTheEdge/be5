@@ -15,6 +15,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 import java.util.Collections;
@@ -76,7 +77,7 @@ public class Form implements Component
         catch (Be5Exception e)
         {
             res.sendErrorAsJson(
-                    documentGenerator.getErrorModel(e, operation.getUrl()),
+                    documentGenerator.getErrorModel(e, HashUrlUtils.getUrl(operation)),
                     req.getDefaultMeta()
             );
             return;
@@ -84,7 +85,7 @@ public class Form implements Component
 
         res.sendAsJson(
                 new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                        Collections.singletonMap(SELF_LINK, operation.getUrl().toString())),
+                        Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())),
                 req.getDefaultMeta()
         );
     }

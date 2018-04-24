@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.util.HashUrl;
-
 import java.io.Serializable;
 import java.util.Map;
 
@@ -57,8 +55,6 @@ public interface Operation extends Serializable
     OperationResult getResult();
 
     void setResult(OperationResult operationResult);
-
-    HashUrl getUrl();
 
     void addRedirectParams(Map<String, ?> extra);
 

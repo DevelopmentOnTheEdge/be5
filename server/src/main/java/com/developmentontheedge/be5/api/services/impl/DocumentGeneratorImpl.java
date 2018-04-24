@@ -29,6 +29,7 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.Utils;
@@ -209,7 +210,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
                 included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
                         dataTopForm.get(),
-                        Collections.singletonMap(SELF_LINK, operation.getUrl().toString())));
+                        Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())));
 
 
                 data.getOperations().remove(topFormOperationPresentation.get());
@@ -257,7 +258,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             {
                 if(UserInfoHolder.isSystemDeveloper())
                 {
-                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), operation.getUrl());
+                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), HashUrlUtils.getUrl(operation));
                 }
 
                 if(operation.getResult().getDetails() != null &&
