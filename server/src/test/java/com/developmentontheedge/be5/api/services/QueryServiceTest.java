@@ -9,6 +9,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,28 @@ public class QueryServiceTest extends Be5ProjectDBTest
                 "  t.value AS \"Value\"\n" +
                 "FROM\n" +
                 "  testtable t) AS \"data\"", be5QueryExecutor.getFinalSql());
+    }
+
+    @Test
+    public void testMultipleColumn()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestMultipleColumn");
+
+        assertEquals("SELECT *\n" +
+                "FROM testtable\n" +
+                "WHERE name IN ('test1', 'test2') LIMIT 2147483647", queryService.
+                build(query, Collections.singletonMap("name", Arrays.asList("test1", "test2"))).getFinalSql());
+    }
+
+    @Test
+    public void testMultipleColumnLong()
+    {
+        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestMultipleColumnLong");
+
+        assertEquals("SELECT *\n" +
+                "FROM testtable\n" +
+                "WHERE ID IN (1, 2) LIMIT 2147483647", queryService.
+                build(query, Collections.singletonMap("ID", Arrays.asList("1", "2"))).getFinalSql());
     }
 
     @Test

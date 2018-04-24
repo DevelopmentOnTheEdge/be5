@@ -542,38 +542,32 @@ public class OperationHelper
         return db.selectList(sql, DpsRecordAdapter::createDps, params);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, ?> parameters )
+    public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, Object> parameters )
     {
         return readAsRecordsFromQuery(meta.createQueryFromSql(sql), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, ?> parameters)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, Object> parameters)
     {
         return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, ?> parameters)
+    public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, Object> parameters)
     {
-        //todo refactoring Be5QueryExecutor,
-        Map<String, String> stringStringMap = new HashMap<>();
-        for( Map.Entry<String, ?> entry : parameters.entrySet())
-        {
-            if(entry.getValue() != null)stringStringMap.put(entry.getKey(), entry.getValue().toString());
-        }
-        return queryService.build(query, stringStringMap).execute();
+        return queryService.build(query, parameters).execute();
     }
 
-    public QRec readOneRecord(String sql, Map<String, ?> parameters)
+    public QRec readOneRecord(String sql, Map<String, Object> parameters)
     {
         return readOneRecord(meta.createQueryFromSql(sql), parameters);
     }
 
-    public QRec readOneRecord(String tableName, String queryName, Map<String, ?> parameters)
+    public QRec readOneRecord(String tableName, String queryName, Map<String, Object> parameters)
     {
         return readOneRecord(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
     }
 
-    public QRec readOneRecord(Query query, Map<String, ?> parameters)
+    public QRec readOneRecord(Query query, Map<String, Object> parameters)
     {
         List<DynamicPropertySet> dpsList = readAsRecordsFromQuery(query, parameters);
 
