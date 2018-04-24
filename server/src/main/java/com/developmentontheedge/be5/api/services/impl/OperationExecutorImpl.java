@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DatabaseService;
@@ -16,7 +15,6 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
-import com.developmentontheedge.be5.util.HashUrl;
 
 
 import java.util.ArrayList;
@@ -132,14 +130,6 @@ public class OperationExecutorImpl implements OperationExecutor
                 log.log(Level.INFO, "error on execute in parameters", e);
                 operation.setResult(OperationResult.error(e));
                 return parameters;
-            }
-
-            if(OperationStatus.EXECUTE == operation.getStatus())
-            {
-                operation.setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION,
-                        operation.getInfo().getEntityName(), operation.getContext().getQueryName())
-                            .named(operation.getRedirectParams()).toString())
-                );
             }
 
             return null;

@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.RELOAD_CONTROL_NAME;
+import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 
 
 public class OperationServiceImpl implements OperationService
@@ -78,6 +80,14 @@ public class OperationServiceImpl implements OperationService
         operation.setResult(OperationResult.execute());
 
         Object parameters = operationExecutor.execute(operation, presetValues);
+
+        if(OperationStatus.EXECUTE == operation.getStatus())
+        {
+            operation.setResult(OperationResult.redirect(new HashUrl(TABLE_ACTION,
+                    operation.getInfo().getEntityName(), operation.getContext().getQueryName())
+                    .named(operation.getRedirectParams()).toString())
+            );
+        }
 
         if(OperationStatus.ERROR == operation.getStatus())
         {
