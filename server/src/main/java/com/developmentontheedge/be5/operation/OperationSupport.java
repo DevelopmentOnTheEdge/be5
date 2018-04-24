@@ -95,14 +95,26 @@ public abstract class OperationSupport implements Operation
         this.operationResult = operationResult;
     }
 
+    //todo rename - remove 'setResult'
     public void setResultRedirectThisOperation()
     {
-        setResult(OperationResult.redirect(getUrl()));
+        setResult(OperationResult.redirect(getUrl().toString()));
     }
 
+    //todo rename - remove 'setResult'
     public void setResultRedirectThisOperationNewId(Object newID)
     {
-        setResult(OperationResult.redirect(getUrlForNewRecordId(newID)));
+        setResult(OperationResult.redirect(getUrlForNewRecordId(newID).toString()));
+    }
+
+    public void redirectToTable(String entityName, String queryName, Map<String, Object> params)
+    {
+        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params).toString()));
+    }
+
+    public void redirectToTable(Query query, Map<String, Object> params)
+    {
+        setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, query.getEntity().getName(), query.getName()).named(params).toString()));
     }
 
     public Query getQuery()

@@ -1,12 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.util.HashUrl;
-
-import java.util.Collections;
-import java.util.Map;
 
 
 public class OperationResult
@@ -130,46 +124,12 @@ public class OperationResult
         return new OperationResult(OperationStatus.FINISHED, message, details);
     }
 
-    public static OperationResult redirect(HashUrl hashUrl)
-    {
-        return redirect(hashUrl.toString());
-    }
-
-    public static OperationResult redirectToOperation(String entityName, String queryName, String operationName, Map<String, String> params)
-    {
-        return redirect(new HashUrl(FrontendConstants.FORM_ACTION, entityName, queryName, operationName).named(params));
-    }
-
-    public static OperationResult redirectToOperation(String entityName, String queryName, String operationName)
-    {
-        return redirectToOperation(entityName, queryName, operationName, Collections.emptyMap());
-    }
-
-    public static OperationResult redirectToTable(String entityName, String queryName, Map<String, Object> params)
-    {
-        return redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params));
-    }
-
-    public static OperationResult redirectToTable(Query query, Map<String, Object> params)
-    {
-        return redirectToTable(query.getEntity().getName(), query.getName(), params);
-    }
-
     public static OperationResult redirect(String url)
     {
         return new OperationResult(OperationStatus.REDIRECTED, url);
     }
 
-    public static OperationResult redirectAndMessage(HashUrl hashUrl, String message)
-    {
-        return redirectAndMessage(hashUrl.toString(), message);
-    }
-
-    public static OperationResult redirectAndMessage(String url, String message)
-    {
-        return new OperationResult(OperationStatus.REDIRECTED, message, url);
-    }
-
+    //todo refactoring, remove dependency of JsonApiModel use finished(...)
     public static OperationResult document(JsonApiModel table)
     {
         return new OperationResult(OperationStatus.DOCUMENT, null, table);

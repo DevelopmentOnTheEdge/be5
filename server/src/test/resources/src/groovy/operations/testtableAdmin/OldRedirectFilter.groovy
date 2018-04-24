@@ -23,7 +23,7 @@ class OldRedirectFilter extends GOperationSupport implements TransactionalOperat
     @Override
     void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.redirectToTable(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters)))
+        redirectToTable(query, dpsHelper.getAsMapStringValues((DynamicPropertySet) parameters))
     }
 
 }
