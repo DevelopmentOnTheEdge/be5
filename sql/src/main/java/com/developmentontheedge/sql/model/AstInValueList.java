@@ -4,9 +4,10 @@ package com.developmentontheedge.sql.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+
 public class AstInValueList extends SimpleNode
 {
-    public static AstInValueList of(int count)
+    public static AstInValueList withReplacementParameter(int count)
     {
         checkArgument(count > 0);
 

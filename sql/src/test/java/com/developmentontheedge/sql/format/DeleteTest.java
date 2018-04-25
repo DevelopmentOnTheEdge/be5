@@ -38,7 +38,7 @@ public class DeleteTest {
     @Test
     public void whereIN()
     {
-        AstDelete sql = Ast.delete("users").where(AstWhere.ofInPredicate("ID", 3));
+        AstDelete sql = Ast.delete("users").where(AstWhere.withReplacementParameter("ID", 3));
         assertEquals("DELETE FROM users WHERE ID IN (?, ?, ?)",
                 sql.format());
 
