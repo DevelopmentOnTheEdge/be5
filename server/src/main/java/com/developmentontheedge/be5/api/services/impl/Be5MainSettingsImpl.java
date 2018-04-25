@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.env.Configurable;
+import com.developmentontheedge.be5.inject.Configurable;
 import com.developmentontheedge.be5.api.services.Be5MainSettings;
 
 import java.util.HashMap;

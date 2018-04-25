@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.entitygen.experimental.gen
 import com.developmentontheedge.be5.api.helpers.DpsHelper
 import com.developmentontheedge.be5.entitygen.experimental.genegate.CoreEntityModels
 import com.developmentontheedge.be5.entitygen.experimental.genegate.entities.Provinces
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock

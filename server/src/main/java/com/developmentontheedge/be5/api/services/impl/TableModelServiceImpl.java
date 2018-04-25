@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.TableModelService;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.impl.TableModel;

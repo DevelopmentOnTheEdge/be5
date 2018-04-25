@@ -3,8 +3,8 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.env.Inject;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.inject.Inject;
+import com.developmentontheedge.be5.inject.Injector;
 
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.google.common.collect.ImmutableMap;

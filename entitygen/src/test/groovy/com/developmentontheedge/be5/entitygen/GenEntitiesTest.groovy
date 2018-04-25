@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.entitygen
 
 import com.developmentontheedge.be5.api.helpers.DpsHelper
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.experimental.entitygen.generate.EntityGenEntityModels
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock

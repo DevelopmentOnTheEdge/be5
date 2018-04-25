@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Entity;

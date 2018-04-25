@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked
 import org.junit.Test

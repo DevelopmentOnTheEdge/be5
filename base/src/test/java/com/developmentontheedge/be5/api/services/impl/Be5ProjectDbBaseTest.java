@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.env.Injector;
-import com.developmentontheedge.be5.env.Stage;
-import com.developmentontheedge.be5.env.impl.Be5Injector;
-import com.developmentontheedge.be5.env.impl.YamlBinder;
+import com.developmentontheedge.be5.inject.Injector;
+import com.developmentontheedge.be5.inject.Stage;
+import com.developmentontheedge.be5.inject.impl.Be5Injector;
+import com.developmentontheedge.be5.inject.impl.YamlBinder;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.JULLogger;

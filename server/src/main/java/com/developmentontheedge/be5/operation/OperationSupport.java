@@ -10,17 +10,15 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public abstract class OperationSupport implements Operation
@@ -96,14 +94,12 @@ public abstract class OperationSupport implements Operation
         this.operationResult = operationResult;
     }
 
-    //todo rename - remove 'setResult'
-    public void setResultRedirectThisOperation()
+    public void redirectThisOperation()
     {
         setResult(OperationResult.redirect(HashUrlUtils.getUrl(this).toString()));
     }
 
-    //todo rename - remove 'setResult'
-    public void setResultRedirectThisOperationNewId(Object newID)
+    public void redirectThisOperationNewId(Object newID)
     {
         setResult(OperationResult.redirect(getUrlForNewRecordId(newID).toString()));
     }

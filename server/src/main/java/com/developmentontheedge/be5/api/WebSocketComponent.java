@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api;
 
 
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.inject.Injector;
 
 /**
  * <p>A component representing the websocket service endpoint.</p>

@@ -4,8 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.OperationExecutor
 import com.developmentontheedge.be5.databasemodel.OperationModel
-import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.operation.OperationResult
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory

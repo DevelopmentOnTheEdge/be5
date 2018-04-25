@@ -1,16 +1,16 @@
 context:
   components:
-  - testComponent: com.developmentontheedge.be5.env.impl.testComponents.TestComponent
+  - testComponent: com.developmentontheedge.be5.inject.impl.testComponents.TestComponent
   services:
-  - com.developmentontheedge.be5.env.impl.testServices.AService
-  - com.developmentontheedge.be5.env.impl.testServices.BService
-  - com.developmentontheedge.be5.env.impl.testServicesProvider.AServiceProvider
-  - com.developmentontheedge.be5.env.impl.testServicesProvider.BServiceProvider
-  - com.developmentontheedge.be5.env.services.ConfigurableService
+  - com.developmentontheedge.be5.inject.impl.testServices.AService
+  - com.developmentontheedge.be5.inject.impl.testServices.BService
+  - com.developmentontheedge.be5.inject.impl.testServicesProvider.AServiceProvider
+  - com.developmentontheedge.be5.inject.impl.testServicesProvider.BServiceProvider
+  - com.developmentontheedge.be5.inject.services.ConfigurableService
   - testService:
-      interface:      com.developmentontheedge.be5.env.services.TestService
-      implementation: com.developmentontheedge.be5.env.services.impl.TestServiceMock
+      interface:      com.developmentontheedge.be5.inject.services.TestService
+      implementation: com.developmentontheedge.be5.inject.services.impl.TestServiceMock
 config:
-  com.developmentontheedge.be5.env.services.ConfigurableService:
+  com.developmentontheedge.be5.inject.services.ConfigurableService:
     count: 5
     url: 'test.url'

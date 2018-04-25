@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.groovy
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.DocumentGenerator
 import com.developmentontheedge.be5.query.impl.TableModel
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import org.junit.Test
