@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.env.Stage;
+import com.developmentontheedge.be5.inject.Stage;
 
 
 public class TestRequestPreprocessor implements RequestPreprocessor

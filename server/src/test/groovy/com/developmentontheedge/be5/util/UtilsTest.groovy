@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.util
 
 import com.developmentontheedge.be5.api.services.SqlService
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import org.junit.Test

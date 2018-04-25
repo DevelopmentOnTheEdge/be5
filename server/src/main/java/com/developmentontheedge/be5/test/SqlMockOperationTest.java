@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;

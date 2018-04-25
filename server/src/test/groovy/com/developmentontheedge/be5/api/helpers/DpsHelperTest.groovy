@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants

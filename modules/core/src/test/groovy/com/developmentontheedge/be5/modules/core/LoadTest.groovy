@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.maven.AppValidate
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException
 import com.developmentontheedge.be5.metadata.model.Module

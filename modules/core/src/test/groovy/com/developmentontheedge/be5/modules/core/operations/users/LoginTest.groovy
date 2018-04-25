@@ -1,14 +1,11 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
 import com.developmentontheedge.be5.api.Request
-import com.developmentontheedge.be5.api.Response
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.api.FrontendConstants
-import com.developmentontheedge.be5.env.Injector
 import com.developmentontheedge.be5.metadata.DatabaseConstants
-import com.developmentontheedge.be5.modules.core.services.LoginService
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
@@ -22,7 +19,6 @@ import org.mockito.Matchers
 import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
 

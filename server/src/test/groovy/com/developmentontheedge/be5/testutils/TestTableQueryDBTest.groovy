@@ -2,11 +2,10 @@ package com.developmentontheedge.be5.testutils
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
 import com.developmentontheedge.be5.api.services.SqlService
-import com.developmentontheedge.be5.env.Inject
-import com.developmentontheedge.be5.env.Injector
+import com.developmentontheedge.be5.inject.Inject
+import com.developmentontheedge.be5.inject.Injector
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Before
-import org.junit.BeforeClass
 
 abstract class TestTableQueryDBTest extends Be5ProjectDBTest
 {

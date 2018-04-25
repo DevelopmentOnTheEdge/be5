@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.model;
 
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.test.TestSession;

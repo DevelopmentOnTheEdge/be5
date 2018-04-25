@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.operation;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.inject.Inject;
 
 
 public class OperationExtenderSupport implements OperationExtender

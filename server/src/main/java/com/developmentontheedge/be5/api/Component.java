@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.env.Configurable;
-import com.developmentontheedge.be5.env.Injector;
+import com.developmentontheedge.be5.inject.Configurable;
+import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
 /**

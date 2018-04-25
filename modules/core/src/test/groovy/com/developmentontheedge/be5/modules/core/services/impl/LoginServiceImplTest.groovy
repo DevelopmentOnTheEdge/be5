@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.impl
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
-import com.developmentontheedge.be5.env.Inject
+import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.modules.core.services.LoginService
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import org.junit.Before

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.env.Inject;
+import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
