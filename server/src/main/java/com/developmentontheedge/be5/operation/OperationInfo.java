@@ -49,4 +49,9 @@ public class OperationInfo
         return operationModel.getEntity().getName();
     }
 
+    public String getPrimaryKey()
+    {
+        return operationModel.getEntity().getPrimaryKey();
+    }
+
 }
