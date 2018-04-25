@@ -53,7 +53,7 @@ public class AstDelete extends SimpleNode
     public AstDelete whereInPredicate(String columnName, int count)
     {
         Objects.requireNonNull( columnName );
-        where(AstWhere.ofInPredicate(columnName, count));
+        where(AstWhere.withReplacementParameter(columnName, count));
         return this;
     }
 }

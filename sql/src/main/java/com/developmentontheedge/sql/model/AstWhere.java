@@ -6,15 +6,12 @@ import java.util.Map;
 
 public class AstWhere extends SimpleNode
 {
-    public static AstWhere ofInPredicate(String columnName, int count)
+    public static AstWhere withReplacementParameter(String columnName, int count)
     {
-        return new AstWhere(columnName, count);
-    }
+        AstWhere astWhere = new AstWhere(SqlParserTreeConstants.JJTWHERE);
+        astWhere.addChild(AstInPredicate.withReplacementParameter(columnName, count));
 
-    private AstWhere(String columnName, int count)
-    {
-        this(SqlParserTreeConstants.JJTWHERE);
-        addChild(AstInPredicate.of(columnName, count));
+        return astWhere;
     }
 
     public AstWhere(Map<String, ? super Object> conditions)

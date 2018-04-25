@@ -4,11 +4,11 @@ package com.developmentontheedge.sql.model;
 
 public class AstInPredicate extends SimpleNode 
 {
-    public static AstInPredicate of(String columnName, int count)
+    public static AstInPredicate withReplacementParameter(String columnName, int count)
     {
         return new AstInPredicate(
                 new AstFieldReference(columnName),
-                AstInValueList.of(count)
+                AstInValueList.withReplacementParameter(count)
         );
     }
 

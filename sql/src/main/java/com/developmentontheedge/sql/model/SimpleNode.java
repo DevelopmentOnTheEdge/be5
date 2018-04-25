@@ -87,12 +87,20 @@ public class SimpleNode implements Node, Cloneable
 
     /**
      * Add given node to the end of children list setting its parent to this node
-     * @param n node to add
+     * @param node node to add
      */
-    public void addChild(SimpleNode n)
+    public void addChild(SimpleNode node)
     {
-        n.jjtSetParent( this );
-        children.add( n );
+        node.jjtSetParent( this );
+        children.add( node );
+    }
+
+    public void addChilds(List<SimpleNode> nodes)
+    {
+        for (SimpleNode node : nodes)
+        {
+            addChild(node);
+        }
     }
 
     private void updateSpecialSuffix(SimpleNode prev, SimpleNode next)

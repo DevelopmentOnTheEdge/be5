@@ -10,61 +10,42 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.util.CategoryFilter;
-import com.developmentontheedge.be5.util.FilterUtils;
+import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
+import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
-import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
-import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
-import com.developmentontheedge.sql.model.AstDerivedColumn;
-import com.developmentontheedge.sql.model.AstIdentifierConstant;
-import com.developmentontheedge.sql.model.AstLimit;
-import com.developmentontheedge.sql.model.AstNumericConstant;
-import com.developmentontheedge.sql.model.AstOrderBy;
-import com.developmentontheedge.sql.model.AstOrderingElement;
-import com.developmentontheedge.sql.model.AstParenthesis;
-import com.developmentontheedge.sql.model.AstQuery;
-import com.developmentontheedge.sql.model.AstSelect;
 import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
-import com.developmentontheedge.sql.model.Token;
 
-import one.util.streamex.MoreCollectors;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.*;
 
 
 /**
@@ -242,31 +223,21 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
         dql.log("Compiled", ast);
 
-        resolveTypeOfRefColumn(ast);
-
-        // CONTEXT
+        resolveTypeOfRefColumn(ast, meta);
 
         // FILTERS
-        FilterUtils.applyFilters(ast, query.getEntity().getName(), new HashMap<>(parameters));
+        applyFilters(ast, query.getEntity().getName(), resolveTypes(parameters, meta));
 
         // CATEGORY
         applyCategory( dql, ast );
 
+        // CONTEXT
         contextApplier.applyContext( ast );
         subQueryKeys = contextApplier.subQueryKeys().toSet();
         dql.log("With context", ast);
 
         // ID COLUMN
-        if( query.getType() == QueryType.D1 && query.getEntity().findTableDefinition() != null && !hasColumnWithLabel(ast, DatabaseConstants.ID_COLUMN_LABEL) )
-        {
-            new ColumnAdder().addColumn( ast, query.getEntity().getName(), query.getEntity().getPrimaryKey(),
-                    DatabaseConstants.ID_COLUMN_LABEL );
-            dql.log("With ID column", ast);
-        }
-        else
-        {
-            dql.log("Without ID column", ast);
-        }
+        addIDColumnIfNeeded(ast, query, dql);
 
         // SIMPLIFY
         Simplifier.simplify(ast);
@@ -281,7 +252,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         if(executeType == ExecuteType.DEFAULT)
         {
             // SORT ORDER
-            applySort(dql, ast);
+            applySort(ast, getSchema(new Formatter().format(ast, context, parserContext)), dql,
+                    getOrderColumn(), getOrderDir());
 
             // LIMITS
             new LimitsApplier( offset, limit ).transform( ast );
@@ -291,136 +263,22 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         return new Formatter().format( ast, context, parserContext );
     }
 
-    private void resolveTypeOfRefColumn(AstStart ast)
+    private DynamicProperty[] getSchema(String sql)
     {
-//todo ignore subquery
-//        Map<String, String> aliasToTable = ast.tree()
-//                .select(AstTableRef.class)
-//                .filter(t -> t.getAlias() != null)
-//                .collect(Collectors.toMap(AstTableRef::getAlias, AstTableRef::getTable));
+        try{
+            Connection conn = databaseService.getConnection(true);
 
-        ast.tree().select(AstBeParameterTag.class).forEach((AstBeParameterTag tag) -> {
-            if(tag.getRefColumn() != null)
-            {
-                String[] split = tag.getRefColumn().split("\\.");
-                String table, column;
-                if(split.length == 2)
-                {
-                    table = split[0];
-                    column = split[1];
-                }
-                else if(split.length == 3)
-                {
-                    table = split[0] + "." + split[1];
-                    column = split[2];
-                }
-                else
-                {
-                    return;
-                }
-                Entity entity;
-
-//                if(aliasToTable.get(table) != null)
-//                    entity = meta.getEntity(aliasToTable.get(table));
-//                else
-
-                entity = meta.getEntity(table);
-
-                if(entity != null)
-                {
-                    tag.setType(meta.getColumnType(entity, column).getName());
-                }
+            try(PreparedStatement ps = conn.prepareStatement(sql)) {
+                return DpsRecordAdapter.createSchema(ps.getMetaData());
             }
-        });
-    }
-
-    private void countFromQuery(AstQuery query)
-    {
-        AstSelect select = Ast.selectCount().from(AstTableRef.as(
-                new AstParenthesis( query.clone() ),
-                new AstIdentifierConstant( "data", true )
-        ));
-        query.replaceWith( new AstQuery( select ) );
-    }
-
-    private boolean hasColumnWithLabel(AstStart ast, String idColumnLabel)
-    {
-        AstQuery query = ast.getQuery();
-        Optional<AstSelect> selectOpt = query.children().select(AstSelect.class).collect(MoreCollectors.onlyOne());
-        if(!selectOpt.isPresent())
-            return false;
-        AstSelect select = selectOpt.get();
-        return select.getSelectList().children()
-            .select(AstDerivedColumn.class)
-            .map(AstDerivedColumn::getAlias)
-            .nonNull()
-            .map(alias -> alias.replaceFirst("^\"(.+)\"$", "$1"))
-            .has(idColumnLabel);
-    }
-
-    private void applySort(DebugQueryLogger dql, AstStart ast)
-    {
-        if(getOrderColumn() >= 0) {
-            try
-            {
-                DynamicProperty[] schema = getSchema(new Formatter().format(ast, context, parserContext));
-                int sortCol = getQuerySortingColumn(schema);
-                if(sortCol > 0) {
-                    AstSelect sel = (AstSelect)ast.getQuery().jjtGetChild(
-                            ast.getQuery().jjtGetNumChildren()-1);
-
-                    AstOrderBy orderBy = sel.getOrderBy();
-                    if(orderBy == null) {
-                        orderBy = new AstOrderBy();
-                        sel.addChild(orderBy);
-                        AstLimit astLimit = sel.children().select(AstLimit.class).findFirst().orElse(null);
-                        if(astLimit != null){
-                            sel.removeChild(astLimit);
-                            sel.addChild(astLimit);
-                        }
-                    }
-                    AstOrderingElement oe = new AstOrderingElement(AstNumericConstant.of(sortCol));
-                    if("desc".equals(orderDir))
-                    {
-                        oe.setDirectionToken(new Token(0, "DESC"));
-                    }
-                    orderBy.addChild(oe);
-                    orderBy.moveToFront(oe);
-                }
-                dql.log("With sort", ast);
-            }
-            catch (SQLException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            finally {
+                databaseService.releaseConnection(conn);
             }
         }
-    }
-
-    private int getQuerySortingColumn(DynamicProperty[] schema)
-    {
-        int sortCol = -1;
-        int restCols = getOrderColumn();
-        for(int i=0; i<schema.length; i++) {
-            if(schema[i].isHidden())continue;
-
-            if(restCols--==0) {
-                sortCol = i+1;
-                break;
-            }
-        }
-        return sortCol;
-    }
-
-    private DynamicProperty[] getSchema(String sql) throws SQLException
-    {
-        Connection conn = databaseService.getConnection(true);
-
-        try(PreparedStatement ps = conn.prepareStatement(sql)) {
-            return DpsRecordAdapter.createSchema(ps.getMetaData());
-        }
-        finally {
-            databaseService.releaseConnection(conn);
+        catch (Throwable e)
+        {
+            log.log(Level.WARNING, "fail getSchema, return empty", e);
+            return new DynamicProperty[]{};
         }
     }
 
@@ -493,47 +351,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //        }
 //    }
 
-    static class DebugQueryLogger
-    {
-        private static final Logger log = Logger.getLogger(DebugQueryLogger.class.getName());
-        private String lastQuery;
-
-        public void log(String name, AstStart ast)
-        {
-            log(name, ast.format());
-        }
-
-        public void log(String name, String query)
-        {
-            if(!query.equals(lastQuery)) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(name).append(": ");
-                if(lastQuery == null) {
-                    sb.append(query);
-                } else {
-                    String prefix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonPrefix());
-                    String suffix = StreamEx.of(query, lastQuery).collect(MoreCollectors.commonSuffix());
-                    int startPos = prefix.length();
-                    int endPos = query.length() - suffix.length();
-                    startPos = startPos > 10 ? query.lastIndexOf('\n', startPos-10) : 0;
-                    endPos = suffix.length() > 10 ? query.indexOf('\n', endPos+10) : query.length();
-                    if(startPos < 0)
-                        startPos = 0;
-                    if(endPos < 0)
-                        endPos = query.length();
-                    String substring = query.substring(startPos, endPos);
-                    if(startPos > 0)
-                        substring = "..."+substring.substring(1);
-                    if(endPos < query.length())
-                        substring += "...";
-                    sb.append(substring);
-                }
-                log.finer(sb.toString());
-                lastQuery = query;
-            }
-        }
-    }
-
     @Override
     public List<DynamicPropertySet> execute()
     {
@@ -554,13 +371,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         executeType = ExecuteType.COUNT;
         return (Long)execute(DpsRecordAdapter::createDps).get(0).asMap().get("count");
     }
-//
-//    @Override
-//    public List<DynamicPropertySet> execute(Object... params)
-//    {
-//        executeType = ExecuteType.DEFAULT;
-//        return execute(DpsRecordAdapter::createDps, params);
-//    }
 
     @Override
     public DynamicPropertySet getRow()
@@ -598,32 +408,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             dynamicPropertySets =  Collections.singletonList(dynamicProperties);
         }
 
-
-//        TableModel table = TableModel
-//                .from(meta.createQueryFromSql(subQuery.getQuery().format()), parameters, session, false, injector)
-//                .setContextApplier(contextApplier)
-//                .build();
-//
-//        String innerJoinedTable = print(table);
-//        DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
-//        dynamicProperties.add(new DynamicProperty("innerJoinedTable", String.class, innerJoinedTable));
-
-
-        //return Collections.singletonList(dynamicProperties);
         return dynamicPropertySets;
     }
 
-//    private String print(TableModel tableModel)
-//    {
-//        return StreamEx.of(tableModel.getRows())
-//                .map(rowModel -> StreamEx.of(rowModel.getCells()).map(cellModel -> cellModel.content != null ? cellModel.content.toString() : "").joining(" "))
-//                .joining("<br/> ");
-//    }
-//
-//    @Override
-//    public QueryExecutor setContextApplier(ContextApplier contextApplier)
-//    {
-//        this.contextApplier = contextApplier;
-//        return this;
-//    }
 }
