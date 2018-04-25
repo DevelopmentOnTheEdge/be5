@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.util.ParseRequestUtils.replaceEmptyStringToNull;
@@ -66,8 +65,6 @@ public abstract class TestUtils
         Injector injector = new Be5Injector(Stage.TEST, binder);
         Project project = injector.get(ProjectProvider.class).getProject();
         initProfile(project);
-
-        LogManager.getLogManager().reset();
 
         return injector;
     }
