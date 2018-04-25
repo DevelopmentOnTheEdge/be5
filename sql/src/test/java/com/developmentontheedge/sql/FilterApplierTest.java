@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.Map;
 import com.developmentontheedge.sql.format.SqlTypeUtils;
 import one.util.streamex.EntryStream;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.developmentontheedge.sql.format.ColumnRef;
@@ -57,7 +55,6 @@ public class FilterApplierTest
     }
 
     @Test
-    @Ignore
     public void testSetFilterApplier()
     {
         AstStart query = SqlQuery.parse( "SELECT * FROM games g, city WHERE g.city = city.name" );
@@ -66,20 +63,20 @@ public class FilterApplierTest
 
         new FilterApplier().setFilter( query, getMapOfList(conditions) );
 
-        assertEquals( "SELECT * FROM games g, city WHERE city.country ='UK' AND g.yr = 2012",
+        assertEquals( "SELECT * FROM games g, city WHERE g.yr = 2012 AND city.country ='UK'",
                 new Formatter().format( query, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
 
         AstStart query2 = SqlQuery.parse( "SELECT city.name, g.* FROM city INNER JOIN games g ON (g.city = city.name)" );
         new FilterApplier().setFilter( query2, getMapOfList(conditions) );
 
-        assertEquals( "SELECT city.name, g.* FROM city INNER JOIN games g WHERE city.country ='UK' AND g.yr = 2012",
+        assertEquals( "SELECT city.name, g.* FROM city INNER JOIN games g WHERE g.yr = 2012 AND city.country ='UK'",
                 new Formatter().format( query2, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
 
 
         AstStart query3 = SqlQuery.parse( "SELECT * FROM city JOIN games g ON (g.city = city.name) JOIN games gm ON city.country ='UK'" );
         new FilterApplier().setFilter( query3, getMapOfList(conditions) );
 
-        assertEquals( "SELECT * FROM city INNER JOIN games g INNER JOIN games gm WHERE city.country ='UK' AND g.yr = 2012",
+        assertEquals( "SELECT * FROM city INNER JOIN games g INNER JOIN games gm WHERE g.yr = 2012 AND city.country ='UK'",
                 new Formatter().format( query3, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
     }
 
@@ -100,7 +97,6 @@ public class FilterApplierTest
     }
 
     @Test
-    @Ignore
     public void testAddFilterApplier()
     {
         AstStart query = SqlQuery
@@ -130,7 +126,6 @@ public class FilterApplierTest
     }
 
     @Test
-    @Ignore
     public void testAddFilterApplierUnion() throws ParseException
     {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
@@ -143,31 +138,26 @@ public class FilterApplierTest
                 new Formatter().format( query, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
     }
 
-    private Map<ColumnRef, List<String>> getMapOfList(Map<ColumnRef, ?> parameters)
+    private Map<ColumnRef, List<Object>> getMapOfList(Map<ColumnRef, ?> parameters)
     {
-        Map<ColumnRef, List<String>> listParams = new HashMap<>();
+        Map<ColumnRef, List<Object>> listParams = new HashMap<>();
         parameters.forEach((k,v) -> listParams.put(k, getParameterList(v)));
 
         return listParams;
     }
 
-    private List<String> getParameterList(Object parameter)
+    private List<Object> getParameterList(Object parameter)
     {
         if(parameter == null)return null;
 
-//TODO
-//        if(SqlTypeUtils.isNumber(parameter.getClass()))
-//        {
-//            return Arrays.asList((Number) parameter);
-//        }
-
-        if(parameter.getClass() == String.class)
+        if(parameter.getClass() == String.class || SqlTypeUtils.isNumber(parameter.getClass())
+                || parameter.getClass() == java.sql.Date.class)
         {
-            return Collections.singletonList((String) parameter);
+            return Collections.singletonList(parameter);
         }
         else
         {
-            return (List<String>) parameter;
+            return (List<Object>) parameter;
         }
     }
 }

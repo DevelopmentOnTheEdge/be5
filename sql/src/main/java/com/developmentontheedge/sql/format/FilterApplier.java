@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toList;
 
 public class FilterApplier
 {
-    public void setFilter(AstStart ast, Map<ColumnRef, List<String>> conditions)
+    public void setFilter(AstStart ast, Map<ColumnRef, List<Object>> conditions)
     {
         AstQuery query = ast.getQuery();
         dropOldConditions( query );
@@ -49,12 +49,12 @@ public class FilterApplier
         }
     }
 
-    public void addFilter(AstStart ast, Map<ColumnRef, List<String>> conditions)
+    public void addFilter(AstStart ast, Map<ColumnRef, List<Object>> conditions)
     {
         addFilter(ast.getQuery(), conditions);
     }
 
-    public void addFilter(AstQuery query, Map<ColumnRef, List<String>> conditions)
+    public void addFilter(AstQuery query, Map<ColumnRef, List<Object>> conditions)
     {
         if( conditions.size() == 0 )
             return;
@@ -87,7 +87,7 @@ public class FilterApplier
             } );
     }
     
-    private void addWhere(AstWhere where, Map<ColumnRef, List<String>> conditions)
+    private void addWhere(AstWhere where, Map<ColumnRef, List<Object>> conditions)
     {
         if( where.jjtGetNumChildren() != 0 )
         {
@@ -110,11 +110,11 @@ public class FilterApplier
             setConditions( where, conditions );
     }
     
-    public void setConditions(SimpleNode where, Map<ColumnRef, List<String>> conditions)
+    public void setConditions(SimpleNode where, Map<ColumnRef, List<Object>> conditions)
     {
-        for (Map.Entry<ColumnRef, List<String>> entry : conditions.entrySet())
+        for (Map.Entry<ColumnRef, List<Object>> entry : conditions.entrySet())
         {
-            List<String> parameter = entry.getValue();
+            List<Object> parameter = entry.getValue();
             AstFunNode node;
             if(parameter.size() == 1)
             {

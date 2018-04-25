@@ -26,7 +26,9 @@ import com.developmentontheedge.sql.model.Token;
 import one.util.streamex.EntryStream;
 import one.util.streamex.MoreCollectors;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,7 +45,7 @@ public class QueryUtils
     private static final List<String> keywords = Arrays.asList("category",
             SEARCH_PARAM, SEARCH_PRESETS_PARAM, CATEGORY_ID_PARAM, RELOAD_CONTROL_NAME);
 
-    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<String>> parameters)
+    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<Object>> parameters)
     {
 //        parameters.forEach((k, v) -> {
 //            if(v != null && v.getClass() != String.class){
@@ -53,7 +55,7 @@ public class QueryUtils
 
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
-        Map<ColumnRef, List<String>> filters = EntryStream.of(parameters)
+        Map<ColumnRef, List<Object>> filters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(keywords::contains)
                 .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainEntityName + "." + k))
@@ -115,6 +117,18 @@ public class QueryUtils
                 }
             }
         });
+    }
+
+    public static Map<String, List<Object>> resolveTypes(Map<String, List<String>> parameters, Meta meta)
+    {
+        //todo resolveTypes
+        Map<String, List<Object>> map = new HashMap<>();
+        parameters.forEach((k,v) -> {
+            if(v != null){
+                map.put(k, new ArrayList<>(v));
+            }
+        });
+        return map;
     }
 
     public static int getQuerySortingColumn(DynamicProperty[] schema, int orderColumn)

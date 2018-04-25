@@ -226,7 +226,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         resolveTypeOfRefColumn(ast, meta);
 
         // FILTERS
-        applyFilters(ast, query.getEntity().getName(), parameters);
+        applyFilters(ast, query.getEntity().getName(), resolveTypes(parameters, meta));
 
         // CATEGORY
         applyCategory( dql, ast );
@@ -275,7 +275,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
                 databaseService.releaseConnection(conn);
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
             log.log(Level.WARNING, "fail getSchema, return empty", e);
             return new DynamicProperty[]{};
