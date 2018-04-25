@@ -94,14 +94,12 @@ public abstract class OperationSupport implements Operation
         this.operationResult = operationResult;
     }
 
-    //todo rename - remove 'setResult'
-    public void setResultRedirectThisOperation()
+    public void redirectThisOperation()
     {
         setResult(OperationResult.redirect(HashUrlUtils.getUrl(this).toString()));
     }
 
-    //todo rename - remove 'setResult'
-    public void setResultRedirectThisOperationNewId(Object newID)
+    public void redirectThisOperationNewId(Object newID)
     {
         setResult(OperationResult.redirect(getUrlForNewRecordId(newID).toString()));
     }

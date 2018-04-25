@@ -29,7 +29,7 @@ public class TestOperation extends OperationSupport
         DynamicPropertySet dps = (DynamicPropertySet)parameters;
         db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));
 
-        setResultRedirectThisOperation();
+        redirectThisOperation();
     }
 
 }
