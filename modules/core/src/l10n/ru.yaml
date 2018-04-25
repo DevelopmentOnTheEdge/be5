@@ -94,6 +94,7 @@ ru:
       - Edit: Редактировать
       - Filter: Фильтр
       - Insert: Добавить
+      - +/- category: +/- категории
       - PermaLink: Постояннная ссылка
       - Restore from Archive: Восстановить из архива
   - query.jsp:
