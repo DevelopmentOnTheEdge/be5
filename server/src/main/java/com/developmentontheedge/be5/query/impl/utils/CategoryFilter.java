@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.util;
+package com.developmentontheedge.be5.query.impl.utils;
 
 import java.util.Optional;
 

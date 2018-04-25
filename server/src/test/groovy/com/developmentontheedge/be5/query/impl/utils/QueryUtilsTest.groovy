@@ -1,8 +1,7 @@
-package com.developmentontheedge.be5.api.helpers
+package com.developmentontheedge.be5.query.impl.utils
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.test.Be5ProjectTest
-import com.developmentontheedge.be5.util.FilterUtils
 import com.developmentontheedge.sql.model.AstStart
 import com.developmentontheedge.sql.model.SqlQuery
 import org.junit.Test
@@ -12,7 +11,7 @@ import javax.inject.Inject
 import static org.junit.Assert.*
 
 
-class FilterHelperTest extends Be5ProjectTest
+class QueryUtilsTest extends Be5ProjectTest
 {
     @Inject Meta meta
 
@@ -20,17 +19,17 @@ class FilterHelperTest extends Be5ProjectTest
     void empty()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        FilterUtils.applyFilters(ast, "filterTestTable", [:])
+        QueryUtils.applyFilters(ast, "filterTestTable", [:])
 
         assertEquals("SELECT ft.name, ft.value\n" +
-                     "FROM filterTestTable ft", ast.format())
+                "FROM filterTestTable ft", ast.format())
     }
 
     @Test
     void simpleFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        FilterUtils.applyFilters(ast, "filterTestTable", ["value":123])
+        QueryUtils.applyFilters(ast, "filterTestTable", ["value":123])
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.value = 123", ast.format())
@@ -40,7 +39,7 @@ class FilterHelperTest extends Be5ProjectTest
     void simpleFilterStringColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        FilterUtils.applyFilters(ast, "filterTestTable", ["name":"test"])
+        QueryUtils.applyFilters(ast, "filterTestTable", ["name":"test"])
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.name ='test'", ast.format())
