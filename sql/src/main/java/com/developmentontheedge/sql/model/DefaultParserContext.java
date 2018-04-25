@@ -68,8 +68,6 @@ public class DefaultParserContext implements ParserContext
     public static final String NOT = "!";
     public static final String NOT_LIT = "NOT";
     public static final String XOR = "XOR";
-    public static final String LIKE = "LIKE";
-    public static final String NOT_LIKE = "NOT LIKE";
 
     public static final String GT = ">";
     public static final String LT = "<";
@@ -79,6 +77,10 @@ public class DefaultParserContext implements ParserContext
     public static final String EQQ = "==";
     public static final String NEQ = "!=";
     public static final String LTGT = "<>";
+    public static final String LIKE = "LIKE";
+    public static final String NOT_LIKE = "NOT LIKE";
+    public static final String IN = "IN";
+    public static final String NOT_IN = "NOT IN";
 
     public static final String PLUS = "+";
     public static final String MINUS = "-";
@@ -103,7 +105,7 @@ public class DefaultParserContext implements ParserContext
     public static final PredefinedFunction FUNC_AND = new PredefinedFunction( AND_LIT, Function.LOGICAL_PRIORITY, -1 );
     public static final PredefinedFunction FUNC_NOT = new PredefinedFunction( NOT_LIT, Function.UNARY_PRIORITY, 1 );
     public static final PredefinedFunction FUNC_XOR = new PredefinedFunction( XOR, Function.LOGICAL_PRIORITY, -1 );
-    
+
     public static final PredefinedFunction FUNC_EQ = new PredefinedFunction( EQ, Function.RELATIONAL_PRIORITY, 2 );
     public static final PredefinedFunction FUNC_GT = new PredefinedFunction( GT, Function.RELATIONAL_PRIORITY, 2 );
     public static final PredefinedFunction FUNC_LT = new PredefinedFunction( LT, Function.RELATIONAL_PRIORITY, 2 );
@@ -112,6 +114,8 @@ public class DefaultParserContext implements ParserContext
     public static final PredefinedFunction FUNC_LTGT = new PredefinedFunction( LTGT, Function.RELATIONAL_PRIORITY, 2 );
     public static final PredefinedFunction FUNC_LIKE = new PredefinedFunction( LIKE, Function.RELATIONAL_PRIORITY, 2 );
     public static final PredefinedFunction FUNC_NOT_LIKE = new PredefinedFunction( NOT_LIKE, Function.RELATIONAL_PRIORITY, 2 );
+    public static final PredefinedFunction FUNC_IN = new PredefinedFunction( IN, Function.RELATIONAL_PRIORITY, 2 );
+    public static final PredefinedFunction FUNC_NOT_IN = new PredefinedFunction( NOT_IN, Function.RELATIONAL_PRIORITY, 2 );
 
     public static final PredefinedFunction FUNC_PLUS = new PredefinedFunction( PLUS, Function.PLUS_PRIORITY, -1 );
     public static final PredefinedFunction FUNC_MINUS = new PredefinedFunction( MINUS, Function.PLUS_PRIORITY, 2 );
@@ -139,6 +143,8 @@ public class DefaultParserContext implements ParserContext
         context.declareFunction( FUNC_LTGT, NEQ );
         context.declareFunction( FUNC_LIKE );
         context.declareFunction( FUNC_NOT_LIKE );
+        context.declareFunction( FUNC_IN );
+        context.declareFunction( FUNC_NOT_IN );
         context.declareFunction( new DbSpecificFunction( new PredefinedFunction( REGEXP_MATCH, Function.RELATIONAL_PRIORITY, 2 ), Dbms.POSTGRESQL, Dbms.MYSQL, Dbms.ORACLE ) );
         
         // Arithmetic operators
