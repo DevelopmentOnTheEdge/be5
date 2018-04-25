@@ -50,10 +50,10 @@ public class AstUpdate extends SimpleNode
         super(p, id);
     }
 
-    public AstUpdate whereInPredicate(String columnName, int count)
+    public AstUpdate whereInWithReplacementParameter(String columnName, int count)
     {
         Objects.requireNonNull( columnName );
-        where(AstWhere.ofInPredicate(columnName, count));
+        where(AstWhere.withReplacementParameter(columnName, count));
         return this;
     }
 }

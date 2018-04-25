@@ -1,11 +1,12 @@
 package com.developmentontheedge.sql.format;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.developmentontheedge.sql.model.AstBeSqlVar;
-import one.util.streamex.EntryStream;
+import com.developmentontheedge.sql.model.AstInValueList;
 
 import com.developmentontheedge.sql.model.AstBooleanExpression;
 import com.developmentontheedge.sql.model.AstFrom;
@@ -24,9 +25,12 @@ import com.developmentontheedge.sql.model.AstWhere;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SimpleNode;
 
+import static java.util.stream.Collectors.toList;
+
+
 public class FilterApplier
 {
-    public void setFilter(AstStart ast, Map<ColumnRef, Object> conditions)
+    public void setFilter(AstStart ast, Map<ColumnRef, List<String>> conditions)
     {
         AstQuery query = ast.getQuery();
         dropOldConditions( query );
@@ -45,11 +49,12 @@ public class FilterApplier
         }
     }
 
-    public void addFilter(AstStart ast, Map<ColumnRef, Object> conditions){
-        addFilter(ast.getQuery(),conditions);
+    public void addFilter(AstStart ast, Map<ColumnRef, List<String>> conditions)
+    {
+        addFilter(ast.getQuery(), conditions);
     }
 
-    public void addFilter(AstQuery query, Map<ColumnRef, Object> conditions)
+    public void addFilter(AstQuery query, Map<ColumnRef, List<String>> conditions)
     {
         if( conditions.size() == 0 )
             return;
@@ -82,7 +87,7 @@ public class FilterApplier
             } );
     }
     
-    private void addWhere(AstWhere where, Map<ColumnRef, Object> conditions)
+    private void addWhere(AstWhere where, Map<ColumnRef, List<String>> conditions)
     {
         if( where.jjtGetNumChildren() != 0 )
         {
@@ -105,10 +110,23 @@ public class FilterApplier
             setConditions( where, conditions );
     }
     
-    public void setConditions(SimpleNode where, Map<ColumnRef, Object> conditions)
+    public void setConditions(SimpleNode where, Map<ColumnRef, List<String>> conditions)
     {
-        EntryStream.of(conditions).mapKeys( ColumnRef::asNode ).mapValues( this::toNode)
-            .mapKeyValue( DefaultParserContext.FUNC_EQ::node ).forEach( where::addChild );
+        for (Map.Entry<ColumnRef, List<String>> entry : conditions.entrySet())
+        {
+            List<String> parameter = entry.getValue();
+            AstFunNode node;
+            if(parameter.size() == 1)
+            {
+                node = DefaultParserContext.FUNC_EQ.node(entry.getKey().asNode(), toNode(parameter.get(0)));
+            }
+            else
+            {
+                List<SimpleNode> nodes = parameter.stream().map(this::toNode).collect(toList());
+                node = DefaultParserContext.FUNC_IN.node(entry.getKey().asNode(), AstInValueList.of(nodes));
+            }
+            where.addChild(node);
+        }
     }
 
     private static final Pattern BeSqlVar_PATTERN = Pattern.compile("<var:(.*)[ /]");

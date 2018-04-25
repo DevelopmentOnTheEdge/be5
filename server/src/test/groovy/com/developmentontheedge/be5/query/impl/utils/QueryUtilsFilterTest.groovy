@@ -11,7 +11,7 @@ import javax.inject.Inject
 import static org.junit.Assert.*
 
 
-class QueryUtilsTest extends Be5ProjectTest
+class QueryUtilsFilterTest extends Be5ProjectTest
 {
     @Inject Meta meta
 
@@ -29,7 +29,7 @@ class QueryUtilsTest extends Be5ProjectTest
     void simpleFilterIntColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        QueryUtils.applyFilters(ast, "filterTestTable", ["value":123])
+        QueryUtils.applyFilters(ast, "filterTestTable", ["value": [123]])
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.value = 123", ast.format())
@@ -39,7 +39,7 @@ class QueryUtilsTest extends Be5ProjectTest
     void simpleFilterStringColumn()
     {
         AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
-        QueryUtils.applyFilters(ast, "filterTestTable", ["name":"test"])
+        QueryUtils.applyFilters(ast, "filterTestTable", ["name": ["test"]])
 
         assertEquals("SELECT ft.name, ft.value\n" +
                 "FROM filterTestTable ft WHERE ft.name ='test'", ast.format())

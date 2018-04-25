@@ -43,11 +43,17 @@ public class QueryUtils
     private static final List<String> keywords = Arrays.asList("category",
             SEARCH_PARAM, SEARCH_PRESETS_PARAM, CATEGORY_ID_PARAM, RELOAD_CONTROL_NAME);
 
-    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, Object> parameters)
+    public static void applyFilters(AstStart ast, String mainEntityName, Map<String, List<String>> parameters)
     {
+//        parameters.forEach((k, v) -> {
+//            if(v != null && v.getClass() != String.class){
+//                System.out.println("v getClass: " + v + ", " + v.getClass());
+//            }
+//        });
+
         Set<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toSet();
 
-        Map<ColumnRef, Object> filters = EntryStream.of(parameters)
+        Map<ColumnRef, List<String>> filters = EntryStream.of(parameters)
                 .removeKeys(usedParams::contains)
                 .removeKeys(keywords::contains)
                 .mapKeys(k -> ColumnRef.resolve(ast, k.contains(".") ? k : mainEntityName + "." + k))

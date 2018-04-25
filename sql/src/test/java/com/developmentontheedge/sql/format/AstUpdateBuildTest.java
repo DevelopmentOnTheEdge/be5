@@ -61,7 +61,7 @@ public class AstUpdateBuildTest
     public void testWhereIN()
     {
         AstUpdate update = Ast.update("users").set(Collections.singletonMap("name", "Test"))
-                .whereInPredicate("ID", 3);
+                .whereInWithReplacementParameter("ID", 3);
 
         assertEquals("UPDATE users SET name ='Test' WHERE ID IN (?, ?, ?)", update.format());
     }
