@@ -95,6 +95,8 @@ ru:
       - Filter: Фильтр
       - Insert: Добавить
       - +/- category: +/- категории
+      - AddRemoveCategory: +/- категории
+      - AddRemoveCategoryOperation: +/- категории
       - PermaLink: Постояннная ссылка
       - Restore from Archive: Восстановить из архива
   - query.jsp:
