@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -11,13 +10,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -106,6 +105,18 @@ public class Utils
         return false;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T[] changeTypes(T[] values, Class<?> aClass)
+    {
+        return (T[])Utils.changeType(values, getArrayClass(aClass));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Class<? extends T[]> getArrayClass(Class<T> clazz)
+    {
+        return (Class<? extends T[]>) Array.newInstance(clazz, 0).getClass();
+    }
+
     //todo parametrize: <T> T changeType( Object val, T valClass )
     public static Object changeType( Object val, Class valClass )
     {
@@ -190,7 +201,7 @@ public class Utils
 
                 out.add( newVal );
             }
-            return out.toArray( ( Object[] )java.lang.reflect.Array.newInstance( valClass.getComponentType(), 0 ) );
+            return out.toArray( ( Object[] )Array.newInstance( valClass.getComponentType(), 0 ) );
         }
 
 /*        if( val.getClass().isArray() && !valClass.isArray() )
