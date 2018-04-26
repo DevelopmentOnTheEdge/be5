@@ -30,13 +30,14 @@ public class AddRemoveCategoryOperation extends GOperationSupport
 
         prop = new DynamicProperty( "operationType", "Operation", String.class );
         prop.setShortDescription( "Whether to add or remove" );
-        prop.setAttribute( TAG_LIST_ATTR, new String[]{ "Add", "Remove" } );
+        //todo support prop.setAttribute( TAG_LIST_ATTR, new String[]{ "Add", "Remove" } );
+        prop.setAttribute( TAG_LIST_ATTR, new String[][]{ {"Add", "Add"}, {"Remove", "Remove"} } );
         dps.add( prop );
 
         prop = new DynamicProperty( "parents", "Repeat for parent categories", Boolean.class );
         dps.add( prop );
 
-        return dps;
+        return dpsHelper.setValues(dps, presetValues);
     }
 
     @Override
@@ -72,9 +73,9 @@ public class AddRemoveCategoryOperation extends GOperationSupport
                     "SELECT CONCAT('"+entity+".', e."+pk+"), c.ID " +
                     "FROM "+entity+" e, categories c " +
                     "WHERE e."+pk+" IN " + Utils.inClause(context.records.length) +
-                    " c.ID IN " + Utils.inClause(categories.size()),
+                    "  AND c.ID     IN " + Utils.inClause(categories.size()),
                     ObjectArrays.concat(
-                            (Object[])Utils.changeType(context.records, meta.getColumnType(getInfo().getEntity(), pk)),
+                            Utils.changeTypes(context.records, meta.getColumnType(getInfo().getEntity(), pk)),
                             categories.toArray(),
                             Object.class));
 
@@ -84,7 +85,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
             return;
         }
         db.update("DELETE FROM classifications " +
-                  "WHERE recordID IN " + Utils.inClause(context.records.length)+
+                  "WHERE recordID   IN " + Utils.inClause(context.records.length) +
                   "  AND categoryID IN " + Utils.inClause(categories.size()),
                   ObjectArrays.concat(
                         Utils.addPrefix(context.records, entity + "."),
