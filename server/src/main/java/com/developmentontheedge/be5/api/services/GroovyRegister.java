@@ -41,11 +41,6 @@ public class GroovyRegister
 
     private Class parseClass( String text, String name )
     {
-        if(text.trim().isEmpty())
-        {
-            throw new RuntimeException("Operation code is empty: " + name);
-        }
-
         return getClassLoader().parseClass( text, name );
     }
 

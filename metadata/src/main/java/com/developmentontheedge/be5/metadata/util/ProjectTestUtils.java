@@ -41,7 +41,7 @@ public class ProjectTestUtils
 
     public static Operation createOperation(Entity entity, String name)
     {
-        Operation operation = Operation.createOperation( name, Operation.OPERATION_TYPE_GROOVY, entity );
+        Operation operation = Operation.createOperation( name, Operation.OPERATION_TYPE_JAVA, entity );
         DataElementUtils.save( operation );
         PageCustomization customization = new PageCustomization( PageCustomization.TYPE_CSS, PageCustomization.DOMAIN_OPERATION_FORM,
                 operation.getOrCreateCollection( PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class ) );

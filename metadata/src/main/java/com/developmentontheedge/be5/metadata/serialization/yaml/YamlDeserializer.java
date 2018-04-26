@@ -985,6 +985,13 @@ public class YamlDeserializer
                     fileOperation.setFileName( sourceFile.getName() );
                     fileOperation.customizeProperty( "code" );
                 }
+                else
+                {
+                    if(operation.getType().equals(Operation.OPERATION_TYPE_GROOVY))
+                    {
+                        throw new RuntimeException("Groovy operation required 'file' attribute: " + operation.getName());
+                    }
+                }
             }
             else
             {
