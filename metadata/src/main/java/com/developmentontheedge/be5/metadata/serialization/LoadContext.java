@@ -14,7 +14,8 @@ public class LoadContext
     
     public void addWarning(ReadException ex)
     {
-        warnings.add( ex );
+        throw new RuntimeException(ex);
+        //warnings.add( ex );
     }
     
     public List<ReadException> getWarnings()
