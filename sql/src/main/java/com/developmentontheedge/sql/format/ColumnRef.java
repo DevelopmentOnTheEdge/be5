@@ -56,6 +56,26 @@ public class ColumnRef
     }
 
     @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ColumnRef columnRef = (ColumnRef) o;
+
+        if (table != null ? !table.equals(columnRef.table) : columnRef.table != null) return false;
+        return name != null ? name.equals(columnRef.name) : columnRef.name == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = table != null ? table.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString()
     {
         return "ColumnRef{" +
