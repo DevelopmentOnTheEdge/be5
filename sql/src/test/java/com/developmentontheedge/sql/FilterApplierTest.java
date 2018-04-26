@@ -63,20 +63,20 @@ public class FilterApplierTest
 
         new FilterApplier().setFilter( query, getMapOfList(conditions) );
 
-        assertEquals( "SELECT * FROM games g, city WHERE g.yr = 2012 AND city.country ='UK'",
+        assertEquals( "SELECT * FROM games g, city WHERE city.country ='UK' AND g.yr = 2012",
                 new Formatter().format( query, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
 
         AstStart query2 = SqlQuery.parse( "SELECT city.name, g.* FROM city INNER JOIN games g ON (g.city = city.name)" );
         new FilterApplier().setFilter( query2, getMapOfList(conditions) );
 
-        assertEquals( "SELECT city.name, g.* FROM city INNER JOIN games g WHERE g.yr = 2012 AND city.country ='UK'",
+        assertEquals( "SELECT city.name, g.* FROM city INNER JOIN games g WHERE city.country ='UK' AND g.yr = 2012",
                 new Formatter().format( query2, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
 
 
         AstStart query3 = SqlQuery.parse( "SELECT * FROM city JOIN games g ON (g.city = city.name) JOIN games gm ON city.country ='UK'" );
         new FilterApplier().setFilter( query3, getMapOfList(conditions) );
 
-        assertEquals( "SELECT * FROM city INNER JOIN games g INNER JOIN games gm WHERE g.yr = 2012 AND city.country ='UK'",
+        assertEquals( "SELECT * FROM city INNER JOIN games g INNER JOIN games gm WHERE city.country ='UK' AND g.yr = 2012",
                 new Formatter().format( query3, new Context( Dbms.POSTGRESQL ), new DefaultParserContext() ) );
     }
 

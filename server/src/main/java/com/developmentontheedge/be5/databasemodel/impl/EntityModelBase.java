@@ -219,19 +219,8 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 
         return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
                 ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        castToColumnType(columnDef, ids), Object.class)
+                        Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
         );
-    }
-
-    private Object[] castToColumnType(ColumnDef columnDef, Object[] values)
-    {
-        return (Object[])Utils.changeType(values, getArrayClass(meta.getColumnType(columnDef)));
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> Class<? extends T[]> getArrayClass(Class<T> clazz)
-    {
-        return (Class<? extends T[]>) Array.newInstance(clazz, 0).getClass();
     }
 
     @Override
