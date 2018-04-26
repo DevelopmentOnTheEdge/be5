@@ -42,6 +42,8 @@ public class UserHelper
             hs.addAll(ModuleLoader2.getDevRoles());
 
             availableRoles = new ArrayList<>(hs);
+            currentRoles = new ArrayList<>(hs);
+
             log.info("Dev roles added - " + ModuleLoader2.getDevRoles().toString());
         }
 
