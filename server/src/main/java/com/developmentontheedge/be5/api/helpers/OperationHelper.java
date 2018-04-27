@@ -228,6 +228,15 @@ public class OperationHelper
         return tags;
     }
 
+    public String[][] localizeTags(String tableName, String queryName, String[][] tags)
+    {
+        for (String[] tag : tags)
+        {
+            tag[1] = userAwareMeta.getColumnTitle(tableName, queryName, tag[1]);
+        }
+
+        return tags;
+    }
 
     public String[][] getTagsFromEnum(String tableName, String name)
     {

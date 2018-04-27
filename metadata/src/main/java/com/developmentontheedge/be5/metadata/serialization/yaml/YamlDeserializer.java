@@ -989,7 +989,7 @@ public class YamlDeserializer
                 {
                     if(operation.getType().equals(Operation.OPERATION_TYPE_GROOVY))
                     {
-                        throw new RuntimeException("Groovy operation required 'file' attribute: " + operation.getName());
+                        throw new ReadException(path, "Groovy operation required 'file' attribute.");
                     }
                 }
             }
@@ -1000,6 +1000,14 @@ public class YamlDeserializer
                 {
                     operation.setCode( text );
                     operation.customizeProperty( "code" );
+                }
+                else
+                {
+                    if(operation.getType().equals(Operation.OPERATION_TYPE_JAVA) &&
+                       operationElement.containsKey( ATTR_FILEPATH ))
+                    {
+                        throw new ReadException(path, "Java operation required 'code' instead 'file' attribute.");
+                    }
                 }
             }
             

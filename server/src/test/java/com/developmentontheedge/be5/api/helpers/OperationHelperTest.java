@@ -127,6 +127,15 @@ public class OperationHelperTest extends Be5ProjectDBTest
     }
 
     @Test
+    public void localizeForQueryTags()
+    {
+        String[][] tags = helper.localizeTags("testTags", "All records", new String[][]{ {"01", "Regional"},{"02", "Municipal"} });
+
+        assertArrayEquals(new String[][]{ {"01", "Региональный"},{"02", "Муниципальный"} },
+                tags);
+    }
+
+    @Test
     public void localizeTagsMap()
     {
         String[][] tags = helper.localizeTags("testTags", ImmutableList.of(

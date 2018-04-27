@@ -102,26 +102,15 @@ public class OperationServiceImpl implements OperationService
                 return replaceNullValueToEmptyStringAndReturn(parameters);
             }
 
-            OperationResult invokeResult = operation.getResult();
+            Operation newOperation = operationExecutor.create(operation.getInfo(), operation.getContext());
+            Object newParameters = operationExecutor.generate(newOperation, presetValues);
 
-            operation.setResult(OperationResult.execute());
-
-            Object newParameters = operationExecutor.generate(operation, presetValues);
-
-            if(OperationStatus.ERROR == operation.getStatus())
+            if(newParameters != null && OperationStatus.ERROR != newOperation.getStatus())
             {
-                return Either.second(invokeResult);
-            }
-
-            if(newParameters != null)
-            {
-                operation.setResult(invokeResult);
                 return replaceNullValueToEmptyStringAndReturn(newParameters);
             }
-            else
-            {
-                return Either.second(invokeResult);
-            }
+
+            return Either.second(operation.getResult());
         }
 
         return Either.second(operation.getResult());

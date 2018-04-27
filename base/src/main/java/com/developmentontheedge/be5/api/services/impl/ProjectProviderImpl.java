@@ -63,31 +63,29 @@ public class ProjectProviderImpl implements ProjectProvider
         try
         {
             if(watcher != null)watcher.stop();
-            Project newProject = null;
 
             try
             {
-                newProject = ModuleLoader2.findAndLoadProjectWithModules();
+                return ModuleLoader2.findAndLoadProjectWithModules();
             }
             catch (RuntimeException e)
             {
-                log.log(Level.SEVERE, "Can't load project.\n", e);
-
-                if(project == null)
+                if (stage == Stage.DEVELOPMENT)
                 {
-                    System.exit(0);
+                    project = null;
+                }
+                throw new RuntimeException("Can't load project.", e);
+            }
+            finally
+            {
+                if (stage == Stage.DEVELOPMENT)
+                {
+                    if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
+                    watcher = new WatchDir(initModulesMap)
+                            .onModify( onModify -> dirty = true)
+                            .start();
                 }
             }
-
-            if (stage == Stage.DEVELOPMENT)
-            {
-                if(initModulesMap == null)initModulesMap = ModuleLoader2.getModulesMap();
-                watcher = new WatchDir(initModulesMap)
-                    .onModify( onModify -> dirty = true)
-                    .start();
-            }
-
-            return newProject != null ? newProject : project;
         }
         catch(ProjectLoadException | IOException e)
         {

@@ -219,17 +219,22 @@ public class SerializationTest
         DataElementUtils.saveQuiet( module );
         final Entity table = new Entity("customizedtable", module, EntityType.TABLE);
         DataElementUtils.saveQuiet( table );
+
         final Operation op1 = Operation.createOperation("normop", Operation.OPERATION_TYPE_JAVA, table);
         assertFalse(module.isCustomized());
         DataElementUtils.saveQuiet( op1 );
+
+        final Query q1 = new Query("normq", table);
+        DataElementUtils.saveQuiet( q1 );
+
         final Operation op2 = Operation.createOperation("custop", Operation.OPERATION_TYPE_JAVA, table);
         op2.setOriginModuleName( Project.APPLICATION );
         DataElementUtils.saveQuiet( op2 );
-        final Query q1 = new Query("normq", table);
-        DataElementUtils.saveQuiet( q1 );
+
         final Query q2 = new Query("custq", table);
         q2.setOriginModuleName( Project.APPLICATION );
         DataElementUtils.saveQuiet( q2 );
+
         assertTrue(module.isCustomized());
 
         final Path tempFolder = tmp.newFolder().toPath();
