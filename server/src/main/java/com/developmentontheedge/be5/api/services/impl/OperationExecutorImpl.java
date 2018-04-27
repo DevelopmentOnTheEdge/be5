@@ -302,9 +302,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
-                    throw Be5Exception.internalInOperation(new RuntimeException(
-                            "It is possible to use the 'file:' instead of the 'code:' " +
-                                    "in the yaml file. \n\t" + e.getMessage(), e), operationInfo.getModel());
+                    throw Be5Exception.internalInOperation(e, operationInfo.getModel());
                 }
             case OPERATION_TYPE_JAVAFUNCTION:
             case OPERATION_TYPE_SQL:

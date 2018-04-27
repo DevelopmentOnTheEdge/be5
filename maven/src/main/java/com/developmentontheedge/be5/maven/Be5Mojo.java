@@ -153,9 +153,9 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
         {
             prj = Serialization.load(root, loadContext);
         }
-        catch(final ProjectLoadException e)
+        catch(ProjectLoadException | RuntimeException e)
         {
-            throw new MojoFailureException("Can not load project", e);
+            throw new MojoFailureException("\nCan not load project", e);
         }
         checkErrors( loadContext, "Project has %d error(s)" );
         return prj;
