@@ -120,6 +120,7 @@ public class OperationServiceImpl implements OperationService
             }
             else
             {
+                //todo revert invokeResult ?
                 return Either.second(invokeResult);
             }
         }

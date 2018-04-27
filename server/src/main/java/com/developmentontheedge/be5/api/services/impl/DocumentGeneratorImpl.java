@@ -256,28 +256,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             ErrorModel errorModel = null;
             if(operation.getResult().getStatus() == OperationStatus.ERROR)
             {
-                if(UserInfoHolder.isSystemDeveloper())
+                if (UserInfoHolder.isSystemDeveloper())
                 {
                     errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), HashUrlUtils.getUrl(operation));
-                }
-
-                if(operation.getResult().getDetails() != null &&
-                   operation.getResult().getDetails().getClass() == Be5Exception.class &&
-                   ((Be5Exception)(operation.getResult().getDetails())).getCause() != null)
-                {
-                    Throwable cause = ((Be5Exception) (operation.getResult().getDetails())).getCause();
-
-                    String message;
-                    if(cause.getMessage() != null){
-                        message = cause.getMessage().split(System.getProperty("line.separator"))[0];
-                    }else{
-                        message = cause.getClass().getSimpleName();
-                    }
-                    operation.setResult(OperationResult.error(message, null));
-                }
-                else
-                {
-                    operation.setResult(OperationResult.error(operation.getResult().getMessage().split(System.getProperty("line.separator"))[0], null));
                 }
             }
 
@@ -287,18 +268,44 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                     userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
                     JsonFactory.bean(result.getFirst()),
                     LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
-                    operation.getResult(),
+                    resultForFrontend(operation.getResult()),
                     errorModel
             ));
         }
         else
         {
-            if(operation.getResult().getStatus() == OperationStatus.ERROR){
-                //remove Throwable for prevent adding to json
-                return Either.second(OperationResult.error(result.getSecond().getMessage(), null));
-            }else{
-                return Either.second(result.getSecond());
+            return Either.second(resultForFrontend(result.getSecond()));
+        }
+    }
+
+    private OperationResult resultForFrontend(OperationResult result)
+    {
+        if(result.getStatus() == OperationStatus.ERROR)
+        {
+            if (result.getDetails() != null &&
+                    result.getDetails().getClass() == Be5Exception.class &&
+                    ((Be5Exception) (result.getDetails())).getCause() != null)
+            {
+                Throwable cause = ((Be5Exception) (result.getDetails())).getCause();
+
+                String message;
+                if (cause.getMessage() != null)
+                {
+                    message = cause.getMessage().split(System.getProperty("line.separator"))[0];
+                } else
+                {
+                    message = cause.getClass().getSimpleName();
+                }
+                return OperationResult.error(message, null);
             }
+            else
+            {
+                return OperationResult.error(result.getMessage().split(System.getProperty("line.separator"))[0], null);
+            }
+        }
+        else
+        {
+            return result;
         }
     }
 
