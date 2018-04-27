@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -165,5 +166,12 @@ public class ParseRequestUtils
                 .stream()
                 .filter(e -> notFilterParams.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public static String getRequestWithoutContext(String contextPath, String requestUri)
+    {
+        String reqWithoutContext = requestUri.replaceFirst(contextPath, "");
+        if(!reqWithoutContext.endsWith("/"))reqWithoutContext += "/";
+        return reqWithoutContext;
     }
 }

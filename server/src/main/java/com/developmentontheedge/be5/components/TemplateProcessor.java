@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.inject.Injector;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -13,7 +14,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
 
-
+//todo refactoring to service
 public class TemplateProcessor implements Component
 {
     private final TemplateEngine templateEngine;
@@ -42,6 +43,8 @@ public class TemplateProcessor implements Component
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
+        String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
+
         UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
         String title = userAwareMeta.getColumnTitle("index", "page", "title");
         String description = userAwareMeta.getColumnTitle("index", "page", "description");
@@ -50,9 +53,6 @@ public class TemplateProcessor implements Component
         context.setVariable("lang", UserInfoHolder.getLanguage());
         context.setVariable("title", title);
         context.setVariable("description", description);
-
-        String reqWithoutContext = req.getRequestUri().replaceFirst(req.getContextPath(), "");
-        if(!reqWithoutContext.endsWith("/"))reqWithoutContext += "/";
 
         context.setVariable("baseUrl", req.getContextPath() + reqWithoutContext);
         context.setVariable("baseUrlWithoutContext", reqWithoutContext);
