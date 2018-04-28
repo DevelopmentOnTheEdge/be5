@@ -6,5 +6,5 @@ under construction ...
 ### Wiki
 https://github.com/DevelopmentOnTheEdge/be5/wiki
 
-### Документация по: Freemarker, BeanExplorer4 metadata, BE-SQL 
+### Документация по: BE-SQL, metadata, Freemarker  
 http://wiki.dote.ru    
