@@ -11,6 +11,8 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +118,7 @@ public class OperationServiceImpl implements OperationService
         return Either.second(operation.getResult());
     }
 
-    private Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
+    private static Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
     {
         Map<String, Object> presetValues =
                 new HashMap<>(ParseRequestUtils.getOperationParamsWithoutFilter(context.getOperationParams()));
@@ -125,11 +127,32 @@ public class OperationServiceImpl implements OperationService
         return presetValues;
     }
 
-    private Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
+    private static Either<Object, OperationResult> replaceNullValueToEmptyStringAndReturn(Object parameters)
     {
-        ParseRequestUtils.replaceValuesToString(parameters);
+        replaceValuesToString(parameters);
 
         return Either.first(parameters);
     }
+
+    static void replaceValuesToString(Object parameters)
+    {
+        if (parameters instanceof DynamicPropertySet)
+        {
+            for (DynamicProperty property : (DynamicPropertySet)parameters)
+            {
+                if (property.getValue() == null)
+                {
+                    property.setValue("");
+                }
+                else if(property.getValue().getClass() != String.class &&
+                        property.getValue().getClass() != Boolean.class &&
+                        !(property.getValue() instanceof Object[]))
+                {
+                    property.setValue(property.getValue().toString());
+                }
+            }
+        }
+    }
+
 
 }

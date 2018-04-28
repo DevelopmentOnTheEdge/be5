@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.impl.model.Base64File;
-import com.developmentontheedge.beans.DynamicProperty;
-import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
@@ -11,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -126,26 +123,6 @@ public class ParseRequestUtils
             }
         }
         return map;
-    }
-
-    public static void replaceValuesToString(Object parameters)
-    {
-        if (parameters instanceof DynamicPropertySet)
-        {
-            for (DynamicProperty property : (DynamicPropertySet)parameters)
-            {
-                if (property.getValue() == null)
-                {
-                    property.setValue("");
-                }
-                else if(property.getValue().getClass() != String.class &&
-                        property.getValue().getClass() != Boolean.class &&
-                        !(property.getValue() instanceof Object[]))
-                {
-                    property.setValue(property.getValue().toString());
-                }
-            }
-        }
     }
 
     public static Map<String, Object> getOperationParamsWithoutFilter(Map<String, Object> operationParams)
