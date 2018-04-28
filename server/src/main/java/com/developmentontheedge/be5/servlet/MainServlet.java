@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.inject.Stage;
 import com.developmentontheedge.be5.inject.impl.YamlBinder;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -91,42 +93,10 @@ public class MainServlet implements Filter
      */
     private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
     {
-        String origin = request.getHeader("Origin");
-        // TODO test origin
-
-        response.addHeader("Access-Control-Allow-Credentials", "true");
-        response.addHeader("Access-Control-Allow-Origin", origin);
-        response.addHeader("Access-Control-Allow-Methods", "POST, GET");
-        response.addHeader("Access-Control-Max-Age", "1728000");
-
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-
-        Response res = new ResponseImpl(response);
-
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
         {
-            // This prevents triggering engine executions for resource URLs
-            log.log(Level.FINE, requestUri + " ContextPath=" + request.getContextPath());
-
-            String contextPath = request.getContextPath();
-            if (requestUri.startsWith( contextPath + (contextPath.endsWith("/") ? "" : "/") + "static/")
-                    || requestUri.contains("favicon.ico"))//|| requestUri.startsWith("/static/")
-            {
-                return false;
-            }
-            String templateComponentID = "templateProcessor";
-            if(!injector.hasComponent(templateComponentID))
-            {
-                templateComponentID = "defaultTemplateProcessor";
-            }
-
-            RequestImpl req = new RequestImpl(request, requestUri, arrayToList(parameters));
-            UserInfoHolder.setRequest(req);
-            runTemplateProcessor(templateComponentID, req, res);
-            return true;
+            return getTemplate(request, response, requestUri, parameters);
         }
 
         String[] uriParts = requestUri.split("/");
@@ -142,8 +112,48 @@ public class MainServlet implements Filter
 
         Request req = new RequestImpl(request, subRequestUri, arrayToList(parameters));
         UserInfoHolder.setRequest(req);
-        runComponent(componentId, req, res);
+        runComponent(componentId, req, getResponse(request, response));
         return true;
+    }
+
+    private boolean getTemplate(HttpServletRequest request, HttpServletResponse response, String requestUri, Map<String, String[]> parameters)
+    {
+        String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(request.getContextPath(), requestUri);
+
+        String path = servletContext.getRealPath("/WEB-INF/templates" + reqWithoutContext + "index.html");
+        if (!new File(path).exists())
+        {
+            return false;
+        }
+
+        String templateComponentID = "templateProcessor";
+        if(!injector.hasComponent(templateComponentID))
+        {
+            templateComponentID = "defaultTemplateProcessor";
+        }
+
+        RequestImpl req = new RequestImpl(request, requestUri, arrayToList(parameters));
+        UserInfoHolder.setRequest(req);
+        runTemplateProcessor(templateComponentID, req, getResponse(request, response));
+        return true;
+    }
+
+
+    //todo refactoring to service
+    private Response getResponse(HttpServletRequest request, HttpServletResponse response)
+    {
+        String origin = request.getHeader("Origin");// TODO test origin
+
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Origin", origin);
+        response.addHeader("Access-Control-Allow-Methods", "POST, GET");
+        response.addHeader("Access-Control-Max-Age", "1728000");
+
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+        return new ResponseImpl(response);
     }
 
     private void runTemplateProcessor(String componentId, Request req, Response res)
