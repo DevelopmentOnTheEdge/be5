@@ -1,3 +1,5 @@
+package system
+
 import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.util.ActionUtils
 import com.developmentontheedge.be5.query.impl.TableModel
