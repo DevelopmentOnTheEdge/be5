@@ -140,7 +140,7 @@ public class ParseRequestUtils
                 }
                 else if(property.getValue().getClass() != String.class &&
                         property.getValue().getClass() != Boolean.class &&
-                        !(property.getValue() instanceof String[]))
+                        !(property.getValue() instanceof Object[]))
                 {
                     property.setValue(property.getValue().toString());
                 }
