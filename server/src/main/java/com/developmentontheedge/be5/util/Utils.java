@@ -106,7 +106,7 @@ public class Utils
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T[] changeTypes(T[] values, Class<?> aClass)
+    public static <T> T[] changeTypes(Object[] values, Class<T> aClass)
     {
         return (T[])Utils.changeType(values, getArrayClass(aClass));
     }
