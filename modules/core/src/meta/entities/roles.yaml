@@ -6,4 +6,4 @@ roles:
   - '*** Selection view ***':
       type: Groovy
       roles: [SystemDeveloper, Administrator]
-      file: roles/SelectionView.groovy
+      file: roles.SelectionView.groovy

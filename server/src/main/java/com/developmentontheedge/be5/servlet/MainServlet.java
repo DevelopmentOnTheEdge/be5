@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -120,8 +119,7 @@ public class MainServlet implements Filter
     {
         String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(request.getContextPath(), requestUri);
 
-        String path = servletContext.getRealPath("/WEB-INF/templates" + reqWithoutContext + "index.html");
-        if (!new File(path).exists())
+        if (servletContext.getResourceAsStream("/WEB-INF/templates" + reqWithoutContext + "index.html") == null)
         {
             return false;
         }

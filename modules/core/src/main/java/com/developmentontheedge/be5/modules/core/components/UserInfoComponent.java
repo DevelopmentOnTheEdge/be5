@@ -18,17 +18,20 @@ public class UserInfoComponent implements Component
     {
         private final boolean loggedIn;
         private final String userName;
+
         private final List<String> availableRoles;
         private final List<String> currentRoles;
         private final Date creationTime;
+        private final String defaultRoute;
 
-        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Date creationTime)
+        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Date creationTime, String defaultRoute)
         {
             this.loggedIn = loggedIn;
             this.userName = userName;
             this.availableRoles = availableRoles;
             this.currentRoles = currentRoles;
             this.creationTime = creationTime;
+            this.defaultRoute = defaultRoute;
         }
 
         public boolean isLoggedIn()
@@ -55,6 +58,11 @@ public class UserInfoComponent implements Component
         {
             return creationTime;
         }
+
+        public String getDefaultRoute()
+        {
+            return defaultRoute;
+        }
     }
 
     @Override
@@ -68,8 +76,8 @@ public class UserInfoComponent implements Component
                         UserInfoHolder.getUserName(),
                         UserInfoHolder.getAvailableRoles(),
                         UserInfoHolder.getCurrentRoles(),
-                        UserInfoHolder.getUserInfo().getCreationTime()
-                ));
+                        UserInfoHolder.getUserInfo().getCreationTime(),
+                        ""));
                 return;
             case "selectRoles":
                 selectRolesAndSendNewState(req, res, injector);

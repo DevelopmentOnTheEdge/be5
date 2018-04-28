@@ -1095,18 +1095,18 @@ public class YamlDeserializer
             case STATIC:
                 text = ( String ) queryElement.get( ATTR_QUERY_CODE );
                 break;
-                
+
             case GROOVY:
                 final String groovyFileName = ( String ) queryElement.get( "file" );
                 // try to read 'code' if there's no 'file'
                 if ( groovyFileName == null )
                 {
                     text = ( String ) queryElement.get( TAG_CODE );
-                    query.setFileName( query.getName().replace( ':', '_' ) + ".groovy" );
+                    query.setFileName( classPathToFileName(query.getName().replace( ':', '_' ) + ".groovy", ".groovy") );
                 }
                 else
                 {
-                    text = getFileSystem().readGroovyQuery( groovyFileName.replace( ':', '_' ) );
+                    text = getFileSystem().readGroovyQuery( classPathToFileName(groovyFileName.replace( ':', '_' ), ".groovy") );
                     query.setFileName( groovyFileName );
                 }
                 break;

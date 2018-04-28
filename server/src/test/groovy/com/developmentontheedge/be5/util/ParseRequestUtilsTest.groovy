@@ -40,4 +40,5 @@ class ParseRequestUtilsTest
 
         assertEquals([CODE:"123", payable:"no"], ParseRequestUtils.getOperationParamsWithoutFilter(map))
     }
+
 }

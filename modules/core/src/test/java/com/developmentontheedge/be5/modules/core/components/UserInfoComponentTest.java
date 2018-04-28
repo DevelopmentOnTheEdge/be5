@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 public class UserInfoComponentTest extends Be5ProjectTest
 {
     @Inject private Injector injector;
-    @Inject private UserHelper userHelper;
     private static Component component;
 
     @Before
@@ -50,8 +49,8 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                any(Date.class)
-        ));
+                any(Date.class),
+                ""));
     }
 
     @Test
@@ -67,8 +66,8 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 RoleType.ROLE_GUEST,
                 Collections.singletonList(RoleType.ROLE_GUEST),
                 Collections.singletonList(RoleType.ROLE_GUEST),
-                any(Date.class)
-        ));
+                any(Date.class),
+                ""));
     }
 
     @Rule
@@ -87,8 +86,8 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                any(Date.class)
-        ));
+                any(Date.class),
+                ""));
     }
 
     @Test
@@ -104,8 +103,8 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                any(Date.class)
-        ));
+                any(Date.class),
+                ""));
     }
 
     @Test

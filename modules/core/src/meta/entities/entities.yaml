@@ -6,4 +6,4 @@ entities:
   - '*** Selection view ***':
       type: Groovy
       roles: [SystemDeveloper, Administrator]
-      file: entities/SelectionView.groovy
+      file: entities.SelectionView.groovy
