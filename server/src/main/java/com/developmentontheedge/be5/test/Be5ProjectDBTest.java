@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
@@ -15,6 +14,8 @@ import com.developmentontheedge.be5.api.helpers.UserHelper;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -60,11 +61,15 @@ public abstract class Be5ProjectDBTest extends TestUtils
         {
             try
             {
+                File file = Paths.get("target/sql").toFile();
                 log.info(JULLogger.infoBlock("Execute be5:create-db"));
                 new AppDb()
-                        .setLogger(new JULLogger(Logger.getLogger(AppDb.class.getName())))
+                        .setLogPath(file)
+                        .setLogger(new JULLogger(log))
                         .setBe5Project(project)
                         .execute();
+
+                log.info("Sql log in: " + file.getAbsolutePath());
             }
             catch (MojoFailureException e)
             {

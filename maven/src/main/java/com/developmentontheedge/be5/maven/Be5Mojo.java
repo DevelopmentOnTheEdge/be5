@@ -228,6 +228,12 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
 //        return result;
 //    }
 
+    public T setLogPath(File logPath)
+    {
+        this.logPath = logPath;
+        return me();
+    }
+
     public T setLogger(ProcessController logger)
     {
         this.logger = logger;
