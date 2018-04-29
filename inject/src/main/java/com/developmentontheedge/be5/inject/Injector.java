@@ -41,7 +41,7 @@ public interface Injector
 {
     /**
      * Resolves a service by its class.
-     * @see Injector ServiceProvider for more information
+     * @see Injector for more information
      */
     <T> T get(Class<T> serviceClass);
 
