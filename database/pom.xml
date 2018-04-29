@@ -32,12 +32,6 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
             <version>1.7</version>
@@ -61,12 +55,6 @@
             <groupId>org.zapodot</groupId>
             <artifactId>embedded-db-junit</artifactId>
             <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.zapodot</groupId>
-            <artifactId>embedded-db-junit</artifactId>
-            <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
 
