@@ -58,9 +58,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.193</version>
+            <groupId>org.zapodot</groupId>
+            <artifactId>embedded-db-junit</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.zapodot</groupId>
+            <artifactId>embedded-db-junit</artifactId>
+            <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
 
