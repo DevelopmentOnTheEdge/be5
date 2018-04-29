@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.SqlService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,7 +40,7 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
             });
             Assert.fail("Should have thrown Be5Exception");
         }
-        catch (Be5Exception e) {
+        catch (RuntimeException e) {
             Assert.assertTrue(true);
             assertEquals(0L, (long)db.getLong("SELECT count(*) FROM persons" ));
         }
@@ -62,7 +61,7 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
             });
             Assert.fail("Should have thrown Be5Exception");
         }
-        catch (Be5Exception e) {
+        catch (RuntimeException e) {
             Assert.assertTrue(true);
             assertEquals(0L, (long)db.getLong("SELECT count(*) FROM persons" ));
         }

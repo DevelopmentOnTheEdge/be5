@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
@@ -34,18 +34,18 @@ public class OperationExecutorImpl implements OperationExecutor
     public static final Logger log = Logger.getLogger(OperationExecutorImpl.class.getName());
 
     private final Injector injector;
-    private final DatabaseService databaseService;
+    private final ConnectionService connectionService;
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
     private final UserAwareMeta userAwareMeta;
     private final GroovyRegister groovyRegister;
 
-    public OperationExecutorImpl(Injector injector, DatabaseService databaseService, Validator validator,
+    public OperationExecutorImpl(Injector injector, ConnectionService connectionService, Validator validator,
                                  GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta,
                                  GroovyRegister groovyRegister)
     {
         this.injector = injector;
-        this.databaseService = databaseService;
+        this.connectionService = connectionService;
         this.validator = validator;
         this.groovyOperationLoader = groovyOperationLoader;
         this.userAwareMeta = userAwareMeta;
@@ -72,11 +72,11 @@ public class OperationExecutorImpl implements OperationExecutor
     {
         if(operation instanceof TransactionalOperation)
         {
-            return databaseService.transactionWithResult(connection -> {
+            return connectionService.transactionWithResult(connection -> {
                 Object parameters = callOperation(operation, presetValues);
                 if(operation.getStatus() == OperationStatus.ERROR)
                 {
-                    databaseService.rollback(connection, (Throwable) operation.getResult().getDetails());
+                    connectionService.rollback(connection, (Throwable) operation.getResult().getDetails());
                 }
                 return parameters;
             });

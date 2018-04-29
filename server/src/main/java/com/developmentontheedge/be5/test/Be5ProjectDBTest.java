@@ -55,8 +55,8 @@ public abstract class Be5ProjectDBTest extends TestUtils
     {
         Project project = injector.get(ProjectProvider.class).getProject();
 
-        if(injector.get(DatabaseService.class).getConnectionProfileName() != null &&
-                profileForIntegrationTests.equals(injector.get(DatabaseService.class).getConnectionProfileName()))
+        if(project.getConnectionProfileName() != null &&
+                profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
             try
             {

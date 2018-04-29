@@ -3,8 +3,6 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.api.sql.SqlExecutor;
-import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
@@ -31,12 +29,8 @@ public class DatabaseServiceImpl implements DatabaseService
     //Thread local?
     //private final Map<ResultSet, Connection> queriesMap = new ConcurrentHashMap<>(100);
 
-    private static final ThreadLocal<Connection> TRANSACT_CONN = new ThreadLocal<>();
-    private static final ThreadLocal<Integer> TRANSACT_CONN_COUNT = new ThreadLocal<>();
-
-    private DataSource dataSource = null;
+    private DataSource dataSource;
     private Rdbms type;
-    private BeConnectionProfile profile = null;
 
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
@@ -55,7 +49,7 @@ public class DatabaseServiceImpl implements DatabaseService
         }
         catch (NamingException ignore)
         {
-            profile = project.getConnectionProfile();
+            BeConnectionProfile profile = project.getConnectionProfile();
             if(profile == null)
             {
                 throw Be5Exception.internal("Connection profile is not configured.");
@@ -90,148 +84,10 @@ public class DatabaseServiceImpl implements DatabaseService
         return dataSource;
     }
 
-    public Connection getConnection(boolean isReadOnly) throws SQLException
-    {
-        Connection conn = getDataSource().getConnection();
-        if (isReadOnly) {
-            conn.setReadOnly(true);
-        }
-        return conn;
-    }
-
-    @Override
-    public void releaseConnection(Connection conn)
-    {
-        if ( !isInTransaction() )
-        {
-            returnConnection(conn);
-        }
-    }
-
-    private void returnConnection(Connection conn)
-    {
-        if (conn != null)
-        {
-            try
-            {
-                if(!conn.isClosed())
-                {
-                    if(!conn.getAutoCommit())
-                        conn.setAutoCommit(true);
-                    if (conn.isReadOnly())
-                        conn.setReadOnly(false);
-
-                    conn.close();
-                }
-            }
-            catch (SQLException e) {
-                throw Be5Exception.internal(log, e);
-            }
-        }
-    }
-
-    public Connection getCurrentTxConn()
-    {
-        return TRANSACT_CONN.get();
-    }
-
-    private Connection getTxConnection() throws SQLException
-    {
-        Connection conn = TRANSACT_CONN.get();
-        if (conn != null)
-        {
-            return conn;//for nested transactions
-        }
-        else
-        {
-            conn = getDataSource().getConnection();
-            conn.setAutoCommit(false);
-            TRANSACT_CONN.set(conn);
-            return conn;
-        }
-    }
-
-    private void closeTx(Connection conn) {
-        returnConnection(conn);
-        TRANSACT_CONN.set(null);
-    }
-
-    public <T> T transactionWithResult(SqlExecutor<T> executor)
-    {
-        Connection conn = null;
-        try {
-            conn = getTxConnection();
-
-            if(TRANSACT_CONN_COUNT.get() == null)TRANSACT_CONN_COUNT.set(0);
-
-            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
-            T res = executor.run(conn);
-            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
-
-            if(TRANSACT_CONN_COUNT.get() == 0)
-            {
-                conn.commit();
-            }
-
-            return res;
-        } catch (Error | Exception e) {
-            TRANSACT_CONN_COUNT.set(0);
-            throw rollback(conn, e);
-        } finally {
-            if(TRANSACT_CONN_COUNT.get() == 0)
-            {
-                closeTx(conn);
-            }
-        }
-    }
-
-    @Override
-    public void transaction(SqlExecutorVoid executor)
-    {
-        transactionWithResult(getWrapperExecutor(executor));
-    }
-
-    private static SqlExecutor<Void> getWrapperExecutor(final SqlExecutorVoid voidExecutor) {
-        return conn -> {
-            voidExecutor.run(conn);
-            return null;
-        };
-    }
-
-    @Override
-    public RuntimeException rollback(Connection conn, Throwable e)
-    {
-        try
-        {
-            if (conn != null)
-            {
-                conn.rollback();
-            }
-            if(e instanceof Be5Exception)
-            {
-                return (Be5Exception)e;
-            }
-            else
-            {
-                return Be5Exception.internal(log, e);
-            }
-        }
-        catch (SQLException se)
-        {
-            return Be5Exception.internal(log, se, "Unable to rollback transactionWithResult", e);
-        }
-    }
-
     @Override
     public Dbms getDbms()
     {
         return type.getDbms();
-    }
-
-    @Override
-    public String getConnectionProfileName()
-    {
-        return profile != null ? profile.getName() : null;
     }
 
     @Override
@@ -245,7 +101,12 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
-    public String getUsername()
+    public Connection getConnection() throws SQLException
+    {
+        return dataSource.getConnection();
+    }
+
+    private String getUsername()
     {
         if(dataSource instanceof BasicDataSource)
         {
@@ -254,11 +115,7 @@ public class DatabaseServiceImpl implements DatabaseService
         throw Be5Exception.internal("Unknown dataSource");
     }
 
-    private boolean isInTransaction()
-    {
-        return getCurrentTxConn() != null;
-    }
-
+    @Override
     public Map<String, String> getParameters()
     {
         Map<String, String> map = new TreeMap<>();

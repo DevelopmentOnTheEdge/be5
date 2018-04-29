@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
@@ -28,10 +29,12 @@ public class SqlServiceImpl implements SqlService
 
     private QueryRunner queryRunner;
     private DatabaseService databaseService;
+    private ConnectionService connectionService;
 
-    public SqlServiceImpl(DatabaseService databaseService)
+    public SqlServiceImpl(ConnectionService connectionService, DatabaseService databaseService)
     {
         this.databaseService = databaseService;
+        this.connectionService = connectionService;
         queryRunner = new QueryRunner();
     }
 
@@ -119,11 +122,11 @@ public class SqlServiceImpl implements SqlService
     private <T> T execute(boolean isReadOnly, SqlExecutor<T> executor)
     {
         Connection conn = null;
-        Connection txConn = databaseService.getCurrentTxConn();
+        Connection txConn = connectionService.getCurrentTxConn();
 
         try
         {
-            conn = (txConn != null) ? txConn : databaseService.getConnection(isReadOnly);
+            conn = (txConn != null) ? txConn : connectionService.getConnection(isReadOnly);
             return executor.run(conn);
         }
         catch (SQLException e)
@@ -135,19 +138,19 @@ public class SqlServiceImpl implements SqlService
         {
             if(txConn == null)
             {
-                databaseService.releaseConnection(conn);
+                connectionService.releaseConnection(conn);
             }
         }
     }
 
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
-        return databaseService.transactionWithResult(executor);
+        return connectionService.transactionWithResult(executor);
     }
 
     public void transaction(SqlExecutorVoid executor)
     {
-        databaseService.transaction(executor);
+        connectionService.transaction(executor);
     }
 
 }

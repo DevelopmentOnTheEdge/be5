@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query.impl;
 
+import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -137,6 +138,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private final DatabaseService databaseService;
+    private final ConnectionService connectionService;
     private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
@@ -151,10 +153,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, DatabaseService databaseService,
+    public Be5QueryExecutor(Query query, ConnectionService connectionService, Map<String, List<String>> parameters, DatabaseService databaseService,
                             Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
         super(query);
+        this.connectionService = connectionService;
 
         this.parameters = parameters;
         this.databaseService = databaseService;
@@ -266,13 +269,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private DynamicProperty[] getSchema(String sql)
     {
         try{
-            Connection conn = databaseService.getConnection(true);
+            Connection conn = connectionService.getConnection(true);
 
             try(PreparedStatement ps = conn.prepareStatement(sql)) {
                 return DpsRecordAdapter.createSchema(ps.getMetaData());
             }
             finally {
-                databaseService.releaseConnection(conn);
+                connectionService.releaseConnection(conn);
             }
         }
         catch (Throwable e)
