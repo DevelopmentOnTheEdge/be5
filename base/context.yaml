@@ -1,15 +1,3 @@
 name: be5-base
 context:
   services:
-  - projectProvider:
-      interface:      com.developmentontheedge.be5.api.services.ProjectProvider
-      implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl
-  - databaseService:
-      interface:      com.developmentontheedge.be5.api.services.DatabaseService
-      implementation: com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl
-  - connectionService:
-      interface:      com.developmentontheedge.be5.api.services.ConnectionService
-      implementation: com.developmentontheedge.be5.api.services.impl.ConnectionServiceImpl
-  - sqlService:
-      interface:      com.developmentontheedge.be5.api.services.SqlService
-      implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl

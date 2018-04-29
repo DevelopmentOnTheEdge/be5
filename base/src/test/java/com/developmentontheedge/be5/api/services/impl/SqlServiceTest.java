@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +12,6 @@ import static org.junit.Assert.assertTrue;
 
 public class SqlServiceTest extends Be5ProjectDbBaseTest
 {
-    @Inject private SqlService db;
-
     private static final ResultSetParser<TestPerson> parser = rs ->
             new TestPerson(rs.getLong("id"),rs.getString("name"),
                     rs.getString("password"),rs.getString("email"));

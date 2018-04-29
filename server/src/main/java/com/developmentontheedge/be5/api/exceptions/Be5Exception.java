@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.exceptions;
 
-import com.developmentontheedge.be5.api.ulit.HtmlUtils;
+import com.developmentontheedge.be5.util.HtmlUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;

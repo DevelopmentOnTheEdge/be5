@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.api.services.SqlService;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,8 +14,6 @@ import static junit.framework.TestCase.assertEquals;
 
 public class MultiThreadedTest extends Be5ProjectDbBaseTest
 {
-    @Inject private SqlService db;
-
     @Before
     public void setUp()
     {

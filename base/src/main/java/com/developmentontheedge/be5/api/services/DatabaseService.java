@@ -9,8 +9,6 @@ import java.util.Map;
 
 public interface DatabaseService
 {
-    String getConnectString();
-
     Connection getConnection() throws SQLException;
 
     Dbms getDbms();

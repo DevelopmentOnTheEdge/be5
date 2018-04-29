@@ -91,19 +91,18 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
-    public String getConnectString()
+    public Connection getConnection() throws SQLException
+    {
+        return dataSource.getConnection();
+    }
+
+    private String getConnectString()
     {
         if(dataSource instanceof BasicDataSource)
         {
             return ((BasicDataSource) dataSource).getUrl();
         }
         throw Be5Exception.internal("Unknown dataSource");
-    }
-
-    @Override
-    public Connection getConnection() throws SQLException
-    {
-        return dataSource.getConnection();
     }
 
     private String getUsername()

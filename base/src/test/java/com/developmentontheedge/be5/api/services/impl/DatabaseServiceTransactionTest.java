@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.api.services.SqlService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,8 +9,6 @@ import static org.junit.Assert.assertEquals;
 
 public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
 {
-    @Inject private SqlService db;
-
     @Before
     public void setUp()
     {

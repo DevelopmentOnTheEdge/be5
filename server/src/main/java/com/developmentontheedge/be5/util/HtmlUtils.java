@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.ulit;
+package com.developmentontheedge.be5.util;
 
 public class HtmlUtils
 {

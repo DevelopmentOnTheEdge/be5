@@ -26,10 +26,6 @@ public class DatabaseServiceMock implements DatabaseService
         return new HashMap<>();
     }
 
-    @Override
-    public String getConnectString() {
-        return "jdbc:postgresql://localhost:5432/test";
-    }
 //
 //    @Override
 //    public int executeUpdate(String query) throws SQLException {
