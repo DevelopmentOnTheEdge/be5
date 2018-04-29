@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>be5-base</artifactId>
+    <artifactId>be5-database</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>be5 base</name>
-    <description>base</description>
+    <name>be5 database</name>
+    <description>database</description>
 
     <parent>
         <groupId>com.developmentontheedge.be5</groupId>

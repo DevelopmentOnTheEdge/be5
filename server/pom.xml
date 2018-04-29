@@ -37,7 +37,7 @@
 
         <dependency>
             <groupId>com.developmentontheedge.be5</groupId>
-            <artifactId>be5-base</artifactId>
+            <artifactId>be5-database</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
 
