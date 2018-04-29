@@ -3,8 +3,6 @@ package com.developmentontheedge.be5.inject;
 import com.developmentontheedge.be5.inject.impl.Be5Injector;
 import com.developmentontheedge.be5.inject.impl.YamlBinder;
 import com.developmentontheedge.be5.inject.impl.testComponents.TestComponent;
-import com.developmentontheedge.be5.inject.impl.testServices.AService;
-import com.developmentontheedge.be5.inject.impl.testServices.BService;
 import com.developmentontheedge.be5.inject.services.ConfigurableService;
 import com.developmentontheedge.be5.inject.services.TestService;
 import com.developmentontheedge.be5.inject.services.impl.TestServiceMock;
@@ -45,18 +43,6 @@ public class InjectorTest
         injector.get(ConfigurableService.class);
 
         verify(TestServiceMock.mock).call("test.url 5");
-    }
-
-    @Test
-    public void injectWithAnnotatedAServiceFirst()
-    {
-        Injector injector = new Be5Injector(Stage.DEVELOPMENT, new YamlBinder());
-
-        injector.get(AService.class).aMethodUseBService();
-        verify(TestServiceMock.mock).call("bMethod");
-
-        injector.get(BService.class).bMethodUseAService();
-        verify(TestServiceMock.mock).call("aMethod");
     }
 
 }
