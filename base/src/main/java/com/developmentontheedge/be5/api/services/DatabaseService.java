@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.sql.format.Dbms;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,9 +23,9 @@ public interface DatabaseService
 
     void releaseConnection( Connection conn );
 
-    Be5Exception rollback(Connection conn, Throwable e);
+    RuntimeException rollback(Connection conn, Throwable e);
 
-    Rdbms getRdbms();
+    Dbms getDbms();
 
     String getConnectionProfileName();
 

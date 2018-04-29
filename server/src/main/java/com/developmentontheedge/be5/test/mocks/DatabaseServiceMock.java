@@ -4,8 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.dbms.DbmsType;
+import com.developmentontheedge.sql.format.Dbms;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -47,8 +46,8 @@ public class DatabaseServiceMock implements DatabaseService
     }
 
     @Override
-    public Rdbms getRdbms() {
-        return Rdbms.H2;
+    public Dbms getDbms() {
+        return Dbms.H2;
     }
 
     @Override
@@ -102,7 +101,7 @@ public class DatabaseServiceMock implements DatabaseService
     }
 
     @Override
-    public Be5Exception rollback(Connection conn, Throwable e)
+    public RuntimeException rollback(Connection conn, Throwable e)
     {
         return null;
     }

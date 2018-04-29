@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.sql.format.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.naming.Context;
@@ -75,8 +76,8 @@ public class DatabaseServiceImpl implements DatabaseService
             configInfo = "connection profile form 'profile.local' - " + profile.getName();
         }
 
-        project.setDatabaseSystem(getRdbms());
-        projectProvider.addToReload(() -> project.setDatabaseSystem(getRdbms()));
+        project.setDatabaseSystem(type);
+        projectProvider.addToReload(() -> project.setDatabaseSystem(type));
 
         log.info(JULLogger.infoBlock(
             "ConfigInfo: " + configInfo +
@@ -198,7 +199,7 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
-    public Be5Exception rollback(Connection conn, Throwable e)
+    public RuntimeException rollback(Connection conn, Throwable e)
     {
         try
         {
@@ -222,9 +223,9 @@ public class DatabaseServiceImpl implements DatabaseService
     }
 
     @Override
-    public Rdbms getRdbms()
+    public Dbms getDbms()
     {
-        return type;
+        return type.getDbms();
     }
 
     @Override

@@ -86,7 +86,7 @@ public class SqlServiceImpl implements SqlService
     private String format(String sql)
     {
         return new Formatter().format(SqlQuery.parse(sql),
-                new Context(databaseService.getRdbms().getDbms()), new DefaultParserContext());
+                new Context(databaseService.getDbms()), new DefaultParserContext());
     }
 
     private <T> T query(Connection conn, String sql, ResultSetHandler<T> rsh, Object... params) throws SQLException

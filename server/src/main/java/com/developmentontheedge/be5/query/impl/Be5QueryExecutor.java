@@ -164,7 +164,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         this.executorQueryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier( executorQueryContext );
-        this.context = new Context( databaseService.getRdbms().getDbms() );
+        this.context = new Context( databaseService.getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
         this.executeType = ExecuteType.DEFAULT;
