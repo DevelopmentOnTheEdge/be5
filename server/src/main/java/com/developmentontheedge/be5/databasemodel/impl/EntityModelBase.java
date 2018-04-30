@@ -331,9 +331,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         dpsHelper.addInsertSpecialColumns(entity, dps);
         dpsHelper.checkDpsColumns(entity, dps);
 
-        Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
+        Object primaryKey = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
 
-        return insert != null ? insert.toString() : null;
+        return primaryKey != null ? primaryKey.toString() : null;
     }
 
     @Override

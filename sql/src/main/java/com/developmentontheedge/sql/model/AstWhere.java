@@ -36,7 +36,37 @@ public class AstWhere extends SimpleNode
         PredefinedFunction function = DefaultParserContext.FUNC_EQ;
         SimpleNode astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
 
-        if(valueObj instanceof String)
+        if(valueObj == null)
+        {
+            astFunNode = new AstNullPredicate(true, new AstFieldReference(entry.getKey()));
+        }
+        else if(valueObj.getClass().isArray())
+        {
+            function = DefaultParserContext.FUNC_IN;
+
+            int len;
+            if(valueObj.getClass() == int[].class){
+                len = ((int[])valueObj).length;
+            }else if(valueObj.getClass() == long[].class){
+                len = ((long[])valueObj).length;
+            }else if(valueObj.getClass() == short[].class){
+                len = ((short[])valueObj).length;
+            }else if(valueObj.getClass() == char[].class){
+                len = ((char[])valueObj).length;
+            }else if(valueObj.getClass() == byte[].class){
+                len = ((byte[])valueObj).length;
+            }else if(valueObj.getClass() == float[].class){
+                len = ((float[])valueObj).length;
+            }else if(valueObj.getClass() == double[].class){
+                len = ((double[])valueObj).length;
+            }else{
+                len = ((Object[])valueObj).length;
+            }
+
+            astFunNode = function.node(new AstFieldReference(entry.getKey()),
+                    AstInValueList.withReplacementParameter(len));
+        }
+        else if(valueObj instanceof String)
         {
             String value = (String)valueObj;
             if (value.equals("null") || value.equals("notNull"))
@@ -52,13 +82,6 @@ public class AstWhere extends SimpleNode
             }
 
             astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
-        }
-        else
-        {
-            if(valueObj == null)
-            {
-                astFunNode = new AstNullPredicate(true, new AstFieldReference(entry.getKey()));
-            }
         }
 
         if(iterator.hasNext())

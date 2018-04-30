@@ -638,7 +638,7 @@ public class DpsHelper
 
     public String generateUpdateSqlForOneKey(BeModelElement modelElements, DynamicPropertySet dps)
     {
-        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+        Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .collect(Utils.toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(modelElements.getName()).set(valuePlaceholders)
@@ -647,7 +647,7 @@ public class DpsHelper
 
     public String generateUpdateSqlForConditions(BeModelElement modelElements, DynamicPropertySet dps, Map<String, ? super Object> conditions)
     {
-        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
+        Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
                 .collect(Utils.toLinkedMap(DynamicProperty::getName, x -> "?"));
 
         return Ast.update(modelElements.getName()).set(valuePlaceholders)
@@ -668,7 +668,7 @@ public class DpsHelper
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
-            LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
+            LinkedHashMap<String, Object> values = new LinkedHashMap<>();
             values.put(IS_DELETED_COLUMN_NAME, "?");
             if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))values.put(WHO_MODIFIED_COLUMN_NAME, "?");
             if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))values.put(MODIFICATION_DATE_COLUMN_NAME, "?");
