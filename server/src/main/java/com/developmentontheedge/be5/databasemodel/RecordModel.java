@@ -10,7 +10,7 @@ public interface RecordModel extends DynamicPropertySet
 
     int remove();
 
-    void update(String propertyName, String value);
+    void update(String propertyName, Object value);
 
     void update(Map<String, Object> values);
 

@@ -59,7 +59,7 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     }
 
     @Override
-    public void update( String propertyName, String value )
+    public void update( String propertyName, Object value )
     {
         entityModelBase.set( getId(), propertyName, value );
         super.setValueHidden( propertyName, value );

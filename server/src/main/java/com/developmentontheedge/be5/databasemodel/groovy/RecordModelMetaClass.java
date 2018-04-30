@@ -20,7 +20,7 @@ public class RecordModelMetaClass extends DynamicPropertySetMetaClass
 
         if( rec.getProperty( propertyName ) != null )
         {
-            rec.update( propertyName, value.toString() );
+            rec.update( propertyName, value );
         }
         else
         {

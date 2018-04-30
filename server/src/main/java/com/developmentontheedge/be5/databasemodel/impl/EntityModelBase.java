@@ -188,7 +188,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public int set( String id, String propertyName, String value )
+    public int set( String id, String propertyName, Object value )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);

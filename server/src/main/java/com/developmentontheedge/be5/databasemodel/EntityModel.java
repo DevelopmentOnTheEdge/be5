@@ -118,7 +118,7 @@ public interface EntityModel<R extends RecordModel>
      * @param value new value
      * @return number of affected rows
      */
-    int set(String id, String propertyName, String value);
+    int set(String id, String propertyName, Object value);
 
     /**
      * Sets value to property with a specified name.<br>
