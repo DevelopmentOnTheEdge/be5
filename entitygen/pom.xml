@@ -6,8 +6,7 @@
 	<version>0.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>be5 entity generation</name>
-	<description>Maven plug-ins for be5</description>
+	<name>be5 gdsl genegator</name>
 
   <parent>
     <groupId>com.developmentontheedge.be5</groupId>
@@ -50,21 +49,6 @@
                                 <argument>${project.build.directory}/generated-test-sources/java/</argument>
                                 <argument/>
                                 <argument>${project.artifactId}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>EntityModels</id>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <phase>generate-test-sources</phase>
-                        <configuration>
-                            <mainClass>com.developmentontheedge.be5.entitygen.experimental.EntityModels</mainClass>
-                            <arguments>
-                                <argument>${project.build.directory}/generated-test-sources/java/</argument>
-                                <argument>${project.groupId}.experimental</argument>
-                                <argument>EntityGen</argument>
                             </arguments>
                         </configuration>
                     </execution>
