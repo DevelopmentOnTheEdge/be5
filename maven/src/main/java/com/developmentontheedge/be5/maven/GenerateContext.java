@@ -34,7 +34,7 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
     {
         if(skipGenerateContextPath)
         {
-            log.info("Generate context.xml skipped");
+            log.info("Generate context.xml skipped.");
             return;
         }
 
@@ -50,7 +50,13 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
             return;
         }
 
-        init();
+        initProject();
+        if(connectionProfileName == null)
+        {
+            log.info("Generate context.xml skipped - BE5_PROFILE not specified.");
+            return;
+        }
+        initConnector();
 
         try
         {
