@@ -21,6 +21,7 @@ context:
   - com.developmentontheedge.be5.api.services.Be5Caches
   - com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader
   - com.developmentontheedge.be5.api.services.GroovyRegister
+  - com.developmentontheedge.be5.api.services.impl.SqlHelper
   - projectProvider:
       interface:      com.developmentontheedge.be5.api.services.ProjectProvider
       implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl

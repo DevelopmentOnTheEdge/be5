@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.databasemodel.impl;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
+import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -24,10 +25,10 @@ import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
 import com.google.common.collect.ObjectArrays;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -46,6 +47,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     private final SqlService db;
+    private final SqlHelper sqlHelper;
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final OperationExecutor operationExecutor;
@@ -55,10 +57,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     private final Entity entity;
 
 
-    public EntityModelBase(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
+        this.sqlHelper = sqlHelper;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.validator = validator;
@@ -133,8 +136,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     public String add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
+
+        values = new HashMap<>(values);
+        values.values().removeIf(Objects::isNull);
+
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
+        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
 
         return add( dps );
     }
@@ -342,8 +349,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
+        values = new HashMap<>(values);
+        values.values().removeIf(Objects::isNull);
+
         DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
+        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
 
         return this.set( id, dps );
     }

@@ -176,7 +176,8 @@ public class DpsHelper
         {
             if(!excludedColumnsList.contains(entry.getKey()))
             {
-                DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(entry.getValue(), modelElements);
+                DynamicProperty dynamicProperty = getDynamicProperty(entry.getValue());
+                addMeta(dynamicProperty, entry.getValue(), modelElements);
                 dps.add(dynamicProperty);
             }
             excludedColumnsList.remove(entry.getKey());
@@ -219,7 +220,8 @@ public class DpsHelper
         for(String propertyName: propertyNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
-            DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(columnDef, modelElements);
+            DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
+            addMeta(dynamicProperty, columnDef, modelElements);
             addTags(dynamicProperty, columnDef, operationParams);
 
             dps.add(dynamicProperty);
@@ -232,8 +234,31 @@ public class DpsHelper
     {
         addDpForColumnsWithoutTags(dps, modelElements, columnNames);
 
+        addMeta(dps, modelElements);
+
         setValues(dps, presetValues);
 
+        return dps;
+    }
+
+    public <T extends DynamicPropertySet> T addDpForColumnsBase(T dps, BeModelElement modelElements, Collection<String> columnNames,
+                                                                Map<String, ? super Object> presetValues)
+    {
+        addDpForColumnsBase(dps, modelElements, columnNames);
+
+        setValues(dps, presetValues);
+
+        return dps;
+    }
+
+    public <T extends DynamicPropertySet> T addMeta(T dps, BeModelElement modelElements)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        for(DynamicProperty property : dps)
+        {
+            ColumnDef columnDef = columns.get(property.getName());
+            if(columnDef != null)addMeta(property, columnDef, modelElements);
+        }
         return dps;
     }
 
@@ -245,7 +270,32 @@ public class DpsHelper
             ColumnDef columnDef = columns.get(propertyName);
             if(columnDef != null)
             {
-                DynamicProperty dynamicProperty = getDynamicPropertyWithoutTags(columnDef, modelElements);
+                DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
+                addMeta(dynamicProperty, columnDef, modelElements);
+                dps.add(dynamicProperty);
+            }
+            else
+            {
+                throw Be5Exception.internal("Entity '" + modelElements.getName() + "' not contain column " + propertyName);
+            }
+        }
+        return dps;
+    }
+
+    public DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    {
+        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+    }
+
+    public <T extends DynamicPropertySet> T addDpForColumnsBase(T dps, BeModelElement modelElements, Collection<String> columnNames)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        for(String propertyName: columnNames)
+        {
+            ColumnDef columnDef = columns.get(propertyName);
+            if(columnDef != null)
+            {
+                DynamicProperty dynamicProperty = getDynamicProperty(columnDef);
                 dps.add(dynamicProperty);
             }
             else
@@ -277,10 +327,8 @@ public class DpsHelper
         return dps;
     }
 
-    public DynamicProperty getDynamicPropertyWithoutTags(ColumnDef columnDef, BeModelElement modelElements)
+    public DynamicProperty addMeta(DynamicProperty dp, ColumnDef columnDef, BeModelElement modelElements)
     {
-        DynamicProperty dp = new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
-
         if(modelElements.getClass() == Query.class)
         {
             dp.setDisplayName(userAwareMeta.getColumnTitle(
@@ -591,6 +639,7 @@ public class DpsHelper
 //        return cond;
 //    }
 
+    @Deprecated
     public String generateInsertSql(BeModelElement modelElements, DynamicPropertySet dps)
     {
         //todo remove property not contain in modelElements and log warning, as in checkDpsColumns
@@ -635,7 +684,7 @@ public class DpsHelper
 
 
     }
-
+    @Deprecated
     public String generateUpdateSqlForOneKey(BeModelElement modelElements, DynamicPropertySet dps)
     {
         Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
@@ -644,7 +693,7 @@ public class DpsHelper
         return Ast.update(modelElements.getName()).set(valuePlaceholders)
                 .where(Collections.singletonMap(getEntity(modelElements).getPrimaryKey(), "?")).format();
     }
-
+    @Deprecated
     public String generateUpdateSqlForConditions(BeModelElement modelElements, DynamicPropertySet dps, Map<String, ? super Object> conditions)
     {
         Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
@@ -662,7 +711,7 @@ public class DpsHelper
 //        return Ast.update(modelElements.getName()).set(valuePlaceholders)
 //                .whereInPredicate(getEntity(modelElements).getPrimaryKey(), count).format();
 //    }
-
+    @Deprecated
     public String generateDelete(BeModelElement modelElements, Map<String, ? super Object> conditions)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
@@ -681,7 +730,7 @@ public class DpsHelper
             return Ast.delete(modelElements.getName()).where(conditions).format();
         }
     }
-
+    @Deprecated
     public String generateDeleteInSql(BeModelElement modelElements, String columnName, int count)
     {
         String sql;

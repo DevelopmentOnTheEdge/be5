@@ -39,8 +39,7 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "CODE"), meta.getEntity("testTags"))
+        DynamicProperty property = dpsHelper.getDynamicProperty(meta.getColumn(meta.getEntity("testTags"), "CODE"))
         assertEquals "CODE", property.getName()
         assertEquals String.class, property.getType()
         assertEquals null, property.getValue()
@@ -49,10 +48,9 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyLocalizationTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
-                meta.getEntity("testTags")
-        )
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags"))
 
         assertEquals "Административный уровень", property.getDisplayName()
     }
@@ -60,10 +58,9 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyLocalizationForQueryTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
-                meta.getEntity("testTags").getQueries().get("TestLocalizQuery")
-        )
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags").getQueries().get("TestLocalizQuery"))
 
         assertEquals "Test Уровень", property.getDisplayName()
     }
@@ -71,10 +68,10 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyLocalizationForOperationTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
-                meta.getEntity("testTags").getOperations().get("Insert")
-        )
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags").getOperations().get("Insert"))
 
         assertEquals "Уровень", property.getDisplayName()
     }
