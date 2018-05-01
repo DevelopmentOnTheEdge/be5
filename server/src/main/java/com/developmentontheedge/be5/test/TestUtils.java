@@ -26,6 +26,9 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Rule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.mockito.Mockito;
 
 import javax.json.bind.Jsonb;
@@ -42,8 +45,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.developmentontheedge.be5.util.ParseRequestUtils.replaceEmptyStringToNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,6 +56,11 @@ import static org.mockito.Mockito.when;
 
 public abstract class TestUtils
 {
+    public static final Logger log = Logger.getLogger(TestUtils.class.getName());
+
+    @Rule
+    public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
+
     @Inject private OperationService operationService;
     @Inject private OperationExecutor operationExecutor;
     @Inject protected UserAwareMeta userAwareMeta;
@@ -258,14 +268,20 @@ public abstract class TestUtils
     {
         OperationInfo meta = userAwareMeta.getOperation(entityName, context.getQueryName(), operationName);
 
-        return operationExecutor.create(meta, context);
+        Operation operation = operationExecutor.create(meta, context);
+        ShowCreatedOperations.addOperation(operation);
+
+        return operation;
     }
 
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
     {
         OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        return operationExecutor.create(meta, new OperationContext(ParseRequestUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
+        Operation operation = operationExecutor.create(meta, new OperationContext(ParseRequestUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
+        ShowCreatedOperations.addOperation(operation);
+
+        return operation;
     }
 
     protected void setSession(String name, Object value)
@@ -288,6 +304,47 @@ public abstract class TestUtils
         catch (ParseException e)
         {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static class ShowCreatedOperations extends TestWatcher
+    {
+        private static List<Operation> operations = Collections.synchronizedList(new ArrayList<>());
+
+        public static void addOperation(Operation operation)
+        {
+            operations.add(operation);
+        }
+
+        @Override
+        protected void starting(Description description)
+        {
+            operations.clear();
+        }
+
+        @Override
+        protected void failed(Throwable e, Description description)
+        {
+            if(!operations.isEmpty())
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Created operations:");
+                operations.forEach(o ->
+                {
+                    String line = "\n" + o.getClass().getCanonicalName() + "(" + o.getClass().getSimpleName() + extension(o) + ":0)";
+                    sb.append(line);
+                });
+                log.info(sb.toString());
+            }
+        }
+
+        private String extension(Operation o)
+        {
+            if(OPERATION_TYPE_GROOVY.equals(o.getInfo().getModel().getType())){
+                return ".groovy";
+            } else {
+                return ".java";
+            }
         }
     }
 }
