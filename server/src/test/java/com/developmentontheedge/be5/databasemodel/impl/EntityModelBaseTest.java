@@ -32,7 +32,7 @@ public class EntityModelBaseTest extends Be5ProjectDBTest
             "name", "TestName2"
         ));
 
-        RecordModel<Long> record = database.<Long>getEntity("testtableAdmin").get(id);
+        RecordModel<Long> record = testtableAdmin.get(id);
 
         Long id2 = record.getPrimaryKey();
         assertEquals(Long.class, id2.getClass());
@@ -53,6 +53,22 @@ public class EntityModelBaseTest extends Be5ProjectDBTest
                 "value", 1
         ));
         assertEquals(Long.class, id.getClass());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void get()
+    {
+        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of( "name", "TestName", "value", 1 ));
+
+        RecordModel<String> record = database.<String>getEntity("testtableAdmin").get(id.toString());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void set()
+    {
+        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of( "name", "TestName", "value", 1 ));
+
+        int count = database.<String>getEntity("testtableAdmin").set(id.toString(), ImmutableMap.of("value", 2));
     }
 
 }

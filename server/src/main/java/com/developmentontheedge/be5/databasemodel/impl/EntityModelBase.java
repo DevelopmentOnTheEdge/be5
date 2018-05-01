@@ -57,8 +57,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
     private final Entity entity;
 
-
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+    EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
@@ -81,19 +80,20 @@ public class EntityModelBase<T> implements EntityModel<T>
     @Override
     public RecordModel<T> get( T id )
     {
-        return get(Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
+        return get(Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
     public RecordModel<T> getColumns( List<String> columns, T id )
     {
-        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
+        return getColumns(columns, Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
     public RecordModel<T> getColumns( List<String> columns, Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
+        checkPrimaryKey(conditions);
 
         AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
@@ -189,9 +189,9 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public List<T> addAll( final Collection<Map<String, ? super Object>> c )
+    public <R> List<R> addAll( final Collection<Map<String, ? super Object>> c )
     {
-        final List<T> keys = new ArrayList<>( c.size() );
+        final List<R> keys = new ArrayList<>( c.size() );
         for( Map<String, ? super Object> values : c )
         {
             keys.add( add( values ) );
@@ -221,7 +221,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        DynamicPropertySet dps = new DynamicPropertySetSupport();
 //        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
 
-        return sqlHelper.update(entity.getName(), getPrimaryKeyName(), id, values);
+        return sqlHelper.update(entity.getName(), getPrimaryKeyName(), checkPrimaryKey(id), values);
     }
 
     @Override
@@ -236,7 +236,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        dpsHelper.addUpdateSpecialColumns(entity, dps);
 //
 //        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-//                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
+//                ObjectArrays.concat(dpsHelper.getValues(dps), checkPrimaryKey(id)));
     }
 //
 //    @Override
@@ -246,16 +246,17 @@ public class EntityModelBase<T> implements EntityModel<T>
 //    }
 
     @Override
-    public final int remove(T firstId, final T... otherId)
+    @SuppressWarnings("unchecked")
+    public final int remove(T id)//removed final T... otherId - 'possible heap pollution from parameterized varargs'
     {
-        Objects.requireNonNull(firstId);
-        return remove( ObjectArrays.concat(firstId, otherId) );
+        Objects.requireNonNull(id);
+        return removeWhereColumnIn(getPrimaryKeyName(), (T[])new Object[]{id});
     }
 
     @Override
     public int remove( T[] ids )
     {
-        return removeWhereColumnIn(entity.getPrimaryKey(), ids);
+        return removeWhereColumnIn(getPrimaryKeyName(), ids);
     }
 
     @Override
@@ -263,6 +264,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(ids);
+        if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
 
         ColumnDef columnDef = meta.getColumn(entity, columnName);
 
@@ -392,10 +394,30 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        setForceMany(values, conditions);
 //    }
 
-    private Object getID(T id)
+    private void checkPrimaryKey(Map<String, ? super Object> conditions)
     {
-        Class<?> primaryKeyColumnType = meta.getColumnType(entity, entity.getPrimaryKey());
-        return Utils.changeType(id, primaryKeyColumnType);
+        for (Map.Entry<String, ? super Object> entry : conditions.entrySet()) {
+            if(entry.getKey().equalsIgnoreCase(getPrimaryKeyName())) checkPrimaryKey((T)entry.getValue());
+        }
+    }
+
+    private void checkPrimaryKey(T[] ids)
+    {
+        for (T id : ids) {
+            checkPrimaryKey(id);
+        }
+    }
+
+    private T checkPrimaryKey(T id)
+    {
+        Class<?> primaryKeyColumnType = meta.getColumnType(entity, getPrimaryKeyName());
+
+        if(id.getClass() != primaryKeyColumnType)
+        {
+            throw new RuntimeException("Primary key must be " + primaryKeyColumnType.getSimpleName());
+        }
+
+        return id;
     }
 
 //

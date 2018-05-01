@@ -198,7 +198,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         def id2 = testtableAdmin << [
                 "name": "TestName2",
                 "value": 2]
-        assertEquals 1, testtableAdmin.remove( [id2] as String[] )
+        assertEquals 1, testtableAdmin.remove( [id2] as Long[] )
     }
 
     @Test

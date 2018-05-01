@@ -83,7 +83,7 @@ public interface EntityModel<T>
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<T> addAll(Collection<Map<String, ? super Object>> c);
+    <R> List<R> addAll(Collection<Map<String, ? super Object>> c);
 
     /** 
      * Returns the record object with the specified id
@@ -126,8 +126,6 @@ public interface EntityModel<T>
      * @return number of affected rows
      */
     int set(T id, Map<String, ? super Object> values);
-
-    //void setMany( Map<String, String> values, String id, String... otherId);
 
 //    void setMany( Map<String, ? super Object> values, Map<String, ? super Object> conditions);
 
@@ -174,11 +172,10 @@ public interface EntityModel<T>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
      * This method calls {@link #remove(T[])}
-     * @param firstId first identify number of record
-     * @param otherId other identify number of record
+     * @param id first identify number of record
      * @return number of affected rows
      */
-    int remove(T firstId, final T... otherId);
+    int remove(T id);
 
     /**
      * Deletes the record with the specified identifiers.<br>

@@ -16,7 +16,7 @@ public abstract class Be5ProjectDbBaseTest
     @Rule
     public final EmbeddedDatabaseRule databaseRule = EmbeddedDatabaseRule.builder()
             .withMode(PostgreSQL)
-            .withInitialSql("CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255));")
+            .withInitialSql("CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255), age INT);")
             .build();
 
     protected SqlService db;
