@@ -72,25 +72,25 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T> get( Map<String, ? super Object> conditions )
+    public RecordModel<T> getByColumns(Map<String, ? super Object> conditions )
     {
-        return getColumns(Collections.emptyList(), conditions);
+        return getColumnsByColumns(Collections.emptyList(), conditions);
     }
 
     @Override
     public RecordModel<T> get( T id )
     {
-        return get(Collections.singletonMap(getPrimaryKeyName(), id));
+        return getByColumns(Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
     public RecordModel<T> getColumns( List<String> columns, T id )
     {
-        return getColumns(columns, Collections.singletonMap(getPrimaryKeyName(), id));
+        return getColumnsByColumns(columns, Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
-    public RecordModel<T> getColumns( List<String> columns, Map<String, ? super Object> conditions )
+    public RecordModel<T> getColumnsByColumns(List<String> columns, Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
@@ -291,11 +291,11 @@ public class EntityModelBase<T> implements EntityModel<T>
     @Override
     public int removeAll()
     {
-        return remove(emptyMap());
+        return removeByColumns(emptyMap());
     }
 
     @Override
-    public int remove( Map<String, ? super Object> conditions )
+    public int removeByColumns(Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
         return db.update(dpsHelper.generateDelete(entity, conditions),
@@ -371,7 +371,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        MultipleRecordsBase<List<T>>  records = new MultipleRecordsBase<>();
 //        MultipleRecordsBase.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
 //        records.setHandler( handler );
-//        records.get( values );
+//        records.getByColumns( values );
 //        return handler.getResult();
 //    }
 

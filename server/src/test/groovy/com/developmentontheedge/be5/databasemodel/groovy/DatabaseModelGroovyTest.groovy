@@ -74,7 +74,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     {
         testtableAdmin << [ "name": "TestName", "value": "1"]
 
-        RecordModel rec = testtableAdmin.getColumns(["value"],
+        RecordModel rec = testtableAdmin.getColumnsByColumns(["value"],
                 ["name": "TestName"]
         )
 
@@ -208,7 +208,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         def id2 = testtableAdmin << [ "name": "TestName2", "value": 1]
 
         assertFalse testtableAdmin.empty
-        assertEquals 1, testtableAdmin.remove( ["name": "TestName2"] )
+        assertEquals 1, testtableAdmin.removeByColumns( ["name": "TestName2"] )
         assertNotNull testtableAdmin[ id ]
         assertNull testtableAdmin[ id2 ]
     }

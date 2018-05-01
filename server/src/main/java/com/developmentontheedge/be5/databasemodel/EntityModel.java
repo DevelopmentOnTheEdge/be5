@@ -98,11 +98,11 @@ public interface EntityModel<T>
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel<T> get(Map<String, ? super Object> conditions );
+    RecordModel<T> getByColumns(Map<String, ? super Object> conditions);
 
     RecordModel<T> getColumns(List<String> columns, T id);
 
-    RecordModel<T> getColumns(List<String> columns, Map<String, ? super Object> conditions);
+    RecordModel<T> getColumnsByColumns(List<String> columns, Map<String, ? super Object> conditions);
 
     /**
      * Sets value to property with a specified name.<br>
@@ -165,7 +165,7 @@ public interface EntityModel<T>
      * @param conditions conditions
      * @return number of affected rows
      */
-    int remove(Map<String, ? super Object> conditions);
+    int removeByColumns(Map<String, ? super Object> conditions);
     
     /**
      * Deletes the record with the specified identifiers.
