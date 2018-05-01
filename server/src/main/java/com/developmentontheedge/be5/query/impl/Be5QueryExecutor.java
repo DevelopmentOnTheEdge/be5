@@ -280,7 +280,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
         catch (Throwable e)
         {
-            log.log(Level.WARNING, "fail getSchema, return empty", e);
+            log.log(Level.FINE, "fail getSchema, return empty", e);
             return new DynamicProperty[]{};
         }
     }
