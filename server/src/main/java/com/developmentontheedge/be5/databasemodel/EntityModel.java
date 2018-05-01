@@ -16,7 +16,7 @@ import java.util.Map;
  * it must be synchronized externally.
  * @author ruslan
  */
-public interface EntityModel<R extends RecordModel>
+public interface EntityModel<T>
 {
     /**
      * Returns the number of records a table.
@@ -58,7 +58,7 @@ public interface EntityModel<R extends RecordModel>
      * @param values map with column names and values
      * @return generated record identify number
      */
-    <T> T add(Map<String, ? super Object> values);
+    T add(Map<String, ? super Object> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -67,7 +67,7 @@ public interface EntityModel<R extends RecordModel>
      * @param dps DynamicPropertySet
      * @return generated record identify number
      */
-    <T> T add(DynamicPropertySet dps);
+    T add(DynamicPropertySet dps);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -83,16 +83,16 @@ public interface EntityModel<R extends RecordModel>
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    <T> List<T> addAll(Collection<Map<String, ? super Object>> c);
+    List<T> addAll(Collection<Map<String, ? super Object>> c);
 
     /** 
      * Returns the record object with the specified id
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
-    RecordModel<String> get(String id);
+    RecordModel<T> get(String id);
 
-    RecordModel<Long> get(Long id);
+    RecordModel<T> get(Long id);
 
     /** 
      * Returns the record object consistent with the specified condition, 
@@ -100,13 +100,13 @@ public interface EntityModel<R extends RecordModel>
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(Map<String, ? super Object> conditions );
+    RecordModel<T> get(Map<String, ? super Object> conditions );
 
-    RecordModel<String> getColumns(List<String> columns, String id);
+    RecordModel<T> getColumns(List<String> columns, String id);
 
-    RecordModel<Long> getColumns(List<String> columns, Long id);
+    RecordModel<T> getColumns(List<String> columns, Long id);
 
-    RecordModel getColumns(List<String> columns, Map<String, ? super Object> conditions);
+    RecordModel<T> getColumns(List<String> columns, Map<String, ? super Object> conditions);
 
     /**
      * Sets value to property with a specified name.<br>

@@ -16,7 +16,6 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.databasemodel.EntityAccess;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
@@ -33,7 +32,7 @@ import java.util.Objects;
  *
  * @author ruslan
  */
-final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel>>
+final public class DatabaseModel implements EntityAccess
 {
     static
     {
@@ -71,14 +70,14 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     }
 
     @Override
-    public EntityModel getEntity( String entityName )
+    public <T> EntityModel<T> getEntity( String entityName )
     {
         Objects.requireNonNull(entityName);
         Entity entity = meta.getEntity(entityName);
 
         if (entity == null)throw Be5Exception.unknownEntity(entityName);
 
-        return new EntityModelBase(sqlService, sqlHelper, columnsHelper, dpsHelper, validator, operationHelper,
+        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, dpsHelper, validator, operationHelper,
                                    operationExecutor, meta, entity);
     }
 

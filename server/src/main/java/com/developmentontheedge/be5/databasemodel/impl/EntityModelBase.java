@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyMap;
 
 
-public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R>
+public class EntityModelBase<T> implements EntityModel<T>
 {
     static
     {
@@ -75,37 +75,37 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public RecordModel get( Map<String, ? super Object> conditions )
+    public RecordModel<T> get( Map<String, ? super Object> conditions )
     {
         return getColumns(Collections.emptyList(), conditions);
     }
 
     @Override
-    public RecordModel get( String id )
+    public RecordModel<T> get( String id )
     {
         return get(Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
     }
 
     @Override
-    public RecordModel get( Long id )
+    public RecordModel<T> get( Long id )
     {
         return getColumns(Collections.emptyList(), id);
     }
 
     @Override
-    public RecordModel getColumns( List<String> columns, String id )
+    public RecordModel<T> getColumns( List<String> columns, String id )
     {
         return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
     }
 
     @Override
-    public RecordModel getColumns( List<String> columns, Long id )
+    public RecordModel<T> getColumns( List<String> columns, Long id )
     {
         return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), id));
     }
 
     @Override
-    public RecordModel getColumns( List<String> columns, Map<String, ? super Object> conditions )
+    public RecordModel<T> getColumns( List<String> columns, Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
@@ -178,7 +178,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public <T> T add( Map<String, ? super Object> values )
+    public T add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
 
@@ -192,7 +192,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    final public <T> T add( DynamicPropertySet dps )
+    final public T add( DynamicPropertySet dps )
     {
         Objects.requireNonNull(dps);
 
@@ -205,7 +205,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public <T> List<T> addAll( final Collection<Map<String, ? super Object>> c )
+    public List<T> addAll( final Collection<Map<String, ? super Object>> c )
     {
         final List<T> keys = new ArrayList<>( c.size() );
         for( Map<String, ? super Object> values : c )
