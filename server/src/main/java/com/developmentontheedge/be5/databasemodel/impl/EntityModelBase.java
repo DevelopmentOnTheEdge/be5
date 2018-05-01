@@ -81,27 +81,15 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T> get( String id )
+    public RecordModel<T> get( T id )
     {
         return get(Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
     }
 
     @Override
-    public RecordModel<T> get( Long id )
-    {
-        return getColumns(Collections.emptyList(), id);
-    }
-
-    @Override
-    public RecordModel<T> getColumns( List<String> columns, String id )
+    public RecordModel<T> getColumns( List<String> columns, T id )
     {
         return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
-    }
-
-    @Override
-    public RecordModel<T> getColumns( List<String> columns, Long id )
-    {
-        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), id));
     }
 
     @Override
@@ -124,13 +112,9 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         if(dps == null)return null;
 
-        Object primaryKey = dps.getProperty(getPrimaryKeyName()).getValue();
-//        if(primaryKey.getClass() == Long.class){
-//            return new RecordModelBase(primaryKey, this, dps );
-//        }else{
-//            return new RecordModelBase(primaryKey.toString(), this, dps );
-//        }
-        return new RecordModelBase(primaryKey, this, dps );
+        T primaryKey = (T)dps.getProperty(getPrimaryKeyName()).getValue();
+
+        return new RecordModelBase<>(primaryKey, this, dps );
     }
 
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
@@ -217,7 +201,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int set( String id, String propertyName, Object value )
+    public int set( T id, String propertyName, Object value )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
@@ -226,7 +210,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int set( String id, Map<String, ? super Object> values )
+    public int set( T id, Map<String, ? super Object> values )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
@@ -241,7 +225,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int set(String id, DynamicPropertySet dps )
+    public int set(T id, DynamicPropertySet dps )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
@@ -254,91 +238,28 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int set( Long id, String propertyName, Object value )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(propertyName);
-        Objects.requireNonNull(value);
-        return this.set( id, Collections.singletonMap( propertyName, value ) );
-    }
-
-    @Override
-    public int set( Long id, Map<String, ? super Object> values )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(values);
-
-        values = new LinkedHashMap<>(values);
-        values.values().removeIf(Objects::isNull);
-
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
-
-        return this.set( id, dps );
-    }
-
-    @Override
-    public int set(Long id, DynamicPropertySet dps )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(dps);
-
-        validator.checkErrorAndCast(dps);
-        dpsHelper.addUpdateSpecialColumns(entity, dps);
-
-        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(dpsHelper.getValues(dps), id));
-    }
-
-    @Override
     public int removeAll( Collection<Map<String, ? super Object>> c )
     {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException( "not implemented" );
     }
 
+    @SafeVarargs
     @Override
-    public int remove( String firstId, final String... otherId )
+    public final int remove(T firstId, final T... otherId)
     {
         Objects.requireNonNull(firstId);
         return remove( ObjectArrays.concat(firstId, otherId) );
     }
 
     @Override
-    public int remove( String[] ids )
+    public int remove( T[] ids )
     {
         return removeWhereColumnIn(entity.getPrimaryKey(), ids);
     }
 
     @Override
-    public int remove( Long firstId, final Long... otherId )
-    {
-        Objects.requireNonNull(firstId);
-        return remove( ObjectArrays.concat(firstId, otherId) );
-    }
-
-    @Override
-    public int remove( Long[] ids )
-    {
-        return removeWhereColumnIn(entity.getPrimaryKey(), ids);
-    }
-
-    @Override
-    public int removeWhereColumnIn(String columnName, String[] ids)
-    {
-        Objects.requireNonNull(columnName);
-        Objects.requireNonNull(ids);
-
-        ColumnDef columnDef = meta.getColumn(entity, columnName);
-
-        return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-        );
-    }
-
-    @Override
-    public int removeWhereColumnIn(String columnName, Long[] ids)
+    public int removeWhereColumnIn(String columnName, T[] ids)
     {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(ids);
@@ -457,7 +378,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        setForceMany(values, conditions);
 //    }
 
-    private Object getID(String id)
+    private Object getID(T id)
     {
         Class<?> primaryKeyColumnType = meta.getColumnType(entity, entity.getPrimaryKey());
         return Utils.changeType(id, primaryKeyColumnType);

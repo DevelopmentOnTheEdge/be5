@@ -90,9 +90,7 @@ public interface EntityModel<T>
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
-    RecordModel<T> get(String id);
-
-    RecordModel<T> get(Long id);
+    RecordModel<T> get(T id);
 
     /** 
      * Returns the record object consistent with the specified condition, 
@@ -102,9 +100,7 @@ public interface EntityModel<T>
      */
     RecordModel<T> get(Map<String, ? super Object> conditions );
 
-    RecordModel<T> getColumns(List<String> columns, String id);
-
-    RecordModel<T> getColumns(List<String> columns, Long id);
+    RecordModel<T> getColumns(List<String> columns, T id);
 
     RecordModel<T> getColumns(List<String> columns, Map<String, ? super Object> conditions);
 
@@ -112,24 +108,24 @@ public interface EntityModel<T>
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set( String, Map )}
+     * This method calls {@link #set( T, Map )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
      * @return number of affected rows
      */
-    int set(String id, String propertyName, Object value);
+    int set(T id, String propertyName, Object value);
 
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set( String, DynamicPropertySet )}
+     * This method calls {@link #set( T, DynamicPropertySet )}
      * @param id identify number of record
      * @param values column names and values
      * @return number of affected rows
      */
-    int set(String id, Map<String, ? super Object> values);
+    int set(T id, Map<String, ? super Object> values);
 
     //void setMany( Map<String, String> values, String id, String... otherId);
 
@@ -142,13 +138,7 @@ public interface EntityModel<T>
      * @param values new column names and values
      * @return number of affected rows
      */
-    int set(String id, DynamicPropertySet values);
-
-    int set(Long id, String propertyName, Object value);
-
-    int set(Long id, Map<String, ? super Object> values);
-
-    int set(Long id, DynamicPropertySet values);
+    int set(T id, DynamicPropertySet values);
 
     //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
@@ -163,9 +153,7 @@ public interface EntityModel<T>
      */
     int removeAll(Collection<Map<String, ? super Object>> c);
 
-    int removeWhereColumnIn(String columnName, String[] ids);
-
-    int removeWhereColumnIn(String columnName, Long[] ids);
+    int removeWhereColumnIn(String columnName, T[] ids);
 
     /**
      * Operation removes all the records
@@ -185,12 +173,12 @@ public interface EntityModel<T>
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #remove(String[])}
+     * This method calls {@link #remove(T[])}
      * @param firstId first identify number of record
      * @param otherId other identify number of record
      * @return number of affected rows
      */
-    int remove(String firstId, String... otherId);
+    int remove(T firstId, T... otherId);
 
     /**
      * Deletes the record with the specified identifiers.<br>
@@ -198,11 +186,7 @@ public interface EntityModel<T>
      * @param ids numbers of record
      * @return number of affected rows
      */
-    int remove(String[] ids);
-
-    int remove(Long firstId, Long... otherId);
-
-    int remove(Long[] ids);
+    int remove(T[] ids);
 
     /**
      * Returns a list of records of current entity.
