@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
-import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
@@ -53,13 +52,12 @@ public class EntityModelBase<T> implements EntityModel<T>
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final OperationExecutor operationExecutor;
-    private final Validator validator;
     private final Meta meta;
 
     private final Entity entity;
 
 
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
@@ -67,7 +65,6 @@ public class EntityModelBase<T> implements EntityModel<T>
         this.columnsHelper = columnsHelper;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
-        this.validator = validator;
         this.operationExecutor = operationExecutor;
         this.meta = meta;
 

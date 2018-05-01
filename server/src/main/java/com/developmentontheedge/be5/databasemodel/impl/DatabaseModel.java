@@ -8,7 +8,6 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
-import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMetaClass;
@@ -52,12 +51,11 @@ final public class DatabaseModel implements EntityAccess
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final Meta meta;
-    private final Validator validator;
     private final OperationExecutor operationExecutor;
 
 
     public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
-                         Meta meta, Validator validator, OperationExecutor operationExecutor)
+                         Meta meta, OperationExecutor operationExecutor)
     {
         this.sqlService = sqlService;
         this.sqlHelper = sqlHelper;
@@ -65,7 +63,6 @@ final public class DatabaseModel implements EntityAccess
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.meta = meta;
-        this.validator = validator;
         this.operationExecutor = operationExecutor;
     }
 
@@ -77,7 +74,7 @@ final public class DatabaseModel implements EntityAccess
 
         if (entity == null)throw Be5Exception.unknownEntity(entityName);
 
-        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, dpsHelper, validator, operationHelper,
+        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, dpsHelper, operationHelper,
                                    operationExecutor, meta, entity);
     }
 
