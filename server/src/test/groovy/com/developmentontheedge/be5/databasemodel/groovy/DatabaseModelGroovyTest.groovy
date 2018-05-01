@@ -42,12 +42,12 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 
         def id = testtableAdmin << [
                 "name": "TestName",
-                "value": "1"]
+                "value": 1]
 
         assertEquals(id, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         testtableAdmin[id] << [
-                "value": "2"
+                "value": 2
         ]
         assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 

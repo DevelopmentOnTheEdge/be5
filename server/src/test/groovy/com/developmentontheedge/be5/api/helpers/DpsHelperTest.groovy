@@ -186,17 +186,6 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void generateInsertSqlTest()
-    {
-        Entity metersEntity = meta.getEntity("meters")
-
-        String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.addDp(dps, metersEntity, [:]))
-        assertEquals "INSERT INTO meters " +
-                "(ID, name, value, whoInserted___, whoModified___, creationDate___, modificationDate___, isDeleted___) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
-    }
-
-    @Test
     void getLabelAndGetLabelRawTest()
     {
         def dps = new DynamicPropertySetSupport()

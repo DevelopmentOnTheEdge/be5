@@ -29,7 +29,18 @@ public class EditOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        database.getEntity(getInfo().getEntityName()).set(context.records[0], (DynamicPropertySet)parameters);
+        Class<?> primaryKeyType = meta.getColumnType(getInfo().getEntity(), getInfo().getPrimaryKey());
+        Object primaryKey;
+        if(primaryKeyType == Long.class)
+        {
+            primaryKey = Long.parseLong(context.records[0]);
+        }
+        else
+        {
+            primaryKey = context.records[0];
+        }
+
+        database.getEntity(getInfo().getEntityName()).set(primaryKey, (DynamicPropertySet)parameters);
 
         setResult(OperationResult.finished());
     }

@@ -20,7 +20,6 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.util.Utils;
-import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
@@ -182,7 +181,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(dps);
 
-        return add(toLinkedHashMap(dps));
+        return add(dpsHelper.toLinkedHashMap(dps));
 //        validator.checkErrorAndCast(dps);
 //
 //        dpsHelper.addInsertSpecialColumns(entity, dps);
@@ -218,12 +217,13 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(values);
 
         values = new LinkedHashMap<>(values);
-        values.values().removeIf(Objects::isNull);
 
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
+        columnsHelper.addUpdateSpecialColumns(entity, values);
 
-        return this.set( id, dps );
+//        DynamicPropertySet dps = new DynamicPropertySetSupport();
+//        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
+
+        return sqlHelper.update(entity.getName(), getPrimaryKeyName(), id, values);
     }
 
     @Override
@@ -232,11 +232,13 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
 
-        validator.checkErrorAndCast(dps);
-        dpsHelper.addUpdateSpecialColumns(entity, dps);
+        return set(id, dpsHelper.toLinkedHashMap(dps));
 
-        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
+//        validator.checkErrorAndCast(dps);
+//        dpsHelper.addUpdateSpecialColumns(entity, dps);
+//
+//        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+//                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
     }
 
     @Override
@@ -453,14 +455,4 @@ public class EntityModelBase<T> implements EntityModel<T>
         return e.getEntityName().equals( getEntityName() );
     }
 
-    private Map<String, Object> toLinkedHashMap(DynamicPropertySet dps)
-    {
-        Map<String, Object> map = new LinkedHashMap<>( dps.size() );
-        for(DynamicProperty property : dps )
-        {
-            map.put( property.getName(), property.getValue() );
-        }
-
-        return map;
-    }
 }

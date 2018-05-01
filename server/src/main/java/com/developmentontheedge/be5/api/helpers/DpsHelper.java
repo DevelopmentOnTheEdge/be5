@@ -489,37 +489,37 @@ public class DpsHelper
 
         return dps;
     }
-
-    public void addUpdateSpecialColumns(Entity entity, DynamicPropertySet values)
-    {
-        addSpecialColumns(entity, values, ColumnsHelper.updateSpecialColumns);
-    }
-
-    public void addInsertSpecialColumns(Entity entity, DynamicPropertySet values)
-    {
-        addSpecialColumns(entity, values, ColumnsHelper.insertSpecialColumns);
-    }
-
-    private void addSpecialColumns(Entity entity, DynamicPropertySet values, List<String> specialColumns)
-    {
-        Map<String, ColumnDef> columns = meta.getColumns(entity);
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-
-        for(String propertyName: specialColumns)
-        {
-            ColumnDef columnDef = columns.get(propertyName);
-            if (columnDef != null)
-            {
-                Object value = columnsHelper.getSpecialColumnsValue(propertyName, currentTime);
-                if (values.getProperty(propertyName) == null)
-                {
-                    DynamicProperty newProperty = new DynamicProperty(propertyName, value.getClass(), value);
-                    newProperty.setHidden(true);
-                    values.add(newProperty);
-                }
-            }
-        }
-    }
+//
+//    public void addUpdateSpecialColumns(Entity entity, DynamicPropertySet values)
+//    {
+//        addSpecialColumns(entity, values, ColumnsHelper.updateSpecialColumns);
+//    }
+//
+//    public void addInsertSpecialColumns(Entity entity, DynamicPropertySet values)
+//    {
+//        addSpecialColumns(entity, values, ColumnsHelper.insertSpecialColumns);
+//    }
+//
+//    private void addSpecialColumns(Entity entity, DynamicPropertySet values, List<String> specialColumns)
+//    {
+//        Map<String, ColumnDef> columns = meta.getColumns(entity);
+//        Timestamp currentTime = new Timestamp(new Date().getTime());
+//
+//        for(String propertyName: specialColumns)
+//        {
+//            ColumnDef columnDef = columns.get(propertyName);
+//            if (columnDef != null)
+//            {
+//                Object value = columnsHelper.getSpecialColumnsValue(propertyName, currentTime);
+//                if (values.getProperty(propertyName) == null)
+//                {
+//                    DynamicProperty newProperty = new DynamicProperty(propertyName, value.getClass(), value);
+//                    newProperty.setHidden(true);
+//                    values.add(newProperty);
+//                }
+//            }
+//        }
+//    }
 
 
     public Object[] getValues(DynamicPropertySet dps)
@@ -744,34 +744,34 @@ public class DpsHelper
         }
         return list.toArray();
     }
-
-    public void checkDpsColumns(BeModelElement modelElements, DynamicPropertySet dps)
-    {
-        StringBuilder errorMsg = new StringBuilder();
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
-
-        for (ColumnDef column : columns.values())
-        {
-            if (!column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
-                    && !dps.hasProperty(column.getName()))
-            {
-                errorMsg.append("Dps not contain notNull column '").append(column.getName()).append("'\n");
-            }
-        }
-
-        for (DynamicProperty property : dps)
-        {
-            if (!columns.keySet().contains(property.getName()))
-            {
-                errorMsg.append("Entity not contain column '").append(property.getName()).append("'\n");
-            }
-        }
-
-        if(!errorMsg.toString().isEmpty())
-        {
-            throw Be5Exception.internal("Dps columns errors for modelElements '" + modelElements.getName() + "'\n"+ errorMsg);
-        }
-    }
+//
+//    public void checkDpsColumns(BeModelElement modelElements, DynamicPropertySet dps)
+//    {
+//        StringBuilder errorMsg = new StringBuilder();
+//        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+//
+//        for (ColumnDef column : columns.values())
+//        {
+//            if (!column.isCanBeNull() && !column.isAutoIncrement() && column.getDefaultValue() == null
+//                    && !dps.hasProperty(column.getName()))
+//            {
+//                errorMsg.append("Dps not contain notNull column '").append(column.getName()).append("'\n");
+//            }
+//        }
+//
+//        for (DynamicProperty property : dps)
+//        {
+//            if (!columns.keySet().contains(property.getName()))
+//            {
+//                errorMsg.append("Entity not contain column '").append(property.getName()).append("'\n");
+//            }
+//        }
+//
+//        if(!errorMsg.toString().isEmpty())
+//        {
+//            throw Be5Exception.internal("Dps columns errors for modelElements '" + modelElements.getName() + "'\n"+ errorMsg);
+//        }
+//    }
 
     public <T extends DynamicPropertySet> T addLabel(T dps, String text)
     {
@@ -900,5 +900,16 @@ public class DpsHelper
         {
             throw new RuntimeException("not supported modelElements");    
         }
+    }
+
+    public Map<String, Object> toLinkedHashMap(DynamicPropertySet dps)
+    {
+        Map<String, Object> map = new LinkedHashMap<>( dps.size() );
+        for(DynamicProperty property : dps )
+        {
+            map.put( property.getName(), property.getValue() );
+        }
+
+        return map;
     }
 }
