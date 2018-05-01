@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.inject.Injector;
@@ -15,6 +16,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
+import com.developmentontheedge.be5.util.Utils;
 
 
 import java.util.ArrayList;
@@ -38,17 +40,19 @@ public class OperationExecutorImpl implements OperationExecutor
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
     private final UserAwareMeta userAwareMeta;
+    private final Meta meta;
     private final GroovyRegister groovyRegister;
 
     public OperationExecutorImpl(Injector injector, ConnectionService connectionService, Validator validator,
                                  GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta,
-                                 GroovyRegister groovyRegister)
+                                 Meta meta, GroovyRegister groovyRegister)
     {
         this.injector = injector;
         this.connectionService = connectionService;
         this.validator = validator;
         this.groovyOperationLoader = groovyOperationLoader;
         this.userAwareMeta = userAwareMeta;
+        this.meta = meta;
         this.groovyRegister = groovyRegister;
     }
 
@@ -255,9 +259,16 @@ public class OperationExecutorImpl implements OperationExecutor
 
     @Override
     public Operation create(String entityName, String queryName, String operationName,
-                            String[] selectedRows, Map<String, Object> operationParams)
+                            String[] stringSelectedRows, Map<String, Object> operationParams)
     {
         OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
+
+        Object[] selectedRows = stringSelectedRows;
+        if(!operationInfo.getEntityName().startsWith("_"))
+        {
+            Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
+            selectedRows = Utils.changeTypes(selectedRows, primaryKeyColumnType);
+        }
 
         OperationContext operationContext = new OperationContext(selectedRows, queryName, operationParams);
 

@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.RestApiConstants;
@@ -22,6 +23,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -62,6 +64,7 @@ public abstract class TestUtils
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
 
     @Inject private OperationService operationService;
+    @Inject private Meta meta;
     @Inject private OperationExecutor operationExecutor;
     @Inject protected UserAwareMeta userAwareMeta;
 
@@ -274,11 +277,19 @@ public abstract class TestUtils
         return operation;
     }
 
-    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRows)
+    protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRowsParam)
     {
-        OperationInfo meta = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
 
-        Operation operation = operationExecutor.create(meta, new OperationContext(ParseRequestUtils.selectedRows(selectedRows), queryName, Collections.emptyMap()));
+        String[] stringSelectedRows = ParseRequestUtils.selectedRows(selectedRowsParam);
+        Object[] selectedRows = stringSelectedRows;
+        if(!operationInfo.getEntityName().startsWith("_"))
+        {
+            Class<?> primaryKeyColumnType = meta.getColumnType(operationInfo.getEntity(), operationInfo.getPrimaryKey());
+            selectedRows = Utils.changeTypes(stringSelectedRows, primaryKeyColumnType);
+        }
+
+        Operation operation = operationExecutor.create(operationInfo, new OperationContext(selectedRows, queryName, Collections.emptyMap()));
         ShowCreatedOperations.addOperation(operation);
 
         return operation;
