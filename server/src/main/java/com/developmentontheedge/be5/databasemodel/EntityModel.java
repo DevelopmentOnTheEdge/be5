@@ -208,7 +208,7 @@ public interface EntityModel<T>
      * Returns a list of records of current entity.
      * @return list of records
      */
-    List<RecordModel> toList();
+    List<RecordModel<T>> toList();
 
 //    List<RecordModel> collect();
 
@@ -216,21 +216,21 @@ public interface EntityModel<T>
      * Returns a array of records of current entity.
      * @return array of records
      */
-    RecordModel[] toArray();
+    RecordModel<T>[] toArray();
 
     /**
      * Returns a list of records of current entity filtered by the specified parameters.
      * @param conditions the filter parameters
      * @return array of records
      */
-    List<RecordModel> toList(Map<String, ? super Object> conditions);
+    List<RecordModel<T>> toList(Map<String, ? super Object> conditions);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
      * @param conditions the filter parameters
      * @return array of records
      */
-    RecordModel[] toArray(Map<String, ? super Object> conditions);
+    RecordModel<T>[] toArray(Map<String, ? super Object> conditions);
 
     /**
      * Spreads collection and collect elements from function to list.<br>

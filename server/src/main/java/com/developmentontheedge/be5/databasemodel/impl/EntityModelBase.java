@@ -120,16 +120,17 @@ public class EntityModelBase<T> implements EntityModel<T>
         return getRecordModel(dps);
     }
 
-    private RecordModel getRecordModel(DynamicPropertySet dps)
+    private RecordModel<T> getRecordModel(DynamicPropertySet dps)
     {
         if(dps == null)return null;
 
         Object primaryKey = dps.getProperty(getPrimaryKeyName()).getValue();
-        if(primaryKey.getClass() == Long.class){
-            return new RecordModelBase<>((Long)primaryKey, this, dps );
-        }else{
-            return new RecordModelBase<>(primaryKey.toString(), this, dps );
-        }
+//        if(primaryKey.getClass() == Long.class){
+//            return new RecordModelBase(primaryKey, this, dps );
+//        }else{
+//            return new RecordModelBase(primaryKey.toString(), this, dps );
+//        }
+        return new RecordModelBase(primaryKey, this, dps );
     }
 
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
@@ -385,19 +386,19 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public List<RecordModel> toList()
+    public List<RecordModel<T>> toList()
     {
         return toList( emptyMap() );
     }
 
     @Override
-    public RecordModel[] toArray()
+    public RecordModel<T>[] toArray()
     {
         return toArray( emptyMap() );
     }
     
     @Override
-    public List<RecordModel> toList( Map<String, ? super Object> conditions )
+    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
@@ -409,12 +410,12 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel[] toArray( Map<String, ? super Object> conditions )
+    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
-        List<RecordModel> recordModels = toList(conditions);
-        RecordModel[] arr = new RecordModel[recordModels.size()];
+        List<RecordModel<T>> recordModels = toList(conditions);
+        RecordModel<T>[] arr = new RecordModel[recordModels.size()];
         return recordModels.toArray( arr );
     }
 //
