@@ -47,6 +47,7 @@ import java.util.stream.StreamSupport;
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range;
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
 
 
 public class DpsHelper
@@ -359,22 +360,23 @@ public class DpsHelper
         }
 
         if(columnDef.isCanBeNull() ||
-                (columnDef.getTypeString().equals(SqlColumnType.TYPE_BOOL) && columnDef.getDefaultValue() != null) )
+                (columnDef.getTypeString().equals(TYPE_BOOL) && columnDef.getDefaultValue() != null) )
         {
             dp.setCanBeNull(true);
         }
 
-        if(SqlColumnType.TYPE_TEXT.equals(columnDef.getType().getTypeName()))
+        String typeName = columnDef.getType().getTypeName();
+
+        if(TYPE_TEXT.equals(typeName))
         {
             dp.setAttribute(BeanInfoConstants.EXTRA_ATTRS, new String[][]{{"inputType", "textArea"}});
         }
 
-        if(SqlColumnType.TYPE_VARCHAR.equals(columnDef.getType().getTypeName()) ||
-           SqlColumnType.TYPE_CHAR.equals(columnDef.getType().getTypeName())){
+        if(TYPE_VARCHAR.equals(typeName) || TYPE_CHAR.equals(typeName)){
             dp.setAttribute(BeanInfoConstants.COLUMN_SIZE_ATTR, columnDef.getType().getSize());
         }
 
-        if(SqlColumnType.TYPE_DECIMAL.equals(columnDef.getType().getTypeName()))
+        if(TYPE_DECIMAL.equals(typeName))
         {
             int size = columnDef.getType().getSize();
             dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
@@ -383,7 +385,7 @@ public class DpsHelper
             ));
         }
 
-        if(SqlColumnType.TYPE_CURRENCY.equals(columnDef.getType().getTypeName()))
+        if(TYPE_CURRENCY.equals(typeName))
         {
             dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
                     getRange(columnDef.getType().getSize(), false),
@@ -391,10 +393,9 @@ public class DpsHelper
             ));
         }
 
-        if(SqlColumnType.TYPE_INT.equals(columnDef.getType().getTypeName()) ||
-           SqlColumnType.TYPE_UINT.equals(columnDef.getType().getTypeName()))
+        if(TYPE_INT.equals(typeName) || TYPE_UINT.equals(typeName))
         {
-            boolean unsigned = SqlColumnType.TYPE_UINT.equals(columnDef.getType().getTypeName());
+            boolean unsigned = TYPE_UINT.equals(typeName);
 
             dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
                     range(unsigned ? 0 : Integer.MIN_VALUE, Integer.MAX_VALUE),
@@ -402,10 +403,9 @@ public class DpsHelper
             ));
         }
 
-        if(SqlColumnType.TYPE_BIGINT.equals(columnDef.getType().getTypeName()) ||
-           SqlColumnType.TYPE_UBIGINT.equals(columnDef.getType().getTypeName()))
+        if(TYPE_BIGINT.equals(typeName) || TYPE_UBIGINT.equals(typeName))
         {
-            boolean unsigned = SqlColumnType.TYPE_UBIGINT.equals(columnDef.getType().getTypeName());
+            boolean unsigned = TYPE_UBIGINT.equals(typeName);
 
             dp.setAttribute(BeanInfoConstants.VALIDATION_RULES, Arrays.asList(
                     range(unsigned ? 0 : Long.MIN_VALUE, Long.MAX_VALUE),
@@ -442,7 +442,7 @@ public class DpsHelper
 
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
-        if(columnDef.getType().getTypeName().equals(SqlColumnType.TYPE_BOOL)){
+        if(columnDef.getType().getTypeName().equals(TYPE_BOOL)){
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
         }
         else if(columnDef.getType().getEnumValues() != Strings2.EMPTY)
