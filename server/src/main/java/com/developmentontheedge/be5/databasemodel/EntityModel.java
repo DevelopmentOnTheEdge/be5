@@ -58,7 +58,7 @@ public interface EntityModel<R extends RecordModel>
      * @param values map with column names and values
      * @return generated record identify number
      */
-    String add(Map<String, ? super Object> values);
+    <T> T add(Map<String, ? super Object> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -67,7 +67,7 @@ public interface EntityModel<R extends RecordModel>
      * @param dps DynamicPropertySet
      * @return generated record identify number
      */
-    String add(DynamicPropertySet dps);
+    <T> T add(DynamicPropertySet dps);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -83,7 +83,7 @@ public interface EntityModel<R extends RecordModel>
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<String> addAll(Collection<Map<String, ? super Object>> c);
+    <T> List<T> addAll(Collection<Map<String, ? super Object>> c);
 
     /** 
      * Returns the record object with the specified id
@@ -144,6 +144,12 @@ public interface EntityModel<R extends RecordModel>
      */
     int set(String id, DynamicPropertySet values);
 
+    int set(Long id, String propertyName, Object value);
+
+    int set(Long id, Map<String, ? super Object> values);
+
+    int set(Long id, DynamicPropertySet values);
+
     //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
 //    void setForceMany(Map<String, String> values, Map<String, String> conditions);
@@ -158,6 +164,8 @@ public interface EntityModel<R extends RecordModel>
     int removeAll(Collection<Map<String, ? super Object>> c);
 
     int removeWhereColumnIn(String columnName, String[] ids);
+
+    int removeWhereColumnIn(String columnName, Long[] ids);
 
     /**
      * Operation removes all the records
@@ -191,6 +199,10 @@ public interface EntityModel<R extends RecordModel>
      * @return number of affected rows
      */
     int remove(String[] ids);
+
+    int remove(Long firstId, Long... otherId);
+
+    int remove(Long[] ids);
 
     /**
      * Returns a list of records of current entity.

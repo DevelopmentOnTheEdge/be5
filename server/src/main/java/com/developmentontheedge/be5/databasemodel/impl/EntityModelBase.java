@@ -166,7 +166,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public String add( Map<String, ? super Object> values )
+    public <T> T add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
 
@@ -176,13 +176,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         columnsHelper.addInsertSpecialColumns(entity, values);
         columnsHelper.checkDpsColumns(entity, values);
 
-        Object primaryKey = sqlHelper.insert(entity.getName(), values);
-
-        return primaryKey != null ? primaryKey.toString() : null;
+        return sqlHelper.insert(entity.getName(), values);
     }
 
     @Override
-    final public String add( DynamicPropertySet dps )
+    final public <T> T add( DynamicPropertySet dps )
     {
         Objects.requireNonNull(dps);
 
@@ -191,15 +189,13 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         dpsHelper.addInsertSpecialColumns(entity, dps);
         dpsHelper.checkDpsColumns(entity, dps);
 
-        Object primaryKey = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
-
-        return primaryKey != null ? primaryKey.toString() : null;
+        return db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
     }
 
     @Override
-    public List<String> addAll( final Collection<Map<String, ? super Object>> c )
+    public <T> List<T> addAll( final Collection<Map<String, ? super Object>> c )
     {
-        final List<String> keys = new ArrayList<>( c.size() );
+        final List<T> keys = new ArrayList<>( c.size() );
         for( Map<String, ? super Object> values : c )
         {
             keys.add( add( values ) );
@@ -245,6 +241,43 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
+    public int set( Long id, String propertyName, Object value )
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(propertyName);
+        Objects.requireNonNull(value);
+        return this.set( id, Collections.singletonMap( propertyName, value ) );
+    }
+
+    @Override
+    public int set( Long id, Map<String, ? super Object> values )
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(values);
+
+        values = new LinkedHashMap<>(values);
+        values.values().removeIf(Objects::isNull);
+
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
+
+        return this.set( id, dps );
+    }
+
+    @Override
+    public int set(Long id, DynamicPropertySet dps )
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(dps);
+
+        validator.checkErrorAndCast(dps);
+        dpsHelper.addUpdateSpecialColumns(entity, dps);
+
+        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+                ObjectArrays.concat(dpsHelper.getValues(dps), id));
+    }
+
+    @Override
     public int removeAll( Collection<Map<String, ? super Object>> c )
     {
         // TODO Auto-generated method stub
@@ -265,7 +298,34 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
+    public int remove( Long firstId, final Long... otherId )
+    {
+        Objects.requireNonNull(firstId);
+        return remove( ObjectArrays.concat(firstId, otherId) );
+    }
+
+    @Override
+    public int remove( Long[] ids )
+    {
+        return removeWhereColumnIn(entity.getPrimaryKey(), ids);
+    }
+
+    @Override
     public int removeWhereColumnIn(String columnName, String[] ids)
+    {
+        Objects.requireNonNull(columnName);
+        Objects.requireNonNull(ids);
+
+        ColumnDef columnDef = meta.getColumn(entity, columnName);
+
+        return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
+                        Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+        );
+    }
+
+    @Override
+    public int removeWhereColumnIn(String columnName, Long[] ids)
     {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(ids);

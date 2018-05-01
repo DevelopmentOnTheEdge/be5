@@ -91,9 +91,9 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         self.getQuery( queryName, values ).each( func );
     }
 
-    public static String leftShift( EntityModel self, Map<String, String> values )
+    public static <T> T leftShift( EntityModel self, Map<String, String> values )
     {
-        return self.add( values );
+        return (T) self.add( values );
     }
 
     public static List list( EntityModel self )
@@ -123,9 +123,9 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return ( ( EntityModel )object ).get( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
     }
 
-    public static String leftShift( Object object, Map<String, String> values )
+    public static <T> T leftShift( Object object, Map<String, String> values )
     {
-        return ( ( EntityModel )object ).add( values );
+        return (T) ( ( EntityModel )object ).add( values );
     }
 
     public static RecordModel call( EntityModel self, Map<String, ? super Object> values )
@@ -149,6 +149,16 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
     }
 
     public static void putAt( EntityModel self, String id, DynamicPropertySet dps )
+    {
+        self.set(id, dps);
+    }
+
+    public static void putAt( EntityModel self, Long id, Map<String, ? super Object> values )
+    {
+        self.set(id, values);
+    }
+
+    public static void putAt( EntityModel self, Long id, DynamicPropertySet dps )
     {
         self.set(id, dps);
     }
