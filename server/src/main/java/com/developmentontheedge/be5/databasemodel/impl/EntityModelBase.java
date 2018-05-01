@@ -117,7 +117,19 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
                 rs -> dpsHelper.addDpWithoutTags(new DynamicPropertySetSupport(), entity, rs),
                 conditions.values().toArray());
 
-        return dps == null ? null : new RecordModelBase( this, dps );
+        return getRecordModel(dps);
+    }
+
+    private RecordModel getRecordModel(DynamicPropertySet dps)
+    {
+        if(dps == null)return null;
+
+        Object primaryKey = dps.getProperty(getPrimaryKeyName()).getValue();
+        if(primaryKey.getClass() == Long.class){
+            return new RecordModelBase<>((Long)primaryKey, this, dps );
+        }else{
+            return new RecordModelBase<>(primaryKey.toString(), this, dps );
+        }
     }
 
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
@@ -392,7 +404,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
 
         return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
-                .map(dps -> new RecordModelBase( EntityModelBase.this, dps ))
+                .map(this::getRecordModel)
                 .collect(Collectors.toList());
     }
 

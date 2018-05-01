@@ -5,8 +5,9 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Map;
 
-public interface RecordModel extends DynamicPropertySet
+public interface RecordModel<T> extends DynamicPropertySet
 {
+    T getId();
 
     int remove();
 
@@ -14,8 +15,5 @@ public interface RecordModel extends DynamicPropertySet
 
     void update(Map<String, Object> values);
 
-    String getId();
-
     Object invokeMethod(String methodName, Object... arguments);
-
 }

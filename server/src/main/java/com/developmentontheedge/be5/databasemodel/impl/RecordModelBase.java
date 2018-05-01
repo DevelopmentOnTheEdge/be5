@@ -11,24 +11,24 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 
-public class RecordModelBase extends DynamicPropertySetBlocked implements RecordModel
+public class RecordModelBase<T> extends DynamicPropertySetBlocked implements RecordModel<T>
 {
     private final EntityModelBase entityModelBase;
-    private final String id;
+    private final T id;
 
-    RecordModelBase(EntityModelBase entityModelBase, DynamicPropertySet dps)
+    RecordModelBase(T id, EntityModelBase entityModelBase, DynamicPropertySet dps)
     {
         super( dps );
         if(dps.getProperty(entityModelBase.getPrimaryKeyName()) == null)
         {
             throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModelBase.getPrimaryKeyName() + "'");
         }
-        id = dps.getProperty(entityModelBase.getPrimaryKeyName()).getValue().toString();
+        this.id = id;
         this.entityModelBase = entityModelBase;
     }
 
     @Override
-    public String getId()
+    public T getId()
     {
         return id;
     }
@@ -36,7 +36,11 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     @Override
     public int remove()
     {
-        return entityModelBase.remove( getId() );
+        if(id.getClass() == Long.class){
+            return entityModelBase.remove( (Long)id );
+        }else{
+            return entityModelBase.remove( id.toString() );
+        }
     }
 
     @Override
@@ -61,14 +65,22 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     @Override
     public void update( String propertyName, Object value )
     {
-        entityModelBase.set( getId(), propertyName, value );
+        if(id.getClass() == Long.class){
+            entityModelBase.set( (Long) getId(), propertyName, value );
+        }else{
+            entityModelBase.set( getId().toString(), propertyName, value );
+        }
         super.setValueHidden( propertyName, value );
     }
 
     @Override
     public void update( Map<String, Object> values )
     {
-        entityModelBase.set( getId(), values );
+        if(id.getClass() == Long.class){
+            entityModelBase.set( (Long) getId(), values );
+        }else{
+            entityModelBase.set( getId().toString(), values );
+        }
         for( String propertyName : values.keySet() )
         {
             if( super.hasProperty( propertyName ) )

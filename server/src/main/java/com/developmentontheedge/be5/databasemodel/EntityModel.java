@@ -90,9 +90,9 @@ public interface EntityModel<R extends RecordModel>
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(String id);
+    RecordModel<String> get(String id);
 
-    RecordModel get(Long id);
+    RecordModel<Long> get(Long id);
 
     /** 
      * Returns the record object consistent with the specified condition, 
@@ -102,9 +102,9 @@ public interface EntityModel<R extends RecordModel>
      */
     RecordModel get(Map<String, ? super Object> conditions );
 
-    RecordModel getColumns(List<String> columns, String id);
+    RecordModel<String> getColumns(List<String> columns, String id);
 
-    RecordModel getColumns(List<String> columns, Long id);
+    RecordModel<Long> getColumns(List<String> columns, Long id);
 
     RecordModel getColumns(List<String> columns, Map<String, ? super Object> conditions);
 
