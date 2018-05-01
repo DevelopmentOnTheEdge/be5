@@ -75,104 +75,9 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public RecordModel getColumns( List<String> columns, Map<String, ? super Object> conditions )
-    {
-        Objects.requireNonNull(conditions);
-
-        AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
-                .from(entity.getName())
-                .where(conditions);
-
-        DynamicPropertySet dps = db.select(sql.format(),
-                rs -> dpsHelper.addDpWithoutTags(new DynamicPropertySetSupport(), entity, rs),
-                conditions.values().toArray());
-
-        return dps == null ? null : new RecordModelBase( this, dps );
-    }
-
-    private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
-    {
-        List<String> columnsWithPK = columns;
-        if(columns.size() > 0 && !columns.contains(getPrimaryKeyName()))
-        {
-            columnsWithPK = new ArrayList<>(columns);
-            columnsWithPK.add(getPrimaryKeyName());
-        }
-        return columnsWithPK;
-    }
-
-    @Override
     public RecordModel get( Map<String, ? super Object> conditions )
     {
         return getColumns(Collections.emptyList(), conditions);
-    }
-
-    @Override
-    public long count()
-    {
-        return count( Collections.emptyMap() );
-    }
-    
-    @Override
-    public long count( Map<String, ? super Object> conditions ) {
-        Objects.requireNonNull(conditions);
-
-        AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
-
-        return db.getLong(sql.format(), conditions.values().toArray());
-    }
-
-    @Override
-    public boolean isEmpty()
-    {
-        return count() == 0;
-    }
-
-    @Override
-    public boolean contains( Map<String, ? super Object> conditions )
-    {
-        Objects.requireNonNull(conditions);
-        return count(conditions) != 0;
-    }
-
-    @Override
-    public String add( Map<String, ? super Object> values )
-    {
-        Objects.requireNonNull(values);
-
-        values = new LinkedHashMap<>(values);
-        values.values().removeIf(Objects::isNull);
-
-        columnsHelper.addInsertSpecialColumns(entity, values);
-        columnsHelper.checkDpsColumns(entity, values);
-
-        Object primaryKey = sqlHelper.insert(entity.getName(), values);
-
-        return primaryKey != null ? primaryKey.toString() : null;
-    }
-
-    @Override
-    public boolean containsAll( Collection<Map<String, ? super Object>> c )
-    {
-        return c.stream().allMatch( this::contains );
-    }
-
-    @Override
-    public List<String> addAll( final Collection<Map<String, ? super Object>> c )
-    {
-        final List<String> keys = new ArrayList<>( c.size() );
-        for( Map<String, ? super Object> values : c )
-        {
-            keys.add( add( values ) );
-        }
-        return keys;
-    }
-
-    @Override
-    public int removeAll( Collection<Map<String, ? super Object>> c )
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException( "not implemented" );
     }
 
     @Override
@@ -200,12 +105,150 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
+    public RecordModel getColumns( List<String> columns, Map<String, ? super Object> conditions )
+    {
+        Objects.requireNonNull(conditions);
+
+        AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
+                .from(entity.getName())
+                .where(conditions);
+
+        DynamicPropertySet dps = db.select(sql.format(),
+                rs -> dpsHelper.addDpWithoutTags(new DynamicPropertySetSupport(), entity, rs),
+                conditions.values().toArray());
+
+        return dps == null ? null : new RecordModelBase( this, dps );
+    }
+
+    private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
+    {
+        List<String> columnsWithPK = columns;
+        if(columns.size() > 0 && !columns.contains(getPrimaryKeyName()))
+        {
+            columnsWithPK = new ArrayList<>(columns);
+            columnsWithPK.add(getPrimaryKeyName());
+        }
+        return columnsWithPK;
+    }
+
+    @Override
+    public long count()
+    {
+        return count( Collections.emptyMap() );
+    }
+
+    @Override
+    public long count( Map<String, ? super Object> conditions ) {
+        Objects.requireNonNull(conditions);
+
+        AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
+
+        return db.getLong(sql.format(), conditions.values().toArray());
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return count() == 0;
+    }
+
+    @Override
+    public boolean contains( Map<String, ? super Object> conditions )
+    {
+        Objects.requireNonNull(conditions);
+        return count(conditions) != 0;
+    }
+
+    @Override
+    public boolean containsAll( Collection<Map<String, ? super Object>> c )
+    {
+        return c.stream().allMatch( this::contains );
+    }
+
+    @Override
+    public String add( Map<String, ? super Object> values )
+    {
+        Objects.requireNonNull(values);
+
+        values = new LinkedHashMap<>(values);
+        values.values().removeIf(Objects::isNull);
+
+        columnsHelper.addInsertSpecialColumns(entity, values);
+        columnsHelper.checkDpsColumns(entity, values);
+
+        Object primaryKey = sqlHelper.insert(entity.getName(), values);
+
+        return primaryKey != null ? primaryKey.toString() : null;
+    }
+
+    @Override
+    final public String add( DynamicPropertySet dps )
+    {
+        Objects.requireNonNull(dps);
+
+        validator.checkErrorAndCast(dps);
+
+        dpsHelper.addInsertSpecialColumns(entity, dps);
+        dpsHelper.checkDpsColumns(entity, dps);
+
+        Object primaryKey = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
+
+        return primaryKey != null ? primaryKey.toString() : null;
+    }
+
+    @Override
+    public List<String> addAll( final Collection<Map<String, ? super Object>> c )
+    {
+        final List<String> keys = new ArrayList<>( c.size() );
+        for( Map<String, ? super Object> values : c )
+        {
+            keys.add( add( values ) );
+        }
+        return keys;
+    }
+
+    @Override
     public int set( String id, String propertyName, Object value )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
         Objects.requireNonNull(value);
         return this.set( id, Collections.singletonMap( propertyName, value ) );
+    }
+
+    @Override
+    public int set( String id, Map<String, ? super Object> values )
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(values);
+
+        values = new LinkedHashMap<>(values);
+        values.values().removeIf(Objects::isNull);
+
+        DynamicPropertySet dps = new DynamicPropertySetSupport();
+        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
+
+        return this.set( id, dps );
+    }
+
+    @Override
+    public int set(String id, DynamicPropertySet dps )
+    {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(dps);
+
+        validator.checkErrorAndCast(dps);
+        dpsHelper.addUpdateSpecialColumns(entity, dps);
+
+        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
+    }
+
+    @Override
+    public int removeAll( Collection<Map<String, ? super Object>> c )
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException( "not implemented" );
     }
 
     @Override
@@ -333,36 +376,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         return getClass().getSimpleName() + "[ entityName = " + getEntityName() + " ]";
     }
 
-    @Override
-    final public String add( DynamicPropertySet dps )
-    {
-        Objects.requireNonNull(dps);
-
-        validator.checkErrorAndCast(dps);
-
-        dpsHelper.addInsertSpecialColumns(entity, dps);
-        dpsHelper.checkDpsColumns(entity, dps);
-
-        Object primaryKey = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
-
-        return primaryKey != null ? primaryKey.toString() : null;
-    }
-
-    @Override
-    public int set( String id, Map<String, ? super Object> values )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(values);
-
-        values = new LinkedHashMap<>(values);
-        values.values().removeIf(Objects::isNull);
-
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
-
-        return this.set( id, dps );
-    }
-
 //    @Override
 //    public void setMany( Map<String, String> values, Map<String, String> conditions )
 //    {
@@ -370,19 +383,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 //        Objects.requireNonNull(conditions);
 //        setForceMany(values, conditions);
 //    }
-
-    @Override
-    public int set(String id, DynamicPropertySet dps )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(dps);
-
-        validator.checkErrorAndCast(dps);
-        dpsHelper.addUpdateSpecialColumns(entity, dps);
-
-        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
-    }
 
     private Object getID(String id)
     {
