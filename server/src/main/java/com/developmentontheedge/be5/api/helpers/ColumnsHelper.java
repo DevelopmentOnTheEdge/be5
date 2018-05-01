@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.google.common.collect.ImmutableList;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,22 @@ public class ColumnsHelper
         if(IP_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
 
         throw Be5Exception.internal("Not support: " + propertyName);
+    }
+
+    public Object[] getDeleteSpecialValues(Entity entity)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        Timestamp currentTime = new Timestamp(new Date().getTime());
+        List<Object> list = new ArrayList<>();
+
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            list.add("yes");
+            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))list.add(UserInfoHolder.getUserName());
+            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))list.add(currentTime);
+            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))list.add(UserInfoHolder.getRemoteAddr());
+        }
+        return list.toArray();
     }
 
     public void checkDpsColumns(Entity entity, Map<String, ? super Object> values)

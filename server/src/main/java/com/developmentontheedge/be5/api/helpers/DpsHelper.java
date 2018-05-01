@@ -489,38 +489,6 @@ public class DpsHelper
 
         return dps;
     }
-//
-//    public void addUpdateSpecialColumns(Entity entity, DynamicPropertySet values)
-//    {
-//        addSpecialColumns(entity, values, ColumnsHelper.updateSpecialColumns);
-//    }
-//
-//    public void addInsertSpecialColumns(Entity entity, DynamicPropertySet values)
-//    {
-//        addSpecialColumns(entity, values, ColumnsHelper.insertSpecialColumns);
-//    }
-//
-//    private void addSpecialColumns(Entity entity, DynamicPropertySet values, List<String> specialColumns)
-//    {
-//        Map<String, ColumnDef> columns = meta.getColumns(entity);
-//        Timestamp currentTime = new Timestamp(new Date().getTime());
-//
-//        for(String propertyName: specialColumns)
-//        {
-//            ColumnDef columnDef = columns.get(propertyName);
-//            if (columnDef != null)
-//            {
-//                Object value = columnsHelper.getSpecialColumnsValue(propertyName, currentTime);
-//                if (values.getProperty(propertyName) == null)
-//                {
-//                    DynamicProperty newProperty = new DynamicProperty(propertyName, value.getClass(), value);
-//                    newProperty.setHidden(true);
-//                    values.add(newProperty);
-//                }
-//            }
-//        }
-//    }
-
 
     public Object[] getValues(DynamicPropertySet dps)
     {
@@ -729,21 +697,6 @@ public class DpsHelper
         return sql + whereSql;
     }
 
-    public Object[] getDeleteSpecialValues(BeModelElement modelElements)
-    {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
-        Timestamp currentTime = new Timestamp(new Date().getTime());
-        List<Object> list = new ArrayList<>();
-
-        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
-        {
-            list.add("yes");
-            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))list.add(UserInfoHolder.getUserName());
-            if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))list.add(currentTime);
-            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))list.add(UserInfoHolder.getRemoteAddr());
-        }
-        return list.toArray();
-    }
 //
 //    public void checkDpsColumns(BeModelElement modelElements, DynamicPropertySet dps)
 //    {

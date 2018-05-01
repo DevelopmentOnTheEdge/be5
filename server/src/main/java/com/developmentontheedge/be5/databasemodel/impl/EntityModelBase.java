@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED_COLUMN_NAME;
 import static java.util.Collections.emptyMap;
 
 
@@ -265,10 +266,24 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         ColumnDef columnDef = meta.getColumn(entity, columnName);
 
-        return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-        );
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            //sqlHelper.update(entity.getName())
+            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+                    ObjectArrays.concat(columnsHelper.getDeleteSpecialValues(entity),
+                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+            );
+        }
+        else
+        {
+            //return sqlHelper.deleteIn(entity.getName(), columnName, ids);
+            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+                    ObjectArrays.concat(columnsHelper.getDeleteSpecialValues(entity),
+                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+            );
+        }
     }
 
     @Override
@@ -282,7 +297,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(conditions);
         return db.update(dpsHelper.generateDelete(entity, conditions),
-                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
+                ObjectArrays.concat(columnsHelper.getDeleteSpecialValues(entity),
                         conditions.values().toArray(), Object.class)
         );
     }

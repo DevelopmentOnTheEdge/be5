@@ -27,7 +27,9 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        int updateCount = database.getEntity(getInfo().getEntityName()).remove(context.records);
+        Object[] records = Utils.changeTypes(context.records, meta.getColumnType(getInfo().getEntity(), getInfo().getPrimaryKey()));
+
+        int updateCount = database.getEntity(getInfo().getEntityName()).remove(records);
 
         out.append( "" + updateCount + " " + ( "records were deleted from" ) + " <i>" + getInfo().getEntityName() + "</i><br />" );
 
@@ -38,7 +40,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
             if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
             {
                 int updateCount1 = database.getEntity(reference.getTableFrom())
-                        .removeWhereColumnIn(reference.getColumnsFrom(), context.records);
+                        .removeWhereColumnIn(reference.getColumnsFrom(), records);
 
                 if (updateCount1 > 0)
                 {
