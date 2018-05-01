@@ -12,18 +12,17 @@ import static org.junit.Assert.assertEquals;
 
 public class EntityModelBaseTest extends Be5ProjectDBTest
 {
-    private EntityModel<Long> testtableAdmin;
-
     @Before
     public void before()
     {
-        testtableAdmin = database.getEntity("testtableAdmin");
         db.update("DELETE FROM testtableAdmin");
     }
 
     @Test
     public void testUpdate()
     {
+        EntityModel<Long> testtableAdmin = database.getEntity("testtableAdmin");
+
         Long id = testtableAdmin.add(ImmutableMap.of(
             "name", "TestName",
             "value", 1
@@ -44,6 +43,16 @@ public class EntityModelBaseTest extends Be5ProjectDBTest
         record.update( ImmutableMap.of(
             "name", "TestName3"
         ));
+    }
+
+    @Test
+    public void add()
+    {
+        Long id = database.getEntity("testtableAdmin").add(ImmutableMap.of(
+                "name", "TestName",
+                "value", 1
+        ));
+        assertEquals(Long.class, id.getClass());
     }
 
 }

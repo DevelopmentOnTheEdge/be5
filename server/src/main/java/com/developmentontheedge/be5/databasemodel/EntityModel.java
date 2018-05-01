@@ -58,7 +58,7 @@ public interface EntityModel<T>
      * @param values map with column names and values
      * @return generated record identify number
      */
-    T add(Map<String, ? super Object> values);
+    <R> R add(Map<String, ? super Object> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -67,7 +67,7 @@ public interface EntityModel<T>
      * @param dps DynamicPropertySet
      * @return generated record identify number
      */
-    T add(DynamicPropertySet dps);
+    <R> R add(DynamicPropertySet dps);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  

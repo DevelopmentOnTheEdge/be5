@@ -163,7 +163,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public T add( Map<String, ? super Object> values )
+    public <R> R add( Map<String, ? super Object> values )
     {
         Objects.requireNonNull(values);
 
@@ -177,7 +177,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    final public T add( DynamicPropertySet dps )
+    final public <R> R add( DynamicPropertySet dps )
     {
         Objects.requireNonNull(dps);
 

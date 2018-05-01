@@ -91,9 +91,9 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         self.getQuery( queryName, values ).each( func );
     }
 
-    public static <T> T leftShift( EntityModel self, Map<String, String> values )
+    public static <R> R leftShift(EntityModel<R> self, Map<String, ? super Object> values )
     {
-        return (T) self.add( values );
+        return (R) self.add( values );
     }
 
     public static List list( EntityModel self )
@@ -123,9 +123,9 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return ( ( EntityModel )object ).get( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
     }
 
-    public static <T> T leftShift( Object object, Map<String, String> values )
+    public static <R> R leftShift( Object object, Map<String, ? super Object> values )
     {
-        return (T) ( ( EntityModel )object ).add( values );
+        return (R) ( ( EntityModel<R> )object ).add( values );
     }
 
     public static RecordModel call( EntityModel self, Map<String, ? super Object> values )
