@@ -38,8 +38,4 @@ public interface EntityAccess {
 //    String getTcloneId();
 
 //    EntityAccess<E> getCloned(String tcloneId);
-
-    <T> T transactionWithResult(SqlExecutor<T> executor);
-
-    void transaction(SqlExecutorVoid executor);
 }
