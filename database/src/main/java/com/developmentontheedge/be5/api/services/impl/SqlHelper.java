@@ -19,7 +19,7 @@ public class SqlHelper
 
     public <T> T insert(String tableName, Map<String, ? super Object> values)
     {
-        return db.insert(generateInsertSql(tableName, values));
+        return db.insert(generateInsertSql(tableName, values), values.values().toArray());
     }
 
     public int update(String tableName, String primaryKeyName, Object primaryKeyValue, Map<String, ? super Object> values)

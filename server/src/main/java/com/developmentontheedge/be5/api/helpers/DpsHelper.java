@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.JavaOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
@@ -22,7 +21,6 @@ import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
-import com.google.common.collect.ImmutableList;
 import com.google.common.math.LongMath;
 
 import java.sql.ResultSet;
@@ -54,31 +52,17 @@ public class DpsHelper
 {
     private static final Logger log = Logger.getLogger(DpsHelper.class.getName());
 
-    private static final List<String> insertSpecialColumns = ImmutableList.<String>builder()
-            .add(WHO_INSERTED_COLUMN_NAME)
-            .add(WHO_MODIFIED_COLUMN_NAME)
-            .add(CREATION_DATE_COLUMN_NAME)
-            .add(MODIFICATION_DATE_COLUMN_NAME)
-            .add(IP_INSERTED_COLUMN_NAME)
-            .add(IP_MODIFIED_COLUMN_NAME)
-            .add(IS_DELETED_COLUMN_NAME)
-            .build();
+    private final Meta meta;
+    private final UserAwareMeta userAwareMeta;
+    private final OperationHelper operationHelper;
+    private final ColumnsHelper columnsHelper;
 
-    private static final List<String> updateSpecialColumns = ImmutableList.<String>builder()
-            .add(WHO_MODIFIED_COLUMN_NAME)
-            .add(MODIFICATION_DATE_COLUMN_NAME)
-            .add(IP_MODIFIED_COLUMN_NAME)
-            .build();
-
-    private Meta meta;
-    private UserAwareMeta userAwareMeta;
-    private OperationHelper operationHelper;
-
-    public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
+    public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta, ColumnsHelper columnsHelper)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.operationHelper = operationHelper;
+        this.columnsHelper = columnsHelper;
     }
 
     public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
@@ -506,19 +490,19 @@ public class DpsHelper
         return dps;
     }
 
-    public void addUpdateSpecialColumns(BeModelElement modelElements, DynamicPropertySet dps)
+    public void addUpdateSpecialColumns(Entity entity, DynamicPropertySet values)
     {
-        addSpecialColumns(modelElements, dps, updateSpecialColumns);
+        addSpecialColumns(entity, values, ColumnsHelper.updateSpecialColumns);
     }
 
-    public void addInsertSpecialColumns(BeModelElement modelElements, DynamicPropertySet dps)
+    public void addInsertSpecialColumns(Entity entity, DynamicPropertySet values)
     {
-        addSpecialColumns(modelElements, dps, insertSpecialColumns);
+        addSpecialColumns(entity, values, ColumnsHelper.insertSpecialColumns);
     }
 
-    private void addSpecialColumns(BeModelElement modelElements, DynamicPropertySet dps, List<String> specialColumns)
+    private void addSpecialColumns(Entity entity, DynamicPropertySet values, List<String> specialColumns)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
         Timestamp currentTime = new Timestamp(new Date().getTime());
 
         for(String propertyName: specialColumns)
@@ -526,36 +510,17 @@ public class DpsHelper
             ColumnDef columnDef = columns.get(propertyName);
             if (columnDef != null)
             {
-                Object value = getSpecialColumnsValue(propertyName, currentTime);
-                if (dps.getProperty(propertyName) == null)
+                Object value = columnsHelper.getSpecialColumnsValue(propertyName, currentTime);
+                if (values.getProperty(propertyName) == null)
                 {
                     DynamicProperty newProperty = new DynamicProperty(propertyName, value.getClass(), value);
                     newProperty.setHidden(true);
-                    dps.add(newProperty);
-                }
-                else
-                {
-                    dps.setValue(propertyName, value);
+                    values.add(newProperty);
                 }
             }
         }
     }
 
-    private Object getSpecialColumnsValue(String propertyName, Timestamp currentTime)
-    {
-        if(CREATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
-        if(MODIFICATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
-
-        if(WHO_INSERTED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getUserName();
-        if(WHO_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getUserName();
-
-        if(IS_DELETED_COLUMN_NAME.equals(propertyName))return "no";
-
-        if(IP_INSERTED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
-        if(IP_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
-
-        throw Be5Exception.internal("Not support: " + propertyName);
-    }
 
     public Object[] getValues(DynamicPropertySet dps)
     {

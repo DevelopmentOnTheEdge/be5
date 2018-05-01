@@ -108,7 +108,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         database.getEntity("testTags").remove("12")
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = RuntimeException.class)
     void testInsertError()
     {
         testtableAdmin << [

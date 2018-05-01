@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
@@ -48,6 +49,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 
     private final SqlService db;
     private final SqlHelper sqlHelper;
+    private final ColumnsHelper columnsHelper;
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final OperationExecutor operationExecutor;
@@ -57,11 +59,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     private final Entity entity;
 
 
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
         this.sqlHelper = sqlHelper;
+        this.columnsHelper = columnsHelper;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.validator = validator;
@@ -140,10 +143,12 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         values = new HashMap<>(values);
         values.values().removeIf(Objects::isNull);
 
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
+        columnsHelper.addInsertSpecialColumns(entity, values);
+        columnsHelper.checkDpsColumns(entity, values);
 
-        return add( dps );
+        Object primaryKey = sqlHelper.insert(entity.getName(), values);
+
+        return primaryKey != null ? primaryKey.toString() : null;
     }
 
     @Override

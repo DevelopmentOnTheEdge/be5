@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
@@ -48,6 +49,7 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
     private final SqlService sqlService;
     private final SqlHelper sqlHelper;
+    private final ColumnsHelper columnsHelper;
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final Meta meta;
@@ -55,11 +57,12 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     private final OperationExecutor operationExecutor;
 
 
-    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
                          Meta meta, Validator validator, OperationExecutor operationExecutor)
     {
         this.sqlService = sqlService;
         this.sqlHelper = sqlHelper;
+        this.columnsHelper = columnsHelper;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.meta = meta;
@@ -75,7 +78,7 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
 
         if (entity == null)throw Be5Exception.unknownEntity(entityName);
 
-        return new EntityModelBase(sqlService, sqlHelper, dpsHelper, validator, operationHelper,
+        return new EntityModelBase(sqlService, sqlHelper, columnsHelper, dpsHelper, validator, operationHelper,
                                    operationExecutor, meta, entity);
     }
 
