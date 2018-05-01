@@ -20,6 +20,7 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.util.Utils;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
@@ -181,12 +182,13 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(dps);
 
-        validator.checkErrorAndCast(dps);
-
-        dpsHelper.addInsertSpecialColumns(entity, dps);
-        dpsHelper.checkDpsColumns(entity, dps);
-
-        return db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
+        return add(toLinkedHashMap(dps));
+//        validator.checkErrorAndCast(dps);
+//
+//        dpsHelper.addInsertSpecialColumns(entity, dps);
+//        dpsHelper.checkDpsColumns(entity, dps);
+//
+//        return db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
     }
 
     @Override
@@ -451,4 +453,14 @@ public class EntityModelBase<T> implements EntityModel<T>
         return e.getEntityName().equals( getEntityName() );
     }
 
+    private Map<String, Object> toLinkedHashMap(DynamicPropertySet dps)
+    {
+        Map<String, Object> map = new LinkedHashMap<>( dps.size() );
+        for(DynamicProperty property : dps )
+        {
+            map.put( property.getName(), property.getValue() );
+        }
+
+        return map;
+    }
 }
