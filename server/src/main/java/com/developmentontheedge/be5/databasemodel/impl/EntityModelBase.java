@@ -29,7 +29,7 @@ import com.google.common.collect.ObjectArrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -140,7 +140,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     {
         Objects.requireNonNull(values);
 
-        values = new HashMap<>(values);
+        values = new LinkedHashMap<>(values);
         values.values().removeIf(Objects::isNull);
 
         columnsHelper.addInsertSpecialColumns(entity, values);
@@ -354,7 +354,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         Objects.requireNonNull(id);
         Objects.requireNonNull(values);
 
-        values = new HashMap<>(values);
+        values = new LinkedHashMap<>(values);
         values.values().removeIf(Objects::isNull);
 
         DynamicPropertySet dps = new DynamicPropertySetSupport();
