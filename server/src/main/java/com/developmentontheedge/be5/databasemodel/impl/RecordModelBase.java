@@ -28,7 +28,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     }
 
     @Override
-    public T getId()
+    public T getPrimaryKey()
     {
         return id;
     }
@@ -46,7 +46,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     @Override
     public String toString()
     {
-        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModelBase.getPrimaryKeyName() + " = " + getId() + " ] }";
+        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModelBase.getPrimaryKeyName() + " = " + getPrimaryKey() + " ] }";
     }
 
     @Override
@@ -66,9 +66,9 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     public void update( String propertyName, Object value )
     {
         if(id.getClass() == Long.class){
-            entityModelBase.set( (Long) getId(), propertyName, value );
+            entityModelBase.set( (Long) getPrimaryKey(), propertyName, value );
         }else{
-            entityModelBase.set( getId().toString(), propertyName, value );
+            entityModelBase.set( getPrimaryKey().toString(), propertyName, value );
         }
         super.setValueHidden( propertyName, value );
     }
@@ -77,9 +77,9 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     public void update( Map<String, Object> values )
     {
         if(id.getClass() == Long.class){
-            entityModelBase.set( (Long) getId(), values );
+            entityModelBase.set( (Long) getPrimaryKey(), values );
         }else{
-            entityModelBase.set( getId().toString(), values );
+            entityModelBase.set( getPrimaryKey().toString(), values );
         }
         for( String propertyName : values.keySet() )
         {

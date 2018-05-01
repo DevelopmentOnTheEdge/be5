@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface RecordModel<T> extends DynamicPropertySet
 {
-    T getId();
+    T getPrimaryKey();
 
     int remove();
 

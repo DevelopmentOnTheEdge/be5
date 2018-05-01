@@ -117,7 +117,7 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     void testQRec()
     {
         def rec = database.operations( table_name : "operations", name : "Clone" )
-        def id = rec.id
+        def id = rec.getPrimaryKey
         try {
             assert rec.table_name == "operations"
             rec.table_name = "cool"
@@ -132,7 +132,7 @@ class DynamicPropertiesGroovyTest extends Be5ProjectTest
     void testQRecWithLeftShiftAndMap()
     {
         def rec = database.operations( table_name : "operations", name : "Clone" )
-        def id = rec.id
+        def id = rec.getPrimaryKey
         try {
             assert rec.table_name == "operations"
             assert rec.name == "Clone"
