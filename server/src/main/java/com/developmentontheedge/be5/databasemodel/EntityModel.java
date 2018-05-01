@@ -144,14 +144,14 @@ public interface EntityModel<T>
 
 //    void setForceMany(Map<String, String> values, Map<String, String> conditions);
     
-    /**
-     * Operation removes all the records consistent with any of conditions in collection.
-     * The method can check the values on consistency and threw exceptions<br>
-     * in order to avoid compromising the integrity of the database.
-     * @param c collection of conditions
-     * @return number of affected rows
-     */
-    int removeAll(Collection<Map<String, ? super Object>> c);
+//    /**
+//     * Operation removes all the records consistent with any of conditions in collection.
+//     * The method can check the values on consistency and threw exceptions<br>
+//     * in order to avoid compromising the integrity of the database.
+//     * @param c collection of conditions
+//     * @return number of affected rows
+//     */
+//    int removeAll(Collection<Map<String, ? super Object>> c);
 
     int removeWhereColumnIn(String columnName, T[] ids);
 
@@ -178,7 +178,7 @@ public interface EntityModel<T>
      * @param otherId other identify number of record
      * @return number of affected rows
      */
-    int remove(T firstId, T... otherId);
+    int remove(T firstId, final T... otherId);
 
     /**
      * Deletes the record with the specified identifiers.<br>

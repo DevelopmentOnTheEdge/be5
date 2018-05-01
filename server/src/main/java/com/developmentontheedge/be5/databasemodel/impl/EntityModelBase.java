@@ -240,15 +240,13 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
 //                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
     }
+//
+//    @Override
+//    public int removeAll( Collection<Map<String, ? super Object>> c )
+//    {
+//        throw new UnsupportedOperationException( "not implemented" );
+//    }
 
-    @Override
-    public int removeAll( Collection<Map<String, ? super Object>> c )
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException( "not implemented" );
-    }
-
-    @SafeVarargs
     @Override
     public final int remove(T firstId, final T... otherId)
     {
