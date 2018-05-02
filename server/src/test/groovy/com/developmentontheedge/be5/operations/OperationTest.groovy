@@ -21,22 +21,22 @@ class OperationTest extends SqlMockOperationTest
     void testOperation()
     {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ImmutableMap.of("name","testName","number", "1"))
+                ImmutableMap.of("name","testName","value", "1"))
 
         Object parameters = generate.getFirst()
 
         assertEquals("{" +
                         "'values':{" +
                             "'name':'testName'," +
-                            "'number':'1'}," +
+                            "'value':'1'}," +
                         "'meta':{" +
                             "'/name':{'displayName':'Name'}," +
-                            "'/number':{'displayName':'Number','type':'Long'}}," +
-                        "'order':['/name','/number']}",
+                            "'/value':{'displayName':'Value','type':'Long'}}," +
+                        "'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(parameters)))
 
         OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "",
-                ImmutableMap.of("name","testName","number", "1")).getSecond()
+                ImmutableMap.of("name","testName","value", "1")).getSecond()
         assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation"), result)
     }
 
@@ -45,7 +45,7 @@ class OperationTest extends SqlMockOperationTest
     {
         OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),
-                ImmutableMap.of("name","testName","number", "1")).getSecond()
+                ImmutableMap.of("name","testName","value", "1")).getSecond()
         assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation/name=foo"), result)
     }
 
@@ -108,9 +108,9 @@ class OperationTest extends SqlMockOperationTest
     void testOperationInvoke()
     {
         executeOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','number':3L])
+                ['name':'testName','value':3L])
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, number) " +
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "testName", 3L)
     }
 

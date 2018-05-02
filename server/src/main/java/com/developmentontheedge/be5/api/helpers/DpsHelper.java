@@ -571,52 +571,6 @@ public class DpsHelper
 //    }
 
     @Deprecated
-    public String generateInsertSql(BeModelElement modelElements, DynamicPropertySet dps)
-    {
-        //todo remove property not contain in modelElements and log warning, as in checkDpsColumns
-        //and add to generateUpdateSqlForOneKey
-
-        Object[] columns = StreamSupport.stream(dps.spliterator(), false)
-                .map(DynamicProperty::getName)
-                .toArray(Object[]::new);
-
-        Object[] valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .map(x -> "?")
-                .toArray(Object[]::new);
-
-        return Ast.insert(modelElements.getName()).fields(columns).values(valuePlaceholders).format();
-
-        // Oracle trick for auto-generated IDs
-//            if( connector.isOracle() && colName.equalsIgnoreCase( pk ) )
-//            {
-//                if( modelElements.equalsIgnoreCase( value ) || JDBCRecordAdapter.AUTO_IDENTITY.equals( value ) )
-//                {
-//                    sql.append( "beIDGenerator.NEXTVAL" );
-//                }
-//                else if( ( modelElements + "_" + pk + "_seq" ).equalsIgnoreCase( value ) )
-//                {
-//                    sql.append( value ).append( ".NEXTVAL" );
-//                }
-//                else
-//                {
-//                    //in case of not autoincremented PK
-//                    justAddValueToQuery( connector, modelElements, prop, value, sql );
-//                }
-//            }
-//            else if( connector.isOracle() && !connector.isOracle8() &&
-//                     "CLOB".equals( prop.getAttribute( JDBCRecordAdapter.DATABASE_TYPE_NAME ) ) )
-//            {
-//                sql.append( OracleDatabaseAnalyzer.makeClobValue( connector, value ) );
-//            }
-        //else
-//            {
-//                justAddValueToQuery( databaseService, "modelElements", prop, value, sql );
-//            }
-
-
-    }
-
-    @Deprecated
     public String generateDelete(BeModelElement modelElements, Map<String, ? super Object> conditions)
     {
         Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
