@@ -35,6 +35,15 @@ public class SqlHelper
                 ObjectArrays.concat(values.values().toArray(), primaryKeyValue));
     }
 
+    public int updateIn(String tableName, String primaryKeyName, Object[] primaryKeyValue, Map<String, ? super Object> values)
+    {
+        Map<String, String> valuePlaceholders = values.entrySet().stream()
+                .collect(toLinkedMap(Map.Entry::getKey, e -> "?"));
+
+        return db.update(generateUpdateInSql(tableName, primaryKeyName, primaryKeyValue.length, valuePlaceholders),
+                ObjectArrays.concat(values.values().toArray(), primaryKeyValue, Object.class));
+    }
+
     public int delete(String tableName, Map<String, ? super Object> values)
     {
         return db.update(generateDeleteSql(tableName, values), values.values().toArray());
@@ -45,7 +54,7 @@ public class SqlHelper
         return db.update(generateDeleteInSql(tableName, columnName, values.length), values);
     }
 
-    public String generateInsertSql(String tableName, Map<String, ? super Object> values)
+    private String generateInsertSql(String tableName, Map<String, ? super Object> values)
     {
         Object[] columns = values.keySet().toArray();
 
@@ -56,23 +65,29 @@ public class SqlHelper
         return Ast.insert(tableName).fields(columns).values(valuePlaceholders).format();
     }
 
-    public String generateUpdateSql(String tableName, String primaryKeyName, Map<String, String> values)
+    private String generateUpdateSql(String tableName, String primaryKeyName, Map<String, String> values)
     {
         return Ast.update(tableName).set(values)
                 .where(Collections.singletonMap(primaryKeyName, "?")).format();
     }
 
-    public String generateDeleteSql(String tableName, Map<String, ? super Object> values)
+    private String generateUpdateInSql(String tableName, String primaryKeyName, int count, Map<String, String> values)
+    {
+        return Ast.update(tableName).set(values)
+                .whereInWithReplacementParameter(primaryKeyName, count).format();
+    }
+
+    private String generateDeleteSql(String tableName, Map<String, ? super Object> values)
     {
         return Ast.delete(tableName).where(values).format();
     }
 
-    public String generateDeleteInSql(String tableName, String columnName, int count)
+    private String generateDeleteInSql(String tableName, String columnName, int count)
     {
         return Ast.delete(tableName).whereInPredicate(columnName, count).format();
     }
 
-    public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+    private static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper)
     {
