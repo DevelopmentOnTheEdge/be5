@@ -55,14 +55,12 @@ public class DpsHelper
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final OperationHelper operationHelper;
-    private final ColumnsHelper columnsHelper;
 
-    public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta, ColumnsHelper columnsHelper)
+    public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
         this.operationHelper = operationHelper;
-        this.columnsHelper = columnsHelper;
     }
 
     public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
@@ -617,33 +615,7 @@ public class DpsHelper
 
 
     }
-    @Deprecated
-    public String generateUpdateSqlForOneKey(BeModelElement modelElements, DynamicPropertySet dps)
-    {
-        Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .collect(Utils.toLinkedMap(DynamicProperty::getName, x -> "?"));
 
-        return Ast.update(modelElements.getName()).set(valuePlaceholders)
-                .where(Collections.singletonMap(getEntity(modelElements).getPrimaryKey(), "?")).format();
-    }
-    @Deprecated
-    public String generateUpdateSqlForConditions(BeModelElement modelElements, DynamicPropertySet dps, Map<String, ? super Object> conditions)
-    {
-        Map<String, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-                .collect(Utils.toLinkedMap(DynamicProperty::getName, x -> "?"));
-
-        return Ast.update(modelElements.getName()).set(valuePlaceholders)
-                .where(conditions).format();
-    }
-
-//    public String generateUpdateSqlForManyKeys(BeModelElement modelElements, DynamicPropertySet dps, int count)
-//    {
-//        Map<Object, Object> valuePlaceholders = StreamSupport.stream(dps.spliterator(), false)
-//                .collect(toLinkedMap(DynamicProperty::getName, x -> "?"));
-//
-//        return Ast.update(modelElements.getName()).set(valuePlaceholders)
-//                .whereInPredicate(getEntity(modelElements).getPrimaryKey(), count).format();
-//    }
     @Deprecated
     public String generateDelete(BeModelElement modelElements, Map<String, ? super Object> conditions)
     {
@@ -663,6 +635,7 @@ public class DpsHelper
             return Ast.delete(modelElements.getName()).where(conditions).format();
         }
     }
+
     @Deprecated
     public String generateDeleteInSql(BeModelElement modelElements, String columnName, int count)
     {
@@ -812,7 +785,7 @@ public class DpsHelper
             DynamicProperty property = dps.getProperty(name);
             Objects.requireNonNull(property);
             String[][] tags = (String[][]) property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
-            if(tags.length == 1)
+            if(tags.length == 1 && !property.isCanBeNull())
             {
                 property.setValue(tags[0][0]);
             }
