@@ -46,4 +46,23 @@ public class DeleteTest {
         assertEquals("DELETE FROM users WHERE ID IN (?, ?, ?)",
                 sql.format());
     }
+
+    @Test
+    public void whereArray()
+    {
+        AstDelete sql = Ast.delete("users")
+                .where(Collections.singletonMap("ID", new Object[]{"1","2","3"}));
+
+        assertEquals("DELETE FROM users WHERE ID IN (?, ?, ?)", sql.format());
+
+        sql = Ast.delete("users")
+                .where(Collections.singletonMap("ID", new String[]{"1","2","3"}));
+
+        assertEquals("DELETE FROM users WHERE ID IN (?, ?, ?)", sql.format());
+
+        sql = Ast.delete("users")
+                .where(Collections.singletonMap("ID", new int[]{1,2,3}));
+
+        assertEquals("DELETE FROM users WHERE ID IN (?, ?, ?)", sql.format());
+    }
 }

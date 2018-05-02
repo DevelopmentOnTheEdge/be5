@@ -1,6 +1,7 @@
 package src.groovy.operations
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception
+import com.developmentontheedge.be5.api.services.ConnectionService
 import com.developmentontheedge.be5.api.services.DatabaseService
 import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.operation.OperationSupport
@@ -10,7 +11,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 class TestTransactionalOperation extends OperationSupport implements TransactionalOperation
 {
-    @Inject private DatabaseService databaseService
+    @Inject private ConnectionService connectionService
 
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception
@@ -21,7 +22,7 @@ class TestTransactionalOperation extends OperationSupport implements Transaction
         }
         else
         {
-            if(databaseService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
+            if(connectionService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
 
             return dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(), getInfo().getEntity(),
                     context.getOperationParams(), presetValues)
@@ -31,7 +32,7 @@ class TestTransactionalOperation extends OperationSupport implements Transaction
     @Override
     void invoke(Object parameters) throws Exception
     {
-        if(databaseService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
+        if(connectionService.getCurrentTxConn() == null)throw Be5Exception.internal("not in transactionWithResult")
     }
 
 }

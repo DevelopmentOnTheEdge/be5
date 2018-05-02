@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.sql.SqlExecutor;
-import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
-import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMetaClass;
@@ -14,7 +13,6 @@ import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.databasemodel.EntityAccess;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
@@ -31,7 +29,7 @@ import java.util.Objects;
  *
  * @author ruslan
  */
-final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel>>
+final public class DatabaseModel implements EntityAccess
 {
     static
     {
@@ -46,45 +44,35 @@ final public class DatabaseModel implements EntityAccess<EntityModel<RecordModel
     }
 
     private final SqlService sqlService;
+    private final SqlHelper sqlHelper;
+    private final ColumnsHelper columnsHelper;
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final Meta meta;
-    private final Validator validator;
     private final OperationExecutor operationExecutor;
 
 
-    public DatabaseModel(SqlService sqlService, DpsHelper dpsHelper, OperationHelper operationHelper,
-                         Meta meta, Validator validator, OperationExecutor operationExecutor)
+    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+                         Meta meta, OperationExecutor operationExecutor)
     {
         this.sqlService = sqlService;
+        this.sqlHelper = sqlHelper;
+        this.columnsHelper = columnsHelper;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.meta = meta;
-        this.validator = validator;
         this.operationExecutor = operationExecutor;
     }
 
     @Override
-    public EntityModel getEntity( String entityName )
+    public <T> EntityModel<T> getEntity( String entityName )
     {
         Objects.requireNonNull(entityName);
         Entity entity = meta.getEntity(entityName);
 
         if (entity == null)throw Be5Exception.unknownEntity(entityName);
 
-        return new EntityModelBase(sqlService, dpsHelper, validator, operationHelper,
-                                   operationExecutor, meta, entity);
-    }
-
-    @Override
-    public <T> T transactionWithResult(SqlExecutor<T> executor)
-    {
-        return sqlService.transactionWithResult(executor);
-    }
-
-    @Override
-    public void transaction(SqlExecutorVoid executor)
-    {
-        sqlService.transaction(executor);
+        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, dpsHelper, operationHelper,
+                                     operationExecutor, meta, entity);
     }
 }

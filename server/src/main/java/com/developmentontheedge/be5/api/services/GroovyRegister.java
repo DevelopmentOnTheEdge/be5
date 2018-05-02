@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
-import com.developmentontheedge.be5.api.ulit.HtmlUtils;
+import com.developmentontheedge.be5.util.HtmlUtils;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.github.benmanes.caffeine.cache.Cache;
 import groovy.lang.GroovyClassLoader;
