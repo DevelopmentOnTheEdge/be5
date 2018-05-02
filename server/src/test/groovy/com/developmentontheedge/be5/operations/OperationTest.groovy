@@ -54,7 +54,7 @@ class OperationTest extends SqlMockOperationTest
     {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0","{}")
 
-        assertEquals("{'name':'','number':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
+        assertEquals("{'name':'','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
@@ -64,10 +64,10 @@ class OperationTest extends SqlMockOperationTest
                 "testtableAdmin", "All records", "TestOperation", "0",
                         ImmutableMap.of(
                                 "name", "test",
-                                "number", "0",
+                                "value", "0",
                                 FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
-        assertEquals("{'name':'test','number':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
+        assertEquals("{'name':'test','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
@@ -76,32 +76,32 @@ class OperationTest extends SqlMockOperationTest
         Either<Object, OperationResult> result = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of(
                         "name", "testName",
-                        "number", "ab",
+                        "value", "ab",
                         FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
         assertNotNull(result.getFirst())
 
         assertNotNull(result.getFirst())
 
-        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("status"))
+        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("status"))
         assertEquals("Здесь должно быть целое число.",
-                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("message"))
+                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("message"))
     }
 
     @Test
     void testOperationParametersErrorInvoke()
     {
         assertNotNull(generateOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','number':'ab']).getFirst())
+                ['name':'testName','value':'ab']).getFirst())
 
         Either<Object, OperationResult> result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','number':'ab'])
+                ['name':'testName','value':'ab'])
 
         assertNotNull(result.getFirst())
 
-        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("status"))
+        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("status"))
         assertEquals("Здесь должно быть целое число.",
-                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("message"))
+                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("message"))
     }
 
     @Test
