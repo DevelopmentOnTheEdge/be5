@@ -42,12 +42,12 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
 
         def id = testtableAdmin << [
                 "name": "TestName",
-                "value": "1"]
+                "value": 1]
 
-        assertEquals(Long.parseLong(id), db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
+        assertEquals(id, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         testtableAdmin[id] << [
-                "value": "2"
+                "value": 2
         ]
         assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
@@ -74,7 +74,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     {
         testtableAdmin << [ "name": "TestName", "value": "1"]
 
-        RecordModel rec = testtableAdmin.getColumns(["value"],
+        RecordModel rec = testtableAdmin.getColumnsByColumns(["value"],
                 ["name": "TestName"]
         )
 
@@ -108,7 +108,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         database.getEntity("testTags").remove("12")
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = RuntimeException.class)
     void testInsertError()
     {
         testtableAdmin << [
@@ -198,7 +198,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         def id2 = testtableAdmin << [
                 "name": "TestName2",
                 "value": 2]
-        assertEquals 1, testtableAdmin.remove( [id2] as String[] )
+        assertEquals 1, testtableAdmin.remove( [id2] as Long[] )
     }
 
     @Test
@@ -208,7 +208,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
         def id2 = testtableAdmin << [ "name": "TestName2", "value": 1]
 
         assertFalse testtableAdmin.empty
-        assertEquals 1, testtableAdmin.remove( ["name": "TestName2"] )
+        assertEquals 1, testtableAdmin.removeByColumns( ["name": "TestName2"] )
         assertNotNull testtableAdmin[ id ]
         assertNull testtableAdmin[ id2 ]
     }

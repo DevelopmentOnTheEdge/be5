@@ -110,7 +110,7 @@ public class Ast
             this.tableName = tableName;
         }
 
-        public AstUpdate set(Map<Object, Object> values)
+        public AstUpdate set(Map<?, ?> values)
         {
             assert values != null && values.size() > 0;
 

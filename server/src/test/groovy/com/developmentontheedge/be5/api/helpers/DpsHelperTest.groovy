@@ -3,12 +3,15 @@ package com.developmentontheedge.be5.api.helpers
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.metadata.model.Entity
+import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableMap
 import org.junit.Before
 import org.junit.Test
 
@@ -39,20 +42,54 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "CODE"), meta.getEntity("testTags"))
+        DynamicProperty property = dpsHelper.getDynamicProperty(meta.getColumn(meta.getEntity("testTags"), "CODE"))
         assertEquals "CODE", property.getName()
         assertEquals String.class, property.getType()
         assertEquals null, property.getValue()
     }
 
     @Test
+    void addDpForColumnsBase()
+    {
+        def dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
+        assertEquals "{'values':{},'meta':{'/admlevel':{'displayName':'admlevel'}},'order':['/admlevel']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
+    void addDpForColumnsBase_with_values()
+    {
+        def dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpForColumnsBase(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
+        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'admlevel'}},'order':['/admlevel']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
+    void addDpForColumnsWithoutTags()
+    {
+        def dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"))
+        assertEquals "{'values':{'admlevel':'Regional'},'meta':{'/admlevel':{'displayName':'Административный уровень'}},'order':['/admlevel']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
+    void addDpForColumnsWithoutTags_with_values()
+    {
+        def dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpForColumnsWithoutTags(dps, meta.getEntity("testTags"), ImmutableList.of("admlevel"), ImmutableMap.of("admlevel", "Custom"))
+        assertEquals "{'values':{'admlevel':'Custom'},'meta':{'/admlevel':{'displayName':'Административный уровень'}},'order':['/admlevel']}",
+                oneQuotes(JsonFactory.dps(dps).toString())
+    }
+
+    @Test
     void getDynamicPropertyLocalizationTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
-                meta.getEntity("testTags")
-        )
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags"))
 
         assertEquals "Административный уровень", property.getDisplayName()
     }
@@ -60,10 +97,9 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyLocalizationForQueryTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
-                meta.getEntity("testTags").getQueries().get("TestLocalizQuery")
-        )
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags").getQueries().get("TestLocalizQuery"))
 
         assertEquals "Test Уровень", property.getDisplayName()
     }
@@ -71,10 +107,10 @@ class DpsHelperTest extends Be5ProjectDBTest
     @Test
     void getDynamicPropertyLocalizationForOperationTest()
     {
-        DynamicProperty property = dpsHelper.getDynamicPropertyWithoutTags(
-                meta.getColumn(meta.getEntity("testTags"), "admlevel"),
-                meta.getEntity("testTags").getOperations().get("Insert")
-        )
+        def columnDef = meta.getColumn(meta.getEntity("testTags"), "admlevel")
+
+        DynamicProperty property = dpsHelper.getDynamicProperty(columnDef)
+        dpsHelper.addMeta(property, columnDef, meta.getEntity("testTags").getOperations().get("Insert"))
 
         assertEquals "Уровень", property.getDisplayName()
     }
@@ -189,14 +225,25 @@ class DpsHelperTest extends Be5ProjectDBTest
     }
 
     @Test
-    void generateInsertSqlTest()
+    void addDpExcludeColumns_operationParams()
     {
-        Entity metersEntity = meta.getEntity("meters")
+        dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
+        assertNotNull dps.getProperty("value")
 
-        String sql = dpsHelper.generateInsertSql(metersEntity, dpsHelper.addDp(dps, metersEntity, [:]))
-        assertEquals "INSERT INTO meters " +
-                "(ID, name, value, whoInserted___, whoModified___, creationDate___, modificationDate___, isDeleted___) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", sql
+        dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["value":"1"], ["value":"2"])
+        assertEquals "1", dps.getValue("value")
+    }
+
+    @Test
+    void addDpExcludeColumns_operationParams_not_affected()
+    {
+        dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
+        assertNotNull dps.getProperty("value")
+
+        dps = new DynamicPropertySetSupport()
+        dpsHelper.addDpExcludeColumns(dps, meta.getEntity("meters"), ImmutableList.of("payable"), ["CODE":"1"], ["value":"2"])
+        assertEquals "2", dps.getValue("value")
     }
 
     @Test
@@ -309,4 +356,28 @@ class DpsHelperTest extends Be5ProjectDBTest
         assertEquals "1.0E-300", dpsHelper.getPrecision(300)
     }
 
+    @Test
+    void setValueIfOneTag()
+    {
+        def dps = new GDynamicPropertySetSupport()
+        dps.add("test") {
+            TAG_LIST_ATTR = [["one", "one"]] as String[][]
+        }
+        dpsHelper.setValueIfOneTag(dps, ImmutableList.of("test"))
+
+        assertEquals "one", dps.getValue("test")
+    }
+
+    @Test
+    void setValueIfOneTag_canBeNull()
+    {
+        def dps = new GDynamicPropertySetSupport()
+        dps.add("test") {
+            TAG_LIST_ATTR = [["one", "one"]] as String[][]
+            CAN_BE_NULL = true
+        }
+        dpsHelper.setValueIfOneTag(dps, ImmutableList.of("test"))
+
+        assertEquals null, dps.getValue("test")
+    }
 }

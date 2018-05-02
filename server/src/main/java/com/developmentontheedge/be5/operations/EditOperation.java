@@ -19,7 +19,7 @@ public class EditOperation extends OperationSupport
         DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
                 getInfo().getModel(), context.getOperationParams());
 
-        dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(context.records[0]));
+        dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(context.getRecord()));
 
         dpsHelper.setValues(dps, presetValues);
 
@@ -29,7 +29,7 @@ public class EditOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        database.getEntity(getInfo().getEntityName()).set(context.records[0], (DynamicPropertySet)parameters);
+        database.getEntity(getInfo().getEntityName()).set(context.getRecord(), (DynamicPropertySet)parameters);
 
         setResult(OperationResult.finished());
     }

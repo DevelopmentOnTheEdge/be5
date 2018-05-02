@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
@@ -17,26 +18,25 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
-import com.google.common.collect.ObjectArrays;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED_COLUMN_NAME;
 import static java.util.Collections.emptyMap;
 
 
-public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R>
+public class EntityModelBase<T> implements EntityModel<T>
 {
     static
     {
@@ -46,22 +46,23 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     private final SqlService db;
+    private final SqlHelper sqlHelper;
+    private final ColumnsHelper columnsHelper;
     private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final OperationExecutor operationExecutor;
-    private final Validator validator;
     private final Meta meta;
 
     private final Entity entity;
 
-
-    public EntityModelBase(SqlService db, DpsHelper dpsHelper, Validator validator, OperationHelper operationHelper,
+    EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
+        this.sqlHelper = sqlHelper;
+        this.columnsHelper = columnsHelper;
         this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
-        this.validator = validator;
         this.operationExecutor = operationExecutor;
         this.meta = meta;
 
@@ -69,9 +70,28 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public RecordModel getColumns( List<String> columns, Map<String, ? super Object> conditions )
+    public RecordModel<T> getByColumns(Map<String, ? super Object> conditions )
+    {
+        return getColumnsByColumns(Collections.emptyList(), conditions);
+    }
+
+    @Override
+    public RecordModel<T> get( T id )
+    {
+        return getByColumns(Collections.singletonMap(getPrimaryKeyName(), id));
+    }
+
+    @Override
+    public RecordModel<T> getColumns( List<String> columns, T id )
+    {
+        return getColumnsByColumns(columns, Collections.singletonMap(getPrimaryKeyName(), id));
+    }
+
+    @Override
+    public RecordModel<T> getColumnsByColumns(List<String> columns, Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
+        checkPrimaryKey(conditions);
 
         AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
@@ -81,7 +101,16 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
                 rs -> dpsHelper.addDpWithoutTags(new DynamicPropertySetSupport(), entity, rs),
                 conditions.values().toArray());
 
-        return dps == null ? null : new RecordModelBase( this, dps );
+        return getRecordModel(dps);
+    }
+
+    private RecordModel<T> getRecordModel(DynamicPropertySet dps)
+    {
+        if(dps == null)return null;
+
+        T primaryKey = (T)dps.getProperty(getPrimaryKeyName()).getValue();
+
+        return new RecordModelBase<>(primaryKey, this, dps );
     }
 
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
@@ -96,17 +125,11 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public RecordModel get( Map<String, ? super Object> conditions )
-    {
-        return getColumns(Collections.emptyList(), conditions);
-    }
-
-    @Override
     public long count()
     {
         return count( Collections.emptyMap() );
     }
-    
+
     @Override
     public long count( Map<String, ? super Object> conditions ) {
         Objects.requireNonNull(conditions);
@@ -130,25 +153,43 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public String add( Map<String, ? super Object> values )
-    {
-        Objects.requireNonNull(values);
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
-
-        return add( dps );
-    }
-
-    @Override
     public boolean containsAll( Collection<Map<String, ? super Object>> c )
     {
         return c.stream().allMatch( this::contains );
     }
 
     @Override
-    public List<String> addAll( final Collection<Map<String, ? super Object>> c )
+    public <R> R add( Map<String, ? super Object> values )
     {
-        final List<String> keys = new ArrayList<>( c.size() );
+        Objects.requireNonNull(values);
+
+        values = new LinkedHashMap<>(values);
+        values.values().removeIf(Objects::isNull);
+
+        columnsHelper.addInsertSpecialColumns(entity, values);
+        columnsHelper.checkDpsColumns(entity, values);
+
+        return sqlHelper.insert(entity.getName(), values);
+    }
+
+    @Override
+    final public <R> R add( DynamicPropertySet dps )
+    {
+        Objects.requireNonNull(dps);
+
+        return add(dpsHelper.toLinkedHashMap(dps));
+//        validator.checkErrorAndCast(dps);
+//
+//        dpsHelper.addInsertSpecialColumns(entity, dps);
+//        dpsHelper.checkDpsColumns(entity, dps);
+//
+//        return db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
+    }
+
+    @Override
+    public <R> List<R> addAll( final Collection<Map<String, ? super Object>> c )
+    {
+        final List<R> keys = new ArrayList<>( c.size() );
         for( Map<String, ? super Object> values : c )
         {
             keys.add( add( values ) );
@@ -157,38 +198,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public int removeAll( Collection<Map<String, ? super Object>> c )
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException( "not implemented" );
-    }
-
-    @Override
-    public RecordModel get( String id )
-    {
-        return get(Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
-    }
-
-    @Override
-    public RecordModel get( Long id )
-    {
-        return getColumns(Collections.emptyList(), id);
-    }
-
-    @Override
-    public RecordModel getColumns( List<String> columns, String id )
-    {
-        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), getID(id)));
-    }
-
-    @Override
-    public RecordModel getColumns( List<String> columns, Long id )
-    {
-        return getColumns(columns, Collections.singletonMap(entity.getPrimaryKey(), id));
-    }
-
-    @Override
-    public int set( String id, String propertyName, String value )
+    public int set( T id, String propertyName, Object value )
     {
         Objects.requireNonNull(id);
         Objects.requireNonNull(propertyName);
@@ -197,46 +207,113 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public int remove( String firstId, final String... otherId )
+    public int set( T id, Map<String, ? super Object> values )
     {
-        Objects.requireNonNull(firstId);
-        return remove( ObjectArrays.concat(firstId, otherId) );
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(values);
+
+        values = new LinkedHashMap<>(values);
+
+        columnsHelper.addUpdateSpecialColumns(entity, values);
+
+//        DynamicPropertySet dps = new DynamicPropertySetSupport();
+//        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
+
+        return sqlHelper.update(entity.getName(),
+                Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id)),
+                values);
     }
 
     @Override
-    public int remove( String[] ids )
+    public int set(T id, DynamicPropertySet dps )
     {
-        return removeWhereColumnIn(entity.getPrimaryKey(), ids);
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(dps);
+
+        return set(id, dpsHelper.toLinkedHashMap(dps));
+
+//        validator.checkErrorAndCast(dps);
+//        dpsHelper.addUpdateSpecialColumns(entity, dps);
+//
+//        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
+//                ObjectArrays.concat(dpsHelper.getValues(dps), checkPrimaryKey(id)));
+    }
+//
+//    @Override
+//    public int removeAll( Collection<Map<String, ? super Object>> c )
+//    {
+//        throw new UnsupportedOperationException( "not implemented" );
+//    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public final int remove(T id)//removed final T... otherId - 'possible heap pollution from parameterized varargs'
+    {
+        Objects.requireNonNull(id);
+        return removeWhereColumnIn(getPrimaryKeyName(), (T[])new Object[]{id});
     }
 
     @Override
-    public int removeWhereColumnIn(String columnName, String[] ids)
+    public int remove( T[] ids )
+    {
+        return removeWhereColumnIn(getPrimaryKeyName(), ids);
+    }
+
+    @Override
+    public int removeWhereColumnIn(String columnName, T[] ids)
     {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(ids);
+        if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
 
-        ColumnDef columnDef = meta.getColumn(entity, columnName);
+        //ColumnDef columnDef = meta.getColumn(entity, columnName);
 
-        return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-        );
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
+            return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
+//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
+//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+//            );
+        }
+        else
+        {
+            return sqlHelper.deleteIn(entity.getName(), columnName, ids);
+//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
+//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+//            );
+        }
     }
 
     @Override
     public int removeAll()
     {
-        return remove(emptyMap());
+        return removeByColumns(emptyMap());
     }
 
     @Override
-    public int remove( Map<String, ? super Object> conditions )
+    public int removeByColumns(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
-        return db.update(dpsHelper.generateDelete(entity, conditions),
-                ObjectArrays.concat(dpsHelper.getDeleteSpecialValues(entity),
-                        conditions.values().toArray(), Object.class)
-        );
+
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
+            return sqlHelper.update(entity.getName(), conditions, values);
+//        return db.update(dpsHelper.generateDelete(entity, conditions),
+//                ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
+//                        conditions.values().toArray(), Object.class)
+//        );
+        }
+        else
+        {
+            return sqlHelper.delete(entity.getName(), conditions);
+        }
     }
 
     @Override
@@ -258,36 +335,36 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
     }
 
     @Override
-    public List<RecordModel> toList()
+    public List<RecordModel<T>> toList()
     {
         return toList( emptyMap() );
     }
 
     @Override
-    public RecordModel[] toArray()
+    public RecordModel<T>[] toArray()
     {
         return toArray( emptyMap() );
     }
     
     @Override
-    public List<RecordModel> toList( Map<String, ? super Object> conditions )
+    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
         String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
 
         return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
-                .map(dps -> new RecordModelBase( EntityModelBase.this, dps ))
+                .map(this::getRecordModel)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public RecordModel[] toArray( Map<String, ? super Object> conditions )
+    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
 
-        List<RecordModel> recordModels = toList(conditions);
-        RecordModel[] arr = new RecordModel[recordModels.size()];
+        List<RecordModel<T>> recordModels = toList(conditions);
+        RecordModel<T>[] arr = new RecordModel[recordModels.size()];
         return recordModels.toArray( arr );
     }
 //
@@ -306,7 +383,7 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 //        MultipleRecordsBase<List<T>>  records = new MultipleRecordsBase<>();
 //        MultipleRecordsBase.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
 //        records.setHandler( handler );
-//        records.get( values );
+//        records.getByColumns( values );
 //        return handler.getResult();
 //    }
 
@@ -321,33 +398,6 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
         return getClass().getSimpleName() + "[ entityName = " + getEntityName() + " ]";
     }
 
-    @Override
-    final public String add( DynamicPropertySet dps )
-    {
-        Objects.requireNonNull(dps);
-
-        validator.checkErrorAndCast(dps);
-
-        dpsHelper.addInsertSpecialColumns(entity, dps);
-        dpsHelper.checkDpsColumns(entity, dps);
-
-        Object insert = db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
-
-        return insert != null ? insert.toString() : null;
-    }
-
-    @Override
-    public int set( String id, Map<String, ? super Object> values )
-    {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(values);
-
-        DynamicPropertySet dps = new DynamicPropertySetSupport();
-        dpsHelper.addDpForColumnsWithoutTags(dps, entity, values.keySet(), values);
-
-        return this.set( id, dps );
-    }
-
 //    @Override
 //    public void setMany( Map<String, String> values, Map<String, String> conditions )
 //    {
@@ -356,23 +406,30 @@ public class EntityModelBase<R extends RecordModelBase> implements EntityModel<R
 //        setForceMany(values, conditions);
 //    }
 
-    @Override
-    public int set(String id, DynamicPropertySet dps )
+    private void checkPrimaryKey(Map<String, ? super Object> conditions)
     {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(dps);
-
-        validator.checkErrorAndCast(dps);
-        dpsHelper.addUpdateSpecialColumns(entity, dps);
-
-        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-                ObjectArrays.concat(dpsHelper.getValues(dps), getID(id)));
+        for (Map.Entry<String, ? super Object> entry : conditions.entrySet()) {
+            if(entry.getKey().equalsIgnoreCase(getPrimaryKeyName())) checkPrimaryKey((T)entry.getValue());
+        }
     }
 
-    private Object getID(String id)
+    private void checkPrimaryKey(T[] ids)
     {
-        Class<?> primaryKeyColumnType = meta.getColumnType(entity, entity.getPrimaryKey());
-        return Utils.changeType(id, primaryKeyColumnType);
+        for (T id : ids) {
+            checkPrimaryKey(id);
+        }
+    }
+
+    private T checkPrimaryKey(T id)
+    {
+        Class<?> primaryKeyColumnType = meta.getColumnType(entity, getPrimaryKeyName());
+
+        if(id.getClass() != primaryKeyColumnType)
+        {
+            throw new RuntimeException("Primary key must be " + primaryKeyColumnType.getSimpleName());
+        }
+
+        return id;
     }
 
 //

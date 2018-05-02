@@ -30,8 +30,7 @@ public class TestOperationProperty extends OperationSupport
     @Override
     public void invoke(Object parameters)
     {
-        DynamicPropertySet dps = (DynamicPropertySet)parameters;
-        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));
+        database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet)parameters);
     }
 
 }

@@ -129,7 +129,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
         table << [ "name": "TestName", "value": (Short)2]
         table << [ "name": "TestName2", "value": (Short)2]
 
-        table.remove(["name": "TestName"])
+        table.removeByColumns(["name": "TestName"])
 
         assertEquals 2, db.getLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
                 "yes", "TestName")

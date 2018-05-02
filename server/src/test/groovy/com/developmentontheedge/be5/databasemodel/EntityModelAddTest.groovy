@@ -43,7 +43,7 @@ class EntityModelAddTest extends Be5ProjectTest
 
         entity.add([
             name : "Test",
-            value: "1"
+            value: 1
         ])
 
         verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)",
@@ -59,15 +59,15 @@ class EntityModelAddTest extends Be5ProjectTest
         def list = [
                 [
                         name : "Test",
-                        value: "1"
+                        value: 1
                 ],
                 [
                         name : "Test",
-                        value: "2"
+                        value: 2
                 ],
                 [
                         name : "Test",
-                        value: "3"
+                        value: 3
                 ],
         ]
 

@@ -27,7 +27,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        int updateCount = database.getEntity(getInfo().getEntityName()).remove(context.records);
+        int updateCount = database.getEntity(getInfo().getEntityName()).remove(context.getRecords());
 
         out.append( "" + updateCount + " " + ( "records were deleted from" ) + " <i>" + getInfo().getEntityName() + "</i><br />" );
 
@@ -38,7 +38,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
             if(getInfo().getEntityName().equals(reference.getTableTo()) && getInfo().getEntity().getPrimaryKey().equalsIgnoreCase(reference.getColumnsTo()))
             {
                 int updateCount1 = database.getEntity(reference.getTableFrom())
-                        .removeWhereColumnIn(reference.getColumnsFrom(), context.records);
+                        .removeWhereColumnIn(reference.getColumnsFrom(), context.getRecords());
 
                 if (updateCount1 > 0)
                 {
@@ -59,7 +59,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                 {
                     int updateCount1 = database.getEntity(reference.getTableFrom())
                             .removeWhereColumnIn(reference.getColumnsFrom(),
-                                    Utils.addPrefix(context.records, getInfo().getEntityName() + "."));
+                                    Utils.addPrefix(context.getRecords(), getInfo().getEntityName() + "."));
 
                     if (updateCount1 > 0)
                     {

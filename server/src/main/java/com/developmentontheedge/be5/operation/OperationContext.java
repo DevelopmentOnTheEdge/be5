@@ -10,11 +10,11 @@ public class OperationContext
     // Properties
     //
 
-    public final String[] records;
+    private final Object[] records;
     public final String queryName;
     private final Map<String, Object> operationParams;
 
-    public OperationContext(String[] records, String queryName, Map<String, Object> operationParams)
+    public OperationContext(Object[] records, String queryName, Map<String, Object> operationParams)
     {
         Objects.requireNonNull(records);
         Objects.requireNonNull(operationParams);
@@ -24,9 +24,15 @@ public class OperationContext
         this.operationParams = operationParams;
     }
 
-    public String[] getRecords()
+    public <T> T[] getRecords()
     {
-        return records;
+        return (T[])records;
+    }
+
+    public <T> T getRecord()
+    {
+        if(records.length != 1)throw new RuntimeException("Expected one record");
+        return (T)records[0];
     }
 
     public String getQueryName()

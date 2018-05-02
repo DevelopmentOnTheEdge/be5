@@ -66,7 +66,7 @@ public class Utils
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
     }
 
-    public static String[] addPrefix(String[] values, String prefix)
+    public static String[] addPrefix(Object[] values, String prefix)
     {
         String[] withPrefix = new String[values.length];
         for (int i=0; i<values.length; i++)
@@ -108,7 +108,12 @@ public class Utils
     @SuppressWarnings("unchecked")
     public static <T> T[] changeTypes(Object[] values, Class<T> aClass)
     {
-        return (T[])Utils.changeType(values, getArrayClass(aClass));
+        T[] changeType = (T[]) Utils.changeType(values, getArrayClass(aClass));
+        if(changeType == null && values != null)
+        {
+            return (T[])new Object[0];
+        }
+        return changeType;
     }
 
     @SuppressWarnings("unchecked")

@@ -17,8 +17,8 @@ public class TestOperation extends OperationSupport
         dps.add(new DynamicProperty("name", "Name", String.class,
                 presetValues.getOrDefault("name", "")));
 
-        dps.add(new DynamicProperty("number", "Number", Long.class,
-                presetValues.getOrDefault("number", "0")));
+        dps.add(new DynamicProperty("value", "Value", Long.class,
+                presetValues.getOrDefault("value", "0")));
 
         return dps;
     }
@@ -26,8 +26,7 @@ public class TestOperation extends OperationSupport
     @Override
     public void invoke(Object parameters)
     {
-        DynamicPropertySet dps = (DynamicPropertySet)parameters;
-        db.insert(dpsHelper.generateInsertSql(getInfo().getEntity(), dps), dpsHelper.getValues(dps));
+        database.getEntity(getInfo().getEntityName()).add((DynamicPropertySet)parameters);
 
         redirectThisOperation();
     }

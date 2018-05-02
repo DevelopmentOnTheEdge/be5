@@ -62,8 +62,42 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
    
     public void init() throws MojoFailureException
     {
+        initProject();
+        initConnector();
+    }
+
+    public void initConnector() throws MojoFailureException
+    {
+        if(connectionProfileName != null)
+        {
+            be5Project.setConnectionProfileName(connectionProfileName);
+        }
+
+        BeConnectionProfile profile = be5Project.getConnectionProfile();
+
+        if (profile != null)
+        {
+            this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
+
+            this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
+                    profile.getConnectionUrl(), profile.getUsername(),
+                    connectionPassword != null ? connectionPassword : profile.getPassword());
+
+            getLog().info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
+        }
+        else
+        {
+            throw new MojoFailureException(
+                    "Please specify connection profile: create "
+                            + be5Project.getProjectFileStructure().getSelectedProfileFile()
+                            + " file with profile name or use -DBE5_PROFILE=...");
+        }
+    }
+
+    public void initProject() throws MojoFailureException
+    {
         long startTime = System.nanoTime();
-    	initLogging();
+        initLogging();
 
         if(be5Project == null)
         {
@@ -89,34 +123,8 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
             }
         }
 
-        if(connectionProfileName != null)
-        {
-            be5Project.setConnectionProfileName(connectionProfileName);
-        }
-
-        BeConnectionProfile profile = be5Project.getConnectionProfile();
-
-        if (profile != null)
-        {
-            this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
-
-            this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
-                    profile.getConnectionUrl(), profile.getUsername(),
-                    connectionPassword != null ? connectionPassword : profile.getPassword());
-
-            getLog().info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
-        }
-        else
-        {
-            throw new MojoFailureException(
-                    "Please specify connection profile: create "
-                            + be5Project.getProjectFileStructure().getSelectedProfileFile()
-                            + " file with profile name or use -DBE5_PROFILE=...");
-        }
-
         getLog().info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
-    
     /**
      * Configures JUL (java.util.logging).
      */
@@ -227,6 +235,12 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
 //        } while(!vals.isEmpty() && !vals.contains( result ));
 //        return result;
 //    }
+
+    public T setLogPath(File logPath)
+    {
+        this.logPath = logPath;
+        return me();
+    }
 
     public T setLogger(ProcessController logger)
     {

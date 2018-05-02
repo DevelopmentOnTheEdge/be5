@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.services.Be5MainSettings;
+import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.inject.Binder;
@@ -9,6 +10,7 @@ import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.inject.impl.YamlBinder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
+import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
@@ -54,6 +56,7 @@ public abstract class Be5ProjectTest extends TestUtils
             new YamlBinder().configure(loadedClasses, bindings, configurations, requestPreprocessors);
             bindings.put(SqlService.class, SqlServiceMock.class);
             bindings.put(DatabaseService.class, DatabaseServiceMock.class);
+            bindings.put(ConnectionService.class, ConnectionServiceMock.class);
             bindings.put(Be5MainSettings.class, Be5MainSettingsForTest.class);
         }
 
