@@ -37,7 +37,7 @@ public class SqlHelper
 
     public int delete(String tableName, Map<String, ? super Object> values)
     {
-        return db.update(generateDeleteSql(tableName, values), values.keySet().toArray());
+        return db.update(generateDeleteSql(tableName, values), values.values().toArray());
     }
 
     public int deleteIn(String tableName, String columnName, Object[] values)
