@@ -40,10 +40,20 @@ public class SqlHelperTest
     public void update()
     {
         when(db.update(any(), anyVararg())).thenReturn(1);
-        int updateCount = sqlHelper.update("persons", "id", 2L, ImmutableMap.of("age", 30));
+        int updateCount = sqlHelper.update("persons", ImmutableMap.of("id", 2L), ImmutableMap.of("age", 30));
 
         assertEquals(1, updateCount);
         verify(db, times(1)).update("UPDATE persons SET age =? WHERE id =?",  30, 2L);
+    }
+
+    @Test
+    public void update_many_params()
+    {
+        when(db.update(any(), anyVararg())).thenReturn(1);
+        int updateCount = sqlHelper.update("persons", ImmutableMap.of("c1", 1L, "c2", 2L), ImmutableMap.of("value1", 10, "value2", 20));
+
+        assertEquals(1, updateCount);
+        verify(db, times(1)).update("UPDATE persons SET value1 =?, value2 =? WHERE c1 =? AND c2 =?", 10, 20, 1L, 2L);
     }
 
     @Test

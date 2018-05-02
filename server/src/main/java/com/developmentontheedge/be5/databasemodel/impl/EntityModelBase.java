@@ -18,12 +18,10 @@ import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstSelect;
-import com.google.common.collect.ObjectArrays;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -221,7 +219,9 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        DynamicPropertySet dps = new DynamicPropertySetSupport();
 //        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
 
-        return sqlHelper.update(entity.getName(), getPrimaryKeyName(), checkPrimaryKey(id), values);
+        return sqlHelper.update(entity.getName(),
+                Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id)),
+                values);
     }
 
     @Override
@@ -266,25 +266,26 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(ids);
         if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
 
-        ColumnDef columnDef = meta.getColumn(entity, columnName);
+        //ColumnDef columnDef = meta.getColumn(entity, columnName);
 
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
-            //sqlHelper.update(entity.getName())
-            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-                    ObjectArrays.concat(columnsHelper.getDeleteSpecialValues(entity),
-                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-            );
+            Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
+            return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
+//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
+//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+//            );
         }
         else
         {
-            //return sqlHelper.deleteIn(entity.getName(), columnName, ids);
-            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-                    ObjectArrays.concat(columnsHelper.getDeleteSpecialValues(entity),
-                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-            );
+            return sqlHelper.deleteIn(entity.getName(), columnName, ids);
+//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
+//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
+//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
+//            );
         }
     }
 
@@ -295,13 +296,24 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public int removeByColumns(Map<String, ? super Object> conditions )
+    public int removeByColumns(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
-        return db.update(dpsHelper.generateDelete(entity, conditions),
-                ObjectArrays.concat(columnsHelper.getDeleteSpecialValues(entity),
-                        conditions.values().toArray(), Object.class)
-        );
+
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
+        {
+            Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
+            return sqlHelper.update(entity.getName(), conditions, values);
+//        return db.update(dpsHelper.generateDelete(entity, conditions),
+//                ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
+//                        conditions.values().toArray(), Object.class)
+//        );
+        }
+        else
+        {
+            return sqlHelper.delete(entity.getName(), conditions);
+        }
     }
 
     @Override

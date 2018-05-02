@@ -14,24 +14,24 @@ public class AstWhere extends SimpleNode
         return astWhere;
     }
 
-    public AstWhere(Map<String, ? super Object> conditions)
+    public AstWhere(Map<String, ?> conditions)
     {
         this(SqlParserTreeConstants.JJTWHERE);
         if(conditions.size() > 0 )
         {
-            Iterator<? extends Map.Entry<String, ? super Object>> iterator = conditions.entrySet().iterator();
+            Iterator<? extends Map.Entry<String, ?>> iterator = conditions.entrySet().iterator();
             iterator.hasNext();
             addChild(addAstFunNode(iterator));
         }
     }
 
-    private SimpleNode addAstFunNode(Iterator<? extends Map.Entry<String, ? super Object>> iterator)
+    private SimpleNode addAstFunNode(Iterator<? extends Map.Entry<String, ?>> iterator)
     {
 //        TODO add !=, NOT LIKE
 //        var udIDs = database.utilityDocuments.ids( {
 //                externalStatus: "!=ok"
 //        } );
-        Map.Entry<String, ? super Object> entry = iterator.next();
+        Map.Entry<String, ?> entry = iterator.next();
         Object valueObj = entry.getValue();
         PredefinedFunction function = DefaultParserContext.FUNC_EQ;
         SimpleNode astFunNode = function.node(new AstFieldReference(entry.getKey()), AstReplacementParameter.get());
