@@ -19,7 +19,6 @@
   <module>server</module>
   <module>maven</module>
   <module>entitygen</module>
-  <module>wizard</module>
   <module>modules/core</module>
  </modules>
 

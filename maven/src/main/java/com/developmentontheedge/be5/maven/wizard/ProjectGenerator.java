@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.wizard;
+package com.developmentontheedge.be5.maven.wizard;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,11 +21,9 @@ import com.developmentontheedge.be5.metadata.model.Icon;
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.Localizations;
 import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
-import com.developmentontheedge.be5.metadata.util.Files2;
 //import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 //import com.beanexplorer.enterprise.operations.SendPassword;
 import com.developmentontheedge.be5.metadata.util.ModuleUtils;

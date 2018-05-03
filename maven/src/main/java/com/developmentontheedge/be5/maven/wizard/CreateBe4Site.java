@@ -1,30 +1,4 @@
-package com.developmentontheedge.be5.wizard;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfiles;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
-
-import com.developmentontheedge.be5.wizard.ProjectGenerator.Parameters;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+package com.developmentontheedge.be5.maven.wizard;
 
 public final class CreateBe4Site //extends BETask
 {
