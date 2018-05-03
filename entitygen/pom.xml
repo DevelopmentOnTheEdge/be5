@@ -17,75 +17,11 @@
 	<dependencies>
 
     <dependency>
-      <groupId>com.developmentontheedge.be5.modules</groupId>
-      <artifactId>be5-modules-core</artifactId>
-      <version>0.1.1-SNAPSHOT</version>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-metadata</artifactId>
+      <version>0.3.1-SNAPSHOT</version>
     </dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-server</artifactId>
-			<version>0.1.2-SNAPSHOT</version>
-		</dependency>
 
 	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>GdslGenegator</id>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <phase>generate-test-sources</phase>
-                        <configuration>
-                            <mainClass>com.developmentontheedge.be5.entitygen.GdslGenegator</mainClass>
-                            <arguments>
-                                <argument>${project.build.directory}/generated-test-sources/java/</argument>
-                                <argument/>
-                                <argument>${project.artifactId}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-test-sources/java/</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>addTestSources</goal>
-                            <goal>compileTests</goal>
-                            <goal>removeTestStubs</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.entitygen;
 
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.inject.impl.Be5Injector;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.inject.Stage;
-import com.developmentontheedge.be5.inject.impl.YamlBinder;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -15,11 +13,11 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
+
 public class GdslGenegator
 {
     private static final Logger log = Logger.getLogger(GdslGenegator.class.getName());
 
-    private Injector injector;
     private int entityCount = 0;
 
     public static void main(String[] args) throws Exception
@@ -52,20 +50,26 @@ public class GdslGenegator
         }
 
         log.info("File '"+file.toString()+"' not found, generate...");
-        injector = new Be5Injector(Stage.TEST, new YamlBinder());
 
-        createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+        try
+        {
+            createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+        }
+        catch (ProjectLoadException e)
+        {
+            e.printStackTrace();
+        }
 
         log.info("Generate successful: " + entityCount + " entities added.\n" + packageName + serviceClassName);
     }
 
     private void createService(String generatedSourcesPath, String packageName,
-                               String serviceClassName, Configuration cfg) throws IOException
+                               String serviceClassName, Configuration cfg) throws IOException, ProjectLoadException
     {
         Template serviceTpl = cfg.getTemplate("gdsl/entities.ftl");
 
-        Meta meta = injector.get(Meta.class);
-        List<Entity> entities = meta.getOrderedEntities("ru");
+        Project project = ModuleLoader2.findAndLoadProjectWithModules();
+        List<Entity> entities = project.getAllEntities();
 
         Map<String, Object> input = new HashMap<>();
 //        input.put("serviceClassName", serviceClassName);
