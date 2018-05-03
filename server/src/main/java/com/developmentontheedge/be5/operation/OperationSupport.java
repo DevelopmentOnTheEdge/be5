@@ -178,7 +178,7 @@ public abstract class OperationSupport implements Operation
     @Override
     public void removeRedirectParam(String name)
     {
-        redirectParams.remove(name);
+        redirectParams.put(name, "");
     }
 
 //    todo addRedirectParam from DPS in invoke as be3
