@@ -14,23 +14,14 @@ import java.util.*;
 import java.util.logging.Logger;
 
 
-public class GdslGenegator
+public class GdslGenerator
 {
-    private static final Logger log = Logger.getLogger(GdslGenegator.class.getName());
+    private static final Logger log = Logger.getLogger(GdslGenerator.class.getName());
 
     private int entityCount = 0;
 
     public static void main(String[] args) throws Exception
     {
-        new GdslGenegator(args);
-    }
-
-    public GdslGenegator(String[] args) throws IOException
-    {
-        Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(GdslGenegator.class, "/templates");
-        cfg.setDefaultEncoding("UTF-8");
-
         String generatedSourcesPath = args[0];
         String packageName = args[1];
         if(packageName == null){
@@ -40,6 +31,15 @@ public class GdslGenegator
         }
 
         String serviceClassName = args[2] + "DatabaseModel";
+
+        new GdslGenerator(generatedSourcesPath, packageName, serviceClassName);
+    }
+
+    public GdslGenerator(String generatedSourcesPath, String packageName, String serviceClassName) throws IOException
+    {
+        Configuration cfg = new Configuration();
+        cfg.setClassForTemplateLoading(GdslGenerator.class, "/templates");
+        cfg.setDefaultEncoding("UTF-8");
 
         File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + serviceClassName + ".gdsl").toFile();
 
