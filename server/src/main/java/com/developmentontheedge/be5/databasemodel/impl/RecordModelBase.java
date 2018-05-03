@@ -11,24 +11,24 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 
-public class RecordModelBase extends DynamicPropertySetBlocked implements RecordModel
+public class RecordModelBase<T> extends DynamicPropertySetBlocked implements RecordModel<T>
 {
-    private final EntityModelBase entityModelBase;
-    private final String id;
+    private final EntityModelBase<T> entityModelBase;
+    private final T id;
 
-    RecordModelBase(EntityModelBase entityModelBase, DynamicPropertySet dps)
+    RecordModelBase(T id, EntityModelBase<T> entityModelBase, DynamicPropertySet dps)
     {
         super( dps );
         if(dps.getProperty(entityModelBase.getPrimaryKeyName()) == null)
         {
             throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModelBase.getPrimaryKeyName() + "'");
         }
-        id = dps.getProperty(entityModelBase.getPrimaryKeyName()).getValue().toString();
+        this.id = id;
         this.entityModelBase = entityModelBase;
     }
 
     @Override
-    public String getId()
+    public T getPrimaryKey()
     {
         return id;
     }
@@ -36,13 +36,13 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     @Override
     public int remove()
     {
-        return entityModelBase.remove( getId() );
+        return entityModelBase.remove( id );
     }
 
     @Override
     public String toString()
     {
-        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModelBase.getPrimaryKeyName() + " = " + getId() + " ] }";
+        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModelBase.getPrimaryKeyName() + " = " + getPrimaryKey() + " ] }";
     }
 
     @Override
@@ -59,16 +59,18 @@ public class RecordModelBase extends DynamicPropertySetBlocked implements Record
     }
 
     @Override
-    public void update( String propertyName, String value )
+    public void update( String propertyName, Object value )
     {
-        entityModelBase.set( getId(), propertyName, value );
+        entityModelBase.set( getPrimaryKey(), propertyName, value );
+
         super.setValueHidden( propertyName, value );
     }
 
     @Override
     public void update( Map<String, Object> values )
     {
-        entityModelBase.set( getId(), values );
+        entityModelBase.set( getPrimaryKey(), values );
+
         for( String propertyName : values.keySet() )
         {
             if( super.hasProperty( propertyName ) )

@@ -21,7 +21,8 @@ public class AstUpdate extends SimpleNode
         this.nodePrefix = "UPDATE";
     }
 
-    public AstUpdate where(Map<String, ? super Object> conditions){
+    public AstUpdate where(Map<String, ?> conditions)
+    {
         Objects.requireNonNull(conditions);
         if(!conditions.isEmpty()) where(new AstWhere(conditions));
         return this;

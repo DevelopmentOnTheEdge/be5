@@ -16,7 +16,9 @@ public class HashUrlUtils
 
         if(operation.getContext().getRecords().length > 0)
         {
-            hashUrl = hashUrl.named("selectedRows", Arrays.stream(operation.getContext().getRecords()).collect(Collectors.joining(",")));
+            hashUrl = hashUrl.named("selectedRows", Arrays.stream(operation.getContext().getRecords())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(",")));
         }
 
         return hashUrl;

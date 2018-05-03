@@ -10,14 +10,14 @@ import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
  * @author ruslan
  *
  */
-public interface EntityAccess<E extends EntityModel<RecordModel>> {
+public interface EntityAccess {
     
     /**
      * 
      * @param entityName entity name
      * @return EntityModel
      */
-    EntityModel getEntity(String entityName);
+    <T> EntityModel<T> getEntity(String entityName);
 
 //    /**
 //     * Returns database connector
@@ -38,8 +38,4 @@ public interface EntityAccess<E extends EntityModel<RecordModel>> {
 //    String getTcloneId();
 
 //    EntityAccess<E> getCloned(String tcloneId);
-
-    <T> T transactionWithResult(SqlExecutor<T> executor);
-
-    void transaction(SqlExecutorVoid executor);
 }

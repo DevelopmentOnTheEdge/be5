@@ -19,7 +19,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        if( context.records.length == 0 )
+        if( context.getRecords().length == 0 )
             return null;
 
         DynamicProperty prop = new DynamicProperty( "categoryID", "Category", String.class );
@@ -43,7 +43,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        if( context.records.length == 0 )
+        if( context.getRecords().length == 0 )
         {
             setResult(OperationResult.error("No records were selected"));
             return;
@@ -72,10 +72,10 @@ public class AddRemoveCategoryOperation extends GOperationSupport
             db.insert("INSERT INTO classifications (recordID, categoryID)" +
                     "SELECT CONCAT('"+entity+".', e."+pk+"), c.ID " +
                     "FROM "+entity+" e, categories c " +
-                    "WHERE e."+pk+" IN " + Utils.inClause(context.records.length) +
+                    "WHERE e."+pk+" IN " + Utils.inClause(context.getRecords().length) +
                     "  AND c.ID     IN " + Utils.inClause(categories.size()),
                     ObjectArrays.concat(
-                            Utils.changeTypes(context.records, meta.getColumnType(getInfo().getEntity(), pk)),
+                            Utils.changeTypes(context.getRecords(), meta.getColumnType(getInfo().getEntity(), pk)),
                             categories.toArray(),
                             Object.class));
 
@@ -85,10 +85,10 @@ public class AddRemoveCategoryOperation extends GOperationSupport
             return;
         }
         db.update("DELETE FROM classifications " +
-                  "WHERE recordID   IN " + Utils.inClause(context.records.length) +
+                  "WHERE recordID   IN " + Utils.inClause(context.getRecords().length) +
                   "  AND categoryID IN " + Utils.inClause(categories.size()),
                   ObjectArrays.concat(
-                        Utils.addPrefix(context.records, entity + "."),
+                        Utils.addPrefix(context.getRecords(), entity + "."),
                         categories.toArray(),
                         Object.class));
 

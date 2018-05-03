@@ -21,22 +21,22 @@ class OperationTest extends SqlMockOperationTest
     void testOperation()
     {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ImmutableMap.of("name","testName","number", "1"))
+                ImmutableMap.of("name","testName","value", "1"))
 
         Object parameters = generate.getFirst()
 
         assertEquals("{" +
                         "'values':{" +
                             "'name':'testName'," +
-                            "'number':'1'}," +
+                            "'value':'1'}," +
                         "'meta':{" +
                             "'/name':{'displayName':'Name'}," +
-                            "'/number':{'displayName':'Number','type':'Long'}}," +
-                        "'order':['/name','/number']}",
+                            "'/value':{'displayName':'Value','type':'Long'}}," +
+                        "'order':['/name','/value']}",
                 oneQuotes(JsonFactory.bean(parameters)))
 
         OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "",
-                ImmutableMap.of("name","testName","number", "1")).getSecond()
+                ImmutableMap.of("name","testName","value", "1")).getSecond()
         assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation"), result)
     }
 
@@ -45,7 +45,7 @@ class OperationTest extends SqlMockOperationTest
     {
         OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),
-                ImmutableMap.of("name","testName","number", "1")).getSecond()
+                ImmutableMap.of("name","testName","value", "1")).getSecond()
         assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation/name=foo"), result)
     }
 
@@ -54,7 +54,7 @@ class OperationTest extends SqlMockOperationTest
     {
         Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0","{}")
 
-        assertEquals("{'name':'','number':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
+        assertEquals("{'name':'','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
@@ -64,10 +64,10 @@ class OperationTest extends SqlMockOperationTest
                 "testtableAdmin", "All records", "TestOperation", "0",
                         ImmutableMap.of(
                                 "name", "test",
-                                "number", "0",
+                                "value", "0",
                                 FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
-        assertEquals("{'name':'test','number':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
+        assertEquals("{'name':'test','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
 
     @Test
@@ -76,41 +76,41 @@ class OperationTest extends SqlMockOperationTest
         Either<Object, OperationResult> result = generateOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ImmutableMap.of(
                         "name", "testName",
-                        "number", "ab",
+                        "value", "ab",
                         FrontendConstants.RELOAD_CONTROL_NAME, "name"))
 
         assertNotNull(result.getFirst())
 
         assertNotNull(result.getFirst())
 
-        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("status"))
+        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("status"))
         assertEquals("Здесь должно быть целое число.",
-                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("message"))
+                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("message"))
     }
 
     @Test
     void testOperationParametersErrorInvoke()
     {
         assertNotNull(generateOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','number':'ab']).getFirst())
+                ['name':'testName','value':'ab']).getFirst())
 
         Either<Object, OperationResult> result = executeOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','number':'ab'])
+                ['name':'testName','value':'ab'])
 
         assertNotNull(result.getFirst())
 
-        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("status"))
+        assertEquals("error", JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("status"))
         assertEquals("Здесь должно быть целое число.",
-                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/number").getString("message"))
+                JsonFactory.bean(result.getFirst()).getJsonObject("meta").getJsonObject("/value").getString("message"))
     }
 
     @Test
     void testOperationInvoke()
     {
         executeOperation("testtableAdmin", "All records", "TestOperation", "0",
-                ['name':'testName','number':3L])
+                ['name':'testName','value':3L])
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, number) " +
+        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "testName", 3L)
     }
 
@@ -155,8 +155,8 @@ class OperationTest extends SqlMockOperationTest
         executeOperation("testTags", "All records", "Insert", "",
                 ['CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional']).getSecond()
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel, referenceTest) VALUES (?, ?, ?, ?)",
-                "01", "yes", "Regional", null
+        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel) VALUES (?, ?, ?)",
+                "01", "yes", "Regional"
         )
     }
 

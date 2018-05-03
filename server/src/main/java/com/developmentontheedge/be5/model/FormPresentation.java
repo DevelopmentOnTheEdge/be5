@@ -30,7 +30,7 @@ public class FormPresentation
         this.query = context.getQueryName();
         this.operation = operationInfo.getName();
         this.title = title;
-        this.selectedRows = Arrays.stream(context.getRecords()).collect(Collectors.joining(","));
+        this.selectedRows = Arrays.stream(context.getRecords()).map(Object::toString).collect(Collectors.joining(","));
         this.operationParams = context.getOperationParams();
         this.bean = bean;
         this.layout = layout;

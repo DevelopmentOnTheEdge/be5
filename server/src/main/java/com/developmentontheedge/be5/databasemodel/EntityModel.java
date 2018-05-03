@@ -16,7 +16,7 @@ import java.util.Map;
  * it must be synchronized externally.
  * @author ruslan
  */
-public interface EntityModel<R extends RecordModel>
+public interface EntityModel<T>
 {
     /**
      * Returns the number of records a table.
@@ -58,7 +58,7 @@ public interface EntityModel<R extends RecordModel>
      * @param values map with column names and values
      * @return generated record identify number
      */
-    String add(Map<String, ? super Object> values);
+    <R> R add(Map<String, ? super Object> values);
     
     /**
      * Adds record into database from map, where key is the column name
@@ -67,7 +67,7 @@ public interface EntityModel<R extends RecordModel>
      * @param dps DynamicPropertySet
      * @return generated record identify number
      */
-    String add(DynamicPropertySet dps);
+    <R> R add(DynamicPropertySet dps);
     
     /**
      * Returns <tt>true</tt> if entity contains record consistent with the  
@@ -83,16 +83,14 @@ public interface EntityModel<R extends RecordModel>
      * @param c collection with column names and values
      * @return list with record identify numbers 
      */
-    List<String> addAll(Collection<Map<String, ? super Object>> c);
+    <R> List<R> addAll(Collection<Map<String, ? super Object>> c);
 
     /** 
      * Returns the record object with the specified id
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(String id);
-
-    RecordModel get(Long id);
+    RecordModel<T> get(T id);
 
     /** 
      * Returns the record object consistent with the specified condition, 
@@ -100,38 +98,34 @@ public interface EntityModel<R extends RecordModel>
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
-    RecordModel get(Map<String, ? super Object> conditions );
+    RecordModel<T> getByColumns(Map<String, ? super Object> conditions);
 
-    RecordModel getColumns(List<String> columns, String id);
+    RecordModel<T> getColumns(List<String> columns, T id);
 
-    RecordModel getColumns(List<String> columns, Long id);
-
-    RecordModel getColumns(List<String> columns, Map<String, ? super Object> conditions);
+    RecordModel<T> getColumnsByColumns(List<String> columns, Map<String, ? super Object> conditions);
 
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set( String, Map )}
+     * This method calls {@link #set( T, Map )}
      * @param id identify number of record
      * @param propertyName column name
      * @param value new value
      * @return number of affected rows
      */
-    int set(String id, String propertyName, String value);
+    int set(T id, String propertyName, Object value);
 
     /**
      * Sets value to property with a specified name.<br>
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #set( String, DynamicPropertySet )}
+     * This method calls {@link #set( T, DynamicPropertySet )}
      * @param id identify number of record
      * @param values column names and values
      * @return number of affected rows
      */
-    int set(String id, Map<String, ? super Object> values);
-
-    //void setMany( Map<String, String> values, String id, String... otherId);
+    int set(T id, Map<String, ? super Object> values);
 
 //    void setMany( Map<String, ? super Object> values, Map<String, ? super Object> conditions);
 
@@ -142,22 +136,22 @@ public interface EntityModel<R extends RecordModel>
      * @param values new column names and values
      * @return number of affected rows
      */
-    int set(String id, DynamicPropertySet values);
+    int set(T id, DynamicPropertySet values);
 
     //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
 //    void setForceMany(Map<String, String> values, Map<String, String> conditions);
     
-    /**
-     * Operation removes all the records consistent with any of conditions in collection.
-     * The method can check the values on consistency and threw exceptions<br>
-     * in order to avoid compromising the integrity of the database.
-     * @param c collection of conditions
-     * @return number of affected rows
-     */
-    int removeAll(Collection<Map<String, ? super Object>> c);
+//    /**
+//     * Operation removes all the records consistent with any of conditions in collection.
+//     * The method can check the values on consistency and threw exceptions<br>
+//     * in order to avoid compromising the integrity of the database.
+//     * @param c collection of conditions
+//     * @return number of affected rows
+//     */
+//    int removeAll(Collection<Map<String, ? super Object>> c);
 
-    int removeWhereColumnIn(String columnName, String[] ids);
+    int removeWhereColumnIn(String columnName, T[] ids);
 
     /**
      * Operation removes all the records
@@ -171,18 +165,17 @@ public interface EntityModel<R extends RecordModel>
      * @param conditions conditions
      * @return number of affected rows
      */
-    int remove(Map<String, ? super Object> conditions);
+    int removeByColumns(Map<String, ? super Object> conditions);
     
     /**
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
      * in order to avoid compromising the integrity of the database.
-     * This method calls {@link #remove(String[])}
-     * @param firstId first identify number of record
-     * @param otherId other identify number of record
+     * This method calls {@link #remove(T[])}
+     * @param id first identify number of record
      * @return number of affected rows
      */
-    int remove(String firstId, String... otherId);
+    int remove(T id);
 
     /**
      * Deletes the record with the specified identifiers.<br>
@@ -190,13 +183,13 @@ public interface EntityModel<R extends RecordModel>
      * @param ids numbers of record
      * @return number of affected rows
      */
-    int remove(String[] ids);
+    int remove(T[] ids);
 
     /**
      * Returns a list of records of current entity.
      * @return list of records
      */
-    List<RecordModel> toList();
+    List<RecordModel<T>> toList();
 
 //    List<RecordModel> collect();
 
@@ -204,21 +197,21 @@ public interface EntityModel<R extends RecordModel>
      * Returns a array of records of current entity.
      * @return array of records
      */
-    RecordModel[] toArray();
+    RecordModel<T>[] toArray();
 
     /**
      * Returns a list of records of current entity filtered by the specified parameters.
      * @param conditions the filter parameters
      * @return array of records
      */
-    List<RecordModel> toList(Map<String, ? super Object> conditions);
+    List<RecordModel<T>> toList(Map<String, ? super Object> conditions);
     
     /**
      * Returns a array of records of current entity filtered by the specified parameters.
      * @param conditions the filter parameters
      * @return array of records
      */
-    RecordModel[] toArray(Map<String, ? super Object> conditions);
+    RecordModel<T>[] toArray(Map<String, ? super Object> conditions);
 
     /**
      * Spreads collection and collect elements from function to list.<br>

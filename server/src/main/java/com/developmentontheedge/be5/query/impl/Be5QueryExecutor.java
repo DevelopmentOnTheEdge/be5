@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query.impl;
 
+import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
@@ -123,7 +124,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
             EntityModel entityModel = database.get().getEntity(tagName);
-            RecordModel row = entityModel.get(conditions);
+            RecordModel row = entityModel.getByColumns(conditions);
 
             String value = row.getValue(name).toString();
 
@@ -137,6 +138,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private final DatabaseService databaseService;
+    private final ConnectionService connectionService;
     private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
@@ -151,10 +153,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, DatabaseService databaseService,
+    public Be5QueryExecutor(Query query, ConnectionService connectionService, Map<String, List<String>> parameters, DatabaseService databaseService,
                             Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
         super(query);
+        this.connectionService = connectionService;
 
         this.parameters = parameters;
         this.databaseService = databaseService;
@@ -164,7 +167,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         this.executorQueryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier( executorQueryContext );
-        this.context = new Context( databaseService.getRdbms().getDbms() );
+        this.context = new Context( databaseService.getDbms() );
         this.parserContext = new DefaultParserContext();
         this.subQueryKeys = Collections.emptySet();
         this.executeType = ExecuteType.DEFAULT;
@@ -266,18 +269,18 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private DynamicProperty[] getSchema(String sql)
     {
         try{
-            Connection conn = databaseService.getConnection(true);
+            Connection conn = connectionService.getConnection(true);
 
             try(PreparedStatement ps = conn.prepareStatement(sql)) {
                 return DpsRecordAdapter.createSchema(ps.getMetaData());
             }
             finally {
-                databaseService.releaseConnection(conn);
+                connectionService.releaseConnection(conn);
             }
         }
         catch (Throwable e)
         {
-            log.log(Level.WARNING, "fail getSchema, return empty", e);
+            log.log(Level.FINE, "fail getSchema, return empty", e);
             return new DynamicProperty[]{};
         }
     }

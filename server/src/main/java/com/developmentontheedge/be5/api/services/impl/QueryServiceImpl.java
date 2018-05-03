@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
@@ -18,14 +19,16 @@ import java.util.Map;
 public class QueryServiceImpl implements QueryService
 {
     private final DatabaseService databaseService;
+    private final ConnectionService connectionService;
     private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
 
-    public QueryServiceImpl(DatabaseService databaseService, Provider<DatabaseModel> database,
+    public QueryServiceImpl(DatabaseService databaseService, ConnectionService connectionService, Provider<DatabaseModel> database,
                             Meta meta, SqlService db)
     {
         this.databaseService = databaseService;
+        this.connectionService = connectionService;
         this.database = database;
         this.meta = meta;
         this.db = db;
@@ -36,7 +39,7 @@ public class QueryServiceImpl implements QueryService
     {
         Map<String, List<String>> listParams = getMapOfList(parameters);
 
-        return new Be5QueryExecutor(query, listParams, databaseService, database, meta, db);
+        return new Be5QueryExecutor(query, connectionService, listParams, databaseService, database, meta, db);
     }
 
     @Override
