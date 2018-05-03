@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.entitygen;
+package com.developmentontheedge.be5.maven.gdsl;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
