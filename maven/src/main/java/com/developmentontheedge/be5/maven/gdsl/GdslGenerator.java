@@ -20,7 +20,7 @@ public class GdslGenerator
 
     private int entityCount = 0;
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args) throws IOException
     {
         String generatedSourcesPath = args[0];
         String packageName = args[1];
@@ -38,7 +38,7 @@ public class GdslGenerator
     public GdslGenerator(String generatedSourcesPath, String packageName, String serviceClassName) throws IOException
     {
         Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(GdslGenerator.class, "/templates");
+        cfg.setClassForTemplateLoading(GdslGenerator.class, "/gdsl");
         cfg.setDefaultEncoding("UTF-8");
 
         File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + serviceClassName + ".gdsl").toFile();
@@ -66,9 +66,9 @@ public class GdslGenerator
     private void createService(String generatedSourcesPath, String packageName,
                                String serviceClassName, Configuration cfg) throws IOException, ProjectLoadException
     {
-        Template serviceTpl = cfg.getTemplate("gdsl/entities.ftl");
+        Template serviceTpl = cfg.getTemplate("/entities.ftl");
 
-        Project project = ModuleLoader2.findAndLoadProjectWithModules();
+        Project project = ModuleLoader2.findAndLoadProjectWithModules(false);
         List<Entity> entities = project.getAllEntities();
 
         Map<String, Object> input = new HashMap<>();
