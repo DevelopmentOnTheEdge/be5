@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 
@@ -21,10 +21,10 @@ public class UserInfoComponent implements Component
 
         private final List<String> availableRoles;
         private final List<String> currentRoles;
-        private final Date creationTime;
+        private final Instant creationTime;
         private final String defaultRoute;
 
-        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Date creationTime, String defaultRoute)
+        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Instant creationTime, String defaultRoute)
         {
             this.loggedIn = loggedIn;
             this.userName = userName;
@@ -54,7 +54,7 @@ public class UserInfoComponent implements Component
             return currentRoles;
         }
 
-        public Date getCreationTime()
+        public Instant getCreationTime()
         {
             return creationTime;
         }
@@ -76,7 +76,7 @@ public class UserInfoComponent implements Component
                         UserInfoHolder.getUserName(),
                         UserInfoHolder.getAvailableRoles(),
                         UserInfoHolder.getCurrentRoles(),
-                        UserInfoHolder.getUserInfo().getCreationTime(),
+                        UserInfoHolder.getUserInfo().getCreationTime().toInstant(),
                         ""));
                 return;
             case "selectRoles":

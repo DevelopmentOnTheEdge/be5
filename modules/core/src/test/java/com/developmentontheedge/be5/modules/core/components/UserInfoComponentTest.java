@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -16,8 +15,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -49,7 +48,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                any(Date.class),
+                any(Instant.class),
                 ""));
     }
 
@@ -66,7 +65,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 RoleType.ROLE_GUEST,
                 Collections.singletonList(RoleType.ROLE_GUEST),
                 Collections.singletonList(RoleType.ROLE_GUEST),
-                any(Date.class),
+                any(Instant.class),
                 ""));
     }
 
@@ -86,7 +85,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                any(Date.class),
+                any(Instant.class),
                 ""));
     }
 
@@ -103,7 +102,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
-                any(Date.class),
+                any(Instant.class),
                 ""));
     }
 
