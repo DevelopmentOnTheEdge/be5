@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
@@ -123,7 +124,7 @@ public abstract class OperationSupport implements Operation
     {
         return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
                 .named(getRedirectParams())
-                .named("selectedRows", newID.toString());
+                .named(RestApiConstants.SELECTED_ROWS, newID.toString());
     }
 
     @Override
@@ -172,6 +173,12 @@ public abstract class OperationSupport implements Operation
     public void addRedirectParam( String name, Object value )
     {
         addRedirectParams( Collections.singletonMap( name, value ) );
+    }
+
+    @Override
+    public void removeRedirectParam(String name)
+    {
+        redirectParams.remove(name);
     }
 
 //    todo addRedirectParam from DPS in invoke as be3
