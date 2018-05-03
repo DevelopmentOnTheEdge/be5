@@ -37,7 +37,7 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
       </goals>
       <phase>compile</phase>
       <configuration>
-       <mainClass>com.developmentontheedge.be5.entitygen.GdslGenegator</mainClass>
+       <mainClass>com.developmentontheedge.be5.maven.gdsl.GdslGenegator</mainClass>
        <arguments>
         <argument>${project.build.directory}/generated-sources/java/</argument>
         <argument/>

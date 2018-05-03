@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.entitygen;
+package com.developmentontheedge.be5.maven.gdsl;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

@@ -1,11 +1,9 @@
-package com.developmentontheedge.be5.entitygen;
+package com.developmentontheedge.be5.maven.gdsl;
 
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.inject.impl.Be5Injector;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.inject.Stage;
-import com.developmentontheedge.be5.inject.impl.YamlBinder;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -15,24 +13,15 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class GdslGenegator
-{
-    private static final Logger log = Logger.getLogger(GdslGenegator.class.getName());
 
-    private Injector injector;
+public class GdslGenerator
+{
+    private static final Logger log = Logger.getLogger(GdslGenerator.class.getName());
+
     private int entityCount = 0;
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args) throws IOException
     {
-        new GdslGenegator(args);
-    }
-
-    public GdslGenegator(String[] args) throws IOException
-    {
-        Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(GdslGenegator.class, "/templates");
-        cfg.setDefaultEncoding("UTF-8");
-
         String generatedSourcesPath = args[0];
         String packageName = args[1];
         if(packageName == null){
@@ -43,6 +32,15 @@ public class GdslGenegator
 
         String serviceClassName = args[2] + "DatabaseModel";
 
+        new GdslGenerator(generatedSourcesPath, packageName, serviceClassName);
+    }
+
+    public GdslGenerator(String generatedSourcesPath, String packageName, String serviceClassName) throws IOException
+    {
+        Configuration cfg = new Configuration();
+        cfg.setClassForTemplateLoading(GdslGenerator.class, "/gdsl");
+        cfg.setDefaultEncoding("UTF-8");
+
         File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + serviceClassName + ".gdsl").toFile();
 
         if(file.exists() && !file.isDirectory())
@@ -52,20 +50,26 @@ public class GdslGenegator
         }
 
         log.info("File '"+file.toString()+"' not found, generate...");
-        injector = new Be5Injector(Stage.TEST, new YamlBinder());
 
-        createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+        try
+        {
+            createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+        }
+        catch (ProjectLoadException e)
+        {
+            e.printStackTrace();
+        }
 
         log.info("Generate successful: " + entityCount + " entities added.\n" + packageName + serviceClassName);
     }
 
     private void createService(String generatedSourcesPath, String packageName,
-                               String serviceClassName, Configuration cfg) throws IOException
+                               String serviceClassName, Configuration cfg) throws IOException, ProjectLoadException
     {
-        Template serviceTpl = cfg.getTemplate("gdsl/entities.ftl");
+        Template serviceTpl = cfg.getTemplate("/entities.ftl");
 
-        Meta meta = injector.get(Meta.class);
-        List<Entity> entities = meta.getOrderedEntities("ru");
+        Project project = ModuleLoader2.findAndLoadProjectWithModules(false);
+        List<Entity> entities = project.getAllEntities();
 
         Map<String, Object> input = new HashMap<>();
 //        input.put("serviceClassName", serviceClassName);

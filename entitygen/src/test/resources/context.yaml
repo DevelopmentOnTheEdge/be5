@@ -1,7 +1,0 @@
-context:
-  services:
-  - com.developmentontheedge.be5.entitygen.experimental.genegate.CoreEntityModels
-  - com.developmentontheedge.be5.experimental.entitygen.generate.EntityGenEntityModels
-config:
-  com.developmentontheedge.be5.api.services.impl.LogConfigurator:
-    path: '/logging.properties'

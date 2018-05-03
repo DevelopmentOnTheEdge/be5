@@ -139,9 +139,9 @@ public class ModuleLoader2
         return modulesMap.get(name).getLocation();
     }
 
-    public static Project findAndLoadProjectWithModules() throws ProjectLoadException
+    public static Project findAndLoadProjectWithModules(boolean dirty) throws ProjectLoadException
     {
-        loadAllProjects(true);
+        loadAllProjects(dirty);
 
         Project project = null;
         for (Map.Entry<String,Project> module: modulesMap.entrySet())
