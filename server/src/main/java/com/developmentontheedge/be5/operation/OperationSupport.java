@@ -134,23 +134,20 @@ public abstract class OperationSupport implements Operation
 
         for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
         {
-            if(entry.getValue() != null)map.put(entry.getKey(), entry.getValue().toString());
+            if(!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
+            {
+                map.put(entry.getKey(), entry.getValue().toString());
+            }
         }
 
         for (Map.Entry<String, Object> entry : redirectParams.entrySet())
         {
-            if(entry.getValue() != null)
+            if(entry.getValue() != null && !entry.getValue().toString().isEmpty())
             {
-                if(!entry.getValue().toString().isEmpty())
-                {
-                    map.put(entry.getKey(), entry.getValue().toString());
-                }
-                else
-                {
-                    map.remove(entry.getKey());
-                }
+                map.put(entry.getKey(), entry.getValue().toString());
             }
         }
+
         return map;
     }
 
