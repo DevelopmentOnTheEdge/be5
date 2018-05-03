@@ -123,7 +123,11 @@ public abstract class TestUtils
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
-        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, parameters));
+        parameters.forEach((k,v) ->
+            when(httpServletRequest.getParameter(k)).thenReturn((String) v)
+        );
+
+        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null));
         when(request.getRequestUri()).thenReturn(requestUri);
 
         for (Map.Entry<String, Object> entry: sessionValues.entrySet())

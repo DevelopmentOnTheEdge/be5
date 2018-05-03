@@ -136,15 +136,4 @@ public class MainServletTest extends Be5ProjectTest
         verify(res).sendError(eq(Be5Exception.unknownComponent("foo")));
     }
 
-    @Test
-    public void testSimplify()
-    {
-        Map<String, String[]> in = new HashMap<>();
-        in.put("testP", new String[]{"p1", "p2"});
-        in.put("testZ", new String[]{"z1"});
-
-        Map<String, Object> out = new MainServlet().arrayToList(in);
-        assertEquals("z1", out.get("testZ"));
-    }
-
 }

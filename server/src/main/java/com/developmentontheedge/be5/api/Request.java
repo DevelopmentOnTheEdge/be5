@@ -30,7 +30,7 @@ public interface Request extends SessionAccess, ParametersAccess
     /**
      * For tables - may be need refactoring to use Map<String, Object> getValuesFromJson()
      */
-    Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception;
+    //Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception;
 
 //    /**
 //     * For operation with POJO
