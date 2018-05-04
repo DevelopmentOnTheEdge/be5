@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.impl.model.Base64File;
+import com.developmentontheedge.be5.model.Base64File;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
