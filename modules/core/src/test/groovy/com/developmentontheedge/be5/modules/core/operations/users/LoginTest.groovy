@@ -4,9 +4,10 @@ import com.developmentontheedge.be5.api.Request
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
-import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants
+import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
@@ -65,12 +66,17 @@ class LoginTest extends Be5ProjectTest
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()
-        assertEquals FrontendConstants.UPDATE_USER_INFO, second.getDetails()
 
         assertEquals TEST_USER, UserInfoHolder.getUserInfo().userName
         assertEquals Arrays.asList("Test1", "Test2"), UserInfoHolder.getUserInfo().availableRoles
         assertEquals Arrays.asList("Test1"), UserInfoHolder.getUserInfo().currentRoles
         assertEquals session, UserInfoHolder.getUserInfo().session
+
+        def actions = (Map<String, Object>) second.getDetails()
+        def userInfoModel = (UserInfoModel) actions.get(CoreFrontendConstants.UPDATE_USER_INFO)
+
+        assertEquals TEST_USER, userInfoModel.getUserName()
+        assertEquals(Arrays.asList("Test1", "Test2"), userInfoModel.getAvailableRoles())
     }
 
     @Test

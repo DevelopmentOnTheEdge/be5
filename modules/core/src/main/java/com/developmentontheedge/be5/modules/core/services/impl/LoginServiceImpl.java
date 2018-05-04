@@ -1,12 +1,15 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
+import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 
 import java.util.ArrayList;
@@ -26,12 +29,43 @@ public class LoginServiceImpl implements LoginService
     private final SqlService db;
     private final UserHelper userHelper;
     private final CoreUtils coreUtils;
+    private final MenuHelper menuHelper;
 
-    public LoginServiceImpl(SqlService db, UserHelper userHelper, CoreUtils coreUtils)
+    public LoginServiceImpl(SqlService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper)
     {
         this.db = db;
         this.userHelper = userHelper;
         this.coreUtils = coreUtils;
+        this.menuHelper = menuHelper;
+    }
+
+    @Override
+    public UserInfoModel getUserInfoModel()
+    {
+        Action defaultAction = menuHelper.getDefaultAction();
+        String defaultRouteCall = "";
+
+        if(defaultAction == null)
+        {
+            log.severe("Default Action must not be null");
+        }
+        else
+        {
+            if(defaultAction.getName().equals("call")){
+                defaultRouteCall = defaultAction.getArg();
+            }else{
+                log.severe("Default Action type must be 'call'");
+            }
+        }
+
+        return new UserInfoModel(
+                UserInfoHolder.isLoggedIn(),
+                UserInfoHolder.getUserName(),
+                UserInfoHolder.getAvailableRoles(),
+                UserInfoHolder.getCurrentRoles(),
+                UserInfoHolder.getUserInfo().getCreationTime().toInstant(),
+                defaultRouteCall
+        );
     }
 
     public boolean loginCheck(String username, String password)

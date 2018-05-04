@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableList;
@@ -43,7 +44,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         component.generate(getMockRequest(""), response, injector);
 
-        verify(response).sendAsRawJson(new UserInfoComponent.State(
+        verify(response).sendAsRawJson(new UserInfoModel(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -60,7 +61,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
 
         component.generate(getMockRequest(""), response, injector);
 
-        verify(response).sendAsRawJson(new UserInfoComponent.State(
+        verify(response).sendAsRawJson(new UserInfoModel(
                 false,
                 RoleType.ROLE_GUEST,
                 Collections.singletonList(RoleType.ROLE_GUEST),
@@ -80,7 +81,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
                 response, injector);
 
-        verify(response).sendAsRawJson(new UserInfoComponent.State(
+        verify(response).sendAsRawJson(new UserInfoModel(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -97,7 +98,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", "")),
                 response, injector);
 
-        verify(response).sendAsRawJson(new UserInfoComponent.State(
+        verify(response).sendAsRawJson(new UserInfoModel(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
