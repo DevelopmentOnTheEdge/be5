@@ -1,6 +1,11 @@
 package com.developmentontheedge.be5.api;
 
 
+import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+
+import java.util.Collections;
+import java.util.Map;
+
 public interface FrontendConstants
 {
     /**
@@ -30,4 +35,8 @@ public interface FrontendConstants
     String OPEN_DEFAULT_ROUTE = "OPEN_DEFAULT_ROUTE";
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
 
+    static Map<String, Object> updateParentDocument(JsonApiModel model)
+    {
+        return Collections.singletonMap(UPDATE_PARENT_DOCUMENT, model);
+    }
 }
