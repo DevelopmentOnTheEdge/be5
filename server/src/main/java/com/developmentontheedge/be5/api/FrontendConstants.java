@@ -27,4 +27,7 @@ public interface FrontendConstants
     //String TOP_DOCUMENT = "topDocument";
 
     String UPDATE_USER_INFO = "UPDATE_USER_INFO";
+    String OPEN_DEFAULT_ROUTE = "OPEN_DEFAULT_ROUTE";
+    String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
+
 }
