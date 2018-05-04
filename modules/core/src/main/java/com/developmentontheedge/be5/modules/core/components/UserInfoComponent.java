@@ -6,15 +6,19 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class UserInfoComponent implements Component
 {
+    private static final Logger log = Logger.getLogger(UserInfoComponent.class.getName());
+
     public static class State
     {
         private final boolean loggedIn;
@@ -71,6 +75,22 @@ public class UserInfoComponent implements Component
     {
         MenuHelper menuHelper = injector.get(MenuHelper.class);
 
+        Action defaultAction = menuHelper.getDefaultAction();
+        String defaultRouteCall = "";
+
+        if(defaultAction == null)
+        {
+            log.severe("Default Action must not be null");
+        }
+        else
+        {
+            if(defaultAction.getName().equals("call")){
+                defaultRouteCall = defaultAction.getArg();
+            }else{
+                log.severe("Default Action type must be 'call'");
+            }
+        }
+
         switch (req.getRequestUri())
         {
             case "":
@@ -80,7 +100,7 @@ public class UserInfoComponent implements Component
                         UserInfoHolder.getAvailableRoles(),
                         UserInfoHolder.getCurrentRoles(),
                         UserInfoHolder.getUserInfo().getCreationTime().toInstant(),
-                        ""));
+                        defaultRouteCall));
                 return;
             case "selectRoles":
                 selectRolesAndSendNewState(req, res, injector);
