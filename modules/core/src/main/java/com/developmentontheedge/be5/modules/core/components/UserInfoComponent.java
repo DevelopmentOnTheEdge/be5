@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
@@ -68,6 +69,8 @@ public class UserInfoComponent implements Component
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
+        MenuHelper menuHelper = injector.get(MenuHelper.class);
+
         switch (req.getRequestUri())
         {
             case "":
