@@ -124,7 +124,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
             EntityModel entityModel = database.get().getEntity(tagName);
-            RecordModel row = entityModel.getByColumns(conditions);
+            RecordModel row = entityModel.getBy(conditions);
 
             String value = row.getValue(name).toString();
 
