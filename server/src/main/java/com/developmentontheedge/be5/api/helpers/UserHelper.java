@@ -65,7 +65,8 @@ public class UserHelper
         req.getSession().invalidate();
 
         String username = UserInfoHolder.getUserName();
-        UserInfoHolder.setUserInfo(null);
+
+        initGuest(req);
 
         log.info("Logout user: " + username);
     }

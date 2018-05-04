@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
+
 public enum OperationStatus
 {
     CREATE      ("create"),
@@ -12,7 +13,6 @@ public enum OperationStatus
     INTERRUPTED ("interrupted"),
     FINISHED    ("finished"),
     REDIRECTED  ("redirect"),
-    DOCUMENT    ("document"),
     ERROR       ("error");
 
     /* PENDING

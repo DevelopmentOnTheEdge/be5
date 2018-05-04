@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.servlet;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -70,7 +69,7 @@ public class MainServlet implements Filter
     {
         HttpServletRequest req = (HttpServletRequest) request;
 
-        if (!respond(req, (HttpServletResponse)response, req.getMethod(),req.getRequestURI(), req.getParameterMap())) {
+        if (!respond(req, (HttpServletResponse)response, req.getMethod(),req.getRequestURI())) {
             chain.doFilter(request, response);
         }
     }
@@ -90,12 +89,12 @@ public class MainServlet implements Filter
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
      */
-    private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
+    private boolean respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri)
     {
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
         {
-            return getTemplate(request, response, requestUri, parameters);
+            return getTemplate(request, response, requestUri);
         }
 
         String[] uriParts = requestUri.split("/");
@@ -109,13 +108,13 @@ public class MainServlet implements Filter
         String subRequestUri = Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
         String componentId = uriParts[ind + 1];
 
-        Request req = new RequestImpl(request, subRequestUri, arrayToList(parameters));
+        Request req = new RequestImpl(request, subRequestUri);
         UserInfoHolder.setRequest(req);
         runComponent(componentId, req, getResponse(request, response));
         return true;
     }
 
-    private boolean getTemplate(HttpServletRequest request, HttpServletResponse response, String requestUri, Map<String, String[]> parameters)
+    private boolean getTemplate(HttpServletRequest request, HttpServletResponse response, String requestUri)
     {
         String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(request.getContextPath(), requestUri);
 
@@ -130,7 +129,7 @@ public class MainServlet implements Filter
             templateComponentID = "defaultTemplateProcessor";
         }
 
-        RequestImpl req = new RequestImpl(request, requestUri, arrayToList(parameters));
+        RequestImpl req = new RequestImpl(request, requestUri);
         UserInfoHolder.setRequest(req);
         runTemplateProcessor(templateComponentID, req, getResponse(request, response));
         return true;
@@ -304,28 +303,5 @@ public class MainServlet implements Filter
 //
 //        return null;
 //    }
-
-    ///////////////////////////////////////////////////////////////////
-    // misc
-    //
-
-    Map<String, Object> arrayToList(Map<String, String[]> parameters)
-    {
-        Map<String, Object> map = new HashMap<>();
-
-        for( Map.Entry<String, String[]> parameter : parameters.entrySet() )
-        {
-            if( parameter.getValue().length == 1 )
-            {
-                map.put( parameter.getKey(), parameter.getValue()[0] );
-            }
-            else
-            {
-                map.put( parameter.getKey(), Arrays.asList(parameter.getValue()) );
-            }
-        }
-
-        return map;
-    }
 
 }

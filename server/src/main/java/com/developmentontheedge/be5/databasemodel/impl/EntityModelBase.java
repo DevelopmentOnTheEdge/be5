@@ -70,25 +70,25 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public RecordModel<T> getByColumns(Map<String, ? super Object> conditions )
+    public RecordModel<T> getBy(Map<String, ? super Object> conditions )
     {
-        return getColumnsByColumns(Collections.emptyList(), conditions);
+        return getColumnsBy(Collections.emptyList(), conditions);
     }
 
     @Override
     public RecordModel<T> get( T id )
     {
-        return getByColumns(Collections.singletonMap(getPrimaryKeyName(), id));
+        return getBy(Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
     public RecordModel<T> getColumns( List<String> columns, T id )
     {
-        return getColumnsByColumns(columns, Collections.singletonMap(getPrimaryKeyName(), id));
+        return getColumnsBy(columns, Collections.singletonMap(getPrimaryKeyName(), id));
     }
 
     @Override
-    public RecordModel<T> getColumnsByColumns(List<String> columns, Map<String, ? super Object> conditions )
+    public RecordModel<T> getColumnsBy(List<String> columns, Map<String, ? super Object> conditions )
     {
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
@@ -292,11 +292,11 @@ public class EntityModelBase<T> implements EntityModel<T>
     @Override
     public int removeAll()
     {
-        return removeByColumns(emptyMap());
+        return removeBy(emptyMap());
     }
 
     @Override
-    public int removeByColumns(Map<String, ? super Object> conditions)
+    public int removeBy(Map<String, ? super Object> conditions)
     {
         Objects.requireNonNull(conditions);
 
@@ -383,7 +383,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        MultipleRecordsBase<List<T>>  records = new MultipleRecordsBase<>();
 //        MultipleRecordsBase.LambdaDPSHandler<R, T> handler = new AbstractMultipleRecords.LambdaDPSHandler<>( lambda );
 //        records.setHandler( handler );
-//        records.getByColumns( values );
+//        records.getBy( values );
 //        return handler.getResult();
 //    }
 

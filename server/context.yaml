@@ -23,6 +23,7 @@ context:
   - com.developmentontheedge.be5.api.services.GroovyRegister
   - com.developmentontheedge.be5.api.services.impl.SqlHelper
   - com.developmentontheedge.be5.api.helpers.ColumnsHelper
+  - com.developmentontheedge.be5.api.helpers.MenuHelper
   - projectProvider:
       interface:      com.developmentontheedge.be5.api.services.ProjectProvider
       implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl

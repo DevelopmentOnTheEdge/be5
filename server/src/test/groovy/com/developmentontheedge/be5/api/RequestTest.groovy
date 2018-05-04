@@ -1,15 +1,31 @@
 package com.developmentontheedge.be5.api
 
+import com.developmentontheedge.be5.api.impl.RequestImpl
 import com.developmentontheedge.be5.api.impl.model.Base64File
 import com.developmentontheedge.be5.test.TestUtils
 import com.google.common.collect.ImmutableMap
+import org.junit.Before
 import org.junit.Test
 
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpSession
+
 import static org.junit.Assert.*
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 
 
 class RequestTest extends TestUtils
 {
+    HttpServletRequest rawRequest
+
+    @Before
+    void setUp()
+    {
+        rawRequest = mock(HttpServletRequest.class)
+        when(rawRequest.getSession()).thenReturn(mock(HttpSession.class))
+    }
+
     @Test
     void getValues()
     {
@@ -44,5 +60,14 @@ class RequestTest extends TestUtils
 
         assertEquals(text, new String(base64File.data))
         assertEquals("application/vnd.oasis.opendocument.text", new String(base64File.mimeTypes))
+    }
+
+    @Test
+    void name()
+    {
+        when(rawRequest.getParameterValues("ids[]")).thenReturn(["1", "2"] as String[])
+        def req = new RequestImpl(rawRequest, "test")
+
+        assertEquals(["1", "2"], req.getList("ids"))
     }
 }

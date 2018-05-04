@@ -3,8 +3,9 @@ package com.developmentontheedge.be5.modules.core.operations.users
 import com.developmentontheedge.be5.api.Request
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
-import com.developmentontheedge.be5.api.FrontendConstants
-
+import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants
+import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import org.junit.Test
@@ -30,11 +31,16 @@ class LogoutTest extends SqlMockOperationTest
 
         verify(session).invalidate()
 
-        assertEquals(null, UserInfoHolder.getUserInfo())
+        assertEquals(RoleType.ROLE_GUEST, UserInfoHolder.getUserInfo().getUserName())
+        assertEquals([RoleType.ROLE_GUEST], UserInfoHolder.getUserInfo().getAvailableRoles())
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()
-        assertEquals FrontendConstants.UPDATE_USER_INFO, second.getDetails()
+        def actions = (Map<String, Object>) second.getDetails()
+        def userInfoModel = (UserInfoModel) actions.get(CoreFrontendConstants.UPDATE_USER_INFO)
+
+        assertEquals RoleType.ROLE_GUEST, userInfoModel.getUserName()
+        assertEquals([RoleType.ROLE_GUEST], userInfoModel.getAvailableRoles())
     }
 
 }

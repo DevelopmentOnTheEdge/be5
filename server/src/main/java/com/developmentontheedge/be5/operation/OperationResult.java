@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-
 
 public class OperationResult
 {
@@ -129,12 +127,6 @@ public class OperationResult
         return new OperationResult(OperationStatus.REDIRECTED, url);
     }
 
-    //todo refactoring, remove dependency of JsonApiModel use finished(...)
-    public static OperationResult document(JsonApiModel table)
-    {
-        return new OperationResult(OperationStatus.DOCUMENT, null, table);
-    }
-    
     public static OperationResult error(String message, Throwable details)
     {
         return new OperationResult(OperationStatus.ERROR, message, details); 

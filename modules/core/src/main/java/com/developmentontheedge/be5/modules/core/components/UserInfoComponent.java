@@ -8,90 +8,36 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
-import java.util.Date;
-import java.util.List;
+import javax.inject.Inject;
 
 
 public class UserInfoComponent implements Component
 {
-    public static class State
-    {
-        private final boolean loggedIn;
-        private final String userName;
-
-        private final List<String> availableRoles;
-        private final List<String> currentRoles;
-        private final Date creationTime;
-        private final String defaultRoute;
-
-        public State(boolean loggedIn, String userName, List<String> availableRoles, List<String> currentRoles, Date creationTime, String defaultRoute)
-        {
-            this.loggedIn = loggedIn;
-            this.userName = userName;
-            this.availableRoles = availableRoles;
-            this.currentRoles = currentRoles;
-            this.creationTime = creationTime;
-            this.defaultRoute = defaultRoute;
-        }
-
-        public boolean isLoggedIn()
-        {
-            return loggedIn;
-        }
-
-        public String getUserName()
-        {
-            return userName;
-        }
-
-        public List<String> getAvailableRoles()
-        {
-            return availableRoles;
-        }
-
-        public List<String> getCurrentRoles()
-        {
-            return currentRoles;
-        }
-
-        public Date getCreationTime()
-        {
-            return creationTime;
-        }
-
-        public String getDefaultRoute()
-        {
-            return defaultRoute;
-        }
-    }
+    @Inject private LoginService loginService;
 
     @Override
     public void generate(Request req, Response res, Injector injector)
     {
+        loginService = injector.get(LoginService.class);
+
         switch (req.getRequestUri())
         {
             case "":
-                res.sendAsRawJson(new State(
-                        UserInfoHolder.isLoggedIn(),
-                        UserInfoHolder.getUserName(),
-                        UserInfoHolder.getAvailableRoles(),
-                        UserInfoHolder.getCurrentRoles(),
-                        UserInfoHolder.getUserInfo().getCreationTime(),
-                        ""));
+                res.sendAsRawJson(loginService.getUserInfoModel());
                 return;
             case "selectRoles":
-                selectRolesAndSendNewState(req, res, injector);
+                selectRolesAndSendNewState(req, res);
                 return;
             default:
                 res.sendUnknownActionError();
             }
     }
 
-    private void selectRolesAndSendNewState(Request req, Response res, Injector injector)
+    private void selectRolesAndSendNewState(Request req, Response res)
     {
         String roles = req.getOrEmpty("roles");
 
-        injector.get(LoginService.class).setCurrentRoles(Splitter.on(',').splitToList(roles));
+        loginService.setCurrentRoles(Splitter.on(',').splitToList(roles));
 
         res.sendAsRawJson(UserInfoHolder.getCurrentRoles());
     }

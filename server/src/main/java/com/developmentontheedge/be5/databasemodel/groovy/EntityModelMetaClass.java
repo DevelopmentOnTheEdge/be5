@@ -120,7 +120,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
     @SuppressWarnings( "unchecked" )
     public Object invokeMethod( Object object, String entityName, Object args )
     {
-        return ( ( EntityModel )object ).getByColumns( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
+        return ( ( EntityModel )object ).getBy( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
     }
 
     public static <R> R leftShift( Object object, Map<String, ? super Object> values )
@@ -130,7 +130,7 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 
     public static RecordModel call( EntityModel self, Map<String, ? super Object> values )
     {
-        return self.getByColumns( values );
+        return self.getBy( values );
     }
 
     public static RecordModel getAt( EntityModel self, String id )

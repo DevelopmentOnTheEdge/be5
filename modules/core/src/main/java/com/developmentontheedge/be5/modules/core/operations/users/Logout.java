@@ -1,21 +1,25 @@
 package com.developmentontheedge.be5.modules.core.operations.users;
 
-import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.inject.Inject;
+import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants;
+import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+
+import javax.inject.Inject;
 
 
 public class Logout extends GOperationSupport
 {
     @Inject protected UserHelper userHelper;
+    @Inject protected LoginService loginService;
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
         userHelper.logout(request);
 
-        setResult(OperationResult.finished(null, FrontendConstants.UPDATE_USER_INFO));
+        setResult(OperationResult.finished(null,
+                CoreFrontendConstants.updateUserAndOpenRoute(loginService.getUserInfoModel())));
     }
 }

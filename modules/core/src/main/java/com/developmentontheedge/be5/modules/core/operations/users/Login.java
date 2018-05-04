@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
+import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.operation.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -44,7 +44,8 @@ public class Login extends GOperationSupport
             postLogin(parameters);
 
             if(context.getOperationParams().get("withoutUpdateUserInfo") == null){
-                setResult(OperationResult.finished(null, FrontendConstants.UPDATE_USER_INFO));
+                setResult(OperationResult.finished(null,
+                        CoreFrontendConstants.updateUserAndOpenRoute(loginService.getUserInfoModel())));
             }else{
                 setResult(OperationResult.finished());
             }

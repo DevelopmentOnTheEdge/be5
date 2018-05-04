@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 
 
-public class GdslGenegatorTest extends TestUtils
+public class GdslGeneratorTest extends TestUtils
 {
     @Test
     public void test() throws IOException

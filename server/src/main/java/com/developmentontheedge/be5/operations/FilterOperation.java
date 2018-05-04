@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operations;
 
+import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -26,6 +27,7 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.document(filterHelper.filterDocument(getQuery(), parameters)));
+        setResult(OperationResult.finished(null, FrontendConstants.
+                updateParentDocument(filterHelper.filterDocument(getQuery(), parameters))));
     }
 }

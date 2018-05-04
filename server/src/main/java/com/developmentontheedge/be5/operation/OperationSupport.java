@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
@@ -123,7 +124,7 @@ public abstract class OperationSupport implements Operation
     {
         return new HashUrl(FrontendConstants.FORM_ACTION, getInfo().getEntityName(), context.getQueryName(), getInfo().getName())
                 .named(getRedirectParams())
-                .named("selectedRows", newID.toString());
+                .named(RestApiConstants.SELECTED_ROWS, newID.toString());
     }
 
     @Override
@@ -133,23 +134,20 @@ public abstract class OperationSupport implements Operation
 
         for (Map.Entry<String, Object> entry : context.getOperationParams().entrySet())
         {
-            if(entry.getValue() != null)map.put(entry.getKey(), entry.getValue().toString());
+            if(!redirectParams.containsKey(entry.getKey()) && entry.getValue() != null)
+            {
+                map.put(entry.getKey(), entry.getValue().toString());
+            }
         }
 
         for (Map.Entry<String, Object> entry : redirectParams.entrySet())
         {
-            if(entry.getValue() != null)
+            if(entry.getValue() != null && !entry.getValue().toString().isEmpty())
             {
-                if(!entry.getValue().toString().isEmpty())
-                {
-                    map.put(entry.getKey(), entry.getValue().toString());
-                }
-                else
-                {
-                    map.remove(entry.getKey());
-                }
+                map.put(entry.getKey(), entry.getValue().toString());
             }
         }
+
         return map;
     }
 
@@ -172,6 +170,12 @@ public abstract class OperationSupport implements Operation
     public void addRedirectParam( String name, Object value )
     {
         addRedirectParams( Collections.singletonMap( name, value ) );
+    }
+
+    @Override
+    public void removeRedirectParam(String name)
+    {
+        redirectParams.put(name, "");
     }
 
 //    todo addRedirectParam from DPS in invoke as be3
