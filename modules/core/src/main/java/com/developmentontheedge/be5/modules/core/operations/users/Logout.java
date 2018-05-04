@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.operation.GOperationSupport;
+import com.developmentontheedge.be5.operation.support.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 

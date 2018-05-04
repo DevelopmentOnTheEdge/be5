@@ -1,12 +1,14 @@
-package com.developmentontheedge.be5.operation;
+package com.developmentontheedge.be5.operation.support;
 
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.inject.Inject;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationExtender;
 
 
-public class OperationExtenderSupport implements OperationExtender
+public abstract class OperationExtenderSupport implements OperationExtender
 {
     @Inject public DatabaseModel database;
     @Inject public SqlService db;
