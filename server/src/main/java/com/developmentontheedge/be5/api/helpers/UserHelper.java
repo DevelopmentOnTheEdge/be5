@@ -4,11 +4,12 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.SessionConstants;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.inject.Stage;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.google.inject.Stage;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ public class UserHelper
     private final Meta meta;
     private final Stage stage;
 
+    @Inject
     public UserHelper(Meta meta, Stage stage)
     {
         this.meta = meta;

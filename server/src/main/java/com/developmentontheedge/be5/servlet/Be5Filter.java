@@ -1,26 +1,8 @@
 package com.developmentontheedge.be5.servlet;
 
-import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserHelper;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
-import com.developmentontheedge.be5.components.TemplateProcessor;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.inject.Stage;
-import com.developmentontheedge.be5.inject.impl.Be5Injector;
-import com.developmentontheedge.be5.inject.impl.YamlBinder;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 
-import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -33,12 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class Be5Filter implements Filter

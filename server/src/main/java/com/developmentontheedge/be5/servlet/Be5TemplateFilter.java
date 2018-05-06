@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
@@ -11,6 +11,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -21,11 +22,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 
 public class Be5TemplateFilter implements Filter
@@ -34,6 +31,14 @@ public class Be5TemplateFilter implements Filter
 
     private ServletContext servletContext;
     private TemplateEngine templateEngine;
+
+    private final UserHelper userHelper;
+
+    @Inject
+    public Be5TemplateFilter(UserHelper userHelper)
+    {
+        this.userHelper = userHelper;
+    }
 
     //TODO private final DaemonStarter starter;
 
@@ -63,6 +68,11 @@ public class Be5TemplateFilter implements Filter
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
+        if (UserInfoHolder.getUserInfo() == null)
+        {
+            userHelper.initGuest(new RequestImpl((HttpServletRequest)request, ((HttpServletRequest)request).getRequestURI()));
+        }
+
         HttpServletRequest req = (HttpServletRequest) request;
 
         String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestURI());

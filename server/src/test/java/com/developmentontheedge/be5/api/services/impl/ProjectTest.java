@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.inject.Stage;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.google.inject.Stage;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class ProjectTest
 {
-    private static ProjectProvider projectProvider = new ProjectProviderImpl(Stage.TEST);
+    private static ProjectProvider projectProvider = new ProjectProviderImpl(Stage.PRODUCTION);
 
     @Test
     public void testGetQuery()
