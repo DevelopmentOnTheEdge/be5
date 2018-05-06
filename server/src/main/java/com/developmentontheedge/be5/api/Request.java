@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 /**
  * Request injected to components.
@@ -30,7 +30,7 @@ public interface Request extends SessionAccess, ParametersAccess
     /**
      * For tables - may be need refactoring to use Map<String, Object> getValuesFromJson()
      */
-    Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception;
+    //Map<String, String> getValuesFromJsonAsStrings(String parameterName) throws Be5Exception;
 
 //    /**
 //     * For operation with POJO

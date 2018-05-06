@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
@@ -11,12 +10,11 @@ import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
 
 public class MenuTest extends Be5ProjectTest
 {
@@ -24,7 +22,8 @@ public class MenuTest extends Be5ProjectTest
     private Component component;
 
     @Before
-    public void init(){
+    public void init()
+    {
         initUserWithRoles(RoleType.ROLE_GUEST);
         component = (Component)injector.getComponent("menu");
     }
@@ -50,52 +49,6 @@ public class MenuTest extends Be5ProjectTest
     }
 
     @Test
-    public void testDefaultAction()
-    {
-        Response response = mock(Response.class);
-
-        component.generate(getMockRequest("defaultAction"), response, injector);
-
-        verify(response).sendAsRawJson(eq(new Action("call", "table/testtable/All records")));
-    }
-
-    @Test
-    public void testDefaultActionAdmin()
-    {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-
-        Response response = mock(Response.class);
-        component.generate(getMockRequest("defaultAction"), response, injector);
-        verify(response).sendAsRawJson(eq(new Action("call", "table/testtableAdmin/All records")));
-
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Test
-    public void testDefaultActionUser()
-    {
-        initUserWithRoles("User");
-
-        Response response = mock(Response.class);
-        component.generate(getMockRequest("defaultAction"), response, injector);
-        verify(response).sendAsRawJson(eq(new Action("call", "table/testtUser/testtUser")));
-
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Test
-    public void testDefaultActionTestUser2()
-    {
-        initUserWithRoles("TestUser2");
-
-        Response response = mock(Response.class);
-        component.generate(getMockRequest("defaultAction"), response, injector);
-        verify(response).sendAsRawJson(eq(new Action("call", "table/atest/Test1")));
-
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-    @Test
     public void testUnknownAction()
     {
         Response response = mock(Response.class);
@@ -104,34 +57,5 @@ public class MenuTest extends Be5ProjectTest
 
         verify(response).sendUnknownActionError();
     }
-
-    @Test
-    public void testGenerateSimpleMenu()
-    {
-        initUserWithRoles("User");
-
-        Menu menu = (Menu)component;
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
-
-        assertEquals("testtable", menuResponse.root.get(1).getTitle());
-        assertEquals(new Action("call", "table/testtable/All records"), menuResponse.root.get(1).getAction());
-        assertNull(menuResponse.root.get(1).getChildren());
-    }
-
-    @Test
-    public void testGenerateSimpleMenuAdmin()
-    {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-
-        Menu menu = (Menu)component;
-        Menu.MenuResponse menuResponse = menu.generateSimpleMenu(injector, EntityType.TABLE);
-        assertEquals("Добавить", menuResponse.root.get(1).getOperations().get(0).title);
-        assertEquals(new Action("call", "form/dateTime/All records/Insert"),
-                menuResponse.root.get(1).getOperations().get(0).action);
-
-        initUserWithRoles(RoleType.ROLE_GUEST);
-    }
-
-
 
 }

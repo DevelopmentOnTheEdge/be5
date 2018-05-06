@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.inject.Stage;
@@ -134,17 +134,6 @@ public class MainServletTest extends Be5ProjectTest
         verify(req).setAttribute("testRequestPreprocessor", Stage.TEST.toString());
 
         verify(res).sendError(eq(Be5Exception.unknownComponent("foo")));
-    }
-
-    @Test
-    public void testSimplify()
-    {
-        Map<String, String[]> in = new HashMap<>();
-        in.put("testP", new String[]{"p1", "p2"});
-        in.put("testZ", new String[]{"z1"});
-
-        Map<String, Object> out = new MainServlet().arrayToList(in);
-        assertEquals("z1", out.get("testZ"));
     }
 
 }

@@ -34,7 +34,7 @@ public class DatabaseModelMetaClass extends DelegatingMetaClass
         }
         catch( MissingMethodException e )
         {
-            return ( ( DatabaseModel )object ).getEntity( methodName ).getByColumns( ( Map<String, ? super Object> )( arguments )[0] );
+            return ( ( DatabaseModel )object ).getEntity( methodName ).getBy( ( Map<String, ? super Object> )( arguments )[0] );
         }
     }
 }

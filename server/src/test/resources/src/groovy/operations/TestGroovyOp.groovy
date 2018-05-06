@@ -3,7 +3,7 @@ package src.groovy.operations
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
 import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.operation.GOperationSupport
+import com.developmentontheedge.be5.operation.support.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 
 import java.sql.Date

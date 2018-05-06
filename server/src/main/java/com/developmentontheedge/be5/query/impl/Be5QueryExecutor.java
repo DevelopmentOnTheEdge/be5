@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -124,7 +124,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
             EntityModel entityModel = database.get().getEntity(tagName);
-            RecordModel row = entityModel.getByColumns(conditions);
+            RecordModel row = entityModel.getBy(conditions);
 
             String value = row.getValue(name).toString();
 

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.exceptions;
+package com.developmentontheedge.be5.exceptions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api;
 import java.util.List;
 import java.util.Map;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 /**
  * <p>An interface providing access to key-value style parameters (e.g. from HTTP request or WebSocket request).
@@ -18,19 +18,15 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 public interface ParametersAccess
 {
     /**
-     * Returns a request parameter or null if there's no such parameter.
-     * 
-     * @see ParametersAccess#getParameters()
+     * Returns an unchangeable map of request parameters.
      */
-    default String get(String parameter)
-    {
-        return (String)getParameters().get( parameter );
-    }
+    Map<String, String[]> getParameters();
 
-    default List<String> getList(String parameter)
-    {
-        return (List<String>)getParameters().get( parameter );
-    }
+    String get(String parameter);
+
+    List<String> getList(String parameter);
+
+    String[] getParameterValues(String name);
     
     default int getInt(String parameter) throws Be5Exception
     {
@@ -115,9 +111,4 @@ public interface ParametersAccess
             throw Be5Exception.requestParameterIsAbsent(parameter);
         return value;
     }
-
-    /**
-     * Returns an unchangeable map of request parameters.
-     */
-    Map<String, Object> getParameters();
 }
