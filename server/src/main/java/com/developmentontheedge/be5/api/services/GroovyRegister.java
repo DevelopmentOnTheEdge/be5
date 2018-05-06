@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
 import com.developmentontheedge.be5.util.HtmlUtils;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;

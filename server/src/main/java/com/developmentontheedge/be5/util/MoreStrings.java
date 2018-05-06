@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 
 /**

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.sql;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.query.impl.BeTagParser;
 import com.developmentontheedge.be5.query.impl.DynamicPropertyMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;

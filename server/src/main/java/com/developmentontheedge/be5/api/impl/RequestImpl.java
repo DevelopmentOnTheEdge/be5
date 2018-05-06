@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation;
+package com.developmentontheedge.be5.operation.support;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.RestApiConstants;
@@ -14,6 +14,11 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.operation.Operation;
+import com.developmentontheedge.be5.operation.OperationContext;
+import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 

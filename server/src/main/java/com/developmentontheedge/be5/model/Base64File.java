@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.impl.model;
+package com.developmentontheedge.be5.model;
 
 
 import java.util.Arrays;

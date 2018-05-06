@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.inject.Stage;
