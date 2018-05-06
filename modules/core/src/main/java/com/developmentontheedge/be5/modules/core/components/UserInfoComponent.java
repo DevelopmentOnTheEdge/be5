@@ -3,23 +3,23 @@ package com.developmentontheedge.be5.modules.core.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
-import javax.inject.Inject;
-
 
 public class UserInfoComponent implements Component
 {
-    @Inject private LoginService loginService;
+    private final LoginService loginService;
+
+    public UserInfoComponent(LoginService loginService)
+    {
+        this.loginService = loginService;
+    }
 
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
-        loginService = injector.get(LoginService.class);
-
         switch (req.getRequestUri())
         {
             case "":

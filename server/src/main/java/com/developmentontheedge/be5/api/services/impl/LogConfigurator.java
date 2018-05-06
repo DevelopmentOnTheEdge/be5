@@ -6,11 +6,10 @@ import java.util.Arrays;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import com.developmentontheedge.be5.inject.Configurable;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 
-public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPath>
+public class LogConfigurator// implements Configurable<LogConfigurator.JulConfigPath>
 {
     private Logger log = Logger.getLogger(LogConfigurator.class.getName());
 
@@ -20,7 +19,7 @@ public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPa
 
     private JulConfigPath configPath;
 
-    @Override
+    //@Override
     public void configure(JulConfigPath configPath)
     {
         this.configPath = configPath;

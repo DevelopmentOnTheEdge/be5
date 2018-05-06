@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.api;
 
 
-import com.developmentontheedge.be5.inject.Injector;
-
 /**
  * <p>A component representing the websocket service endpoint.</p>
  *
@@ -11,7 +9,6 @@ import com.developmentontheedge.be5.inject.Injector;
  * will use the <code>vncproxy</code> component.</p>
  * 
  * @see WebSocketContext
- * @see Injector
  * @author lan
  */
 public interface WebSocketComponent

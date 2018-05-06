@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel
 
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.Be5ProjectTest

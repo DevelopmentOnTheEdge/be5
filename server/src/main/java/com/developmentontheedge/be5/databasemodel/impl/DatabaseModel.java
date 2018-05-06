@@ -22,6 +22,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
 /**
@@ -51,7 +52,7 @@ final public class DatabaseModel implements EntityAccess
     private final Meta meta;
     private final OperationExecutor operationExecutor;
 
-
+    @Inject
     public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
                          Meta meta, OperationExecutor operationExecutor)
     {

@@ -1,7 +1,7 @@
 package src.groovy.operations.testtableAdmin
 
 import com.developmentontheedge.be5.api.helpers.FilterHelper
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.operation.support.GOperationSupport
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.TransactionalOperation

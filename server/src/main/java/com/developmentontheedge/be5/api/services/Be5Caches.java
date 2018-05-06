@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,6 +15,7 @@ public class Be5Caches
 
     private Be5MainSettings be5MainSettings;
 
+    @Inject
     public Be5Caches(Be5MainSettings be5MainSettings, ProjectProvider projectProvider)
     {
         this.be5MainSettings = be5MainSettings;

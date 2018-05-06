@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.inject.impl.testServices;
 
-import com.developmentontheedge.be5.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.inject.services.TestService;
 
 public class BService

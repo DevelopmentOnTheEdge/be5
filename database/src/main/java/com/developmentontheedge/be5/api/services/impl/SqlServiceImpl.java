@@ -14,6 +14,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class SqlServiceImpl implements SqlService
     private DatabaseService databaseService;
     private ConnectionService connectionService;
 
+    @Inject
     public SqlServiceImpl(ConnectionService connectionService, DatabaseService databaseService)
     {
         this.databaseService = databaseService;

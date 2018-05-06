@@ -5,14 +5,22 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.MenuHelper;
 
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 
+import javax.inject.Inject;
 import java.util.List;
 
 
 public class Menu implements Component
 {
+    private final MenuHelper menuHelper;
+
+    @Inject
+    public Menu(MenuHelper menuHelper)
+    {
+        this.menuHelper = menuHelper;
+    }
+
     /**
      * Generated JSON sample:
      * <pre>
@@ -27,10 +35,8 @@ public class Menu implements Component
      * </pre>
      */
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
-        MenuHelper menuHelper = injector.get(MenuHelper.class);
-
         switch (req.getRequestUri())
         {
             case "":

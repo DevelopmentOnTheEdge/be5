@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.helpers.OperationHelper
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.model.QRec
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.Be5ProjectDBTest

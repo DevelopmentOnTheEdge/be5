@@ -1,7 +1,7 @@
 package system
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.operation.support.OperationSupport
 
 

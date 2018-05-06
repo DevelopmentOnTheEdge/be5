@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.test;
 
+import com.developmentontheedge.be5.ServerModule;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -9,11 +10,7 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.inject.impl.Be5Injector;
-import com.developmentontheedge.be5.inject.Binder;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.inject.Stage;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.model.QRec;
@@ -28,6 +25,10 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Stage;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -73,10 +74,11 @@ public abstract class TestUtils
 
     static final String profileForIntegrationTests = "profileForIntegrationTests";
 
-    static Injector initInjector(Binder binder)
+    static Injector initInjector(Module... modules)
     {
-        Injector injector = new Be5Injector(Stage.TEST, binder);
-        Project project = injector.get(ProjectProvider.class).getProject();
+        //Injector injector = new Be5Injector(Stage.TEST, binder);
+        Injector injector = Guice.createInjector(Stage.PRODUCTION, modules);
+        Project project = injector.getInstance(ProjectProvider.class).getProject();
         initProfile(project);
 
         return injector;

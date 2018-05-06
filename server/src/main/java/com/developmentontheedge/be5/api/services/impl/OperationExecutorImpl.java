@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.validation.Validator;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -17,8 +16,10 @@ import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Utils;
+import com.google.inject.Injector;
 
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,6 +44,7 @@ public class OperationExecutorImpl implements OperationExecutor
     private final Meta meta;
     private final GroovyRegister groovyRegister;
 
+    @Inject
     public OperationExecutorImpl(Injector injector, ConnectionService connectionService, Validator validator,
                                  GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta,
                                  Meta meta, GroovyRegister groovyRegister)
@@ -221,7 +223,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
             }
 
-            injector.injectAnnotatedFields(operationExtender);
+            injector.injectMembers(operationExtender);
 
             operationExtenders.add(operationExtender);
         }
@@ -327,7 +329,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
 
         operation.initialize(operationInfo, operationContext, OperationResult.create());
-        injector.injectAnnotatedFields(operation);
+        injector.injectMembers(operation);
 
         return operation;
     }

@@ -1,14 +1,12 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
+import javax.inject.Inject;
+
 
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,14 +15,7 @@ import static org.mockito.Mockito.mock;
 
 public class DownloadComponentTest extends Be5ProjectTest
 {
-    @Inject private Injector injector;
-    private Component component;
-
-    @Before
-    public void init()
-    {
-        component = (Component)injector.getComponent("download");
-    }
+    @Inject private DownloadComponent component;
 
     @Test
     @Ignore
@@ -41,7 +32,7 @@ public class DownloadComponentTest extends Be5ProjectTest
             .put("ID", "7326")
             .build());
 
-        component.generate(req, response, injector);
+        component.generate(req, response);
     }
 
 

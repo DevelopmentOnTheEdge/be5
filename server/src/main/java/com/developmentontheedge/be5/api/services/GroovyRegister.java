@@ -9,6 +9,7 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.MetaClass;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +25,7 @@ public class GroovyRegister
 
     private Provider<GroovyOperationLoader> groovyOperationLoaderProvider;
 
+    @Inject
     public GroovyRegister(ProjectProvider projectProvider, Provider<GroovyOperationLoader> groovyOperationLoaderProvider, Be5Caches be5Caches)
     {
         this.groovyOperationLoaderProvider = groovyOperationLoaderProvider;

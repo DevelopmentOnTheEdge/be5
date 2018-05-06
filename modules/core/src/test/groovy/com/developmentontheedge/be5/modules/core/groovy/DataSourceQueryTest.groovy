@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.groovy
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Test
 

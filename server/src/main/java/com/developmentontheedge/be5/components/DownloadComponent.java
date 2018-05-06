@@ -6,12 +6,12 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.inject.Injector;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.UrlEscapers;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,8 +24,16 @@ import java.io.InputStream;
  */
 public class DownloadComponent implements Component
 {
+    private final DatabaseModel database;
+
+    @Inject
+    public DownloadComponent(DatabaseModel database)
+    {
+        this.database = database;
+    }
+
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
         String entity         = req.getNonEmpty("_t_");
         String ID             = req.getNonEmpty("ID");
@@ -37,7 +45,7 @@ public class DownloadComponent implements Component
         String charsetColumn  = req.get("_charsetColumn_");
         boolean download      = "yes".equals(req.get("_download_"));
 
-        RecordModel record = injector.get(DatabaseModel.class).getEntity(entity).get(ID);
+        RecordModel record = database.getEntity(entity).get(ID);
 
 
         String filename    = record.getValueAsString(filenameColumn);

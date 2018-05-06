@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.helpers.impl;
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Test;
 

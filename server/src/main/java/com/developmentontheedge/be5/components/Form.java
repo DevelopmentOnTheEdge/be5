@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
@@ -18,6 +17,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
@@ -29,12 +29,19 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class Form implements Component
 {
-    @Override
-    public void generate(Request req, Response res, Injector injector)
-    {
-        OperationExecutor operationExecutor = injector.get(OperationExecutor.class);
-        DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+    private final OperationExecutor operationExecutor;
+    private final DocumentGenerator documentGenerator;
 
+    @Inject
+    public Form(OperationExecutor operationExecutor, DocumentGenerator documentGenerator)
+    {
+        this.operationExecutor = operationExecutor;
+        this.documentGenerator = documentGenerator;
+    }
+
+    @Override
+    public void generate(Request req, Response res)
+    {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);

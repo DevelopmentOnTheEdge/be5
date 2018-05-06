@@ -5,13 +5,13 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
+import javax.inject.Inject;
 import java.util.Collections;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
@@ -20,12 +20,20 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 public class StaticPageComponent implements Component
 {
+    private final ProjectProvider projectProvider;
+
+    @Inject
+    public StaticPageComponent(ProjectProvider projectProvider)
+    {
+        this.projectProvider = projectProvider;
+    }
+
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
         String language = UserInfoHolder.getLanguage();
         String page = req.getRequestUri();
-        String staticPageContent = injector.get(ProjectProvider.class).getProject().getStaticPageContent(language, page);
+        String staticPageContent = projectProvider.getProject().getStaticPageContent(language, page);
 
         if (staticPageContent == null)
         {

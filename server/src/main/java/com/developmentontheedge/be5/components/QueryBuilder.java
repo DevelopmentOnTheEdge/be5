@@ -13,7 +13,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -28,6 +27,7 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstUpdate;
 import com.developmentontheedge.sql.model.SqlQuery;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,8 +45,22 @@ public class QueryBuilder implements Component
     private List<ResourceData> resourceDataList = new ArrayList<>();
     private List<ErrorModel> errorModelList = new ArrayList<>();
 
+    private final SqlService db;
+    private final DocumentGenerator documentGenerator;
+    private final ProjectProvider projectProvider;
+    private final QueryService queryService;
+
+    @Inject
+    public QueryBuilder(SqlService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider, QueryService queryService)
+    {
+        this.db = db;
+        this.documentGenerator = documentGenerator;
+        this.projectProvider = projectProvider;
+        this.queryService = queryService;
+    }
+
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
         if(UserInfoHolder.isSystemDeveloper())
         {
@@ -91,7 +105,7 @@ public class QueryBuilder implements Component
 
                 if(type == SqlType.SELECT)
                 {
-                    select(sql, req, injector);
+                    select(sql, req);
                 }
                 else
                 {
@@ -100,13 +114,13 @@ public class QueryBuilder implements Component
                         switch (type)
                         {
                             case INSERT:
-                                insert(sql, injector);
+                                insert(sql);
                                 break;
                             case UPDATE:
-                                update(sql, injector);
+                                update(sql);
                                 break;
                             case DELETE:
-                                update(sql, injector);
+                                update(sql);
                                 break;
                             default:
                                 res.sendUnknownActionError();
@@ -138,9 +152,9 @@ public class QueryBuilder implements Component
         }
     }
 
-    private void insert(String sql, Injector injector)
+    private void insert(String sql)
     {
-        Object id = injector.get(SqlService.class).insert(sql);
+        Object id = db.insert(sql);
 
         resourceDataList.add(new ResourceData(
                 "result",
@@ -153,9 +167,9 @@ public class QueryBuilder implements Component
         ));
     }
 
-    private void update(String sql, Injector injector)
+    private void update(String sql)
     {
-        Object id = injector.get(SqlService.class).update(sql);
+        Object id = db.update(sql);
 
         resourceDataList.add(new ResourceData(
                 "result",
@@ -168,15 +182,13 @@ public class QueryBuilder implements Component
         ));
     }
 
-    private void select(String sql, Request req, Injector injector)
+    private void select(String sql, Request req)
     {
-        DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
-
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
 
         Map<String, Object> parameters = req.getValuesFromJson(RestApiConstants.VALUES);
 
-        Entity entity = new Entity( entityName, injector.get(ProjectProvider.class).getProject().getApplication(), EntityType.TABLE );
+        Entity entity = new Entity( entityName, projectProvider.getProject().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );
 
         Query query = new Query( userQBuilderQueryName, entity );
@@ -195,7 +207,7 @@ public class QueryBuilder implements Component
                     FrontendConstants.STATIC_ACTION,
                     new StaticPagePresentation(
                             "Final sql",
-                            injector.get(QueryService.class).build(query, parameters).getFinalSql()
+                            queryService.build(query, parameters).getFinalSql()
                     ),
                     null
             ));

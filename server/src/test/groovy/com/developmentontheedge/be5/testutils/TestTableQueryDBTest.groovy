@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.testutils
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
 import com.developmentontheedge.be5.api.services.SqlService
-import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.inject.Injector
+
+import javax.inject.Inject
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import org.junit.Before
 
@@ -11,7 +11,6 @@ abstract class TestTableQueryDBTest extends Be5ProjectDBTest
 {
     @Inject public SqlService db
     @Inject public ProjectProvider projectProvider
-    @Inject public Injector injector
 
     @Before
     void testTableQueryDBTestBefore()

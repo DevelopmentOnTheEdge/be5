@@ -1,12 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,14 +15,12 @@ import static org.mockito.Mockito.verify;
 
 public class MenuTest extends Be5ProjectTest
 {
-    @Inject private Injector injector;
-    private Component component;
+    @Inject private Menu component;
 
     @Before
     public void init()
     {
         initUserWithRoles(RoleType.ROLE_GUEST);
-        component = (Component)injector.getComponent("menu");
     }
 
     @Test
@@ -33,7 +28,7 @@ public class MenuTest extends Be5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, injector);
+        component.generate(getMockRequest(""), response);
 
         verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
     }
@@ -43,7 +38,7 @@ public class MenuTest extends Be5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("withIds"), response, injector);
+        component.generate(getMockRequest("withIds"), response);
 
         verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
     }
@@ -53,7 +48,7 @@ public class MenuTest extends Be5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("foo"), response, injector);
+        component.generate(getMockRequest("foo"), response);
 
         verify(response).sendUnknownActionError();
     }

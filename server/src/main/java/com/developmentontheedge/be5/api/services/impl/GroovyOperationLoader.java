@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class GroovyOperationLoader
 
     private Map<String, Operation> groovyOperationsMap;
 
+    @Inject
     public GroovyOperationLoader(ProjectProvider projectProvider, Meta meta, GroovyRegister groovyRegister)
     {
         this.groovyRegister = groovyRegister;

@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class QueryServiceImpl implements QueryService
     private final Meta meta;
     private final SqlService db;
 
+    @Inject
     public QueryServiceImpl(DatabaseService databaseService, ConnectionService connectionService, Provider<DatabaseModel> database,
                             Meta meta, SqlService db)
     {

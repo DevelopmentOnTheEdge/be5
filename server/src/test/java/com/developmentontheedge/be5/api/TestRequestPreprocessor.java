@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.inject.Stage;
 
+import com.google.inject.Stage;
 
 public class TestRequestPreprocessor implements RequestPreprocessor
 {

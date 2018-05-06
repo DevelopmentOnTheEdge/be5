@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.inject.Configurable;
 import com.developmentontheedge.be5.api.services.Be5MainSettings;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Be5MainSettingsImpl implements Be5MainSettings, Configurable<Be5MainSettingsImpl.Config>
+public class Be5MainSettingsImpl implements Be5MainSettings//, Configurable<Be5MainSettingsImpl.Config>
 {
     private Config config = new Config();
 
@@ -15,7 +14,7 @@ public class Be5MainSettingsImpl implements Be5MainSettings, Configurable<Be5Mai
         Map<String, Integer> cacheSizes = new HashMap<>();
     }
 
-    @Override
+    //@Override
     public void configure(Config config) {
         this.config = config;
     }

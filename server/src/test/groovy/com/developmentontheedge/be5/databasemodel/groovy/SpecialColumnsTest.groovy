@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.databasemodel.groovy
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.Be5ProjectDBTest
 import com.developmentontheedge.be5.api.helpers.UserHelper

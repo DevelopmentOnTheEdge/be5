@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.servlet;
 
-import com.developmentontheedge.be5.api.ServerModule;
+import com.developmentontheedge.be5.ServerModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;

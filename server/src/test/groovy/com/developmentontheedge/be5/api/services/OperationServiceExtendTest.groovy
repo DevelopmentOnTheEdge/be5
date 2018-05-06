@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
 import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import groovy.transform.TypeChecked
 import org.junit.Test

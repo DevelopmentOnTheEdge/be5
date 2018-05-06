@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
-import com.developmentontheedge.be5.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.After;
 import org.junit.Before;

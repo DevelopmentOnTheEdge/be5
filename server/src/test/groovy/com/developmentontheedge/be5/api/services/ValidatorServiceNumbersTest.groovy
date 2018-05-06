@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.exceptions.Be5Exception
 import com.developmentontheedge.be5.api.validation.Validator
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
