@@ -88,7 +88,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
                   "WHERE recordID   IN " + Utils.inClause(context.getRecords().length) +
                   "  AND categoryID IN " + Utils.inClause(categories.size()),
                   ObjectArrays.concat(
-                        Utils.addPrefix(context.getRecords(), entity + "."),
+                        Utils.addPrefix(entity + ".", context.getRecords()),
                         categories.toArray(),
                         Object.class));
 
