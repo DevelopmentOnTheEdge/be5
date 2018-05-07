@@ -86,7 +86,17 @@ public class RequestImpl implements Request
     @Override
     public String[] getParameterValues(String name)
     {
-        return rawRequest.getParameterValues(name + "[]");
+        String[] values = rawRequest.getParameterValues(name + "[]");
+        if(values == null)
+        {
+            String value = rawRequest.getParameter(name);
+            if(value != null){
+                return new String[]{value};
+            }else{
+                return new String[]{};
+            }
+        }
+        return values;
     }
 
 //
