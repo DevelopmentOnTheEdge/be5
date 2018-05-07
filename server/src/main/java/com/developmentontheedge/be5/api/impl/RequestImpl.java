@@ -28,16 +28,14 @@ public class RequestImpl implements Request
     private final HttpServletRequest rawRequest;
     private final String requestUri;
     private final String remoteAddr;
-    private final String sessionId;
     
     public RequestImpl(HttpServletRequest rawRequest, String requestUri)
     {
         this.rawRequest = rawRequest;
         this.requestUri = requestUri;
         this.remoteAddr = getClientIpAddr(rawRequest);
-        this.sessionId = rawRequest.getSession().getId();
     }
-    
+
     @Override
     public Object getAttribute(String name)
     {
@@ -57,6 +55,20 @@ public class RequestImpl implements Request
     public Session getSession()
     {
         return new SessionImpl(rawRequest.getSession());
+    }
+
+    @Override
+    public Session getSession(boolean create)
+    {
+        HttpSession rawSession = rawRequest.getSession(create);
+        if(rawSession == null)return null;
+        return new SessionImpl(rawSession);
+    }
+
+    @Override
+    public String getSessionId()
+    {
+        return getSession().getSessionId();
     }
 
     @Override
@@ -155,12 +167,6 @@ public class RequestImpl implements Request
     public String getRemoteAddr()
     {
         return remoteAddr;
-    }
-
-    @Override
-    public String getSessionId()
-    {
-        return sessionId;
     }
 
     @Override
