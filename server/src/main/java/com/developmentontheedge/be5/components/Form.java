@@ -35,6 +35,9 @@ public class Form implements Component
         OperationExecutor operationExecutor = injector.get(OperationExecutor.class);
         DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
 
+        //todo initGuest if dev mode and session req.getSession(false) == null
+        req.getSession();//init session, after dev reload usually. by default session created on load templates
+
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
