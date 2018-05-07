@@ -20,7 +20,7 @@ class QueriesTest extends Be5ProjectTest
     @Test
     void getEntities()
     {
-        Query query = meta.getQueryIgnoringRoles("_system_", "Entities")
+        Query query = meta.getQuery("_system_", "Entities")
 
         def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 
@@ -33,7 +33,7 @@ class QueriesTest extends Be5ProjectTest
     void getSessionVariables()
     {
         setSession("test", "value")
-        Query query = meta.getQueryIgnoringRoles("_system_", "Session variables")
+        Query query = meta.getQuery("_system_", "Session variables")
 
         def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 

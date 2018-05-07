@@ -550,7 +550,7 @@ public class OperationHelper
 
     public List<DynamicPropertySet> readAsRecordsFromQuery(String tableName, String queryName, Map<String, Object> parameters)
     {
-        return readAsRecordsFromQuery(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
+        return readAsRecordsFromQuery(meta.getQuery(tableName, queryName), parameters);
     }
 
     public List<DynamicPropertySet> readAsRecordsFromQuery(Query query, Map<String, Object> parameters)
@@ -565,7 +565,7 @@ public class OperationHelper
 
     public QRec readOneRecord(String tableName, String queryName, Map<String, Object> parameters)
     {
-        return readOneRecord(meta.getQueryIgnoringRoles(tableName, queryName), parameters);
+        return readOneRecord(meta.getQuery(tableName, queryName), parameters);
     }
 
     public QRec readOneRecord(Query query, Map<String, Object> parameters)

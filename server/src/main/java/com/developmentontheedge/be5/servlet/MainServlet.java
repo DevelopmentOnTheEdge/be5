@@ -183,7 +183,7 @@ public class MainServlet implements Filter
 
     void runComponent(String componentId, Request req, Response res)
     {
-        if (UserInfoHolder.getUserInfo() == null)
+        if (req.getSession(false) != null && UserInfoHolder.getUserInfo() == null)
         {
             injector.get(UserHelper.class).initGuest(req);
         }

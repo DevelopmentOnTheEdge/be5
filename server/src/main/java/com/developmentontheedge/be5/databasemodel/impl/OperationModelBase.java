@@ -125,7 +125,7 @@ public class OperationModelBase implements OperationModel
     private OperationInfo getOperationInfo()
     {
         com.developmentontheedge.be5.metadata.model.Operation operationModel =
-                meta.getOperationIgnoringRoles(entityName, operationName);
+                meta.getOperation(entityName, operationName);
 
         Objects.requireNonNull(operationModel, "Operation '" + entityName + "." + operationName + "' not found.");
 
