@@ -16,7 +16,7 @@ public interface OperationModel
 
     OperationModel setOperationName(String operationName);
 
-    OperationModel setRecords(String... records);
+    OperationModel setRecords(Object[] records);
 
     OperationModel setPresetValues(Map<String, ?> presetValues);
 
@@ -30,7 +30,7 @@ public interface OperationModel
 
     Operation execute(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
 
-    default Operation executeIfNotEmptyRecords(String... records)
+    default Operation executeIfNotEmptyRecords(Object[] records)
     {
         if(records.length > 0)
         {
