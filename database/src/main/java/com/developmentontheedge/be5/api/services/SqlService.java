@@ -3,10 +3,12 @@ package com.developmentontheedge.be5.api.services;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.api.sql.parsers.ScalarParser;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.sql.Date;
 import java.util.List;
+
 
 public interface SqlService
 {
@@ -67,47 +69,21 @@ public interface SqlService
         return getScalar(sql, params);
     }
 
-    default List<String> selectListString(String sql, Object... params)
+    default <T> List<T> selectScalarList(String sql, Object... params)
     {
-        return selectList(sql, rs-> rs.getString(1), params);
+        return selectList(sql, new ScalarParser<T>(), params);
     }
 
-    default String[] selectArrayString(String sql, Object... params)
+    default Long[] selectLongArray(String sql, Object... params)
     {
-        List<String> strings = selectList(sql, rs -> rs.getString(1), params);
-
-        String[] stockArr = new String[strings.size()];
-        stockArr = strings.toArray(stockArr);
-        return stockArr;
+        List<Long> list = selectList(sql, new ScalarParser<Long>(), params);
+        return list.toArray(new Long[list.size()]);
     }
 
-    default Long[] selectArrayLong(String sql, Object... params)
+    default String[] selectStringArray(String sql, Object... params)
     {
-        List<Long> longs = selectList(sql, rs -> rs.getLong(1), params);
-
-        Long[] stockArr = new Long[longs.size()];
-        stockArr = longs.toArray(stockArr);
-        return stockArr;
-    }
-
-    default List<Integer> selectListInteger(String sql, Object... params)
-    {
-        return selectList(sql, rs-> rs.getInt(1), params);
-    }
-
-    default List<Long> selectListLong(String sql, Object... params)
-    {
-        return selectList(sql, rs-> rs.getLong(1), params);
-    }
-
-    default List<Double> selectListDouble(String sql, Object... params)
-    {
-        return selectList(sql, rs-> rs.getDouble(1), params);
-    }
-
-    default List<Date> selectListDate(String sql, Object... params)
-    {
-        return selectList(sql, rs-> rs.getDate(1), params);
+        List<String> list = selectList(sql, new ScalarParser<String>(), params);
+        return list.toArray(new String[list.size()]);
     }
 
 }

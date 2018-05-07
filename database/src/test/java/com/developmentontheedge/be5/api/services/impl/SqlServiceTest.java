@@ -127,7 +127,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     @Test
     public void testSelectArrayLong()
     {
-        Long[] persons = db.selectArrayLong("SELECT id FROM persons");
+        Long[] persons = db.selectLongArray("SELECT id FROM persons");
 
         assertTrue(persons.length >= 2);
         assertEquals(Long.class, persons[0].getClass());
@@ -136,10 +136,28 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     @Test
     public void testSelectArrayString()
     {
-        String[] persons = db.selectArrayString("SELECT name FROM persons");
+        String[] persons = db.selectStringArray("SELECT name FROM persons");
 
         assertTrue(persons.length >= 2);
         assertEquals(String.class, persons[0].getClass());
+    }
+
+    @Test
+    public void selectScalarList_Long()
+    {
+        List<Long> persons = db.selectScalarList("SELECT id FROM persons");
+
+        assertTrue(persons.size() >= 2);
+        assertEquals(Long.class, persons.get(0).getClass());
+    }
+
+    @Test
+    public void selectScalarList_String()
+    {
+        List<String> persons = db.selectScalarList("SELECT name FROM persons");
+
+        assertTrue(persons.size() >= 2);
+        assertEquals(String.class, persons.get(0).getClass());
     }
 
     @Test
