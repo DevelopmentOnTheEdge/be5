@@ -1,7 +1,7 @@
 package src.groovy.extenders
 
 import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationExtenderSupport
+import com.developmentontheedge.be5.operation.support.OperationExtenderSupport
 
 class TestGroovyExtender extends OperationExtenderSupport
 {

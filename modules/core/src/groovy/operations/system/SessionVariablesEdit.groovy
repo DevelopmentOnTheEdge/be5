@@ -1,6 +1,6 @@
 package system
 
-import com.developmentontheedge.be5.operation.GOperationSupport
+import com.developmentontheedge.be5.operation.support.GOperationSupport
 import com.developmentontheedge.be5.operation.OperationResult
 
 

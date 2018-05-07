@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -8,7 +7,6 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import groovy.lang.GroovyObjectSupport;
 import org.codehaus.groovy.runtime.GStringImpl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.logging.Logger;
 

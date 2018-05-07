@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.servlet;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -23,7 +22,7 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.RequestPreprocessor;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.impl.ResponseImpl;
@@ -184,7 +183,7 @@ public class MainServlet implements Filter
 
     void runComponent(String componentId, Request req, Response res)
     {
-        if (UserInfoHolder.getUserInfo() == null)
+        if (req.getSession(false) != null && UserInfoHolder.getUserInfo() == null)
         {
             injector.get(UserHelper.class).initGuest(req);
         }

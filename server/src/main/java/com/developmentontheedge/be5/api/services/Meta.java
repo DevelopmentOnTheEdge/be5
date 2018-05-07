@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 
 public interface Meta
@@ -46,13 +47,9 @@ public interface Meta
      * Throws an exception if there's no operation with this name.
      * Throws an exception if there's no query with this name or this query hasn't this operation.
      */
-    Operation getOperation(String entityName, String queryName, String name, List<String> roles);
+    Operation getOperation(String entityName, String queryName, String name);
 
-    Operation getOperation(String entityName, String name, List<String> roles);
-
-    Operation getOperationIgnoringRoles(String entityName, String name);
-
-    Operation getOperationIgnoringRoles(Entity entity, String name);
+    Operation getOperation(String entityName, String name);
 
     /**
      * Returns a list of all queries of the entity that a user with the given roles can run.
@@ -65,29 +62,20 @@ public interface Meta
      */
     boolean isAvailableFor(EntityItem entityItem, List<String> roles);
 
-    /**
-     * Returns a query.
-     * Throws an exception if there's no such query or it is not awailable due to lack of rights.
-     */
-    Query getQuery(String entity, String name, List<String> roles);
+    String getQueryCode(String entityName, String queryName);
 
-    String getQueryCode(String entityName, String queryName, List<String> availableRoles);
-
-    String getQueryCode(Query query, List<String> availableRoles);
+    String getQueryCode(Query query);
 
     /**
      * Returns a query.
      * Throws an exception if there's no such query.
      */
-    Query getQueryIgnoringRoles(String entity, String name);
+    Query getQuery(String entityName, String queryName);
 
     List<String> getQueryNames(Entity entity);
 
     Optional<Entity> findEntity(String entityName);
 
-    /**
-     * Tries to find a query ignoring roles.
-     */
     Optional<Query> findQuery(String entityName, String queryName);
     
     Optional<Query> findQuery(QueryLink link);
@@ -147,4 +135,6 @@ public interface Meta
     Set<String> getProjectRoles();
 
     Query createQueryFromSql(String sql);
+
+    boolean hasAccess(RoleSet roles, List<String> availableRoles);
 }

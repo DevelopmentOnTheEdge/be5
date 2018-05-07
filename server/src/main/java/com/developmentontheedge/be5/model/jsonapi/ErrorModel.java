@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.util.Utils;
 
 import java.util.Map;

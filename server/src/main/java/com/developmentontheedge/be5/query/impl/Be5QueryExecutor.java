@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -81,8 +81,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String resolveQuery(String entityName, String queryName)
         {
-            return meta.getQueryCode( entityName == null ? query.getEntity().getName() : entityName,
-                    queryName, UserInfoHolder.getCurrentRoles() );
+            return meta.getQueryCode( entityName == null ? query.getEntity().getName() : entityName, queryName );
         }
 
         @Override
@@ -207,7 +206,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
 
-        String queryText = meta.getQueryCode(query, UserInfoHolder.getCurrentRoles());
+        String queryText = meta.getQueryCode(query);
 
         dql.log("After FreeMarker", queryText);
         if(queryText.isEmpty())

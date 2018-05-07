@@ -36,7 +36,7 @@ class Queries extends TableBuilderSupport
         def queries = meta.getQueryNames(meta.getEntity(entityName))
         for (String queryName: queries)
         {
-            Query query = meta.getQueryIgnoringRoles(entityName, queryName)
+            Query query = meta.getQuery(entityName, queryName)
             List<CellModel> cells = new ArrayList<CellModel>()
 
             cells.add(new CellModel(entityName))

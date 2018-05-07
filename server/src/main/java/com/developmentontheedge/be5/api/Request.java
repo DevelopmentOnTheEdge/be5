@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 /**
  * Request injected to components.
@@ -17,6 +17,8 @@ import com.developmentontheedge.be5.api.exceptions.Be5Exception;
 public interface Request extends SessionAccess, ParametersAccess
 {
     Session getSession();
+
+    Session getSession(boolean create);
 
     /**
      * Reads a parameter as JSON array in the form of [{name: 'foo', value: 'bar'},...]

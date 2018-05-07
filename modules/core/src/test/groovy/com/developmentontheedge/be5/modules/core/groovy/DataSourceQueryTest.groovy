@@ -12,9 +12,9 @@ class DataSourceQueryTest extends Be5ProjectDBTest
     @Test
     void get() throws Exception
     {
-        meta.getQueryIgnoringRoles("_system_", "DataSource");
+        meta.getQuery("_system_", "DataSource");
 //        TableModel tableModel = new DataSource().initialize(
-//                injector.getMeta().getQueryIgnoringRoles("_system_", "DataSource Parameters"),
+//                injector.getMeta().getQuery("_system_", "DataSource Parameters"),
 //                new HashMap<>(),
 //                getMockRequest(""),
 //                injector
