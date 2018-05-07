@@ -81,6 +81,15 @@ public interface SqlService
         return stockArr;
     }
 
+    default Long[] selectArrayLong(String sql, Object... params)
+    {
+        List<Long> strings = selectList(sql, rs -> rs.getLong(1), params);
+
+        Long[] stockArr = new Long[strings.size()];
+        stockArr = strings.toArray(stockArr);
+        return stockArr;
+    }
+
     default List<Integer> selectListInteger(String sql, Object... params)
     {
         return selectList(sql, rs-> rs.getInt(1), params);
