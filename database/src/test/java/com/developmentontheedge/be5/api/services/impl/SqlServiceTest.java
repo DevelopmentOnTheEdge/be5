@@ -125,6 +125,24 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     }
 
     @Test
+    public void testSelectArrayLong()
+    {
+        Long[] persons = db.selectArrayLong("SELECT id FROM persons");
+
+        assertTrue(persons.length >= 2);
+        assertEquals(Long.class, persons[0].getClass());
+    }
+
+    @Test
+    public void testSelectArrayString()
+    {
+        String[] persons = db.selectArrayString("SELECT name FROM persons");
+
+        assertTrue(persons.length >= 2);
+        assertEquals(String.class, persons[0].getClass());
+    }
+
+    @Test
     public void testSelectListLambda() {
         List<String> strings = db.selectList("SELECT * FROM persons", rs ->
                 rs.getString("name") + " "
