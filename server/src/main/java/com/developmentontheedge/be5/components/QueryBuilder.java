@@ -1,10 +1,11 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -38,7 +39,7 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.api.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
-public class QueryBuilder implements Component
+public class QueryBuilder extends ControllerSupport implements Controller
 {
     private static final String entityName = "queryBuilderComponent";
 

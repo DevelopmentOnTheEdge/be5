@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
@@ -22,7 +23,7 @@ import java.io.InputStream;
  * Example url
  * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name&_dataColumn_=data&_download_=yes&ID=7326
  */
-public class DownloadComponent implements Component
+public class DownloadComponent extends ControllerSupport implements Controller
 {
     private final DatabaseModel database;
 

@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class LanguageSelector implements Component
+public class LanguageSelector extends ControllerSupport implements Controller
 {
     private final Meta meta;
     private final ProjectProvider projectProvider;

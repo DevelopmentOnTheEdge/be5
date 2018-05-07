@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
@@ -18,7 +18,7 @@ import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
-public class StaticPageComponent implements Component
+public class StaticPageComponent extends ControllerSupport
 {
     private final ProjectProvider projectProvider;
 

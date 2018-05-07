@@ -3,14 +3,12 @@ package com.developmentontheedge.be5.components;
 import javax.inject.Inject;
 
 import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

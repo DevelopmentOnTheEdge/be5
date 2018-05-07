@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.ServerModule;
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.ConnectionService;
@@ -18,7 +17,6 @@ import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.Scope;
 import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 import org.junit.Before;

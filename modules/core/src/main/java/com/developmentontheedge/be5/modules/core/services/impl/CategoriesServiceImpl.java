@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCate
 import com.developmentontheedge.be5.modules.core.util.Generators;
 import com.google.common.collect.ImmutableList;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class CategoriesServiceImpl implements CategoriesService
     private final Meta meta;
     private final QueryService queryService;
 
+    @Inject
     public CategoriesServiceImpl(Meta meta, QueryService queryService)
     {
         this.meta = meta;

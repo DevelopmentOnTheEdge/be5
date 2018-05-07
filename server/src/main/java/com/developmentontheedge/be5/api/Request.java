@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 /**
  * Request injected to components.
  * 
- * @see Component
+ * @see Controller
  * @author asko
  */
 public interface Request extends SessionAccess, ParametersAccess

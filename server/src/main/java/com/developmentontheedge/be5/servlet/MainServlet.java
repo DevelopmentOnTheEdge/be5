@@ -1,38 +1,5 @@
 package com.developmentontheedge.be5.servlet;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.Filter;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.developmentontheedge.be5.api.Component;
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.RequestPreprocessor;
-import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.RequestImpl;
-import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
-import com.developmentontheedge.be5.api.helpers.UserHelper;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-
 
 public class MainServlet// implements Filter
 {

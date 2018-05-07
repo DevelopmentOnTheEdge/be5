@@ -1,16 +1,20 @@
 package com.developmentontheedge.be5.modules.core.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 
+import javax.inject.Inject;
 
-public class Categories implements Component
+
+public class Categories extends ControllerSupport implements Controller
 {
     private final CategoriesService categoriesService;
 
+    @Inject
     public Categories(CategoriesService categoriesService)
     {
         this.categoriesService = categoriesService;

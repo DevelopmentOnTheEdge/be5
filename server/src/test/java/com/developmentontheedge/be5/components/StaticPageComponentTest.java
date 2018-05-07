@@ -6,10 +6,8 @@ import javax.inject.Inject;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;

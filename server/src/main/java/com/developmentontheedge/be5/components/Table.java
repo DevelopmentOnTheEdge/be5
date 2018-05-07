@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
@@ -25,7 +25,7 @@ import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
-public class Table implements Component
+public class Table extends ControllerSupport
 {
     private final DocumentGenerator documentGenerator;
     private final TableModelService tableModelService;

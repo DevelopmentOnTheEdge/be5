@@ -13,15 +13,9 @@ public class Be5GuiceServletConfig extends GuiceServletContextListener
     @Override
     protected Injector getInjector()
     {
-        return Guice.createInjector(new ServerModule(), new ServletModule()
-        {
-            @Override
-            protected void configureServlets()
-            {
-                bind(Be5TemplateFilter.class).in(Scopes.SINGLETON);
-                filter("/*").through(Be5TemplateFilter.class);
-                //filter("/api/*").through(Be5Filter.class);
-            }
-        });
+        return Guice.createInjector(
+                new ServerModule(),
+                new TemplateModule()
+        );
     }
 }

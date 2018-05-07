@@ -54,15 +54,23 @@ public class ServerModule extends ServletModule
     @Override
     protected void configureServlets()
     {
-        bind(ApplicationInfoComponent.class).in(Scopes.SINGLETON);
         bind(Table.class).in(Scopes.SINGLETON);
         bind(Form.class).in(Scopes.SINGLETON);
-        bind(LanguageSelector.class).in(Scopes.SINGLETON);
-        bind(Menu.class).in(Scopes.SINGLETON);
         bind(StaticPageComponent.class).in(Scopes.SINGLETON);
+        bind(Menu.class).in(Scopes.SINGLETON);
+        bind(LanguageSelector.class).in(Scopes.SINGLETON);
+        bind(ApplicationInfoComponent.class).in(Scopes.SINGLETON);
         bind(QueryBuilder.class).in(Scopes.SINGLETON);
         bind(DownloadComponent.class).in(Scopes.SINGLETON);
 
+        serve("/api/table").with(Table.class);
+        serve("/api/form*").with(Form.class);
+        serve("/api/static*").with(StaticPageComponent.class);
+        serve("/api/menu").with(Menu.class);
+        serve("/api/languageSelector").with(LanguageSelector.class);
+        serve("/api/appInfo").with(ApplicationInfoComponent.class);
+        serve("/api/queryBuilder").with(QueryBuilder.class);
+        serve("/api/download").with(DownloadComponent.class);
 
         bind(FilterHelper.class).in(Scopes.SINGLETON);
         bind(LogConfigurator.class).in(Scopes.SINGLETON);

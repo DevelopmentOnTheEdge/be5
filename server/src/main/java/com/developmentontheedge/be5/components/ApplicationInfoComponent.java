@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * ApplicationInfoComponent returns ApplicationInfo(title, url) for current application (servlet context).
  */
-public class ApplicationInfoComponent implements Component 
+public class ApplicationInfoComponent extends ControllerSupport implements Controller
 {
     public static class ApplicationInfo
     {

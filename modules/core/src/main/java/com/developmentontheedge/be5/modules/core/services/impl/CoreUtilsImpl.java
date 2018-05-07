@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.util.BlobUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class CoreUtilsImpl implements CoreUtils
 
     private final SqlService db;
 
+    @Inject
     public CoreUtilsImpl(SqlService db, Be5Caches be5Caches)
     {
         this.db = db;

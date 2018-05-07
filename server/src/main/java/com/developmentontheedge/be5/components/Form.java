@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.model.FormPresentation;
@@ -27,7 +27,7 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
-public class Form implements Component
+public class Form extends ControllerSupport
 {
     private final OperationExecutor operationExecutor;
     private final DocumentGenerator documentGenerator;

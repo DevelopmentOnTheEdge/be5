@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,7 @@ public class LoginServiceImpl implements LoginService
     private final CoreUtils coreUtils;
     private final MenuHelper menuHelper;
 
+    @Inject
     public LoginServiceImpl(SqlService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper)
     {
         this.db = db;

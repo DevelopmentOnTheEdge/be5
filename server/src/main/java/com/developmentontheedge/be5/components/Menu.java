@@ -1,17 +1,18 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.MenuHelper;
 
+import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 
 import javax.inject.Inject;
 import java.util.List;
 
 
-public class Menu implements Component
+public class Menu extends ControllerSupport implements Controller
 {
     private final MenuHelper menuHelper;
 
