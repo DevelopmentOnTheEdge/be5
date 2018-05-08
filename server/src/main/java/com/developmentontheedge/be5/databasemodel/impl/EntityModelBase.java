@@ -136,7 +136,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
 
-        return db.getLong(sql.format(), conditions.values().toArray());
+        return db.oneLong(sql.format(), conditions.values().toArray());
     }
 
     @Override

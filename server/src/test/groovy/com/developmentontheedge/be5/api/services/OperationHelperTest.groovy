@@ -63,8 +63,8 @@ class OperationHelperTest extends Be5ProjectDBTest
         }
 
         //use db and DpsRecordAdapter.createDps
-        assertEquals "TestName", db.getString("SELECT name FROM testtableAdmin WHERE id = ?", id)
-        assertEquals 123, db.getInteger("SELECT value FROM testtableAdmin WHERE id = ?", id)
+        assertEquals "TestName", db.oneString("SELECT name FROM testtableAdmin WHERE id = ?", id)
+        assertEquals 123, db.oneInteger("SELECT value FROM testtableAdmin WHERE id = ?", id)
 
         DynamicPropertySet dps = db.select("SELECT * FROM testtableAdmin WHERE id = ?", { rs -> DpsRecordAdapter.createDps(rs) }, id)
         if(dps != null)

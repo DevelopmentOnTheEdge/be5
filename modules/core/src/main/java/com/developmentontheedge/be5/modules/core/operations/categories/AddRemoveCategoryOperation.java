@@ -105,7 +105,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
         while (cat != null) {
             categories.add(cat);
 
-            cat = db.getLong("SELECT c1.parentID FROM categories c1 WHERE c1.ID = ?", cat);
+            cat = db.oneLong("SELECT c1.parentID FROM categories c1 WHERE c1.ID = ?", cat);
         }
 
         return categories;

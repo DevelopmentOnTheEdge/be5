@@ -30,25 +30,25 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
 
     @Test
     public void testSelectScalar() {
-        String password = db.getScalar("SELECT password FROM persons WHERE name = ?", "user2");
+        String password = db.one("SELECT password FROM persons WHERE name = ?", "user2");
 
         assertEquals("pass2", password);
     }
 
     @Test
     public void testCount() {
-        assertEquals((Long)0L, db.getLong("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser"));
+        assertEquals((Long)0L, db.oneLong("SELECT COUNT(id) FROM persons WHERE name = ?","notContainUser"));
     }
 
     @Test
     public void testSelectString() {
-        assertEquals("pass2", db.getString("SELECT password FROM persons WHERE name = ?",
+        assertEquals("pass2", db.oneString("SELECT password FROM persons WHERE name = ?",
                 "user2"));
     }
 
     @Test
     public void testGetNullIfNotContain() {
-        assertEquals(null, db.getLong("SELECT id FROM persons WHERE name = ?", "notContainUser"));
+        assertEquals(null, db.oneLong("SELECT id FROM persons WHERE name = ?", "notContainUser"));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
 
     @Test
     public void testSelectListResultSetParser() {
-        List<TestPerson> persons = db.selectList("SELECT * FROM persons", parser);
+        List<TestPerson> persons = db.list("SELECT * FROM persons", parser);
 
         assertTrue(persons.size() >= 2);
         assertEquals("pass1", persons.get(0).getPassword());
@@ -127,7 +127,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     @Test
     public void testSelectArrayLong()
     {
-        Long[] persons = db.selectLongArray("SELECT id FROM persons");
+        Long[] persons = db.longArray("SELECT id FROM persons");
 
         assertTrue(persons.length >= 2);
         assertEquals(Long.class, persons[0].getClass());
@@ -136,7 +136,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     @Test
     public void testSelectArrayString()
     {
-        String[] persons = db.selectStringArray("SELECT name FROM persons");
+        String[] persons = db.stringArray("SELECT name FROM persons");
 
         assertTrue(persons.length >= 2);
         assertEquals(String.class, persons[0].getClass());
@@ -145,7 +145,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     @Test
     public void selectScalarList_Long()
     {
-        List<Long> persons = db.selectScalarList("SELECT id FROM persons");
+        List<Long> persons = db.scalarList("SELECT id FROM persons");
 
         assertTrue(persons.size() >= 2);
         assertEquals(Long.class, persons.get(0).getClass());
@@ -154,7 +154,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
     @Test
     public void selectScalarList_String()
     {
-        List<String> persons = db.selectScalarList("SELECT name FROM persons");
+        List<String> persons = db.scalarList("SELECT name FROM persons");
 
         assertTrue(persons.size() >= 2);
         assertEquals(String.class, persons.get(0).getClass());
@@ -162,7 +162,7 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
 
     @Test
     public void testSelectListLambda() {
-        List<String> strings = db.selectList("SELECT * FROM persons", rs ->
+        List<String> strings = db.list("SELECT * FROM persons", rs ->
                 rs.getString("name") + " "
                         + rs.getString("password")
         );
@@ -178,6 +178,6 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
         Long id = db.insert("INSERT INTO persons (name, password) VALUES (?,?)",
                 uniqueName, "pass");
 
-        assertEquals(id, db.getLong("SELECT ID FROM persons WHERE name = ?", uniqueName));
+        assertEquals(id, db.oneLong("SELECT ID FROM persons WHERE name = ?", uniqueName));
     }
 }

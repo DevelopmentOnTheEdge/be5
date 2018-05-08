@@ -62,7 +62,7 @@ public class OperationHelper
      */
     public String[][] getTags(String tableName, String valueColumnName, String textColumnName)
     {
-        List<String[]> tags = db.selectList("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
+        List<String[]> tags = db.list("SELECT " + valueColumnName + ", " + textColumnName + " FROM " + tableName,
                 rs -> new String[]{rs.getString(valueColumnName), rs.getString(textColumnName)}
         );
         String[][] stockArr = new String[tags.size()][2];
@@ -144,7 +144,7 @@ public class OperationHelper
 
     public String[][] getTagsFromQuery(String sql, Object... params)
     {
-        List<String[]> tags = db.selectList(sql,
+        List<String[]> tags = db.list(sql,
                 rs -> new String[]{rs.getString(1), rs.getString(2)}, params
         );
         String[][] stockArr = new String[tags.size()][2];
@@ -540,7 +540,7 @@ public class OperationHelper
     //todo use Be5QueryExecutor?
     public List<DynamicPropertySet> readAsRecords( String sql, Object... params )
     {
-        return db.selectList(sql, DpsRecordAdapter::createDps, params);
+        return db.list(sql, DpsRecordAdapter::createDps, params);
     }
 
     public List<DynamicPropertySet> readAsRecordsFromQuery( String sql, Map<String, Object> parameters )

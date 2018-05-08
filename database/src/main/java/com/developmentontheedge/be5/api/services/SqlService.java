@@ -6,7 +6,6 @@ import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.api.sql.parsers.ScalarParser;
 import org.apache.commons.dbutils.ResultSetHandler;
 
-import java.sql.Date;
 import java.util.List;
 
 
@@ -16,9 +15,9 @@ public interface SqlService
 
     <T> T select(String sql, ResultSetParser<T> parser, Object... params);
 
-    <T> List<T> selectList(String sql, ResultSetParser<T> parser, Object... params);
+    <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params);
 
-    <T> T getScalar(String sql, Object... params);
+    <T> T one(String sql, Object... params);
 
     int update(String sql, Object... params);
 
@@ -32,9 +31,9 @@ public interface SqlService
 
     void transaction(SqlExecutorVoid executor);
 
-    default Long getLong(String sql, Object... params)
+    default Long oneLong(String sql, Object... params)
     {
-        Object number = getScalar(sql, params);
+        Object number = one(sql, params);
         if(number == null) return null;
 
         Long res;
@@ -49,40 +48,30 @@ public interface SqlService
         return res;
     }
 
-    default String getString(String sql, Object... params)
+    default String oneString(String sql, Object... params)
     {
-        return getScalar(sql, params);
+        return one(sql, params);
     }
 
-    default Integer getInteger(String sql, Object... params)
+    default Integer oneInteger(String sql, Object... params)
     {
-        return getScalar(sql, params);
+        return one(sql, params);
     }
 
-    default Double getDouble(String sql, Object... params)
+    default <T> List<T> scalarList(String sql, Object... params)
     {
-        return getScalar(sql, params);
+        return list(sql, new ScalarParser<T>(), params);
     }
 
-    default Date getDate(String sql, Object... params)
+    default Long[] longArray(String sql, Object... params)
     {
-        return getScalar(sql, params);
-    }
-
-    default <T> List<T> selectScalarList(String sql, Object... params)
-    {
-        return selectList(sql, new ScalarParser<T>(), params);
-    }
-
-    default Long[] selectLongArray(String sql, Object... params)
-    {
-        List<Long> list = selectList(sql, new ScalarParser<Long>(), params);
+        List<Long> list = list(sql, new ScalarParser<Long>(), params);
         return list.toArray(new Long[list.size()]);
     }
 
-    default String[] selectStringArray(String sql, Object... params)
+    default String[] stringArray(String sql, Object... params)
     {
-        List<String> list = selectList(sql, new ScalarParser<String>(), params);
+        List<String> list = list(sql, new ScalarParser<String>(), params);
         return list.toArray(new String[list.size()]);
     }
 
