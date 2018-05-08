@@ -3,18 +3,14 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.inject.Injector;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
-import com.google.common.io.ByteStreams;
-import com.google.common.net.UrlEscapers;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -38,7 +34,6 @@ public class DownloadComponent implements Component
         boolean download      = "yes".equals(req.get("_download_"));
 
         RecordModel record = injector.get(DatabaseModel.class).getEntity(entity).get(ID);
-
 
         String filename    = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
@@ -65,27 +60,7 @@ public class DownloadComponent implements Component
             throw Be5Exception.internal("Unknown data type");
         }
 
-        HttpServletResponse response = res.getRawResponse();
-
-        response.setContentType(contentType + "; charset=" + charset);
-        //response.setCharacterEncoding(encoding);
-
-        if (download)
-        {
-            response.setHeader("Content-disposition","attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-        else
-        {
-            response.setHeader("Content-disposition","filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-
-        try
-        {
-            ByteStreams.copy(in, response.getOutputStream());
-        }
-        catch (IOException e)
-        {
-            throw Be5Exception.internal(e);
-        }
+        res.sendFile(download, filename, contentType, charset, in);
     }
+
 }
