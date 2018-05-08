@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import java.util.Date;
 
 import static org.mockito.Matchers.any;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.test.Be5ProjectDBTest;
 

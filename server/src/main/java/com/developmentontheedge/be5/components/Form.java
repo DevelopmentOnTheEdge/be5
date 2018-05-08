@@ -16,8 +16,8 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.google.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 

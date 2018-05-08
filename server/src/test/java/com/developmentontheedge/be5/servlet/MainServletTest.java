@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.servlet;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.Be5ProjectTest;

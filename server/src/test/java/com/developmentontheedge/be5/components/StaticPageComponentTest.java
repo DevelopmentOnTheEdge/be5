@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Request;
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;

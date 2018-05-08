@@ -19,7 +19,7 @@ import com.developmentontheedge.be5.util.Utils;
 import com.google.inject.Injector;
 
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

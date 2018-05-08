@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Test;
 

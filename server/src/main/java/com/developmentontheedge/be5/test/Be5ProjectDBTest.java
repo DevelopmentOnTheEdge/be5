@@ -20,7 +20,7 @@ import com.google.inject.util.Modules;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;

@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 
 public class Categories extends ControllerSupport implements Controller

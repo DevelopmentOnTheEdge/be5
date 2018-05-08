@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;

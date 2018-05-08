@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;

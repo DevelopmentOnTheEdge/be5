@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;

@@ -17,7 +17,7 @@ import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.util.HashUrl;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 

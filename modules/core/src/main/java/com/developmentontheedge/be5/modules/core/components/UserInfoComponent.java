@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 
 public class UserInfoComponent extends ControllerSupport implements Controller

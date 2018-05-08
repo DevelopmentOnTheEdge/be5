@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.operation.Operation;

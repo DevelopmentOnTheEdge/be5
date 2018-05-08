@@ -12,7 +12,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.UrlEscapers;
 
-import javax.inject.Inject;
+import com.google.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import javax.inject.Inject;
+import com.google.inject.Inject;
 
 
 import com.developmentontheedge.be5.test.Be5ProjectTest;
