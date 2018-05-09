@@ -68,12 +68,12 @@ public class Be5TemplateFilter implements Filter
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
+        HttpServletRequest req = (HttpServletRequest) request;
+
         if (UserInfoHolder.getUserInfo() == null)
         {
-            userHelper.initGuest(new RequestImpl((HttpServletRequest)request, ((HttpServletRequest)request).getRequestURI()));
+            userHelper.initGuest(new RequestImpl(req, req.getRequestURI()));
         }
-
-        HttpServletRequest req = (HttpServletRequest) request;
 
         String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestURI());
 

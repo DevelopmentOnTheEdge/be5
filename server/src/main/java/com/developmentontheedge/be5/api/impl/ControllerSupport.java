@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,20 +24,20 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
+        respond(request, response, request.getMethod(), request.getRequestURI());
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        respond(request, response, request.getMethod(), request.getRequestURI(), request.getParameterMap());
+        respond(request, response, request.getMethod(), request.getRequestURI());
     }
 
     /**
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
      */
-    private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri, Map<String, String[]> parameters)
+    private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri)
     {
         Matcher matcher = uriPattern.matcher(requestUri);
         if (!matcher.matches())
