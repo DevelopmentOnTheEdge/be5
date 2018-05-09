@@ -58,6 +58,7 @@ public class QueryServiceImpl implements QueryService
         return listParams;
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> getParameterList(Object parameter)
     {
         if(parameter == null)return null;
