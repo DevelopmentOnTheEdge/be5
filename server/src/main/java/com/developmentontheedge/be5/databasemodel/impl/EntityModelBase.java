@@ -136,7 +136,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
 
-        return db.getLong(sql.format(), conditions.values().toArray());
+        return db.oneLong(sql.format(), conditions.values().toArray());
     }
 
     @Override
@@ -426,7 +426,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         if(id.getClass() != primaryKeyColumnType)
         {
-            throw new RuntimeException("Primary key must be " + primaryKeyColumnType.getSimpleName());
+            throw new RuntimeException("Primary key must be " + primaryKeyColumnType.getSimpleName() + " instead " + id.getClass().getSimpleName());
         }
 
         return id;

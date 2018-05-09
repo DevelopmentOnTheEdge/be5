@@ -293,7 +293,7 @@ public class DpsHelper
         AstStart ast;
         try
         {
-            ast = SqlQuery.parse(meta.getQueryCode(query, UserInfoHolder.getCurrentRoles()));
+            ast = SqlQuery.parse(meta.getQueryCode(query));
         }
         catch (RuntimeException e)
         {

@@ -51,7 +51,7 @@ class SpecialColumnsTest extends Be5ProjectDBTest
             value: (Short)1
         ]
 
-        assertEquals 1, db.getLong("select count(*) from $tableName")
+        assertEquals 1, db.oneLong("select count(*) from $tableName")
 
         initGuest()
         table << [
@@ -131,9 +131,9 @@ class SpecialColumnsTest extends Be5ProjectDBTest
 
         table.removeBy(["name": "TestName"])
 
-        assertEquals 2, db.getLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
+        assertEquals 2, db.oneLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
                 "yes", "TestName")
-        assertEquals 1, db.getLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
+        assertEquals 1, db.oneLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
                 "no", "TestName2")
     }
 

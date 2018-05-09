@@ -41,17 +41,17 @@ public class SqlServiceMock implements SqlService
     }
 
     @Override
-    public <T> List<T> selectList(String sql, ResultSetParser<T> parser, Object... params)
+    public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
         log.fine(sql + Arrays.toString(params));
-        return mock.selectList(sql, parser, params);
+        return mock.list(sql, parser, params);
     }
 
     @Override
-    public <T> T getScalar(String sql, Object... params)
+    public <T> T one(String sql, Object... params)
     {
         log.fine(sql + Arrays.toString(params));
-        return mock.getScalar(sql, params);
+        return mock.one(sql, params);
     }
 
     @Override

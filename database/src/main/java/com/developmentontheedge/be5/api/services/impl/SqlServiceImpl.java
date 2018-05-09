@@ -53,7 +53,7 @@ public class SqlServiceImpl implements SqlService
     }
 
     @Override
-    public <T> List<T> selectList(String sql, ResultSetParser<T> parser, Object... params)
+    public <T> List<T> list(String sql, ResultSetParser<T> parser, Object... params)
     {
         return execute(true, conn -> query(conn, sql, rs -> {
             List<T> rows = new ArrayList<>();
@@ -65,7 +65,7 @@ public class SqlServiceImpl implements SqlService
     }
 
     @Override
-    public <T> T getScalar(String sql, Object... params)
+    public <T> T one(String sql, Object... params)
     {
         return execute(true, conn -> query(conn, sql, new ScalarHandler<T>(), params));
     }

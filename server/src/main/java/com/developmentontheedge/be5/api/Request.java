@@ -18,6 +18,8 @@ public interface Request extends SessionAccess, ParametersAccess
 {
     Session getSession();
 
+    Session getSession(boolean create);
+
     /**
      * Reads a parameter as JSON array in the form of [{name: 'foo', value: 'bar'},...]
      * 

@@ -18,7 +18,7 @@ class QueryUtilsFilterTest extends Be5ProjectTest
     @Test
     void empty()
     {
-        AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim())
         QueryUtils.applyFilters(ast, "filterTestTable", [:])
 
         assertEquals("SELECT ft.name, ft.value\n" +
@@ -28,7 +28,7 @@ class QueryUtilsFilterTest extends Be5ProjectTest
     @Test
     void simpleFilterIntColumn()
     {
-        AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim())
         QueryUtils.applyFilters(ast, "filterTestTable", ["value": [123]])
 
         assertEquals("SELECT ft.name, ft.value\n" +
@@ -38,7 +38,7 @@ class QueryUtilsFilterTest extends Be5ProjectTest
     @Test
     void simpleFilterStringColumn()
     {
-        AstStart ast = SqlQuery.parse(meta.getQueryIgnoringRoles("filterTestTable", "Simple").getQueryCompiled().validate().trim())
+        AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim())
         QueryUtils.applyFilters(ast, "filterTestTable", ["name": ["test"]])
 
         assertEquals("SELECT ft.name, ft.value\n" +

@@ -9,13 +9,9 @@ import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
-import com.google.common.io.ByteStreams;
-import com.google.common.net.UrlEscapers;
 
 import com.google.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -48,7 +44,6 @@ public class DownloadComponent extends ControllerSupport implements Controller
 
         RecordModel record = database.getEntity(entity).get(ID);
 
-
         String filename    = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);
         Object data        = record.getValue(dataColumn);
@@ -74,27 +69,7 @@ public class DownloadComponent extends ControllerSupport implements Controller
             throw Be5Exception.internal("Unknown data type");
         }
 
-        HttpServletResponse response = res.getRawResponse();
-
-        response.setContentType(contentType + "; charset=" + charset);
-        //response.setCharacterEncoding(encoding);
-
-        if (download)
-        {
-            response.setHeader("Content-disposition","attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-        else
-        {
-            response.setHeader("Content-disposition","filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-
-        try
-        {
-            ByteStreams.copy(in, response.getOutputStream());
-        }
-        catch (IOException e)
-        {
-            throw Be5Exception.internal(e);
-        }
+        res.sendFile(download, filename, contentType, charset, in);
     }
+
 }

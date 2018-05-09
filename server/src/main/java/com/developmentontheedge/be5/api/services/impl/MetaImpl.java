@@ -99,19 +99,14 @@ public class MetaImpl implements Meta
         this.projectProvider = projectProvider;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.beanexplorer.enterprise.components.Meta#getEntity(java.lang.String)
-     */
     @Override
     public Entity getEntity(String name)
     {
         return getProject().getEntity(name);
     }
 
-    private boolean hasAccess(RoleSet roles, List<String> availableRoles)
+    @Override
+    public boolean hasAccess(RoleSet roles, List<String> availableRoles)
     {
         Set<String> finalRoles = roles.getFinalRoles();
         for (String role : availableRoles)
@@ -123,13 +118,6 @@ public class MetaImpl implements Meta
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.beanexplorer.enterprise.components.Meta#getOrderedEntities(java.lang.
-     * String)
-     */
     @Override
     public List<Entity> getOrderedEntities(String language)
     {
@@ -212,13 +200,6 @@ public class MetaImpl implements Meta
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.beanexplorer.enterprise.components.Meta#getTitle(com.beanexplorer.
-     * enterprise.metadata.model.Entity, java.lang.String)
-     */
     @Override
     public String getTitle(Entity entity, String language)
     {
@@ -236,13 +217,6 @@ public class MetaImpl implements Meta
         return entity.getName();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.beanexplorer.enterprise.components.Meta#getTitle(com.beanexplorer.
-     * enterprise.metadata.model.Query, java.lang.String)
-     */
     @Override
     public String getTitle(Query query, String language)
     {
@@ -321,7 +295,7 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    public Operation getOperation(String entityName, String queryName, String name, List<String> roles)
+    public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = getProject().findOperation(entityName, queryName, name);
         if (operation == null)
@@ -335,43 +309,21 @@ public class MetaImpl implements Meta
                 throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, name);
             }
         }
-        if (!hasAccess(operation.getRoles(), roles))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);//todo add - for current roles
+
         return operation;
     }
 
     @Override
-    public Operation getOperation(String entityName, String name, List<String> roles)
+    public Operation getOperation(String entityName, String name)
     {
         Operation operation = getProject().findOperation(entityName, name);
         if (operation == null)
         {
             throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, name);
         }
-        if (!hasAccess(operation.getRoles(), roles))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
         return operation;
     }
 
-    @Override
-    public Operation getOperationIgnoringRoles(String entityName, String name)
-    {
-        return getOperationIgnoringRoles(getEntity(entityName), name);
-    }
-
-    @Override
-    public Operation getOperationIgnoringRoles(Entity entity, String name)
-    {
-        return entity.getOperations().get(name);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.beanexplorer.enterprise.components.Meta#getQueries(com.beanexplorer.
-     * enterprise.metadata.model.Entity, java.util.List)
-     */
     @Override
     public List<Query> getQueries(Entity entity, List<String> roles)
     {
@@ -388,45 +340,22 @@ public class MetaImpl implements Meta
         return permittedQueries;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.beanexplorer.enterprise.components.Meta#isAvailableFor(com.
-     * beanexplorer.enterprise.metadata.model.EntityItem, java.util.List)
-     */
     @Override
     public boolean isAvailableFor(EntityItem entityItem, List<String> roles)
     {
         return roles.stream().anyMatch(entityItem.getRoles().getFinalRoles()::contains);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.beanexplorer.enterprise.components.Meta#getQuery(java.lang.String,
-     * java.lang.String)
-     */
     @Override
-    public Query getQuery(String entityName, String queryName, List<String> availableRoles)
+    public String getQueryCode(String entityName, String queryName)
     {
-        Query query = getQueryIgnoringRoles(entityName, queryName);
-        if (!hasAccess(query.getRoles(), availableRoles))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
-        return query;
+        Query query = getQuery(entityName, queryName);
+
+        return getQueryCode(query);
     }
 
     @Override
-    public String getQueryCode(String entityName, String queryName, List<String> availableRoles)
-    {
-        Query query = getQueryIgnoringRoles(entityName, queryName);
-        if (!hasAccess(query.getRoles(), availableRoles))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
-        return getQueryCode(query, availableRoles);
-    }
-
-    @Override
-    public String getQueryCode(Query query, List<String> availableRoles)
+    public String getQueryCode(Query query)
     {
         try
         {
@@ -442,7 +371,7 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    public Query getQueryIgnoringRoles(String entityName, String queryName)
+    public Query getQuery(String entityName, String queryName)
     {
         Entity entity = getEntity(entityName);
         if(entity == null)

@@ -24,7 +24,7 @@ class OperationExecutorTest extends Be5ProjectDBTest
     {
         def testtableAdmin = database.getEntity("testtableAdmin")
 
-        def info = new OperationInfo(meta.getOperationIgnoringRoles("testtableAdmin", "TransactionTestOp"))
+        def info = new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp"))
         def operation = operationExecutor.create(info, new OperationContext([] as String[], null, Collections.emptyMap()))
 
         testtableAdmin.removeAll()

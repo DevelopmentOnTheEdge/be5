@@ -22,7 +22,7 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)","user1", "pass1");
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
         });
-        long countUser1 = db.getScalar("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
+        long countUser1 = db.one("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
         assertEquals(2, countUser1);
     }
 
@@ -38,7 +38,7 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
         }
         catch (RuntimeException e) {
             Assert.assertTrue(true);
-            assertEquals(0L, (long)db.getLong("SELECT count(*) FROM persons" ));
+            assertEquals(0L, (long)db.oneLong("SELECT count(*) FROM persons" ));
         }
     }
 
@@ -59,7 +59,7 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
         }
         catch (RuntimeException e) {
             Assert.assertTrue(true);
-            assertEquals(0L, (long)db.getLong("SELECT count(*) FROM persons" ));
+            assertEquals(0L, (long)db.oneLong("SELECT count(*) FROM persons" ));
         }
     }
 }

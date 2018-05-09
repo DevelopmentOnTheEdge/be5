@@ -33,7 +33,7 @@ public class MultiThreadedTest extends Be5ProjectDbBaseTest
             e.printStackTrace();
         }
 
-        assertEquals((Long)100L, db.getLong("select count(*) AS \"count\" from Persons"));
+        assertEquals((Long)100L, db.oneLong("select count(*) AS \"count\" from Persons"));
     }
 
     public class Test2 implements Runnable{

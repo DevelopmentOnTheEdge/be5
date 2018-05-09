@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.components;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
@@ -17,6 +19,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.google.inject.Inject;
+import com.google.inject.Stage;
 
 import java.util.Collections;
 import java.util.Map;
@@ -31,17 +34,26 @@ public class Form extends ControllerSupport
 {
     private final OperationExecutor operationExecutor;
     private final DocumentGenerator documentGenerator;
+    private final UserHelper userHelper;
+    private final Stage stage;
 
     @Inject
-    public Form(OperationExecutor operationExecutor, DocumentGenerator documentGenerator)
+    public Form(OperationExecutor operationExecutor, DocumentGenerator documentGenerator, UserHelper userHelper, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
+        this.userHelper = userHelper;
+        this.stage = stage;
     }
 
     @Override
     public void generate(Request req, Response res)
     {
+        if(stage == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
+        {
+            userHelper.initGuest(req);
+        }
+
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);

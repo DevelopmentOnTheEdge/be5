@@ -63,11 +63,20 @@ class RequestTest extends TestUtils
     }
 
     @Test
-    void name()
+    void getParameterValues()
     {
         when(rawRequest.getParameterValues("ids[]")).thenReturn(["1", "2"] as String[])
         def req = new RequestImpl(rawRequest, "test")
 
         assertEquals(["1", "2"], req.getList("ids"))
+    }
+
+    @Test
+    void getParameterValuesOneValue()
+    {
+        when(rawRequest.getParameter("ids")).thenReturn("1")
+        def req = new RequestImpl(rawRequest, "test")
+
+        assertEquals(["1"], req.getList("ids"))
     }
 }

@@ -30,7 +30,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getCategoriesForest(String entityName, boolean hideEmpty)
     {
         List<MutableCategory> categories = queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getCategoriesForest"),
+                .build(meta.getQuery("_categoriesService_", "getCategoriesForest"),
                        Collections.singletonMap("entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
@@ -41,7 +41,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getRootCategory(String entityName)
     {
         return queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getRootCategory"),
+                .build(meta.getQuery("_categoriesService_", "getRootCategory"),
                        Collections.singletonMap("entity", entityName))
                 .execute(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
     }
@@ -50,7 +50,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getCategoryNavigation(long categoryID)
     {
         List<MutableCategory> categories = queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getCategoryNavigation"),
+                .build(meta.getQuery("_categoriesService_", "getCategoryNavigation"),
                         Collections.singletonMap("categoryID", "" + categoryID))
                 .execute(MutableCategory::fromResultSet);
 
@@ -107,7 +107,7 @@ public class CategoriesServiceImpl implements CategoriesService
     private boolean hasAnyItem(MutableCategory category)
     {
         return (Long)queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "hasAnyItem"),
+                .build(meta.getQuery("_categoriesService_", "hasAnyItem"),
                         Collections.singletonMap("categoryID", "" + category.id))
                 .execute().get(0).asMap().get("count") > 0;
     }

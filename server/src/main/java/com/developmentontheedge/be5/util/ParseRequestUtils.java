@@ -66,7 +66,6 @@ public class ParseRequestUtils
                     arrValues[i] = value.get(i).getAsString();
                 }
 
-                //todo List?
                 fieldValues.put(name, arrValues);
             }
             else if(entry.getValue() instanceof JsonObject)

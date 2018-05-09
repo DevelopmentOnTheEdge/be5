@@ -44,7 +44,7 @@ public abstract class SqlMockOperationTest extends Be5ProjectTest
         List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
                 .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
 
-        when(SqlServiceMock.mock.selectList(contains(containsSql),
+        when(SqlServiceMock.mock.list(contains(containsSql),
                 Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 }

@@ -9,7 +9,9 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -142,10 +144,10 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
 
     @Override
     public QuerySettings getQuerySettings(Query query) {
-        List<String> availableRoles = UserInfoHolder.getCurrentRoles();
+        List<String> currentRoles = UserInfoHolder.getCurrentRoles();
         for(QuerySettings settings: query.getQuerySettings()) {
             Set<String> roles = settings.getRoles().getFinalRoles();
-            for(String role : availableRoles) {
+            for(String role : currentRoles) {
                 if(roles.contains(role)) {
                     return settings;
                 }
@@ -157,19 +159,30 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     @Override
     public OperationInfo getOperation(String entityName, String name)
     {
-        return new OperationInfo(meta.getOperation(entityName, name, UserInfoHolder.getCurrentRoles()));
+        Operation operation = meta.getOperation(entityName, name);
+        if (!meta.hasAccess(operation.getRoles(), UserInfoHolder.getCurrentRoles()))
+            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
+
+        return new OperationInfo(operation);
     }
 
     @Override
     public OperationInfo getOperation(String entityName, String queryName, String name)
     {
-        return new OperationInfo(meta.getOperation(entityName, queryName, name, UserInfoHolder.getCurrentRoles()));
+        Operation operation = meta.getOperation(entityName, queryName, name);
+        if (!meta.hasAccess(operation.getRoles(), UserInfoHolder.getCurrentRoles()))
+            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
+
+        return new OperationInfo(operation);
     }
 
     @Override
-    public Query getQuery(String entity, String name)
+    public Query getQuery(String entityName, String queryName)
     {
-        return meta.getQuery(entity, name, UserInfoHolder.getCurrentRoles());
+        Query query = meta.getQuery(entityName, queryName);
+        if (!meta.hasAccess(query.getRoles(), UserInfoHolder.getCurrentRoles()))
+            throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
+        return query;
     }
 
     @Override

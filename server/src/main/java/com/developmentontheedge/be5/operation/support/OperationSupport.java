@@ -122,7 +122,7 @@ public abstract class OperationSupport implements Operation
 
     public Query getQuery()
     {
-        return meta.getQuery(getInfo().getEntityName(), context.getQueryName(), userInfo.getCurrentRoles());
+        return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
     }
 
     public HashUrl getUrlForNewRecordId(Object newID)
