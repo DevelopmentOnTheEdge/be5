@@ -59,7 +59,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                 {
                     int updateCount1 = database.getEntity(reference.getTableFrom())
                             .removeWhereColumnIn(reference.getColumnsFrom(),
-                                    Utils.addPrefix(context.getRecords(), getInfo().getEntityName() + "."));
+                                    Utils.addPrefix(getInfo().getEntityName() + ".", context.getRecords()));
 
                     if (updateCount1 > 0)
                     {

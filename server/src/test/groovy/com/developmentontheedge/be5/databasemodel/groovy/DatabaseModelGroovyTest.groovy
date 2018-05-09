@@ -38,22 +38,22 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
     @Test
     void test()
     {
-        assertEquals(null, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
+        assertEquals(null, db.oneLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def id = testtableAdmin << [
                 "name": "TestName",
                 "value": 1]
 
-        assertEquals(id, db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
+        assertEquals(id, db.oneLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName"))
 
         testtableAdmin[id] << [
                 "value": 2
         ]
-        assertEquals(2, db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
+        assertEquals(2, db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def testtableAdmin = testtableAdmin
 
-        assert db.getLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
+        assert db.oneLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
         assert testtableAdmin( ["name": "TestName"] ) != null
     }
 
@@ -89,7 +89,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
                 "name": "InsertName",
                 "value": "2"]
 
-        assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+        assert db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
     }
 
     @Test
@@ -115,7 +115,7 @@ class DatabaseModelGroovyTest extends Be5ProjectDBTest
                 "name": "InsertName",
                 "value": "asd"]
 
-        assert db.getInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+        assert db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
     }
 
     @Test

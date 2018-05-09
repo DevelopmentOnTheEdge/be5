@@ -88,7 +88,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
                   "WHERE recordID   IN " + Utils.inClause(context.getRecords().length) +
                   "  AND categoryID IN " + Utils.inClause(categories.size()),
                   ObjectArrays.concat(
-                        Utils.addPrefix(context.getRecords(), entity + "."),
+                        Utils.addPrefix(entity + ".", context.getRecords()),
                         categories.toArray(),
                         Object.class));
 
@@ -105,7 +105,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
         while (cat != null) {
             categories.add(cat);
 
-            cat = db.getLong("SELECT c1.parentID FROM categories c1 WHERE c1.ID = ?", cat);
+            cat = db.oneLong("SELECT c1.parentID FROM categories c1 WHERE c1.ID = ?", cat);
         }
 
         return categories;

@@ -181,7 +181,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             try
             {
-                return db.selectList(getFinalSql(), parser);
+                return db.list(getFinalSql(), parser);
             }
             catch (RuntimeException e)
             {
@@ -396,7 +396,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         try
         {
-            dynamicPropertySets = db.selectList(finalSql, DpsRecordAdapter::createDps);
+            dynamicPropertySets = db.list(finalSql, DpsRecordAdapter::createDps);
         }
         catch (Throwable e)
         {

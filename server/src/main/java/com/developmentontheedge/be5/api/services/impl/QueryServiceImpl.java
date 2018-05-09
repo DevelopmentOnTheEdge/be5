@@ -60,13 +60,13 @@ public class QueryServiceImpl implements QueryService
     {
         if(parameter == null)return null;
 
-        if(parameter.getClass() == String.class)
+        if(parameter instanceof List)
         {
-            return Collections.singletonList((String) parameter);
+            return (List<String>) parameter;
         }
         else
         {
-            return (List<String>) parameter;
+            return Collections.singletonList(parameter.toString());
         }
     }
 
