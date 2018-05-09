@@ -52,7 +52,6 @@
   </dependency>
  </dependencies>
 
-
  <build>
   <plugins>
 
@@ -88,36 +87,6 @@
       <arg>-Xlint:all</arg>
      </compilerArgs>
     </configuration>
-   </plugin>
-
-   <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-javadoc-plugin</artifactId>
-    <version>2.10.3</version>
-    <executions>
-     <execution>
-      <id>attach-javadocs</id>
-      <goals>
-       <goal>jar</goal>
-      </goals>
-      <configuration>
-       <quiet>true</quiet>
-       <additionalparam>-Xdoclint:none</additionalparam>
-       <tags>
-         <tag>
-           <name>todo</name>
-           <placement>a</placement>
-           <head>TODO:</head>
-         </tag>
-         <tag>
-           <name>pending</name>
-           <placement>a</placement>
-           <head>PENDING:</head>
-         </tag>
-       </tags>
-      </configuration>
-     </execution>
-    </executions>
    </plugin>
 
   </plugins>
