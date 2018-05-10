@@ -115,6 +115,16 @@ public abstract class OperationSupport implements Operation
         setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, entityName, queryName).named(params).toString()));
     }
 
+    public String goBackUrl()
+    {
+        return "goBack()";
+    }
+
+    public void redirectGoBack()
+    {
+        setResult(OperationResult.redirect(goBackUrl()));
+    }
+
     public void redirectToTable(Query query, Map<String, Object> params)
     {
         setResult(OperationResult.redirect(new HashUrl(FrontendConstants.TABLE_ACTION, query.getEntity().getName(), query.getName()).named(params).toString()));
