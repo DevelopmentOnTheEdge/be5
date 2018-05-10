@@ -3,6 +3,7 @@ context:
   - userInfo:         com.developmentontheedge.be5.modules.core.components.UserInfoComponent
   - categories:       com.developmentontheedge.be5.modules.core.components.Categories
   services:
+  - com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper
   - coreUtils:
       interface:      com.developmentontheedge.be5.api.services.CoreUtils
       implementation: com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl

@@ -74,10 +74,7 @@ public class AddRemoveCategoryOperation extends GOperationSupport
                     "FROM "+entity+" e, categories c " +
                     "WHERE e."+pk+" IN " + Utils.inClause(context.getRecords().length) +
                     "  AND c.ID     IN " + Utils.inClause(categories.size()),
-                    ObjectArrays.concat(
-                            Utils.changeTypes(context.getRecords(), meta.getColumnType(getInfo().getEntity(), pk)),
-                            categories.toArray(),
-                            Object.class));
+                    ObjectArrays.concat(context.getRecords(), categories.toArray(), Object.class));
 
 //            out.write( localizedMessage( "Category" ) + " " + catList + " " +
 //                    localizedMessage( "was added to" ) + " <b>" + updateCount + "</b> " +
