@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.model.FrontendAction;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-
 
 public interface FrontendConstants
 {
@@ -29,12 +26,4 @@ public interface FrontendConstants
     String TOP_FORM = "topForm";
     //String TOP_DOCUMENT = "topDocument";
 
-    String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
-//    String GO_BACK = "GO_BACK";
-//    String GO_BACK_AND_UPDATE = "GO_BACK_AND_UPDATE";
-
-    static FrontendAction updateParentDocument(JsonApiModel model)
-    {
-        return new FrontendAction(UPDATE_PARENT_DOCUMENT, model);
-    }
 }

@@ -11,7 +11,7 @@ import org.junit.Test
 
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM
-import static com.developmentontheedge.be5.api.FrontendConstants.UPDATE_PARENT_DOCUMENT
+import static com.developmentontheedge.be5.api.FrontendActions.UPDATE_PARENT_DOCUMENT
 import static org.junit.Assert.assertEquals
 
 
