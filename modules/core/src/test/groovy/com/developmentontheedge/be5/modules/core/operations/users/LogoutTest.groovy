@@ -44,6 +44,8 @@ class LogoutTest extends SqlMockOperationTest
         def userInfoModel = (UserInfoModel) actions[0].getValue()
         assertEquals RoleType.ROLE_GUEST, userInfoModel.getUserName()
         assertEquals([RoleType.ROLE_GUEST], userInfoModel.getAvailableRoles())
+
+        assertEquals(CoreFrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
     }
 
 }
