@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
 
-import com.google.common.collect.ImmutableMap;
-
 public class OperationResult
 {
     ///////////////////////////////////////////////////////////////////
@@ -127,12 +125,6 @@ public class OperationResult
     public static OperationResult redirect(String url)
     {
         return new OperationResult(OperationStatus.REDIRECTED, url);
-    }
-
-    public static OperationResult redirect(String url, String newWindowUrl)
-    {
-        return new OperationResult(OperationStatus.REDIRECTED,
-                ImmutableMap.of("url", url, "newWindowUrl", newWindowUrl));
     }
 
     public static OperationResult error(String message, Throwable details)

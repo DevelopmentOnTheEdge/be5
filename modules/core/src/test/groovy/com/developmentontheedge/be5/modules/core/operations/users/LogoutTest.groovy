@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
@@ -36,9 +37,11 @@ class LogoutTest extends SqlMockOperationTest
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()
-        def actions = (Map<String, Object>) second.getDetails()
-        def userInfoModel = (UserInfoModel) actions.get(CoreFrontendConstants.UPDATE_USER_INFO)
+        def actions = (FrontendAction[]) second.getDetails()
 
+        assertEquals(CoreFrontendConstants.UPDATE_USER_INFO, actions[0].getType())
+
+        def userInfoModel = (UserInfoModel) actions[0].getValue()
         assertEquals RoleType.ROLE_GUEST, userInfoModel.getUserName()
         assertEquals([RoleType.ROLE_GUEST], userInfoModel.getAvailableRoles())
     }

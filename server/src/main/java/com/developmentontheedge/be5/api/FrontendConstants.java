@@ -1,10 +1,8 @@
 package com.developmentontheedge.be5.api;
 
-
+import com.developmentontheedge.be5.model.FrontendAction;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 
-import java.util.Collections;
-import java.util.Map;
 
 public interface FrontendConstants
 {
@@ -32,9 +30,11 @@ public interface FrontendConstants
     //String TOP_DOCUMENT = "topDocument";
 
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
+//    String GO_BACK = "GO_BACK";
+//    String GO_BACK_AND_UPDATE = "GO_BACK_AND_UPDATE";
 
-    static Map<String, Object> updateParentDocument(JsonApiModel model)
+    static FrontendAction updateParentDocument(JsonApiModel model)
     {
-        return Collections.singletonMap(UPDATE_PARENT_DOCUMENT, model);
+        return new FrontendAction(UPDATE_PARENT_DOCUMENT, model);
     }
 }

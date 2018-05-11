@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operations
 
+import com.developmentontheedge.be5.model.FrontendAction
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.operation.OperationResult
@@ -59,10 +60,13 @@ class FilterOperationTest extends SqlMockOperationTest
         assertEquals("finished",
                 oneQuotes(execute.getSecond().getStatus()))
 
-        def details = (Map<String, Object>)execute.getSecond().getDetails()
+        def details = (FrontendAction)execute.getSecond().getDetails()
+
         assertEquals("[_search_presets_:name, name:test, _search_:true]",
-                oneQuotes(((TablePresentation)((JsonApiModel)details.get(UPDATE_PARENT_DOCUMENT))
+                oneQuotes(((TablePresentation)((JsonApiModel)details.getValue())
                         .getData().getAttributes()).getParameters().toString()))
+
+        assertEquals(UPDATE_PARENT_DOCUMENT, details.getType())
     }
 
     @Test
