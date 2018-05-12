@@ -72,8 +72,8 @@ public class ServerModule extends ServletModule
         serve("/api/queryBuilder").with(QueryBuilder.class);
         serve("/api/download").with(DownloadComponent.class);
 
+        bind(LogConfigurator.class).asEagerSingleton();
         bind(FilterHelper.class).in(Scopes.SINGLETON);
-        bind(LogConfigurator.class).in(Scopes.SINGLETON);
         bind(DatabaseModel.class).in(Scopes.SINGLETON);
         bind(DpsHelper.class).in(Scopes.SINGLETON);
         bind(UserHelper.class).in(Scopes.SINGLETON);
