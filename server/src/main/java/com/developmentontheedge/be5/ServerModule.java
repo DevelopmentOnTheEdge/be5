@@ -63,11 +63,11 @@ public class ServerModule extends ServletModule
         bind(QueryBuilder.class).in(Scopes.SINGLETON);
         bind(DownloadComponent.class).in(Scopes.SINGLETON);
 
-        serve("/api/table").with(Table.class);
+        serve("/api/table*").with(Table.class);
         serve("/api/form*").with(Form.class);
         serve("/api/static*").with(StaticPageComponent.class);
-        serve("/api/menu").with(Menu.class);
-        serve("/api/languageSelector").with(LanguageSelector.class);
+        serve("/api/menu*").with(Menu.class);
+        serve("/api/languageSelector*").with(LanguageSelector.class);
         serve("/api/appInfo").with(ApplicationInfoComponent.class);
         serve("/api/queryBuilder").with(QueryBuilder.class);
         serve("/api/download").with(DownloadComponent.class);

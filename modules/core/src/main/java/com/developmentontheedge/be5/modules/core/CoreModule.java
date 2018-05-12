@@ -20,8 +20,8 @@ public class CoreModule extends ServletModule
         bind(UserInfoComponent.class).in(Scopes.SINGLETON);
         bind(Categories.class).in(Scopes.SINGLETON);
 
-        serve("/api/userInfo").with(UserInfoComponent.class);
-        serve("/api/categories").with(Categories.class);
+        serve("/api/userInfo*").with(UserInfoComponent.class);
+        serve("/api/categories*").with(Categories.class);
 
         bind(CoreUtils.class).to(CoreUtilsImpl.class).in(Scopes.SINGLETON);
         bind(LoginService.class).to(LoginServiceImpl.class).in(Scopes.SINGLETON);
