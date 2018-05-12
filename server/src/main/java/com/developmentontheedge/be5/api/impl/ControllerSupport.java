@@ -7,35 +7,31 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public abstract class ControllerSupport extends HttpServlet implements Controller
 {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     {
-        respond(request, response, request.getMethod(), request.getRequestURI());
+        respond(request, response, request.getRequestURI());
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
     {
-        respond(request, response, request.getMethod(), request.getRequestURI());
+        respond(request, response, request.getRequestURI());
     }
 
     /**
      * The general routing method. Tries to determine and find a component using a given request URI.
      * Generation of response is delegated to a found component.
      */
-    private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri)
+    private void respond(HttpServletRequest request, HttpServletResponse response, String requestUri)
     {
         String[] uriParts = requestUri.split("/");
         int ind = 1;
