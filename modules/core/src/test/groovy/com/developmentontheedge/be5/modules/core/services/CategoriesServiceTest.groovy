@@ -110,12 +110,12 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     @Test
     void getCategoryNavigationTest()
     {
-        def rootID = database.categories.add([
+        Long rootID = database.categories.add([
                 entity  : "docTypes",
                 name    : "Root"
         ])
 
-        def p1ID = database.categories.add([
+        Long p1ID = database.categories.add([
                 entity  : "docTypes",
                 name    : "p1",
                 parentID: rootID
