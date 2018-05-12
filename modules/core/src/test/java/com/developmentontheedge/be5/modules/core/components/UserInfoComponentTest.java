@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.api.Response;
 import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -23,9 +22,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class UserInfoComponentTest extends Be5ProjectTest
+public class UserInfoComponentTest extends CoreBe5ProjectTest
 {
-    @Inject private static UserInfoComponent component;
+    @Inject private UserInfoComponent component;
 
     @Before
     public void init()

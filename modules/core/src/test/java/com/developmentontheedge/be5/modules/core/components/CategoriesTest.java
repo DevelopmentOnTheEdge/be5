@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.modules.core.components;
 
 import com.developmentontheedge.be5.api.Response;
 import com.google.inject.Inject;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class CategoriesTest extends Be5ProjectTest
+public class CategoriesTest extends CoreBe5ProjectTest
 {
     @Inject private Categories component;
 

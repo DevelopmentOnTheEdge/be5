@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
-import com.developmentontheedge.be5.test.Be5ProjectDBTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class QueryServiceTest extends Be5ProjectDBTest
+public class QueryServiceTest extends ServerBe5ProjectDBTest
 {
     @Inject private ProjectProvider projectProvider;
     @Inject private SqlService db;

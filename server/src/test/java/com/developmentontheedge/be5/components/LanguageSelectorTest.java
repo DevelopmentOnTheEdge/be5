@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.components;
 
 import com.google.inject.Inject;
 
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
@@ -19,7 +19,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class LanguageSelectorTest extends Be5ProjectTest
+
+public class LanguageSelectorTest extends ServerBe5ProjectTest
 {
     @Inject private LanguageSelector component;
 

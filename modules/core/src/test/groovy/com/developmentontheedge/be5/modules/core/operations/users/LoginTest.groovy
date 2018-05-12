@@ -7,9 +7,9 @@ import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants
+import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectTest
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
 
-class LoginTest extends Be5ProjectTest
+class LoginTest extends CoreBe5ProjectTest
 {
     @Before
     void init(){

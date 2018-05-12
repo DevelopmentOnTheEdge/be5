@@ -1,19 +1,18 @@
 package com.developmentontheedge.be5.components;
 
 import com.google.inject.Inject;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class MenuTest extends Be5ProjectTest
+public class MenuTest extends ServerBe5ProjectTest
 {
     @Inject private Menu component;
 

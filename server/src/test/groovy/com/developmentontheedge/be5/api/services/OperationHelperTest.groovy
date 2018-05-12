@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.sql.DpsRecordAdapter
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.QRec
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
 
-class OperationHelperTest extends Be5ProjectDBTest
+class OperationHelperTest extends ServerBe5ProjectDBTest
 {
     @Inject private SqlService db
     @Inject private DatabaseModel database

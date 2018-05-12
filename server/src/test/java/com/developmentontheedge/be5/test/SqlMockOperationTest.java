@@ -21,7 +21,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.when;
 
 
-public abstract class SqlMockOperationTest extends Be5ProjectTest
+public abstract class SqlMockOperationTest extends ServerBe5ProjectTest
 {
     @Inject protected DpsHelper dpsHelper;
     @Inject protected Meta meta;

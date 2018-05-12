@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class StaticPageComponentTest extends Be5ProjectTest
+public class StaticPageComponentTest extends ServerBe5ProjectTest
 {
     @Inject private StaticPageComponent component;
 

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.services
 import com.developmentontheedge.be5.api.validation.Validator
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import org.junit.Before
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 
 
-class ValidatorServiceTest extends Be5ProjectTest
+class ValidatorServiceTest extends ServerBe5ProjectTest
 {
     @Inject Validator validator
     GDynamicPropertySetSupport dps

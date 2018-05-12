@@ -4,16 +4,16 @@ import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.api.services.CoreUtils
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import javax.inject.Inject
+import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 
-class CoreUtilsTest extends Be5ProjectDBTest
+class CoreUtilsTest extends CoreBe5ProjectDBTest
 {
     @Inject DatabaseModel database
     @Inject SqlService db

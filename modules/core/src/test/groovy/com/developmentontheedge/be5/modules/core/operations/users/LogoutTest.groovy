@@ -5,9 +5,9 @@ import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants
+import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectTest
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.SqlMockOperationTest
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
 
-class LogoutTest extends SqlMockOperationTest
+class LogoutTest extends CoreBe5ProjectTest
 {
     @Test
     void logout()

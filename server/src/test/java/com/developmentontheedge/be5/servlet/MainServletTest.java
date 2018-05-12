@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class MainServletTest extends Be5ProjectTest
+public class MainServletTest extends ServerBe5ProjectTest
 {
 //    @Inject private Injector injector;
 //

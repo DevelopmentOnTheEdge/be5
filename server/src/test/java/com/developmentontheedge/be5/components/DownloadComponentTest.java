@@ -2,10 +2,8 @@ package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.google.inject.Inject;
-
-
-import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,7 +11,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 
 
-public class DownloadComponentTest extends Be5ProjectTest
+public class DownloadComponentTest extends ServerBe5ProjectTest
 {
     @Inject private DownloadComponent component;
 

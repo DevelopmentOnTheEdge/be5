@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.helpers;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.model.Action;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 
-public class MenuHelperTest extends Be5ProjectTest
+public class MenuHelperTest extends ServerBe5ProjectTest
 {
     @Inject private MenuHelper menuHelper;
 
