@@ -19,8 +19,6 @@ import java.util.regex.Pattern;
 
 public abstract class ControllerSupport extends HttpServlet implements Controller
 {
-    private final static Pattern uriPattern = Pattern.compile("(/.*)?/api/(.*)");
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -39,12 +37,6 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
      */
     private void respond(HttpServletRequest request, HttpServletResponse response, String method, String requestUri)
     {
-        Matcher matcher = uriPattern.matcher(requestUri);
-        if (!matcher.matches())
-        {
-            throw new RuntimeException("must be bind to /api/");
-        }
-
         String[] uriParts = requestUri.split("/");
         int ind = 1;
 
