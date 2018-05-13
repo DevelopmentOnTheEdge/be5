@@ -21,7 +21,7 @@ public class OperationModelBase implements OperationModel
     private OperationExecutor operationExecutor;
     private Meta meta;
 
-    private String[] records = new String[]{ };
+    private Object[] records = new Object[]{ };
 
     private String entityName;
     private String queryName;
@@ -58,7 +58,7 @@ public class OperationModelBase implements OperationModel
     }
 
     @Override
-    public OperationModel setRecords( String... records )
+    public OperationModel setRecords( Object[] records )
     {
         this.records = records;
         return this;
@@ -125,7 +125,7 @@ public class OperationModelBase implements OperationModel
     private OperationInfo getOperationInfo()
     {
         com.developmentontheedge.be5.metadata.model.Operation operationModel =
-                meta.getOperationIgnoringRoles(entityName, operationName);
+                meta.getOperation(entityName, operationName);
 
         Objects.requireNonNull(operationModel, "Operation '" + entityName + "." + operationName + "' not found.");
 

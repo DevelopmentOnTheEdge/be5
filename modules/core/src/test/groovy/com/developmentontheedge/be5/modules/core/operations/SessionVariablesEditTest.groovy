@@ -35,7 +35,7 @@ class SessionVariablesEditTest extends SqlMockOperationTest
     {
         setSession("remoteAddr", "199.168.0.1")
 
-        when(SqlServiceMock.mock.getScalar(anyString(), anyVararg())).thenReturn(1L)
+        when(SqlServiceMock.mock.one(anyString(), anyVararg())).thenReturn(1L)
 
         executeOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", ["newValue":"199.168.0.2"])
 

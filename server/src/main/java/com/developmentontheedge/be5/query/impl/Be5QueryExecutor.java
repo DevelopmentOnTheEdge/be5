@@ -81,8 +81,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String resolveQuery(String entityName, String queryName)
         {
-            return meta.getQueryCode( entityName == null ? query.getEntity().getName() : entityName,
-                    queryName, UserInfoHolder.getCurrentRoles() );
+            return meta.getQueryCode( entityName == null ? query.getEntity().getName() : entityName, queryName );
         }
 
         @Override
@@ -182,7 +181,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         {
             try
             {
-                return db.selectList(getFinalSql(), parser);
+                return db.list(getFinalSql(), parser);
             }
             catch (RuntimeException e)
             {
@@ -207,7 +206,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         DebugQueryLogger dql = new DebugQueryLogger();
         dql.log("Orig", query.getQuery());
 
-        String queryText = meta.getQueryCode(query, UserInfoHolder.getCurrentRoles());
+        String queryText = meta.getQueryCode(query);
 
         dql.log("After FreeMarker", queryText);
         if(queryText.isEmpty())
@@ -397,7 +396,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         try
         {
-            dynamicPropertySets = db.selectList(finalSql, DpsRecordAdapter::createDps);
+            dynamicPropertySets = db.list(finalSql, DpsRecordAdapter::createDps);
         }
         catch (Throwable e)
         {

@@ -28,16 +28,14 @@ public class RequestImpl implements Request
     private final HttpServletRequest rawRequest;
     private final String requestUri;
     private final String remoteAddr;
-    private final String sessionId;
     
     public RequestImpl(HttpServletRequest rawRequest, String requestUri)
     {
         this.rawRequest = rawRequest;
         this.requestUri = requestUri;
         this.remoteAddr = getClientIpAddr(rawRequest);
-        this.sessionId = rawRequest.getSession().getId();
     }
-    
+
     @Override
     public Object getAttribute(String name)
     {
@@ -60,6 +58,20 @@ public class RequestImpl implements Request
     }
 
     @Override
+    public Session getSession(boolean create)
+    {
+        HttpSession rawSession = rawRequest.getSession(create);
+        if(rawSession == null)return null;
+        return new SessionImpl(rawSession);
+    }
+
+    @Override
+    public String getSessionId()
+    {
+        return getSession().getSessionId();
+    }
+
+    @Override
     public String get(String name)
     {
         return rawRequest.getParameter(name);
@@ -74,7 +86,17 @@ public class RequestImpl implements Request
     @Override
     public String[] getParameterValues(String name)
     {
-        return rawRequest.getParameterValues(name + "[]");
+        String[] values = rawRequest.getParameterValues(name + "[]");
+        if(values == null)
+        {
+            String value = rawRequest.getParameter(name);
+            if(value != null){
+                return new String[]{value};
+            }else{
+                return new String[]{};
+            }
+        }
+        return values;
     }
 
 //
@@ -155,12 +177,6 @@ public class RequestImpl implements Request
     public String getRemoteAddr()
     {
         return remoteAddr;
-    }
-
-    @Override
-    public String getSessionId()
-    {
-        return sessionId;
     }
 
     @Override

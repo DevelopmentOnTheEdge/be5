@@ -6,7 +6,8 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.modules.core.api.CoreFrontendConstants
+import com.developmentontheedge.be5.model.FrontendAction
+import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.Be5ProjectTest
@@ -50,14 +51,14 @@ class LoginTest extends Be5ProjectTest
 
         String testPass = "testPass"
 
-        when(SqlServiceMock.mock.getScalar(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
+        when(SqlServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
 
-        when(SqlServiceMock.mock.selectList(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
+        when(SqlServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
                 Matchers.<ResultSetParser<String>>any(), eq(TEST_USER)))
                 .thenReturn(Arrays.asList("Test1", "Test2"))
 
-        when(SqlServiceMock.mock.getScalar(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
+        when(SqlServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
                 eq(DatabaseConstants.CURRENT_ROLE_LIST), eq(TEST_USER)))
                 .thenReturn("('Test1')")
 
@@ -72,11 +73,15 @@ class LoginTest extends Be5ProjectTest
         assertEquals Arrays.asList("Test1"), UserInfoHolder.getUserInfo().currentRoles
         assertEquals session, UserInfoHolder.getUserInfo().session
 
-        def actions = (Map<String, Object>) second.getDetails()
-        def userInfoModel = (UserInfoModel) actions.get(CoreFrontendConstants.UPDATE_USER_INFO)
+        def actions = (FrontendAction[]) second.getDetails()
 
+        assertEquals(CoreFrontendActions.UPDATE_USER_INFO, actions[0].getType())
+
+        def userInfoModel = (UserInfoModel) actions[0].getValue()
         assertEquals TEST_USER, userInfoModel.getUserName()
         assertEquals(Arrays.asList("Test1", "Test2"), userInfoModel.getAvailableRoles())
+
+        assertEquals(CoreFrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
     }
 
     @Test

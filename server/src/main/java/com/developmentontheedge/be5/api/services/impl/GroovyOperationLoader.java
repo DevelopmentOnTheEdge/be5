@@ -42,7 +42,7 @@ public class GroovyOperationLoader
             List<String> operationNames = meta.getOperationNames(entity);
             for (String operationName : operationNames)
             {
-                com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperationIgnoringRoles(entity, operationName);
+                com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperation(entity.getName(), operationName);
                 if(operation.getType().equals(OPERATION_TYPE_GROOVY))
                 {
                     GroovyOperation groovyOperation = (GroovyOperation) operation;

@@ -75,13 +75,12 @@ public class LoginServiceImpl implements LoginService
 
         String sql = "SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?";
 
-        return db.getLong(sql, username, password) == 1L;
+        return db.oneLong(sql, username, password) == 1L;
     }
 
     private List<String> selectAvailableRoles(String username)
     {
-        return db.selectList("SELECT role_name FROM user_roles WHERE user_name = ?",
-                    rs -> rs.getString(1), username);
+        return db.scalarList("SELECT role_name FROM user_roles WHERE user_name = ?", username);
     }
 
     @Override

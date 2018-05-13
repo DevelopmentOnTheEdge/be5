@@ -4,9 +4,12 @@ import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.inject.Injector;
+import com.developmentontheedge.be5.inject.Stage;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
@@ -34,6 +37,11 @@ public class Form implements Component
     {
         OperationExecutor operationExecutor = injector.get(OperationExecutor.class);
         DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+
+        if(injector.get(Stage.class) == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
+        {
+            injector.get(UserHelper.class).initGuest(req);
+        }
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
