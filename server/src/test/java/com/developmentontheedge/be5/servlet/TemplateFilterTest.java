@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.google.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -25,14 +26,11 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 public class TemplateFilterTest extends ServerBe5ProjectTest
 {
-    private UserAwareMeta userAwareMeta;
-    private UserHelper userHelper;
+    @Inject private TemplateFilter templateFilter;
 
-    private TemplateFilter templateFilter;
-
-    private FilterConfig filterConfig;
     private ServletContext servletContext;
 
     private Response res;
@@ -46,12 +44,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
     @Before
     public void setUp()
     {
-        userAwareMeta = mock(UserAwareMeta.class);
-        userHelper = mock(UserHelper.class);
-
-        templateFilter = new TemplateFilter(userAwareMeta, userHelper);
-
-        filterConfig = mock(FilterConfig.class);
+        FilterConfig filterConfig = mock(FilterConfig.class);
         servletContext = mock(ServletContext.class);
         when(filterConfig.getServletContext()).thenReturn(servletContext);
 
@@ -60,7 +53,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
         res = mock(Response.class);
         filterChain = mock(FilterChain.class);
 
-        req = getMockRequest("/");
+        req = getSpyMockRequest("/");
     }
 
     @Test
@@ -72,7 +65,7 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
 
         templateFilter.filter(req, res, filterChain);
 
-        verify(userHelper, only()).initGuest(req);
+        assertEquals(RoleType.ROLE_GUEST, UserInfoHolder.getUserName());
         verify(filterChain, only()).doFilter(any(), any());
     }
 
