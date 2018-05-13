@@ -18,13 +18,10 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 
 public class TemplateFilter extends FilterSupport
 {
-    private static final Logger log = Logger.getLogger(TemplateFilter.class.getName());
-
     private ServletContext servletContext;
     private TemplateEngine templateEngine;
 
