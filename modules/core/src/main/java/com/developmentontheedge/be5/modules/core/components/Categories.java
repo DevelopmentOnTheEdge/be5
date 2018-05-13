@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.impl.ControllerSupport;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 
 import com.google.inject.Inject;

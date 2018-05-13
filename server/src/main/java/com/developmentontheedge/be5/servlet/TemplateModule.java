@@ -9,8 +9,8 @@ public class TemplateModule extends ServletModule
     @Override
     protected void configureServlets()
     {
-        bind(Be5TemplateFilter.class).in(Scopes.SINGLETON);
-        filter("/*").through(Be5TemplateFilter.class);
-        //filter("/api/*").through(Be5Filter.class);
+        bind(TemplateFilter.class).in(Scopes.SINGLETON);
+
+        filter("/*").through(TemplateFilter.class);
     }
 }

@@ -1,10 +1,11 @@
 package com.developmentontheedge.be5.servlet;
 
+import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.RequestImpl;
-import com.developmentontheedge.be5.api.impl.ResponseImpl;
+import com.developmentontheedge.be5.api.support.FilterSupport;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -12,35 +13,30 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import com.google.inject.Inject;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 
-public class Be5TemplateFilter implements Filter
+public class TemplateFilter extends FilterSupport
 {
-    private static final Logger log = Logger.getLogger(Be5TemplateFilter.class.getName());
+    private static final Logger log = Logger.getLogger(TemplateFilter.class.getName());
 
     private ServletContext servletContext;
     private TemplateEngine templateEngine;
 
+    private final UserAwareMeta userAwareMeta;
     private final UserHelper userHelper;
 
     @Inject
-    public Be5TemplateFilter(UserHelper userHelper)
+    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper)
     {
+        this.userAwareMeta = userAwareMeta;
         this.userHelper = userHelper;
     }
-
-    //TODO private final DaemonStarter starter;
 
     @Override
     public void init(FilterConfig filterConfig)
@@ -66,29 +62,23 @@ public class Be5TemplateFilter implements Filter
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+    public void filter(Request req, Response res, FilterChain chain) throws IOException, ServletException
     {
-        HttpServletRequest req = (HttpServletRequest) request;
-
         if (UserInfoHolder.getUserInfo() == null)
         {
-            userHelper.initGuest(new RequestImpl(req, req.getRequestURI()));
+            userHelper.initGuest(req);
         }
 
-        String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestURI());
+        String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestUri());
 
         if (servletContext.getResourceAsStream("/WEB-INF/templates" + reqWithoutContext + "index.html") == null)
         {
-            chain.doFilter(request, response);
+            chain.doFilter(req.getRawRequest(), res.getRawResponse());
             return;
         }
 
-//        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
-//        String title = userAwareMeta.getColumnTitle("index", "page", "title");
-//        String description = userAwareMeta.getColumnTitle("index", "page", "description");
-        String title = "123";
-        String description = "12345";
-
+        String title = userAwareMeta.getColumnTitle("index", "page", "title");
+        String description = userAwareMeta.getColumnTitle("index", "page", "description");
 
         Context context = new Context();
         context.setVariable("lang", UserInfoHolder.getLanguage());
@@ -98,30 +88,7 @@ public class Be5TemplateFilter implements Filter
         context.setVariable("baseUrl", req.getContextPath() + reqWithoutContext);
         context.setVariable("baseUrlWithoutContext", reqWithoutContext);
 
-        Response res = getResponse((HttpServletRequest) request, (HttpServletResponse) response);
         res.sendHtml(templateEngine.process(reqWithoutContext + "index", context));
-    }
-
-    private Response getResponse(HttpServletRequest request, HttpServletResponse response)
-    {
-        String origin = request.getHeader("Origin");// TODO test origin
-
-        response.addHeader("Access-Control-Allow-Credentials", "true");
-        response.addHeader("Access-Control-Allow-Origin", origin);
-        response.addHeader("Access-Control-Allow-Methods", "POST, GET");
-        response.addHeader("Access-Control-Max-Age", "1728000");
-
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-
-        return new ResponseImpl(response);
-    }
-
-    @Override
-    public void destroy()
-    {
-        // nothing to do
     }
 
 }
