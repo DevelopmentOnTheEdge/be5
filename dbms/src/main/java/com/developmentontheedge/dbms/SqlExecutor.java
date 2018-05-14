@@ -28,7 +28,7 @@ public class SqlExecutor
     protected final DbmsConnector connector;
     protected final Properties properties;
     protected String sectionName;
-    private final Map<String, BulkInserter> inserters = new HashMap<>();
+    //private final Map<String, BulkInserter> inserters = new HashMap<>();
 
     static URL getDefaultPropertiesFile()
     {
@@ -178,93 +178,93 @@ public class SqlExecutor
             throw new ExtendedSqlException( connector, sql, e );
         }
     }
-
-    /**
-     * Executes the query with the given name and returns its insert ID.
-     *
-     * @param queryName The name of the query to be executed.
-     * @param args Query arguments.
-     * @return id of inserted record (db-specific)
-     * @throws ExtendedSqlException SQL execution error
-     */
-    public String execInsert(String queryName, Object ... args) throws ExtendedSqlException
-    {
-        if( mustUsePreparedStatement( args ) )
-        {
-            return execPrepared( queryName, args, true );
-        }
-        String sql = sql( queryName, args );
-        try
-        {
-            log( sql );
-            return connector.executeInsert( sql );
-        }
-        catch( SQLException e )
-        {
-            comment( "Warning: SQL error " + e.getMessage() + " trying again...", false );
-            try
-            {
-                return connector.executeInsert( sql );
-            }
-            catch( SQLException e1 )
-            {
-                throw handleError( sql, e );
-            }
-        }
-    }
-
-    public void execDelayedInsert(String queryName, Object ... args) throws ExtendedSqlException
-    {
-        if( sectionName != null )
-        {
-            comment( sectionName );
-            sectionName = null;
-        }
-        if( mustUsePreparedStatement( args ) )
-        {
-            execPrepared( queryName, args, false );
-            return;
-        }
-        BulkInserter inserter = inserters.get( queryName );
-        if( inserter == null )
-        {
-            String query = getQuery( queryName );
-            int pos = query.indexOf( "VALUES(" );
-            int lastPos = query.lastIndexOf( ')' );
-            if( pos <= 0 || lastPos <= 0 )
-            {
-                throw new IllegalArgumentException( "Template " + queryName + " is not proper insert template" );
-            }
-            String initString = query.substring( 0, pos );
-            String valuesTemplate = query.substring( pos + "VALUES(".length(), lastPos );
-            inserter = new BulkInserter( connector, initString, valuesTemplate, log );
-            inserters.put( queryName, inserter );
-        }
-        comment( "(delayed) " + sql( queryName, args ) + ";", false );
-        try
-        {
-            inserter.add( args );
-        }
-        catch( Exception e )
-        {
-            throw handleError( "", e );
-        }
-    }
-
-    public void flushDelayedInserts() throws ExtendedSqlException
-    {
-        for( BulkInserter inserter : inserters.values() )
-        {
-            try
-            {
-                inserter.flush();
-            }
-            catch( Exception e )
-            {
-                throw handleError( "", e );
-            }
-        }
-    }
+//
+//    /**
+//     * Executes the query with the given name and returns its insert ID.
+//     *
+//     * @param queryName The name of the query to be executed.
+//     * @param args Query arguments.
+//     * @return id of inserted record (db-specific)
+//     * @throws ExtendedSqlException SQL execution error
+//     */
+//    public String execInsert(String queryName, Object ... args) throws ExtendedSqlException
+//    {
+//        if( mustUsePreparedStatement( args ) )
+//        {
+//            return execPrepared( queryName, args, true );
+//        }
+//        String sql = sql( queryName, args );
+//        try
+//        {
+//            log( sql );
+//            return connector.executeInsert( sql );
+//        }
+//        catch( SQLException e )
+//        {
+//            comment( "Warning: SQL error " + e.getMessage() + " trying again...", false );
+//            try
+//            {
+//                return connector.executeInsert( sql );
+//            }
+//            catch( SQLException e1 )
+//            {
+//                throw handleError( sql, e );
+//            }
+//        }
+//    }
+//
+//    public void execDelayedInsert(String queryName, Object ... args) throws ExtendedSqlException
+//    {
+//        if( sectionName != null )
+//        {
+//            comment( sectionName );
+//            sectionName = null;
+//        }
+//        if( mustUsePreparedStatement( args ) )
+//        {
+//            execPrepared( queryName, args, false );
+//            return;
+//        }
+//        BulkInserter inserter = inserters.get( queryName );
+//        if( inserter == null )
+//        {
+//            String query = getQuery( queryName );
+//            int pos = query.indexOf( "VALUES(" );
+//            int lastPos = query.lastIndexOf( ')' );
+//            if( pos <= 0 || lastPos <= 0 )
+//            {
+//                throw new IllegalArgumentException( "Template " + queryName + " is not proper insert template" );
+//            }
+//            String initString = query.substring( 0, pos );
+//            String valuesTemplate = query.substring( pos + "VALUES(".length(), lastPos );
+//            inserter = new BulkInserter( connector, initString, valuesTemplate, log );
+//            inserters.put( queryName, inserter );
+//        }
+//        comment( "(delayed) " + sql( queryName, args ) + ";", false );
+//        try
+//        {
+//            inserter.add( args );
+//        }
+//        catch( Exception e )
+//        {
+//            throw handleError( "", e );
+//        }
+//    }
+//
+//    public void flushDelayedInserts() throws ExtendedSqlException
+//    {
+//        for( BulkInserter inserter : inserters.values() )
+//        {
+//            try
+//            {
+//                inserter.flush();
+//            }
+//            catch( Exception e )
+//            {
+//                throw handleError( "", e );
+//            }
+//        }
+//    }
 
     /**
      * Executes query with the given name and returns
@@ -299,87 +299,87 @@ public class SqlExecutor
             throw new ExtendedSqlException( connector, sql, e );
         }
     }
-
-    /**
-     * Executes query with the specified name and returns result
-     * as a list containing values of the first column in record set.
-     *
-     * @param queryName Query name to execute.
-     * @param args Query arguments.
-     * @return List containing values of the first column in record set.
-     * @throws ExtendedSqlException SQL execution error
-     */
-    public List<String> readStringList(String queryName, Object ... args) throws ExtendedSqlException
-    {
-        String sql = sql( queryName, args );
-        try
-        {
-            log( sql );
-            ResultSet rs = connector.executeQuery( sql );
-            try
-            {
-                List<String> result = new ArrayList<>();
-                while( rs.next() )
-                    result.add( rs.getString( 1 ) );
-                return result;
-            }
-            finally
-            {
-                connector.close( rs );
-            }
-        }
-        catch( Exception e )
-        {
-            throw new ExtendedSqlException( connector, sql, e );
-        }
-    }
-
-    /**
-     * Executes query with the specified name and returns result
-     * as a map with keys from first column of result set and values from the second column
-     *
-     * @param queryName Query name to execute.
-     * @param args Query arguments.
-     * @return Map
-     * @throws ExtendedSqlException SQL execution error
-     */
-    public Map<String, String> readMap(String queryName, Object ... args) throws ExtendedSqlException
-    {
-        String sql = sql( queryName, args );
-        try
-        {
-            log( sql );
-            ResultSet rs = connector.executeQuery( sql );
-            try
-            {
-                Map<String, String> result = new HashMap<>();
-                while( rs.next() )
-                    result.put( rs.getString( 1 ), rs.getString( 2 ) );
-                return result;
-            }
-            finally
-            {
-                connector.close( rs );
-            }
-        }
-        catch( Exception e )
-        {
-            throw new ExtendedSqlException( connector, sql, e );
-        }
-    }
-
-    public boolean hasTable(String tableName)
-    {
-        try
-        {
-            readString( "sql.test.table", tableName );
-            return true;
-        }
-        catch( ExtendedSqlException e )
-        {
-            return false;
-        }
-    }
+//
+//    /**
+//     * Executes query with the specified name and returns result
+//     * as a list containing values of the first column in record set.
+//     *
+//     * @param queryName Query name to execute.
+//     * @param args Query arguments.
+//     * @return List containing values of the first column in record set.
+//     * @throws ExtendedSqlException SQL execution error
+//     */
+//    public List<String> readStringList(String queryName, Object ... args) throws ExtendedSqlException
+//    {
+//        String sql = sql( queryName, args );
+//        try
+//        {
+//            log( sql );
+//            ResultSet rs = connector.executeQuery( sql );
+//            try
+//            {
+//                List<String> result = new ArrayList<>();
+//                while( rs.next() )
+//                    result.add( rs.getString( 1 ) );
+//                return result;
+//            }
+//            finally
+//            {
+//                connector.close( rs );
+//            }
+//        }
+//        catch( Exception e )
+//        {
+//            throw new ExtendedSqlException( connector, sql, e );
+//        }
+//    }
+//
+//    /**
+//     * Executes query with the specified name and returns result
+//     * as a map with keys from first column of result set and values from the second column
+//     *
+//     * @param queryName Query name to execute.
+//     * @param args Query arguments.
+//     * @return Map
+//     * @throws ExtendedSqlException SQL execution error
+//     */
+//    public Map<String, String> readMap(String queryName, Object ... args) throws ExtendedSqlException
+//    {
+//        String sql = sql( queryName, args );
+//        try
+//        {
+//            log( sql );
+//            ResultSet rs = connector.executeQuery( sql );
+//            try
+//            {
+//                Map<String, String> result = new HashMap<>();
+//                while( rs.next() )
+//                    result.put( rs.getString( 1 ), rs.getString( 2 ) );
+//                return result;
+//            }
+//            finally
+//            {
+//                connector.close( rs );
+//            }
+//        }
+//        catch( Exception e )
+//        {
+//            throw new ExtendedSqlException( connector, sql, e );
+//        }
+//    }
+//
+//    public boolean hasTable(String tableName)
+//    {
+//        try
+//        {
+//            readString( "sql.test.table", tableName );
+//            return true;
+//        }
+//        catch( ExtendedSqlException e )
+//        {
+//            return false;
+//        }
+//    }
 
     public boolean hasResult(String queryName, Object ... args) throws ExtendedSqlException
     {
