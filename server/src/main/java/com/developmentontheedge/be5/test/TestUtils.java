@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -51,6 +52,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.json.bind.Jsonb;
@@ -77,6 +79,8 @@ import java.util.stream.Collectors;
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
 import static com.developmentontheedge.be5.test.TestProjectProvider.profileForIntegrationTests;
 import static com.developmentontheedge.be5.util.ParseRequestUtils.replaceEmptyStringToNull;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -360,6 +364,15 @@ public abstract class TestUtils
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void whenSelectListTagsContains(String containsSql, String... tagValues)
+    {
+        List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
+                .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
+
+        when(SqlServiceMock.mock.list(contains(containsSql),
+                Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 
     public static class ShowCreatedOperations extends TestWatcher

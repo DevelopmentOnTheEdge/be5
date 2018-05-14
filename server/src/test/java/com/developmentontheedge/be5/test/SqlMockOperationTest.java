@@ -39,12 +39,4 @@ public abstract class SqlMockOperationTest extends ServerBe5ProjectTest
         initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
-    public static void whenSelectListTagsContains(String containsSql, String... tagValues)
-    {
-        List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
-                .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
-
-        when(SqlServiceMock.mock.list(contains(containsSql),
-                Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
-    }
 }
