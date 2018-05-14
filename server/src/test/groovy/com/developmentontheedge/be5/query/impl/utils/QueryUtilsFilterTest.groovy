@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.query.impl.utils
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.sql.model.AstStart
 import com.developmentontheedge.sql.model.SqlQuery
 import org.junit.Test
@@ -11,7 +11,7 @@ import javax.inject.Inject
 import static org.junit.Assert.*
 
 
-class QueryUtilsFilterTest extends Be5ProjectTest
+class QueryUtilsFilterTest extends ServerBe5ProjectTest
 {
     @Inject Meta meta
 

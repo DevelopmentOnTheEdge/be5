@@ -1,9 +1,10 @@
 package com.developmentontheedge.be5.api;
 
-import com.developmentontheedge.be5.inject.Stage;
+import com.developmentontheedge.be5.api.support.RequestPreprocessorSupport;
+import com.google.inject.Stage;
 
 
-public class TestRequestPreprocessor implements RequestPreprocessor
+public class TestRequestPreprocessor extends RequestPreprocessorSupport
 {
     private final Stage stage;
 
@@ -13,7 +14,7 @@ public class TestRequestPreprocessor implements RequestPreprocessor
     }
 
     @Override
-    public void preprocessUrl(String componentId, Request req, Response res)
+    public void preprocessUrl(Request req, Response res)
     {
         req.setAttribute("testRequestPreprocessor", stage.toString());
     }

@@ -1,16 +1,13 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import java.util.Date;
 
 import static org.mockito.Matchers.any;
@@ -20,14 +17,7 @@ import static org.mockito.Mockito.verify;
 
 public class TableTest extends SqlMockOperationTest
 {
-    @Inject private Injector injector;
-    private Component component;
-
-    @Before
-    public void init()
-    {
-        component = (Component)injector.getComponent("table");
-    }
+    @Inject private Table component;
 
     @Test
     public void generate()
@@ -37,7 +27,7 @@ public class TableTest extends SqlMockOperationTest
         component.generate(getSpyMockRequest("", ImmutableMap.of(
                 RestApiConstants.ENTITY,"testtable",
                 RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime(),
-                RestApiConstants.QUERY,"All records")), response, injector);
+                RestApiConstants.QUERY,"All records")), response);
 
         verify(response).sendAsJson(any(JsonApiModel.class));
     }

@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.api.helpers.impl;
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.google.inject.Inject;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class UserAwareMetaImplTest extends Be5ProjectTest
+public class UserAwareMetaImplTest extends ServerBe5ProjectTest
 {
     @Inject private UserAwareMeta userAwareMeta;
 

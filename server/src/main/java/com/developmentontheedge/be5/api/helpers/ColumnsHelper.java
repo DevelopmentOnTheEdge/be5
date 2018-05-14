@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.google.common.collect.ImmutableList;
 
+import com.google.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ColumnsHelper
 
     private final Meta meta;
 
+    @Inject
     public ColumnsHelper(Meta meta)
     {
         this.meta = meta;

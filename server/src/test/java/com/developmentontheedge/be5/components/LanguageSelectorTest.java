@@ -1,16 +1,14 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.Component;
+import com.google.inject.Inject;
+
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -21,15 +19,10 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class LanguageSelectorTest extends Be5ProjectTest
-{
-    @Inject private Injector injector;
-    private Component component;
 
-    @Before
-    public void init(){
-        component = (Component)injector.getComponent("languageSelector");
-    }
+public class LanguageSelectorTest extends ServerBe5ProjectTest
+{
+    @Inject private LanguageSelector component;
 
     private LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
             new LanguageSelector.LanguageSelectorResponse(
@@ -41,7 +34,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, injector);
+        component.generate(getMockRequest(""), response);
 
 
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
@@ -58,7 +51,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
 
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("select"), response, injector);
+        component.generate(getSpyMockRequest("select"), response);
     }
 
     @Test
@@ -68,7 +61,7 @@ public class LanguageSelectorTest extends Be5ProjectTest
 
         Request request = getSpyMockRequest("select", ImmutableMap.of("language", "RU") );
 
-        component.generate(request, response, injector);
+        component.generate(request, response);
 
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
     }

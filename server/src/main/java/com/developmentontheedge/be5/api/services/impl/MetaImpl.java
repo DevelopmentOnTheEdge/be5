@@ -48,6 +48,8 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.sql.format.SqlTypeUtils;
 
+import com.google.inject.Inject;
+
 
 public class MetaImpl implements Meta
 {
@@ -91,6 +93,7 @@ public class MetaImpl implements Meta
      */
     private final ProjectProvider projectProvider;
 
+    @Inject
     public MetaImpl(ProjectProvider projectProvider)
     {
         this.projectProvider = projectProvider;

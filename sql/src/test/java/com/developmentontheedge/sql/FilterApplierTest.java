@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.developmentontheedge.sql.format.SqlTypeUtils;
 import one.util.streamex.EntryStream;
 
 import org.junit.Test;
@@ -146,18 +145,18 @@ public class FilterApplierTest
         return listParams;
     }
 
+    @SuppressWarnings("unchecked")
     private List<Object> getParameterList(Object parameter)
     {
         if(parameter == null)return null;
 
-        if(parameter.getClass() == String.class || SqlTypeUtils.isNumber(parameter.getClass())
-                || parameter.getClass() == java.sql.Date.class)
+        if(parameter instanceof List)
         {
-            return Collections.singletonList(parameter);
+            return (List<Object>) parameter;
         }
         else
         {
-            return (List<Object>) parameter;
+            return Collections.singletonList(parameter);
         }
     }
 }

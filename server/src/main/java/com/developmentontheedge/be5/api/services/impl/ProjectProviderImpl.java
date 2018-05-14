@@ -2,12 +2,13 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.inject.Stage;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.WatchDir;
+import com.google.inject.Stage;
 
+import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ProjectProviderImpl implements ProjectProvider
 
     private final Stage stage;
 
+    @Inject
     public ProjectProviderImpl(Stage stage)
     {
         this.stage = stage;

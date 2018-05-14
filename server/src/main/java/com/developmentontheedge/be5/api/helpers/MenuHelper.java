@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.util.ActionUtils;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,7 @@ public class MenuHelper
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
 
+    @Inject
     public MenuHelper(UserAwareMeta userAwareMeta, Meta meta)
     {
         this.userAwareMeta = userAwareMeta;

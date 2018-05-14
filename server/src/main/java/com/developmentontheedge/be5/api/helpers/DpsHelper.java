@@ -21,6 +21,7 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.math.LongMath;
 
+import com.google.inject.Inject;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -52,6 +53,7 @@ public class DpsHelper
     private final UserAwareMeta userAwareMeta;
     private final OperationHelper operationHelper;
 
+    @Inject
     public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;

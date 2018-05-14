@@ -1,7 +1,8 @@
 package com.developmentontheedge.be5.operations;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.test.OperationDBTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.be5.test.TestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
@@ -10,13 +11,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class StandardOperationsDBTest extends OperationDBTest
+public class StandardOperationsDBTest extends ServerBe5ProjectDBTest
 {
     private Long id;
 
     @Before
     public void addRecords()
     {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+
         db.update("DELETE FROM testtableAdmin");
         id = db.insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)", "TestName", 1);
     }

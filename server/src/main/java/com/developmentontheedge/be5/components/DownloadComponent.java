@@ -1,15 +1,16 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.inject.Injector;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 
+import com.google.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -18,10 +19,18 @@ import java.io.InputStream;
  * Example url
  * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name&_dataColumn_=data&_download_=yes&ID=7326
  */
-public class DownloadComponent implements Component
+public class DownloadComponent extends ControllerSupport implements Controller
 {
+    private final DatabaseModel database;
+
+    @Inject
+    public DownloadComponent(DatabaseModel database)
+    {
+        this.database = database;
+    }
+
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
         String entity         = req.getNonEmpty("_t_");
         String ID             = req.getNonEmpty("ID");
@@ -33,7 +42,7 @@ public class DownloadComponent implements Component
         String charsetColumn  = req.get("_charsetColumn_");
         boolean download      = "yes".equals(req.get("_download_"));
 
-        RecordModel record = injector.get(DatabaseModel.class).getEntity(entity).get(ID);
+        RecordModel record = database.getEntity(entity).get(ID);
 
         String filename    = record.getValueAsString(filenameColumn);
         String contentType = record.getValueAsString(typeColumn);

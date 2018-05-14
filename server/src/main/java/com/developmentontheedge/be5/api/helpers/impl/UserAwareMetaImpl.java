@@ -19,6 +19,8 @@ import com.developmentontheedge.be5.util.MoreStrings;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
+import com.google.inject.Inject;
+
 public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
 {
     /**
@@ -44,6 +46,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
      */
     private final ProjectProvider projectProvider;
 
+    @Inject
     public UserAwareMetaImpl(Meta meta, ProjectProvider projectProvider)
     {
         this.meta = meta;

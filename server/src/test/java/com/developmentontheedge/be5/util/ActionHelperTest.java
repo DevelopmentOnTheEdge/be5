@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ActionHelperTest extends Be5ProjectTest
+public class ActionHelperTest extends ServerBe5ProjectTest
 {
     @Inject private Meta meta;
 

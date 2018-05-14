@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 
+import com.google.inject.Inject;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private DatabaseService databaseService;
 
+    @Inject
     public ConnectionServiceImpl(DatabaseService databaseService)
     {
         this.databaseService = databaseService;

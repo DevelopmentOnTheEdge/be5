@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.util
 
 import com.developmentontheedge.be5.api.services.SqlService
-import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import javax.inject.Inject
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import org.junit.Test
 
@@ -15,7 +15,7 @@ import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.verify
 
 
-class UtilsTest extends Be5ProjectTest
+class UtilsTest extends ServerBe5ProjectTest
 {
     @Inject SqlService db
 

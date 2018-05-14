@@ -7,6 +7,7 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
+import com.google.inject.Inject;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -20,6 +21,7 @@ public class Validator
 {
     private final UserAwareMeta userAwareMeta;
 
+    @Inject
     public Validator(UserAwareMeta userAwareMeta)
     {
         this.userAwareMeta = userAwareMeta;

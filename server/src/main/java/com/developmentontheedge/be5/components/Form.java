@@ -1,15 +1,13 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.inject.Stage;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
@@ -20,6 +18,8 @@ import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.google.inject.Inject;
+import com.google.inject.Stage;
 
 import java.util.Collections;
 import java.util.Map;
@@ -30,17 +30,28 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
-public class Form implements Component
+public class Form extends ControllerSupport
 {
-    @Override
-    public void generate(Request req, Response res, Injector injector)
-    {
-        OperationExecutor operationExecutor = injector.get(OperationExecutor.class);
-        DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
+    private final OperationExecutor operationExecutor;
+    private final DocumentGenerator documentGenerator;
+    private final UserHelper userHelper;
+    private final Stage stage;
 
-        if(injector.get(Stage.class) == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
+    @Inject
+    public Form(OperationExecutor operationExecutor, DocumentGenerator documentGenerator, UserHelper userHelper, Stage stage)
+    {
+        this.operationExecutor = operationExecutor;
+        this.documentGenerator = documentGenerator;
+        this.userHelper = userHelper;
+        this.stage = stage;
+    }
+
+    @Override
+    public void generate(Request req, Response res)
+    {
+        if(stage == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
         {
-            injector.get(UserHelper.class).initGuest(req);
+            userHelper.initGuest(req);
         }
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);

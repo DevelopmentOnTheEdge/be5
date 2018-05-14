@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.api.validation.Validator
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNull
 
 
-class ValidatorServiceValueInTagsTest extends Be5ProjectTest
+class ValidatorServiceValueInTagsTest extends ServerBe5ProjectTest
 {
     @Inject Validator validator
     GDynamicPropertySetSupport dps

@@ -6,35 +6,25 @@ import java.util.Arrays;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import com.developmentontheedge.be5.inject.Configurable;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 
-public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPath>
+public class LogConfigurator
 {
-    private Logger log = Logger.getLogger(LogConfigurator.class.getName());
+    private Logger log;
+    private final static String path = "/logging.properties";
 
-    class JulConfigPath{
-        String path;
-    }
-
-    private JulConfigPath configPath;
-
-    @Override
-    public void configure(JulConfigPath configPath)
+    public LogConfigurator()
     {
-        this.configPath = configPath;
         try
         {
-            if(configPath != null)
+            InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(path);
+            if (resourceAsStream == null)
             {
-                InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(configPath.path);
-                if (resourceAsStream == null)
-                {
-                    throw Be5Exception.internal("File not found: " + configPath.path);
-                }
-                LogManager.getLogManager().readConfiguration(resourceAsStream);
+                throw Be5Exception.internal("File not found: " + path);
             }
+            LogManager.getLogManager().readConfiguration(resourceAsStream);
+
             log = Logger.getLogger(LogConfigurator.class.getName());
             String level = log.getLevel() != null ? log.getLevel().getName() :
                     log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
@@ -48,8 +38,4 @@ public class LogConfigurator implements Configurable<LogConfigurator.JulConfigPa
         }
     }
 
-    public JulConfigPath getConfigPath()
-    {
-        return configPath;
-    }
 }

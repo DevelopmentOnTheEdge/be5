@@ -1,15 +1,13 @@
 package com.developmentontheedge.be5.components;
 
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
+import com.google.inject.Inject;
+
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
@@ -21,15 +19,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class StaticPageComponentTest extends Be5ProjectTest
+public class StaticPageComponentTest extends ServerBe5ProjectTest
 {
-    @Inject private Injector injector;
-    private Component component;
-
-    @Before
-    public void init(){
-        component = (Component)injector.getComponent("static");
-    }
+    @Inject private StaticPageComponent component;
 
     @Test
     public void generate()
@@ -39,7 +31,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
         Request req = getSpyMockRequest(page, ImmutableMap.of(TIMESTAMP_PARAM, "123456789"));
 
 
-        component.generate(req, response, injector);
+        component.generate(req, response);
 
 //todo         verify(response).sendAsJson(eq(new ResourceData(STATIC_ACTION,
 //                        new StaticPagePresentation("", "<h1>Info</h1><p>Test text.</p>"))),
@@ -55,7 +47,7 @@ public class StaticPageComponentTest extends Be5ProjectTest
         Response response = mock(Response.class);
 
         String page = "foo.be";
-        component.generate(getMockRequest(page), response, injector);
+        component.generate(getMockRequest(page), response);
 
         verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class));
     }

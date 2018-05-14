@@ -1,11 +1,7 @@
 package com.developmentontheedge.be5.modules.core.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
-import org.junit.Before;
+import com.google.inject.Inject;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,23 +11,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class CategoriesTest extends Be5ProjectTest
+public class CategoriesTest extends CoreBe5ProjectTest
 {
-    @Inject private Injector injector;
-    private static Component component;
-
-    @Before
-    public void init()
-    {
-        component = (Component)injector.getComponent("categories");
-    }
+    @Inject private Categories component;
 
     @Test
     public void generate()
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("forest"), response, injector);
+        component.generate(getMockRequest("forest"), response);
 
         verify(response).sendAsRawJson(eq(new ArrayList<>()));
     }
@@ -41,7 +30,7 @@ public class CategoriesTest extends Be5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, injector);
+        component.generate(getMockRequest(""), response);
 
         verify(response).sendUnknownActionError();
     }

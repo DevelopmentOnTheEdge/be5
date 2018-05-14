@@ -7,13 +7,12 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 /**
  * <p>An interface providing access to key-value style parameters (e.g. from HTTP request or WebSocket request).
- * <code>Component</code>'s {@link Request} and <code>WebSocketComponent</code>'s {@link WebSocketContext} implement this interface.</p>
+ * <code>Controller</code>'s {@link Request} implement this interface.</p>
  * 
  * <p>Parameters of HTTP requests are get parameters or fields of the <code>x-www-form-urlencoded</code> content.</p>
  * 
  * @author lan
  * @see Request
- * @see WebSocketContext
  */
 public interface ParametersAccess
 {

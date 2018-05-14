@@ -35,6 +35,7 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -60,6 +61,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
 
+    @Inject
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
             GroovyRegister groovyRegister,
@@ -125,7 +127,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         if(categoryID != null)
         {
-            return categoriesService.getCategoryNavigation(Long.parseLong(categoryID));
+            return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
         }
         else
         {

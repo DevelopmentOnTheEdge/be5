@@ -1,15 +1,23 @@
 package com.developmentontheedge.be5.operations;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.test.OperationDBTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.be5.util.Either;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 
-public class TransactionalOperationTest extends OperationDBTest
+public class TransactionalOperationTest extends ServerBe5ProjectDBTest
 {
+    @Before
+    public void beforeSqlMockOperationTest()
+    {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+    }
+
     @Test
     public void test()
     {

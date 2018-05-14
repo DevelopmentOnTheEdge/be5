@@ -17,6 +17,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 
 import com.github.benmanes.caffeine.cache.Cache;
 
+import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public class OperationHelper
     public static final String yes = "yes";
     public static final String no = "no";
 
+    @Inject
     public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
                            TableModelService tableModelService, QueryService queryService)
     {

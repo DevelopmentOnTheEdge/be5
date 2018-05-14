@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationInfo
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Test
 
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import static org.junit.Assert.*
 
 
-class OperationExecutorTest extends Be5ProjectDBTest
+class OperationExecutorTest extends ServerBe5ProjectDBTest
 {
     @Inject DatabaseModel database
     @Inject OperationExecutor operationExecutor

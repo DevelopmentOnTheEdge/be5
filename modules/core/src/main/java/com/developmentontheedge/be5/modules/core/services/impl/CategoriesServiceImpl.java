@@ -7,7 +7,9 @@ import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
 import com.developmentontheedge.be5.modules.core.util.Generators;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,7 @@ public class CategoriesServiceImpl implements CategoriesService
     private final Meta meta;
     private final QueryService queryService;
 
+    @Inject
     public CategoriesServiceImpl(Meta meta, QueryService queryService)
     {
         this.meta = meta;
@@ -45,11 +48,11 @@ public class CategoriesServiceImpl implements CategoriesService
     }
 
     @Override
-    public List<Category> getCategoryNavigation(long categoryID)
+    public List<Category> getCategoryNavigation(String entityName, long categoryID)
     {
         List<MutableCategory> categories = queryService
                 .build(meta.getQuery("_categoriesService_", "getCategoryNavigation"),
-                        Collections.singletonMap("categoryID", "" + categoryID))
+                        ImmutableMap.of("categoryID", "" + categoryID, "entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
         return getCategories(categories, false);

@@ -6,12 +6,13 @@ import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.TableModelService;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.util.LayoutUtils;
+import com.google.inject.Injector;
 
+import com.google.inject.Inject;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.api.RestApiConstants.LIMIT;
@@ -28,6 +29,7 @@ public class TableModelServiceImpl implements TableModelService
     private final Injector injector;
     private final QueryService queryService;
 
+    @Inject
     public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister, Injector injector, QueryService queryService)
     {
         this.userAwareMeta = userAwareMeta;
@@ -99,7 +101,7 @@ public class TableModelServiceImpl implements TableModelService
                 TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
 
                 tableBuilder.initialize(query, parameters);
-                injector.injectAnnotatedFields(tableBuilder);
+                injector.injectMembers(tableBuilder);
 
                 return tableBuilder.getTableModel();
             }

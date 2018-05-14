@@ -1,18 +1,27 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.MenuHelper;
 
-import com.developmentontheedge.be5.inject.Injector;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 
+import com.google.inject.Inject;
 import java.util.List;
 
 
-public class Menu implements Component
+public class Menu extends ControllerSupport implements Controller
 {
+    private final MenuHelper menuHelper;
+
+    @Inject
+    public Menu(MenuHelper menuHelper)
+    {
+        this.menuHelper = menuHelper;
+    }
+
     /**
      * Generated JSON sample:
      * <pre>
@@ -27,10 +36,8 @@ public class Menu implements Component
      * </pre>
      */
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
-        MenuHelper menuHelper = injector.get(MenuHelper.class);
-
         switch (req.getRequestUri())
         {
             case "":

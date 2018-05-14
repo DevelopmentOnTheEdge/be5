@@ -1,16 +1,17 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
 import one.util.streamex.StreamEx;
 
+import com.google.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +20,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class LanguageSelector implements Component
+public class LanguageSelector extends ControllerSupport implements Controller
 {
+    private final Meta meta;
+    private final ProjectProvider projectProvider;
+
+    @Inject
+    public LanguageSelector(Meta meta, ProjectProvider projectProvider)
+    {
+        this.meta = meta;
+        this.projectProvider = projectProvider;
+    }
 
     public static class LanguageSelectorResponse
     {
@@ -76,37 +86,37 @@ public class LanguageSelector implements Component
     }
 
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
         switch( req.getRequestUri() )
         {
         case "":
-            res.sendAsRawJson(getInitialData(injector));
+            res.sendAsRawJson(getInitialData());
             return;
         case "select":
-            res.sendAsRawJson(selectLanguage(req, injector));
+            res.sendAsRawJson(selectLanguage(req));
             return;
         default:
             res.sendUnknownActionError();
         }
     }
 
-    private LanguageSelectorResponse getInitialData(Injector injector)
+    private LanguageSelectorResponse getInitialData()
     {
-        return getState(injector);
+        return getState();
     }
 
-    private LanguageSelectorResponse selectLanguage(Request req, Injector injector)
+    private LanguageSelectorResponse selectLanguage(Request req)
     {
-        Locale language = injector.get(Meta.class).getLocale(new Locale(req.getNonEmpty("language")));
+        Locale language = meta.getLocale(new Locale(req.getNonEmpty("language")));
         UserInfoHolder.getUserInfo().setLocale(language);
 
-        return getState(injector);
+        return getState();
     }
 
-    private LanguageSelectorResponse getState(Injector injector)
+    private LanguageSelectorResponse getState()
     {
-        Project project = injector.get(ProjectProvider.class).getProject();
+        Project project = projectProvider.getProject();
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 

@@ -1,11 +1,12 @@
 package com.developmentontheedge.be5.modules.core.groovy
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectDBTest
+
+import javax.inject.Inject
 import org.junit.Test
 
-class DataSourceQueryTest extends Be5ProjectDBTest
+class DataSourceQueryTest extends CoreBe5ProjectDBTest
 {
     @Inject Meta meta
 

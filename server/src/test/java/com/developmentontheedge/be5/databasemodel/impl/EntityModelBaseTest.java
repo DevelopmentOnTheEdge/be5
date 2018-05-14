@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.test.Be5ProjectDBTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
-public class EntityModelBaseTest extends Be5ProjectDBTest
+public class EntityModelBaseTest extends ServerBe5ProjectDBTest
 {
     @Before
     public void before()

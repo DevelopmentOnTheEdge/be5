@@ -71,22 +71,6 @@
 		</resources>
 
 		<plugins>
-			<plugin>
-				<groupId>com.developmentontheedge.be5</groupId>
-				<artifactId>be5-maven-plugin</artifactId>
-				<version>0.1.1-SNAPSHOT</version>
-				<configuration>
-					<projectPath>./</projectPath>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>validate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>

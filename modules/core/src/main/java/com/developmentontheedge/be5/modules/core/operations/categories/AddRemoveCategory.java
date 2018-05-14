@@ -35,6 +35,7 @@ public class AddRemoveCategory extends GOperationSupport
         prop.setAttribute( TAG_LIST_ATTR, new String[][]{
                 {"Add", "Add to this category and parents"},
                 {"Remove", "Remove from this category and children"} } );
+        prop.setValue("Add");
         dps.add( prop );
 
         return dpsHelper.setValues(dps, presetValues);

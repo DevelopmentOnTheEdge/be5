@@ -2,17 +2,17 @@ package com.developmentontheedge.be5.modules.core.groovy
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.DocumentGenerator
+import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.query.impl.TableModel
-import com.developmentontheedge.be5.inject.Inject
 import com.developmentontheedge.be5.metadata.model.Query
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import javax.inject.Inject
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
 
-class QueriesTest extends Be5ProjectTest
+class QueriesTest extends CoreBe5ProjectDBTest
 {
     @Inject DocumentGenerator documentGenerator
     @Inject Meta meta

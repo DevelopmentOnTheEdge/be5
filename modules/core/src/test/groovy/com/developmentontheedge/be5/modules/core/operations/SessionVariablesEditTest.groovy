@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.modules.core.operations
 
-import com.developmentontheedge.be5.test.SqlMockOperationTest
+import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
+import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -10,8 +12,13 @@ import static org.mockito.Matchers.anyString
 import static org.mockito.Matchers.anyVararg
 import static org.mockito.Mockito.when
 
-class SessionVariablesEditTest extends SqlMockOperationTest
+class SessionVariablesEditTest extends CoreBe5ProjectTest
 {
+    @Before
+    void setUp(){
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER)
+    }
+
     @Test
     void testGet()
     {

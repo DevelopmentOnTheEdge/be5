@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.validation.rule
 
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
@@ -9,7 +9,7 @@ import static org.junit.Assert.*
 import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.*
 
 
-class ValidationRulesTest extends Be5ProjectTest
+class ValidationRulesTest extends ServerBe5ProjectTest
 {
     @Test
     void rangeTest()

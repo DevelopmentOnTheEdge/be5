@@ -1,14 +1,11 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -20,14 +17,7 @@ import static org.mockito.Mockito.verify;
 
 public class QueryBuilderTest extends SqlMockOperationTest
 {
-    @Inject private Injector injector;
-    private Component component;
-
-    @Before
-    public void init()
-    {
-        component = (Component)injector.getComponent("queryBuilder");
-    }
+    @Inject private QueryBuilder component;
 
     @Test
     public void generate()
@@ -35,7 +25,7 @@ public class QueryBuilderTest extends SqlMockOperationTest
         Response response = mock(Response.class);
         component.generate(getSpyMockRequest("queryBuilder", ImmutableMap.of(
                 "sql", "select * from testtable limit 1",
-                RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), response, injector);
+                RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), response);
 
         verify(response).sendAsJson(any(JsonApiModel.class));
     }

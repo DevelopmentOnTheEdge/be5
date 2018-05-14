@@ -1,12 +1,9 @@
 package com.developmentontheedge.be5.modules.core.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
+import com.google.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -25,16 +22,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class UserInfoComponentTest extends Be5ProjectTest
+public class UserInfoComponentTest extends CoreBe5ProjectTest
 {
-    @Inject private Injector injector;
-    private static Component component;
+    @Inject private UserInfoComponent component;
 
     @Before
     public void init()
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
-        component = (Component)injector.getComponent("userInfo");
     }
 
     @Test
@@ -42,7 +37,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, injector);
+        component.generate(getMockRequest(""), response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
                 true,
@@ -59,7 +54,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         initGuest();
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response, injector);
+        component.generate(getMockRequest(""), response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
                 false,
@@ -79,7 +74,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
-                response, injector);
+                response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
                 true,
@@ -96,7 +91,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("", ImmutableMap.of("roles", "")),
-                response, injector);
+                response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
                 true,
@@ -113,7 +108,7 @@ public class UserInfoComponentTest extends Be5ProjectTest
         Response response = mock(Response.class);
 
         component.generate(getSpyMockRequest("selectRoles",
-                ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response, injector);
+                ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response);
 
         verify(response).sendAsRawJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));
 

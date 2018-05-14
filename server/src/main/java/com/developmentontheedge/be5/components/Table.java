@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.TableModelService;
-import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
@@ -18,6 +17,7 @@ import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.util.HashUrl;
 
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
@@ -25,14 +25,23 @@ import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
-public class Table implements Component
+public class Table extends ControllerSupport
 {
-    @Override
-    public void generate(Request req, Response res, Injector injector)
-    {
-        DocumentGenerator documentGenerator = injector.get(DocumentGenerator.class);
-        UserAwareMeta userAwareMeta = injector.get(UserAwareMeta.class);
+    private final DocumentGenerator documentGenerator;
+    private final TableModelService tableModelService;
+    private final UserAwareMeta userAwareMeta;
 
+    @Inject
+    public Table(DocumentGenerator documentGenerator, TableModelService tableModelService, UserAwareMeta userAwareMeta)
+    {
+        this.documentGenerator = documentGenerator;
+        this.tableModelService = tableModelService;
+        this.userAwareMeta = userAwareMeta;
+    }
+
+    @Override
+    public void generate(Request req, Response res)
+    {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
 
@@ -55,7 +64,7 @@ public class Table implements Component
 
         try
         {
-            TableModel tableModel = injector.get(TableModelService.class).getTableModel(query, parameters);
+            TableModel tableModel = tableModelService.getTableModel(query, parameters);
 
             switch (req.getRequestUri())
             {

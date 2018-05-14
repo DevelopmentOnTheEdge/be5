@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.impl.ResponseImpl;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.test.Be5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
 import org.junit.Before;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class ResponseTest extends Be5ProjectTest
+public class ResponseTest extends ServerBe5ProjectTest
 {
 
     private Response response;

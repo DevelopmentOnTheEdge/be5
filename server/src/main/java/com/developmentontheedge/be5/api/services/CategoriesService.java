@@ -14,5 +14,5 @@ public interface CategoriesService
 
     List<Category> getRootCategory(String entityName);
 
-    List<Category> getCategoryNavigation(long categoryID);
+    List<Category> getCategoryNavigation(String entityName, long categoryID);
 }

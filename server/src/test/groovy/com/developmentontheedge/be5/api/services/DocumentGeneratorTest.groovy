@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel

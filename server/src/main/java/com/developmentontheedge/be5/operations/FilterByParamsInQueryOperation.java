@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
-import com.developmentontheedge.be5.inject.Inject;
+import com.google.inject.Inject;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 

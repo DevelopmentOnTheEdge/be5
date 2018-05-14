@@ -1,18 +1,19 @@
 package com.developmentontheedge.be5.components;
 
-import com.developmentontheedge.be5.api.Component;
+import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.inject.Injector;
+import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 
+import com.google.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * ApplicationInfoComponent returns ApplicationInfo(title, url) for current application (servlet context).
  */
-public class ApplicationInfoComponent implements Component 
+public class ApplicationInfoComponent extends ControllerSupport implements Controller
 {
     public static class ApplicationInfo
     {
@@ -34,17 +35,24 @@ public class ApplicationInfoComponent implements Component
         {
         	return url;
         }
-        
     }
-	
+
+    private final UserAwareMeta userAwareMeta;
+
+    @Inject
+    public ApplicationInfoComponent(UserAwareMeta userAwareMeta)
+    {
+        this.userAwareMeta = userAwareMeta;
+    }
+
     @Override
-    public void generate(Request req, Response res, Injector injector)
+    public void generate(Request req, Response res)
     {
         final ApplicationInfo appInfo;
         
         try
         {
-            appInfo = getApplicationInfo(req, injector.get(UserAwareMeta.class));
+            appInfo = getApplicationInfo(req);
             res.sendAsRawJson(appInfo);
         }
         catch (Exception e)
@@ -53,8 +61,7 @@ public class ApplicationInfoComponent implements Component
         }
     }
 
-    
-    public static ApplicationInfo getApplicationInfo(Request req, UserAwareMeta userAwareMeta)throws Exception
+    public ApplicationInfo getApplicationInfo(Request req)
     {
         String title = userAwareMeta
                 .getColumnTitle("index", "page", "title");

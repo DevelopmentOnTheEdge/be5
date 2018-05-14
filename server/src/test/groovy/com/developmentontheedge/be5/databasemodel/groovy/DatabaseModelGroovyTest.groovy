@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
 import org.junit.Before
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 
 
-class DatabaseModelGroovyTest extends Be5ProjectDBTest
+class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
 {
     EntityModel testtableAdmin
 

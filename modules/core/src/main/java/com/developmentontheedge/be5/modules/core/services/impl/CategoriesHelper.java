@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.util.Utils;
+import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ public class CategoriesHelper
 {
     private final SqlService db;
 
+    @Inject
     public CategoriesHelper(SqlService db)
     {
         this.db = db;
