@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
+import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.CoreUtils;
@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.be5.test.mocks.Be5MainSettingsForTest;
+import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
@@ -443,7 +443,7 @@ public abstract class TestUtils
             bind(SqlService.class).to(SqlServiceMock.class).in(Scopes.SINGLETON);
             bind(DatabaseService.class).to(DatabaseServiceMock.class).in(Scopes.SINGLETON);
             bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
-            bind(Be5MainSettings.class).to(Be5MainSettingsForTest.class).in(Scopes.SINGLETON);
+            bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
         }
     }
 

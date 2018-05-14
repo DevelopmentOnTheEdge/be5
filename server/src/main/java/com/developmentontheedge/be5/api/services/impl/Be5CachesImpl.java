@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.inject.Inject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
         this.config = config;
     }
 
+    @Inject
     public Be5CachesImpl(ConfigurationProvider configurationProvider, ProjectProvider projectProvider)
     {
         configurationProvider.configure(this);

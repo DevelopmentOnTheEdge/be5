@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Ignore
 import org.junit.Test
 
 
-class ConfigurationProviderTest extends Be5ProjectDBTest
+class ConfigurationProviderTest extends ServerBe5ProjectDBTest
 {
     @Test
     @Ignore

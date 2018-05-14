@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.api.services.Be5Caches;
-import com.developmentontheedge.be5.api.services.Be5MainSettings;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
@@ -21,7 +20,7 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.TableModelService;
-import com.developmentontheedge.be5.api.services.impl.Be5MainSettingsImpl;
+import com.developmentontheedge.be5.api.services.impl.Be5CachesImpl;
 import com.developmentontheedge.be5.api.services.impl.ConnectionServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DocumentGeneratorImpl;
@@ -79,7 +78,6 @@ public class ServerModule extends ServletModule
         bind(UserHelper.class).in(Scopes.SINGLETON);
         bind(Validator.class).in(Scopes.SINGLETON);
         bind(OperationHelper.class).in(Scopes.SINGLETON);
-        bind(Be5Caches.class).in(Scopes.SINGLETON);
         bind(GroovyOperationLoader.class).in(Scopes.SINGLETON);
         bind(GroovyRegister.class).in(Scopes.SINGLETON);
         bind(SqlHelper.class).in(Scopes.SINGLETON);
@@ -90,7 +88,6 @@ public class ServerModule extends ServletModule
         bind(DatabaseService.class).to(DatabaseServiceImpl.class).in(Scopes.SINGLETON);
         bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
         bind(SqlService.class).to(SqlServiceImpl.class).in(Scopes.SINGLETON);
-        bind(Be5MainSettings.class).to(Be5MainSettingsImpl.class).in(Scopes.SINGLETON);
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);
         bind(UserAwareMeta.class).to(UserAwareMetaImpl.class).in(Scopes.SINGLETON);
         bind(QueryService.class).to(QueryServiceImpl.class).in(Scopes.SINGLETON);
@@ -98,6 +95,6 @@ public class ServerModule extends ServletModule
         bind(OperationExecutor.class).to(OperationExecutorImpl.class).in(Scopes.SINGLETON);
         bind(TableModelService.class).to(TableModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
-
+        bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
     }
 }
