@@ -9,6 +9,7 @@ public interface FrontendActions
     String UPDATE_PARENT_DOCUMENT = "UPDATE_PARENT_DOCUMENT";
     String GO_BACK = "GO_BACK";
     String OPEN_NEW_WINDOW = "OPEN_NEW_WINDOW";
+    String REDIRECT = "REDIRECT";
 
     //String UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
 
@@ -27,5 +28,10 @@ public interface FrontendActions
     static FrontendAction openNewWindow(String url)
     {
         return new FrontendAction(OPEN_NEW_WINDOW, url);
+    }
+
+    static FrontendAction redirect(String url)
+    {
+        return new FrontendAction(REDIRECT, url);
     }
 }

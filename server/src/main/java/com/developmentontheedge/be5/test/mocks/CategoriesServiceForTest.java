@@ -22,7 +22,7 @@ public class CategoriesServiceForTest implements CategoriesService
     }
 
     @Override
-    public List<Category> getCategoryNavigation(long categoryID)
+    public List<Category> getCategoryNavigation(String entityName, long categoryID)
     {
         return Collections.emptyList();
     }

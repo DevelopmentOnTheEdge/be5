@@ -137,7 +137,7 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
                 parentID: p1ID
         ])
 
-        def docTypes = categoriesService.getCategoryNavigation(p1ID)
+        def docTypes = categoriesService.getCategoryNavigation("docTypes", p1ID)
 
         assertEquals 1, docTypes.size()
         assertEquals "Root", docTypes.get(0).name

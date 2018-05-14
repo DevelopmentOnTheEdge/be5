@@ -139,9 +139,15 @@ public class UserInfo implements Serializable
     {
         return "UserInfo{" +
                 "userName='" + userName + '\'' +
+                ", availableRoles=" + availableRoles +
+                ", currentRoles=" + currentRoles +
+                ", session=" + session +
+                ", creationTime=" + creationTime +
                 ", locale=" + locale +
                 ", timeZone=" + timeZone +
                 ", remoteAddr='" + remoteAddr + '\'' +
+                ", prevLoggedInTime=" + prevLoggedInTime +
+                ", loggedInTime=" + loggedInTime +
                 '}';
     }
 

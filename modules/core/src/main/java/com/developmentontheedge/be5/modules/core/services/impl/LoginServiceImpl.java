@@ -95,7 +95,7 @@ public class LoginServiceImpl implements LoginService
         List<String> currentRoles;
         if(savedRoles != null)
         {
-            currentRoles = parseRoles(savedRoles);
+            currentRoles = getAvailableCurrentRoles(parseRoles(savedRoles), availableRoles);
         }
         else
         {
@@ -111,14 +111,19 @@ public class LoginServiceImpl implements LoginService
     @Override
     public void setCurrentRoles(List<String> roles)
     {
-        List<String> newCurrentRoles = roles.stream()
-                .filter(role -> UserInfoHolder.getUserInfo().getAvailableRoles().contains(role))
-                .collect(Collectors.toList());
+        List<String> availableCurrentRoles = getAvailableCurrentRoles(roles, UserInfoHolder.getAvailableRoles());
 
         coreUtils.setUserSetting(UserInfoHolder.getUserName(), DatabaseConstants.CURRENT_ROLE_LIST,
                 MetadataUtils.toInClause(roles));
 
-        UserInfoHolder.getUserInfo().setCurrentRoles(newCurrentRoles);
+        UserInfoHolder.getUserInfo().setCurrentRoles(availableCurrentRoles);
+    }
+
+    private List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)
+    {
+        return roles.stream()
+                    .filter(availableRoles::contains)
+                    .collect(Collectors.toList());
     }
 
     protected List<String> parseRoles( String roles )

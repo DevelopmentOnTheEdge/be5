@@ -127,7 +127,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         if(categoryID != null)
         {
-            return categoriesService.getCategoryNavigation(Long.parseLong(categoryID));
+            return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
         }
         else
         {
