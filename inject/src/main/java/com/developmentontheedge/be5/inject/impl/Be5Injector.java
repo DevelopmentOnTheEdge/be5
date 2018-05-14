@@ -15,11 +15,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.developmentontheedge.be5.inject.Binder;
-import com.developmentontheedge.be5.inject.Configurable;
 import com.developmentontheedge.be5.inject.Inject;
 import com.developmentontheedge.be5.inject.Injector;
 import com.developmentontheedge.be5.inject.Stage;
-import com.google.gson.Gson;
 
 import javax.inject.Provider;
 
@@ -110,7 +108,6 @@ public class Be5Injector implements Injector
         T service = resolveService(serviceClass, stack);
 
         injectAnnotatedFields(service);
-        configureIfConfigurable(service, configurations);
 
         return service;
     }
@@ -203,7 +200,6 @@ public class Be5Injector implements Injector
             Class<?> klass = getComponentClass(componentId);
             Object component = klass.newInstance();
             injectAnnotatedFields(component);
-            configureIfConfigurable(component, configurations);
             return component;
         }
         catch( InstantiationException | IllegalAccessException | ClassCastException e )
@@ -237,38 +233,6 @@ public class Be5Injector implements Injector
             throw new RuntimeException("unknownComponent: " + componentId);
         }
         return loadedClasses.get(componentId);
-    }
-
-    private <T> void configureIfConfigurable(T object, Map<Class<?>, Object> configurations)
-    {
-        if (object instanceof Configurable)
-        {
-            @SuppressWarnings("unchecked")
-            Configurable<Object> configurable = (Configurable<Object>) object;
-            Object config = getConfiguration(object.getClass(), configurable.getConfigurationClass(), configurations);
-
-//            if(config != null)
-//            {
-            configurable.configure(config);
-//            }else{
-//                log.warning("Module '" + object.getClass().getName() + "' not configured.");
-//            }
-        }
-    }
-
-    private Object getConfiguration(Class<?> klass, Class<Object> configClass, Map<Class<?>, Object> configurations)
-    {
-        Object config = configurations.get(klass);
-
-        if(config == null)
-        {
-            return null;
-        }
-
-        //todo use json-b
-        String componentConfigJson = new Gson().toJson(config);
-
-        return new Gson().fromJson(componentConfigJson, configClass);
     }
 
     @Override

@@ -6,11 +6,6 @@ context:
   - com.developmentontheedge.be5.inject.impl.testServices.BService
   - com.developmentontheedge.be5.inject.impl.testServicesProvider.AServiceProvider
   - com.developmentontheedge.be5.inject.impl.testServicesProvider.BServiceProvider
-  - com.developmentontheedge.be5.inject.services.ConfigurableService
   - testService:
       interface:      com.developmentontheedge.be5.inject.services.TestService
       implementation: com.developmentontheedge.be5.inject.services.impl.TestServiceMock
-config:
-  com.developmentontheedge.be5.inject.services.ConfigurableService:
-    count: 5
-    url: 'test.url'

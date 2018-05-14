@@ -1,0 +1,6 @@
+config:
+  com.developmentontheedge.be5.api.services.impl.LogConfigurator:
+    path: '/logging.properties'
+  com.developmentontheedge.be5.api.services.Be5Caches:
+    cacheSizes:
+      User settings: 0

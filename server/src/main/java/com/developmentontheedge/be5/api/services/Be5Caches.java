@@ -1,54 +1,21 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
-public class Be5Caches
+public interface Be5Caches
 {
-    private Map<String, Cache> caches = new ConcurrentHashMap<>();
+    void registerCache(String name, Cache cache);
 
-    private Be5MainSettings be5MainSettings;
+    <K, V> Cache<K, V> createCache(String name);
 
-    public Be5Caches(Be5MainSettings be5MainSettings, ProjectProvider projectProvider)
-    {
-        this.be5MainSettings = be5MainSettings;
+    Map<String, Cache> getCaches();
 
-        projectProvider.addToReload(this::clearAll);
-    }
+    Cache getCache(String name);
 
-    public void registerCache(String name, Cache cache)
-    {
-        if(caches.containsKey(name))throw Be5Exception.internal("caches containsKey: " + name);
-        caches.put(name, cache);
-    }
+    void clearAll();
 
-    public <K, V> Cache<K, V> createCache(String name)
-    {
-        Cache<K, V> newCache = Caffeine.newBuilder()
-                .maximumSize(be5MainSettings.getCacheSize(name))
-                .recordStats()
-                .build();
-        registerCache(name, newCache);
-        return newCache;
-    }
-
-    public Map<String, Cache> getCaches()
-    {
-        return caches;
-    }
-
-    public Cache getCache(String name)
-    {
-        return caches.get(name);
-    }
-
-    public void clearAll()
-    {
-        caches.forEach((k,v) -> v.invalidateAll());
-    }
+    int getCacheSize(String name);
 }

@@ -73,14 +73,14 @@ public class YamlBinder implements Binder
             if (services != null) bindServices(bindings, services);
         }
 
-        Map<String, Object> config = (Map<String, Object>) file.get("config");
-        if(config != null)
-        {
-            for (Map.Entry<String, Object> entry : config.entrySet())
-            {
-                configurations.put(loadClass(entry.getKey()), entry.getValue());
-            }
-        }
+//        Map<String, Object> config = (Map<String, Object>) file.get("config");
+//        if(config != null)
+//        {
+//            for (Map.Entry<String, Object> entry : config.entrySet())
+//            {
+//                configurations.put(loadClass(entry.getKey()), entry.getValue());
+//            }
+//        }
 
         List<String> requestPreprocessorsConfig = (List<String>) file.get("requestPreprocessors");
         if(requestPreprocessorsConfig != null)

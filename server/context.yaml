@@ -18,12 +18,12 @@ context:
   - com.developmentontheedge.be5.api.helpers.UserHelper
   - com.developmentontheedge.be5.api.validation.Validator
   - com.developmentontheedge.be5.api.helpers.OperationHelper
-  - com.developmentontheedge.be5.api.services.Be5Caches
   - com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader
   - com.developmentontheedge.be5.api.services.GroovyRegister
   - com.developmentontheedge.be5.api.services.impl.SqlHelper
   - com.developmentontheedge.be5.api.helpers.ColumnsHelper
   - com.developmentontheedge.be5.api.helpers.MenuHelper
+  - com.developmentontheedge.be5.api.services.impl.ConfigurationProvider
   - projectProvider:
       interface:      com.developmentontheedge.be5.api.services.ProjectProvider
       implementation: com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl
@@ -36,9 +36,6 @@ context:
   - sqlService:
       interface:      com.developmentontheedge.be5.api.services.SqlService
       implementation: com.developmentontheedge.be5.api.services.impl.SqlServiceImpl
-  - be5MainSettings:
-      interface:      com.developmentontheedge.be5.api.services.Be5MainSettings
-      implementation: com.developmentontheedge.be5.api.services.impl.Be5MainSettingsImpl
   - meta:
       interface:      com.developmentontheedge.be5.api.services.Meta
       implementation: com.developmentontheedge.be5.api.services.impl.MetaImpl
@@ -60,3 +57,6 @@ context:
   - documentGenerator:
       interface:      com.developmentontheedge.be5.api.services.DocumentGenerator
       implementation: com.developmentontheedge.be5.api.services.impl.DocumentGeneratorImpl
+  - be5Caches:
+      interface:      com.developmentontheedge.be5.api.services.Be5Caches
+      implementation: com.developmentontheedge.be5.api.services.impl.Be5CachesImpl
