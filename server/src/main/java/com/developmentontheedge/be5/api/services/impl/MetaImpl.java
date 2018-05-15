@@ -87,10 +87,6 @@ public class MetaImpl implements Meta
 
     private static final Pattern MENU_ITEM_PATTERN = Pattern.compile("<!--\\S+?-->");
 
-    /**
-     * We must not keep the project directly as services are created once, but
-     * the project can be reloaded.
-     */
     private final ProjectProvider projectProvider;
 
     @Inject
@@ -265,7 +261,7 @@ public class MetaImpl implements Meta
     @Override
     public Locale getLocale(Locale locale)
     {
-        List<String> languages = Arrays.asList(projectProvider.getProject().getLanguages());
+        List<String> languages = Arrays.asList(getProject().getLanguages());
 
         if(locale == null || !languages.contains(locale.getLanguage()))
         {
@@ -524,6 +520,12 @@ public class MetaImpl implements Meta
     public Optional<Entity> findEntity(String entityName)
     {
         return Optional.ofNullable(getProject().getEntity(entityName));
+    }
+
+    @Override
+    public String getStaticPageContent(String language, String name)
+    {
+        return getProject().getStaticPageContent(language, name);
     }
 
     private Project getProject()
