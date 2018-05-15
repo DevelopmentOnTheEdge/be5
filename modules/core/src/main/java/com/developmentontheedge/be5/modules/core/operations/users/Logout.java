@@ -20,6 +20,6 @@ public class Logout extends GOperationSupport
         userHelper.logout(request);
 
         setResult(OperationResult.finished(null,
-                CoreFrontendActions.updateUserAndOpenRoute(loginService.getUserInfoModel())));
+                CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
     }
 }

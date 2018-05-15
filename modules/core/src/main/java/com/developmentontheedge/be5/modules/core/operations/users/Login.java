@@ -45,7 +45,7 @@ public class Login extends GOperationSupport
 
             if(context.getOperationParams().get("withoutUpdateUserInfo") == null){
                 setResult(OperationResult.finished(null,
-                        CoreFrontendActions.updateUserAndOpenRoute(loginService.getUserInfoModel())));
+                        CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
             }else{
                 setResult(OperationResult.finished());
             }
