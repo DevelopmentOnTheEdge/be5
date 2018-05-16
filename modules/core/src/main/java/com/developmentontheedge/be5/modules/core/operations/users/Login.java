@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.operation.support.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.beans.DynamicProperty;

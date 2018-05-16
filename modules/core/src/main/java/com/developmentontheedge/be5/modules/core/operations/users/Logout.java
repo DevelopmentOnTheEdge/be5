@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.operation.support.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 
 public class Logout extends GOperationSupport

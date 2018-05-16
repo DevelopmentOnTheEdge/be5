@@ -28,7 +28,7 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstUpdate;
 import com.developmentontheedge.sql.model.SqlQuery;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

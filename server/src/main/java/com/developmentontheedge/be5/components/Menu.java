@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.List;
 
 

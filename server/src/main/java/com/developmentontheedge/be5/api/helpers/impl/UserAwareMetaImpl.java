@@ -19,7 +19,7 @@ import com.developmentontheedge.be5.util.MoreStrings;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
 {

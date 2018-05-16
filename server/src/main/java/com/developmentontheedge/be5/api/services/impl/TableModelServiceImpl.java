@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.util.LayoutUtils;
 import com.google.inject.Injector;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.api.RestApiConstants.LIMIT;

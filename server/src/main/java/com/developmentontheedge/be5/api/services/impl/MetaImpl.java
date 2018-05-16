@@ -48,7 +48,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.sql.format.SqlTypeUtils;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 
 public class MetaImpl implements Meta

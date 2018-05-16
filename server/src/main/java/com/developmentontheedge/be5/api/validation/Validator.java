@@ -7,7 +7,7 @@ import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;

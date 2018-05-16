@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 

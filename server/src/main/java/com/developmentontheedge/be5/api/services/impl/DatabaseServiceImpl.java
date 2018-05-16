@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.sql.format.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

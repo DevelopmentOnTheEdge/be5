@@ -22,7 +22,7 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.Objects;
 
 /**

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.components;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.metadata.RoleType;

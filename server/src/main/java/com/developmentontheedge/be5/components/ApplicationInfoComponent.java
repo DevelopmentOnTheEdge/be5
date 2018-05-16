@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 /**

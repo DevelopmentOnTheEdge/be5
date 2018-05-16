@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.components;
 
 import com.developmentontheedge.be5.api.Response;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import org.junit.Test;
 
 import java.util.ArrayList;

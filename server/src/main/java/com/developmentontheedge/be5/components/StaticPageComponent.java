@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.Collections;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
