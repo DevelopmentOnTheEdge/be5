@@ -43,8 +43,8 @@ public class QueryBuilder extends ControllerSupport implements Controller
 {
     private static final String entityName = "queryBuilderComponent";
 
-    private List<ResourceData> resourceDataList = new ArrayList<>();
-    private List<ErrorModel> errorModelList = new ArrayList<>();
+    private List<ResourceData> resourceDataList;
+    private List<ErrorModel> errorModelList;
 
     private final SqlService db;
     private final DocumentGenerator documentGenerator;
@@ -63,6 +63,9 @@ public class QueryBuilder extends ControllerSupport implements Controller
     @Override
     public void generate(Request req, Response res)
     {
+        resourceDataList = new ArrayList<>();
+        errorModelList = new ArrayList<>();
+
         if(UserInfoHolder.isSystemDeveloper())
         {
             String sql = req.get("sql");
