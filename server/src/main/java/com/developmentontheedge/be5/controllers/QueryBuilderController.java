@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.FrontendConstants;
@@ -39,7 +39,7 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.api.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
-public class QueryBuilder extends ControllerSupport implements Controller
+public class QueryBuilderController extends ControllerSupport implements Controller
 {
     private static final String entityName = "queryBuilderComponent";
 
@@ -52,7 +52,7 @@ public class QueryBuilder extends ControllerSupport implements Controller
     private final QueryService queryService;
 
     @Inject
-    public QueryBuilder(SqlService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider, QueryService queryService)
+    public QueryBuilderController(SqlService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider, QueryService queryService)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;

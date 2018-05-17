@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.api.services.CoreUtils
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectDBTest
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
 import javax.inject.Inject
 import org.junit.Before

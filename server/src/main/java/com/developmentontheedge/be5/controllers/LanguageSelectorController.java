@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
@@ -20,13 +20,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class LanguageSelector extends ControllerSupport implements Controller
+public class LanguageSelectorController extends ControllerSupport implements Controller
 {
     private final Meta meta;
     private final ProjectProvider projectProvider;
 
     @Inject
-    public LanguageSelector(Meta meta, ProjectProvider projectProvider)
+    public LanguageSelectorController(Meta meta, ProjectProvider projectProvider)
     {
         this.meta = meta;
         this.projectProvider = projectProvider;

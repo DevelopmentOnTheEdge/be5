@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
@@ -19,12 +19,12 @@ import java.io.InputStream;
  * Example url
  * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name&_dataColumn_=data&_download_=yes&ID=7326
  */
-public class DownloadComponent extends ControllerSupport implements Controller
+public class DownloadController extends ControllerSupport implements Controller
 {
     private final DatabaseModel database;
 
     @Inject
-    public DownloadComponent(DatabaseModel database)
+    public DownloadController(DatabaseModel database)
     {
         this.database = database;
     }

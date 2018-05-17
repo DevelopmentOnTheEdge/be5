@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
@@ -32,9 +32,9 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
-public class Form extends ControllerSupport
+public class FormController extends ControllerSupport
 {
-    private static final Logger log = Logger.getLogger(Form.class.getName());
+    private static final Logger log = Logger.getLogger(FormController.class.getName());
 
     private final OperationExecutor operationExecutor;
     private final DocumentGenerator documentGenerator;
@@ -42,7 +42,7 @@ public class Form extends ControllerSupport
     private final Stage stage;
 
     @Inject
-    public Form(OperationExecutor operationExecutor, DocumentGenerator documentGenerator, UserHelper userHelper, Stage stage)
+    public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator, UserHelper userHelper, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
@@ -27,16 +27,16 @@ import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
-public class Table extends ControllerSupport
+public class TableController extends ControllerSupport
 {
-    private static final Logger log = Logger.getLogger(Table.class.getName());
+    private static final Logger log = Logger.getLogger(TableController.class.getName());
 
     private final DocumentGenerator documentGenerator;
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public Table(DocumentGenerator documentGenerator, TableModelService tableModelService, UserAwareMeta userAwareMeta)
+    public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService, UserAwareMeta userAwareMeta)
     {
         this.documentGenerator = documentGenerator;
         this.tableModelService = tableModelService;

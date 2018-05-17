@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import javax.inject.Inject;
 
@@ -22,10 +22,10 @@ import static org.mockito.Mockito.verify;
 
 public class LanguageSelectorTest extends ServerBe5ProjectTest
 {
-    @Inject private LanguageSelector component;
+    @Inject private LanguageSelectorController component;
 
-    private LanguageSelector.LanguageSelectorResponse languageSelectorResponse =
-            new LanguageSelector.LanguageSelectorResponse(
+    private LanguageSelectorController.LanguageSelectorResponse languageSelectorResponse =
+            new LanguageSelectorController.LanguageSelectorResponse(
                     Collections.singletonList("RU"), "RU", ImmutableMap.of(
                     "fio","Ф.И.О.","no","нет","yes","да"));
 

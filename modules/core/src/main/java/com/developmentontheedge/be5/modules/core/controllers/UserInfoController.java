@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.components;
+package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
@@ -11,12 +11,12 @@ import com.google.common.base.Splitter;
 import javax.inject.Inject;
 
 
-public class UserInfoComponent extends ControllerSupport implements Controller
+public class UserInfoController extends ControllerSupport implements Controller
 {
     private final LoginService loginService;
 
     @Inject
-    public UserInfoComponent(LoginService loginService)
+    public UserInfoController(LoginService loginService)
     {
         this.loginService = loginService;
     }

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.components;
+package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.ServerModule;
 import com.developmentontheedge.be5.modules.core.CoreModule;

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Request;
 import javax.inject.Inject;
@@ -19,9 +19,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class StaticPageComponentTest extends ServerBe5ProjectTest
+public class StaticPageControllerTest extends ServerBe5ProjectTest
 {
-    @Inject private StaticPageComponent component;
+    @Inject private StaticPageController component;
 
     @Test
     public void generate()

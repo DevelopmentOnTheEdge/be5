@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
@@ -11,9 +11,9 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 
 
-public class DownloadComponentTest extends ServerBe5ProjectTest
+public class DownloadControllerTest extends ServerBe5ProjectTest
 {
-    @Inject private DownloadComponent component;
+    @Inject private DownloadController component;
 
     @Test
     @Ignore

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
@@ -12,12 +12,12 @@ import javax.inject.Inject;
 import java.util.List;
 
 
-public class Menu extends ControllerSupport implements Controller
+public class MenuController extends ControllerSupport implements Controller
 {
     private final MenuHelper menuHelper;
 
     @Inject
-    public Menu(MenuHelper menuHelper)
+    public MenuController(MenuHelper menuHelper)
     {
         this.menuHelper = menuHelper;
     }

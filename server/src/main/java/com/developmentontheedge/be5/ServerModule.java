@@ -21,7 +21,6 @@ import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.api.services.impl.Be5CachesImpl;
 import com.developmentontheedge.be5.api.services.impl.ConnectionServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
@@ -37,14 +36,14 @@ import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.services.impl.SqlServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.TableModelServiceImpl;
 import com.developmentontheedge.be5.api.services.validation.Validator;
-import com.developmentontheedge.be5.components.ApplicationInfoComponent;
-import com.developmentontheedge.be5.components.DownloadComponent;
-import com.developmentontheedge.be5.components.Form;
-import com.developmentontheedge.be5.components.LanguageSelector;
-import com.developmentontheedge.be5.components.Menu;
-import com.developmentontheedge.be5.components.QueryBuilder;
-import com.developmentontheedge.be5.components.StaticPageComponent;
-import com.developmentontheedge.be5.components.Table;
+import com.developmentontheedge.be5.controllers.ApplicationInfoController;
+import com.developmentontheedge.be5.controllers.DownloadController;
+import com.developmentontheedge.be5.controllers.FormController;
+import com.developmentontheedge.be5.controllers.LanguageSelectorController;
+import com.developmentontheedge.be5.controllers.MenuController;
+import com.developmentontheedge.be5.controllers.QueryBuilderController;
+import com.developmentontheedge.be5.controllers.StaticPageController;
+import com.developmentontheedge.be5.controllers.TableController;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
 
@@ -54,23 +53,23 @@ public class ServerModule extends ServletModule
     @Override
     protected void configureServlets()
     {
-        bind(Table.class).in(Scopes.SINGLETON);
-        bind(Form.class).in(Scopes.SINGLETON);
-        bind(StaticPageComponent.class).in(Scopes.SINGLETON);
-        bind(Menu.class).in(Scopes.SINGLETON);
-        bind(LanguageSelector.class).in(Scopes.SINGLETON);
-        bind(ApplicationInfoComponent.class).in(Scopes.SINGLETON);
-        bind(QueryBuilder.class).in(Scopes.SINGLETON);
-        bind(DownloadComponent.class).in(Scopes.SINGLETON);
+        bind(TableController.class).in(Scopes.SINGLETON);
+        bind(FormController.class).in(Scopes.SINGLETON);
+        bind(StaticPageController.class).in(Scopes.SINGLETON);
+        bind(MenuController.class).in(Scopes.SINGLETON);
+        bind(LanguageSelectorController.class).in(Scopes.SINGLETON);
+        bind(ApplicationInfoController.class).in(Scopes.SINGLETON);
+        bind(QueryBuilderController.class).in(Scopes.SINGLETON);
+        bind(DownloadController.class).in(Scopes.SINGLETON);
 
-        serve("/api/table*").with(Table.class);
-        serve("/api/form*").with(Form.class);
-        serve("/api/static*").with(StaticPageComponent.class);
-        serve("/api/menu*").with(Menu.class);
-        serve("/api/languageSelector*").with(LanguageSelector.class);
-        serve("/api/appInfo").with(ApplicationInfoComponent.class);
-        serve("/api/queryBuilder").with(QueryBuilder.class);
-        serve("/api/download").with(DownloadComponent.class);
+        serve("/api/table*").with(TableController.class);
+        serve("/api/form*").with(FormController.class);
+        serve("/api/static*").with(StaticPageController.class);
+        serve("/api/menu*").with(MenuController.class);
+        serve("/api/languageSelector*").with(LanguageSelectorController.class);
+        serve("/api/appInfo").with(ApplicationInfoController.class);
+        serve("/api/queryBuilder").with(QueryBuilderController.class);
+        serve("/api/download").with(DownloadController.class);
 
         bind(LogConfigurator.class).asEagerSingleton();
         bind(FilterHelper.class).in(Scopes.SINGLETON);

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components
+package com.developmentontheedge.be5.controllers
 
 import com.developmentontheedge.be5.api.Response
 import com.developmentontheedge.be5.api.RestApiConstants
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify
 @TypeChecked
 class FormTest extends ServerBe5ProjectTest
 {
-    @Inject private Form component
+    @Inject private FormController component
     private Response response
 
     @Before

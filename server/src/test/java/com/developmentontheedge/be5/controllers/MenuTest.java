@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import javax.inject.Inject;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 
 public class MenuTest extends ServerBe5ProjectTest
 {
-    @Inject private Menu component;
+    @Inject private MenuController component;
 
     @Before
     public void init()
@@ -29,7 +29,7 @@ public class MenuTest extends ServerBe5ProjectTest
 
         component.generate(getMockRequest(""), response);
 
-        verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
+        verify(response).sendAsRawJson(isA(MenuController.MenuResponse.class));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class MenuTest extends ServerBe5ProjectTest
 
         component.generate(getMockRequest("withIds"), response);
 
-        verify(response).sendAsRawJson(isA(Menu.MenuResponse.class));
+        verify(response).sendAsRawJson(isA(MenuController.MenuResponse.class));
     }
 
     @Test

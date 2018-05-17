@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.components;
+package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
@@ -10,12 +10,12 @@ import com.developmentontheedge.be5.api.services.CategoriesService;
 import javax.inject.Inject;
 
 
-public class Categories extends ControllerSupport implements Controller
+public class CategoriesController extends ControllerSupport implements Controller
 {
     private final CategoriesService categoriesService;
 
     @Inject
-    public Categories(CategoriesService categoriesService)
+    public CategoriesController(CategoriesService categoriesService)
     {
         this.categoriesService = categoriesService;
     }

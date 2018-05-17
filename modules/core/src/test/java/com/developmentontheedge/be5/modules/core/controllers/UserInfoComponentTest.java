@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.components;
+package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.api.Response;
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 
 public class UserInfoComponentTest extends CoreBe5ProjectTest
 {
-    @Inject private UserInfoComponent component;
+    @Inject private UserInfoController component;
 
     @Before
     public void init()

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
@@ -18,12 +18,12 @@ import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 
-public class StaticPageComponent extends ControllerSupport
+public class StaticPageController extends ControllerSupport
 {
     private final ProjectProvider projectProvider;
 
     @Inject
-    public StaticPageComponent(ProjectProvider projectProvider)
+    public StaticPageController(ProjectProvider projectProvider)
     {
         this.projectProvider = projectProvider;
     }

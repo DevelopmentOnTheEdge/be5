@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.modules.core.components;
+package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.api.Response;
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 
 public class CategoriesTest extends CoreBe5ProjectTest
 {
-    @Inject private Categories component;
+    @Inject private CategoriesController component;
 
     @Test
     public void generate()

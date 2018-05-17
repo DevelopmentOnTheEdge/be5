@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.components;
+package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * ApplicationInfoComponent returns ApplicationInfo(title, url) for current application (servlet context).
  */
-public class ApplicationInfoComponent extends ControllerSupport implements Controller
+public class ApplicationInfoController extends ControllerSupport implements Controller
 {
     public static class ApplicationInfo
     {
@@ -40,7 +40,7 @@ public class ApplicationInfoComponent extends ControllerSupport implements Contr
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public ApplicationInfoComponent(UserAwareMeta userAwareMeta)
+    public ApplicationInfoController(UserAwareMeta userAwareMeta)
     {
         this.userAwareMeta = userAwareMeta;
     }
