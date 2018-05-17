@@ -131,9 +131,9 @@ class SpecialColumnsTest extends ServerBe5ProjectDBTest
 
         table.removeBy(["name": "TestName"])
 
-        assertEquals 2, db.oneLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
+        assertEquals 2, db.oneLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name = ? ",
                 "yes", "TestName")
-        assertEquals 1, db.oneLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name =? ",
+        assertEquals 1, db.oneLong("SELECT count(*) FROM $tableName WHERE isDeleted___ = ? AND name = ? ",
                 "no", "TestName2")
     }
 

@@ -43,7 +43,7 @@ public class SqlHelperTest
         int updateCount = sqlHelper.update("persons", ImmutableMap.of("id", 2L), ImmutableMap.of("age", 30));
 
         assertEquals(1, updateCount);
-        verify(db, times(1)).update("UPDATE persons SET age =? WHERE id =?",  30, 2L);
+        verify(db, times(1)).update("UPDATE persons SET age = ? WHERE id = ?",  30, 2L);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class SqlHelperTest
         int updateCount = sqlHelper.update("persons", ImmutableMap.of("c1", 1L, "c2", 2L), ImmutableMap.of("value1", 10, "value2", 20));
 
         assertEquals(1, updateCount);
-        verify(db, times(1)).update("UPDATE persons SET value1 =?, value2 =? WHERE c1 =? AND c2 =?", 10, 20, 1L, 2L);
+        verify(db, times(1)).update("UPDATE persons SET value1 = ?, value2 = ? WHERE c1 = ? AND c2 = ?", 10, 20, 1L, 2L);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class SqlHelperTest
         int updateCount = sqlHelper.updateIn("persons", "id", new Long[]{2L, 3L}, ImmutableMap.of("age", 30));
 
         assertEquals(2, updateCount);
-        verify(db, times(1)).update("UPDATE persons SET age =? WHERE id IN (?, ?)",  30, 2L, 3L);
+        verify(db, times(1)).update("UPDATE persons SET age = ? WHERE id IN (?, ?)",  30, 2L, 3L);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class SqlHelperTest
         int updateCount = sqlHelper.delete("persons", ImmutableMap.of("id", 2));
 
         assertEquals(1, updateCount);
-        verify(db, times(1)).update("DELETE FROM persons WHERE id =?",  2);
+        verify(db, times(1)).update("DELETE FROM persons WHERE id = ?",  2);
     }
 
     @Test
