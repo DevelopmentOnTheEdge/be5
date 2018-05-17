@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.operation.support.OperationSupport;
+import com.developmentontheedge.be5.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 

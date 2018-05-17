@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations.extenders;
 
 import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.support.OperationExtenderSupport;
+import com.developmentontheedge.be5.operations.support.OperationExtenderSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 
 

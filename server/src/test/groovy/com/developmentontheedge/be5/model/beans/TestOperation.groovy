@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.model.beans
 
-import com.developmentontheedge.be5.operation.support.GOperationSupport
+import com.developmentontheedge.be5.operations.support.GOperationSupport
 import com.developmentontheedge.be5.operation.Operation
 
 class TestOperation extends GOperationSupport implements Operation

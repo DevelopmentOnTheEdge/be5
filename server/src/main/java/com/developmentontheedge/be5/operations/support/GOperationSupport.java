@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.support;
+package com.developmentontheedge.be5.operations.support;
 
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
 import com.developmentontheedge.be5.operation.Operation;

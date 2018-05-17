@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.support;
+package com.developmentontheedge.be5.operations.support;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.RestApiConstants;
@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
-import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.operation.Operation;
@@ -22,6 +21,7 @@ import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
