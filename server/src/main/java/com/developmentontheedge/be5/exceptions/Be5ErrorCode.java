@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.exceptions;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public enum Be5ErrorCode
 {
@@ -11,8 +9,6 @@ public enum Be5ErrorCode
     PARAMETER_ABSENT, PARAMETER_EMPTY, PARAMETER_INVALID, STATE_INVALID,
     ACCESS_DENIED, ACCESS_DENIED_TO_OPERATION, ACCESS_DENIED_TO_QUERY;
 
-    private static final Logger log = Logger.getLogger(Be5ErrorCode.class.getName());
-
     /**
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
@@ -20,19 +16,6 @@ public enum Be5ErrorCode
     public Be5Exception exception(Object... parameters)
     {
         String msg = ErrorTitles.formatTitle(this, parameters);
-        log.log(getLogLevel(), msg);
-
-        return Be5Exception.create(this, msg);
-    }
-
-    /**
-     * Creates a {@link Be5Exception} by the code and a formatted message. Note
-     * that this method is not a part of the API.
-     */
-    Be5Exception exception(Logger log, Object... parameters)
-    {
-        String msg = ErrorTitles.formatTitle(this, parameters);
-        log.log(getLogLevel(), msg);
 
         return Be5Exception.create(this, msg);
     }
@@ -44,19 +27,6 @@ public enum Be5ErrorCode
     Be5Exception rethrow(Throwable t, Object... parameters)
     {
         String msg = ErrorTitles.formatTitle(this, parameters);
-        log.log(getLogLevel(), msg, t);
-
-        return Be5Exception.create(this, msg, t);
-    }
-
-    /**
-     * Creates a {@link Be5Exception} by the code and a formatted message. Note
-     * that this method is not a part of the API.
-     */
-    Be5Exception rethrow(Logger log, Throwable t, Object... parameters)
-    {
-        String msg = ErrorTitles.formatTitle(this, parameters);
-        log.log(getLogLevel(), msg, t);
 
         return Be5Exception.create(this, msg, t);
     }
@@ -113,11 +83,5 @@ public enum Be5ErrorCode
         if (isNotFound())return HTTP_CODE_404;
         if (isAccessDenied())return HTTP_CODE_403;
         return HTTP_CODE_500;
-    }
-
-
-    public Level getLogLevel()
-    {
-        return isInternal() ? Level.SEVERE : Level.FINE;
     }
 }

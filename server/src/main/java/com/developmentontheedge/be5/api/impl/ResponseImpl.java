@@ -13,10 +13,13 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 public class ResponseImpl implements Response
 {
+    private static final Logger log = Logger.getLogger(ResponseImpl.class.getName());
+
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     /**
@@ -148,7 +151,7 @@ public class ResponseImpl implements Response
     @Override
     public void sendUnknownActionError()
     {
-        sendErrorAsJson( new ErrorModel("500", "Unknown component action."), null);
+        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), null);
     }
     
     private void sendText(String contentType, String text)
@@ -162,9 +165,9 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendTextError(String messagee)
+    public void sendTextError(String message)
     {
-        sendText("text/plain;charset=UTF-8", messagee);
+        sendText("text/plain;charset=UTF-8", message);
     }
     
     @Override

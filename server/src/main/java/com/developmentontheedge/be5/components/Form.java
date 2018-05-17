@@ -23,6 +23,8 @@ import com.google.inject.Stage;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESULT;
@@ -32,6 +34,8 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class Form extends ControllerSupport
 {
+    private static final Logger log = Logger.getLogger(Form.class.getName());
+
     private final OperationExecutor operationExecutor;
     private final DocumentGenerator documentGenerator;
     private final UserHelper userHelper;
@@ -69,6 +73,8 @@ public class Form extends ControllerSupport
         catch (Be5Exception e)
         {
             HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
+            log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
+
             res.sendErrorAsJson(
                     new ErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
                     req.getDefaultMeta()
@@ -95,8 +101,11 @@ public class Form extends ControllerSupport
         }
         catch (Be5Exception e)
         {
+            HashUrl url = HashUrlUtils.getUrl(operation);
+            log.log(Level.SEVERE, "Error in operation: " + url.toString(), e);
+
             res.sendErrorAsJson(
-                    documentGenerator.getErrorModel(e, HashUrlUtils.getUrl(operation)),
+                    documentGenerator.getErrorModel(e, url),
                     req.getDefaultMeta()
             );
             return;

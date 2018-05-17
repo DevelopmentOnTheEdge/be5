@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 public class LogConfigurator
 {
-    private Logger log;
     private final static String path = "/logging.properties";
 
     public LogConfigurator()
@@ -25,7 +24,7 @@ public class LogConfigurator
             }
             LogManager.getLogManager().readConfiguration(resourceAsStream);
 
-            log = Logger.getLogger(LogConfigurator.class.getName());
+            Logger log = Logger.getLogger(LogConfigurator.class.getName());
             String level = log.getLevel() != null ? log.getLevel().getName() :
                     log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
 
@@ -34,7 +33,7 @@ public class LogConfigurator
         }
         catch (IOException e)
         {
-            throw Be5Exception.internal(log, e);
+            throw Be5Exception.internal(e);
         }
     }
 

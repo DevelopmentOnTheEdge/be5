@@ -37,9 +37,12 @@ public class StaticPageComponent extends ControllerSupport
 
         if (staticPageContent == null)
         {
+            String msg = ErrorTitles.formatTitle(Be5ErrorCode.NOT_FOUND, "static/" + page);
+            log.fine(msg);
+
             //todo localize
             res.sendErrorAsJson(
-                    new ErrorModel("500", ErrorTitles.formatTitle(Be5ErrorCode.NOT_FOUND, page),
+                    new ErrorModel("404", msg,
                             Collections.singletonMap(SELF_LINK, "static/" + page)),
                     req.getDefaultMeta()
             );

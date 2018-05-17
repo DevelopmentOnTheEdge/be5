@@ -117,7 +117,7 @@ public class RequestImpl implements Request
         }
         catch (ClassCastException e)
         {
-            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
+            throw Be5Exception.invalidRequestParameter(e, parameter, valuesString);
         }
     }
 //

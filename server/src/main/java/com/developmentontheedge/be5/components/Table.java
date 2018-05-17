@@ -20,6 +20,8 @@ import com.developmentontheedge.be5.util.HashUrl;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
@@ -27,6 +29,8 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 public class Table extends ControllerSupport
 {
+    private static final Logger log = Logger.getLogger(Table.class.getName());
+
     private final DocumentGenerator documentGenerator;
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
@@ -96,6 +100,8 @@ public class Table extends ControllerSupport
 
     private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
     {
+        log.log(Level.SEVERE, "Error in table" + url.toString(), e);
+
         String message = "";
 
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());

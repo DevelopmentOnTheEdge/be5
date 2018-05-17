@@ -114,8 +114,6 @@ class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
         testtableAdmin << [
                 "name": "InsertName",
                 "value": "asd"]
-
-        assert db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
     }
 
     @Test
