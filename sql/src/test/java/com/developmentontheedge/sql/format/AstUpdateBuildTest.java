@@ -45,7 +45,7 @@ public class AstUpdateBuildTest
 
         AstUpdate update = Ast.update("users").set(map);
 
-        assertEquals("UPDATE users SET count = 4, name =?", update.format());
+        assertEquals("UPDATE users SET count = 4, name = ?", update.format());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class AstUpdateBuildTest
         AstUpdate update = Ast.update("users").set(Collections.singletonMap("name", "Test"))
                 .where(Collections.singletonMap("name", "test"));
 
-        assertEquals("UPDATE users SET name ='Test' WHERE name =?", update.format());
+        assertEquals("UPDATE users SET name ='Test' WHERE name = ?", update.format());
     }
 
     @Test

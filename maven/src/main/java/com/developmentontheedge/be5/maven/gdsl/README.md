@@ -19,7 +19,7 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
 ```xml
  <dependency>
   <groupId>com.developmentontheedge.be5</groupId>
-  <artifactId>be5-entity-gen</artifactId>
+  <artifactId>be5-maven-plugin</artifactId>
   <version>0.1.1-SNAPSHOT</version>
  </dependency>
 ``` 

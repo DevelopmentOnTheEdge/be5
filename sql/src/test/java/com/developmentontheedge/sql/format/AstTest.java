@@ -43,7 +43,7 @@ public class AstTest
     {
         Map<String, ? super Object> name = Collections.singletonMap("name", "test");
         AstSelect users = Ast.selectCount().from("users").where(name);
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name =?",
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name = ?",
                 users.format());
     }
 
@@ -63,7 +63,7 @@ public class AstTest
         names.put("name", "test");
         names.put("name2", "test2");
         AstSelect users = Ast.selectCount().from("users").where(names);
-        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name =? AND name2 =?",
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name = ? AND name2 = ?",
                 users.format());
     }
 

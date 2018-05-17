@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.QRec
-import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before

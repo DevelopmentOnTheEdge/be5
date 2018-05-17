@@ -137,4 +137,6 @@ public interface Meta
     Query createQueryFromSql(String sql);
 
     boolean hasAccess(RoleSet roles, List<String> availableRoles);
+
+    String getStaticPageContent(String language, String name);
 }

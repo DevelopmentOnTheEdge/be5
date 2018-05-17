@@ -87,7 +87,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         Object first = generateOperation("testtableAdmin", "All records", "Edit", "12","{}").getFirst();
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
 
         assertEquals("{'name':'TestName','value':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
@@ -104,7 +104,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         Object first = generateOperation("propertyTypes", "All records", "Edit", "01","{}").getFirst();
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE =?"),any(),eq("01"));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE = ?"),any(),eq("01"));
 
         assertEquals("{'CODE':'02','name':'TestName'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
@@ -115,7 +115,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithParams("{'name':'EditName','value':123}");
 
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
+        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", 123, 12L);
     }
 
@@ -124,7 +124,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithParams("{'name':'EditName','value':null}");
 
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
+        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
@@ -133,7 +133,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithParams("{'name':'EditName','value':''}");
 
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name =?, value =? WHERE ID =?",
+        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
@@ -151,6 +151,6 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID =?"),any(),eq(12L));
+        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
     }
 }

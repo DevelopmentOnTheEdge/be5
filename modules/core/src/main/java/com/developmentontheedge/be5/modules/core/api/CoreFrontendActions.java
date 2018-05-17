@@ -11,7 +11,7 @@ public interface CoreFrontendActions
 
     FrontendAction OPEN_DEFAULT_ROUTE_ACTION = new FrontendAction(OPEN_DEFAULT_ROUTE, null);
 
-    static FrontendAction[] updateUserAndOpenRoute(UserInfoModel userInfoModel)
+    static FrontendAction[] updateUserAndOpenDefaultRoute(UserInfoModel userInfoModel)
     {
         return new FrontendAction[]{
                 new FrontendAction(UPDATE_USER_INFO, userInfoModel),

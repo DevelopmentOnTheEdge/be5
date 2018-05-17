@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;

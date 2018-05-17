@@ -6,10 +6,10 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
-import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
 import java.util.HashMap;

@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 
 public class TestProjectProvider implements ProjectProvider

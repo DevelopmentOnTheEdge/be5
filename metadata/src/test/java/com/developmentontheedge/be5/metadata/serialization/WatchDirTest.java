@@ -7,6 +7,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Random;
 
 import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createScript;
 import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.getProject;
@@ -31,11 +32,12 @@ public class WatchDirTest
                 .onModify( onModify -> modify[0] = true)
                 .start();
 
-        createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" );
-        Serialization.save( project, path );
-
         while (!modify[0]){
-            Thread.sleep(50);
+            Thread.sleep(100);
+
+            createScript( project, "Post-db", "INSERT INTO entity (name) VALUES ('foo')" + new Random().nextInt());
+            Serialization.save( project, path );
+
             System.out.println(modify[0]);
         }
 

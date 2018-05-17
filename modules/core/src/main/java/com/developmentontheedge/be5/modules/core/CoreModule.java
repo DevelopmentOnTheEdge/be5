@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.modules.core.components.Categories;
-import com.developmentontheedge.be5.modules.core.components.UserInfoComponent;
+import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
+import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesServiceImpl;
@@ -18,11 +18,11 @@ public class CoreModule extends ServletModule
     @Override
     protected void configureServlets()
     {
-        bind(UserInfoComponent.class).in(Scopes.SINGLETON);
-        bind(Categories.class).in(Scopes.SINGLETON);
+        bind(UserInfoController.class).in(Scopes.SINGLETON);
+        bind(CategoriesController.class).in(Scopes.SINGLETON);
 
-        serve("/api/userInfo*").with(UserInfoComponent.class);
-        serve("/api/categories*").with(Categories.class);
+        serve("/api/userInfo*").with(UserInfoController.class);
+        serve("/api/categories*").with(CategoriesController.class);
 
         bind(CategoriesHelper.class).in(Scopes.SINGLETON);
         bind(CoreUtils.class).to(CoreUtilsImpl.class).in(Scopes.SINGLETON);

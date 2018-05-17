@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 

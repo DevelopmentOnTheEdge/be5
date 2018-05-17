@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ObjectArrays;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;

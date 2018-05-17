@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 import java.util.List;
 

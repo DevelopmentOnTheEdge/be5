@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.validation.Validator;
+import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -19,7 +19,7 @@ import com.developmentontheedge.be5.util.Utils;
 import com.google.inject.Injector;
 
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

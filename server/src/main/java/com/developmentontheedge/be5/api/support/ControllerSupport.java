@@ -8,10 +8,14 @@ import com.developmentontheedge.be5.api.impl.RequestImpl;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public abstract class ControllerSupport extends HttpServlet implements Controller
 {
+    protected static final Logger log = Logger.getLogger(ControllerSupport.class.getName());
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     {
@@ -30,6 +34,13 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
 
         UserInfoHolder.setRequest(req);
 
-        generate(req, ServletUtils.getResponse(request, response));
+        try
+        {
+            generate(req, ServletUtils.getResponse(request, response));
+        }
+        catch (Throwable e)
+        {
+            log.log(Level.SEVERE, "Error in controller", e);
+        }
     }
 }

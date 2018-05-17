@@ -47,6 +47,10 @@ public interface Response
 
     void sendAsRawJson(Object value);
 
+    /**
+     * @param value object for send as json
+     * @param status {@link java.net.HttpURLConnection}
+     */
     void sendError(Object value, int status);
 
     void setStatus(int status);

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.operations
 
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before

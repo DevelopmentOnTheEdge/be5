@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.helpers;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
-import com.developmentontheedge.be5.api.validation.rule.ValidationRules;
+import com.developmentontheedge.be5.api.services.validation.ValidationRules;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
@@ -21,7 +21,7 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.math.LongMath;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -39,8 +39,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range;
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.step;
+import static com.developmentontheedge.be5.api.services.validation.ValidationRules.range;
+import static com.developmentontheedge.be5.api.services.validation.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
 

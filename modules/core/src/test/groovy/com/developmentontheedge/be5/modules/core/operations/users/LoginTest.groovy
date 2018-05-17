@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.modules.core.components.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
 import com.developmentontheedge.be5.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel

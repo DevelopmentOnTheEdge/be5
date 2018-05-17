@@ -4,8 +4,8 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.google.inject.Inject;
-import com.developmentontheedge.be5.operation.support.GOperationSupport;
+import javax.inject.Inject;
+import com.developmentontheedge.be5.operations.support.GOperationSupport;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.beans.DynamicProperty;
 
@@ -45,7 +45,7 @@ public class Login extends GOperationSupport
 
             if(context.getOperationParams().get("withoutUpdateUserInfo") == null){
                 setResult(OperationResult.finished(null,
-                        CoreFrontendActions.updateUserAndOpenRoute(loginService.getUserInfoModel())));
+                        CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));
             }else{
                 setResult(OperationResult.finished());
             }

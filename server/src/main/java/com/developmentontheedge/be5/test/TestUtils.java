@@ -17,7 +17,7 @@ import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
@@ -41,7 +41,7 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -425,15 +425,11 @@ public abstract class TestUtils
         {
             try
             {
-                File file = Paths.get("target/sql").toFile();
                 log.info(JULLogger.infoBlock("Execute be5:create-db"));
                 new AppDb()
-                        .setLogPath(file)
                         .setLogger(new JULLogger(log))
                         .setBe5Project(project)
                         .execute();
-
-                log.info("Sql log in: " + file.getAbsolutePath());
             }
             catch (MojoFailureException e)
             {

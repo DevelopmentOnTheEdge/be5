@@ -5,8 +5,6 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 
-import java.util.logging.Logger;
-
 /**
  * The general BeanExplorer5 exception. You can create instances of the exception with its static constructors.
  * 
@@ -66,21 +64,6 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.INTERNAL_ERROR.exception(title);
     }
 
-    public static Be5Exception internal(Logger log, String title)
-    {
-        return Be5ErrorCode.INTERNAL_ERROR.exception(log, title);
-    }
-
-    public static Be5Exception internal(Logger log, Throwable t)
-    {
-        return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t);
-    }
-
-    public static Be5Exception internal(Logger log, Throwable t, Object... parameters)
-    {
-        return Be5ErrorCode.INTERNAL_ERROR.rethrow(log, t, parameters);
-    }
-
     public static Be5Exception internal(Throwable t)
     {
         return internal(t, "");
@@ -111,9 +94,9 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.PARAMETER_INVALID.exception(parameterName, invalidValue);
     }
 
-    public static Be5Exception invalidRequestParameter(Logger log, Throwable t, String parameterName, String invalidValue)
+    public static Be5Exception invalidRequestParameter(Throwable t, String parameterName, String invalidValue)
     {
-        return Be5ErrorCode.PARAMETER_INVALID.rethrow(log, t, parameterName, invalidValue);
+        return Be5ErrorCode.PARAMETER_INVALID.rethrow(t, parameterName, invalidValue);
     }
     
     public static Be5Exception requestParameterIsAbsent(String parameterName)
