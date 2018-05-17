@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.model.beans;
 
-import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
-import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.api.services.databasemodel.groovy.DynamicPropertyMetaClass;
+import com.developmentontheedge.be5.api.services.databasemodel.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

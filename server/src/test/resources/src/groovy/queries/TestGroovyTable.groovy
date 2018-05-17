@@ -1,7 +1,7 @@
 package src.groovy.queries
 
 import com.developmentontheedge.be5.query.impl.TableModel
-import com.developmentontheedge.be5.query.TableBuilderSupport
+import com.developmentontheedge.be5.queries.support.TableBuilderSupport
 
 
 class TestGroovyTable extends TableBuilderSupport

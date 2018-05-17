@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.util.ActionUtils
 import com.developmentontheedge.be5.query.impl.TableModel
 import com.developmentontheedge.be5.query.impl.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
-import com.developmentontheedge.be5.query.TableBuilderSupport
+import com.developmentontheedge.be5.queries.support.TableBuilderSupport
 
 
 class Queries extends TableBuilderSupport
