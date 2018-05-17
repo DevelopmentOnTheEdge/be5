@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.modules.core.operations
 
-import com.developmentontheedge.be5.test.SqlMockOperationTest
+import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
+import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -10,8 +12,13 @@ import static org.mockito.Matchers.anyString
 import static org.mockito.Matchers.anyVararg
 import static org.mockito.Mockito.when
 
-class SessionVariablesEditTest extends SqlMockOperationTest
+class SessionVariablesEditTest extends CoreBe5ProjectTest
 {
+    @Before
+    void setUp(){
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER)
+    }
+
     @Test
     void testGet()
     {
@@ -35,7 +42,7 @@ class SessionVariablesEditTest extends SqlMockOperationTest
     {
         setSession("remoteAddr", "199.168.0.1")
 
-        when(SqlServiceMock.mock.getScalar(anyString(), anyVararg())).thenReturn(1L)
+        when(SqlServiceMock.mock.one(anyString(), anyVararg())).thenReturn(1L)
 
         executeOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", ["newValue":"199.168.0.2"])
 

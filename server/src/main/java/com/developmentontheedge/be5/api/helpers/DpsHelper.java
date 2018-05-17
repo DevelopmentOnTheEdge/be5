@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
-import com.developmentontheedge.be5.api.validation.rule.ValidationRules;
+import com.developmentontheedge.be5.api.services.validation.ValidationRules;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
@@ -13,25 +13,22 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-import com.developmentontheedge.sql.format.Ast;
 import com.developmentontheedge.sql.model.AstBeParameterTag;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.math.LongMath;
 
+import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,8 +39,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range;
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.step;
+import static com.developmentontheedge.be5.api.services.validation.ValidationRules.range;
+import static com.developmentontheedge.be5.api.services.validation.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
 
@@ -56,6 +53,7 @@ public class DpsHelper
     private final UserAwareMeta userAwareMeta;
     private final OperationHelper operationHelper;
 
+    @Inject
     public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
@@ -295,7 +293,7 @@ public class DpsHelper
         AstStart ast;
         try
         {
-            ast = SqlQuery.parse(meta.getQueryCode(query, UserInfoHolder.getCurrentRoles()));
+            ast = SqlQuery.parse(meta.getQueryCode(query));
         }
         catch (RuntimeException e)
         {

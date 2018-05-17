@@ -1,11 +1,12 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.google.common.collect.ImmutableList;
 
+import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ColumnsHelper
 
     private final Meta meta;
 
+    @Inject
     public ColumnsHelper(Meta meta)
     {
         this.meta = meta;

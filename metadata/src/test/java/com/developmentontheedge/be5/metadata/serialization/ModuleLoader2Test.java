@@ -52,7 +52,7 @@ public class ModuleLoader2Test
         assertTrue(ModuleLoader2.getPathsToProjectsToHotReload().toString().startsWith("{test="));
         assertEquals(1, ModuleLoader2.getPathsToProjectsToHotReload().size());
 
-        Project loadProject = ModuleLoader2.findAndLoadProjectWithModules();
+        Project loadProject = ModuleLoader2.findAndLoadProjectWithModules(true);
         assertEquals("test", loadProject.getAppName());
 
         ModuleLoader2.getFileSystem(loadProject, "test");

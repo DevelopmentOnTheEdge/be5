@@ -2,9 +2,9 @@ package system
 
 import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.query.impl.TableModel
-import com.developmentontheedge.be5.query.TableBuilderSupport
+import com.developmentontheedge.be5.queries.support.TableBuilderSupport
 import com.github.benmanes.caffeine.cache.Cache
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 
 
 class CacheTable extends TableBuilderSupport

@@ -4,11 +4,13 @@ import com.developmentontheedge.be5.api.Request
 import com.developmentontheedge.be5.api.Session
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.api.sql.ResultSetParser
-import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
+import com.developmentontheedge.be5.model.FrontendAction
+import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
+import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.Be5ProjectTest
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
 
-class LoginTest extends Be5ProjectTest
+class LoginTest extends CoreBe5ProjectTest
 {
     @Before
     void init(){
@@ -49,14 +51,14 @@ class LoginTest extends Be5ProjectTest
 
         String testPass = "testPass"
 
-        when(SqlServiceMock.mock.getScalar(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
+        when(SqlServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
 
-        when(SqlServiceMock.mock.selectList(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
+        when(SqlServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
                 Matchers.<ResultSetParser<String>>any(), eq(TEST_USER)))
                 .thenReturn(Arrays.asList("Test1", "Test2"))
 
-        when(SqlServiceMock.mock.getScalar(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
+        when(SqlServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
                 eq(DatabaseConstants.CURRENT_ROLE_LIST), eq(TEST_USER)))
                 .thenReturn("('Test1')")
 
@@ -65,12 +67,21 @@ class LoginTest extends Be5ProjectTest
 
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()
-        assertEquals FrontendConstants.UPDATE_USER_INFO, second.getDetails()
 
         assertEquals TEST_USER, UserInfoHolder.getUserInfo().userName
         assertEquals Arrays.asList("Test1", "Test2"), UserInfoHolder.getUserInfo().availableRoles
         assertEquals Arrays.asList("Test1"), UserInfoHolder.getUserInfo().currentRoles
         assertEquals session, UserInfoHolder.getUserInfo().session
+
+        def actions = (FrontendAction[]) second.getDetails()
+
+        assertEquals(CoreFrontendActions.UPDATE_USER_INFO, actions[0].getType())
+
+        def userInfoModel = (UserInfoModel) actions[0].getValue()
+        assertEquals TEST_USER, userInfoModel.getUserName()
+        assertEquals(Arrays.asList("Test1", "Test2"), userInfoModel.getAvailableRoles())
+
+        assertEquals(CoreFrontendActions.OPEN_DEFAULT_ROUTE, actions[1].getType())
     }
 
     @Test

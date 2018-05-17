@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import one.util.streamex.StreamEx;
 
@@ -897,6 +898,21 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         automaticDeserializationService = new AutomaticDeserializationService();
         automaticSerializationService = new AutomaticSerializationService();
         freemarkerConfiguration = null;
+    }
+
+    public List<Entity> getAllEntities()
+    {
+        List<Entity> entities = new ArrayList<>();
+
+        for (Module module : getProject().getModulesAndApplication())
+        {
+            for (Entity entity : module.getEntities())
+            {
+                entities.add(entity);
+            }
+        }
+
+        return entities;
     }
 
     /**

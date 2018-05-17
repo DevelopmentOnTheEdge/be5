@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.api.helpers
 
-import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
-import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
+import javax.inject.Inject
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Before;
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 
-class DpsRecordAdapterTest extends Be5ProjectDBTest
+class DpsRecordAdapterTest extends ServerBe5ProjectDBTest
 {
     @Inject DatabaseModel database
 

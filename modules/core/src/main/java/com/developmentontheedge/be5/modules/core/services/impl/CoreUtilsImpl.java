@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.util.BlobUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class CoreUtilsImpl implements CoreUtils
 
     private final SqlService db;
 
+    @Inject
     public CoreUtilsImpl(SqlService db, Be5Caches be5Caches)
     {
         this.db = db;
@@ -66,7 +68,7 @@ public class CoreUtilsImpl implements CoreUtils
 
         Object value = systemSettingsCache.get(key, (k)->{
             String sql = "SELECT setting_value FROM systemSettings WHERE setting_name = ? AND section_name = ?";
-            return BlobUtils.getAsString(db.getScalar(sql, param, section));
+            return BlobUtils.getAsString(db.one(sql, param, section));
         });
 
         if( MISSING_SETTING_VALUE.equals( value ) )
@@ -123,7 +125,7 @@ public class CoreUtilsImpl implements CoreUtils
 
         String sql = "SELECT setting_name, setting_value FROM systemSettings WHERE section_name = ?";
         Map<String, String> settingsInSection = new HashMap<>();
-        db.selectList(sql, rs -> {
+        db.list(sql, rs -> {
             String param = rs.getString(1);
             String value = BlobUtils.getAsString(rs.getObject(2));
             systemSettingsCache.put(section + "." + param, value);
@@ -247,7 +249,7 @@ public class CoreUtilsImpl implements CoreUtils
         String key = user + "." + param;
         Object value = userSettingsCache.get(key, k -> {
             String sql = "SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?";
-            return BlobUtils.getAsString(db.getScalar(sql, param, user));
+            return BlobUtils.getAsString(db.one(sql, param, user));
         });
 
         if(MISSING_SETTING_VALUE.equals(value))

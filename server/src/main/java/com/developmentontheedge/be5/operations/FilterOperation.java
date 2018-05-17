@@ -1,13 +1,15 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
-import com.developmentontheedge.be5.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.operation.OperationSupport;
+import com.developmentontheedge.be5.operations.support.OperationSupport;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Map;
+
+import static com.developmentontheedge.be5.api.FrontendActions.*;
 
 
 public class FilterOperation extends OperationSupport
@@ -26,6 +28,7 @@ public class FilterOperation extends OperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        setResult(OperationResult.document(filterHelper.filterDocument(getQuery(), parameters)));
+        setResult(OperationResult.finished(null,
+                updateParentDocument(filterHelper.filterDocument(getQuery(), parameters))));
     }
 }

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operations
 
+import com.developmentontheedge.be5.model.FrontendAction
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.operation.OperationResult
@@ -10,6 +11,7 @@ import org.junit.Test
 
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM
+import static com.developmentontheedge.be5.api.FrontendActions.UPDATE_PARENT_DOCUMENT
 import static org.junit.Assert.assertEquals
 
 
@@ -55,12 +57,16 @@ class FilterOperationTest extends SqlMockOperationTest
         Either<Object, OperationResult> execute = executeOperation(
                 "testtable", "All records", "Filter", "", [name:"test"])
 
-        assertEquals("document",
+        assertEquals("finished",
                 oneQuotes(execute.getSecond().getStatus()))
 
+        def details = (FrontendAction)execute.getSecond().getDetails()
+
         assertEquals("[_search_presets_:name, name:test, _search_:true]",
-                oneQuotes(((TablePresentation)((JsonApiModel)execute.getSecond().getDetails())
+                oneQuotes(((TablePresentation)((JsonApiModel)details.getValue())
                         .getData().getAttributes()).getParameters().toString()))
+
+        assertEquals(UPDATE_PARENT_DOCUMENT, details.getType())
     }
 
     @Test

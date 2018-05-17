@@ -2,11 +2,15 @@ package com.developmentontheedge.be5.api;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.google.common.io.ByteStreams;
+import com.google.common.net.UrlEscapers;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 
@@ -43,6 +47,10 @@ public interface Response
 
     void sendAsRawJson(Object value);
 
+    /**
+     * @param value object for send as json
+     * @param status {@link java.net.HttpURLConnection}
+     */
     void sendError(Object value, int status);
 
     void setStatus(int status);
@@ -98,4 +106,31 @@ public interface Response
      * Returns a raw response. Used only for low-level API. Should not be used in ordinary components.
      */
     HttpServletResponse getRawResponse();
+
+    default void sendFile(boolean download, String filename, String contentType, String charset, InputStream in)
+    {
+        HttpServletResponse response = getRawResponse();
+
+        response.setContentType(contentType + "; charset=" + charset);
+        //response.setCharacterEncoding(encoding);
+
+        if (download)
+        {
+            response.setHeader("Content-disposition","attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+        }
+        else
+        {
+            response.setHeader("Content-disposition","filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
+        }
+
+        try
+        {
+            ByteStreams.copy(in, response.getOutputStream());
+            in.close();
+        }
+        catch (IOException e)
+        {
+            throw Be5Exception.internal(e);
+        }
+    }
 }

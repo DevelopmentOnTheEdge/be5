@@ -26,5 +26,4 @@ public interface FrontendConstants
     String TOP_FORM = "topForm";
     //String TOP_DOCUMENT = "topDocument";
 
-    String UPDATE_USER_INFO = "UPDATE_USER_INFO";
 }

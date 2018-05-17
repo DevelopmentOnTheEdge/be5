@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.operations;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.operation.OperationSupport;
+import com.developmentontheedge.be5.operations.support.OperationSupport;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
 import com.developmentontheedge.be5.util.Utils;
 
@@ -59,7 +59,7 @@ public class DeleteOperation extends OperationSupport implements TransactionalOp
                 {
                     int updateCount1 = database.getEntity(reference.getTableFrom())
                             .removeWhereColumnIn(reference.getColumnsFrom(),
-                                    Utils.addPrefix(context.getRecords(), getInfo().getEntityName() + "."));
+                                    Utils.addPrefix(getInfo().getEntityName() + ".", context.getRecords()));
 
                     if (updateCount1 > 0)
                     {

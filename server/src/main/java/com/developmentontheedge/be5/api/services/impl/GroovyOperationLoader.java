@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.operation.OperationInfo;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class GroovyOperationLoader
 
     private Map<String, Operation> groovyOperationsMap;
 
+    @Inject
     public GroovyOperationLoader(ProjectProvider projectProvider, Meta meta, GroovyRegister groovyRegister)
     {
         this.groovyRegister = groovyRegister;
@@ -42,7 +44,7 @@ public class GroovyOperationLoader
             List<String> operationNames = meta.getOperationNames(entity);
             for (String operationName : operationNames)
             {
-                com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperationIgnoringRoles(entity, operationName);
+                com.developmentontheedge.be5.metadata.model.Operation operation = meta.getOperation(entity.getName(), operationName);
                 if(operation.getType().equals(OPERATION_TYPE_GROOVY))
                 {
                     GroovyOperation groovyOperation = (GroovyOperation) operation;

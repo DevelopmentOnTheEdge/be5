@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.util;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 
 import javax.xml.bind.DatatypeConverter;
@@ -66,7 +66,7 @@ public class Utils
         return "(" + IntStream.range(0, count).mapToObj(x -> "?").collect(Collectors.joining(", ")) + ")";
     }
 
-    public static String[] addPrefix(Object[] values, String prefix)
+    public static String[] addPrefix(String prefix, Object[] values)
     {
         String[] withPrefix = new String[values.length];
         for (int i=0; i<values.length; i++)

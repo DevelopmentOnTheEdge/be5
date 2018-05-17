@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception
-import com.developmentontheedge.be5.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.exceptions.Be5Exception
+import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationInfo
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Test
 
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import static org.junit.Assert.*
 
 
-class OperationExecutorTest extends Be5ProjectDBTest
+class OperationExecutorTest extends ServerBe5ProjectDBTest
 {
     @Inject DatabaseModel database
     @Inject OperationExecutor operationExecutor
@@ -24,7 +24,7 @@ class OperationExecutorTest extends Be5ProjectDBTest
     {
         def testtableAdmin = database.getEntity("testtableAdmin")
 
-        def info = new OperationInfo(meta.getOperationIgnoringRoles("testtableAdmin", "TransactionTestOp"))
+        def info = new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp"))
         def operation = operationExecutor.create(info, new OperationContext([] as String[], null, Collections.emptyMap()))
 
         testtableAdmin.removeAll()

@@ -99,31 +99,31 @@ public class WatchDir
         });
     }
 
-    /**
-     * Creates a WatchService and registers the given directory
-     */
-    public WatchDir(Path dir) throws IOException {
-        this.watcher = FileSystems.getDefault().newWatchService();
-        this.keys = new HashMap<>();
-        this.recursive = true;
-
-        if (recursive) {
-            registerAll(dir);
-        } else {
-            register(dir);
-        }
-    }
-    
-    /**
-     * Creates a WatchService and registers the given Project
-     */
-    public WatchDir(Project project) throws IOException {
-        this.watcher = FileSystems.getDefault().newWatchService();
-        this.keys = new HashMap<>();
-        this.recursive = true;
-        
-        registerAll(new ProjectFileSystem( project ));
-    }
+//    /**
+//     * Creates a WatchService and registers the given directory
+//     */
+//    public WatchDir(Path dir) throws IOException {
+//        this.watcher = FileSystems.getDefault().newWatchService();
+//        this.keys = new HashMap<>();
+//        this.recursive = true;
+//
+//        if (recursive) {
+//            registerAll(dir);
+//        } else {
+//            register(dir);
+//        }
+//    }
+//
+//    /**
+//     * Creates a WatchService and registers the given Project
+//     */
+//    public WatchDir(Project project) throws IOException {
+//        this.watcher = FileSystems.getDefault().newWatchService();
+//        this.keys = new HashMap<>();
+//        this.recursive = true;
+//
+//        registerAll(new ProjectFileSystem( project ));
+//    }
 
     public WatchDir(Map<String, Project> modulesMap) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();

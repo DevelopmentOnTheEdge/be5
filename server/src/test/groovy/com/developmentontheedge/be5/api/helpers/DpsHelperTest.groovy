@@ -1,10 +1,9 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.metadata.model.Entity
+import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
@@ -18,7 +17,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class DpsHelperTest extends Be5ProjectDBTest
+class DpsHelperTest extends ServerBe5ProjectDBTest
 {
     @Inject DpsHelper dpsHelper
     @Inject Meta meta

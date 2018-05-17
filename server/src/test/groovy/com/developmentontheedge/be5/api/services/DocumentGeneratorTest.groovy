@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.inject.Inject
+import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.model.TablePresentation
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel
@@ -21,7 +21,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     void getTablePresentation()
     {
         TablePresentation table = documentGenerator.getTablePresentation(
-                meta.getQuery("testtable", "All records", Collections.singletonList("Guest")), new HashMap<>())
+                meta.getQuery("testtable", "All records"), new HashMap<>())
 
         assertEquals("testtable: All records", table.getTitle())
 
@@ -37,7 +37,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     void testLinkQuick()
     {
         TablePresentation table = documentGenerator.getTablePresentation(
-                meta.getQuery("testtable", "LinkQuick", Collections.singletonList("SystemDeveloper")), new HashMap<>())
+                meta.getQuery("testtable", "LinkQuick"), new HashMap<>())
 
         assertEquals("testtable: LinkQuick", table.getTitle())
 
@@ -54,7 +54,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     {
         initUserWithRoles("SystemDeveloper")
 
-        def query = meta.getQuery("testtable", "TableWithFilter", Collections.singletonList("SystemDeveloper"))
+        def query = meta.getQuery("testtable", "TableWithFilter")
 
         JsonApiModel document = documentGenerator.getJsonApiModel(query, new HashMap<>())
 
@@ -86,8 +86,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
         db.insert("insert into testtableAdmin (name, value) VALUES (?, ?)","tableModelTest", null)
 
         TablePresentation table = documentGenerator.getTablePresentation(
-                meta.getQuery("testtableAdmin", "Test null in subQuery",
-                        Collections.singletonList("SystemDeveloper")), new HashMap<>())
+                meta.getQuery("testtableAdmin", "Test null in subQuery"), new HashMap<>())
 
         assertEquals("[" +
                 "{'cells':[" +
@@ -105,7 +104,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     void groovyTableTest()
     {
         def table = (TablePresentation)documentGenerator.
-                getTablePresentation(meta.getQueryIgnoringRoles("testtableAdmin", "TestGroovyTable"), new HashMap<>())
+                getTablePresentation(meta.getQuery("testtableAdmin", "TestGroovyTable"), new HashMap<>())
 
         assertEquals "['name','value']", oneQuotes(jsonb.toJson(table.getColumns()))
 

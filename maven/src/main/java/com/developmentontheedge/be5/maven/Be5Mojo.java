@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.maven;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +48,7 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
     boolean debug = false;
 
     @Parameter (property = "BE5_LOG_PATH")
-    File logPath;
+    File logPath = Paths.get("target/sql").toFile();
 
     @Parameter (property = "BE5_PROFILE")
     String connectionProfileName;
@@ -58,7 +59,8 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
     Project be5Project;
 
     ///////////////////////////////////////////////////////////////////
-    
+
+    private File logFile;
    
     public void init() throws MojoFailureException
     {
@@ -169,8 +171,32 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
         return prj;
     }
 
-    ///////////////////////////////////////////////////////////////////    
-    
+    PrintStream createPrintStream(String name)
+    {
+        if(logPath != null)
+        {
+            logPath.mkdirs();
+            try
+            {
+                logFile = new File(logPath, name);
+                return new PrintStream(logFile, "UTF-8");
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+    void logSqlFilePath()
+    {
+        if(logPath != null)
+        {
+            getLog().info("Logs: " + logFile.getAbsolutePath());
+        }
+    }
+
     protected void displayError(ProjectElementException error)
     {
         error.format( System.err );

@@ -2,8 +2,9 @@ package com.developmentontheedge.be5.api.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -13,10 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
-import com.google.common.base.Strings;
-import com.google.gson.*;
+
 
 import static com.developmentontheedge.be5.api.RestApiConstants.TIMESTAMP_PARAM;
 
@@ -27,19 +27,15 @@ public class RequestImpl implements Request
 
     private final HttpServletRequest rawRequest;
     private final String requestUri;
-    private final Map<String, Object> parameters;
     private final String remoteAddr;
-    private final String sessionId;
     
-    public RequestImpl(HttpServletRequest rawRequest, String requestUri, Map<String, Object> parameters)
+    public RequestImpl(HttpServletRequest rawRequest, String requestUri)
     {
         this.rawRequest = rawRequest;
         this.requestUri = requestUri;
-        this.parameters = new HashMap<>(parameters);
         this.remoteAddr = getClientIpAddr(rawRequest);
-        this.sessionId = rawRequest.getSession().getId();
     }
-    
+
     @Override
     public Object getAttribute(String name)
     {
@@ -61,6 +57,48 @@ public class RequestImpl implements Request
         return new SessionImpl(rawRequest.getSession());
     }
 
+    @Override
+    public Session getSession(boolean create)
+    {
+        HttpSession rawSession = rawRequest.getSession(create);
+        if(rawSession == null)return null;
+        return new SessionImpl(rawSession);
+    }
+
+    @Override
+    public String getSessionId()
+    {
+        return getSession().getSessionId();
+    }
+
+    @Override
+    public String get(String name)
+    {
+        return rawRequest.getParameter(name);
+    }
+
+    @Override
+    public List<String> getList(String name)
+    {
+        return Arrays.asList(getParameterValues(name));
+    }
+
+    @Override
+    public String[] getParameterValues(String name)
+    {
+        String[] values = rawRequest.getParameterValues(name + "[]");
+        if(values == null)
+        {
+            String value = rawRequest.getParameter(name);
+            if(value != null){
+                return new String[]{value};
+            }else{
+                return new String[]{};
+            }
+        }
+        return values;
+    }
+
 //
 //    @Override
 //    public <T> T getValuesFromJson(String parameterName, Class<T> clazz) throws Be5Exception
@@ -79,54 +117,54 @@ public class RequestImpl implements Request
         }
         catch (ClassCastException e)
         {
-            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
+            throw Be5Exception.invalidRequestParameter(e, parameter, valuesString);
         }
     }
-
-    /**
-     * for query
-     */
-    @Override
-    public Map<String, String> getValuesFromJsonAsStrings(String parameter) throws Be5Exception
-    {
-        String valuesString = get(parameter);
-        if(Strings.isNullOrEmpty(valuesString))
-        {
-            return Collections.emptyMap();
-        }
-
-        Map<String, String> fieldValues = new HashMap<>();
-
-        try
-        {
-            JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
-            for (Map.Entry entry: values.entrySet())
-            {
-                fieldValues.put(entry.getKey().toString(), ((JsonElement)entry.getValue()).getAsString());
-            }
-//            JsonArray values = (JsonArray) new JsonParser().parse(valuesString);
-//            for (int i = 0; i < values.size(); i++)
+//
+//    /**
+//     * for query
+//     */
+//    @Override
+//    public Map<String, String> getValuesFromJsonAsStrings(String parameter) throws Be5Exception
+//    {
+//        String valuesString = get(parameter);
+//        if(Strings.isNullOrEmpty(valuesString))
+//        {
+//            return Collections.emptyMap();
+//        }
+//
+//        Map<String, String> fieldValues = new HashMap<>();
+//
+//        try
+//        {
+//            JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
+//            for (Map.Entry entry: values.entrySet())
 //            {
-//                JsonObject pair = (JsonObject) values.get(i);
-//                String name = pair.get("name").getAsString();
-//                String value = pair.get("value").getAsString();
-//                if( !"".equals(value) )
-//                {
-//                    fieldValues.put(name, value);
-//                }
+//                fieldValues.put(entry.getKey().toString(), ((JsonElement)entry.getValue()).getAsString());
 //            }
-        }
-        catch (ClassCastException e)
-        {
-            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
-        }
-		return fieldValues;
-    }
+////            JsonArray values = (JsonArray) new JsonParser().parse(valuesString);
+////            for (int i = 0; i < values.size(); i++)
+////            {
+////                JsonObject pair = (JsonObject) values.get(i);
+////                String name = pair.get("name").getAsString();
+////                String value = pair.get("value").getAsString();
+////                if( !"".equals(value) )
+////                {
+////                    fieldValues.put(name, value);
+////                }
+////            }
+//        }
+//        catch (ClassCastException e)
+//        {
+//            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
+//        }
+//		return fieldValues;
+//    }
 
 	@Override
-    public Map<String, Object> getParameters()
+    public Map<String, String[]> getParameters()
     {
-        return Collections.unmodifiableMap(parameters);
+        return Collections.unmodifiableMap((Map<String, String[]>)rawRequest.getParameterMap());
     }
     
 	@Override
@@ -139,12 +177,6 @@ public class RequestImpl implements Request
     public String getRemoteAddr()
     {
         return remoteAddr;
-    }
-
-    @Override
-    public String getSessionId()
-    {
-        return sessionId;
     }
 
     @Override
@@ -196,21 +228,21 @@ public class RequestImpl implements Request
     @Override
     public String getBody()
     {
-        try
-        {
-            StringBuilder sb = new StringBuilder();
-            BufferedReader br = rawRequest.getReader();
+        StringBuilder sb = new StringBuilder();
+
+        try(BufferedReader br = rawRequest.getReader()){
             String str;
             while( (str = br.readLine()) != null )
             {
                 sb.append(str);
             }
-            return sb.toString();
         }
         catch (IOException e)
         {
             throw Be5Exception.internal(e);
         }
+
+        return sb.toString();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.sql.format.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -32,6 +33,7 @@ public class DatabaseServiceImpl implements DatabaseService
     private DataSource dataSource;
     private Rdbms type;
 
+    @Inject
     public DatabaseServiceImpl(ProjectProvider projectProvider)
     {
         Project project = projectProvider.getProject();

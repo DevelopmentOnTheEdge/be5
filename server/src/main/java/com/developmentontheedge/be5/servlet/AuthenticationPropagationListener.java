@@ -9,9 +9,9 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+
 public class AuthenticationPropagationListener implements ServletRequestListener
 {
-
     @Override
     public void requestInitialized(ServletRequestEvent event)
     {
@@ -29,5 +29,4 @@ public class AuthenticationPropagationListener implements ServletRequestListener
     {
         UserInfoHolder.setUserInfo(null);
     }
-
 }

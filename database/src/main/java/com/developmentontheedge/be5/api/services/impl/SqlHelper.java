@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ObjectArrays;
 
+import javax.inject.Inject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -15,6 +16,7 @@ public class SqlHelper
 {
     private final SqlService db;
 
+    @Inject
     public SqlHelper(SqlService db)
     {
         this.db = db;

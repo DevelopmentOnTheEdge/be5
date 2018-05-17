@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.modules.core.services.impl
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
-import com.developmentontheedge.be5.inject.Inject
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
 import com.developmentontheedge.be5.modules.core.services.LoginService
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 
-class LoginServiceImplTest extends Be5ProjectTest
+class LoginServiceImplTest extends CoreBe5ProjectTest
 {
     @Inject LoginService loginService
 

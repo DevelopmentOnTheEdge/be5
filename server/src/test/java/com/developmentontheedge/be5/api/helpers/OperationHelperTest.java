@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.inject.Inject;
+import javax.inject.Inject;
 import com.developmentontheedge.be5.model.QRec;
-import com.developmentontheedge.be5.test.Be5ProjectDBTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableList;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 
-public class OperationHelperTest extends Be5ProjectDBTest
+public class OperationHelperTest extends ServerBe5ProjectDBTest
 {
     @Inject private OperationHelper helper;
 

@@ -1,15 +1,16 @@
 package com.developmentontheedge.be5.modules.core.services
 
 import com.developmentontheedge.be5.api.services.CategoriesService
-import com.developmentontheedge.be5.inject.Inject
-import com.developmentontheedge.be5.test.Be5ProjectDBTest
+import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
+
+import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 
 
-class CategoriesServiceTest extends Be5ProjectDBTest
+class CategoriesServiceTest extends CoreBe5ProjectDBTest
 {
     @Inject CategoriesService categoriesService
 
@@ -109,12 +110,12 @@ class CategoriesServiceTest extends Be5ProjectDBTest
     @Test
     void getCategoryNavigationTest()
     {
-        def rootID = database.categories.add([
+        Long rootID = database.categories.add([
                 entity  : "docTypes",
                 name    : "Root"
         ])
 
-        def p1ID = database.categories.add([
+        Long p1ID = database.categories.add([
                 entity  : "docTypes",
                 name    : "p1",
                 parentID: rootID
@@ -136,7 +137,7 @@ class CategoriesServiceTest extends Be5ProjectDBTest
                 parentID: p1ID
         ])
 
-        def docTypes = categoriesService.getCategoryNavigation(p1ID)
+        def docTypes = categoriesService.getCategoryNavigation("docTypes", p1ID)
 
         assertEquals 1, docTypes.size()
         assertEquals "Root", docTypes.get(0).name

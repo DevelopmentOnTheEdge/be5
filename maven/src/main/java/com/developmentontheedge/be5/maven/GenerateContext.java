@@ -38,6 +38,12 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
             return;
         }
 
+        if(connectionProfileName == null)
+        {
+            log.info("Generate context.xml skipped - BE5_PROFILE not specified.");
+            return;
+        }
+
         generateFilePath = generateContextPath + "/context.xml";
 
         if(generateContextPath == null)throw new MojoFailureException("generateContextPath is null");
@@ -50,13 +56,7 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
             return;
         }
 
-        initProject();
-        if(connectionProfileName == null)
-        {
-            log.info("Generate context.xml skipped - BE5_PROFILE not specified.");
-            return;
-        }
-        initConnector();
+        init();
 
         try
         {

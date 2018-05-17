@@ -23,7 +23,7 @@ public class DeleteTest {
     public void selectWhere()
     {
         AstDelete sql = Ast.delete("users").where(Collections.singletonMap("name", "test"));
-        assertEquals("DELETE FROM users WHERE name =?",
+        assertEquals("DELETE FROM users WHERE name = ?",
                 sql.format());
     }
 

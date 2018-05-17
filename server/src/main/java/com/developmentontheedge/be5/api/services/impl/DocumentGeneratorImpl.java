@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.exceptions.Be5Exception;
+import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
@@ -10,6 +11,8 @@ import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.exceptions.ErrorTitles;
+import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
 import com.developmentontheedge.be5.query.impl.Operations;
@@ -35,6 +38,7 @@ import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,6 +50,7 @@ import java.util.stream.Collectors;
 import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.api.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.api.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
@@ -60,6 +65,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
 
+    @Inject
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
             GroovyRegister groovyRegister,
@@ -95,6 +101,19 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
+    @Override
+    public JsonApiModel getStaticPage(String title, String content, String url)
+    {
+        return JsonApiModel.data(
+                new ResourceData(
+                        STATIC_ACTION,
+                        new StaticPagePresentation(title, content),
+                        Collections.singletonMap(SELF_LINK, url)
+                ),
+                null
+        );
+    }
+
     public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters)
     {
         return getTablePresentation(query, parameters, tableModelService.getTableModel(query, parameters));
@@ -125,7 +144,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         if(categoryID != null)
         {
-            return categoriesService.getCategoryNavigation(Long.parseLong(categoryID));
+            return categoriesService.getCategoryNavigation(entityName, Long.parseLong(categoryID));
         }
         else
         {

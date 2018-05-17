@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.util.ActionUtils
 import com.developmentontheedge.be5.query.impl.TableModel
 import com.developmentontheedge.be5.query.impl.TableModel.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
-import com.developmentontheedge.be5.query.TableBuilderSupport
+import com.developmentontheedge.be5.queries.support.TableBuilderSupport
 
 
 class Queries extends TableBuilderSupport
@@ -36,7 +36,7 @@ class Queries extends TableBuilderSupport
         def queries = meta.getQueryNames(meta.getEntity(entityName))
         for (String queryName: queries)
         {
-            Query query = meta.getQueryIgnoringRoles(entityName, queryName)
+            Query query = meta.getQuery(entityName, queryName)
             List<CellModel> cells = new ArrayList<CellModel>()
 
             cells.add(new CellModel(entityName))

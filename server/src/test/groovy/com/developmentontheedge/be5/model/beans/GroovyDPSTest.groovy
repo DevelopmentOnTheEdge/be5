@@ -1,17 +1,17 @@
 package com.developmentontheedge.be5.model.beans
 
-import com.developmentontheedge.be5.api.validation.Validation
-import com.developmentontheedge.be5.test.Be5ProjectTest
+import com.developmentontheedge.be5.api.services.validation.Validation
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Test
 
-import static com.developmentontheedge.be5.api.validation.rule.ValidationRules.range
+import static com.developmentontheedge.be5.api.services.validation.ValidationRules.range
 import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class GroovyDPSTest extends Be5ProjectTest
+class GroovyDPSTest extends ServerBe5ProjectTest
 {
     private GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport()
 

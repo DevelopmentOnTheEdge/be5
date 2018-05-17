@@ -2,20 +2,32 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
+import com.developmentontheedge.be5.api.services.Be5Caches;
+import com.developmentontheedge.be5.api.services.CategoriesService;
+import com.developmentontheedge.be5.api.services.ConnectionService;
+import com.developmentontheedge.be5.api.services.CoreUtils;
+import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.inject.impl.Be5Injector;
-import com.developmentontheedge.be5.inject.Binder;
-import com.developmentontheedge.be5.inject.Inject;
-import com.developmentontheedge.be5.inject.Injector;
-import com.developmentontheedge.be5.inject.Stage;
+import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.sql.ResultSetParser;
+import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.maven.AppDb;
+import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
+import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
+import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
+import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
+import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
+import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.util.ProjectTestUtils;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
@@ -28,30 +40,47 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.AbstractModule;
+import javax.inject.Inject;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Scopes;
+import com.google.inject.Stage;
+import org.apache.maven.plugin.MojoFailureException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
+import static com.developmentontheedge.be5.test.TestProjectProvider.profileForIntegrationTests;
 import static com.developmentontheedge.be5.util.ParseRequestUtils.replaceEmptyStringToNull;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -67,28 +96,43 @@ public abstract class TestUtils
     @Inject private Meta meta;
     @Inject private OperationExecutor operationExecutor;
     @Inject protected UserAwareMeta userAwareMeta;
+    @Inject protected DatabaseModel database;
+    @Inject protected SqlService db;
 
     protected static final String TEST_USER = "testUser";
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
-    static final String profileForIntegrationTests = "profileForIntegrationTests";
-
-    static Injector initInjector(Binder binder)
+    @Before
+    public void setUpTestUtils()
     {
-        Injector injector = new Be5Injector(Stage.TEST, binder);
-        Project project = injector.get(ProjectProvider.class).getProject();
-        initProfile(project);
-
-        return injector;
+        if(getInjector() != null)
+        {
+            getInjector().injectMembers(this);
+            initGuest();
+        }
     }
 
-    private static void initProfile(Project project)
+    public Injector getInjector()
     {
-        if(project.getConnectionProfile() == null || !profileForIntegrationTests.equals(project.getConnectionProfile().getName()))
-        {
-            ProjectTestUtils.createH2Profile(project, profileForIntegrationTests);
-            project.setConnectionProfileName(profileForIntegrationTests);
-        }
+        return null;
+    }
+
+    protected void initUserWithRoles(String... roles)
+    {
+        getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+                Locale.US, "", new TestSession());
+    }
+
+    protected void initGuest()
+    {
+        List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
+        getInjector().getInstance(UserHelper.class).saveUser(RoleType.ROLE_GUEST, roles, roles,
+                Locale.US, "", new TestSession());
+    }
+
+    protected static Injector initInjector(Module... modules)
+    {
+        return Guice.createInjector(Stage.DEVELOPMENT, modules);
     }
 
     protected static String oneQuotes(Object s)
@@ -123,7 +167,11 @@ public abstract class TestUtils
         HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
 
-        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null, parameters));
+        parameters.forEach((k,v) ->
+            when(httpServletRequest.getParameter(k)).thenReturn((String) v)
+        );
+
+        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null));
         when(request.getRequestUri()).thenReturn(requestUri);
 
         for (Map.Entry<String, Object> entry: sessionValues.entrySet())
@@ -318,6 +366,15 @@ public abstract class TestUtils
         }
     }
 
+    public static void whenSelectListTagsContains(String containsSql, String... tagValues)
+    {
+        List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
+                .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
+
+        when(SqlServiceMock.mock.list(contains(containsSql),
+                Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
+    }
+
     public static class ShowCreatedOperations extends TestWatcher
     {
         private static List<Operation> operations = Collections.synchronizedList(new ArrayList<>());
@@ -358,4 +415,64 @@ public abstract class TestUtils
             }
         }
     }
+
+    protected static void initDb(Injector injector)
+    {
+        Project project = injector.getInstance(ProjectProvider.class).getProject();
+
+        if(project.getConnectionProfileName() != null &&
+                profileForIntegrationTests.equals(project.getConnectionProfileName()))
+        {
+            try
+            {
+                log.info(JULLogger.infoBlock("Execute be5:create-db"));
+                new AppDb()
+                        .setLogger(new JULLogger(log))
+                        .setBe5Project(project)
+                        .execute();
+            }
+            catch (MojoFailureException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            log.warning("Fail set '"+ profileForIntegrationTests +"' profile, maybe DatabaseService already initialized." );
+        }
+    }
+
+    public static class SqlMockModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
+
+            bind(SqlService.class).to(SqlServiceMock.class).in(Scopes.SINGLETON);
+            bind(DatabaseService.class).to(DatabaseServiceMock.class).in(Scopes.SINGLETON);
+            bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
+            bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
+        }
+    }
+
+    public static class CoreModuleForTest extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
+            bind(CategoriesService.class).to(CategoriesServiceForTest.class).in(Scopes.SINGLETON);
+        }
+    }
+
+    public static class TestProjectProviderModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
+        }
+    }
+
 }

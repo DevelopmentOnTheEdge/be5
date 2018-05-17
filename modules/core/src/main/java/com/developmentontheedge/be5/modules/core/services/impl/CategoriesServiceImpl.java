@@ -7,7 +7,9 @@ import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
 import com.developmentontheedge.be5.modules.core.util.Generators;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,7 @@ public class CategoriesServiceImpl implements CategoriesService
     private final Meta meta;
     private final QueryService queryService;
 
+    @Inject
     public CategoriesServiceImpl(Meta meta, QueryService queryService)
     {
         this.meta = meta;
@@ -28,7 +31,7 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getCategoriesForest(String entityName, boolean hideEmpty)
     {
         List<MutableCategory> categories = queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getCategoriesForest"),
+                .build(meta.getQuery("_categoriesService_", "getCategoriesForest"),
                        Collections.singletonMap("entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
@@ -39,17 +42,17 @@ public class CategoriesServiceImpl implements CategoriesService
     public List<Category> getRootCategory(String entityName)
     {
         return queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getRootCategory"),
+                .build(meta.getQuery("_categoriesService_", "getRootCategory"),
                        Collections.singletonMap("entity", entityName))
                 .execute(rs -> new Category(rs.getInt("ID"), rs.getString("name"), Collections.emptyList()));
     }
 
     @Override
-    public List<Category> getCategoryNavigation(long categoryID)
+    public List<Category> getCategoryNavigation(String entityName, long categoryID)
     {
         List<MutableCategory> categories = queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "getCategoryNavigation"),
-                        Collections.singletonMap("categoryID", "" + categoryID))
+                .build(meta.getQuery("_categoriesService_", "getCategoryNavigation"),
+                        ImmutableMap.of("categoryID", "" + categoryID, "entity", entityName))
                 .execute(MutableCategory::fromResultSet);
 
         return getCategories(categories, false);
@@ -105,7 +108,7 @@ public class CategoriesServiceImpl implements CategoriesService
     private boolean hasAnyItem(MutableCategory category)
     {
         return (Long)queryService
-                .build(meta.getQueryIgnoringRoles("_categoriesService_", "hasAnyItem"),
+                .build(meta.getQuery("_categoriesService_", "hasAnyItem"),
                         Collections.singletonMap("categoryID", "" + category.id))
                 .execute().get(0).asMap().get("count") > 0;
     }

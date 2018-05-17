@@ -22,7 +22,7 @@ public abstract class TestUtils
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
-    Path tpmProjectPath;
+    protected Path tpmProjectPath;
     Project project;
 
     final String profileTestMavenPlugin = "profileTestMavenPlugin";
