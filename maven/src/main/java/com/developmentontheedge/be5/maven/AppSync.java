@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.maven;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.ResultSet;
@@ -42,10 +41,10 @@ import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
 
-
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
 
 @Mojo( name = "sync")
 public class AppSync extends Be5Mojo<AppSync>
@@ -71,15 +70,10 @@ public class AppSync extends Be5Mojo<AppSync>
     {
         init();
 
-        PrintStream ps = null;
+        PrintStream ps = createPrintStream(be5Project.getName() + "_sync_ddl.sql");
+
         try
         {
-            if(logPath != null)
-            {
-                logPath.mkdirs();
-                ps = new PrintStream(new File(logPath, be5Project.getName() + "_sync_ddl.sql"), "UTF-8");
-            }
-            
             sqlExecutor = new BeSqlExecutor(connector, ps);
 
             if(be5Project.getDebugStream() != null)
@@ -141,6 +135,8 @@ public class AppSync extends Be5Mojo<AppSync>
                 ps.close();
             }
         }
+
+        logSqlFilePath();
     }
 
     protected void checkSynchronizationStatus()

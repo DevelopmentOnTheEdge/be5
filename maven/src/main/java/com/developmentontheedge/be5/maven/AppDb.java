@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.maven;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import java.io.File;
 import java.io.PrintStream;
 
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
@@ -18,6 +17,7 @@ import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+
 
 @Mojo( name = "create-db")
 public class AppDb extends Be5Mojo<AppDb>
@@ -45,11 +45,7 @@ public class AppDb extends Be5Mojo<AppDb>
         
         try
         {
-            if( logPath != null)
-            {
-                logPath.mkdirs();
-                ps = new PrintStream( new File(logPath, (moduleName == null ? be5Project.getName() : moduleName) + "_db.sql" ), "UTF-8" );
-            }
+            ps = createPrintStream((moduleName == null ? be5Project.getName() : moduleName) + "_db.sql");
 
             sql = new BeSqlExecutor(connector, ps);
             
@@ -98,6 +94,8 @@ public class AppDb extends Be5Mojo<AppDb>
                 ps.close();
             }
         }
+
+        logSqlFilePath();
     }
 
     private void createDb( Module module ) throws ProjectElementException

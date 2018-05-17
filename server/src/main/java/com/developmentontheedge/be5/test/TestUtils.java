@@ -425,15 +425,11 @@ public abstract class TestUtils
         {
             try
             {
-                File file = Paths.get("target/sql").toFile();
                 log.info(JULLogger.infoBlock("Execute be5:create-db"));
                 new AppDb()
-                        .setLogPath(file)
                         .setLogger(new JULLogger(log))
                         .setBe5Project(project)
                         .execute();
-
-                log.info("Sql log in: " + file.getAbsolutePath());
             }
             catch (MojoFailureException e)
             {

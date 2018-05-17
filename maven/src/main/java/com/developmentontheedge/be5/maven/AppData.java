@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.maven;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +23,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+
 @Mojo( name = "data")
 public class AppData extends Be5Mojo<AppData>
 {
@@ -41,11 +41,7 @@ public class AppData extends Be5Mojo<AppData>
         PrintStream ps = null;
         try
         {
-            if(logPath != null)
-            {
-                logPath.mkdirs();
-                ps = new PrintStream( new File(logPath, be5Project.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql" ), "UTF-8" );
-            }
+            ps = createPrintStream(be5Project.getName() + "_scripts_" + script.replace( ';', '_' ).replace( ':', '.' ) + ".sql");
 
             ModuleLoader2.addModuleScripts(be5Project);
 
@@ -127,6 +123,8 @@ public class AppData extends Be5Mojo<AppData>
                 ps.close();
             }
         }
+
+        logSqlFilePath();
     }
     
     protected void executeScript( final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript ) throws ProjectElementException, IOException
