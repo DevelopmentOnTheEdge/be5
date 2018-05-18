@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.services.validation;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -235,21 +234,22 @@ public class Validator
 
     private String toStringProperty(DynamicProperty property)
     {
-        if(!UserInfoHolder.isSystemDeveloper())return "";
-        String value;
-        if(property.getValue() != null)
-        {
-            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : property.getValue().toString();
-            value += " (" + property.getValue().getClass().getSimpleName() + ")";
-        }
-        else
-        {
-            value = "null";
-        }
-        return " - ["
-                + " name: '"  + property.getName()
-                + "', type: "  + property.getType()
-                + ", value: " + value
-                + " ]";
+        return "";
+//        if(!UserInfoHolder.isSystemDeveloper())return "";
+//        String value;
+//        if(property.getValue() != null)
+//        {
+//            value = property.getValue().getClass().isArray() ? Arrays.toString((Object[]) property.getValue()) : property.getValue().toString();
+//            value += " (" + property.getValue().getClass().getSimpleName() + ")";
+//        }
+//        else
+//        {
+//            value = "null";
+//        }
+//        return " - ["
+//                + " name: '"  + property.getName()
+//                + "', type: "  + property.getType()
+//                + ", value: " + value
+//                + " ]";
     }
 }

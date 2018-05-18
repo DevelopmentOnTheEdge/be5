@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.util;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+//import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -391,7 +391,7 @@ public class Utils
 
             if( java.util.Date.class.equals( valClass ) )
             {
-                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT );
                 df.setLenient( false );
                 java.util.Date parsed;
                 try
@@ -406,7 +406,7 @@ public class Utils
             }
             if( java.sql.Date.class.equals( valClass ) )
             {
-                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                DateFormat df = DateFormat.getDateInstance( DateFormat.DEFAULT );
                 df.setLenient( false );
                 java.util.Date parsed;
                 try
@@ -424,7 +424,7 @@ public class Utils
             }
             if( java.sql.Time.class.equals( valClass ) )
             {
-                DateFormat df = DateFormat.getTimeInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                DateFormat df = DateFormat.getTimeInstance( DateFormat.DEFAULT );
                 df.setLenient( false );
                 java.util.Date parsed;
                 try
@@ -449,7 +449,7 @@ public class Utils
                 }
 
                 java.util.Date parsed;
-                DateFormat df = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                DateFormat df = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT );
                 df.setLenient( false );
                 try
                 {
@@ -463,7 +463,7 @@ public class Utils
                     }
                     catch( ParseException pe2 )
                     {
-                        df = DateFormat.getDateInstance( DateFormat.DEFAULT, UserInfoHolder.getLocale() );
+                        df = DateFormat.getDateInstance( DateFormat.DEFAULT );
                         try
                         {
                             parsed = df.parse( ( String )val );
@@ -722,21 +722,4 @@ public class Utils
                 LinkedHashMap::new);
     }
 
-    public static String exceptionAsString(Throwable e)
-    {
-        if(UserInfoHolder.isSystemDeveloper())
-        {
-            StringWriter sw = new StringWriter();
-            if (e instanceof Be5Exception && e.getCause() != null)
-            {
-                e.getCause().printStackTrace(new PrintWriter(sw));
-            } else
-            {
-                e.printStackTrace(new PrintWriter(sw));
-            }
-            return sw.toString();
-        }else{
-            return null;
-        }
-    }
 }

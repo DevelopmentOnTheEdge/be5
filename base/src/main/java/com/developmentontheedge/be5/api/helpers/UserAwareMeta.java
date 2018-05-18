@@ -48,6 +48,15 @@ public interface UserAwareMeta
     String getLocalizedExceptionMessage(String message);
 
     /**
+     * Returns a localized title of a column - be4 format.
+     */
+    String getColumnTitle(String entityName, String queryName, String columnName);
+
+    String getColumnTitle(String entityName, String columnName);
+
+    String getFieldTitle(String entityName, String operationName, String queryName, String name);
+
+    /**
      * Returns a query.
      * Throws an exception if there's no such query or it is not awailable due to lack of rights.
      */
@@ -69,13 +78,5 @@ public interface UserAwareMeta
      * Throws an exception if there's no operation with this name.
      */
     OperationInfo getOperation(String entityName, String queryName, String name);
-    /**
-     * Returns a localized title of a column - be4 format.
-     */
-    String getColumnTitle(String entityName, String queryName, String columnName);
-
-    String getColumnTitle(String entityName, String columnName);
-
-    String getFieldTitle(String entityName, String operationName, String queryName, String name);
 
 }

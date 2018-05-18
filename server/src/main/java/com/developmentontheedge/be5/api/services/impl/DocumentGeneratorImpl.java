@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
@@ -11,7 +10,6 @@ import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
@@ -35,7 +33,6 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -335,7 +332,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
 
-        return new ErrorModel("500", e.getMessage(), message, Utils.exceptionAsString(e),
+        return new ErrorModel("500", e.getMessage(), message, ErrorModel.exceptionAsString(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
