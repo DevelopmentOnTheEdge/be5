@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -41,20 +40,17 @@ public class OperationExecutorImpl implements OperationExecutor
     private final ConnectionService connectionService;
     private final Validator validator;
     private final GroovyOperationLoader groovyOperationLoader;
-    private final UserAwareMeta userAwareMeta;
     private final Meta meta;
     private final GroovyRegister groovyRegister;
 
     @Inject
     public OperationExecutorImpl(Injector injector, ConnectionService connectionService, Validator validator,
-                                 GroovyOperationLoader groovyOperationLoader, UserAwareMeta userAwareMeta,
-                                 Meta meta, GroovyRegister groovyRegister)
+                                 GroovyOperationLoader groovyOperationLoader, Meta meta, GroovyRegister groovyRegister)
     {
         this.injector = injector;
         this.connectionService = connectionService;
         this.validator = validator;
         this.groovyOperationLoader = groovyOperationLoader;
-        this.userAwareMeta = userAwareMeta;
         this.meta = meta;
         this.groovyRegister = groovyRegister;
     }
@@ -261,10 +257,10 @@ public class OperationExecutorImpl implements OperationExecutor
 //    }
 
     @Override
-    public Operation create(String entityName, String queryName, String operationName,
-                            String[] stringSelectedRows, Map<String, Object> operationParams)
+    public Operation create(com.developmentontheedge.be5.metadata.model.Operation operationMeta, String queryName,
+                     String[] stringSelectedRows, Map<String, Object> operationParams)
     {
-        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = new OperationInfo(operationMeta);
 
         Object[] selectedRows = stringSelectedRows;
         if(!operationInfo.getEntityName().startsWith("_"))
@@ -288,7 +284,7 @@ public class OperationExecutorImpl implements OperationExecutor
             case OPERATION_TYPE_GROOVY:
                 try
                 {
-                    Class aClass = groovyOperationLoader.get(operationInfo);
+                    Class aClass = groovyOperationLoader.get(operationInfo.getModel());
                     if(aClass != null)
                     {
                         operation = ( Operation ) aClass.newInstance();

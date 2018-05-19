@@ -19,6 +19,7 @@
   <module>maven</module>
   <module>modules/core</module>
   <module>base</module>
+  <module>operation</module>
  </modules>
 
  <distributionManagement>

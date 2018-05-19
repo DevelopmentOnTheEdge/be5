@@ -221,7 +221,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             if(topFormOperationPresentation.isPresent())
             {
                 com.developmentontheedge.be5.operation.Operation operation =
-                        operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+                        operationExecutor.create(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm), query.getName(), new String[]{}, parameters);
 
                 Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
                 included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
@@ -281,7 +281,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             return Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
-                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
+                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel()),
                     JsonFactory.bean(result.getFirst()),
                     LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
                     resultForFrontend(operation.getResult()),
@@ -330,7 +330,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         String message = Be5Exception.getMessage(e);
 
-        if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
+        //TODO if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
 
         return new ErrorModel("500", e.getMessage(), message, ErrorModel.exceptionAsString(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));

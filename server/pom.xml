@@ -16,10 +16,9 @@
 	</parent>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-base</artifactId>
+			<artifactId>be5-operation</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
@@ -45,12 +44,6 @@
 			<groupId>javax.websocket</groupId>
 			<artifactId>javax.websocket-api</artifactId>
 			<version>1.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.5</version>
 		</dependency>
 
 		<dependency>
@@ -83,8 +76,13 @@
 			<artifactId>be5-maven-plugin</artifactId>
 			<version>0.1.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-base</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 	
 	<build>
 		<resources>

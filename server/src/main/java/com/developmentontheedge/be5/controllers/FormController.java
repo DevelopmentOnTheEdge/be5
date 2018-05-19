@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.controllers;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
@@ -39,14 +40,17 @@ public class FormController extends ControllerSupport
     private final OperationExecutor operationExecutor;
     private final DocumentGenerator documentGenerator;
     private final UserHelper userHelper;
+    private final UserAwareMeta userAwareMeta;
     private final Stage stage;
 
     @Inject
-    public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator, UserHelper userHelper, Stage stage)
+    public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
+                          UserHelper userHelper, UserAwareMeta userAwareMeta, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
         this.userHelper = userHelper;
+        this.userAwareMeta = userAwareMeta;
         this.stage = stage;
     }
 
@@ -65,16 +69,18 @@ public class FormController extends ControllerSupport
         Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
         Map<String, Object> values = req.getValuesFromJson(RestApiConstants.VALUES);
 
+        HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
+
+        com.developmentontheedge.be5.metadata.model.Operation operationMeta;
         Operation operation;
         try
         {
-            operation = operationExecutor.create(entityName, queryName, operationName, selectedRows, operationParams);
+            operationMeta = userAwareMeta.getOperation(entityName, queryName, operationName);
+            operation = operationExecutor.create(operationMeta, queryName, selectedRows, operationParams);
         }
         catch (Be5Exception e)
         {
-            HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
             log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
-
             res.sendErrorAsJson(
                     new ErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
                     req.getDefaultMeta()
@@ -101,11 +107,11 @@ public class FormController extends ControllerSupport
         }
         catch (Be5Exception e)
         {
-            HashUrl url = HashUrlUtils.getUrl(operation);
-            log.log(Level.SEVERE, "Error in operation: " + url.toString(), e);
+            HashUrl url2 = HashUrlUtils.getUrl(operation);
+            log.log(Level.SEVERE, "Error in operation: " + url2.toString(), e);
 
             res.sendErrorAsJson(
-                    documentGenerator.getErrorModel(e, url),
+                    documentGenerator.getErrorModel(e, url2),
                     req.getDefaultMeta()
             );
             return;
