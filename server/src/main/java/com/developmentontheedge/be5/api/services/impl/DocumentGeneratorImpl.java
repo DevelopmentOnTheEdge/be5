@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
@@ -11,7 +10,6 @@ import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
@@ -35,7 +33,6 @@ import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 import com.developmentontheedge.be5.util.LayoutUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
-import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -224,7 +221,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             if(topFormOperationPresentation.isPresent())
             {
                 com.developmentontheedge.be5.operation.Operation operation =
-                        operationExecutor.create(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters);
+                        operationExecutor.create(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm), query.getName(), new String[]{}, parameters);
 
                 Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
                 included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
@@ -284,7 +281,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             return Either.first(new FormPresentation(
                     operation.getInfo(),
                     operation.getContext(),
-                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo()),
+                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel()),
                     JsonFactory.bean(result.getFirst()),
                     LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
                     resultForFrontend(operation.getResult()),
@@ -333,9 +330,9 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         String message = Be5Exception.getMessage(e);
 
-        if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
+        //TODO if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
 
-        return new ErrorModel("500", e.getMessage(), message, Utils.exceptionAsString(e),
+        return new ErrorModel("500", e.getMessage(), message, ErrorModel.exceptionAsString(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 

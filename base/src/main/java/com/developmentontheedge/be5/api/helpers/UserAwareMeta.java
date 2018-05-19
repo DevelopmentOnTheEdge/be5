@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
-import com.developmentontheedge.be5.operation.OperationInfo;
-import com.google.common.annotations.Beta;
 
 import java.util.Optional;
 
-@Beta
+
 public interface UserAwareMeta
 {
 
@@ -17,35 +16,44 @@ public interface UserAwareMeta
     /**
      * Returns a localized title in user's preferred language.
      */
-    String getLocalizedEntityTitle(Entity entity);
+    String getLocalizedEntityTitle(Entity entityName);
 
     /**
      * Returns a localized title in user's preferred language. Ignores entity's display name.
      */
-    Optional<String> getLocalizedEntityTitle(String entity);
+    Optional<String> getLocalizedEntityTitle(String entityName);
 
     /**
      * Returns a localized title of a query in user's preferred language.
      */
-    String getLocalizedQueryTitle(String entity, String query);
+    String getLocalizedQueryTitle(String entityName, String queryName);
 
     /**
      * Returns a localized title of an operation in user's preferred language.
      */
-    String getLocalizedOperationTitle(OperationInfo operationInfo);
+    String getLocalizedOperationTitle(Operation operation);
 
-    String getLocalizedOperationTitle(String entity, String operation);
+    String getLocalizedOperationTitle(String entityName, String operationName);
 
     String getLocalizedOperationField(String entityName, String operationName, String name);
 
     /**
      * Returns a localized title of an operation in user's preferred language.
      */
-    String getLocalizedCell(String content, String entity, String query);
+    String getLocalizedCell(String content, String entityName, String queryName);
 
     String getLocalizedValidationMessage(String message);
 
     String getLocalizedExceptionMessage(String message);
+
+    /**
+     * Returns a localized title of a column - be4 format.
+     */
+    String getColumnTitle(String entityName, String queryName, String columnName);
+
+    String getColumnTitle(String entityName, String columnName);
+
+    String getFieldTitle(String entityName, String operationName, String queryName, String name);
 
     /**
      * Returns a query.
@@ -62,20 +70,12 @@ public interface UserAwareMeta
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    OperationInfo getOperation(String entity, String name);
+    Operation getOperation(String entity, String name);
 
     /**
      * Returns an operation by its name.
      * Throws an exception if there's no operation with this name.
      */
-    OperationInfo getOperation(String entityName, String queryName, String name);
-    /**
-     * Returns a localized title of a column - be4 format.
-     */
-    String getColumnTitle(String entityName, String queryName, String columnName);
-
-    String getColumnTitle(String entityName, String columnName);
-
-    String getFieldTitle(String entityName, String operationName, String queryName, String name);
+    Operation getOperation(String entityName, String queryName, String name);
 
 }

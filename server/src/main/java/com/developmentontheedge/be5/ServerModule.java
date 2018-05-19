@@ -25,7 +25,7 @@ import com.developmentontheedge.be5.api.services.impl.Be5CachesImpl;
 import com.developmentontheedge.be5.api.services.impl.ConnectionServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DocumentGeneratorImpl;
-import com.developmentontheedge.be5.api.services.impl.GroovyOperationLoader;
+import com.developmentontheedge.be5.api.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.api.services.impl.MetaImpl;
 import com.developmentontheedge.be5.api.services.impl.OperationExecutorImpl;

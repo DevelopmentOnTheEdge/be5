@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.api.services.validation;
 
-import com.developmentontheedge.beans.json.JsonFactory;
-
 
 public class ValidationRules
 {
@@ -112,7 +110,11 @@ public class ValidationRules
         @Override
         public String toString()
         {
-            return JsonFactory.jsonb.toJson(this, this.getClass());
+            return "Rule{" +
+                    "type='" + type + '\'' +
+                    ", attr=" + attr +
+                    ", customMessage='" + customMessage + '\'' +
+                    '}';
         }
     }
 

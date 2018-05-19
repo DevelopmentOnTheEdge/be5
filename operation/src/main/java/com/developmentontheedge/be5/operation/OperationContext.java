@@ -42,8 +42,6 @@ public class OperationContext
 
     /**
      * Contain operation and filter parameters.
-     * For get only operation parameters use
-     * {@link com.developmentontheedge.be5.util.ParseRequestUtils#getOperationParamsWithoutFilter(Map)}
      *
      * @return map of parameters
      */

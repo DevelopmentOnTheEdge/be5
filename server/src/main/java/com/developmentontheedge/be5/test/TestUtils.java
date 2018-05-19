@@ -47,6 +47,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.Stage;
+import com.google.inject.servlet.ServletModule;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -317,9 +318,9 @@ public abstract class TestUtils
 
     protected Operation createOperation(String entityName, String operationName, OperationContext context)
     {
-        OperationInfo meta = userAwareMeta.getOperation(entityName, context.getQueryName(), operationName);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, context.getQueryName(), operationName));
 
-        Operation operation = operationExecutor.create(meta, context);
+        Operation operation = operationExecutor.create(operationInfo, context);
         ShowCreatedOperations.addOperation(operation);
 
         return operation;
@@ -327,7 +328,7 @@ public abstract class TestUtils
 
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRowsParam)
     {
-        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
         String[] stringSelectedRows = ParseRequestUtils.selectedRows(selectedRowsParam);
         Object[] selectedRows = stringSelectedRows;
@@ -442,10 +443,10 @@ public abstract class TestUtils
         }
     }
 
-    public static class SqlMockModule extends AbstractModule
+    public static class SqlMockModule extends ServletModule
     {
         @Override
-        protected void configure()
+        protected void configureServlets()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
 

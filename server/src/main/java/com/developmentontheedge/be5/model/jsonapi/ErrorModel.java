@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.util.Utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 
 /**
@@ -45,17 +47,35 @@ public class ErrorModel
     public ErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
         this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
-                Utils.exceptionAsString(e), links);
+                exceptionAsString(e), links);
     }
 
     public ErrorModel(Be5Exception e, Map<String, String> links)
     {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Utils.exceptionAsString(e), links);
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), exceptionAsString(e), links);
     }
 
     public ErrorModel(Be5Exception e)
     {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), Utils.exceptionAsString(e), null);
+        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), exceptionAsString(e), null);
+    }
+
+    public static String exceptionAsString(Throwable e)
+    {
+        if(UserInfoHolder.isSystemDeveloper())
+        {
+            StringWriter sw = new StringWriter();
+            if (e instanceof Be5Exception && e.getCause() != null)
+            {
+                e.getCause().printStackTrace(new PrintWriter(sw));
+            } else
+            {
+                e.printStackTrace(new PrintWriter(sw));
+            }
+            return sw.toString();
+        }else{
+            return null;
+        }
     }
 
     public String getStatus()
