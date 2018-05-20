@@ -120,15 +120,16 @@ public abstract class TestUtils
 
     protected void initUserWithRoles(String... roles)
     {
+        TestSession testSession = new TestSession();
         getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
-                Locale.US, "", new TestSession());
+                Locale.US, "", testSession);
+
+        UserInfoHolder.setRequest(new TestRequest(testSession));
     }
 
     protected void initGuest()
     {
-        List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
-        getInjector().getInstance(UserHelper.class).saveUser(RoleType.ROLE_GUEST, roles, roles,
-                Locale.US, "", new TestSession());
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     protected static Injector initInjector(Module... modules)

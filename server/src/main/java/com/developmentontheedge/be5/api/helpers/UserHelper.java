@@ -49,7 +49,7 @@ public class UserHelper
             log.info("Dev roles added - " + ModuleLoader2.getDevRoles().toString());
         }
 
-        UserInfo ui = new UserInfo(userName, availableRoles, currentRoles, session);
+        UserInfo ui = new UserInfo(userName, availableRoles, currentRoles);
         ui.setRemoteAddr(remoteAddr);
         ui.setLocale(meta.getLocale(locale));
 

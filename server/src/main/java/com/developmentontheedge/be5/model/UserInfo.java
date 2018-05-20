@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.model;
 
-import com.developmentontheedge.be5.api.Session;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -9,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 
 public class UserInfo implements Serializable
@@ -18,8 +15,6 @@ public class UserInfo implements Serializable
     private List<String> availableRoles;
     private List<String> currentRoles;
 
-    private Session session;
-
     private Date creationTime;
     private Locale locale;
     private TimeZone timeZone;
@@ -27,13 +22,11 @@ public class UserInfo implements Serializable
     private Timestamp prevLoggedInTime;
     private Timestamp loggedInTime;
 
-    public UserInfo(String userName, List<String> availableRoles, List<String> currentRoles, Session session)
+    public UserInfo(String userName, List<String> availableRoles, List<String> currentRoles)
     {
         this.userName = userName;
         this.availableRoles = new ArrayList<>(availableRoles);
         this.currentRoles = new ArrayList<>(currentRoles);
-
-        this.session = session;
 
         this.creationTime = new Date();
         this.locale = Locale.US;
@@ -77,11 +70,6 @@ public class UserInfo implements Serializable
     public void setTimeZone( String timeZoneID )
     {
         this.timeZone = timeZoneID != null ? TimeZone.getTimeZone( timeZoneID ) : null;
-    }
-
-    public Session getSession()
-    {
-        return session;
     }
 
     public Timestamp getLoggedInTime()
@@ -141,7 +129,6 @@ public class UserInfo implements Serializable
                 "userName='" + userName + '\'' +
                 ", availableRoles=" + availableRoles +
                 ", currentRoles=" + currentRoles +
-                ", session=" + session +
                 ", creationTime=" + creationTime +
                 ", locale=" + locale +
                 ", timeZone=" + timeZone +

@@ -71,7 +71,7 @@ class LoginTest extends CoreBe5ProjectTest
         assertEquals TEST_USER, UserInfoHolder.getUserInfo().userName
         assertEquals Arrays.asList("Test1", "Test2"), UserInfoHolder.getUserInfo().availableRoles
         assertEquals Arrays.asList("Test1"), UserInfoHolder.getUserInfo().currentRoles
-        assertEquals session, UserInfoHolder.getUserInfo().session
+        assertEquals session, UserInfoHolder.getSession()
 
         def actions = (FrontendAction[]) second.getDetails()
 
