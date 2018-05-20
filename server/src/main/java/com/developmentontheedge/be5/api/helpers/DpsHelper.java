@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.helpers;
 
+import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.validation.ValidationRules;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -61,17 +61,17 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
-    {
-        addDp(dps, modelElements, operationParams);
-        return setValues(dps, resultSet);
-    }
+//    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
+//    {
+//        addDp(dps, modelElements, operationParams);
+//        return setValues(dps, resultSet);
+//    }
 
-    public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, BeModelElement modelElements, ResultSet resultSet)
-    {
-        addDpWithoutTags(dps, modelElements);
-        return setValues(dps, resultSet);
-    }
+//    public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, BeModelElement modelElements, ResultSet resultSet)
+//    {
+//        addDpWithoutTags(dps, modelElements);
+//        return setValues(dps, resultSet);
+//    }
 
 //    public DynamicPropertySet getDpsForColumns(BeModelElement modelElements, Collection<String> columnNames, ResultSet resultSet)
 //    {
@@ -266,6 +266,16 @@ public class DpsHelper
     public DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+    }
+
+    public <T extends DynamicPropertySet> T addDpBase(T dps, BeModelElement modelElements)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        for(Map.Entry<String, ColumnDef> column: columns.entrySet())
+        {
+            dps.add(getDynamicProperty(column.getValue()));
+        }
+        return dps;
     }
 
     public <T extends DynamicPropertySet> T addDpForColumnsBase(T dps, BeModelElement modelElements, Collection<String> columnNames)

@@ -94,8 +94,8 @@ public class EntityModelBase<T> implements EntityModel<T>
                 .from(entity.getName())
                 .where(conditions);
 
-        DynamicPropertySet dps = db.select(sql.format(),
-                rs -> dpsHelper.addDpWithoutTags(new DynamicPropertySetSupport(), entity, rs),
+        DynamicPropertySetSupport dps = db.select(sql.format(),
+                rs -> dpsHelper.setValues(dpsHelper.addDpBase(new DynamicPropertySetSupport(), entity), rs),
                 conditions.values().toArray());
 
         return getRecordModel(dps);
@@ -175,12 +175,6 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(dps);
 
         return add(dpsHelper.toLinkedHashMap(dps));
-//        validator.checkErrorAndCast(dps);
-//
-//        dpsHelper.addInsertSpecialColumns(entity, dps);
-//        dpsHelper.checkDpsColumns(entity, dps);
-//
-//        return db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
     }
 
     @Override
@@ -213,9 +207,6 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         columnsHelper.addUpdateSpecialColumns(entity, values);
 
-//        DynamicPropertySet dps = new DynamicPropertySetSupport();
-//        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
-
         return sqlHelper.update(entity.getName(),
                 Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id)),
                 values);
@@ -228,23 +219,11 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(dps);
 
         return set(id, dpsHelper.toLinkedHashMap(dps));
-
-//        validator.checkErrorAndCast(dps);
-//        dpsHelper.addUpdateSpecialColumns(entity, dps);
-//
-//        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-//                ObjectArrays.concat(dpsHelper.getValues(dps), checkPrimaryKey(id)));
     }
-//
-//    @Override
-//    public int removeAll( Collection<Map<String, ? super Object>> c )
-//    {
-//        throw new UnsupportedOperationException( "not implemented" );
-//    }
 
     @Override
     @SuppressWarnings("unchecked")
-    public final int remove(T id)//removed final T... otherId - 'possible heap pollution from parameterized varargs'
+    public final int remove(T id)
     {
         Objects.requireNonNull(id);
         return removeWhereColumnIn(getPrimaryKeyName(), (T[])new Object[]{id});
@@ -263,26 +242,16 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(ids);
         if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
 
-        //ColumnDef columnDef = meta.getColumn(entity, columnName);
-
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
-//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
-//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-//            );
         }
         else
         {
             return sqlHelper.deleteIn(entity.getName(), columnName, ids);
-//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
-//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-//            );
         }
     }
 
@@ -302,10 +271,6 @@ public class EntityModelBase<T> implements EntityModel<T>
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.update(entity.getName(), conditions, values);
-//        return db.update(dpsHelper.generateDelete(entity, conditions),
-//                ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
-//                        conditions.values().toArray(), Object.class)
-//        );
         }
         else
         {
