@@ -8,6 +8,8 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Map;
 
+import static com.developmentontheedge.be5.util.DpsUtils.setValues;
+
 
 public class EditOperation extends OperationSupport
 {
@@ -19,9 +21,9 @@ public class EditOperation extends OperationSupport
         DynamicPropertySet dps = dpsHelper.addDpExcludeAutoIncrement(new DynamicPropertySetSupport(),
                 getInfo().getModel(), context.getOperationParams());
 
-        dpsHelper.setValues(dps, database.getEntity(entity.getName()).get(context.getRecord()));
+        setValues(dps, database.getEntity(entity.getName()).get(context.getRecord()));
 
-        dpsHelper.setValues(dps, presetValues);
+        setValues(dps, presetValues);
 
         return dpsHelper.setOperationParams(dps, context.getOperationParams());
     }

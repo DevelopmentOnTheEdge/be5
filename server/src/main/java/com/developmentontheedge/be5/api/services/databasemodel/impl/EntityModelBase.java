@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -16,6 +15,8 @@ import com.developmentontheedge.be5.api.services.databasemodel.RecordModel;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.util.DpsUtils;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
@@ -45,20 +46,18 @@ public class EntityModelBase<T> implements EntityModel<T>
     private final SqlService db;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
-    private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final OperationExecutor operationExecutor;
     private final Meta meta;
 
     private final Entity entity;
 
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
         this.sqlHelper = sqlHelper;
         this.columnsHelper = columnsHelper;
-        this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.operationExecutor = operationExecutor;
         this.meta = meta;
@@ -95,10 +94,26 @@ public class EntityModelBase<T> implements EntityModel<T>
                 .where(conditions);
 
         DynamicPropertySetSupport dps = db.select(sql.format(),
-                rs -> dpsHelper.setValues(dpsHelper.addDpBase(new DynamicPropertySetSupport(), entity), rs),
+                rs -> DpsUtils.setValues(getDps(), rs),
                 conditions.values().toArray());
 
         return getRecordModel(dps);
+    }
+
+    public DynamicPropertySetSupport getDps()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        for(Map.Entry<String, ColumnDef> column: columns.entrySet())
+        {
+            dps.add(getDynamicProperty(column.getValue()));
+        }
+        return dps;
+    }
+
+    public DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    {
+        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
     private RecordModel<T> getRecordModel(DynamicPropertySet dps)
@@ -174,7 +189,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(dps);
 
-        return add(dpsHelper.toLinkedHashMap(dps));
+        return add(DpsUtils.toLinkedHashMap(dps));
     }
 
     @Override
@@ -218,7 +233,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
 
-        return set(id, dpsHelper.toLinkedHashMap(dps));
+        return set(id, DpsUtils.toLinkedHashMap(dps));
     }
 
     @Override

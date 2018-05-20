@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.sql;
 
+import com.developmentontheedge.be5.api.util.SqlUtils;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.query.impl.BeTagParser;
 import com.developmentontheedge.be5.query.impl.DynamicPropertyMeta;
@@ -9,17 +10,9 @@ import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import one.util.streamex.IntStreamEx;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +58,7 @@ public class DpsRecordAdapter
                     }
                     continue;
                 }
-                Object val = getSqlValue( dp.getType(), resultSet, i + 1 );
+                Object val = SqlUtils.getSqlValue( dp.getType(), resultSet, i + 1 );
                 //todo test Map<String, Map<String, String>> metaInfo = DynamicPropertyMeta.get(dp);
                 //metaProcessor.process(val, metaInfo);
                 DynamicProperty property = DynamicPropertySetSupport.cloneProperty( dp );
@@ -75,57 +68,6 @@ public class DpsRecordAdapter
             return dps;
         }catch (Exception e){
             throw Be5Exception.internal(e);
-        }
-    }
-
-    public static Object getSqlValue(Class<?> clazz, ResultSet rs, int idx)
-    {
-        try{
-            Object object = rs.getObject(idx);
-            if(object == null)
-            {
-                return null;
-            }
-
-            if(clazz == Double.class && object.getClass() == BigDecimal.class)
-            {
-                return ((BigDecimal)object).doubleValue();
-            }
-
-            if(clazz == Long.class && object.getClass() == BigInteger.class)
-            {
-                return ((BigInteger)object).longValue();
-            }
-
-            if(clazz == Short.class && object.getClass() == Integer.class)
-            {
-                return ((Integer)object).shortValue();
-            }
-
-            if(clazz == Integer.class && object.getClass() == Long.class)
-            {
-                return ((Long)object).intValue();
-            }
-
-            if(clazz == String.class && object.getClass() == byte[].class)
-            {
-                return new String((byte[])object);
-            }
-
-            return clazz.cast(object);
-        }
-        catch (Throwable e)
-        {
-            String name = "";
-            try
-            {
-                name = rs.getMetaData().getColumnName(idx);
-            }
-            catch (SQLException ignore){
-
-            }
-
-            throw Be5Exception.internal(e, "for column: " + name);
         }
     }
 
@@ -150,7 +92,7 @@ public class DpsRecordAdapter
                 }
                 String[] parts = columnLabel.split(";", 2);
                 String name = getUniqueName(names, parts[0]);
-                Class<?> clazz = getTypeClass(metaData.getColumnType(i));
+                Class<?> clazz = SqlUtils.getTypeClass(metaData.getColumnType(i));
                 DynamicProperty dp = new DynamicProperty(name, clazz);
                 if (name.startsWith(DatabaseConstants.HIDDEN_COLUMN_PREFIX)) {
                     dp.setHidden(true);
@@ -165,41 +107,6 @@ public class DpsRecordAdapter
             return schema;
         }catch (SQLException e){
             throw Be5Exception.internal(e);
-        }
-    }
-
-    public static Class<?> getTypeClass(int columnType)
-    {
-        switch( columnType )
-        {
-            case Types.BIGINT:
-                return Long.class;
-            case Types.INTEGER:
-                return Integer.class;
-            case Types.SMALLINT:
-                return Short.class;
-            case Types.DOUBLE:
-            case Types.FLOAT:
-            case Types.DECIMAL:
-            case Types.REAL:
-            case Types.NUMERIC:
-                return Double.class;
-            case Types.BOOLEAN:
-                return Boolean.class;
-            case Types.DATE:
-                return Date.class;
-            case Types.TIME:
-                return Time.class;
-            case Types.TIMESTAMP:
-                return Timestamp.class;
-            case Types.CLOB:
-                return Clob.class;
-            case Types.BLOB:
-                return Blob.class;
-            case Types.BINARY:
-                return byte[].class;
-            default:
-                return String.class;
         }
     }
 
