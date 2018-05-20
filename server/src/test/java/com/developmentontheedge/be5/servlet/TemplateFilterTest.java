@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import javax.inject.Inject;

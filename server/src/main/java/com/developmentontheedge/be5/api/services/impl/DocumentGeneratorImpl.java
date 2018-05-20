@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
