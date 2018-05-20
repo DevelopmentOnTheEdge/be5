@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.api.services.databasemodel
 
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
-
 import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest

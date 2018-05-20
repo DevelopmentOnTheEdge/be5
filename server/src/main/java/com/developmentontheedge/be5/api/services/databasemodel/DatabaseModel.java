@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.api.services.databasemodel.impl;
+package com.developmentontheedge.be5.api.services.databasemodel;
 
-import com.developmentontheedge.be5.api.services.databasemodel.EntityAccess;
+import com.developmentontheedge.be5.api.services.databasemodel.impl.EntityModelBase;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
@@ -12,7 +12,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
-import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.DatabaseModelImplMetaClass;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.DynamicPropertySetMetaClass;

@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.TableModelService;
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.api.services.impl.Be5CachesImpl;
 import com.developmentontheedge.be5.api.services.impl.ConnectionServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;

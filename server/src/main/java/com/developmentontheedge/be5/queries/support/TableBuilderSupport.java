@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;

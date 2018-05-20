@@ -55,7 +55,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
     private final Entity entity;
 
-    EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;

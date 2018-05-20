@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.operation.Operation;
