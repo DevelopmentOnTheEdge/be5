@@ -12,11 +12,9 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
 import com.developmentontheedge.be5.api.services.databasemodel.OperationModel;
-import com.developmentontheedge.be5.api.services.databasemodel.QueryModel;
 import com.developmentontheedge.be5.api.services.databasemodel.RecordModel;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
-import com.developmentontheedge.be5.api.services.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -42,7 +40,6 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         GroovyRegister.registerMetaClass( EntityModelMetaClass.class, EntityModelBase.class );
         GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
-        GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
     }
 
     private final SqlService db;
@@ -462,24 +459,12 @@ public class EntityModelBase<T> implements EntityModel<T>
 //    }
 
     @Override
-    public QueryModel getQuery(String queryName, Map<String, ? super Object> params )
-    {
-        return new QueryModelBase( queryName, params );
-    }
-
-    @Override
     public OperationModel getOperation( String operationName )
     {
         return new OperationModelBase(meta, operationExecutor)
                 .setEntityName(entity.getName())
                 .setQueryName("from another operation")
                 .setOperationName(operationName);
-    }
-
-    @Override
-    public QueryModel getQuery( String queryName ) 
-    {
-        return new QueryModelBase( queryName, emptyMap() );
     }
 
     @Override
