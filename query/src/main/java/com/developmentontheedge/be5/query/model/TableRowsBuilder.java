@@ -3,10 +3,6 @@ package com.developmentontheedge.be5.query.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.developmentontheedge.be5.query.impl.TableModel;
-import com.developmentontheedge.be5.query.impl.TableModel.CellModel;
-import com.developmentontheedge.be5.query.impl.TableModel.RowModel;
-
 public abstract class TableRowsBuilder<RowT, CellT> {
     
     public TableRowsBuilder() {

@@ -7,7 +7,8 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.query.impl.TableModel;
+import com.developmentontheedge.be5.query.model.RowModel;
+import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -196,7 +197,7 @@ public class OperationHelper
         String[][] stockArr = new String[tableModel.getRows().size()][2];
 
         int i = 0;
-        for (TableModel.RowModel row : tableModel.getRows())
+        for (RowModel row : tableModel.getRows())
         {
             String first = row.getCells().size() >= 1 ? row.getCells().get(0).content.toString() : "";
             String second = row.getCells().size() >= 2 ? row.getCells().get(1).content.toString() : "";

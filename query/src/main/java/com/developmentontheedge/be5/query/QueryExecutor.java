@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.query.impl.CellFormatter;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public interface QueryExecutor
      */
     List<String> getColumnNames();
 
-    List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver);
+    List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver);
 
     int getOrderColumn();
 

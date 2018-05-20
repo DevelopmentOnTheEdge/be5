@@ -10,7 +10,10 @@ import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.query.TableBuilder;
-import com.developmentontheedge.be5.query.impl.TableModel;
+import com.developmentontheedge.be5.query.model.CellModel;
+import com.developmentontheedge.be5.query.model.ColumnModel;
+import com.developmentontheedge.be5.query.model.RowModel;
+import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -40,8 +43,8 @@ public abstract class TableBuilderSupport implements TableBuilder
     protected Query query;
     protected Map<String, Object> parameters;
 
-    protected List<TableModel.ColumnModel> columns = new ArrayList<>();
-    protected List<TableModel.RowModel> rows = new ArrayList<>();
+    protected List<ColumnModel> columns = new ArrayList<>();
+    protected List<RowModel> rows = new ArrayList<>();
 
     public TableBuilder initialize(Query query, Map<String, Object> parameters)
     {
@@ -57,72 +60,72 @@ public abstract class TableBuilderSupport implements TableBuilder
 
     public void addColumns(String firstName, String... columnNames)
     {
-        columns.add(new TableModel.ColumnModel(firstName, firstName));
+        columns.add(new ColumnModel(firstName, firstName));
         if(columnNames != null)
         {
             for (String columnName : columnNames)
             {
-                columns.add(new TableModel.ColumnModel(columnName, columnName));
+                columns.add(new ColumnModel(columnName, columnName));
             }
         }
     }
 
-    public List<TableModel.CellModel> cells(Object firstContent, Object... contents)
+    public List<CellModel> cells(Object firstContent, Object... contents)
     {
-        List<TableModel.CellModel> columns = new ArrayList<>();
-        columns.add(new TableModel.CellModel(firstContent, new HashMap<>() ));
+        List<CellModel> columns = new ArrayList<>();
+        columns.add(new CellModel(firstContent, new HashMap<>() ));
         if(contents != null)
         {
             for (Object content : contents)
             {
-                columns.add(new TableModel.CellModel(content, new HashMap<>() ));
+                columns.add(new CellModel(content, new HashMap<>() ));
             }
         }
         return Collections.unmodifiableList(columns);
     }
 
-    public List<TableModel.CellModel> cells(TableModel.CellModel firstCell, TableModel.CellModel... cells)
+    public List<CellModel> cells(CellModel firstCell, CellModel... cells)
     {
-        List<TableModel.CellModel> columns = new ArrayList<>();
+        List<CellModel> columns = new ArrayList<>();
         columns.add(firstCell);
         Collections.addAll(columns, cells);
         return Collections.unmodifiableList(columns);
     }
 
-    public void addRow(List<TableModel.CellModel> cells)
+    public void addRow(List<CellModel> cells)
     {
-        rows.add(new TableModel.RowModel("0", cells));
+        rows.add(new RowModel("0", cells));
     }
 
-    public void addRow(Integer id, List<TableModel.CellModel> cells)
+    public void addRow(Integer id, List<CellModel> cells)
     {
-        rows.add(new TableModel.RowModel(id.toString(), cells));
+        rows.add(new RowModel(id.toString(), cells));
     }
 
-    public void addRow(String id, List<TableModel.CellModel> cells)
+    public void addRow(String id, List<CellModel> cells)
     {
-        rows.add(new TableModel.RowModel(id, cells));
+        rows.add(new RowModel(id, cells));
     }
 
-    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows)
+    public TableModel table(List<ColumnModel> columns, List<RowModel> rows)
     {
         return getSimpleTable(columns, rows, false, (long) rows.size(), false);
     }
 
-    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows, boolean selectable)
+    public TableModel table(List<ColumnModel> columns, List<RowModel> rows, boolean selectable)
     {
         return getSimpleTable(columns, rows, selectable, (long) rows.size(), false);
     }
 
-    public TableModel table(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows,
+    public TableModel table(List<ColumnModel> columns, List<RowModel> rows,
                             boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
         return getSimpleTable(columns, rows, selectable, totalNumberOfRows, hasAggregate);
     }
 
     //todo support order, limit, offset
-    private TableModel getSimpleTable(List<TableModel.ColumnModel> columns, List<TableModel.RowModel> rows,
-                            boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
+    private TableModel getSimpleTable(List<ColumnModel> columns, List<RowModel> rows,
+                                      boolean selectable, Long totalNumberOfRows, boolean hasAggregate)
     {
         return new TableModel(columns, rows, selectable, totalNumberOfRows, hasAggregate,
                             0, Integer.MAX_VALUE, -1, "asc");

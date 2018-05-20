@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -382,7 +383,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver)
+    public List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver)
     {
         AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
 

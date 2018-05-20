@@ -2,8 +2,8 @@ package system
 
 import com.developmentontheedge.be5.api.helpers.UserInfoHolder
 import com.developmentontheedge.be5.util.ActionUtils
-import com.developmentontheedge.be5.query.impl.TableModel
-import com.developmentontheedge.be5.query.impl.TableModel.CellModel
+import com.developmentontheedge.be5.query.model.TableModel
+import com.developmentontheedge.be5.query.model.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport
 

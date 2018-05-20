@@ -22,17 +22,15 @@ public class QueryServiceImpl implements QueryService
 {
     private final DatabaseService databaseService;
     private final ConnectionService connectionService;
-    private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
 
     @Inject
-    public QueryServiceImpl(DatabaseService databaseService, ConnectionService connectionService, Provider<DatabaseModel> database,
+    public QueryServiceImpl(DatabaseService databaseService, ConnectionService connectionService,
                             Meta meta, SqlService db)
     {
         this.databaseService = databaseService;
         this.connectionService = connectionService;
-        this.database = database;
         this.meta = meta;
         this.db = db;
     }

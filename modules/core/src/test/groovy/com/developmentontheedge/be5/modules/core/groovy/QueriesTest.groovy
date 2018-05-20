@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.groovy
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.DocumentGenerator
 import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
-import com.developmentontheedge.be5.query.impl.TableModel
+import com.developmentontheedge.be5.query.model.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
 import javax.inject.Inject
 import org.junit.Test
@@ -25,7 +25,7 @@ class QueriesTest extends CoreBe5ProjectDBTest
         def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())
 
         assertTrue(table.getRows().stream()
-                .filter({ x -> ((TableModel.CellModel)x.cells.get(0)).getContent() == "users"})
+                .filter({ x -> ((CellModel)x.cells.get(0)).getContent() == "users"})
                 .findFirst().present)
     }
 

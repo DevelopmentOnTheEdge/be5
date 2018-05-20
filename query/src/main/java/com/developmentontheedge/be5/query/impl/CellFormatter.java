@@ -5,6 +5,8 @@ import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;
+import com.developmentontheedge.be5.query.VarResolver;
+import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.util.HashUrl;
 import com.developmentontheedge.be5.util.Unzipper;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -37,12 +39,12 @@ public class CellFormatter
     /**
      * Executes subqueries of the cell or returns the cell content itself.
      */
-    Object formatCell(TableModel.RawCellModel cell, DynamicPropertySet previousCells)
+    Object formatCell(RawCellModel cell, DynamicPropertySet previousCells)
     {
         return format(cell, new RootVarResolver(previousCells));
     }
 
-    private Object format(TableModel.RawCellModel cell, VarResolver varResolver)
+    private Object format(RawCellModel cell, VarResolver varResolver)
     {
         //ImmutableList<Object> formattedParts = getFormattedPartsWithoutLink(cell, varResolver);
 
@@ -106,7 +108,7 @@ public class CellFormatter
         return formattedContent;
     }
 
-    private Object getFormattedPartsWithoutLink(TableModel.RawCellModel cell, VarResolver varResolver)
+    private Object getFormattedPartsWithoutLink(RawCellModel cell, VarResolver varResolver)
     {
         Objects.requireNonNull(cell);
 
@@ -192,22 +194,15 @@ public class CellFormatter
         return StreamEx.of(dps.spliterator()).map(property -> {
             String name = property.getName();
             Object value = property.getValue();
-            Object processedCell = format(new TableModel.RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
+            Object processedCell = format(new RawCellModel(value != null ? value.toString() : ""), new CompositeVarResolver(new RootVarResolver(previousCells), varResolver));
             previousCells.add(new DynamicProperty(name, String.class, processedCell));
             return !name.startsWith("___") ? processedCell : "";
         }).toList();
     }
 
 
-    @FunctionalInterface
-    public interface VarResolver
-    {
-        String resolve(String varName);
-    }
-
     private static class RootVarResolver implements VarResolver
     {
-
         private final DynamicPropertySet dps;
 
         RootVarResolver(DynamicPropertySet dps)
@@ -226,7 +221,6 @@ public class CellFormatter
 
     private static class CompositeVarResolver implements VarResolver
     {
-
         private final VarResolver local;
         private final VarResolver parent;
 

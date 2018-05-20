@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query;
 
-import com.developmentontheedge.be5.query.impl.TableModel;
+import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 import java.util.Map;
