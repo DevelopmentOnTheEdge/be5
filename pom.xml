@@ -20,6 +20,7 @@
   <module>modules/core</module>
   <module>base</module>
   <module>operation</module>
+  <module>query</module>
  </modules>
 
  <distributionManagement>
