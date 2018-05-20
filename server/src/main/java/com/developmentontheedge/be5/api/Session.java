@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api;
 
+import com.developmentontheedge.be5.query.QuerySession;
+
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
  * 
  * @author lan
  */
-public interface Session
+public interface Session extends QuerySession
 {
     /**
      * Returns the current session identifier.

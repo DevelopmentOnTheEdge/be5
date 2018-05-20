@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -41,7 +42,8 @@ public class QueryServiceImpl implements QueryService
     {
         Map<String, List<String>> listParams = getMapOfList(parameters);
 
-        return new Be5QueryExecutor(query, connectionService, listParams, databaseService, database, meta, db);
+        return new Be5QueryExecutor(query, listParams, UserInfoHolder.getUserInfo(), UserInfoHolder.getSession(),
+                connectionService, databaseService, meta, db);
     }
 
     @Override

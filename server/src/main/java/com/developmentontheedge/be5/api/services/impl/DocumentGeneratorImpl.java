@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
-import com.developmentontheedge.be5.query.impl.Operations;
+import com.developmentontheedge.be5.api.services.model.Operations;
 import com.developmentontheedge.be5.query.impl.TableModel;
 import com.developmentontheedge.be5.query.impl.TableModel.ColumnModel;
 import com.developmentontheedge.be5.metadata.model.Operation;

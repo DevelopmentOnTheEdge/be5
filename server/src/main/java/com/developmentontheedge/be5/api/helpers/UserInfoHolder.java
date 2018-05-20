@@ -36,7 +36,7 @@ public class UserInfoHolder
 
     public static Session getSession()
     {
-        return getUserInfo().getSession();
+        return requestThreadLocalScope.get().getSession();
     }
 
     public static String getLanguage()

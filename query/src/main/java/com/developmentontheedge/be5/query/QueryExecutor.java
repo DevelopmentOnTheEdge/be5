@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services;
+package com.developmentontheedge.be5.query;
 
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.query.impl.CellFormatter;

@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.query.impl;
 
 import java.util.Objects;
 
-import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.QueryExecutor;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

@@ -28,16 +28,4 @@ public class ServletUtils
         return new ResponseImpl(response);
     }
 
-    static String getApiSubUrl(String requestUri)
-    {
-        String[] uriParts = requestUri.split("/");
-        int ind = 1;
-
-        while (!"api".equals(uriParts[ind]) && ind + 1 < uriParts.length)
-        {
-            ind++;
-        }
-
-        return Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
-    }
 }
