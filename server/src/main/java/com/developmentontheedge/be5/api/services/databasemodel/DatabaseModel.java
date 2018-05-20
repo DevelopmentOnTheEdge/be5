@@ -1,9 +1,8 @@
-package com.developmentontheedge.be5.api.services.databasemodel.impl;
+package com.developmentontheedge.be5.api.services.databasemodel;
 
-import com.developmentontheedge.be5.api.services.databasemodel.EntityAccess;
+import com.developmentontheedge.be5.api.services.databasemodel.impl.EntityModelBase;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
@@ -12,7 +11,6 @@ import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
-import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.DatabaseModelImplMetaClass;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.DynamicPropertySetMetaClass;
@@ -47,19 +45,17 @@ final public class DatabaseModel implements EntityAccess
     private final SqlService sqlService;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
-    private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final Meta meta;
     private final OperationExecutor operationExecutor;
 
     @Inject
-    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
                          Meta meta, OperationExecutor operationExecutor)
     {
         this.sqlService = sqlService;
         this.sqlHelper = sqlHelper;
         this.columnsHelper = columnsHelper;
-        this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.meta = meta;
         this.operationExecutor = operationExecutor;
@@ -73,7 +69,7 @@ final public class DatabaseModel implements EntityAccess
 
         if (entity == null)throw Be5Exception.unknownEntity(entityName);
 
-        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, dpsHelper, operationHelper,
+        return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, operationHelper,
                                      operationExecutor, meta, entity);
     }
 }

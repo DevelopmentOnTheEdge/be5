@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.api.services.databasemodel.groovy;
 
 import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
-import com.developmentontheedge.be5.api.services.databasemodel.QueryModel;
 import com.developmentontheedge.be5.api.services.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
+
 
 public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 {
@@ -75,21 +74,6 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        callClosureWithDelegate( closure, operation );
 //        return operation.invoke();
 //    }
-
-    public static QueryModel query(EntityModel self, String queryName, Map<String, String> values )
-    {
-        return self.getQuery( queryName, values );
-    }
-
-    public static QueryModel query( EntityModel self, String queryName )
-    {
-        return self.getQuery( queryName );
-    }
-
-    public static void query( EntityModel self, String queryName, Map<String, String> values, BiConsumer<DynamicPropertySet, Integer> func )
-    {
-        self.getQuery( queryName, values ).each( func );
-    }
 
     public static <R> R leftShift(EntityModel<R> self, Map<String, ? super Object> values )
     {

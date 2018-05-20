@@ -2,8 +2,6 @@ package com.developmentontheedge.be5.query.model;
 
 import java.util.List;
 
-import com.developmentontheedge.be5.query.impl.TableModel.CellModel;
-import com.developmentontheedge.be5.query.impl.TableModel.RowModel;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 

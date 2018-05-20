@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 import java.io.PrintWriter;

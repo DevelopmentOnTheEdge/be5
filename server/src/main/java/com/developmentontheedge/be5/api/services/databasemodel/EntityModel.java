@@ -244,21 +244,6 @@ public interface EntityModel<T>
     String getTableName();
 
     /**
-     * Returns query model of this entity.
-     * @param queryName
-     * @return query model
-     */
-    QueryModel getQuery(String queryName);
-    
-    /**
-     * Returns query model of this entity with the given parameters.
-     * @param queryName
-     * @param params
-     * @return query model
-     */
-    QueryModel getQuery(String queryName, Map<String, ? super Object> params);
-
-    /**
      * Returns operation model of this entity.
      * @param operationName operation name
      * @return operation model

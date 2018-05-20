@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.validation.ValidationRules;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -12,6 +11,7 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.be5.util.DpsUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -22,18 +22,13 @@ import com.developmentontheedge.sql.model.SqlQuery;
 import com.google.common.math.LongMath;
 
 import javax.inject.Inject;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -43,6 +38,7 @@ import static com.developmentontheedge.be5.api.services.validation.ValidationRul
 import static com.developmentontheedge.be5.api.services.validation.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
+import static com.developmentontheedge.be5.util.DpsUtils.setValues;
 
 
 public class DpsHelper
@@ -61,17 +57,17 @@ public class DpsHelper
         this.operationHelper = operationHelper;
     }
 
-    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
-    {
-        addDp(dps, modelElements, operationParams);
-        return setValues(dps, resultSet);
-    }
+//    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
+//    {
+//        addDp(dps, modelElements, operationParams);
+//        return setValues(dps, resultSet);
+//    }
 
-    public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, BeModelElement modelElements, ResultSet resultSet)
-    {
-        addDpWithoutTags(dps, modelElements);
-        return setValues(dps, resultSet);
-    }
+//    public <T extends DynamicPropertySet> T addDpWithoutTags(T dps, BeModelElement modelElements, ResultSet resultSet)
+//    {
+//        addDpWithoutTags(dps, modelElements);
+//        return setValues(dps, resultSet);
+//    }
 
 //    public DynamicPropertySet getDpsForColumns(BeModelElement modelElements, Collection<String> columnNames, ResultSet resultSet)
 //    {
@@ -89,7 +85,7 @@ public class DpsHelper
                                                   Map<String, Object> operationParams, Map<String, ? super Object> values)
     {
         addDpExcludeAutoIncrement(dps, modelElements, operationParams);
-        return setValues(dps, values);
+        return DpsUtils.setValues(dps, values);
     }
 
     public <T extends DynamicPropertySet> T addDpExcludeAutoIncrement(T dps, BeModelElement modelElements, Map<String, Object> operationParams)
@@ -119,7 +115,7 @@ public class DpsHelper
     {
         addDpExcludeColumns(dps, modelElements, columnNames, operationParams);
 
-        setValues(dps, presetValues);
+        DpsUtils.setValues(dps, presetValues);
         setOperationParams(dps, operationParams);
 
         return dps;
@@ -176,7 +172,7 @@ public class DpsHelper
     {
         addDpForColumns(dps, modelElements, columnNames, operationParams);
 
-        setValues(dps, presetValues);
+        DpsUtils.setValues(dps, presetValues);
         setOperationParams(dps, operationParams);
 
         return dps;
@@ -217,7 +213,7 @@ public class DpsHelper
 
         addMeta(dps, modelElements);
 
-        setValues(dps, presetValues);
+        DpsUtils.setValues(dps, presetValues);
 
         return dps;
     }
@@ -227,7 +223,7 @@ public class DpsHelper
     {
         addDpForColumnsBase(dps, modelElements, columnNames);
 
-        setValues(dps, presetValues);
+        DpsUtils.setValues(dps, presetValues);
 
         return dps;
     }
@@ -266,6 +262,16 @@ public class DpsHelper
     public DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
+    }
+
+    public <T extends DynamicPropertySet> T addDpBase(T dps, BeModelElement modelElements)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        for(Map.Entry<String, ColumnDef> column: columns.entrySet())
+        {
+            dps.add(getDynamicProperty(column.getValue()));
+        }
+        return dps;
     }
 
     public <T extends DynamicPropertySet> T addDpForColumnsBase(T dps, BeModelElement modelElements, Collection<String> columnNames)
@@ -437,55 +443,6 @@ public class DpsHelper
         }
     }
 
-    public <T extends DynamicPropertySet> T setValues(T dps, DynamicPropertySet values)
-    {
-        for(DynamicProperty valueProperty : values)
-        {
-            DynamicProperty property = dps.getProperty(valueProperty.getName());
-            if(property != null)
-            {
-                property.setValue(valueProperty.getValue());
-            }
-        }
-        return dps;
-    }
-
-    public <T extends DynamicPropertySet> T setValues(T dps, Map<String, ?> values)
-    {
-        for (Map.Entry<String, ?> entry : values.entrySet())
-        {
-            DynamicProperty property = dps.getProperty(entry.getKey());
-            if(property != null && !property.isReadOnly())
-            {
-                dps.setValue(entry.getKey(), entry.getValue());
-            }
-        }
-        return dps;
-    }
-
-    public <T extends DynamicPropertySet> T setValues(T dps, ResultSet resultSet)
-    {
-        try
-        {
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            for (int i = 1; i <= metaData.getColumnCount(); i++)
-            {
-                String name = metaData.getColumnName(i);
-
-                DynamicProperty property = dps.getProperty(name);
-                if(property != null) {
-                    property.setValue(DpsRecordAdapter.getSqlValue(property.getType(), resultSet, i));
-                }
-            }
-        }
-        catch (SQLException e)
-        {
-            throw Be5Exception.internal(e);
-        }
-
-        return dps;
-    }
-
     public Object[] getValues(DynamicPropertySet dps)
     {
         return StreamSupport.stream(dps.spliterator(), false)
@@ -571,20 +528,6 @@ public class DpsHelper
         return values;
     }
 
-    public void setValueIfOneTag(DynamicPropertySet dps, List<String> propertyNames)
-    {
-        for (String name : propertyNames)
-        {
-            DynamicProperty property = dps.getProperty(name);
-            Objects.requireNonNull(property);
-            String[][] tags = (String[][]) property.getAttribute(BeanInfoConstants.TAG_LIST_ATTR);
-            if(tags.length == 1 && !property.isCanBeNull())
-            {
-                property.setValue(tags[0][0]);
-            }
-        }
-    }
-
     public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
     {
         Map<String, ?> params = ParseRequestUtils.getOperationParamsWithoutFilter(operationParams);
@@ -619,16 +562,5 @@ public class DpsHelper
         {
             throw new RuntimeException("not supported modelElements");    
         }
-    }
-
-    public Map<String, Object> toLinkedHashMap(DynamicPropertySet dps)
-    {
-        Map<String, Object> map = new LinkedHashMap<>( dps.size() );
-        for(DynamicProperty property : dps )
-        {
-            map.put( property.getName(), property.getValue() );
-        }
-
-        return map;
     }
 }

@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;

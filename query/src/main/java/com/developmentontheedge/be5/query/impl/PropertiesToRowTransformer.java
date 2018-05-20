@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.query.model.ColumnModel;
+import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.query.impl.TableModel.ColumnModel;
-import com.developmentontheedge.be5.query.impl.TableModel.RawCellModel;
 import com.developmentontheedge.be5.util.MoreStrings;
 
 /**

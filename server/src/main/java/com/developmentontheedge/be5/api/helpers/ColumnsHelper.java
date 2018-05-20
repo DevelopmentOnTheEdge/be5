@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;

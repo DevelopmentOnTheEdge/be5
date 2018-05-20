@@ -1,7 +1,7 @@
 package system
 
 import com.developmentontheedge.be5.api.services.Be5Caches
-import com.developmentontheedge.be5.query.impl.TableModel
+import com.developmentontheedge.be5.query.model.TableModel
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport
 import com.github.benmanes.caffeine.cache.Cache
 import javax.inject.Inject

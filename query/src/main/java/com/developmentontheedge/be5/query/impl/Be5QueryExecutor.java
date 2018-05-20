@@ -13,6 +13,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -40,7 +41,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,7 +91,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public Object getSessionVariable(String name)
         {
-            return session.get(name);
+            return querySession.get(name);
         }
 
         @Override
@@ -141,17 +141,16 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private final Map<String, List<String>> parameters;
     private final UserInfo userInfo;
-    private final QuerySession session;
+    private final QuerySession querySession;
 
     private final Context context;
     private ExecutorQueryContext executorQueryContext;
     private ContextApplier contextApplier;
     private final ParserContext parserContext;
-    private Set<String> subQueryKeys;
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession session,
+    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession querySession,
                             ConnectionService connectionService, DatabaseService databaseService,
                             Meta meta, SqlService db)
     {
@@ -160,7 +159,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         this.parameters = parameters;
         this.userInfo = userInfo;
-        this.session = session;
+        this.querySession = querySession;
 
         this.meta = meta;
         this.db = db;
@@ -169,7 +168,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.contextApplier = new ContextApplier( executorQueryContext );
         this.context = new Context( databaseService.getDbms() );
         this.parserContext = new DefaultParserContext();
-        this.subQueryKeys = Collections.emptySet();
         this.executeType = ExecuteType.DEFAULT;
 
         selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
@@ -236,7 +234,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         // CONTEXT
         contextApplier.applyContext( ast );
-        subQueryKeys = contextApplier.subQueryKeys().toSet();
         dql.log("With context", ast);
 
         // ID COLUMN
@@ -382,7 +379,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     @Override
-    public List<DynamicPropertySet> executeSubQuery(String subqueryName, CellFormatter.VarResolver varResolver)
+    public List<DynamicPropertySet> executeSubQuery(String subqueryName, VarResolver varResolver)
     {
         AstBeSqlSubQuery subQuery = contextApplier.applyVars(subqueryName, varResolver::resolve);
 

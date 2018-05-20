@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.services.databasemodel.groovy;
 import java.util.Map;
 
 
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import groovy.lang.DelegatingMetaClass;
 import groovy.lang.MissingMethodException;
 

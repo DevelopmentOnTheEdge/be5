@@ -5,19 +5,18 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
 import com.developmentontheedge.be5.api.services.databasemodel.OperationModel;
-import com.developmentontheedge.be5.api.services.databasemodel.QueryModel;
 import com.developmentontheedge.be5.api.services.databasemodel.RecordModel;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.EntityModelMetaClass;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
-import com.developmentontheedge.be5.api.services.databasemodel.groovy.QueryModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.util.DpsUtils;
+import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
@@ -42,26 +41,23 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         GroovyRegister.registerMetaClass( EntityModelMetaClass.class, EntityModelBase.class );
         GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
-        GroovyRegister.registerMetaClass( QueryModelMetaClass.class, QueryModelBase.class );
     }
 
     private final SqlService db;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
-    private final DpsHelper dpsHelper;
     private final OperationHelper operationHelper;
     private final OperationExecutor operationExecutor;
     private final Meta meta;
 
     private final Entity entity;
 
-    EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, DpsHelper dpsHelper, OperationHelper operationHelper,
+    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;
         this.sqlHelper = sqlHelper;
         this.columnsHelper = columnsHelper;
-        this.dpsHelper = dpsHelper;
         this.operationHelper = operationHelper;
         this.operationExecutor = operationExecutor;
         this.meta = meta;
@@ -97,11 +93,27 @@ public class EntityModelBase<T> implements EntityModel<T>
                 .from(entity.getName())
                 .where(conditions);
 
-        DynamicPropertySet dps = db.select(sql.format(),
-                rs -> dpsHelper.addDpWithoutTags(new DynamicPropertySetSupport(), entity, rs),
+        DynamicPropertySetSupport dps = db.select(sql.format(),
+                rs -> DpsUtils.setValues(getDps(), rs),
                 conditions.values().toArray());
 
         return getRecordModel(dps);
+    }
+
+    public DynamicPropertySetSupport getDps()
+    {
+        DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
+        Map<String, ColumnDef> columns = meta.getColumns(entity);
+        for(Map.Entry<String, ColumnDef> column: columns.entrySet())
+        {
+            dps.add(getDynamicProperty(column.getValue()));
+        }
+        return dps;
+    }
+
+    public DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    {
+        return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
 
     private RecordModel<T> getRecordModel(DynamicPropertySet dps)
@@ -177,13 +189,7 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(dps);
 
-        return add(dpsHelper.toLinkedHashMap(dps));
-//        validator.checkErrorAndCast(dps);
-//
-//        dpsHelper.addInsertSpecialColumns(entity, dps);
-//        dpsHelper.checkDpsColumns(entity, dps);
-//
-//        return db.insert(dpsHelper.generateInsertSql(entity, dps), dpsHelper.getValues(dps));
+        return add(DpsUtils.toLinkedHashMap(dps));
     }
 
     @Override
@@ -216,9 +222,6 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         columnsHelper.addUpdateSpecialColumns(entity, values);
 
-//        DynamicPropertySet dps = new DynamicPropertySetSupport();
-//        dpsHelper.addDpForColumnsBase(dps, entity, values.keySet(), values);
-
         return sqlHelper.update(entity.getName(),
                 Collections.singletonMap(getPrimaryKeyName(), checkPrimaryKey(id)),
                 values);
@@ -230,24 +233,12 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(id);
         Objects.requireNonNull(dps);
 
-        return set(id, dpsHelper.toLinkedHashMap(dps));
-
-//        validator.checkErrorAndCast(dps);
-//        dpsHelper.addUpdateSpecialColumns(entity, dps);
-//
-//        return db.update(dpsHelper.generateUpdateSqlForOneKey(entity, dps),
-//                ObjectArrays.concat(dpsHelper.getValues(dps), checkPrimaryKey(id)));
+        return set(id, DpsUtils.toLinkedHashMap(dps));
     }
-//
-//    @Override
-//    public int removeAll( Collection<Map<String, ? super Object>> c )
-//    {
-//        throw new UnsupportedOperationException( "not implemented" );
-//    }
 
     @Override
     @SuppressWarnings("unchecked")
-    public final int remove(T id)//removed final T... otherId - 'possible heap pollution from parameterized varargs'
+    public final int remove(T id)
     {
         Objects.requireNonNull(id);
         return removeWhereColumnIn(getPrimaryKeyName(), (T[])new Object[]{id});
@@ -266,26 +257,16 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(ids);
         if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
 
-        //ColumnDef columnDef = meta.getColumn(entity, columnName);
-
         Map<String, ColumnDef> columns = meta.getColumns(entity);
 
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.updateIn(entity.getName(), columnName, ids, values);
-//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
-//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-//            );
         }
         else
         {
             return sqlHelper.deleteIn(entity.getName(), columnName, ids);
-//            return db.update(dpsHelper.generateDeleteInSql(entity, columnDef.getName(), ids.length),
-//                    ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
-//                            Utils.changeTypes(ids, meta.getColumnType(columnDef)), Object.class)
-//            );
         }
     }
 
@@ -305,10 +286,6 @@ public class EntityModelBase<T> implements EntityModel<T>
         {
             Map<String, ? super Object> values = columnsHelper.addDeleteSpecialValues(entity, new LinkedHashMap<>());
             return sqlHelper.update(entity.getName(), conditions, values);
-//        return db.update(dpsHelper.generateDelete(entity, conditions),
-//                ObjectArrays.concat(columnsHelper.addDeleteSpecialValues(entity),
-//                        conditions.values().toArray(), Object.class)
-//        );
         }
         else
         {
@@ -462,24 +439,12 @@ public class EntityModelBase<T> implements EntityModel<T>
 //    }
 
     @Override
-    public QueryModel getQuery(String queryName, Map<String, ? super Object> params )
-    {
-        return new QueryModelBase( queryName, params );
-    }
-
-    @Override
     public OperationModel getOperation( String operationName )
     {
         return new OperationModelBase(meta, operationExecutor)
                 .setEntityName(entity.getName())
                 .setQueryName("from another operation")
                 .setOperationName(operationName);
-    }
-
-    @Override
-    public QueryModel getQuery( String queryName ) 
-    {
-        return new QueryModelBase( queryName, emptyMap() );
     }
 
     @Override

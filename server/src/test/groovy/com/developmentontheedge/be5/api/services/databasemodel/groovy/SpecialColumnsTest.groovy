@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services.databasemodel.groovy
 
 import com.developmentontheedge.be5.api.services.SqlService
 import com.developmentontheedge.be5.api.services.databasemodel.EntityModel
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.be5.api.helpers.UserHelper

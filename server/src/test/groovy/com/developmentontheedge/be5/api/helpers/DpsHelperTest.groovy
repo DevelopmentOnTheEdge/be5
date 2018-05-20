@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.api.services.Meta
+import com.developmentontheedge.be5.util.DpsUtils
+
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
@@ -362,7 +364,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         dps.add("test") {
             TAG_LIST_ATTR = [["one", "one"]] as String[][]
         }
-        dpsHelper.setValueIfOneTag(dps, ImmutableList.of("test"))
+        DpsUtils.setValueIfOneTag(dps, ImmutableList.of("test"))
 
         assertEquals "one", dps.getValue("test")
     }
@@ -375,7 +377,7 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
             TAG_LIST_ATTR = [["one", "one"]] as String[][]
             CAN_BE_NULL = true
         }
-        dpsHelper.setValueIfOneTag(dps, ImmutableList.of("test"))
+        DpsUtils.setValueIfOneTag(dps, ImmutableList.of("test"))
 
         assertEquals null, dps.getValue("test")
     }
