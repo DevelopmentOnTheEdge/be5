@@ -10,17 +10,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.services.QueryExecutor;
 import com.developmentontheedge.be5.api.services.QueryService;
+import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;
-
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.QueryExecutor;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.model.Query;
 
 
 public class TableModel
@@ -28,16 +27,19 @@ public class TableModel
     public static class Builder
     {
         private final Query query;
+        private final UserInfo userInfo;
         private final Map<String, Object> parameters;
         private final QueryService queryService;
         private final QueryExecutor queryExecutor;
         private final UserAwareMeta userAwareMeta;
         private final CellFormatter cellFormatter;
 
-        private Builder(Query query, Map<String, Object> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
+        private Builder(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
+                        UserAwareMeta userAwareMeta)
         {
             this.query = query;
             this.parameters = parameters;
+            this.userInfo = userInfo;
 
             this.queryService = queryService;
             this.queryExecutor = queryService.build(query, parameters);
@@ -118,7 +120,7 @@ public class TableModel
         * */
         void filterWithRoles(List<ColumnModel> columns, List<RowModel> rows){
             if(rows.size() == 0)return;
-            List<String> currRoles = UserInfoHolder.getCurrentRoles();
+            List<String> currRoles = userInfo.getCurrentRoles();
 
             List<CellModel> firstLine = rows.get(0).cells;
             for (int i = firstLine.size()-1; i >= 0; i--) {
@@ -321,9 +323,10 @@ public class TableModel
 
     }
 
-    public static Builder from(Query query, Map<String, Object> parameters, QueryService queryService, UserAwareMeta userAwareMeta)
+    public static Builder from(Query query, Map<String, Object> parameters, UserInfo userInfo, QueryService queryService,
+                               UserAwareMeta userAwareMeta)
     {
-        return new Builder(query, parameters, queryService, userAwareMeta);
+        return new Builder(query, parameters, userInfo, queryService, userAwareMeta);
     }
 
     public static class ColumnModel

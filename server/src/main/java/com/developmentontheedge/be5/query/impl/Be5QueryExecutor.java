@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.query.impl;
 
+import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -7,12 +8,13 @@ import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
 import com.developmentontheedge.be5.api.services.databasemodel.RecordModel;
 import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -75,7 +77,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public StreamEx<String> roles()
         {
-            return StreamEx.of(UserInfoHolder.getCurrentRoles());
+            return StreamEx.of(userInfo.getCurrentRoles());
         }
 
         @Override
@@ -87,13 +89,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getUserName()
         {
-            return UserInfoHolder.getUserName();
+            return userInfo.getUserName();
         }
 
         @Override
         public Object getSessionVariable(String name)
         {
-            return UserInfoHolder.getSession().get(name);
+            return session.get(name);
         }
 
         @Override
@@ -136,13 +138,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private final DatabaseService databaseService;
     private final ConnectionService connectionService;
     private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
 
     private final Map<String, List<String>> parameters;
+    private final UserInfo userInfo;
+    private final Session session;
 
     private final Context context;
     private ExecutorQueryContext executorQueryContext;
@@ -152,14 +155,17 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, ConnectionService connectionService, Map<String, List<String>> parameters, DatabaseService databaseService,
+    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, Session session,
+                            ConnectionService connectionService, DatabaseService databaseService,
                             Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
         super(query);
         this.connectionService = connectionService;
 
         this.parameters = parameters;
-        this.databaseService = databaseService;
+        this.userInfo = userInfo;
+        this.session = session;
+
         this.database = database;
         this.meta = meta;
         this.db = db;
@@ -326,7 +332,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 //            QueryIterator iterator = Classes.tryLoad( query.getQueryCompiled().validate(), QueryIterator.class )
 //                    .getConstructor( UserInfo.class, ParamHelper.class, DbmsConnector.class, long.class, long.class )
 //                    // TODO: create and pass ParamHelper
-//                    .newInstance( UserInfoHolder.getUserInfo(), new MapParamHelper(parameters), connector, offset, limit );
+//                    .newInstance( userInfo.getUserInfo(), new MapParamHelper(parameters), connector, offset, limit );
 //
 //            if (iterator instanceof Be5Query)
 //            {
@@ -406,7 +412,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();
             dynamicProperties.add(new DynamicProperty("___ID", String.class, "-1"));
-            dynamicProperties.add(new DynamicProperty("error", String.class, UserInfoHolder.isSystemDeveloper() ? Be5Exception.getMessage(e) : "error"));
+            dynamicProperties.add(new DynamicProperty("error", String.class, 
+                    userInfo.getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER) ? Be5Exception.getMessage(e) : "error"));
             dynamicPropertySets =  Collections.singletonList(dynamicProperties);
         }
 
