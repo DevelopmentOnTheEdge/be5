@@ -43,7 +43,7 @@ public class QueryServiceImpl implements QueryService
         Map<String, List<String>> listParams = getMapOfList(parameters);
 
         return new Be5QueryExecutor(query, listParams, UserInfoHolder.getUserInfo(), UserInfoHolder.getSession(),
-                connectionService, databaseService, database, meta, db);
+                connectionService, databaseService, meta, db);
     }
 
     @Override

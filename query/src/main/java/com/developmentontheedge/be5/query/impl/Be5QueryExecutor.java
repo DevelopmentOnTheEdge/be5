@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.query.impl;
 
+import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
-import com.developmentontheedge.be5.api.services.databasemodel.RecordModel;
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -34,7 +32,6 @@ import com.developmentontheedge.sql.model.SqlQuery;
 
 import one.util.streamex.StreamEx;
 
-import javax.inject.Provider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
@@ -47,7 +44,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.*;
 
 
@@ -124,22 +120,22 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         @Override
         public String getDictionaryValue(String tagName, String name, Map<String, String> conditions)
         {
-            EntityModel entityModel = database.get().getEntity(tagName);
-            RecordModel row = entityModel.getBy(conditions);
-
-            String value = row.getValue(name).toString();
-
-            if(!meta.isNumericColumn(entityModel.getEntity(), name))
-            {
-                value = "'" + value + "'";
-            }
-
-            return value;
+            throw new RuntimeException("todo");
+//            EntityModel entityModel = database.get().getEntity(tagName);
+//            RecordModel row = entityModel.getBy(conditions);
+//
+//            String value = row.getValue(name).toString();
+//
+//            if(!meta.isNumericColumn(entityModel.getEntity(), name))
+//            {
+//                value = "'" + value + "'";
+//            }
+//
+//            return value;
         }
     }
 
     private final ConnectionService connectionService;
-    private final Provider<DatabaseModel> database;
     private final Meta meta;
     private final SqlService db;
 
@@ -157,7 +153,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession session,
                             ConnectionService connectionService, DatabaseService databaseService,
-                            Provider<DatabaseModel> database, Meta meta, SqlService db)
+                            Meta meta, SqlService db)
     {
         super(query);
         this.connectionService = connectionService;
@@ -166,7 +162,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         this.userInfo = userInfo;
         this.session = session;
 
-        this.database = database;
         this.meta = meta;
         this.db = db;
 
@@ -292,7 +287,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private void applyCategory(DebugQueryLogger dql, AstStart ast)
     {
-        String categoryString = executorQueryContext.getParameter(CATEGORY_ID_PARAM);
+        String categoryString = executorQueryContext.getParameter(FrontendConstants.CATEGORY_ID_PARAM);
         if(categoryString != null)
         {
             long categoryId;
