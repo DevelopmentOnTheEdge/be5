@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -15,6 +14,7 @@ import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -145,7 +145,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
     private final Map<String, List<String>> parameters;
     private final UserInfo userInfo;
-    private final Session session;
+    private final QuerySession session;
 
     private final Context context;
     private ExecutorQueryContext executorQueryContext;
@@ -155,7 +155,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, Session session,
+    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession session,
                             ConnectionService connectionService, DatabaseService databaseService,
                             Provider<DatabaseModel> database, Meta meta, SqlService db)
     {
