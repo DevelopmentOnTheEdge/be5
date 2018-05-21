@@ -7,14 +7,13 @@ import java.util.regex.Pattern;
 
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
-import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.util.MoreStrings;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -96,9 +95,9 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
-    public String getLocalizedOperationTitle(OperationInfo operationInfo) {
+    public String getLocalizedOperationTitle(Operation operation) {
         return localizations.getOperationTitle(UserInfoHolder.getLanguage(),
-                operationInfo.getEntityName(), operationInfo.getName());
+                operation.getEntity().getName(), operation.getName());
     }
 
     @Override
@@ -157,23 +156,23 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
-    public OperationInfo getOperation(String entityName, String name)
+    public Operation getOperation(String entityName, String name)
     {
         Operation operation = meta.getOperation(entityName, name);
         if (!meta.hasAccess(operation.getRoles(), UserInfoHolder.getCurrentRoles()))
             throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
 
-        return new OperationInfo(operation);
+        return operation;
     }
 
     @Override
-    public OperationInfo getOperation(String entityName, String queryName, String name)
+    public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = meta.getOperation(entityName, queryName, name);
         if (!meta.hasAccess(operation.getRoles(), UserInfoHolder.getCurrentRoles()))
             throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
 
-        return new OperationInfo(operation);
+        return operation;
     }
 
     @Override

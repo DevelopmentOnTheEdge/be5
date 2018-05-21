@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.exceptions.Be5Exception
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationInfo
 import com.developmentontheedge.be5.operation.OperationStatus

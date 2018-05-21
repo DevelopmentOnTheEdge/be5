@@ -2,7 +2,7 @@ package entities
 
 import com.developmentontheedge.be5.metadata.model.Entity
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport
-import com.developmentontheedge.be5.query.impl.TableModel
+import com.developmentontheedge.be5.query.model.TableModel
 
 
 class SelectionView extends TableBuilderSupport

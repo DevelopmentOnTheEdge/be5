@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.test;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.CategoriesService;
@@ -17,7 +17,7 @@ import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.api.services.databasemodel.impl.DatabaseModel;
+import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
@@ -47,6 +47,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.Stage;
+import com.google.inject.servlet.ServletModule;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,8 +60,6 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -119,15 +118,16 @@ public abstract class TestUtils
 
     protected void initUserWithRoles(String... roles)
     {
+        TestSession testSession = new TestSession();
         getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
-                Locale.US, "", new TestSession());
+                Locale.US, "", testSession);
+
+        UserInfoHolder.setRequest(new TestRequest(testSession));
     }
 
     protected void initGuest()
     {
-        List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
-        getInjector().getInstance(UserHelper.class).saveUser(RoleType.ROLE_GUEST, roles, roles,
-                Locale.US, "", new TestSession());
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     protected static Injector initInjector(Module... modules)
@@ -317,9 +317,9 @@ public abstract class TestUtils
 
     protected Operation createOperation(String entityName, String operationName, OperationContext context)
     {
-        OperationInfo meta = userAwareMeta.getOperation(entityName, context.getQueryName(), operationName);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, context.getQueryName(), operationName));
 
-        Operation operation = operationExecutor.create(meta, context);
+        Operation operation = operationExecutor.create(operationInfo, context);
         ShowCreatedOperations.addOperation(operation);
 
         return operation;
@@ -327,7 +327,7 @@ public abstract class TestUtils
 
     protected Operation createOperation(String entityName, String queryName, String operationName, String selectedRowsParam)
     {
-        OperationInfo operationInfo = userAwareMeta.getOperation(entityName, queryName, operationName);
+        OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
         String[] stringSelectedRows = ParseRequestUtils.selectedRows(selectedRowsParam);
         Object[] selectedRows = stringSelectedRows;
@@ -442,10 +442,10 @@ public abstract class TestUtils
         }
     }
 
-    public static class SqlMockModule extends AbstractModule
+    public static class SqlMockModule extends ServletModule
     {
         @Override
-        protected void configure()
+        protected void configureServlets()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
 

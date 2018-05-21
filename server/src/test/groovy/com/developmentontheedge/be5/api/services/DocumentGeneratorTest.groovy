@@ -117,10 +117,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Test
     void generateForm()
     {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
-
         def result = documentGenerator.generateForm(
-                operationExecutor.create("testtable", "All records", "Insert", [] as String[], [:]),
+                operationExecutor.create(meta.getOperation("testtable", "Insert"), "All records", [] as String[], [:]),
                 [name: "test1", value: "2"])
 
         assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," +

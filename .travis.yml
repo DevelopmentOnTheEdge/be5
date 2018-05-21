@@ -9,13 +9,8 @@ before_install:
     && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     && cd ../
 install:
-  - mvn test -B -Dmaven.javadoc.skip=true
-after_success:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report -B -Dmaven.javadoc.skip=true org.eluder.coveralls:coveralls-maven-plugin:report
 jdk:
   - oraclejdk8
-cache:
-  directories:
-  - $HOME/.m2
 notifications:
   email: false

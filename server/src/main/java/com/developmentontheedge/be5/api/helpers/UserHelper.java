@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
@@ -49,7 +50,7 @@ public class UserHelper
             log.info("Dev roles added - " + ModuleLoader2.getDevRoles().toString());
         }
 
-        UserInfo ui = new UserInfo(userName, availableRoles, currentRoles, session);
+        UserInfo ui = new UserInfo(userName, availableRoles, currentRoles);
         ui.setRemoteAddr(remoteAddr);
         ui.setLocale(meta.getLocale(locale));
 

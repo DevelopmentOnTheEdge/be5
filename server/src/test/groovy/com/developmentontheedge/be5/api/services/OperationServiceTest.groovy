@@ -53,7 +53,7 @@ class OperationServiceTest extends SqlMockOperationTest
         def operation = propertyError(['_reloadcontrol_':'/name','name':'generateErrorInProperty'])
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
-        assertEquals "Error in property (getParameters) - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
+        assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
                 operation.getResult().getMessage()
     }
 
@@ -87,7 +87,7 @@ class OperationServiceTest extends SqlMockOperationTest
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
-        assertEquals "Error in property (getParameters) - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
+        assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
                 operation.getResult().getMessage()
     }
 
@@ -103,7 +103,7 @@ class OperationServiceTest extends SqlMockOperationTest
                 oneQuotes(JsonFactory.bean(first).getJsonObject("meta").getJsonObject("/name").toString())
 
         assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
-        assertEquals "Error in property (invoke) - [ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]",
+        assertEquals "Error in property (invoke)",// - [ name: 'name', type: class java.lang.String, value: executeErrorInProperty (String) ]",
                 operation.getResult().getMessage()
     }
 

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
@@ -8,7 +9,8 @@ import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
-import com.developmentontheedge.be5.query.impl.TableModel;
+import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
+import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.util.LayoutUtils;
 import com.google.inject.Injector;
 
@@ -30,7 +32,8 @@ public class TableModelServiceImpl implements TableModelService
     private final QueryService queryService;
 
     @Inject
-    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister, Injector injector, QueryService queryService)
+    public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
+                                 Injector injector, QueryService queryService)
     {
         this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
@@ -55,9 +58,9 @@ public class TableModelServiceImpl implements TableModelService
     }
 
     @Override
-    public TableModel.Builder builder(Query query, Map<String, ?> parameters)
+    public SqlTableBuilder builder(Query query, Map<String, ?> parameters)
     {
-        return TableModel.from(query, (Map<String, Object>) parameters, queryService, userAwareMeta);
+        return new SqlTableBuilder(query, (Map<String, Object>) parameters, UserInfoHolder.getUserInfo(), queryService, userAwareMeta);
     }
 
     private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
@@ -81,8 +84,7 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return TableModel
-                .from(query, parameters, queryService, userAwareMeta)
+        return new SqlTableBuilder(query, parameters, UserInfoHolder.getUserInfo(), queryService, userAwareMeta)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))

@@ -2,12 +2,15 @@ package com.developmentontheedge.be5.api.support;
 
 import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
+import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +33,7 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
 
     private void respond(HttpServletRequest request, HttpServletResponse response)
     {
-        Request req = new RequestImpl(request, ServletUtils.getApiSubUrl(request.getRequestURI()));
+        Request req = new RequestImpl(request, getApiSubUrl(request.getRequestURI()));
 
         UserInfoHolder.setRequest(req);
 
@@ -42,5 +45,18 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
         {
             log.log(Level.SEVERE, "Error in controller", e);
         }
+    }
+
+    private String getApiSubUrl(String requestUri)
+    {
+        String[] uriParts = requestUri.split("/");
+        int ind = 1;
+
+        while (!"api".equals(uriParts[ind]) && ind + 1 < uriParts.length)
+        {
+            ind++;
+        }
+
+        return Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
     }
 }

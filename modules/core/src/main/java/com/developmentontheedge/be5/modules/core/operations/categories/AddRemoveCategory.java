@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.modules.core.operations.categories;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operations.support.GOperationSupport;
+import com.developmentontheedge.be5.util.DpsUtils;
 import com.developmentontheedge.be5.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.google.common.collect.ObjectArrays;
@@ -38,7 +39,7 @@ public class AddRemoveCategory extends GOperationSupport
         prop.setValue("Add");
         dps.add( prop );
 
-        return dpsHelper.setValues(dps, presetValues);
+        return DpsUtils.setValues(dps, presetValues);
     }
 
     @Override

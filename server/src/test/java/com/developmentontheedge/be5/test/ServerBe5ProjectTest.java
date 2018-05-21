@@ -9,8 +9,7 @@ import com.google.inject.util.Modules;
 public abstract class ServerBe5ProjectTest extends TestUtils
 {
     private static final Injector injector = initInjector(
-            Modules.override(new ServerModule()).with(new SqlMockModule()),
-            new TemplateModule(),
+            Modules.override(new ServerModule(), new TemplateModule()).with(new SqlMockModule()),
             new CoreModuleForTest()
     );
 
