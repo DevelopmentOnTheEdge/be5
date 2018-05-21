@@ -134,6 +134,12 @@
      <groupId>org.eluder.coveralls</groupId>
      <artifactId>coveralls-maven-plugin</artifactId>
      <version>4.3.0</version>
+     <configuration>
+      <sourceDirectories>
+       <sourceDirectory>${project.build.directory}/generated-sources/javacc</sourceDirectory>
+       <sourceDirectory>${project.build.directory}/generated-sources/jjtree</sourceDirectory>
+      </sourceDirectories>
+     </configuration>
     </plugin>
    </plugins>
   </pluginManagement>
