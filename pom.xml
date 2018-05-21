@@ -136,8 +136,8 @@
      <version>4.3.0</version>
      <configuration>
       <sourceDirectories>
-       <sourceDirectory>${project.build.directory}/generated-sources/javacc</sourceDirectory>
-       <sourceDirectory>${project.build.directory}/generated-sources/jjtree</sourceDirectory>
+       <sourceDirectory>${basedir}/sql/target/generated-sources/javacc</sourceDirectory>
+       <sourceDirectory>${basedir}/sql/target/generated-sources/jjtree</sourceDirectory>
       </sourceDirectories>
      </configuration>
     </plugin>
