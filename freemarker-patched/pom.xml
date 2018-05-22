@@ -6,7 +6,7 @@
  <version>2.3.20p4-SNAPSHOT</version>
  <packaging>jar</packaging>
 
- <name>be5 Patched Freemarker</name>
+ <name>be5 patched freemarker</name>
  <description>Freemarker with DOTE-specific patches</description>
 
  <parent>
