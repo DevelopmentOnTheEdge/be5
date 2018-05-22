@@ -54,6 +54,7 @@ public class ConnectionServiceImpl implements ConnectionService
         TRANSACT_CONN.set(null);
     }
 
+    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         Connection conn = null;
@@ -116,7 +117,7 @@ public class ConnectionServiceImpl implements ConnectionService
         }
     }
 
-
+    @Override
     public Connection getConnection(boolean isReadOnly) throws SQLException
     {
         Connection conn = databaseService.getConnection();
