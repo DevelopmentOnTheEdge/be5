@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
+import com.developmentontheedge.be5.api.services.DbService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.zapodot.junit.db.EmbeddedDatabaseRule;
@@ -19,14 +19,14 @@ public abstract class Be5ProjectDbBaseTest
             .withInitialSql("CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255), age INT);")
             .build();
 
-    protected SqlService db;
+    protected DbService db;
 
     @Before
     public void setUpDb()
     {
-        DatabaseService databaseService = new DatabaseServiceTestImpl(databaseRule.getDataSource());
+        DataSourceService databaseService = new DataSourceServiceTestImpl(databaseRule.getDataSource());
 
-        db = new SqlServiceImpl(new ConnectionServiceImpl(databaseService), databaseService);
+        db = new DbServiceImpl(new ConnectionServiceImpl(databaseService), databaseService);
     }
 
     static {

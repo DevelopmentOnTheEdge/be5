@@ -4,7 +4,12 @@ import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -179,5 +184,23 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
                 uniqueName, "pass");
 
         assertEquals(id, db.oneLong("SELECT ID FROM persons WHERE name = ?", uniqueName));
+    }
+
+    @Test
+    public void execute() throws SQLException
+    {
+        Map<String, Integer> metaData = db.execute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM persons"))
+            {
+                ResultSetMetaData metaData1 = ps.getMetaData();
+                Map<String, Integer> map = new HashMap<>();
+                map.put(metaData1.getColumnName(1), metaData1.getColumnType(1));
+                map.put(metaData1.getColumnName(2), metaData1.getColumnType(2));
+                return map;
+            }
+        });
+
+        assertEquals(-5, (int)metaData.get("ID"));
+        assertEquals(12, (int)metaData.get("NAME"));
     }
 }

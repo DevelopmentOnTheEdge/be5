@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
@@ -15,15 +15,15 @@ import java.util.logging.Logger;
 import static org.mockito.Mockito.mock;
 
 
-public class SqlServiceMock implements SqlService
+public class DbServiceMock implements DbService
 {
-    private static final Logger log = Logger.getLogger(SqlServiceMock.class.getName());
+    private static final Logger log = Logger.getLogger(DbServiceMock.class.getName());
 
-    public static SqlService mock = mock(SqlService.class);
+    public static DbService mock = mock(DbService.class);
 
     public static void clearMock()
     {
-        mock = mock(SqlService.class);
+        mock = mock(DbService.class);
     }
 
     @Override
@@ -73,6 +73,12 @@ public class SqlServiceMock implements SqlService
     {
         log.fine(sql + Arrays.toString(params));
         return mock.insert(sql, params);
+    }
+
+    @Override
+    public <T> T execute(SqlExecutor<T> executor)
+    {
+        return mock.execute(executor);
     }
 
     @Override

@@ -25,7 +25,7 @@ public abstract class TestUtils
     protected Path tpmProjectPath;
     Project project;
 
-    final String profileTestMavenPlugin = "profileTestMavenPlugin";
+    public final String profileTestMavenPlugin = "profileTestMavenPlugin";
 
     @Before
     public void setUp() throws Exception

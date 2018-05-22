@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +16,13 @@ import static org.mockito.Mockito.when;
 
 public class SqlHelperTest
 {
-    private SqlService db;
+    private DbService db;
     private SqlHelper sqlHelper;
 
     @Before
     public void setUp() throws Exception
     {
-        db = mock(SqlService.class);
+        db = mock(DbService.class);
         sqlHelper = new SqlHelper(db);
     }
 

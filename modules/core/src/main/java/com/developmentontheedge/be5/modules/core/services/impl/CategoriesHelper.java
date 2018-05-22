@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.util.Utils;
 import javax.inject.Inject;
 
@@ -10,10 +10,10 @@ import java.util.List;
 
 public class CategoriesHelper
 {
-    private final SqlService db;
+    private final DbService db;
 
     @Inject
-    public CategoriesHelper(SqlService db)
+    public CategoriesHelper(DbService db)
     {
         this.db = db;
     }

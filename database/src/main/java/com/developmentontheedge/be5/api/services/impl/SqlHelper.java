@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.sql.format.Ast;
 import com.google.common.collect.ObjectArrays;
 
@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 public class SqlHelper
 {
-    private final SqlService db;
+    private final DbService db;
 
     @Inject
-    public SqlHelper(SqlService db)
+    public SqlHelper(DbService db)
     {
         this.db = db;
     }

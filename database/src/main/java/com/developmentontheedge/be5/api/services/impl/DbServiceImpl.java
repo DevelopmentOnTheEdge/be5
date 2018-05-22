@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.ConnectionService;
-import com.developmentontheedge.be5.api.services.DatabaseService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
@@ -24,16 +24,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class SqlServiceImpl implements SqlService
+public class DbServiceImpl implements DbService
 {
-    private static final Logger log = Logger.getLogger(SqlServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger(DbServiceImpl.class.getName());
 
     private QueryRunner queryRunner;
-    private DatabaseService databaseService;
+    private DataSourceService databaseService;
     private ConnectionService connectionService;
 
     @Inject
-    public SqlServiceImpl(ConnectionService connectionService, DatabaseService databaseService)
+    public DbServiceImpl(ConnectionService connectionService, DataSourceService databaseService)
     {
         this.databaseService = databaseService;
         this.connectionService = connectionService;
@@ -145,11 +145,19 @@ public class SqlServiceImpl implements SqlService
         }
     }
 
+    @Override
+    public <T> T execute(SqlExecutor<T> executor)
+    {
+        return execute(false, executor);
+    }
+
+    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         return connectionService.transactionWithResult(executor);
     }
 
+    @Override
     public void transaction(SqlExecutorVoid executor)
     {
         connectionService.transaction(executor);

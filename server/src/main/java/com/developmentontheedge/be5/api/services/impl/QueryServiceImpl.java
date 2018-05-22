@@ -1,11 +1,10 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.ConnectionService;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
@@ -18,17 +17,14 @@ import java.util.Map;
 
 public class QueryServiceImpl implements QueryService
 {
-    private final DatabaseService databaseService;
-    private final ConnectionService connectionService;
+    private final DataSourceService databaseService;
     private final Meta meta;
-    private final SqlService db;
+    private final DbService db;
 
     @Inject
-    public QueryServiceImpl(DatabaseService databaseService, ConnectionService connectionService,
-                            Meta meta, SqlService db)
+    public QueryServiceImpl(DataSourceService databaseService, Meta meta, DbService db)
     {
         this.databaseService = databaseService;
-        this.connectionService = connectionService;
         this.meta = meta;
         this.db = db;
     }
@@ -39,7 +35,7 @@ public class QueryServiceImpl implements QueryService
         Map<String, List<String>> listParams = getMapOfList(parameters);
 
         return new Be5QueryExecutor(query, listParams, UserInfoHolder.getUserInfo(), UserInfoHolder.getSession(),
-                connectionService, databaseService, meta, db);
+                databaseService, meta, db);
     }
 
     @Override

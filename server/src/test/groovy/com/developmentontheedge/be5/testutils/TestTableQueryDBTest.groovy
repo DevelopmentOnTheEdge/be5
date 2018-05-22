@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.testutils
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.api.services.SqlService
+import com.developmentontheedge.be5.api.services.DbService
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
@@ -9,7 +9,7 @@ import org.junit.Before
 
 abstract class TestTableQueryDBTest extends ServerBe5ProjectDBTest
 {
-    @Inject public SqlService db
+    @Inject public DbService db
     @Inject public ProjectProvider projectProvider
 
     @Before

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.ConnectionService;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
 import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
 
@@ -19,10 +19,10 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private static final Logger log = Logger.getLogger(ConnectionServiceImpl.class.getName());
 
-    private DatabaseService databaseService;
+    private DataSourceService databaseService;
 
     @Inject
-    public ConnectionServiceImpl(DatabaseService databaseService)
+    public ConnectionServiceImpl(DataSourceService databaseService)
     {
         this.databaseService = databaseService;
     }
@@ -41,7 +41,7 @@ public class ConnectionServiceImpl implements ConnectionService
         }
         else
         {
-            conn = databaseService.getConnection();
+            conn = databaseService.getDataSource().getConnection();
             conn.setAutoCommit(false);
             TRANSACT_CONN.set(conn);
             return conn;
@@ -54,6 +54,7 @@ public class ConnectionServiceImpl implements ConnectionService
         TRANSACT_CONN.set(null);
     }
 
+    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         Connection conn = null;
@@ -116,10 +117,10 @@ public class ConnectionServiceImpl implements ConnectionService
         }
     }
 
-
+    @Override
     public Connection getConnection(boolean isReadOnly) throws SQLException
     {
-        Connection conn = databaseService.getConnection();
+        Connection conn = databaseService.getDataSource().getConnection();
         if (isReadOnly) {
             conn.setReadOnly(true);
         }

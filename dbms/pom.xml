@@ -6,7 +6,7 @@
  <version>0.1.1-SNAPSHOT</version>
  <packaging>jar</packaging>
 
- <name>be5 DBMS helpers</name>
+ <name>be5 dbms helpers</name>
  <description>DOTE DBMS helpers</description>
 
  <parent>

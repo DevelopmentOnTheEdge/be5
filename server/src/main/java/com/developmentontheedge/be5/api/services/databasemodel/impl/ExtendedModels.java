@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.databasemodel.impl;
 
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.databasemodel.EntityMethod;
 import com.developmentontheedge.be5.api.services.databasemodel.EntityModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -87,7 +87,7 @@ final public class ExtendedModels {
         return Collections.unmodifiableMap( methods );
     }
     
-    public static boolean isAvailable( SqlService sqlService ) throws SQLException
+    public static boolean isAvailable( DbService sqlService ) throws SQLException
     {
         return false;
         //return Utils.columnExists( connector, "entities", "entityModel" );

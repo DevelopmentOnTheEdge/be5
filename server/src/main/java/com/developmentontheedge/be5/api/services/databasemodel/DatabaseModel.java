@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.model.QRec;
@@ -42,7 +42,7 @@ final public class DatabaseModel implements EntityAccess
         GroovyRegister.registerMetaClass( GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class );
     }
 
-    private final SqlService sqlService;
+    private final DbService sqlService;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
     private final OperationHelper operationHelper;
@@ -50,7 +50,7 @@ final public class DatabaseModel implements EntityAccess
     private final OperationExecutor operationExecutor;
 
     @Inject
-    public DatabaseModel(SqlService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
+    public DatabaseModel(DbService sqlService, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
                          Meta meta, OperationExecutor operationExecutor)
     {
         this.sqlService = sqlService;

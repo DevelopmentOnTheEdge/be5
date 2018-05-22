@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Response;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -112,12 +112,12 @@ public class UserInfoComponentTest extends CoreBe5ProjectTest
 
         verify(response).sendAsRawJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));
 
-        verify(SqlServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
+        verify(DbServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
                 "('Administrator')",
                 "current-role-list",
                 "testUser");
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO user_prefs VALUES( ?, ?, ? )",
+        verify(DbServiceMock.mock).insert("INSERT INTO user_prefs VALUES( ?, ?, ? )",
                 "testUser",
                 "current-role-list",
                 "('Administrator')");

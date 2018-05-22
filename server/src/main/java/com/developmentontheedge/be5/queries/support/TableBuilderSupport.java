@@ -6,9 +6,8 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.validation.Validator;
-import com.developmentontheedge.be5.api.services.DatabaseService;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
@@ -28,9 +27,8 @@ import java.util.Map;
 
 public abstract class TableBuilderSupport implements TableBuilder
 {
-    @Inject public DatabaseService databaseService;
     @Inject public DatabaseModel database;
-    @Inject public SqlService db;
+    @Inject public DbService db;
     @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
     @Inject public OperationHelper helper;

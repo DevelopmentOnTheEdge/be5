@@ -1,5 +1,6 @@
-package com.developmentontheedge.be5.maven;
+package com.developmentontheedge.be5.maven.generate;
 
+import com.developmentontheedge.be5.maven.TestUtils;
 import org.junit.Test;
 
 import java.nio.file.Files;

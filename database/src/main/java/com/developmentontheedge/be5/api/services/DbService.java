@@ -9,7 +9,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import java.util.List;
 
 
-public interface SqlService
+public interface DbService
 {
     <T> T query(String sql, ResultSetHandler<T> rsh, Object... params);
 
@@ -26,6 +26,8 @@ public interface SqlService
     int updateWithoutBeSql(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
+
+    <T> T execute(SqlExecutor<T> executor);
 
     <T> T transactionWithResult(SqlExecutor<T> executor);
 

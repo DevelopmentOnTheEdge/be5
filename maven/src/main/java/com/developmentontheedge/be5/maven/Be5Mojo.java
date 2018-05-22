@@ -51,12 +51,12 @@ public abstract class Be5Mojo<T extends Be5Mojo<T>> extends AbstractMojo
     File logPath = Paths.get("target/sql").toFile();
 
     @Parameter (property = "BE5_PROFILE")
-    String connectionProfileName;
+    protected String connectionProfileName;
 
     @Parameter (property = "DB_PASSWORD")
-    String connectionPassword;
+    protected String connectionPassword;
 
-    Project be5Project;
+    protected Project be5Project;
 
     ///////////////////////////////////////////////////////////////////
 

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.operations.extenders;
 
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -21,16 +21,16 @@ public class ExtendersTest extends SqlMockOperationTest
                 executeOperation("testtable", "All records", "InsertWithExtender", "",
                         "{'name':'test','value':'1'}").getSecond());
 
-        verify(SqlServiceMock.mock).update("update testTable name = 'preInvoke' WHERE 1=2");
+        verify(DbServiceMock.mock).update("update testTable name = 'preInvoke' WHERE 1=2");
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
+        verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
                 "VALUES (?, ?)", "test", "1");
 
-        verify(SqlServiceMock.mock).update("update testTable name = 'postInvoke' WHERE 1=2");
+        verify(DbServiceMock.mock).update("update testTable name = 'postInvoke' WHERE 1=2");
 
-        verify(SqlServiceMock.mock, times(2)).update(anyString());
+        verify(DbServiceMock.mock, times(2)).update(anyString());
 
-        verify(SqlServiceMock.mock, times(1)).insert(anyString(), anyVararg());
+        verify(DbServiceMock.mock, times(1)).insert(anyString(), anyVararg());
     }
 
     @Test
@@ -40,11 +40,11 @@ public class ExtendersTest extends SqlMockOperationTest
                 executeOperation("testtable", "All records", "InsertWithSkipExtender", "",
                         "{'name':'test','value':'1'}").getSecond());
 
-        verify(SqlServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkip' WHERE 1=2");
+        verify(DbServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkip' WHERE 1=2");
 
-        verify(SqlServiceMock.mock, times(1)).update(anyString());
+        verify(DbServiceMock.mock, times(1)).update(anyString());
 
-        verify(SqlServiceMock.mock, times(0)).insert(anyString(), anyVararg());
+        verify(DbServiceMock.mock, times(0)).insert(anyString(), anyVararg());
     }
 
     @Test
@@ -54,9 +54,9 @@ public class ExtendersTest extends SqlMockOperationTest
                 executeOperation("testtable", "All records", "InsertWithGroovyExtender", "",
                         "{'name':'test','value':'1'}").getSecond());
 
-        verify(SqlServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkipGroovy' WHERE 1=2");
+        verify(DbServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkipGroovy' WHERE 1=2");
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
+        verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
                 "VALUES (?, ?)", "test", "1");
     }
 }

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.services.databasemodel
 import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock
+import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -31,21 +31,21 @@ class EntityModelAddTest extends ServerBe5ProjectTest
 
     @Before
     void before(){
-        SqlServiceMock.clearMock()
+        DbServiceMock.clearMock()
     }
 
     @Test
     void testAdd()
     {
         EntityModel entity = database.getEntity( "testtableAdmin" )
-        when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
+        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
 
         entity.add([
             name : "Test",
             value: 1
         ])
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)",
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)",
                 "Test", 1)
     }
 
@@ -53,7 +53,7 @@ class EntityModelAddTest extends ServerBe5ProjectTest
     void testAddAll()
     {
         EntityModel entity = database.getEntity( "testtableAdmin" )
-        when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
+        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
 
         def list = [
                 [
@@ -72,9 +72,9 @@ class EntityModelAddTest extends ServerBe5ProjectTest
 
         entity.addAll( list )
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 1)
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 2)
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 3)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 1)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 2)
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) VALUES (?, ?)","Test", 3)
     }
 
     @Test
@@ -82,14 +82,14 @@ class EntityModelAddTest extends ServerBe5ProjectTest
     {
         EntityModel entity = database.getEntity( "testtableAdmin" )
 
-        when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
+        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn("1")
         String id = entity.add( [
                 name : "Test",
                 value: "1"
         ])
         assertEquals("1", id)
 
-        when(SqlServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(2L)
+        when(DbServiceMock.mock.insert(anyString(), anyVararg())).thenReturn(2L)
         id = entity.add( [
                 name : "Test",
                 value: "1"

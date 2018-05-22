@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.helpers;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -34,7 +34,7 @@ public class OperationHelper
 {
     private final Cache<String, String[][]> tagsCache;
 
-    private final SqlService db;
+    private final DbService db;
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
     private final QueryService queryService;
@@ -44,7 +44,7 @@ public class OperationHelper
     public static final String no = "no";
 
     @Inject
-    public OperationHelper(SqlService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
+    public OperationHelper(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
                            TableModelService tableModelService, QueryService queryService)
     {
         this.db = db;
