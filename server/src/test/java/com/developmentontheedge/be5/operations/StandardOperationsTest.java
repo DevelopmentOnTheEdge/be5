@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.beans.json.JsonFactory;
@@ -29,14 +29,14 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationStatus.FINISHED,
                 generateOperation("testtableAdmin", "All records", "Delete", "1", "").getSecond().getStatus());
 
-        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
-        verify(SqlServiceMock.mock).update("DELETE FROM testCollection WHERE categoryID IN (?)", 1L);
-        verify(SqlServiceMock.mock).update("DELETE FROM testGenCollection WHERE recordID IN (?)", "testtableAdmin.1");
+        verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?)", 1L);
+        verify(DbServiceMock.mock).update("DELETE FROM testCollection WHERE categoryID IN (?)", 1L);
+        verify(DbServiceMock.mock).update("DELETE FROM testGenCollection WHERE recordID IN (?)", "testtableAdmin.1");
 
         generateOperation("testtableAdmin", "All records", "Delete",
                 "1,2,3", "").getSecond();
 
-        verify(SqlServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
+        verify(DbServiceMock.mock).update("DELETE FROM testtableAdmin WHERE ID IN (?, ?, ?)", 1L, 2L, 3L);
     }
 
     @Test
@@ -72,14 +72,14 @@ public class StandardOperationsTest extends SqlMockOperationTest
                 executeOperation("testtable", "All records", "Insert", "",
                         "{'name':'test','value':'1'}").getSecond());
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
+        verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
                 "VALUES (?, ?)", "test", "1");
     }
 
     @Test
     public void editOperationGenerate()
     {
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
+        when(DbServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
                 "value", 1,
                 "ID", 12L
@@ -87,7 +87,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
 
         Object first = generateOperation("testtableAdmin", "All records", "Edit", "12","{}").getFirst();
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
 
         assertEquals("{'name':'TestName','value':'1'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
@@ -100,11 +100,11 @@ public class StandardOperationsTest extends SqlMockOperationTest
         dpsHelper.addDpExcludeAutoIncrement(dps, meta.getEntity("propertyTypes"), Collections.emptyMap());
         dps.setValue("name", "TestName");
         dps.setValue("CODE", "02");
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
+        when(DbServiceMock.mock.select(any(),any(),any())).thenReturn(dps);
 
         Object first = generateOperation("propertyTypes", "All records", "Edit", "01","{}").getFirst();
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE = ?"),any(),eq("01"));
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM propertyTypes WHERE CODE = ?"),any(),eq("01"));
 
         assertEquals("{'CODE':'02','name':'TestName'}",
                 oneQuotes(JsonFactory.bean(first).getJsonObject("values").toString()));
@@ -115,7 +115,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithParams("{'name':'EditName','value':123}");
 
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", 123, 12L);
     }
 
@@ -124,7 +124,7 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithParams("{'name':'EditName','value':null}");
 
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
@@ -133,13 +133,13 @@ public class StandardOperationsTest extends SqlMockOperationTest
     {
         executeEditWithParams("{'name':'EditName','value':''}");
 
-        verify(SqlServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
+        verify(DbServiceMock.mock).update("UPDATE testtableAdmin SET name = ?, value = ? WHERE ID = ?",
                 "EditName", null, 12L);
     }
 
     private void executeEditWithParams(String params)
     {
-        when(SqlServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
+        when(DbServiceMock.mock.select(any(),any(),any())).thenReturn(getDpsS(ImmutableMap.of(
                 "name", "TestName",
                 "value", 12345,
                 "ID", 12L
@@ -151,6 +151,6 @@ public class StandardOperationsTest extends SqlMockOperationTest
         assertEquals(OperationResult.redirect("table/testtableAdmin/All records"),
                 operationResult);
 
-        verify(SqlServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
+        verify(DbServiceMock.mock).select(eq("SELECT * FROM testtableAdmin WHERE ID = ?"),any(),eq(12L));
     }
 }

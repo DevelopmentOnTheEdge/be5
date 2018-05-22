@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.services
 
 import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.api.services.CoreUtils
-import com.developmentontheedge.be5.api.services.SqlService
+import com.developmentontheedge.be5.api.services.DbService
 import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
@@ -16,7 +16,7 @@ import static org.junit.Assert.*
 class CoreUtilsTest extends CoreBe5ProjectDBTest
 {
     @Inject DatabaseModel database
-    @Inject SqlService db
+    @Inject DbService db
     @Inject CoreUtils utils
     @Inject Be5Caches be5Caches
 

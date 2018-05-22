@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.DataSourceService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -134,7 +134,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     }
 
     private final Meta meta;
-    private final SqlService db;
+    private final DbService db;
 
     private final Map<String, List<String>> parameters;
     private final UserInfo userInfo;
@@ -148,7 +148,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
     public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession querySession,
-                            DataSourceService databaseService, Meta meta, SqlService db)
+                            DataSourceService databaseService, Meta meta, DbService db)
     {
         super(query);
 

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operations.support;
 
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.operation.OperationExtender;
 public abstract class OperationExtenderSupport implements OperationExtender
 {
     @Inject public DatabaseModel database;
-    @Inject public SqlService db;
+    @Inject public DbService db;
     @Inject public Validator validator;
 
     @Override

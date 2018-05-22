@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.databasemodel.groovy
 
-import com.developmentontheedge.be5.api.services.SqlService
+import com.developmentontheedge.be5.api.services.DbService
 import com.developmentontheedge.be5.api.services.databasemodel.EntityModel
 import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.metadata.RoleType
@@ -21,7 +21,7 @@ import static org.junit.Assert.*
 class SpecialColumnsTest extends ServerBe5ProjectDBTest
 {
     @Inject private DatabaseModel database
-    @Inject private SqlService db
+    @Inject private DbService db
     @Inject private UserHelper userHelper
     EntityModel table
     String tableName

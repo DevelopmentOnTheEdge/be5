@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -43,7 +43,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         GroovyRegister.registerMetaClass( RecordModelMetaClass.class, RecordModelBase.class );
     }
 
-    private final SqlService db;
+    private final DbService db;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
     private final OperationHelper operationHelper;
@@ -52,7 +52,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
     private final Entity entity;
 
-    public EntityModelBase(SqlService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
+    public EntityModelBase(DbService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
                            OperationExecutor operationExecutor, Meta meta, Entity entity)
     {
         this.db = db;

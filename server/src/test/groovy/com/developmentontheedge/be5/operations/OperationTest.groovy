@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.FrontendConstants
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock
+import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.be5.util.Either
 import com.developmentontheedge.beans.json.JsonFactory
 import com.google.common.collect.ImmutableMap
@@ -110,7 +110,7 @@ class OperationTest extends SqlMockOperationTest
         executeOperation("testtableAdmin", "All records", "TestOperation", "0",
                 ['name':'testName','value':3L])
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
+        verify(DbServiceMock.mock).insert("INSERT INTO testtableAdmin (name, value) " +
                 "VALUES (?, ?)", "testName", 3L)
     }
 
@@ -155,7 +155,7 @@ class OperationTest extends SqlMockOperationTest
         executeOperation("testTags", "All records", "Insert", "",
                 ['CODE':'01','referenceTest':'','payable':'yes','admlevel':'Regional']).getSecond()
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel) VALUES (?, ?, ?)",
+        verify(DbServiceMock.mock).insert("INSERT INTO testTags (CODE, payable, admlevel) VALUES (?, ?, ?)",
                 "01", "yes", "Regional"
         )
     }

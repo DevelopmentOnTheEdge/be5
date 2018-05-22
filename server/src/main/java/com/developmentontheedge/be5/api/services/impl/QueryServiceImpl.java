@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;
 
@@ -19,10 +19,10 @@ public class QueryServiceImpl implements QueryService
 {
     private final DataSourceService databaseService;
     private final Meta meta;
-    private final SqlService db;
+    private final DbService db;
 
     @Inject
-    public QueryServiceImpl(DataSourceService databaseService, Meta meta, SqlService db)
+    public QueryServiceImpl(DataSourceService databaseService, Meta meta, DbService db)
     {
         this.databaseService = databaseService;
         this.meta = meta;

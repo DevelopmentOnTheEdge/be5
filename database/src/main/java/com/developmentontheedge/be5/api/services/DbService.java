@@ -9,7 +9,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import java.util.List;
 
 
-public interface SqlService
+public interface DbService
 {
     <T> T query(String sql, ResultSetHandler<T> rsh, Object... params);
 

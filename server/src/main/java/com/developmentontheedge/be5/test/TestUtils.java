@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.maven.AppDb;
@@ -26,7 +26,7 @@ import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.model.QRec;
 import com.developmentontheedge.be5.operation.Operation;
@@ -96,7 +96,7 @@ public abstract class TestUtils
     @Inject private OperationExecutor operationExecutor;
     @Inject protected UserAwareMeta userAwareMeta;
     @Inject protected DatabaseModel database;
-    @Inject protected SqlService db;
+    @Inject protected DbService db;
 
     protected static final String TEST_USER = "testUser";
     protected static final Jsonb jsonb = JsonbBuilder.create();
@@ -371,7 +371,7 @@ public abstract class TestUtils
         List<DynamicPropertySet> tagValuesList = Arrays.stream(tagValues)
                 .map(tagValue -> getDpsS(ImmutableMap.of("CODE", tagValue, "Name", tagValue))).collect(Collectors.toList());
 
-        when(SqlServiceMock.mock.list(contains(containsSql),
+        when(DbServiceMock.mock.list(contains(containsSql),
                 Matchers.<ResultSetParser<DynamicPropertySet>>any(), anyVararg())).thenReturn(tagValuesList);
     }
 
@@ -449,7 +449,7 @@ public abstract class TestUtils
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
 
-            bind(SqlService.class).to(SqlServiceMock.class).in(Scopes.SINGLETON);
+            bind(DbService.class).to(DbServiceMock.class).in(Scopes.SINGLETON);
             bind(DataSourceService.class).to(DataSourceServiceMock.class).in(Scopes.SINGLETON);
             bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);

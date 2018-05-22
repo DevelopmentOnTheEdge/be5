@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
@@ -30,7 +30,7 @@ import java.util.Map;
 public abstract class OperationSupport implements Operation
 {
     @Inject public DatabaseModel database;
-    @Inject public SqlService db;
+    @Inject public DbService db;
     @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
     @Inject public OperationHelper helper;

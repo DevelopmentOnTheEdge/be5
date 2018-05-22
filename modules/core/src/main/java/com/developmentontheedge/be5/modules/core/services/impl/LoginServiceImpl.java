@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
 import com.developmentontheedge.be5.model.Action;
@@ -27,13 +27,13 @@ public class LoginServiceImpl implements LoginService
 {
     public static final Logger log = Logger.getLogger(LoginServiceImpl.class.getName());
 
-    private final SqlService db;
+    private final DbService db;
     private final UserHelper userHelper;
     private final CoreUtils coreUtils;
     private final MenuHelper menuHelper;
 
     @Inject
-    public LoginServiceImpl(SqlService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper)
+    public LoginServiceImpl(DbService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper)
     {
         this.db = db;
         this.userHelper = userHelper;

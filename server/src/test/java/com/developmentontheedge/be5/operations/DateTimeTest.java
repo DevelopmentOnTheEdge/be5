@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.operations;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
+import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
@@ -41,7 +41,7 @@ public class DateTimeTest extends SqlMockOperationTest
     {
         executeOperation("dateTime", "All records", "Insert", "0", ImmutableMap.of("activeFrom","1901-02-03"));
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
+        verify(DbServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
                 Date.valueOf("1901-02-03"));
     }
 
@@ -60,7 +60,7 @@ public class DateTimeTest extends SqlMockOperationTest
     {
         executeOperation("dateTime", "All records", "Insert", "0", "{}");
 
-        verify(SqlServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
+        verify(DbServiceMock.mock).insert("INSERT INTO dateTime (activeFrom) VALUES (?)",
                 Date.valueOf("1900-01-01"));
     }
 

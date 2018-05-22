@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryService;
-import com.developmentontheedge.be5.api.services.SqlService;
+import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
@@ -46,13 +46,13 @@ public class QueryBuilderController extends ControllerSupport implements Control
     private List<ResourceData> resourceDataList;
     private List<ErrorModel> errorModelList;
 
-    private final SqlService db;
+    private final DbService db;
     private final DocumentGenerator documentGenerator;
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
 
     @Inject
-    public QueryBuilderController(SqlService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider, QueryService queryService)
+    public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider, QueryService queryService)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;

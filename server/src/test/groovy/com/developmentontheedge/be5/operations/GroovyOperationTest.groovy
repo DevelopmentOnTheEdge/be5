@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.operation.Operation
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock
+import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.be5.util.Either
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
@@ -46,7 +46,7 @@ class GroovyOperationTest extends SqlMockOperationTest
 
         assertEquals(OperationStatus.REDIRECTED, operation.getStatus())
 
-        verify(SqlServiceMock.mock).update(eq("update fakeTable set name = ?,beginDate = ?,reason = ?"),
+        verify(DbServiceMock.mock).update(eq("update fakeTable set name = ?,beginDate = ?,reason = ?"),
                 eq("testValue"),
                 eq(parseDate("2017-07-01")),
                 eq("fired"))

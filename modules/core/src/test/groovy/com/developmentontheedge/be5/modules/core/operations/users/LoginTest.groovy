@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.mocks.SqlServiceMock
+import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Ignore
@@ -51,14 +51,14 @@ class LoginTest extends CoreBe5ProjectTest
 
         String testPass = "testPass"
 
-        when(SqlServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
+        when(DbServiceMock.mock.one(eq("SELECT COUNT(user_name) FROM users WHERE user_name = ? AND user_pass = ?"),
                 eq(TEST_USER), eq(testPass))).thenReturn(1L)
 
-        when(SqlServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
+        when(DbServiceMock.mock.list(eq("SELECT role_name FROM user_roles WHERE user_name = ?"),
                 Matchers.<ResultSetParser<String>>any(), eq(TEST_USER)))
                 .thenReturn(Arrays.asList("Test1", "Test2"))
 
-        when(SqlServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
+        when(DbServiceMock.mock.one(eq("SELECT pref_value FROM user_prefs WHERE pref_name = ? AND user_name = ?"),
                 eq(DatabaseConstants.CURRENT_ROLE_LIST), eq(TEST_USER)))
                 .thenReturn("('Test1')")
 

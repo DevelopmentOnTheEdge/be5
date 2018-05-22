@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class QueryServiceTest extends ServerBe5ProjectDBTest
 {
     @Inject private ProjectProvider projectProvider;
-    @Inject private SqlService db;
+    @Inject private DbService db;
     @Inject private QueryService queryService;
 
     private Query query;

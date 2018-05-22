@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull
 
 class OperationHelperTest extends ServerBe5ProjectDBTest
 {
-    @Inject private SqlService db
+    @Inject private DbService db
     @Inject private DatabaseModel database
     @Inject private OperationHelper helper
 
