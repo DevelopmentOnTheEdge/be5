@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
@@ -25,7 +25,7 @@ import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
-import com.developmentontheedge.be5.test.mocks.DatabaseServiceMock;
+import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
 import com.developmentontheedge.be5.test.mocks.SqlServiceMock;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.model.QRec;
@@ -450,7 +450,7 @@ public abstract class TestUtils
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
 
             bind(SqlService.class).to(SqlServiceMock.class).in(Scopes.SINGLETON);
-            bind(DatabaseService.class).to(DatabaseServiceMock.class).in(Scopes.SINGLETON);
+            bind(DataSourceService.class).to(DataSourceServiceMock.class).in(Scopes.SINGLETON);
             bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
         }

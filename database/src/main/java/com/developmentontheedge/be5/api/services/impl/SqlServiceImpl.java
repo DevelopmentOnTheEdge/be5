@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.ConnectionService;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
 import com.developmentontheedge.be5.api.sql.SqlExecutor;
@@ -29,11 +29,11 @@ public class SqlServiceImpl implements SqlService
     private static final Logger log = Logger.getLogger(SqlServiceImpl.class.getName());
 
     private QueryRunner queryRunner;
-    private DatabaseService databaseService;
+    private DataSourceService databaseService;
     private ConnectionService connectionService;
 
     @Inject
-    public SqlServiceImpl(ConnectionService connectionService, DatabaseService databaseService)
+    public SqlServiceImpl(ConnectionService connectionService, DataSourceService databaseService)
     {
         this.databaseService = databaseService;
         this.connectionService = connectionService;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.SqlService;
@@ -17,12 +17,12 @@ import java.util.Map;
 
 public class QueryServiceImpl implements QueryService
 {
-    private final DatabaseService databaseService;
+    private final DataSourceService databaseService;
     private final Meta meta;
     private final SqlService db;
 
     @Inject
-    public QueryServiceImpl(DatabaseService databaseService, Meta meta, SqlService db)
+    public QueryServiceImpl(DataSourceService databaseService, Meta meta, SqlService db)
     {
         this.databaseService = databaseService;
         this.meta = meta;

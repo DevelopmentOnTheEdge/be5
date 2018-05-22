@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.ConnectionService;
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -23,7 +23,7 @@ import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.api.services.impl.Be5CachesImpl;
 import com.developmentontheedge.be5.api.services.impl.ConnectionServiceImpl;
-import com.developmentontheedge.be5.api.services.impl.DatabaseServiceImpl;
+import com.developmentontheedge.be5.api.services.impl.DataSourceServiceImpl;
 import com.developmentontheedge.be5.api.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.api.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
@@ -85,7 +85,7 @@ public class ServerModule extends ServletModule
         bind(MenuHelper.class).in(Scopes.SINGLETON);
 
         bind(ProjectProvider.class).to(ProjectProviderImpl.class).in(Scopes.SINGLETON);
-        bind(DatabaseService.class).to(DatabaseServiceImpl.class).in(Scopes.SINGLETON);
+        bind(DataSourceService.class).to(DataSourceServiceImpl.class).in(Scopes.SINGLETON);
         bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
         bind(SqlService.class).to(SqlServiceImpl.class).in(Scopes.SINGLETON);
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);

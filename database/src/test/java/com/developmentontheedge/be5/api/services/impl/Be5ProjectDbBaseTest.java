@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
-import com.developmentontheedge.be5.api.services.DatabaseService;
+import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.SqlService;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,7 +24,7 @@ public abstract class Be5ProjectDbBaseTest
     @Before
     public void setUpDb()
     {
-        DatabaseService databaseService = new DatabaseServiceTestImpl(databaseRule.getDataSource());
+        DataSourceService databaseService = new DataSourceServiceTestImpl(databaseRule.getDataSource());
 
         db = new SqlServiceImpl(new ConnectionServiceImpl(databaseService), databaseService);
     }
