@@ -76,6 +76,12 @@ public class SqlServiceMock implements SqlService
     }
 
     @Override
+    public <T> T execute(SqlExecutor<T> executor)
+    {
+        return mock.execute(executor);
+    }
+
+    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         try {

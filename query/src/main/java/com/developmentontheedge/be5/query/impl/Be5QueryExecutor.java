@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
@@ -33,7 +32,6 @@ import com.developmentontheedge.sql.model.SqlQuery;
 
 import one.util.streamex.StreamEx;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
@@ -135,7 +133,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         }
     }
 
-    private final ConnectionService connectionService;
     private final Meta meta;
     private final SqlService db;
 
@@ -151,11 +148,9 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
 
     public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession querySession,
-                            ConnectionService connectionService, DatabaseService databaseService,
-                            Meta meta, SqlService db)
+                            DatabaseService databaseService, Meta meta, SqlService db)
     {
         super(query);
-        this.connectionService = connectionService;
 
         this.parameters = parameters;
         this.userInfo = userInfo;
@@ -266,14 +261,11 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private DynamicProperty[] getSchema(String sql)
     {
         try{
-            Connection conn = connectionService.getConnection(true);
-
-            try(PreparedStatement ps = conn.prepareStatement(sql)) {
-                return DpsRecordAdapter.createSchema(ps.getMetaData());
-            }
-            finally {
-                connectionService.releaseConnection(conn);
-            }
+            return db.execute(conn -> {
+                try(PreparedStatement ps = conn.prepareStatement(sql)) {
+                    return DpsRecordAdapter.createSchema(ps.getMetaData());
+                }
+            });
         }
         catch (Throwable e)
         {

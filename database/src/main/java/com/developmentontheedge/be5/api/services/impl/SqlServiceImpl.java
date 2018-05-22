@@ -145,11 +145,19 @@ public class SqlServiceImpl implements SqlService
         }
     }
 
+    @Override
+    public <T> T execute(SqlExecutor<T> executor)
+    {
+        return execute(false, executor);
+    }
+
+    @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
         return connectionService.transactionWithResult(executor);
     }
 
+    @Override
     public void transaction(SqlExecutorVoid executor)
     {
         connectionService.transaction(executor);

@@ -27,6 +27,8 @@ public interface SqlService
 
     <T> T insert(String sql, Object... params);
 
+    <T> T execute(SqlExecutor<T> executor);
+
     <T> T transactionWithResult(SqlExecutor<T> executor);
 
     void transaction(SqlExecutorVoid executor);
