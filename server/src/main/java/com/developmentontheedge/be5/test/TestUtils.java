@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.api.UserInfoProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.Be5Caches;
@@ -119,10 +121,11 @@ public abstract class TestUtils
     protected void initUserWithRoles(String... roles)
     {
         TestSession testSession = new TestSession();
-        getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+        UserInfo userInfo = getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
                 Locale.US, "", testSession);
 
         UserInfoHolder.setRequest(new TestRequest(testSession));
+        UserInfoProviderForTest.userInfo = userInfo;
     }
 
     protected void initGuest()
@@ -466,12 +469,23 @@ public abstract class TestUtils
         }
     }
 
+    public static class UserInfoProviderForTest implements UserInfoProvider
+    {
+        static UserInfo userInfo;
+        @Override
+        public UserInfo get()
+        {
+            return userInfo;
+        }
+    }
+
     public static class TestProjectProviderModule extends AbstractModule
     {
         @Override
         protected void configure()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
+            bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
         }
     }
 

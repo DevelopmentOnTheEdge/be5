@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
-import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
+import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;

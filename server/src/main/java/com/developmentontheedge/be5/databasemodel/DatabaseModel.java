@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel;
 
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
+import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;

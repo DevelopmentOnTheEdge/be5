@@ -1,13 +1,14 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.databasemodel.helpers;
 
+import com.developmentontheedge.be5.api.UserInfoProvider;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.MODIFICATION_DATE_COLUMN_NAME;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.WHO_INSERTED_COLUMN_NAME;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.WHO_MODIFIED_COLUMN_NAME;
+
 
 public class ColumnsHelper
 {
@@ -40,11 +42,13 @@ public class ColumnsHelper
                     .build();
 
     private final Meta meta;
+    private final UserInfoProvider userInfoService;
 
     @Inject
-    public ColumnsHelper(Meta meta)
+    public ColumnsHelper(Meta meta, UserInfoProvider userInfoService)
     {
         this.meta = meta;
+        this.userInfoService = userInfoService;
     }
 
     public void addUpdateSpecialColumns(Entity entity, Map<String, ? super Object> values)
@@ -81,13 +85,13 @@ public class ColumnsHelper
         if(CREATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
         if(MODIFICATION_DATE_COLUMN_NAME.equals(propertyName))return currentTime;
 
-        if(WHO_INSERTED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getUserName();
-        if(WHO_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getUserName();
+        if(WHO_INSERTED_COLUMN_NAME.equals(propertyName))return userInfoService.get().getUserName();
+        if(WHO_MODIFIED_COLUMN_NAME.equals(propertyName))return userInfoService.get().getUserName();
 
         if(IS_DELETED_COLUMN_NAME.equals(propertyName))return "no";
 
-        if(IP_INSERTED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
-        if(IP_MODIFIED_COLUMN_NAME.equals(propertyName))return UserInfoHolder.getRemoteAddr();
+        if(IP_INSERTED_COLUMN_NAME.equals(propertyName))return userInfoService.get().getRemoteAddr();
+        if(IP_MODIFIED_COLUMN_NAME.equals(propertyName))return userInfoService.get().getRemoteAddr();
 
         throw Be5Exception.internal("Not support: " + propertyName);
     }
@@ -100,9 +104,9 @@ public class ColumnsHelper
         if(columns.containsKey( IS_DELETED_COLUMN_NAME ))
         {
             values.put(IS_DELETED_COLUMN_NAME, "yes");
-            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))values.put(WHO_MODIFIED_COLUMN_NAME, UserInfoHolder.getUserName());
+            if( columns.containsKey( WHO_MODIFIED_COLUMN_NAME     ))values.put(WHO_MODIFIED_COLUMN_NAME, userInfoService.get().getUserName());
             if( columns.containsKey( MODIFICATION_DATE_COLUMN_NAME))values.put(MODIFICATION_DATE_COLUMN_NAME, currentTime);
-            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))values.put(IP_MODIFIED_COLUMN_NAME, UserInfoHolder.getRemoteAddr());
+            if( columns.containsKey( IP_MODIFIED_COLUMN_NAME      ))values.put(IP_MODIFIED_COLUMN_NAME, userInfoService.get().getRemoteAddr());
         }
         return values;
     }

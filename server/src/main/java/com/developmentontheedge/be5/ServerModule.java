@@ -1,13 +1,15 @@
 package com.developmentontheedge.be5;
 
-import com.developmentontheedge.be5.api.helpers.ColumnsHelper;
+import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
 import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.api.UserInfoProvider;
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
+import com.developmentontheedge.be5.api.services.impl.UserInfoProviderImpl;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DataSourceService;
@@ -44,6 +46,7 @@ import com.developmentontheedge.be5.controllers.MenuController;
 import com.developmentontheedge.be5.controllers.QueryBuilderController;
 import com.developmentontheedge.be5.controllers.StaticPageController;
 import com.developmentontheedge.be5.controllers.TableController;
+import com.google.inject.Scope;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
 
@@ -96,5 +99,6 @@ public class ServerModule extends ServletModule
         bind(TableModelService.class).to(TableModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
+        bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
     }
 }
