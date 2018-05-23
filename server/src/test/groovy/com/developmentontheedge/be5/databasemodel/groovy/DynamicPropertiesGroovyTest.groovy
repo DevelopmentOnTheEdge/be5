@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
-import javax.inject.Inject
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
+
+import javax.inject.Inject
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport

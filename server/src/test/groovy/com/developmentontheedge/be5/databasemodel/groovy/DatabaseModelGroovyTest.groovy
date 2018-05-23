@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -288,32 +289,32 @@ class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
 //        return false;
 //    }
 
-    @Test
-    void testGetList()
-    {
-        testtableAdmin << [
-                "name": "TestName",
-                "value": "1"]
-
-        testtableAdmin << [
-                "name": "TestName2",
-                "value": "2"]
-
-        List<RecordModel> list = testtableAdmin.toList()
-
-        assertTrue( listContains( list, "name", "TestName" ) )
-        assertTrue( listContains( list, "value", "1" ) )
-
-        assertTrue( listContains( list, "name", "TestName2" ) )
-        assertTrue( listContains( list, "value", "2" ) )
-
-
-        list = testtableAdmin.toList( value: "1" )
-        assertTrue( listContains( list, "name", "TestName" ) )
-
-        list = testtableAdmin.toList( name: "TestName3" )
-        assertTrue list.empty
-    }
+//    @Test - use operationHelper instead, move test or delete
+//    void testGetList()
+//    {
+//        testtableAdmin << [
+//                "name": "TestName",
+//                "value": "1"]
+//
+//        testtableAdmin << [
+//                "name": "TestName2",
+//                "value": "2"]
+//
+//        List<RecordModel> list = testtableAdmin.toList()
+//
+//        assertTrue( listContains( list, "name", "TestName" ) )
+//        assertTrue( listContains( list, "value", "1" ) )
+//
+//        assertTrue( listContains( list, "name", "TestName2" ) )
+//        assertTrue( listContains( list, "value", "2" ) )
+//
+//
+//        list = testtableAdmin.toList( value: "1" )
+//        assertTrue( listContains( list, "name", "TestName" ) )
+//
+//        list = testtableAdmin.toList( name: "TestName3" )
+//        assertTrue list.empty
+//    }
 
 //    @Test
 //    void testOperationGenerate()

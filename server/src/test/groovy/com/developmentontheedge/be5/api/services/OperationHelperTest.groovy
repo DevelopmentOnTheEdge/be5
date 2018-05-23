@@ -23,25 +23,25 @@ class OperationHelperTest extends ServerBe5ProjectDBTest
     @Before
     void before()
     {
-        database.testtableAdmin.removeAll()
+        database.getEntity("testtableAdmin").removeAll()
     }
 
     @Test
     void test()
     {
-        String id = database.testtableAdmin << [ "name": "TestName", "value": "1"]
+        String id = database.getEntity("testtableAdmin").add([ "name": "TestName", "value": "1"])
 
         def rec = helper.qRec("SELECT * FROM testtableAdmin WHERE id = ?", id)
 
         assertNotNull rec
         assertEquals "TestName", rec.getProperty("name").getValue()
-        assertEquals "TestName", rec.$name
+        assertEquals "TestName", rec.getValue("name")
     }
 
     @Test
     void testBeSql()
     {
-        String id = database.testtableAdmin << [ "name": "1234567890", "value": "1"]
+        String id = database.getEntity("testtableAdmin").add([ "name": "1234567890", "value": "1"])
 
         assertEquals "10", helper.qRec("SELECT TO_CHAR(LENGTH(name)) FROM testtableAdmin WHERE id = ?", id).getValue()
 
@@ -51,7 +51,7 @@ class OperationHelperTest extends ServerBe5ProjectDBTest
     @Test
     void testGetters()
     {
-        String id = database.testtableAdmin << [ "name": "TestName", "value": 123]
+        String id = database.getEntity("testtableAdmin").add([ "name": "TestName", "value": 123])
 
         QRec rec = helper.qRec("SELECT * FROM testtableAdmin WHERE id = ?", id)
 

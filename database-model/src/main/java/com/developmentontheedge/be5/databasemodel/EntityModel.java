@@ -185,33 +185,33 @@ public interface EntityModel<T>
      */
     int remove(T[] ids);
 
-    /**
-     * Returns a list of records of current entity.
-     * @return list of records
-     */
-    List<RecordModel<T>> toList();
+//    /**
+//     * Returns a list of records of current entity.
+//     * @return list of records
+//     */
+    //List<RecordModel<T>> toList();
 
 //    List<RecordModel> collect();
-
-    /**
-     * Returns a array of records of current entity.
-     * @return array of records
-     */
-    RecordModel<T>[] toArray();
-
-    /**
-     * Returns a list of records of current entity filtered by the specified parameters.
-     * @param conditions the filter parameters
-     * @return array of records
-     */
-    List<RecordModel<T>> toList(Map<String, ? super Object> conditions);
-    
-    /**
-     * Returns a array of records of current entity filtered by the specified parameters.
-     * @param conditions the filter parameters
-     * @return array of records
-     */
-    RecordModel<T>[] toArray(Map<String, ? super Object> conditions);
+//
+//    /**
+//     * Returns a array of records of current entity.
+//     * @return array of records
+//     */
+//    RecordModel<T>[] toArray();
+//
+//    /**
+//     * Returns a list of records of current entity filtered by the specified parameters.
+//     * @param conditions the filter parameters
+//     * @return array of records
+//     */
+//    List<RecordModel<T>> toList(Map<String, ? super Object> conditions);
+//
+//    /**
+//     * Returns a array of records of current entity filtered by the specified parameters.
+//     * @param conditions the filter parameters
+//     * @return array of records
+//     */
+//    RecordModel<T>[] toArray(Map<String, ? super Object> conditions);
 
     /**
      * Spreads collection and collect elements from function to list.<br>
@@ -243,12 +243,12 @@ public interface EntityModel<T>
      */
     String getTableName();
 
-    /**
-     * Returns operation model of this entity.
-     * @param operationName operation name
-     * @return operation model
-     */
-    OperationModel getOperation(String operationName);
+//    /**
+//     * Returns operation model of this entity.
+//     * @param operationName operation name
+//     * @return operation model
+//     */
+//    OperationModel getOperation(String operationName);
 
     Entity getEntity();
 }

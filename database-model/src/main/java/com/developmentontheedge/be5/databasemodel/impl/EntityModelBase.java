@@ -1,19 +1,16 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
+import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
+import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
-import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
 import com.developmentontheedge.be5.api.services.DbService;
-import com.developmentontheedge.be5.databasemodel.groovy.RecordModelMetaClass;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.OperationModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.databasemodel.groovy.EntityModelMetaClass;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.util.DpsUtils;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -29,7 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED_COLUMN_NAME;
 import static java.util.Collections.emptyMap;
@@ -46,20 +42,16 @@ public class EntityModelBase<T> implements EntityModel<T>
     private final DbService db;
     private final SqlHelper sqlHelper;
     private final ColumnsHelper columnsHelper;
-    private final OperationHelper operationHelper;
-    private final OperationExecutor operationExecutor;
     private final Meta meta;
 
     private final Entity entity;
 
-    public EntityModelBase(DbService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper, OperationHelper operationHelper,
-                           OperationExecutor operationExecutor, Meta meta, Entity entity)
+    public EntityModelBase(DbService db, SqlHelper sqlHelper, ColumnsHelper columnsHelper,
+                           Meta meta, Entity entity)
     {
         this.db = db;
         this.sqlHelper = sqlHelper;
         this.columnsHelper = columnsHelper;
-        this.operationHelper = operationHelper;
-        this.operationExecutor = operationExecutor;
         this.meta = meta;
 
         this.entity = entity;
@@ -311,39 +303,39 @@ public class EntityModelBase<T> implements EntityModel<T>
         return entity.getPrimaryKey();
     }
 
-    @Override
-    public List<RecordModel<T>> toList()
-    {
-        return toList( emptyMap() );
-    }
+//    @Override
+//    public List<RecordModel<T>> toList()
+//    {
+//        return toList( emptyMap() );
+//    }
+//
+//    @Override
+//    public RecordModel<T>[] toArray()
+//    {
+//        return toArray( emptyMap() );
+//    }
 
-    @Override
-    public RecordModel<T>[] toArray()
-    {
-        return toArray( emptyMap() );
-    }
-    
-    @Override
-    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
-    {
-        Objects.requireNonNull(conditions);
-
-        String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
-
-        return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
-                .map(this::getRecordModel)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
-    {
-        Objects.requireNonNull(conditions);
-
-        List<RecordModel<T>> recordModels = toList(conditions);
-        RecordModel<T>[] arr = new RecordModel[recordModels.size()];
-        return recordModels.toArray( arr );
-    }
+//    @Override
+//    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
+//    {
+//        Objects.requireNonNull(conditions);
+//
+//        String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
+//
+//        return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
+//                .map(this::getRecordModel)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
+//    {
+//        Objects.requireNonNull(conditions);
+//
+//        List<RecordModel<T>> recordModels = toList(conditions);
+//        RecordModel<T>[] arr = new RecordModel[recordModels.size()];
+//        return recordModels.toArray( arr );
+//    }
 //
 //    @Override
 //    public List<RecordModel> collect()
@@ -437,15 +429,15 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        db.update(dpsHelper.generateUpdateSqlForConditions(entity, dps, conditions),
 //                ObjectArrays.concat(dpsHelper.getValuesFromJson(dps), castValues(entity, conditions), Object.class));
 //    }
-
-    @Override
-    public OperationModel getOperation( String operationName )
-    {
-        return new OperationModelBase(meta, operationExecutor)
-                .setEntityName(entity.getName())
-                .setQueryName("from another operation")
-                .setOperationName(operationName);
-    }
+//
+//    @Override
+//    public OperationModel getOperation( String operationName )
+//    {
+//        return new OperationModelBase(meta, operationExecutor)
+//                .setEntityName(entity.getName())
+//                .setQueryName("from another operation")
+//                .setOperationName(operationName);
+//    }
 
     @Override
     public Entity getEntity()

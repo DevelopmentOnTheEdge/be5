@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
-import com.developmentontheedge.be5.api.helpers.UserHelper
 import com.developmentontheedge.beans.BeanInfoConstants
 import org.junit.After
 import org.junit.Before
@@ -22,7 +21,7 @@ class SpecialColumnsTest extends ServerBe5ProjectDBTest
 {
     @Inject private DatabaseModel database
     @Inject private DbService db
-    @Inject private UserHelper userHelper
+
     EntityModel table
     String tableName
 

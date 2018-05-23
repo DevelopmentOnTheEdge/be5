@@ -24,14 +24,14 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 
     private Object getPropertyImpl( EntityModel entityModel, String property )
     {
-        if( "array".equals( property ) )
-        {
-            return entityModel.toArray();
-        }
-        else if( "list".equals( property ) )
-        {
-            return entityModel.toList();
-        }
+//        if( "array".equals( property ) )
+//        {
+//            return entityModel.toArray();
+//        }
+//        else if( "list".equals( property ) )
+//        {
+//            return entityModel.toList();
+//        }
         return super.getProperty( entityModel, property );
     }
 
@@ -80,25 +80,25 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
         return (R) self.add( values );
     }
 
-    public static List list( EntityModel self )
-    {
-        return self.toList();
-    }
-
-    public static List list( EntityModel self, LinkedHashMap values )
-    {
-        return self.toList( values );
-    }
-
-    public static RecordModel[] toArray( EntityModel self )
-    {
-        return self.toArray();
-    }
-
-    public static RecordModel[] toArray( EntityModel self, Map<String, String> values )
-    {
-        return self.toArray( values );
-    }
+//    public static List list( EntityModel self )
+//    {
+//        return self.toList();
+//    }
+//
+//    public static List list( EntityModel self, LinkedHashMap values )
+//    {
+//        return self.toList( values );
+//    }
+//
+//    public static RecordModel[] toArray( EntityModel self )
+//    {
+//        return self.toArray();
+//    }
+//
+//    public static RecordModel[] toArray( EntityModel self, Map<String, String> values )
+//    {
+//        return self.toArray( values );
+//    }
 
     @Override
     @SuppressWarnings( "unchecked" )

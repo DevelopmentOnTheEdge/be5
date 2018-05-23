@@ -3,14 +3,11 @@ package com.developmentontheedge.be5.databasemodel.impl;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
-import com.developmentontheedge.be5.databasemodel.groovy.GOperationModelBaseBuilder;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
 
 import java.util.Collections;
 import java.util.Map;

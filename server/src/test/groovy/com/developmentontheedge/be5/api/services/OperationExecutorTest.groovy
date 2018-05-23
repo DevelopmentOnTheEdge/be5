@@ -35,11 +35,11 @@ class OperationExecutorTest extends ServerBe5ProjectDBTest
         assertEquals 0, testtableAdmin.count()
     }
 
-    @Test(expected = Be5Exception)
-    void executeWithDatabase()
-    {
-        database.getEntity("testtableAdmin").getOperation("TransactionTestOp").execute()
-    }
+//    @Test(expected = Be5Exception)
+//    void executeWithDatabase()
+//    {
+//        database.getEntity("testtableAdmin").getOperation("TransactionTestOp").execute()
+//    }
 
 
 }
