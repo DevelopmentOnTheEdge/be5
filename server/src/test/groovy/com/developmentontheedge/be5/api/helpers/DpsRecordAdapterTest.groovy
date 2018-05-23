@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.helpers
 
-import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import javax.inject.Inject
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Before;

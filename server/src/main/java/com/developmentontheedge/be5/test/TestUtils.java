@@ -17,7 +17,7 @@ import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
