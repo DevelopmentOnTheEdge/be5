@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.databasemodel.impl.OperationModelBase;
+//import com.developmentontheedge.be5.databasemodel.groovy.GOperationModelBaseBuilder;
 import com.developmentontheedge.be5.operation.Operation;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
+//import groovy.lang.Closure;
+//import groovy.lang.DelegatesTo;
 
 import java.util.Map;
 
 
-public interface OperationModel 
+public interface OperationModel
 {
     OperationModel setEntityName(String entityName);
 
@@ -26,9 +26,9 @@ public interface OperationModel
 
     Operation execute();
 
-    Object generate(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
-
-    Operation execute(@DelegatesTo(OperationModelBase.GOperationModelBaseBuilder.class) Closure closure);
+//    Object generate(@DelegatesTo(GOperationModelBaseBuilder.class) Closure closure);
+//
+//    Operation execute(@DelegatesTo(GOperationModelBaseBuilder.class) Closure closure);
 
     default Operation executeIfNotEmptyRecords(Object[] records)
     {

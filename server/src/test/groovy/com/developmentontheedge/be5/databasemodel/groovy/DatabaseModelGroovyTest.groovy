@@ -315,21 +315,21 @@ class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
         assertTrue list.empty
     }
 
-    @Test
-    void testOperationGenerate()
-    {
-        def params = testtableAdmin.getOperation("ErrorProcessing").generate { presetValues = [ 'name': 'ok' ] }
-
-        assertEquals("ok", params.$name)
-    }
-
-    @Test
-    void testOperationExecute()
-    {
-        def operation = testtableAdmin.getOperation("ErrorProcessing").execute { presetValues = [ 'name': 'ok' ] }
-
-        assertEquals(OperationStatus.FINISHED, operation.getStatus())
-    }
+//    @Test
+//    void testOperationGenerate()
+//    {
+//        def params = testtableAdmin.getOperation("ErrorProcessing").generate { presetValues = [ 'name': 'ok' ] }
+//
+//        assertEquals("ok", params.$name)
+//    }
+//
+//    @Test
+//    void testOperationExecute()
+//    {
+//        def operation = testtableAdmin.getOperation("ErrorProcessing").execute { presetValues = [ 'name': 'ok' ] }
+//
+//        assertEquals(OperationStatus.FINISHED, operation.getStatus())
+//    }
 //
 //    public void testGetArray()
 //    {

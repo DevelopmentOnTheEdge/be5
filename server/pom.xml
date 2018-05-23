@@ -24,6 +24,12 @@
 
 		<dependency>
 			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-database-model</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge.be5</groupId>
 			<artifactId>be5-query</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>

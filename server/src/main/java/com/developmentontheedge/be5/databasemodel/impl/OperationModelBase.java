@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.databasemodel.impl;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.databasemodel.OperationModel;
+import com.developmentontheedge.be5.databasemodel.groovy.GOperationModelBaseBuilder;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -101,26 +102,26 @@ public class OperationModelBase implements OperationModel
 
         return operation;
     }
-
-    @Override
-    public Object generate(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure closure)
-    {
-        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
-        closure.setDelegate( this );
-        closure.call();
-
-        return generate();
-    }
-
-    @Override
-    public Operation execute(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure closure)
-    {
-        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
-        closure.setDelegate( this );
-        closure.call();
-
-        return execute();
-    }
+//
+//    @Override
+//    public Object generate(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure closure)
+//    {
+//        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
+//        closure.setDelegate( this );
+//        closure.call();
+//
+//        return generate();
+//    }
+//
+//    @Override
+//    public Operation execute(@DelegatesTo(GOperationModelBaseBuilder.class) final Closure closure)
+//    {
+//        closure.setResolveStrategy( Closure.DELEGATE_FIRST );
+//        closure.setDelegate( this );
+//        closure.call();
+//
+//        return execute();
+//    }
 
     private OperationInfo getOperationInfo()
     {
@@ -137,12 +138,4 @@ public class OperationModelBase implements OperationModel
         return new OperationContext(records, queryName, operationParams);
     }
 
-    public class GOperationModelBaseBuilder
-    {
-        public String[] records = new String[]{ };
-        public String entityName;
-        public String queryName;
-        public String operationName;
-        public Map<String, ?> presetValues = Collections.emptyMap();
-    }
 }
