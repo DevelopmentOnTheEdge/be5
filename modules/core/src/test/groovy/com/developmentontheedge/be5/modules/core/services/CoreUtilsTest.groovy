@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.core.services
 import com.developmentontheedge.be5.api.services.Be5Caches
 import com.developmentontheedge.be5.api.services.CoreUtils
 import com.developmentontheedge.be5.api.services.DbService
-import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
 import javax.inject.Inject
