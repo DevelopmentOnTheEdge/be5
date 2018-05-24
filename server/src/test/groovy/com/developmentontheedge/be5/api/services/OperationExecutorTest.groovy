@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.exceptions.Be5Exception
-import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationInfo
 import com.developmentontheedge.be5.operation.OperationStatus
@@ -16,6 +16,7 @@ import static org.junit.Assert.*
 class OperationExecutorTest extends ServerBe5ProjectDBTest
 {
     @Inject DatabaseModel database
+    @Inject OperationsFactory operations
     @Inject OperationExecutor operationExecutor
     @Inject Meta meta
 
@@ -38,7 +39,7 @@ class OperationExecutorTest extends ServerBe5ProjectDBTest
     @Test(expected = Be5Exception)
     void executeWithDatabase()
     {
-        database.getEntity("testtableAdmin").getOperation("TransactionTestOp").execute()
+        operations.get("testtableAdmin", "TransactionTestOp").execute()
     }
 
 

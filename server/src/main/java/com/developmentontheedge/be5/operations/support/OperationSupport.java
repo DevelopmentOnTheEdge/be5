@@ -5,12 +5,13 @@ import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.api.services.OperationsFactory;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.DbService;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.api.services.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.UserInfo;
 import com.developmentontheedge.be5.operation.Operation;
@@ -30,6 +31,7 @@ import java.util.Map;
 public abstract class OperationSupport implements Operation
 {
     @Inject public DatabaseModel database;
+    @Inject public OperationsFactory operations;
     @Inject public DbService db;
     @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
