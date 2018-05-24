@@ -24,7 +24,7 @@ import static com.developmentontheedge.be5.metadata.DatabaseConstants.WHO_MODIFI
 
 public class ColumnsHelper
 {
-    private static final List<String> insertSpecialColumns = ImmutableList.<String>builder()
+    static final List<String> insertSpecialColumns = ImmutableList.<String>builder()
             .add(WHO_INSERTED_COLUMN_NAME)
             .add(WHO_MODIFIED_COLUMN_NAME)
             .add(CREATION_DATE_COLUMN_NAME)
@@ -34,7 +34,7 @@ public class ColumnsHelper
             .add(IS_DELETED_COLUMN_NAME)
             .build();
 
-    private static final List<String> updateSpecialColumns = ImmutableList.<String>builder()
+    static final List<String> updateSpecialColumns = ImmutableList.<String>builder()
                     .add(WHO_MODIFIED_COLUMN_NAME)
                     .add(MODIFICATION_DATE_COLUMN_NAME)
                     .add(IP_MODIFIED_COLUMN_NAME)
