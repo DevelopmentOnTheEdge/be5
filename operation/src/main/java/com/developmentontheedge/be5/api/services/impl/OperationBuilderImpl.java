@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.databasemodel.impl;
+package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.databasemodel.OperationModel;
+import com.developmentontheedge.be5.api.services.OperationBuilder;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class OperationModelBase implements OperationModel
+public class OperationBuilderImpl implements OperationBuilder
 {
     private OperationExecutor operationExecutor;
     private Meta meta;
@@ -28,49 +28,52 @@ public class OperationModelBase implements OperationModel
     private Map<String, ?> presetValues = Collections.emptyMap();
     private Map<String, Object> operationParams = Collections.emptyMap();
 
-    OperationModelBase( Meta meta, OperationExecutor operationExecutor )
+    OperationBuilderImpl(Meta meta, OperationExecutor operationExecutor, String entityName, String operationName)
     {
         this.meta = meta;
         this.operationExecutor = operationExecutor;
-    }
 
-    @Override
-    public OperationModel setEntityName(String entityName)
-    {
         this.entityName = entityName;
-        return this;
+        this.operationName = operationName;
     }
 
+//    @Override
+//    public OperationBuilder setEntityName(String entityName)
+//    {
+//        this.entityName = entityName;
+//        return this;
+//    }
+
     @Override
-    public OperationModel setQueryName(String queryName)
+    public OperationBuilder setQueryName(String queryName)
     {
         this.queryName = queryName;
         return this;
     }
+//
+//    @Override
+//    public OperationBuilder setOperationName(String operationName)
+//    {
+//        this.operationName = operationName;
+//        return this;
+//    }
 
     @Override
-    public OperationModel setOperationName(String operationName)
-    {
-        this.operationName = operationName;
-        return this;
-    }
-
-    @Override
-    public OperationModel setRecords( Object[] records )
+    public OperationBuilder setRecords(Object[] records )
     {
         this.records = records;
         return this;
     }
 
     @Override
-    public OperationModel setPresetValues( Map<String, ?> presetValues )
+    public OperationBuilder setPresetValues(Map<String, ?> presetValues )
     {
         this.presetValues = presetValues;
         return this;
     }
 
     @Override
-    public OperationModel setOperationParams( Map<String, Object> operationParams )
+    public OperationBuilder setOperationParams(Map<String, Object> operationParams )
     {
         this.operationParams = operationParams;
         return this;

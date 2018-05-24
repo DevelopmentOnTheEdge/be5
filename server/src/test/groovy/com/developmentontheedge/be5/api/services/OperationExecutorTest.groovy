@@ -16,6 +16,7 @@ import static org.junit.Assert.*
 class OperationExecutorTest extends ServerBe5ProjectDBTest
 {
     @Inject DatabaseModel database
+    @Inject OperationsFactory operations
     @Inject OperationExecutor operationExecutor
     @Inject Meta meta
 
@@ -35,11 +36,11 @@ class OperationExecutorTest extends ServerBe5ProjectDBTest
         assertEquals 0, testtableAdmin.count()
     }
 
-//    @Test(expected = Be5Exception)
-//    void executeWithDatabase()
-//    {
-//        database.getEntity("testtableAdmin").getOperation("TransactionTestOp").execute()
-//    }
+    @Test(expected = Be5Exception)
+    void executeWithDatabase()
+    {
+        operations.get("testtableAdmin", "TransactionTestOp").execute()
+    }
 
 
 }

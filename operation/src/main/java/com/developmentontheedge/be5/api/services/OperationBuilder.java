@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.databasemodel;
+package com.developmentontheedge.be5.api.services;
 
 //import com.developmentontheedge.be5.databasemodel.groovy.GOperationModelBaseBuilder;
 import com.developmentontheedge.be5.operation.Operation;
@@ -8,19 +8,19 @@ import com.developmentontheedge.be5.operation.Operation;
 import java.util.Map;
 
 
-public interface OperationModel
+public interface OperationBuilder
 {
-    OperationModel setEntityName(String entityName);
+    //OperationBuilder setEntityName(String entityName);
 
-    OperationModel setQueryName(String queryName);
+    OperationBuilder setQueryName(String queryName);
 
-    OperationModel setOperationName(String operationName);
+    //OperationBuilder setOperationName(String operationName);
 
-    OperationModel setRecords(Object[] records);
+    OperationBuilder setRecords(Object[] records);
 
-    OperationModel setPresetValues(Map<String, ?> presetValues);
+    OperationBuilder setPresetValues(Map<String, ?> presetValues);
 
-    OperationModel setOperationParams(Map<String, Object> operationParams);
+    OperationBuilder setOperationParams(Map<String, Object> operationParams);
 
     Object generate();
 

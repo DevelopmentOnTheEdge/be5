@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5;
 
+import com.developmentontheedge.be5.api.services.OperationsFactory;
+import com.developmentontheedge.be5.api.services.impl.OperationsFactoryImpl;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.FilterHelper;
@@ -96,6 +98,7 @@ public class ServerModule extends ServletModule
         bind(QueryService.class).to(QueryServiceImpl.class).in(Scopes.SINGLETON);
         bind(OperationService.class).to(OperationServiceImpl.class).in(Scopes.SINGLETON);
         bind(OperationExecutor.class).to(OperationExecutorImpl.class).in(Scopes.SINGLETON);
+        bind(OperationsFactory.class).to(OperationsFactoryImpl.class).in(Scopes.SINGLETON);
         bind(TableModelService.class).to(TableModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);

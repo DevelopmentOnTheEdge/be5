@@ -1,13 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.impl
 
+import com.developmentontheedge.be5.api.services.OperationsFactory
 import com.developmentontheedge.be5.exceptions.Be5Exception
-import com.developmentontheedge.be5.api.services.Meta
-import com.developmentontheedge.be5.api.services.OperationExecutor
-import com.developmentontheedge.be5.databasemodel.OperationModel
 import javax.inject.Inject
 import com.developmentontheedge.be5.operation.OperationStatus
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
-import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Before
 import org.junit.Rule
@@ -20,19 +17,15 @@ import static org.junit.Assert.*
 @TypeChecked
 class OperationModelBaseTest extends ServerBe5ProjectTest
 {
-    @Inject OperationExecutor operationExecutor
-    @Inject Meta meta
+    @Inject OperationsFactory operations
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none()
 
-    OperationModel operationModelBase
-
     @Before
     void init()
     {
-        operationModelBase = new OperationModelBase(meta, operationExecutor)
-                .setEntityName("testtableAdmin").setQueryName("All records")
+
     }
 //
 //    @Test
@@ -117,12 +110,7 @@ class OperationModelBaseTest extends ServerBe5ProjectTest
 
     void executeAndCheck(String value)
     {
-//        def operation = operationModelBase.execute {
-//            operationName = "ErrorProcessing"
-//            presetValues = [ 'name':value ]
-//        }
-        def operation = operationModelBase
-                .setOperationName("ErrorProcessing")
+        def operation = operations.get("testtableAdmin", "ErrorProcessing")
                 .setPresetValues([ 'name':value ])
                 .execute()
 

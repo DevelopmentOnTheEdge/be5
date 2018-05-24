@@ -21,12 +21,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.developmentontheedge.be5</groupId>
-            <artifactId>be5-operation</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.developmentontheedge</groupId>
             <artifactId>beans-json</artifactId>
             <version>1.0.1-SNAPSHOT</version>

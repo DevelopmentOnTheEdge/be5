@@ -451,6 +451,7 @@ public abstract class TestUtils
         protected void configureServlets()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
+            bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
 
             bind(DbService.class).to(DbServiceMock.class).in(Scopes.SINGLETON);
             bind(DataSourceService.class).to(DataSourceServiceMock.class).in(Scopes.SINGLETON);
