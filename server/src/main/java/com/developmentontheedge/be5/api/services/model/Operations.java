@@ -4,27 +4,10 @@ import java.util.List;
 
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.util.Collections3;
-import com.developmentontheedge.be5.util.HashLink;
-import com.developmentontheedge.be5.util.HashLinks;
+
 
 public class Operations
 {
-    
-    private Operations()
-    {
-        // not intended to be instantiated
-    }
-
-    public static boolean isClientSide(Operation operation)
-    {
-        return operation.getType().equals(Operation.OPERATION_TYPE_JAVASCRIPT) && HashLinks.isIn(operation.getCode());
-    }
-    
-    public static HashLink asClientSide(Operation operation)
-    {
-        return HashLink.parse(operation.getCode());
-    }
-
     /**
      * Transforms operation.getRecords() integer "enumeration" to a string: "always", "oneSelected", "anySelected" or "hasRecords".
      */

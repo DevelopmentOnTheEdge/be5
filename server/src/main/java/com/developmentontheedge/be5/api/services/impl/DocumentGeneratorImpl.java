@@ -187,12 +187,10 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String visibleWhen = Operations.determineWhenVisible(operation);
         String title = userAwareMeta.getLocalizedOperationTitle(query.getEntity().getName(), operation.getName());
         boolean requiresConfirmation = operation.isConfirm();
-        boolean isClientSide = Operations.isClientSide(operation);
-        Action action = null;
-
-        if (isClientSide)
-        {
-            action = Action.call(Operations.asClientSide(operation).toHashUrl());
+        boolean isClientSide = Operation.OPERATION_TYPE_JAVASCRIPT.equals(operation.getType());
+        String action = null;
+        if(isClientSide){
+            action = operation.getCode();
         }
 
         return new TableOperationPresentation(operation.getName(), title, visibleWhen, requiresConfirmation, isClientSide, action);
