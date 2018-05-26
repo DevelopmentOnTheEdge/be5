@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.util.Jaxb;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -114,7 +115,7 @@ public class ResponseTest extends ServerBe5ProjectTest
     public void sendAsXml()
     {
         ActionForXml call = new ActionForXml("call", "test/path");
-        response.sendAsXml(ActionForXml.class, call);
+        response.sendXml(Jaxb.toXml(ActionForXml.class, call));
 
         verify(rawResponse).setContentType("application/xml;charset=UTF-8");
         verify(writer).append(doubleQuotes("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" +

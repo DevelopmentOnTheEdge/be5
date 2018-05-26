@@ -1,12 +1,9 @@
 package com.developmentontheedge.be5.api;
 
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 /**
  * Request injected to components.
@@ -19,15 +16,6 @@ public interface Request extends SessionAccess, ParametersAccess
     Session getSession();
 
     Session getSession(boolean create);
-
-    /**
-     * Reads a parameter as JSON array in the form of [{name: 'foo', value: 'bar'},...]
-     * 
-     * @param parameterName parameter name
-     * @return read map
-     * @throws Be5Exception if parameter has invalid format
-     */
-    Map<String, Object> getValuesFromJson(String parameterName) throws Be5Exception;
 
     /**
      * For tables - may be need refactoring to use Map<String, Object> getValuesFromJson()

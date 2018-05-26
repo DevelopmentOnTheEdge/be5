@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.api
 import com.developmentontheedge.be5.api.impl.RequestImpl
 import com.developmentontheedge.be5.model.Base64File
 import com.developmentontheedge.be5.test.TestUtils
+import com.developmentontheedge.be5.util.ParseRequestUtils
 import com.google.common.collect.ImmutableMap
 import org.junit.Before
 import org.junit.Test
@@ -33,7 +34,7 @@ class RequestTest extends TestUtils
                 "{'name':'test','value':1,'accept':true}")
 
         assertEquals(ImmutableMap.of("name", "test", "value", "1", "accept", "true"),
-                req.getValuesFromJson(RestApiConstants.VALUES))
+                ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)))
     }
 
     @Test
@@ -43,7 +44,7 @@ class RequestTest extends TestUtils
         String frontendEncoded = "data:;base64," + Base64.getEncoder().encodeToString(text.getBytes("UTF-8"))
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
                 "{'base64':{'type':'Base64File','data':'${frontendEncoded}','name':'test.txt'}}")
-        Base64File base64File = req.getValuesFromJson("values").get("base64")
+        Base64File base64File = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)).get("base64")
 
         assertEquals(text, new String(base64File.data))
         assertEquals("", new String(base64File.mimeTypes))
@@ -56,7 +57,7 @@ class RequestTest extends TestUtils
         String frontendEncoded = "data:application/vnd.oasis.opendocument.text;base64," + Base64.getEncoder().encodeToString(text.getBytes("UTF-8"))
         Request req = getSpyMockRecForOp("testtableAdmin", "All records", "Insert", "",
                 "{'base64':{'type':'Base64File','data':'${frontendEncoded}','name':'test.txt'}}")
-        Base64File base64File = req.getValuesFromJson("values").get("base64")
+        Base64File base64File = (Base64File)ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES)).get("base64")
 
         assertEquals(text, new String(base64File.data))
         assertEquals("application/vnd.oasis.opendocument.text", new String(base64File.mimeTypes))

@@ -7,17 +7,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class ResponseImpl implements Response
 {
-    private static final Logger log = Logger.getLogger(ResponseImpl.class.getName());
-
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     /**
@@ -132,12 +128,6 @@ public class ResponseImpl implements Response
         sendText("text/html;charset=UTF-8", content);
     }
 
-    @Override
-    public <T> void sendAsXml(Class<T> klass, T object)
-    {
-        sendXml(new Jaxb().toXml(klass, object));
-    }
-    
     @Override
     public void sendXml(String xml)
     {

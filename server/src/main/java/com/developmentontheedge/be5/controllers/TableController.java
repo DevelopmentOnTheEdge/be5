@@ -16,6 +16,7 @@ import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -52,7 +53,7 @@ public class TableController extends ControllerSupport
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
 
-        Map<String, Object> parameters = req.getValuesFromJson(RestApiConstants.VALUES);
+        Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
         HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
 

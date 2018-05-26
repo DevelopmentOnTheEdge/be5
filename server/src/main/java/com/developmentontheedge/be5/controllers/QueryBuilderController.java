@@ -23,6 +23,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -194,7 +195,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
     {
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
 
-        Map<String, Object> parameters = req.getValuesFromJson(RestApiConstants.VALUES);
+        Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
         Entity entity = new Entity( entityName, projectProvider.getProject().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );

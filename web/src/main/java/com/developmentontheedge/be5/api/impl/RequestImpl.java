@@ -14,8 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 
 public class RequestImpl implements Request
@@ -103,20 +101,6 @@ public class RequestImpl implements Request
 //        return jsonb.fromJson(get(parameterName), clazz);
 //    }
 
-    @Override
-    public Map<String, Object> getValuesFromJson(String parameter) throws Be5Exception
-    {
-        String valuesString = get(parameter);
-
-        try
-        {
-            return ParseRequestUtils.getValuesFromJson(get(parameter));
-        }
-        catch (ClassCastException e)
-        {
-            throw Be5Exception.invalidRequestParameter(e, parameter, valuesString);
-        }
-    }
 //
 //    /**
 //     * for query
@@ -236,7 +220,7 @@ public class RequestImpl implements Request
         }
         catch (IOException e)
         {
-            throw Be5Exception.internal(e);
+            throw new RuntimeException(e);
         }
 
         return sb.toString();

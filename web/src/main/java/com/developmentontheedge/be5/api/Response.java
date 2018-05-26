@@ -59,17 +59,6 @@ public interface Response
 
     void sendHtml(String json);
 
-    /**
-     * Sends an XML response. See JAXB documentation to know about the serialization algorithm.
-     * 
-     * @param klass a class of the object to serialize
-     * @param object an object to serialize
-     */
-    <T> void sendAsXml(Class<T> klass, T object);
-    
-    /**
-     * Sends a serialized XML. It is recommended to use {@link Response#sendAsXml(Class, Object)} instead.
-     */
     void sendXml(String xml);
 
 //    /**
