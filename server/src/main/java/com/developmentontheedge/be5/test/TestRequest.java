@@ -40,12 +40,6 @@ public class TestRequest implements Request
     }
 
     @Override
-    public Map<String, Object> getValuesFromJson(String parameterName) throws Be5Exception
-    {
-        return null;
-    }
-
-    @Override
     public String getRequestUri()
     {
         return null;
@@ -95,12 +89,6 @@ public class TestRequest implements Request
 
     @Override
     public String getBody()
-    {
-        return null;
-    }
-
-    @Override
-    public Object getDefaultMeta()
     {
         return null;
     }

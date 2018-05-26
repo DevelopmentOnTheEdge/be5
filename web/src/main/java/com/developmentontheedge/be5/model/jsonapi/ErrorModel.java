@@ -1,10 +1,5 @@
 package com.developmentontheedge.be5.model.jsonapi;
 
-import com.developmentontheedge.be5.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Map;
 
 /**
@@ -42,40 +37,6 @@ public class ErrorModel
         this.code = code;
         this.detail = detail;
         this.links = links;
-    }
-
-    public ErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
-    {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
-                exceptionAsString(e), links);
-    }
-
-    public ErrorModel(Be5Exception e, Map<String, String> links)
-    {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), exceptionAsString(e), links);
-    }
-
-    public ErrorModel(Be5Exception e)
-    {
-        this(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), exceptionAsString(e), null);
-    }
-
-    public static String exceptionAsString(Throwable e)
-    {
-        if(UserInfoHolder.isSystemDeveloper())
-        {
-            StringWriter sw = new StringWriter();
-            if (e instanceof Be5Exception && e.getCause() != null)
-            {
-                e.getCause().printStackTrace(new PrintWriter(sw));
-            } else
-            {
-                e.printStackTrace(new PrintWriter(sw));
-            }
-            return sw.toString();
-        }else{
-            return null;
-        }
     }
 
     public String getStatus()

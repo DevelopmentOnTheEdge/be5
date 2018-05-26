@@ -14,11 +14,7 @@ final public class ActionUtils
 {
     public static Action toAction(Query query) 
     {
-        if (isClientSide(query))
-        {
-            return Action.call(asCliendSide(query).toHashUrl());
-        }
-        else if (isExternalRef(query))
+        if (isExternalRef(query))
         {
             return Action.open(query.getQuery());
         }
@@ -108,16 +104,6 @@ final public class ActionUtils
     private ActionUtils()
     {
         throw new IllegalStateException("Must not be instantiated");
-    }
-    
-    private static boolean isClientSide(Query query) 
-    {
-        return query.getType() == QueryType.STATIC && HashLinks.isIn(query.getQuery());
-    }
-    
-    private static HashLink asCliendSide(Query query) 
-    {
-        return HashLink.parse(query.getQuery());
     }
 
     private static boolean isExternalRef(Query query) 

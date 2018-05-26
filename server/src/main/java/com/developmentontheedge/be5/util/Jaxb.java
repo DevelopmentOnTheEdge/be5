@@ -11,14 +11,8 @@ import javax.xml.bind.Unmarshaller;
 
 public class Jaxb
 {
-
-    public Jaxb()
-    {
-        // no state yet
-    }
-
     @SuppressWarnings("unchecked")
-    public <T> T parse(Class<T> klass, String url) throws AssertionError
+    public static <T> T parse(Class<T> klass, String url) throws AssertionError
     {
         try
         {
@@ -36,7 +30,7 @@ public class Jaxb
         }
     }
     
-    public <T> String toXml(Class<T> klass, T object)
+    public static <T> String toXml(Class<T> klass, T object)
     {
         StringWriter out = new StringWriter();
 

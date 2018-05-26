@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.GroovyRegister;
@@ -19,7 +20,6 @@ import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.Action;
 import com.developmentontheedge.be5.model.FormPresentation;
 import com.developmentontheedge.be5.model.TableOperationPresentation;
 import com.developmentontheedge.be5.model.TablePresentation;
@@ -61,6 +61,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
+    private final ResponseHelper responseHelper;
 
     @Inject
     public DocumentGeneratorImpl(
@@ -69,7 +70,8 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             OperationService operationService,
             OperationExecutor operationExecutor,
             CategoriesService categoriesService,
-            TableModelService tableModelService)
+            TableModelService tableModelService,
+            ResponseHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
@@ -77,6 +79,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         this.operationExecutor = operationExecutor;
         this.categoriesService = categoriesService;
         this.tableModelService = tableModelService;
+        this.responseHelper = responseHelper;
     }
 
 //
@@ -187,12 +190,10 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         String visibleWhen = Operations.determineWhenVisible(operation);
         String title = userAwareMeta.getLocalizedOperationTitle(query.getEntity().getName(), operation.getName());
         boolean requiresConfirmation = operation.isConfirm();
-        boolean isClientSide = Operations.isClientSide(operation);
-        Action action = null;
-
-        if (isClientSide)
-        {
-            action = Action.call(Operations.asClientSide(operation).toHashUrl());
+        boolean isClientSide = Operation.OPERATION_TYPE_JAVASCRIPT.equals(operation.getType());
+        String action = null;
+        if(isClientSide){
+            action = operation.getCode();
         }
 
         return new TableOperationPresentation(operation.getName(), title, visibleWhen, requiresConfirmation, isClientSide, action);
@@ -328,11 +329,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     @Override
     public ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
-        String message = Be5Exception.getMessage(e);
+        String additionalMessage = Be5Exception.getMessage(e);
 
         //TODO if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
 
-        return new ErrorModel("500", e.getMessage(), message, ErrorModel.exceptionAsString(e),
+        return responseHelper.getErrorModel(Be5Exception.internal(e), additionalMessage,
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 

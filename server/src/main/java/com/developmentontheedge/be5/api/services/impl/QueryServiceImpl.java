@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api.services.impl;
 
+import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.api.services.Meta;
@@ -34,7 +36,8 @@ public class QueryServiceImpl implements QueryService
     {
         Map<String, List<String>> listParams = getMapOfList(parameters);
 
-        return new Be5QueryExecutor(query, listParams, UserInfoHolder.getUserInfo(), UserInfoHolder.getSession(),
+        return new Be5QueryExecutor(query, listParams, UserInfoHolder.getUserInfo(),
+                new SessionWrapper(UserInfoHolder.getSession()),
                 databaseService, meta, db);
     }
 
@@ -67,4 +70,19 @@ public class QueryServiceImpl implements QueryService
         }
     }
 
+    class SessionWrapper implements QuerySession
+    {
+        private final Session session;
+
+        public SessionWrapper(Session session)
+        {
+            this.session = session;
+        }
+
+        @Override
+        public Object get(String name)
+        {
+            return session.get(name);
+        }
+    }
 }

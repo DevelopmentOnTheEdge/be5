@@ -4,22 +4,16 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
-import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class ResponseImpl implements Response
 {
-    private static final Logger log = Logger.getLogger(ResponseImpl.class.getName());
-
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     /**
@@ -84,22 +78,22 @@ public class ResponseImpl implements Response
 //        throw new RuntimeException("");
 //        //TODO create ErrorObject, sendAsRawJson(new JsonApiModel(errors, meta, links));
 //    }
-
-    @Override
-    public void sendError(Be5Exception e)
-    {
-        ErrorModel errorModel;
-        if(UserInfoHolder.isSystemDeveloper())
-        {
-            errorModel = new ErrorModel(e);
-        }
-        else
-        {
-            errorModel = new ErrorModel(e.getHttpStatusCode(), "");
-        }
-
-        sendErrorAsJson(errorModel, null);
-    }
+//
+//    @Override
+//    public void sendError(Be5Exception e)
+//    {
+//        ErrorModel errorModel;
+//        if(UserInfoHolder.isSystemDeveloper())
+//        {
+//            errorModel = new ErrorModel(e);
+//        }
+//        else
+//        {
+//            errorModel = new ErrorModel(e.getHttpStatusCode(), "");
+//        }
+//
+//        sendErrorAsJson(errorModel, null);
+//    }
 
     @Override
     public void sendAsRawJson(Object value)
@@ -134,12 +128,6 @@ public class ResponseImpl implements Response
         sendText("text/html;charset=UTF-8", content);
     }
 
-    @Override
-    public <T> void sendAsXml(Class<T> klass, T object)
-    {
-        sendXml(new Jaxb().toXml(klass, object));
-    }
-    
     @Override
     public void sendXml(String xml)
     {

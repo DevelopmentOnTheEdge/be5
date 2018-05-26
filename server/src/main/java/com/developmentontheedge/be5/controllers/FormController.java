@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.controllers;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
@@ -10,7 +11,6 @@ import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationResult;
@@ -41,16 +41,18 @@ public class FormController extends ControllerSupport
     private final DocumentGenerator documentGenerator;
     private final UserHelper userHelper;
     private final UserAwareMeta userAwareMeta;
+    private final ResponseHelper responseHelper;
     private final Stage stage;
 
     @Inject
     public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
-                          UserHelper userHelper, UserAwareMeta userAwareMeta, Stage stage)
+                          UserHelper userHelper, UserAwareMeta userAwareMeta, ResponseHelper responseHelper, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
         this.userHelper = userHelper;
         this.userAwareMeta = userAwareMeta;
+        this.responseHelper = responseHelper;
         this.stage = stage;
     }
 
@@ -66,8 +68,8 @@ public class FormController extends ControllerSupport
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
         String operationName = req.getNonEmpty(RestApiConstants.OPERATION);
         String[] selectedRows = ParseRequestUtils.selectedRows(nullToEmpty(req.get(RestApiConstants.SELECTED_ROWS)));
-        Map<String, Object> operationParams = req.getValuesFromJson(RestApiConstants.OPERATION_PARAMS);
-        Map<String, Object> values = req.getValuesFromJson(RestApiConstants.VALUES);
+        Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
+        Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
         HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
 
@@ -82,8 +84,8 @@ public class FormController extends ControllerSupport
         {
             log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
             res.sendErrorAsJson(
-                    new ErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
-                    req.getDefaultMeta()
+                    responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
+                    responseHelper.getDefaultMeta(req)
             );
             return;
         }
@@ -112,7 +114,7 @@ public class FormController extends ControllerSupport
 
             res.sendErrorAsJson(
                     documentGenerator.getErrorModel(e, url2),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
             return;
         }
@@ -120,7 +122,7 @@ public class FormController extends ControllerSupport
         res.sendAsJson(
                 new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                         Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())),
-                req.getDefaultMeta()
+                responseHelper.getDefaultMeta(req)
         );
     }
 

@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
@@ -22,6 +23,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -50,14 +52,17 @@ public class QueryBuilderController extends ControllerSupport implements Control
     private final DocumentGenerator documentGenerator;
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
+    private final ResponseHelper responseHelper;
 
     @Inject
-    public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider, QueryService queryService)
+    public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
+                                  QueryService queryService, ResponseHelper responseHelper)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
         this.projectProvider = projectProvider;
         this.queryService = queryService;
+        this.responseHelper = responseHelper;
     }
 
     @Override
@@ -135,23 +140,23 @@ public class QueryBuilderController extends ControllerSupport implements Control
             }
             catch (Throwable e)
             {
-                errorModelList.add(new ErrorModel(Be5Exception.internal(e)));
+                errorModelList.add(responseHelper.getErrorModel(Be5Exception.internal(e)));
             }
 
             res.sendAsJson(JsonApiModel.data(
                     resourceData,
                     errorModelList.toArray(new ErrorModel[0]),
                     resourceDataList.toArray(new ResourceData[0]),
-                    req.getDefaultMeta(),
+                    responseHelper.getDefaultMeta(req),
                     null
             ));
         }
         else
         {
             res.sendErrorAsJson(
-                    new ErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
+                    responseHelper.getErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
                             Collections.singletonMap(SELF_LINK, "queryBuilder")),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
         }
     }
@@ -190,7 +195,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
     {
         String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
 
-        Map<String, Object> parameters = req.getValuesFromJson(RestApiConstants.VALUES);
+        Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
         Entity entity = new Entity( entityName, projectProvider.getProject().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );
@@ -218,7 +223,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
         }
         catch (Be5Exception e)
         {
-            errorModelList.add(new ErrorModel(e));
+            errorModelList.add(responseHelper.getErrorModel(e));
         }
 
         try
@@ -232,7 +237,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
         }
         catch (Be5Exception e)
         {
-            errorModelList.add(new ErrorModel(e));
+            errorModelList.add(responseHelper.getErrorModel(e));
         }
 
         entity.getOrigin().remove(entityName);
