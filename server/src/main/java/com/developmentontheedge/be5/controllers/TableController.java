@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.controllers;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
@@ -10,7 +11,6 @@ import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
@@ -34,13 +34,16 @@ public class TableController extends ControllerSupport
     private final DocumentGenerator documentGenerator;
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
+    private final ResponseHelper responseHelper;
 
     @Inject
-    public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService, UserAwareMeta userAwareMeta)
+    public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService,
+                           UserAwareMeta userAwareMeta, ResponseHelper responseHelper)
     {
         this.documentGenerator = documentGenerator;
         this.tableModelService = tableModelService;
         this.userAwareMeta = userAwareMeta;
+        this.responseHelper = responseHelper;
     }
 
     @Override
@@ -107,7 +110,7 @@ public class TableController extends ControllerSupport
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
         res.sendErrorAsJson(
-                new ErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
+                responseHelper.getErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
                 req.getDefaultMeta()
         );
     }

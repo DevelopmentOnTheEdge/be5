@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5;
 
+import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.services.OperationsFactory;
 import com.developmentontheedge.be5.api.services.impl.OperationsFactoryImpl;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
@@ -88,6 +89,7 @@ public class ServerModule extends ServletModule
         bind(SqlHelper.class).in(Scopes.SINGLETON);
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);
+        bind(ResponseHelper.class).in(Scopes.SINGLETON);
 
         bind(ProjectProvider.class).to(ProjectProviderImpl.class).in(Scopes.SINGLETON);
         bind(DataSourceService.class).to(DataSourceServiceImpl.class).in(Scopes.SINGLETON);

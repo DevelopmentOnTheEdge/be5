@@ -82,10 +82,10 @@ public interface Response
      */
     void sendUnknownActionError();
     
-    /**
-     * A way to report about an occured error.
-     */
-    void sendError(Be5Exception e);
+//    /**
+//     * A way to report about an occured error.
+//     */
+//    void sendError(Be5Exception e);
 //
 //    /**
 //     * A way to report about an occured error.

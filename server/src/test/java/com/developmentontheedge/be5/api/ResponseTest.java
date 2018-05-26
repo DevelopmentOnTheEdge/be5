@@ -63,31 +63,31 @@ public class ResponseTest extends ServerBe5ProjectTest
         verify(writer).append(doubleQuotes("{'arg':'test/path','name':'call'}"));
     }
 
-    @Test
-    public void sendErrorSysDev()
-    {
-        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
+//    @Test
+//    public void sendErrorSysDev()
+//    {
+//        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
+//
+//        response.sendError(Be5Exception.internal("testMsg"));
+//
+//        verify(rawResponse).setContentType("application/json;charset=UTF-8");
+//        //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
+//        verify(writer).append(contains(doubleQuotes("'detail':")));
+//        verify(writer).flush();
+//    }
 
-        response.sendError(Be5Exception.internal("testMsg"));
-
-        verify(rawResponse).setContentType("application/json;charset=UTF-8");
-        //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append(contains(doubleQuotes("'detail':")));
-        verify(writer).flush();
-    }
-
-    @Test
-    public void sendErrorNotSysDev()
-    {
-        initUserWithRoles(RoleType.ROLE_GUEST);
-
-        response.sendError(Be5Exception.internal("testMsg"));
-
-        verify(rawResponse).setContentType("application/json;charset=UTF-8");
-        //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
-        verify(writer).append(doubleQuotes("{'errors':[{'status':'500','title':''}]}"));
-        verify(writer).flush();
-    }
+//    @Test
+//    public void sendErrorNotSysDev()
+//    {
+//        initUserWithRoles(RoleType.ROLE_GUEST);
+//
+//        response.sendError(Be5Exception.internal("testMsg"));
+//
+//        verify(rawResponse).setContentType("application/json;charset=UTF-8");
+//        //verify(rawResponse).setCharacterEncoding(StandardCharsets.UTF_8.name());
+//        verify(writer).append(doubleQuotes("{'errors':[{'status':'500','title':''}]}"));
+//        verify(writer).flush();
+//    }
 
     @Test
     public void getRawResponse()
