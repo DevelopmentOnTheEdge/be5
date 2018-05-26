@@ -77,7 +77,7 @@ public class TableController extends ControllerSupport
             {
                 case "":
                     JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters, tableModel);
-                    document.setMeta(req.getDefaultMeta());
+                    document.setMeta(responseHelper.getDefaultMeta(req));
                     res.sendAsJson(document);
                     return;
                 case "update":
@@ -111,7 +111,7 @@ public class TableController extends ControllerSupport
 
         res.sendErrorAsJson(
                 responseHelper.getErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
-                req.getDefaultMeta()
+                responseHelper.getDefaultMeta(req)
         );
     }
 

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
@@ -21,11 +22,13 @@ import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 public class StaticPageController extends ControllerSupport
 {
     private final ProjectProvider projectProvider;
+    private final ResponseHelper responseHelper;
 
     @Inject
-    public StaticPageController(ProjectProvider projectProvider)
+    public StaticPageController(ProjectProvider projectProvider, ResponseHelper responseHelper)
     {
         this.projectProvider = projectProvider;
+        this.responseHelper = responseHelper;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class StaticPageController extends ControllerSupport
             res.sendErrorAsJson(
                     new ErrorModel("404", msg,
                             Collections.singletonMap(SELF_LINK, "static/" + page)),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
         }
         else
@@ -52,7 +55,7 @@ public class StaticPageController extends ControllerSupport
             res.sendAsJson(
                     new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent),
                             Collections.singletonMap(SELF_LINK, "static/" + page)),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
         }
     }

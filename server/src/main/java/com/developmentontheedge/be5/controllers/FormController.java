@@ -85,7 +85,7 @@ public class FormController extends ControllerSupport
             log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
             res.sendErrorAsJson(
                     responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
             return;
         }
@@ -114,7 +114,7 @@ public class FormController extends ControllerSupport
 
             res.sendErrorAsJson(
                     documentGenerator.getErrorModel(e, url2),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
             return;
         }
@@ -122,7 +122,7 @@ public class FormController extends ControllerSupport
         res.sendAsJson(
                 new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                         Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())),
-                req.getDefaultMeta()
+                responseHelper.getDefaultMeta(req)
         );
     }
 

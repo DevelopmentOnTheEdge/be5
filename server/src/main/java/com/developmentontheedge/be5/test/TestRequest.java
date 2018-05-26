@@ -100,12 +100,6 @@ public class TestRequest implements Request
     }
 
     @Override
-    public Object getDefaultMeta()
-    {
-        return null;
-    }
-
-    @Override
     public Locale getLocale()
     {
         return null;

@@ -74,7 +74,5 @@ public interface Request extends SessionAccess, ParametersAccess
 
     String getBody();
 
-    Object getDefaultMeta();
-
     Locale getLocale();
 }

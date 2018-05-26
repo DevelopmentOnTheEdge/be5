@@ -146,7 +146,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
                     resourceData,
                     errorModelList.toArray(new ErrorModel[0]),
                     resourceDataList.toArray(new ResourceData[0]),
-                    req.getDefaultMeta(),
+                    responseHelper.getDefaultMeta(req),
                     null
             ));
         }
@@ -155,7 +155,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
             res.sendErrorAsJson(
                     responseHelper.getErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
                             Collections.singletonMap(SELF_LINK, "queryBuilder")),
-                    req.getDefaultMeta()
+                    responseHelper.getDefaultMeta(req)
             );
         }
     }
