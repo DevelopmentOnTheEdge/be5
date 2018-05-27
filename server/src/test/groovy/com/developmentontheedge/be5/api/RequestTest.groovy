@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.api
 
-import com.developmentontheedge.be5.api.impl.RequestImpl
 import com.developmentontheedge.be5.model.Base64File
 import com.developmentontheedge.be5.test.TestUtils
 import com.developmentontheedge.be5.util.ParseRequestUtils
