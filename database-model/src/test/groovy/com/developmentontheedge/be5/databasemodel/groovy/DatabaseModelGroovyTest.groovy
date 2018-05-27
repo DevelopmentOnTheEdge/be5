@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.operation.OperationStatus
-import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.test.BaseTestUtils
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 
 
-class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
+class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 {
     EntityModel testtableAdmin
 
@@ -50,7 +50,7 @@ class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
         testtableAdmin[id] << [
                 "value": 2
         ]
-        assertEquals(2, db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
+        Assert.assertEquals(2, db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def testtableAdmin = testtableAdmin
 
@@ -104,7 +104,7 @@ class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
         ]
 
         assertEquals "12,yes,Regional,null",
-                db.select("SELECT * FROM testTags WHERE CODE = ?", {rs -> resultSetToString(rs)}, "12")
+                db.select("SELECT * FROM testTags WHERE CODE = ?", {rs -> BaseTestUtils.resultSetToString(rs)}, "12")
 
         database.getEntity("testTags").remove("12")
     }
@@ -249,7 +249,7 @@ class DatabaseModelGroovyTest extends ServerBe5ProjectDBTest
         assertEquals "TestName3", record.$name
         assertEquals "TestName3", testtableAdmin[id].$name
 
-        testtableAdmin[id] = getDpsS("name": "TestName4")//putAt(id, map)
+        testtableAdmin[id] = BaseTestUtils.getDpsS("name": "TestName4")//putAt(id, map)
 
         assertEquals "TestName4", testtableAdmin[id].$name
     }

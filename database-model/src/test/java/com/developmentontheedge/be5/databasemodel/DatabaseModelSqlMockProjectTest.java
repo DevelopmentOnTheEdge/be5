@@ -8,17 +8,13 @@ import com.google.inject.util.Modules;
 import javax.inject.Inject;
 
 
-public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
+public abstract class DatabaseModelSqlMockProjectTest extends BaseTestUtils
 {
     @Inject protected DatabaseModel database;
 
     private static final Injector injector = initInjector(
-            Modules.override(new BaseModule()).with(new TestProjectProviderModule())
+            Modules.override(new BaseModule()).with(new SqlMockModule())
     );
-
-    static {
-        initDb(injector);
-    }
 
     @Override
     public Injector getInjector()

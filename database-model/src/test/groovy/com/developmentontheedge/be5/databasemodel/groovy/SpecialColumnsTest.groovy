@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.api.services.DbService
+import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import org.junit.After
 import org.junit.Before
@@ -17,7 +17,7 @@ import java.util.stream.StreamSupport
 import static org.junit.Assert.*
 
 
-class SpecialColumnsTest extends ServerBe5ProjectDBTest
+class SpecialColumnsTest extends DatabaseModelProjectDbTest
 {
     @Inject private DatabaseModel database
     @Inject private DbService db

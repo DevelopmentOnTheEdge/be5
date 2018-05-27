@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
+import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*
 
-class DynamicPropertyMetaClassTest extends ServerBe5ProjectTest
+class DynamicPropertyMetaClassTest extends DatabaseModelProjectDbTest
 {
     @Test
     void leftShift()

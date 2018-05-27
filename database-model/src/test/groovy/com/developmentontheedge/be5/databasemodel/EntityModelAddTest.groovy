@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.databasemodel
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import org.junit.After
 import org.junit.Before
@@ -15,7 +14,8 @@ import static org.mockito.Mockito.when
 
 import static org.junit.Assert.assertEquals
 
-class EntityModelAddTest extends ServerBe5ProjectTest
+
+class EntityModelAddTest extends DatabaseModelSqlMockProjectTest
 {
     @Inject private DatabaseModel database
 
