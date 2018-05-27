@@ -5,9 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.developmentontheedge.be5.api.UserInfoProvider;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -19,6 +19,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
+
 
 public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
 {
@@ -39,17 +40,15 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     private CompiledLocalizations localizations;
 
     private final Meta meta;
-    /**
-     * We must not keep the project directly as services are created once, but
-     * the project can be reloaded.
-     */
     private final ProjectProvider projectProvider;
-
+    private final UserInfoProvider userInfoProvider;
+    
     @Inject
-    public UserAwareMetaImpl(Meta meta, ProjectProvider projectProvider)
+    public UserAwareMetaImpl(Meta meta, ProjectProvider projectProvider, UserInfoProvider userInfoProvider)
     {
         this.meta = meta;
         this.projectProvider = projectProvider;
+        this.userInfoProvider = userInfoProvider;
 
         projectProvider.addToReload(this::compileLocalizations);
         compileLocalizations();
@@ -86,29 +85,29 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
 
     @Override
     public Optional<String> getLocalizedEntityTitle(String entity) {
-        return localizations.getEntityTitle(UserInfoHolder.getLanguage(), entity);
+        return localizations.getEntityTitle(userInfoProvider.get().getLanguage(), entity);
     }
 
     @Override
     public String getLocalizedQueryTitle(String entity, String query) {
-        return localizations.getQueryTitle(UserInfoHolder.getLanguage(), entity, query);
+        return localizations.getQueryTitle(userInfoProvider.get().getLanguage(), entity, query);
     }
 
     @Override
     public String getLocalizedOperationTitle(Operation operation) {
-        return localizations.getOperationTitle(UserInfoHolder.getLanguage(),
+        return localizations.getOperationTitle(userInfoProvider.get().getLanguage(),
                 operation.getEntity().getName(), operation.getName());
     }
 
     @Override
     public String getLocalizedOperationTitle(String entity, String name)
     {
-        return localizations.getOperationTitle(UserInfoHolder.getLanguage(), entity, name);
+        return localizations.getOperationTitle(userInfoProvider.get().getLanguage(), entity, name);
     }
 
     public String getLocalizedOperationField(String entityName, String operationName, String name)
     {
-        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, name)
+        return localizations.getFieldTitle(userInfoProvider.get().getLanguage(), entityName, operationName, name)
                 .orElseGet(() -> getColumnTitle(entityName, name));
     }
 
@@ -116,13 +115,13 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public String getLocalizedCell(String content, String entity, String query)
     {
         String localized = MoreStrings.substituteVariables(content, MESSAGE_PATTERN, (message) ->
-                localizations.get(UserInfoHolder.getLanguage(), entity, query, message).orElse(content)
+                localizations.get(userInfoProvider.get().getLanguage(), entity, query, message).orElse(content)
         );
 
         if(localized.startsWith("{{{") && localized.endsWith("}}}"))
         {
             String clearContent = localized.substring(3,localized.length()-3);
-            return localizations.get(UserInfoHolder.getLanguage(), entity, query, clearContent)
+            return localizations.get(userInfoProvider.get().getLanguage(), entity, query, clearContent)
                     .orElse(clearContent);
         }
 
@@ -132,18 +131,18 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     @Override
     public String getLocalizedValidationMessage(String message)
     {
-        return localizations.get(UserInfoHolder.getLanguage(), "messages.l10n", "validation", message).orElse(message);
+        return localizations.get(userInfoProvider.get().getLanguage(), "messages.l10n", "validation", message).orElse(message);
     }
 
     @Override
     public String getLocalizedExceptionMessage(String message)
     {
-        return localizations.get(UserInfoHolder.getLanguage(), "messages.l10n", "exception", message).orElse(message);
+        return localizations.get(userInfoProvider.get().getLanguage(), "messages.l10n", "exception", message).orElse(message);
     }
 
     @Override
     public QuerySettings getQuerySettings(Query query) {
-        List<String> currentRoles = UserInfoHolder.getCurrentRoles();
+        List<String> currentRoles = userInfoProvider.get().getCurrentRoles();
         for(QuerySettings settings: query.getQuerySettings()) {
             Set<String> roles = settings.getRoles().getFinalRoles();
             for(String role : currentRoles) {
@@ -159,7 +158,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public Operation getOperation(String entityName, String name)
     {
         Operation operation = meta.getOperation(entityName, name);
-        if (!meta.hasAccess(operation.getRoles(), UserInfoHolder.getCurrentRoles()))
+        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
             throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
 
         return operation;
@@ -169,7 +168,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = meta.getOperation(entityName, queryName, name);
-        if (!meta.hasAccess(operation.getRoles(), UserInfoHolder.getCurrentRoles()))
+        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
             throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
 
         return operation;
@@ -179,7 +178,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public Query getQuery(String entityName, String queryName)
     {
         Query query = meta.getQuery(entityName, queryName);
-        if (!meta.hasAccess(query.getRoles(), UserInfoHolder.getCurrentRoles()))
+        if (!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
             throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
         return query;
     }
@@ -187,7 +186,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     @Override
     public String getColumnTitle(String entityName, String queryName, String columnName)
     {
-        return localizations.get(UserInfoHolder.getLanguage(), entityName, queryName, columnName).orElse(columnName);
+        return localizations.get(userInfoProvider.get().getLanguage(), entityName, queryName, columnName).orElse(columnName);
     }
 
     public String getColumnTitle(String entityName, String columnName)
@@ -195,7 +194,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
         ImmutableList<String> defaultQueries = ImmutableList.of("All records");
         for (String queryName : defaultQueries)
         {
-            Optional<String> columnTitle = localizations.get(UserInfoHolder.getLanguage(), entityName, queryName, columnName);
+            Optional<String> columnTitle = localizations.get(userInfoProvider.get().getLanguage(), entityName, queryName, columnName);
             if(columnTitle.isPresent())return columnTitle.get();
         }
         return columnName;
@@ -204,7 +203,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     @Override
     public String getFieldTitle(String entityName, String operationName, String queryName, String name)
     {
-        return localizations.getFieldTitle(UserInfoHolder.getLanguage(), entityName, operationName, queryName, name).orElse(name);
+        return localizations.getFieldTitle(userInfoProvider.get().getLanguage(), entityName, operationName, queryName, name).orElse(name);
     }
 
     public CompiledLocalizations getLocalizations()

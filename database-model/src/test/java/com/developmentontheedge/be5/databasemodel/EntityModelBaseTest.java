@@ -1,17 +1,18 @@
-package com.developmentontheedge.be5.databasemodel.impl;
+package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 import static org.junit.Assert.assertEquals;
 
 
-public class EntityModelBaseTest extends ServerBe5ProjectDBTest
+public class EntityModelBaseTest extends DatabaseModelProjectDbTest
 {
+    @Inject private DatabaseModel database;
+
     @Before
     public void before()
     {

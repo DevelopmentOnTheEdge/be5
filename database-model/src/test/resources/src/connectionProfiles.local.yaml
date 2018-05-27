@@ -1,0 +1,14 @@
+connectionProfiles:
+  profiles:
+    app:
+      connectionUrl: jdbc:postgresql://pg93.dote.ru:5432/condo_uuinnk
+      username: condo_schema_lk
+      password: condo
+      tomcatPath: L:\Lan\Projects\DOTE\tomcat\webapps
+      tomcatManagerReloadUrlTemplate: http://localhost:8080/manager/text/reload?path=/{projectName}
+      properties:
+      - PROJECT_SOURCE: direct
+    profileForIntegrationTests:
+      connectionUrl: jdbc:h2:~/profileForIntegrationTestsServer
+      username: sa
+      password: ''

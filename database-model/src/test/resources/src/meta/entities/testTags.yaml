@@ -1,0 +1,19 @@
+testTags:
+  type: dictionary
+  displayName: Property Types
+  primaryKey: CODE
+  scheme:
+    columns:
+    - CODE:
+        type: VARCHAR(2)
+        primaryKey: true
+    - payable:
+        type: BOOL
+        defaultValue: '''yes'''
+    - admlevel:
+        type: ENUM('Federal','Municipal','Regional')
+        defaultValue: '''Regional'''
+    - referenceTest:
+        type: VARCHAR(2)
+        canBeNull: true
+        reference: testTags

@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.base;
 
+import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.ConnectionService;
 import com.developmentontheedge.be5.api.services.DataSourceService;
@@ -33,6 +35,7 @@ public class BaseModule extends ServletModule
         bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
         bind(DbService.class).to(DbServiceImpl.class).in(Scopes.SINGLETON);
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);
+        bind(UserAwareMeta.class).to(UserAwareMetaImpl.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
     }
 }

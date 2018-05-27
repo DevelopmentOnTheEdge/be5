@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.exceptions.Be5Exception;
 
 public class LogConfigurator
 {
+    private final static Logger log = Logger.getLogger(LogConfigurator.class.getName());
     private final static String path = "/logging.properties";
 
     public LogConfigurator()
@@ -20,11 +21,11 @@ public class LogConfigurator
             InputStream resourceAsStream = LogConfigurator.class.getResourceAsStream(path);
             if (resourceAsStream == null)
             {
-                throw Be5Exception.internal("File not found: " + path);
+                log.info("File not found: " + path + ", log not configured.");
+                return;
             }
-            LogManager.getLogManager().readConfiguration(resourceAsStream);
 
-            Logger log = Logger.getLogger(LogConfigurator.class.getName());
+            LogManager.getLogManager().readConfiguration(resourceAsStream);
             String level = log.getLevel() != null ? log.getLevel().getName() :
                     log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
 

@@ -1,0 +1,13 @@
+testProject:
+  features: logging
+  l10n: ru
+  projectFileStructure: {}
+  modules: []
+  application:
+  - testtable
+  - testtableAdmin
+  - testTags
+  scripts:
+  - Post-db
+  - dictionaries
+
