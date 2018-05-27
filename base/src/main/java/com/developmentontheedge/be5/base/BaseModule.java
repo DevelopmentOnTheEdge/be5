@@ -17,14 +17,14 @@ import com.developmentontheedge.be5.api.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.api.services.impl.MetaImpl;
 import com.developmentontheedge.be5.api.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.api.services.impl.SqlHelper;
+import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.servlet.ServletModule;
 
 
-public class BaseModule extends ServletModule
+public class BaseModule extends AbstractModule
 {
     @Override
-    protected void configureServlets()
+    protected void configure()
     {
         bind(LogConfigurator.class).asEagerSingleton();
         bind(GroovyRegister.class).in(Scopes.SINGLETON);

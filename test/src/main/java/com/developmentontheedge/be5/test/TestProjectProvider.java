@@ -18,7 +18,7 @@ public class TestProjectProvider implements ProjectProvider
     public TestProjectProvider()
     {
         try {
-            project = ModuleLoader2.findAndLoadProjectWithModules(true);
+            project = ModuleLoader2.findAndLoadProjectWithModules(false);
             initProfile(project);
         } catch (ProjectLoadException e) {
             throw new RuntimeException(e);
