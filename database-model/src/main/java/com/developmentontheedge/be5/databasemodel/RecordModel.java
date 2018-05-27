@@ -14,6 +14,4 @@ public interface RecordModel<T> extends DynamicPropertySet
     void update(String propertyName, Object value);
 
     void update(Map<String, Object> values);
-
-    Object invokeMethod(String methodName, Object... arguments);
 }

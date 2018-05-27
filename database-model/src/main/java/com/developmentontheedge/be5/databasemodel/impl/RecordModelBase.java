@@ -46,19 +46,6 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     }
 
     @Override
-    public Object invokeMethod( String methodName, Object... arguments )
-    {
-        Method method = ExtendedModels.getInstance().getMethod( entityModelBase, methodName );
-        return new MethodProviderBase( method ).invoke( arguments );
-    }
-
-    public MethodProvider getMethod(String methodName )
-    {
-        Method method = ExtendedModels.getInstance().getMethod( entityModelBase, methodName );
-        return new MethodProviderBase( method );
-    }
-
-    @Override
     public void update( String propertyName, Object value )
     {
         entityModelBase.set( getPrimaryKey(), propertyName, value );

@@ -65,10 +65,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.193</version>
-			<scope>test</scope>
+			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-test</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
