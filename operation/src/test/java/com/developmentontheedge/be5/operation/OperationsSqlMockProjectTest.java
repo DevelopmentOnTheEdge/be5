@@ -14,6 +14,8 @@ import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
@@ -25,13 +27,13 @@ import java.util.Collections;
 public abstract class OperationsSqlMockProjectTest extends BaseTestUtils
 {
     private static Injector injector;
-    protected OperationsFactory operations;
+    protected static OperationsFactory operations;
 
-    @Rule
-    public TemporaryFolder tmp = new TemporaryFolder();
+    @ClassRule
+    public static TemporaryFolder tmp = new TemporaryFolder();
 
-    @Before
-    public void setUp() throws Exception
+    @BeforeClass
+    public static void setUp() throws Exception
     {
         initProjectWithOperation();
 
@@ -49,7 +51,7 @@ public abstract class OperationsSqlMockProjectTest extends BaseTestUtils
         return injector;
     }
 
-    private void initProjectWithOperation() throws IOException
+    private static void initProjectWithOperation() throws IOException
     {
         Path path = tmp.newFolder().toPath();
         Project prj = new Project("test");

@@ -188,10 +188,10 @@ public abstract class BaseTestUtils
         }
     }
 
-    public static class SqlMockModule extends ServletModule
+    public static class SqlMockModule extends AbstractModule
     {
         @Override
-        protected void configureServlets()
+        protected void configure()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
             bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
