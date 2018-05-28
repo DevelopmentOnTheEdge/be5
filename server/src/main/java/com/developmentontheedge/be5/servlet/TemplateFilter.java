@@ -81,8 +81,11 @@ public class TemplateFilter extends FilterSupport
         context.setVariable("title", title);
         context.setVariable("description", description);
 
-        context.setVariable("baseUrl", req.getContextPath() + reqWithoutContext);
-        context.setVariable("baseUrlWithoutContext", reqWithoutContext);
+        //context.setVariable("baseUrl", req.getContextPath() + reqWithoutContext);
+        //context.setVariable("baseUrlWithoutContext", reqWithoutContext);
+
+        context.setVariable("contextUrl", req.getContextPath());
+        context.setVariable("serverUrlWithContext", req.getServerUrlWithContext());
 
         res.sendHtml(templateEngine.process(reqWithoutContext + "index", context));
     }

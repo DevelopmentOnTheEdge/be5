@@ -70,7 +70,7 @@ public class TestRequest implements Request
     }
 
     @Override
-    public String getBaseUrl()
+    public String getServerUrlWithContext()
     {
         return null;
     }

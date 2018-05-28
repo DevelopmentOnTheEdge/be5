@@ -188,7 +188,7 @@ public class RequestImpl implements Request
     }
 
     @Override
-    public String getBaseUrl()
+    public String getServerUrlWithContext()
     {
         String contextPath = rawRequest.getContextPath();
         return getServerUrl() + contextPath;
