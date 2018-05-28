@@ -4,7 +4,11 @@ import com.developmentontheedge.be5.api.Session;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 public class SessionImpl implements Session
 {
@@ -50,6 +54,21 @@ public class SessionImpl implements Session
     public List<String> getAttributeNames()
     {
         return Collections.list(rawSession.getAttributeNames());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getAllAttributes()
+    {
+        Map<String, Object> map = new HashMap<>();
+
+        Enumeration<String> enumeration = rawSession.getAttributeNames();
+        while (enumeration.hasMoreElements()) {
+            String name = enumeration.nextElement();
+            map.put(name, get(name));
+        }
+
+        return map;
     }
 
     @Override

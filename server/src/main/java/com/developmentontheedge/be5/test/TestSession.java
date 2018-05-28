@@ -54,4 +54,10 @@ public class TestSession implements Session
     {
 
     }
+
+    @Override
+    public Map<String, Object> getAllAttributes()
+    {
+        return map;
+    }
 }

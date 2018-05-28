@@ -154,8 +154,4 @@ public abstract class BaseOperationSupport implements Operation
 //        presetValues.forEach((key, value) -> addNotNullRedirectParam(presetValues, key));
 //    }
 
-    public <T> T getValueOrDefault(T value, T defaultValue)
-    {
-        return value == null ? defaultValue : value;
-    }
 }

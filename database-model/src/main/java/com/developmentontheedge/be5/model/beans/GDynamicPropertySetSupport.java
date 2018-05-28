@@ -14,12 +14,6 @@ import java.util.Objects;
 
 public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 {
-//в TypeChecked не компилится, не работает тулинг в IDEA - тогда лучше использовать $columnName - как в be3
-//    public Object call(String name)
-//    {
-//        return super.getValue(name);
-//    }
-
     public DynamicProperty getAt(String name)
     {
         return super.getProperty(name);
@@ -96,7 +90,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     }
 
     /**
-     * be3 синтаксис, метод без тулинга
+     * не @TypeChecked
      */
     @Deprecated
     public void putAt(String propertyName, Map<String, Object> value)

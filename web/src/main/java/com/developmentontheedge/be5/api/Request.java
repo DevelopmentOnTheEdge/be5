@@ -52,11 +52,9 @@ public interface Request extends SessionAccess, ParametersAccess
      */
     HttpSession getRawSession();
 
-    String getServletContextRealPath(String s);
-
     String getServerUrl();
 
-    String getBaseUrl();
+    String getServerUrlWithContext();
 
     String getContextPath();
 

@@ -2,10 +2,11 @@ package com.developmentontheedge.be5.api;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A high-level access to the session.
- * 
+ *
  * @author lan
  */
 public interface Session
@@ -22,6 +23,13 @@ public interface Session
      */
     Object get(String name);
 
+    default Object getOrDefault(String name, Object defaultValue) {
+        Object v;
+        return ((v = get(name)) != null)
+                ? v
+                : defaultValue;
+    }
+
     /**
      * Stores named attribute into the session
      * @param name an attribute name
@@ -31,7 +39,6 @@ public interface Session
 
     HttpSession getRawSession();
 
-    @SuppressWarnings("unchecked")
     List<String> getAttributeNames();
 
     //for groovy meta
@@ -46,6 +53,9 @@ public interface Session
     }
 
     void remove(String name);
+
+    @SuppressWarnings("unchecked")
+    Map<String, Object> getAllAttributes();
 
     void invalidate();
 }
