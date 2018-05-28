@@ -179,12 +179,6 @@ public class RequestImpl implements Request
     }
 
     @Override
-    public String getServletContextRealPath(String s)
-    {
-        return getRawRequest().getSession().getServletContext().getRealPath(s);
-    }
-
-    @Override
     public String getServerUrl()
     {
         String scheme = rawRequest.getScheme() + "://";

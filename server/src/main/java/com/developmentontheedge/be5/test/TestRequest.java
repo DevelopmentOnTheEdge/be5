@@ -64,12 +64,6 @@ public class TestRequest implements Request
     }
 
     @Override
-    public String getServletContextRealPath(String s)
-    {
-        return null;
-    }
-
-    @Override
     public String getServerUrl()
     {
         return null;
