@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * A high-level access to the session.
- * 
+ *
  * @author lan
  */
 public interface Session
@@ -21,6 +21,13 @@ public interface Session
      * @return an attribute value stored in the session
      */
     Object get(String name);
+
+    default Object getOrDefault(String name, Object defaultValue) {
+        Object v;
+        return ((v = get(name)) != null)
+                ? v
+                : defaultValue;
+    }
 
     /**
      * Stores named attribute into the session
