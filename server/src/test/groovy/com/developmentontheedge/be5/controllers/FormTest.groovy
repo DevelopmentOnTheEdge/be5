@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.controllers
 
+import com.developmentontheedge.be5.server.controllers.FormController
 import com.developmentontheedge.be5.web.Response
 import com.developmentontheedge.be5.api.RestApiConstants
 

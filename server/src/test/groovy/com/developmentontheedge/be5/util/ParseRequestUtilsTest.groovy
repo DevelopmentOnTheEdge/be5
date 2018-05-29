@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.util
 
+import com.developmentontheedge.be5.server.util.ParseRequestUtils
 import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM

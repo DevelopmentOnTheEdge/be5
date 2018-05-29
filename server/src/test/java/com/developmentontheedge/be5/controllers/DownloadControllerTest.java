@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.controllers;
 
+import com.developmentontheedge.be5.server.controllers.DownloadController;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;

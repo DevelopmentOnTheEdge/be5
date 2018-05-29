@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.util.HashUrlUtils;
+import com.developmentontheedge.be5.server.util.HashUrlUtils;
 
 import javax.inject.Inject;
 import java.util.Map;

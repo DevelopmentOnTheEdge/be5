@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.util;
 
+import com.developmentontheedge.be5.server.util.DateUtils;
 import junit.framework.TestCase;
 
 

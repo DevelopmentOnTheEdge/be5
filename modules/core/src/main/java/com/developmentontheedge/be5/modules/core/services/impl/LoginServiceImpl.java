@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
-import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.server.model.Action;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 

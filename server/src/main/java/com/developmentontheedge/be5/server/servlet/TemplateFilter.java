@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.api.support.FilterSupport;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;

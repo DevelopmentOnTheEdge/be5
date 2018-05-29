@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.model.Action;
+import com.developmentontheedge.be5.server.model.Action;
 import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
 import org.junit.Test;
 

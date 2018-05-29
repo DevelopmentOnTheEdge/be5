@@ -22,8 +22,8 @@ import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.server.test.mocks.CoreUtilsForTest;
-import com.developmentontheedge.be5.util.Either;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
@@ -48,7 +48,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
-import static com.developmentontheedge.be5.util.ParseRequestUtils.replaceEmptyStringToNull;
+import static com.developmentontheedge.be5.server.util.ParseRequestUtils.replaceEmptyStringToNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

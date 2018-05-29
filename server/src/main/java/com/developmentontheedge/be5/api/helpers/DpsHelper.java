@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.base.util.DpsUtils;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;

@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.controllers;
 
+import com.developmentontheedge.be5.server.controllers.StaticPageController;
 import com.developmentontheedge.be5.web.Request;
 import javax.inject.Inject;
 

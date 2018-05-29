@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
-import com.developmentontheedge.be5.model.FrontendAction
+import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.model.OperationStatus

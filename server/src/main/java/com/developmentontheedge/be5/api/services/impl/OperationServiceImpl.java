@@ -8,9 +8,9 @@ import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.server.util.Either;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.util.ParseRequestUtils;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 

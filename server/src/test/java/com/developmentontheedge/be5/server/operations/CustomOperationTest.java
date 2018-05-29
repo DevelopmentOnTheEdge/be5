@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.test.SqlMockOperationTest;
-import com.developmentontheedge.be5.util.Either;
+import com.developmentontheedge.be5.server.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Test;
 

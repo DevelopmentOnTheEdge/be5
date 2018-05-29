@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.util.LayoutUtils;
+import com.developmentontheedge.be5.server.util.LayoutUtils;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
