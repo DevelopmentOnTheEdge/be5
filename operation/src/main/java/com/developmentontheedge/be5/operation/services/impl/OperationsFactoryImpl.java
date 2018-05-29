@@ -1,9 +1,9 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.operation.services.impl;
 
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationBuilder;
-import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.services.OperationsFactory;
+import com.developmentontheedge.be5.operation.services.OperationBuilder;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.operation.services.OperationsFactory;
 
 import javax.inject.Inject;
 

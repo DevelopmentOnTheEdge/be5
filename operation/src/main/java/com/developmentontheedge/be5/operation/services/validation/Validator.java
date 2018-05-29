@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services.validation;
+package com.developmentontheedge.be5.operation.services.validation;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -12,8 +12,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
-import static com.developmentontheedge.be5.api.services.validation.Validation.Status.SUCCESS;
-import static com.developmentontheedge.be5.api.services.validation.Validation.Status.ERROR;
+import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.SUCCESS;
+import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.ERROR;
 
 
 public class Validator

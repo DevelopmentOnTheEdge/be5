@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations.support;
 
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.api.services.validation.Validator;
+import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.operation.model.Operation;

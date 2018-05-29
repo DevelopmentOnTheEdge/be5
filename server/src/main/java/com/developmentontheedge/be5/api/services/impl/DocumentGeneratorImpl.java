@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.api.services.OperationExecutor;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.TableModelService;

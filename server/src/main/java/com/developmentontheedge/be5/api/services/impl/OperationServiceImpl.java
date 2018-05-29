@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.services.validation.Validator;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;

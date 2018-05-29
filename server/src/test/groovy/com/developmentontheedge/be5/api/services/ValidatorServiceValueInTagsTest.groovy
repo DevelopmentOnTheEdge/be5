@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.api.services.validation.Validator
+import com.developmentontheedge.be5.operation.services.validation.Validator
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest

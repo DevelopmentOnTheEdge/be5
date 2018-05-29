@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.helpers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.api.services.validation.ValidationRules;
+import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -35,8 +35,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.developmentontheedge.be5.api.services.validation.ValidationRules.range;
-import static com.developmentontheedge.be5.api.services.validation.ValidationRules.step;
+import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.range;
+import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
 import static com.developmentontheedge.be5.base.util.DpsUtils.setValues;

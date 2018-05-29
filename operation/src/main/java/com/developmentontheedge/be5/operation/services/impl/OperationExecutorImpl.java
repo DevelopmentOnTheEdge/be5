@@ -1,12 +1,12 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.operation.services.impl;
 
-import com.developmentontheedge.be5.api.services.GroovyOperationLoader;
+import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationExecutor;
-import com.developmentontheedge.be5.api.services.validation.Validator;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
