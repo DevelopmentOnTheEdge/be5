@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import org.junit.Ignore;

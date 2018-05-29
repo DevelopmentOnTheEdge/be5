@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.DbService;
-import com.developmentontheedge.be5.api.sql.ResultSetParser;
-import com.developmentontheedge.be5.api.sql.SqlExecutor;
-import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.database.sql.SqlExecutor;
+import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 import java.sql.SQLException;

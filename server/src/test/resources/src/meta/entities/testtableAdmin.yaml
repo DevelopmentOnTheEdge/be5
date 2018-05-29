@@ -83,10 +83,10 @@ testtableAdmin:
   operations:
   - TestOperation:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.TestOperation
+      code: com.developmentontheedge.be5.server.operations.TestOperation
   - TestOperationProperty:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.TestOperationProperty
+      code: com.developmentontheedge.be5.server.operations.TestOperationProperty
   - TestTransactionalOperation:
       type: Groovy
       roles: Administrator
@@ -122,14 +122,14 @@ testtableAdmin:
   - Delete:
       records: 2
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.DeleteOperation
+      code: com.developmentontheedge.be5.server.operations.DeleteOperation
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Filter:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.FilterOperation
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation

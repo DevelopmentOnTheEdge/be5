@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
-import com.developmentontheedge.be5.api.Request
-import com.developmentontheedge.be5.api.Session
-import com.developmentontheedge.be5.servlet.UserInfoHolder
+import com.developmentontheedge.be5.web.Request
+import com.developmentontheedge.be5.web.Session
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
-import com.developmentontheedge.be5.model.FrontendAction
+import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
-import com.developmentontheedge.be5.operation.OperationStatus
+import com.developmentontheedge.be5.operation.model.OperationStatus
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

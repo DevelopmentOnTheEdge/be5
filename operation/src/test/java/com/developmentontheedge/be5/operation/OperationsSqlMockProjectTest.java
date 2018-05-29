@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.api.services.OperationsFactory;
+import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -13,10 +13,8 @@ import com.developmentontheedge.be5.operation.test.ErrorProcessing;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;

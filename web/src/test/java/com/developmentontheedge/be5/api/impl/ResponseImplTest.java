@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.api.impl;
 
-import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.impl.ResponseImpl;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 import org.junit.Before;
 import org.junit.Test;
 

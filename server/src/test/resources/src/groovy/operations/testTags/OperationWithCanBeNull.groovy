@@ -1,8 +1,8 @@
 package src.groovy.operations.testTags
 
-import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationResult
-import com.developmentontheedge.be5.operations.SilentInsertOperation
+import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.model.OperationResult
+import com.developmentontheedge.be5.server.operations.SilentInsertOperation
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 

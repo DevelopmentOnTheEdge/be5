@@ -132,16 +132,16 @@ categories:
   operations:
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - Delete:
       records: 2
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentDeleteOperation
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Filter:
       roles: Administrator
       layout: '{"type":"modalForm"}'
-      code: com.developmentontheedge.be5.operations.FilterOperation
+      code: com.developmentontheedge.be5.server.operations.FilterOperation

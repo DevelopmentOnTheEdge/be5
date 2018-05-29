@@ -1,12 +1,12 @@
 package src.groovy.operations
 
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta
-import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
-import com.developmentontheedge.be5.util.DpsUtils
+import com.developmentontheedge.be5.base.services.UserAwareMeta
+import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl
+import com.developmentontheedge.be5.base.util.DpsUtils
 
 import javax.inject.Inject
-import com.developmentontheedge.be5.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.Operation
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport
+import com.developmentontheedge.be5.operation.model.Operation
 
 import java.sql.Date
 

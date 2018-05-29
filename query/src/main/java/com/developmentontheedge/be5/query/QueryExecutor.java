@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query;
 
-import com.developmentontheedge.be5.api.sql.ResultSetParser;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.List;

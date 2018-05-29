@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -34,10 +34,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
-import static com.developmentontheedge.be5.api.FrontendConstants.RELOAD_CONTROL_NAME;
-import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME;
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
 
 
 public class QueryUtils

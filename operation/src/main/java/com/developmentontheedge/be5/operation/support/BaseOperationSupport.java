@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.operation.support;
 
-import com.developmentontheedge.be5.api.services.DbService;
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.OperationsFactory;
-import com.developmentontheedge.be5.api.services.validation.Validator;
+import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.operation.services.OperationsFactory;
+import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.UserInfo;
-import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
-import com.developmentontheedge.be5.operation.OperationInfo;
-import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationContext;
+import com.developmentontheedge.be5.operation.model.OperationInfo;
+import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 
 import javax.inject.Inject;
 import java.util.Collections;

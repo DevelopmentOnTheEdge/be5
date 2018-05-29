@@ -30,7 +30,7 @@ user_prefs:
   operations:
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - Filter:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.FilterOperation
+      code: com.developmentontheedge.be5.server.operations.FilterOperation

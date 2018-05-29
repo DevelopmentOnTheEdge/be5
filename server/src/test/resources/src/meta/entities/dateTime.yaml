@@ -29,11 +29,11 @@ dateTime:
   - Delete:
       records: 2
       roles: '@AllRoles'
-      code: com.developmentontheedge.be5.operations.SilentDeleteOperation
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
       records: 1
       roles: '@AllRoles'
-      code: com.developmentontheedge.be5.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Insert:
       roles: '@AllRoles'
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation

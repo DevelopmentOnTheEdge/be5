@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.api.services.CategoriesService;
-import com.developmentontheedge.be5.api.services.CoreUtils;
+import com.developmentontheedge.be5.server.services.CategoriesService;
+import com.developmentontheedge.be5.server.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
 import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
