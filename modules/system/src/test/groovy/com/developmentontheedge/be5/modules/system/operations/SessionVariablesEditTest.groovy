@@ -1,7 +1,7 @@
-package com.developmentontheedge.be5.modules.core.operations
+package com.developmentontheedge.be5.modules.system.operations
 
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
@@ -13,7 +13,7 @@ import static org.mockito.Matchers.anyVararg
 import static org.mockito.Mockito.when
 
 
-class SessionVariablesEditTest extends CoreBe5ProjectTest
+class SessionVariablesEditTest extends SystemBe5ProjectTest
 {
     @Before
     void setUp(){

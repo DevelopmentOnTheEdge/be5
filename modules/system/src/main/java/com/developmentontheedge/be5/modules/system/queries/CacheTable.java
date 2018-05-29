@@ -1,27 +1,29 @@
-package system
+package com.developmentontheedge.be5.modules.system.queries;
 
-import com.developmentontheedge.be5.api.services.Be5Caches
-import com.developmentontheedge.be5.query.model.TableModel
-import com.developmentontheedge.be5.queries.support.TableBuilderSupport
-import com.github.benmanes.caffeine.cache.Cache
-import javax.inject.Inject
+import com.developmentontheedge.be5.api.services.Be5Caches;
+import com.developmentontheedge.be5.queries.support.TableBuilderSupport;
+import com.developmentontheedge.be5.query.model.TableModel;
+import com.github.benmanes.caffeine.cache.Cache;
+
+import javax.inject.Inject;
+import java.util.Map;
 
 
-class CacheTable extends TableBuilderSupport
+public class CacheTable extends TableBuilderSupport
 {
-    @Inject Be5Caches be5Caches
+    @Inject private Be5Caches be5Caches;
 
     @Override
-    TableModel getTableModel()
+    public TableModel getTableModel()
     {
         addColumns("Name",
                 "Hit rate",
                 "Eviction count",
                 "Average load penalty",
                 "Load / hit count",
-                "Failure count")
+                "Failure count");
 
-        for (Map.Entry<String, Cache> entry : be5Caches.caches.entrySet())
+        for (Map.Entry<String, Cache> entry : be5Caches.getCaches().entrySet())
         {
             addRow(entry.getKey(), cells(
                     entry.getKey(),
@@ -30,9 +32,9 @@ class CacheTable extends TableBuilderSupport
                     String.format("%.4f", entry.getValue().stats().averageLoadPenalty() / 1000_000_000.0),
                     entry.getValue().stats().loadCount() + " / " + entry.getValue().stats().hitCount(),
                     entry.getValue().stats().loadFailureCount()
-            ))
+            ));
         }
 
-        return table(columns, rows)
+        return table(columns, rows);
     }
 }

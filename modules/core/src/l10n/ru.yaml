@@ -40,13 +40,6 @@ ru:
     - topics: displayName
       entries:
       - displayName: Система
-    - topics: viewName
-      entries:
-      - Session variables: Переменные сессии
-      - Cache: Кэш
-      - DataSource: Характеристики БД
-      - System Properties: Свойства
-      - Threads: Список потоков
     - topics: operationName
       entries:
       - SessionVariablesEdit: Изменить переменную сессии

@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.support.FilterSupport;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import org.thymeleaf.TemplateEngine;
@@ -28,10 +29,12 @@ public class TemplateFilter extends FilterSupport
     private final UserHelper userHelper;
 
     @Inject
-    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper)
+    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper, ProjectProvider projectProvider)
     {
         this.userAwareMeta = userAwareMeta;
         this.userHelper = userHelper;
+
+        projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
     }
 
     @Override
@@ -81,7 +84,9 @@ public class TemplateFilter extends FilterSupport
         context.setVariable("title", title);
         context.setVariable("description", description);
 
-        //context.setVariable("contextUrl", req.getContextPath());
+        context.setVariable("requestUrl", req.getRequestUri());
+
+        //context.setVariable("contextPath", req.getContextPath());
         context.setVariable("serverUrlWithContext", req.getServerUrlWithContext() + "/");
 
         res.sendHtml(templateEngine.process(reqWithoutContext + "index", context));

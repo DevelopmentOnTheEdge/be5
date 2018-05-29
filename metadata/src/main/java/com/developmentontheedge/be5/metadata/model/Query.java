@@ -153,7 +153,7 @@ public class Query extends EntityItem implements TemplateElement
 
     public boolean isQueryClassHidden()
     {
-        return getType() != QueryType.CUSTOM;
+        return getType() != QueryType.JAVA;
     }
     
     @PropertyName("Query code (freemarker template)")

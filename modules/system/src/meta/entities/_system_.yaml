@@ -5,53 +5,53 @@ _system_:
   primaryKey: _dummy_
   queries:
   - Cache:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
       - ReloadProject
-      file: system.CacheTable.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.CacheTable
   - Entities:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.Entities.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.Entities
   - Queries:
-      type: Groovy
+      type: Java
       invisible: true
       roles: [SystemDeveloper, Administrator]
-      file: system.Queries.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.Queries
   - Session variables:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
       - SessionVariablesEdit
-      file: system.SessionVariables.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.SessionVariables
   - Threads:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.Threads.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.Threads
   - System Properties:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.SystemProperties.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.SystemProperties
   - Http Headers:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.HttpHeaders.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.HttpHeaders
   - DataSource:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.DataSource.groovy
+      code: com.developmentontheedge.be5.modules.system.queries.DataSource
   - Query Builder:
       type: static
       roles: [SystemDeveloper]
       value: queryBuilder
   operations:
   - SessionVariablesEdit:
-      type: Groovy
+      type: Java
       records: 1
       roles: [SystemDeveloper, Administrator]
-      file: system.SessionVariablesEdit.groovy
+      code: com.developmentontheedge.be5.modules.system.operations.SessionVariablesEdit
   - ReloadProject:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.ReloadProject.groovy
+      code: com.developmentontheedge.be5.modules.system.operations.ReloadProject
