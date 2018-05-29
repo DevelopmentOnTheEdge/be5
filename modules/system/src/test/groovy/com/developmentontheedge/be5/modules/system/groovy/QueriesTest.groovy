@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.modules.core.groovy
+package com.developmentontheedge.be5.modules.system.groovy
 
 import com.developmentontheedge.be5.api.services.Meta
 import com.developmentontheedge.be5.api.services.DocumentGenerator
-import com.developmentontheedge.be5.modules.core.controllers.SystemBe5ProjectDBTest
+import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
 import com.developmentontheedge.be5.query.model.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
 
 
-class QueriesTest extends SystemBe5ProjectDBTest
+class QueriesTest extends SystemBe5ProjectTest
 {
     @Inject DocumentGenerator documentGenerator
     @Inject Meta meta

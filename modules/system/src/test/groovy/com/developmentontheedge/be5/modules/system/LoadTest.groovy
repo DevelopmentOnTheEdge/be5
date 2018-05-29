@@ -1,7 +1,6 @@
-package com.developmentontheedge.be5.modules.core
+package com.developmentontheedge.be5.modules.system
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.modules.core.controllers.SystemBe5ProjectTest
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.maven.AppValidate
