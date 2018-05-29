@@ -3,11 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.developmentontheedge.be5.modules</groupId>
-	<artifactId>be5-modules-core</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<artifactId>be5-modules-system</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
 
-	<name>be5 modules core</name>
-	<description>Core database module for be5 applications</description>
+	<name>be5 modules system</name>
 
 	<distributionManagement>
 		<repository>
@@ -35,12 +34,6 @@
 			<groupId>com.developmentontheedge.be5</groupId>
 			<artifactId>be5-server</artifactId>
 			<version>0.1.2-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.developmentontheedge.be5.modules</groupId>
-			<artifactId>be5-modules-system</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -84,9 +77,9 @@
                 <executions>
                     <execution>
                         <goals>
-							<goal>addTestSources</goal>
-							<goal>compileTests</goal>
-							<goal>removeTestStubs</goal>
+													<goal>addTestSources</goal>
+													<goal>compileTests</goal>
+													<goal>removeTestStubs</goal>
                         </goals>
                     </execution>
                 </executions>

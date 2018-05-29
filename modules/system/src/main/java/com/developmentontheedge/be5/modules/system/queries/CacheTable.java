@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.system.queries;
+package com.developmentontheedge.be5.modules.system.queries;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport;

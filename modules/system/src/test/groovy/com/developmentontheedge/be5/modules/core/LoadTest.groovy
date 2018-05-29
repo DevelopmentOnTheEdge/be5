@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.core.controllers.SystemBe5ProjectTest
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.maven.AppValidate
@@ -12,21 +12,19 @@ import org.junit.Test
 
 
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertNotNull
 
 
-class LoadTest extends CoreBe5ProjectTest
+class LoadTest extends SystemBe5ProjectTest
 {
     @Inject ProjectProvider projectProvider
 
     @Test
     void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
     {
-        assertEquals("core", projectProvider.getProject().getAppName())
+        assertEquals("system", projectProvider.getProject().getAppName())
 
         BeModelCollection<Module> modules = projectProvider.getProject().getModules()
-        assertEquals(1, modules.getSize())
-        assertNotNull(modules.get("system"))
+        assertEquals(0, modules.getSize())
     }
 
     @Test
