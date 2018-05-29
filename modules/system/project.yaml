@@ -1,0 +1,8 @@
+system:
+  moduleProject: true
+  features: []
+  l10n: ru
+  projectFileStructure: {}
+  modules: []
+  application:
+  - _system_

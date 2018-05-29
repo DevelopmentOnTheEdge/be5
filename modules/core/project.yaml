@@ -3,11 +3,12 @@ core:
   features: []
   l10n: ru
   projectFileStructure: {}
-  modules: []
+  modules:
+  - system:
+      entities: []
   application:
   - _logout_
   - _categoriesService_
-  - _system_
   - categories
   - classifications
   - countries
