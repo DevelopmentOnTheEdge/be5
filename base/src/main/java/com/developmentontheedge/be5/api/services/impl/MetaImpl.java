@@ -261,7 +261,7 @@ public class MetaImpl implements Meta
     @Override
     public Locale getLocale(Locale locale)
     {
-        List<String> languages = Arrays.asList(getProject().getLanguages());
+        List<String> languages = getProject().getApplication().getLocalizations().names().toList();
 
         if(locale == null || !languages.contains(locale.getLanguage()))
         {

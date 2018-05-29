@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.support.FilterSupport;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
@@ -27,12 +28,14 @@ public class TemplateFilter extends FilterSupport
 
     private final UserAwareMeta userAwareMeta;
     private final UserHelper userHelper;
+    private final Meta meta;
 
     @Inject
-    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper, ProjectProvider projectProvider)
+    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper, ProjectProvider projectProvider, Meta meta)
     {
         this.userAwareMeta = userAwareMeta;
         this.userHelper = userHelper;
+        this.meta = meta;
 
         projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
     }
@@ -80,7 +83,7 @@ public class TemplateFilter extends FilterSupport
         String description = userAwareMeta.getColumnTitle("index", "page", "description");
 
         Context context = new Context();
-        context.setVariable("lang", UserInfoHolder.getLanguage());
+        context.setVariable("lang", meta.getLocale(null));
         context.setVariable("title", title);
         context.setVariable("description", description);
 
