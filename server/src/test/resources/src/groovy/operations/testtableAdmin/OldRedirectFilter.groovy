@@ -1,9 +1,8 @@
 package src.groovy.operations.testtableAdmin
 
-import com.developmentontheedge.be5.api.helpers.FilterHelper
+import com.developmentontheedge.be5.server.helpers.FilterHelper
 import javax.inject.Inject
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.model.TransactionalOperation
 import com.developmentontheedge.beans.DynamicPropertySet
 

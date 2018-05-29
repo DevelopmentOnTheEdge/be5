@@ -12,8 +12,8 @@ import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelImplMetaCl
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.model.QRec;
-import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport;
+import com.developmentontheedge.be5.databasemodel.model.QRec;
+import com.developmentontheedge.be5.databasemodel.model.GDynamicPropertySetSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
