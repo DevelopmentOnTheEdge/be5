@@ -1,4 +1,4 @@
-package system;
+package com.developmentontheedge.be5.queries.system;
 
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.util.HashUrl;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Entities extends TableBuilderSupport
 {

@@ -12,6 +12,7 @@ import static org.mockito.Matchers.anyString
 import static org.mockito.Matchers.anyVararg
 import static org.mockito.Mockito.when
 
+
 class SessionVariablesEditTest extends CoreBe5ProjectTest
 {
     @Before

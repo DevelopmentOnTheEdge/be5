@@ -1,4 +1,4 @@
-package system;
+package com.developmentontheedge.be5.queries.system;
 
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport;
 import com.developmentontheedge.be5.query.model.TableModel;

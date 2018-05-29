@@ -11,32 +11,32 @@ _system_:
       - ReloadProject
       code: com.developmentontheedge.be5.queries.CacheTable
   - Entities:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.Entities.groovy
+      code: com.developmentontheedge.be5.queries.Entities
   - Queries:
-      type: Groovy
+      type: Java
       invisible: true
       roles: [SystemDeveloper, Administrator]
-      file: system.Queries.groovy
+      code: com.developmentontheedge.be5.queries.Queries
   - Session variables:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
       - SessionVariablesEdit
-      file: system.SessionVariables.groovy
+      code: com.developmentontheedge.be5.queries.SessionVariables
   - Threads:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.Threads.groovy
+      code: com.developmentontheedge.be5.queries.Threads
   - System Properties:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.SystemProperties.groovy
+      code: com.developmentontheedge.be5.queries.SystemProperties
   - Http Headers:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.HttpHeaders.groovy
+      code: com.developmentontheedge.be5.queries.HttpHeaders
   - DataSource:
       type: Java
       roles: [SystemDeveloper, Administrator]
@@ -47,11 +47,11 @@ _system_:
       value: queryBuilder
   operations:
   - SessionVariablesEdit:
-      type: Groovy
+      type: Java
       records: 1
       roles: [SystemDeveloper, Administrator]
-      file: system.SessionVariablesEdit.groovy
+      code: com.developmentontheedge.be5.operations.SessionVariablesEdit
   - ReloadProject:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.ReloadProject.groovy
+      code: com.developmentontheedge.be5.operations.ReloadProject
