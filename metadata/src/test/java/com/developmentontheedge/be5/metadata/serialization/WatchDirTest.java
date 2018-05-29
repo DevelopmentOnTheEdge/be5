@@ -45,6 +45,16 @@ public class WatchDirTest
 
             assertTrue(modify[0]);
             watcher.stop();
+
+            do{
+                Thread.sleep(100);
+
+                modify[0] = false;
+                Serialization.save( project, path );
+            }
+            while (modify[0]);
+
+            assertFalse(modify[0]);
         }
         finally
         {
