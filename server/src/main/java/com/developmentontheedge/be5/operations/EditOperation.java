@@ -8,7 +8,7 @@ import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
 import java.util.Map;
 
-import static com.developmentontheedge.be5.util.DpsUtils.setValues;
+import static com.developmentontheedge.be5.base.util.DpsUtils.setValues;
 
 
 public class EditOperation extends OperationSupport

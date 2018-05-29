@@ -44,7 +44,7 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
-import com.developmentontheedge.be5.util.Utils;
+import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.sql.format.SqlTypeUtils;
 
 import javax.inject.Inject;

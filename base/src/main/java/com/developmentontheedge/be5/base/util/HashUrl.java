@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.util;
+package com.developmentontheedge.be5.base.util;
 
 import java.util.Arrays;
 import java.util.Map;

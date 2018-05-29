@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 
 import javax.inject.Inject;

@@ -14,12 +14,12 @@ import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.operation.Operation;
 import com.developmentontheedge.be5.operation.OperationContext;
 import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.util.HashUrl;
+import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
 
 import javax.inject.Inject;

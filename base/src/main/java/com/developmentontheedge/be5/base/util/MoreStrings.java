@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.util;
+package com.developmentontheedge.be5.base.util;
 
 import static com.google.common.base.Preconditions.*;
 

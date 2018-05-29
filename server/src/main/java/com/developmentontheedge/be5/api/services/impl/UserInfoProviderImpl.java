@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.api.SessionConstants;
 import com.developmentontheedge.be5.api.UserInfoProvider;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.base.model.UserInfo;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

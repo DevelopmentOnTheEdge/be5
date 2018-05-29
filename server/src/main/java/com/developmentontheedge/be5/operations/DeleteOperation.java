@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operations.support.OperationSupport;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
-import com.developmentontheedge.be5.util.Utils;
+import com.developmentontheedge.be5.base.util.Utils;
 
 import java.util.List;
 import java.util.Map;

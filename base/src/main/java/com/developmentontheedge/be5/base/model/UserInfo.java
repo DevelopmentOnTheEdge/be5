@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.model;
+package com.developmentontheedge.be5.base.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

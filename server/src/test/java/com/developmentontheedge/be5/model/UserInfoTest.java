@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.model;
 
 import javax.inject.Inject;
+
+import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.test.TestSession;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.operations.support.OperationSupport;
-import com.developmentontheedge.be5.util.DpsUtils;
+import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

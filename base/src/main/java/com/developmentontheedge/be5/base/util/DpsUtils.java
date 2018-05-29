@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.util;
+package com.developmentontheedge.be5.base.util;
 
 import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;

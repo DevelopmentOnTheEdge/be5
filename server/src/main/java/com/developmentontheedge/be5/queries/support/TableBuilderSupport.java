@@ -16,7 +16,7 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.base.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;

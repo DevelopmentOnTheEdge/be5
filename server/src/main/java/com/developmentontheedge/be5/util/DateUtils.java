@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.util;
 
+import com.developmentontheedge.be5.base.util.Utils;
+
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,7 +32,7 @@ public class DateUtils
 
     public static java.util.Date convert( Object val )
     {
-        return (java.util.Date)Utils.changeType( val, java.sql.Date.class);
+        return (java.util.Date) Utils.changeType( val, java.sql.Date.class);
     }
 
     public static java.sql.Timestamp convertToTimestamp( Object val )

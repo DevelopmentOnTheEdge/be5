@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.servlet;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.base.model.UserInfo;
 
 import java.util.List;
 import java.util.Locale;

@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.operation.OperationInfo;
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operation.OperationStatus;
 import com.developmentontheedge.be5.operation.TransactionalOperation;
-import com.developmentontheedge.be5.util.Utils;
+import com.developmentontheedge.be5.base.util.Utils;
 import com.google.inject.Injector;
 
 

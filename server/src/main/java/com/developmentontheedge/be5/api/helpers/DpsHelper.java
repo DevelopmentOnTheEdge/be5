@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.be5.util.DpsUtils;
+import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
@@ -38,7 +38,7 @@ import static com.developmentontheedge.be5.api.services.validation.ValidationRul
 import static com.developmentontheedge.be5.api.services.validation.ValidationRules.step;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
-import static com.developmentontheedge.be5.util.DpsUtils.setValues;
+import static com.developmentontheedge.be5.base.util.DpsUtils.setValues;
 
 
 public class DpsHelper

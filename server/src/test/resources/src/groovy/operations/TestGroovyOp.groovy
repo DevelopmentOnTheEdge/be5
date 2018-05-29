@@ -2,7 +2,7 @@ package src.groovy.operations
 
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta
 import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
-import com.developmentontheedge.be5.util.DpsUtils
+import com.developmentontheedge.be5.base.util.DpsUtils
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.operations.support.GOperationSupport
