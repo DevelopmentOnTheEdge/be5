@@ -144,6 +144,12 @@ public class ModuleLoader2
         loadAllProjects(dirty);
 
         Project project = null;
+
+        if(modulesMap.size() == 0)
+        {
+            throw new RuntimeException("modulesMap is empty");
+        }
+
         for (Map.Entry<String,Project> module: modulesMap.entrySet())
         {
             if(module.getValue() != null && !module.getValue().isModuleProject())
