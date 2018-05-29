@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.model;
 import java.util.List;
 import java.util.Map;
 
-import com.developmentontheedge.be5.api.services.model.Category;
+import com.developmentontheedge.be5.server.services.model.Category;
 import com.developmentontheedge.be5.query.model.InitialRow;
 
 public class TablePresentation

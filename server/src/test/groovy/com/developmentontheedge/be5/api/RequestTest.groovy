@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api
 
+import com.developmentontheedge.be5.server.RestApiConstants
 import com.developmentontheedge.be5.server.model.Base64File
 import com.developmentontheedge.be5.server.test.TestUtils
 import com.developmentontheedge.be5.server.util.ParseRequestUtils

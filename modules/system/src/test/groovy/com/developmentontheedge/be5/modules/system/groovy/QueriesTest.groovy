@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.system.groovy
 
 import com.developmentontheedge.be5.base.services.Meta
-import com.developmentontheedge.be5.api.services.DocumentGenerator
+import com.developmentontheedge.be5.server.services.DocumentGenerator
 import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
 import com.developmentontheedge.be5.query.model.CellModel
 import com.developmentontheedge.be5.metadata.model.Query

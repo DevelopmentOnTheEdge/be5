@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 

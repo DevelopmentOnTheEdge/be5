@@ -4,9 +4,9 @@ import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.helpers.ResponseHelper;
-import com.developmentontheedge.be5.api.support.ControllerSupport;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
@@ -14,7 +14,7 @@ import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.web.SessionConstants.QUERY_BUILDER_HISTORY;
 
 

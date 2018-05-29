@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.operations.support;
 
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.helpers.OperationHelper;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;

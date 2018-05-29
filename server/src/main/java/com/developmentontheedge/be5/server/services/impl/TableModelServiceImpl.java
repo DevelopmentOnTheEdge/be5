@@ -1,9 +1,9 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.api.services.CoreUtils;
+import com.developmentontheedge.be5.server.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.query.services.TableModelService;
@@ -17,10 +17,10 @@ import com.google.inject.Injector;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.api.RestApiConstants.LIMIT;
-import static com.developmentontheedge.be5.api.RestApiConstants.OFFSET;
-import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.api.RestApiConstants.ORDER_DIR;
+import static com.developmentontheedge.be5.server.RestApiConstants.LIMIT;
+import static com.developmentontheedge.be5.server.RestApiConstants.OFFSET;
+import static com.developmentontheedge.be5.server.RestApiConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.server.RestApiConstants.ORDER_DIR;
 
 
 public class TableModelServiceImpl implements TableModelService

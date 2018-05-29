@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.server.controllers.QueryBuilderController;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.api.RestApiConstants;
+import com.developmentontheedge.be5.server.RestApiConstants;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.test.SqlMockOperationTest;

@@ -3,9 +3,9 @@ package com.developmentontheedge.be5.modules.core.controllers;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.support.ControllerSupport;
-import com.developmentontheedge.be5.api.services.CategoriesService;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.services.CategoriesService;
 
 import javax.inject.Inject;
 

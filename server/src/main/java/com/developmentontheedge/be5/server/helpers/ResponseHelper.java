@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.base.UserInfoProvider;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.RestApiConstants.TIMESTAMP_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 
 
 public class ResponseHelper

@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.base.util.DpsUtils;

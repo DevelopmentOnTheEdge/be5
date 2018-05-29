@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.api.helpers.OperationHelper
+import com.developmentontheedge.be5.server.helpers.OperationHelper
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter
 import javax.inject.Inject

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static com.developmentontheedge.be5.api.RestApiConstants.TIMESTAMP_PARAM;
+import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;

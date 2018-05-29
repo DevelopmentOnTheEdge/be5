@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.api.helpers.ResponseHelper;
-import com.developmentontheedge.be5.api.support.ControllerSupport;
+import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import java.util.Collections;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
-import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
 public class StaticPageController extends ControllerSupport

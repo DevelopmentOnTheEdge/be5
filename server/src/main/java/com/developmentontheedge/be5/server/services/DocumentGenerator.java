@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services;
+package com.developmentontheedge.be5.server.services;
 
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.metadata.model.Query;

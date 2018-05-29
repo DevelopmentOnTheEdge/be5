@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.web.SessionConstants;
 import com.developmentontheedge.be5.base.UserInfoProvider;

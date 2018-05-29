@@ -2,19 +2,19 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.api.helpers.UserHelper;
+import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.util.Either;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
-import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 

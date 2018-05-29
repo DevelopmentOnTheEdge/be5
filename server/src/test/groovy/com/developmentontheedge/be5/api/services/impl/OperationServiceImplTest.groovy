@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services.impl
 
+import com.developmentontheedge.be5.server.services.impl.OperationServiceImpl
 import com.developmentontheedge.be5.server.test.TestUtils
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.Test

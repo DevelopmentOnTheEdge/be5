@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.test.mocks;
 
-import com.developmentontheedge.be5.api.services.CategoriesService;
-import com.developmentontheedge.be5.api.services.model.Category;
+import com.developmentontheedge.be5.server.services.CategoriesService;
+import com.developmentontheedge.be5.server.services.model.Category;
 
 import java.util.Collections;
 import java.util.List;

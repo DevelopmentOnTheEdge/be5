@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.services.model;
+package com.developmentontheedge.be5.server.services.model;
 
 import java.util.List;
 

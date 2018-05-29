@@ -2,12 +2,12 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.helpers.ResponseHelper;
-import com.developmentontheedge.be5.api.support.ControllerSupport;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
-import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
 public class TableController extends ControllerSupport

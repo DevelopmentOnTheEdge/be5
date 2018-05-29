@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.helpers;
+package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;

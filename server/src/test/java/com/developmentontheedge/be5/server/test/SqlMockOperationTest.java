@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.test;
 
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.base.services.Meta;
 
 import javax.inject.Inject;

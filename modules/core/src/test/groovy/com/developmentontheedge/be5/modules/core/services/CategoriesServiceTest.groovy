@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services
 
-import com.developmentontheedge.be5.api.services.CategoriesService
+import com.developmentontheedge.be5.server.services.CategoriesService
 import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
 
 import javax.inject.Inject

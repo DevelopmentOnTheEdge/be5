@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.server.queries.support;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.api.helpers.OperationHelper;
+import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.server.helpers.OperationHelper;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.base.services.Meta;

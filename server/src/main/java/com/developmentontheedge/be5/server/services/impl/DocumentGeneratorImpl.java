@@ -1,20 +1,20 @@
-package com.developmentontheedge.be5.api.services.impl;
+package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.api.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.CategoriesService;
+import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.api.services.OperationService;
-import com.developmentontheedge.be5.api.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.OperationService;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.query.services.TableModelService;
-import com.developmentontheedge.be5.api.services.model.Category;
+import com.developmentontheedge.be5.server.services.model.Category;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
-import com.developmentontheedge.be5.api.services.model.Operations;
+import com.developmentontheedge.be5.server.services.model.Operations;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.metadata.model.Operation;
@@ -50,7 +50,7 @@ import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESU
 import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TOP_FORM;
-import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
 public class DocumentGeneratorImpl implements DocumentGenerator
