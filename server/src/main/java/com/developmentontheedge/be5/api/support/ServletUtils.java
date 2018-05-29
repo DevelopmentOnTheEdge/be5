@@ -1,13 +1,10 @@
 package com.developmentontheedge.be5.api.support;
 
-import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.impl.ResponseImpl;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
+import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.impl.ResponseImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 
 
 public class ServletUtils

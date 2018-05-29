@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.base.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 
 import javax.inject.Inject;
 import java.io.PrintWriter;

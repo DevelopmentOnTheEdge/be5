@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.web.impl;
 
-import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.web.Session;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;

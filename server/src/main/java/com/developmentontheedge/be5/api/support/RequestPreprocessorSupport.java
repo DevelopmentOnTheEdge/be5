@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.api.support;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.RequestPreprocessor;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.RequestPreprocessor;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.impl.RequestImpl;
+import com.developmentontheedge.be5.web.impl.RequestImpl;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

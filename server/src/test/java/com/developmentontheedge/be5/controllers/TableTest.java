@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.controllers;
 
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;

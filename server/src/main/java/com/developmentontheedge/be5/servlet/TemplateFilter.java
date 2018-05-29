@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.servlet;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.base.services.Meta;

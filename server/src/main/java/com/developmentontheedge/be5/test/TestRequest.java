@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

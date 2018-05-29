@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.controllers;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;

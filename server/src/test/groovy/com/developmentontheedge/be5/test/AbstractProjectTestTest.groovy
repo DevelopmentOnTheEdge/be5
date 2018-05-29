@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test
 
-import com.developmentontheedge.be5.api.Request
+import com.developmentontheedge.be5.web.Request
 import org.junit.Test
 
 import static org.junit.Assert.*

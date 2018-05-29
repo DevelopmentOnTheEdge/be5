@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.operations.support;
 
-import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;

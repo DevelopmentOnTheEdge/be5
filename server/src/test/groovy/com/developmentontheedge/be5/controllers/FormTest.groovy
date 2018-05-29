@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.controllers
 
-import com.developmentontheedge.be5.api.Response
+import com.developmentontheedge.be5.web.Response
 import com.developmentontheedge.be5.api.RestApiConstants
 
 import javax.inject.Inject
 
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel
-import com.developmentontheedge.be5.model.jsonapi.ResourceData
+import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.google.common.collect.ImmutableMap
 import groovy.transform.TypeChecked

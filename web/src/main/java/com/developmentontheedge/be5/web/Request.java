@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api;
+package com.developmentontheedge.be5.web;
 
 import java.util.Locale;
 

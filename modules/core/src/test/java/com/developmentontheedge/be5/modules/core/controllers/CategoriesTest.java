@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Response;
 import javax.inject.Inject;
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
 /** $Id: SessionConstants.java,v 1.18 2012/01/27 12:53:14 sav Exp $ */
 
-package com.developmentontheedge.be5.api;
+package com.developmentontheedge.be5.web;
 
 public interface SessionConstants
 {

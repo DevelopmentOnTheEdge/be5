@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.servlet;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.base.model.UserInfo;
 

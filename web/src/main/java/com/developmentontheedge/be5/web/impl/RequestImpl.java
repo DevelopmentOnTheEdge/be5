@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.web.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
 
 
 public class RequestImpl implements Request

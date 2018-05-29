@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.helpers.UserHelper;

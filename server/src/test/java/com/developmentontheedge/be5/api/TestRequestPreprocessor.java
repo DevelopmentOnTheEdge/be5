@@ -1,6 +1,8 @@
 package com.developmentontheedge.be5.api;
 
 import com.developmentontheedge.be5.api.support.RequestPreprocessorSupport;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.google.inject.Stage;
 
 

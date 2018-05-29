@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.controllers;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.model.FormPresentation;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;

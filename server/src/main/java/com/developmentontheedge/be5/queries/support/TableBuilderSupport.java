@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.queries.support;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Session;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.api.helpers.DpsHelper;
 import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;

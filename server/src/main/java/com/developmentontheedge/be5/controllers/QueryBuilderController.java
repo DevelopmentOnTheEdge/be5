@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.controllers;
 
-import com.developmentontheedge.be5.api.Controller;
+import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
@@ -20,9 +20,9 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.api.SessionConstants.QUERY_BUILDER_HISTORY;
+import static com.developmentontheedge.be5.web.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
 public class QueryBuilderController extends ControllerSupport implements Controller

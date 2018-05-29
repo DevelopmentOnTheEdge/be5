@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
-import com.developmentontheedge.be5.api.Request
-import com.developmentontheedge.be5.api.Session
+import com.developmentontheedge.be5.web.Request
+import com.developmentontheedge.be5.web.Session
 import com.developmentontheedge.be5.servlet.UserInfoHolder
 import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants

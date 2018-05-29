@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api;
+package com.developmentontheedge.be5.web;
 
 /**
  * <p>This is the general interface for controllers.</p>

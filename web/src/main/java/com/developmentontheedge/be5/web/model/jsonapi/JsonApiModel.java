@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.model.jsonapi;
+package com.developmentontheedge.be5.web.model.jsonapi;
 
 import java.util.Arrays;
 import java.util.Map;

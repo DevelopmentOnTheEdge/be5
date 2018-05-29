@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Session;
-import com.developmentontheedge.be5.api.SessionConstants;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.SessionConstants;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;

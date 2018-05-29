@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.Request;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
-import com.developmentontheedge.be5.api.impl.RequestImpl;
+import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;

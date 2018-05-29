@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.controllers;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
@@ -9,8 +9,8 @@ import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 
 import javax.inject.Inject;
 import java.util.Collections;

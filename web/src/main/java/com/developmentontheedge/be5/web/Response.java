@@ -1,11 +1,11 @@
-package com.developmentontheedge.be5.api;
+package com.developmentontheedge.be5.web;
 
 import javax.servlet.http.HttpServletResponse;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.UrlEscapers;
 

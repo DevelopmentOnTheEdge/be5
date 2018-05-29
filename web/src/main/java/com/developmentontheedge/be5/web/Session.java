@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api;
+package com.developmentontheedge.be5.web;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

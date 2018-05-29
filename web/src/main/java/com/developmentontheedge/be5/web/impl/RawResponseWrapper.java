@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.web.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;

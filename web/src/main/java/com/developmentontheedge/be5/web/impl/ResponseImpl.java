@@ -1,13 +1,13 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.web.impl;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
 
-import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.api.Response;
+import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.Response;
 
 import java.util.Map;
 
