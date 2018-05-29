@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api.helpers;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Session;
 import com.developmentontheedge.be5.api.SessionConstants;
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.base.model.UserInfo;

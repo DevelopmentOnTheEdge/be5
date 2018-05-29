@@ -1,7 +1,7 @@
 package src.groovy.operations
 
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta
-import com.developmentontheedge.be5.api.helpers.impl.UserAwareMetaImpl
+import com.developmentontheedge.be5.base.services.UserAwareMeta
+import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl
 import com.developmentontheedge.be5.base.util.DpsUtils
 
 import javax.inject.Inject

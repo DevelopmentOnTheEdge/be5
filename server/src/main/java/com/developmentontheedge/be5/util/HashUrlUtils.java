@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.util;
 
-import com.developmentontheedge.be5.api.FrontendConstants;
+import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.Operation;
 

@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.servlet;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.api.support.FilterSupport;
 import com.developmentontheedge.be5.util.ParseRequestUtils;
 import org.thymeleaf.TemplateEngine;

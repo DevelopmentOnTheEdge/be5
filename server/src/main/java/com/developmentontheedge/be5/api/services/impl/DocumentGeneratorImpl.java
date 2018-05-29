@@ -3,13 +3,13 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.CategoriesService;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
 import com.developmentontheedge.be5.query.model.InitialRow;
@@ -44,12 +44,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.CATEGORY_ID_PARAM;
-import static com.developmentontheedge.be5.api.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESULT;
-import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
-import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
-import static com.developmentontheedge.be5.api.FrontendConstants.TOP_FORM;
+import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 

@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.RELOAD_CONTROL_NAME;
-import static com.developmentontheedge.be5.api.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.RELOAD_CONTROL_NAME;
+import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 
 
 public class OperationServiceImpl implements OperationService

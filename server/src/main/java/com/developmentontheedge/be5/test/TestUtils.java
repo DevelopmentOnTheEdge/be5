@@ -2,13 +2,13 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.RestApiConstants;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.impl.RequestImpl;
 import com.developmentontheedge.be5.api.services.CategoriesService;
 import com.developmentontheedge.be5.api.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;

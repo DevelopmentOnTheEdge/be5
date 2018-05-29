@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.model.StaticPagePresentation;
@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import javax.inject.Inject;
 import java.util.Collections;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.STATIC_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 
 

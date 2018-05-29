@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import com.developmentontheedge.be5.api.helpers.ResponseHelper;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.api.FrontendConstants.OPERATION_RESULT;
+import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.api.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 

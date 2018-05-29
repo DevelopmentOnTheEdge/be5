@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operations
 
-import com.developmentontheedge.be5.api.FrontendConstants
+import com.developmentontheedge.be5.base.FrontendConstants
 import com.developmentontheedge.be5.operation.OperationContext
 import com.developmentontheedge.be5.operation.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest

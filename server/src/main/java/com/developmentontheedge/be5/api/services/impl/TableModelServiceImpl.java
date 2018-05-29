@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.api.services.impl;
 
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.GroovyRegister;
+import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.metadata.model.Query;

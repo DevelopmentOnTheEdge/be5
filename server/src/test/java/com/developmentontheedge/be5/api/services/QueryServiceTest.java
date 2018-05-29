@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import javax.inject.Inject;

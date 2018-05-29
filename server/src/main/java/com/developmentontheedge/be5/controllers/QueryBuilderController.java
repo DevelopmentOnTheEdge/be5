@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.controllers;
 
 import com.developmentontheedge.be5.api.Controller;
-import com.developmentontheedge.be5.api.FrontendConstants;
+import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.api.helpers.ResponseHelper;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.api.services.QueryService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;

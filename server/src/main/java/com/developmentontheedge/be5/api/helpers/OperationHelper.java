@@ -1,8 +1,9 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.api.services.Be5Caches;
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.base.services.Be5Caches;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.api.services.QueryService;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.api.services.TableModelService;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;

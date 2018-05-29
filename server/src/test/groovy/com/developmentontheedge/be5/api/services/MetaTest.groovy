@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.api.services
 
+import com.developmentontheedge.be5.base.services.Meta
+
 import javax.inject.Inject
 import com.developmentontheedge.be5.testutils.TestTableQueryDBTest
 import groovy.transform.TypeChecked

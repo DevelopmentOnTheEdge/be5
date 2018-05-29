@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.system.queries;
 
-import com.developmentontheedge.be5.api.FrontendConstants;
+import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;

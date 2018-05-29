@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.api.services;
 
+import com.developmentontheedge.be5.base.services.GroovyRegister;
+import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
 import com.developmentontheedge.be5.metadata.model.Operation;

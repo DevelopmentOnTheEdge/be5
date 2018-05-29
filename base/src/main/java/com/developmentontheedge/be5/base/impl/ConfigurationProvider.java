@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.base.impl;
 
-import com.developmentontheedge.be5.api.services.Configurable;
+import com.developmentontheedge.be5.base.services.Configurable;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 

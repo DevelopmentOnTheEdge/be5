@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.api.FrontendConstants.SEARCH_PRESETS_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
+import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
 
 
 public class ParseRequestUtils

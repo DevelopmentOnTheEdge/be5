@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.base.impl;
 
-import com.developmentontheedge.be5.api.services.Be5Caches;
-import com.developmentontheedge.be5.api.services.Configurable;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.Be5Caches;
+import com.developmentontheedge.be5.base.services.Configurable;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;

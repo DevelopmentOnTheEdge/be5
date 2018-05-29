@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.system.groovy
 
-import com.developmentontheedge.be5.api.services.Meta
+import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
 
 import javax.inject.Inject

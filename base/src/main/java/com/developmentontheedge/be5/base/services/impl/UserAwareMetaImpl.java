@@ -1,14 +1,14 @@
-package com.developmentontheedge.be5.api.helpers.impl;
+package com.developmentontheedge.be5.base.services.impl;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.developmentontheedge.be5.api.UserInfoProvider;
-import com.developmentontheedge.be5.api.services.ProjectProvider;
-import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
