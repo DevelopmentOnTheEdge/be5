@@ -59,14 +59,14 @@ testTags:
   - Delete:
       records: 2
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.DeleteOperation
+      code: com.developmentontheedge.be5.server.operations.DeleteOperation
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - OperationWithCanBeNull:
       type: Groovy
       roles: Administrator

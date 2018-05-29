@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.base.services.ProjectProvider
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader
 
 import javax.inject.Inject
-import com.developmentontheedge.be5.test.SqlMockOperationTest
+import com.developmentontheedge.be5.server.test.SqlMockOperationTest
 import groovy.transform.TypeChecked
 import org.junit.Test
 

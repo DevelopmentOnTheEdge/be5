@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.model.Action;
-import com.developmentontheedge.be5.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.util.ActionUtils;
 
 import javax.inject.Inject;

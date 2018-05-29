@@ -204,7 +204,7 @@ public abstract class BaseTestUtils
 
     public static class UserInfoProviderForTest implements UserInfoProvider
     {
-        static UserInfo userInfo;
+        public static UserInfo userInfo;
         @Override
         public UserInfo get()
         {

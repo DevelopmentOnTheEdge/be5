@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.helpers
 
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import javax.inject.Inject
-import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
 import org.junit.Before;
 import org.junit.Test
 

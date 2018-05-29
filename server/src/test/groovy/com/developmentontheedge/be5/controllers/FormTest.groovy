@@ -8,7 +8,7 @@ import javax.inject.Inject
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest
 import com.google.common.collect.ImmutableMap
 import groovy.transform.TypeChecked
 import org.junit.After

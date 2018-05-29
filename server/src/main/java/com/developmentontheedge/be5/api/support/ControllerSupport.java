@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.support;
 
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;

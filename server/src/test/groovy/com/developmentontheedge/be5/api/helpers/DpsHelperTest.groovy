@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.base.util.DpsUtils
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet

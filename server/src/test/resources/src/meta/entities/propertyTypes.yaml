@@ -26,11 +26,11 @@ propertyTypes:
   - Delete:
       records: 2
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.DeleteOperation
+      code: com.developmentontheedge.be5.server.operations.DeleteOperation
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.EditOperation
+      code: com.developmentontheedge.be5.server.operations.EditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.InsertOperation
+      code: com.developmentontheedge.be5.server.operations.InsertOperation

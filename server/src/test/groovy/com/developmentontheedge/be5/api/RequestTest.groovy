@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api
 
 import com.developmentontheedge.be5.model.Base64File
-import com.developmentontheedge.be5.test.TestUtils
+import com.developmentontheedge.be5.server.test.TestUtils
 import com.developmentontheedge.be5.util.ParseRequestUtils
 import com.developmentontheedge.be5.web.Request
 import com.google.common.collect.ImmutableMap

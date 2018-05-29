@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.helpers.impl;
 
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import javax.inject.Inject;
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

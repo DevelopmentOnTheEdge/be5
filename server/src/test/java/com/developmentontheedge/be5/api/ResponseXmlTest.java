@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.api;
 
 import com.developmentontheedge.be5.web.impl.ResponseImpl;
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.util.Jaxb;
 import com.developmentontheedge.be5.web.Response;
 import org.junit.Before;

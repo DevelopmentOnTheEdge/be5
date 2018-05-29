@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.api.RestApiConstants;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.test.SqlMockOperationTest;
+import com.developmentontheedge.be5.server.test.SqlMockOperationTest;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 

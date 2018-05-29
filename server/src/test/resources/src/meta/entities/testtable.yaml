@@ -121,10 +121,10 @@ testtable:
   operations:
   - Filter:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.FilterOperation
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
   - FilterByParamsInQueryOperation:
       roles: '@AllRoles'
-      code: com.developmentontheedge.be5.operations.FilterByParamsInQueryOperation
+      code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
   - OldRedirectFilter:
       type: Groovy
       roles: Administrator
@@ -132,25 +132,25 @@ testtable:
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - InsertWithExtender:
       roles: Administrator
       extenders:
-      - className: com.developmentontheedge.be5.operations.extenders.TestExtender
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      - className: com.developmentontheedge.be5.server.operations.extenders.TestExtender
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - InsertWithSkipExtender:
       roles: Administrator
       extenders:
-      - className: com.developmentontheedge.be5.operations.extenders.TestSkipExtender
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      - className: com.developmentontheedge.be5.server.operations.extenders.TestSkipExtender
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - InsertWithGroovyExtender:
       roles: Administrator
       extenders:
       - file: TestGroovyExtender.groovy
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - CustomOperation:
       type: Groovy
       roles: Administrator

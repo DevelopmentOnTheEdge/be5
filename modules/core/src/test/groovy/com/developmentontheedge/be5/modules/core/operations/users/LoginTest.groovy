@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.operations.users
 
 import com.developmentontheedge.be5.web.Request
 import com.developmentontheedge.be5.web.Session
-import com.developmentontheedge.be5.servlet.UserInfoHolder
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder
 import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType

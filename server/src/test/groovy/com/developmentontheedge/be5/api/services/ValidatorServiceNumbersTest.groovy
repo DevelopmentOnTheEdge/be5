@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.operation.services.validation.Validator
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.controllers;
 
 import javax.inject.Inject;
 
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;

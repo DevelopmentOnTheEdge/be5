@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.api.helpers;
 
 import javax.inject.Inject;
 import com.developmentontheedge.be5.model.QRec;
-import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest;
 
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableList;
