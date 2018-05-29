@@ -73,8 +73,8 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
     {
         String text;
 
-        InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/context.xml");
-        //InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/tomcat-pool.xml");
+        //InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/context.xml");
+        InputStream resource = getClass().getClassLoader().getResourceAsStream("generate-context/tomcat-pool.xml");
 
         try(BufferedReader br = new BufferedReader(new InputStreamReader(resource)))
         {
