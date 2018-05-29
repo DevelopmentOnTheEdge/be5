@@ -50,8 +50,9 @@ public class TableModelServiceImpl implements TableModelService
             case D1:
             case D1_UNKNOWN:
                 return getSqlTableModel(query, (Map<String, Object>) parameters);
+            case JAVA:
             case GROOVY:
-                return getGroovyTableModel(query, (Map<String, Object>) parameters);
+                return getFromTableBuilder(query, (Map<String, Object>) parameters);
             default:
                 throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
         }
@@ -91,30 +92,53 @@ public class TableModelServiceImpl implements TableModelService
                 .build();
     }
 
-    private TableModel getGroovyTableModel(Query query, Map<String, Object> parameters)
+    private TableModel getFromTableBuilder(Query query, Map<String, Object> parameters)
     {
-        try
+        TableBuilder tableBuilder;
+
+        switch (query.getType())
         {
-            Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
-                    query.getQuery(), query.getFileName());
+            case JAVA:
+                try
+                {
+                    tableBuilder = (TableBuilder) Class.forName(query.getQuery()).newInstance();
+                    break;
+                }
+                catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
+                {
+                    throw Be5Exception.internalInQuery(e, query);
+                }
+            case GROOVY:
+                try
+                {
+                    Class aClass = groovyRegister.getClass(query.getEntity() + query.getName(),
+                            query.getQuery(), query.getFileName());
 
-            if(aClass != null)
-            {
-                TableBuilder tableBuilder = (TableBuilder) aClass.newInstance();
-
-                tableBuilder.initialize(query, parameters);
-                injector.injectMembers(tableBuilder);
-
-                return tableBuilder.getTableModel();
-            }
-            else
-            {
-                throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
-            }
+                    if(aClass != null)
+                    {
+                        tableBuilder = (TableBuilder) aClass.newInstance();
+                        break;
+                    }
+                    else
+                    {
+                        throw Be5Exception.internal("Class " + query.getQuery() + " is null." );
+                    }
+                }
+                catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+                {
+                    throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+                }
+            default: throw Be5Exception.internal("Not support operation type: " + query.getType());
         }
-        catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
+
+        if(tableBuilder == null)
         {
-            throw new UnsupportedOperationException( "Groovy feature has been excluded", e );
+            throw Be5Exception.internal("TableBuilder " + query.getQuery() + " is null." );
         }
+
+        tableBuilder.initialize(query, parameters);
+        injector.injectMembers(tableBuilder);
+
+        return tableBuilder.getTableModel();
     }
 }

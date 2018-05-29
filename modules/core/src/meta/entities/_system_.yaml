@@ -38,9 +38,9 @@ _system_:
       roles: [SystemDeveloper, Administrator]
       file: system.HttpHeaders.groovy
   - DataSource:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
-      file: system.DataSource.groovy
+      code: com.developmentontheedge.be5.queries.DataSource
   - Query Builder:
       type: static
       roles: [SystemDeveloper]
