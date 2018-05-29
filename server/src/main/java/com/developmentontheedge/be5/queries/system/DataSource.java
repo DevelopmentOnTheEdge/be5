@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.queries;
+package com.developmentontheedge.be5.queries.system;
 
 import com.developmentontheedge.be5.api.services.DataSourceService;
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport;
@@ -20,6 +20,14 @@ import java.util.TreeMap;
 
 public class DataSource extends TableBuilderSupport
 {
+    private final DataSourceService databaseService;
+
+    @Inject
+    public DataSource(DataSourceService databaseService)
+    {
+        this.databaseService = databaseService;
+    }
+
     @Override
     public TableModel getTableModel()
     {
@@ -90,7 +98,4 @@ public class DataSource extends TableBuilderSupport
 
         return map;
     }
-
-    @Inject
-    public DataSourceService databaseService;
 }

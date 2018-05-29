@@ -5,11 +5,11 @@ _system_:
   primaryKey: _dummy_
   queries:
   - Cache:
-      type: Groovy
+      type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
       - ReloadProject
-      file: system.CacheTable.groovy
+      code: com.developmentontheedge.be5.queries.CacheTable
   - Entities:
       type: Groovy
       roles: [SystemDeveloper, Administrator]
