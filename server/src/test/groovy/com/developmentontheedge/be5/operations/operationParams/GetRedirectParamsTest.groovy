@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations.operationParams
 
-import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationContext
+import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import org.junit.Test
 

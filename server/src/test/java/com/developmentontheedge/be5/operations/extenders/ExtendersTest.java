@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operations.extenders;
 
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import org.junit.Test;

@@ -3,9 +3,9 @@ package com.developmentontheedge.be5.api.services
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
-import com.developmentontheedge.be5.operation.OperationContext
-import com.developmentontheedge.be5.operation.OperationInfo
-import com.developmentontheedge.be5.operation.OperationStatus
+import com.developmentontheedge.be5.operation.model.OperationContext
+import com.developmentontheedge.be5.operation.model.OperationInfo
+import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Test
 

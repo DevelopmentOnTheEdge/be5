@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.operations;
 
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.be5.util.Either;
 import org.junit.Before;

@@ -2,6 +2,8 @@ package com.developmentontheedge.be5.operation;
 
 import com.developmentontheedge.be5.api.services.OperationsFactory;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;

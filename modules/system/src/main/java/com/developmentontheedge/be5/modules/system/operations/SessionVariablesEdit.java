@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.system.operations;
 
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operations.support.GOperationSupport;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 

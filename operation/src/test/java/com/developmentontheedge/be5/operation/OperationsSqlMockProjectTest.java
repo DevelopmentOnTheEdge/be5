@@ -9,14 +9,13 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.operation.model.OperationModule;
 import com.developmentontheedge.be5.operation.test.ErrorProcessing;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;

@@ -4,8 +4,8 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import javax.inject.Inject;
-import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationExtender;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationExtender;
 
 
 public abstract class OperationExtenderSupport implements OperationExtender

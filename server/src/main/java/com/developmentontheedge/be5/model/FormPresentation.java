@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.model;
 
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.operation.OperationContext;
-import com.developmentontheedge.be5.operation.OperationInfo;
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationContext;
+import com.developmentontheedge.be5.operation.model.OperationInfo;
+import com.developmentontheedge.be5.operation.model.OperationResult;
 
 import javax.json.JsonObject;
 import java.util.Arrays;

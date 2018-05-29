@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.database.ConnectionService
 import javax.inject.Inject
 import com.developmentontheedge.be5.operations.support.OperationSupport
-import com.developmentontheedge.be5.operation.TransactionalOperation
+import com.developmentontheedge.be5.operation.model.TransactionalOperation
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 

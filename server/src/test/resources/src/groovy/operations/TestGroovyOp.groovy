@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.base.util.DpsUtils
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.Operation
+import com.developmentontheedge.be5.operation.model.Operation
 
 import java.sql.Date
 

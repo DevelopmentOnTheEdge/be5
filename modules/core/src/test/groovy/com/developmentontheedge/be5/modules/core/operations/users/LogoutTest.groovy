@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
 import com.developmentontheedge.be5.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
-import com.developmentontheedge.be5.operation.OperationStatus
+import com.developmentontheedge.be5.operation.model.OperationStatus
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

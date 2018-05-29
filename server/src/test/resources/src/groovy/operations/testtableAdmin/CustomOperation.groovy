@@ -1,8 +1,8 @@
 package testtableAdmin
 
 import com.developmentontheedge.be5.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationContext
+import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.model.OperationContext
 
 
 class CustomOperation extends GOperationSupport implements Operation

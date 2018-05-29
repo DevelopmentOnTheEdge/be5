@@ -3,11 +3,11 @@ package com.developmentontheedge.be5.api.services.impl;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationBuilder;
-import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
-import com.developmentontheedge.be5.operation.OperationInfo;
-import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationContext;
+import com.developmentontheedge.be5.operation.model.OperationInfo;
+import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 
 import java.util.Collections;
 import java.util.Map;

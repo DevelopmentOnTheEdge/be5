@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation;
+package com.developmentontheedge.be5.operation.model;
 
 import com.developmentontheedge.be5.api.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.api.services.OperationExecutor;

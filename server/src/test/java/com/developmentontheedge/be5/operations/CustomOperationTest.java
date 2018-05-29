@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operations;
 
-import com.developmentontheedge.be5.operation.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;

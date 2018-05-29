@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.api.services
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationResult
-import com.developmentontheedge.be5.operation.OperationStatus
+import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.model.OperationResult
+import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Ignore

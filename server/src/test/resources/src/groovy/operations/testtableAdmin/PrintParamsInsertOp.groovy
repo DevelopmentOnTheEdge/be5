@@ -1,6 +1,6 @@
 package src.groovy.operations.testtableAdmin
 
-import com.developmentontheedge.be5.operation.OperationResult
+import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operations.SilentInsertOperation
 import com.developmentontheedge.beans.DynamicPropertySet
 

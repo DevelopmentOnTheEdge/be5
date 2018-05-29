@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation;
+package com.developmentontheedge.be5.operation.model;
 
 
 public interface TransactionalOperation extends Operation

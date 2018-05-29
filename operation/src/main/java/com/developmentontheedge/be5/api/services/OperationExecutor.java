@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.api.services;
 
-import com.developmentontheedge.be5.operation.Operation;
-import com.developmentontheedge.be5.operation.OperationContext;
-import com.developmentontheedge.be5.operation.OperationInfo;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationContext;
+import com.developmentontheedge.be5.operation.model.OperationInfo;
 
 import java.util.Map;
 

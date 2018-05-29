@@ -26,8 +26,8 @@ import com.developmentontheedge.be5.model.TablePresentation;
 import com.developmentontheedge.be5.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.operation.OperationResult;
-import com.developmentontheedge.be5.operation.OperationStatus;
+import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.util.Either;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.util.HashUrlUtils;
@@ -221,7 +221,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
             if(topFormOperationPresentation.isPresent())
             {
-                com.developmentontheedge.be5.operation.Operation operation =
+                com.developmentontheedge.be5.operation.model.Operation operation =
                         operationExecutor.create(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm), query.getName(), new String[]{}, parameters);
 
                 Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
@@ -242,20 +242,20 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public Either<FormPresentation, OperationResult> generateForm(com.developmentontheedge.be5.operation.Operation operation,
+    public Either<FormPresentation, OperationResult> generateForm(com.developmentontheedge.be5.operation.model.Operation operation,
                                                                   Map<String, ?> values)
     {
         return processForm(operation, values, false);
     }
 
     @Override
-    public Either<FormPresentation, OperationResult> executeForm(com.developmentontheedge.be5.operation.Operation operation,
+    public Either<FormPresentation, OperationResult> executeForm(com.developmentontheedge.be5.operation.model.Operation operation,
                                                                  Map<String, ?> values)
     {
         return processForm(operation, values, true);
     }
 
-    private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.Operation operation,
+    private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.model.Operation operation,
                                                                   Map<String, ?> values, boolean execute)
     {
         Either<Object, OperationResult> result;
