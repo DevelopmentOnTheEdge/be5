@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.queries.system;
+package com.developmentontheedge.be5.system.queries;
 
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;

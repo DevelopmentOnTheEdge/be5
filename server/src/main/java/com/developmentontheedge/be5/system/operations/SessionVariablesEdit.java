@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operations.system;
+package com.developmentontheedge.be5.system.operations;
 
 import com.developmentontheedge.be5.operation.OperationResult;
 import com.developmentontheedge.be5.operations.support.GOperationSupport;

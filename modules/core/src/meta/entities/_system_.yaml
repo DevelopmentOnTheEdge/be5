@@ -9,38 +9,38 @@ _system_:
       roles: [SystemDeveloper, Administrator]
       operations:
       - ReloadProject
-      code: com.developmentontheedge.be5.queries.CacheTable
+      code: com.developmentontheedge.be5.system.queries.CacheTable
   - Entities:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.queries.Entities
+      code: com.developmentontheedge.be5.system.queries.Entities
   - Queries:
       type: Java
       invisible: true
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.queries.Queries
+      code: com.developmentontheedge.be5.system.queries.Queries
   - Session variables:
       type: Java
       roles: [SystemDeveloper, Administrator]
       operations:
       - SessionVariablesEdit
-      code: com.developmentontheedge.be5.queries.SessionVariables
+      code: com.developmentontheedge.be5.system.queries.SessionVariables
   - Threads:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.queries.Threads
+      code: com.developmentontheedge.be5.system.queries.Threads
   - System Properties:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.queries.SystemProperties
+      code: com.developmentontheedge.be5.system.queries.SystemProperties
   - Http Headers:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.queries.HttpHeaders
+      code: com.developmentontheedge.be5.system.queries.HttpHeaders
   - DataSource:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.queries.DataSource
+      code: com.developmentontheedge.be5.system.queries.DataSource
   - Query Builder:
       type: static
       roles: [SystemDeveloper]
@@ -50,8 +50,8 @@ _system_:
       type: Java
       records: 1
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.operations.SessionVariablesEdit
+      code: com.developmentontheedge.be5.system.operations.SessionVariablesEdit
   - ReloadProject:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.operations.ReloadProject
+      code: com.developmentontheedge.be5.system.operations.ReloadProject

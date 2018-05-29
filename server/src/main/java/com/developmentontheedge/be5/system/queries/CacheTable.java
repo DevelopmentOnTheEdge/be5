@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.queries.system;
+package com.developmentontheedge.be5.system.queries;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport;
@@ -11,13 +11,7 @@ import java.util.Map;
 
 public class CacheTable extends TableBuilderSupport
 {
-    private final Be5Caches be5Caches;
-
-    @Inject
-    public CacheTable(Be5Caches be5Caches)
-    {
-        this.be5Caches = be5Caches;
-    }
+    @Inject private Be5Caches be5Caches;
 
     @Override
     public TableModel getTableModel()
