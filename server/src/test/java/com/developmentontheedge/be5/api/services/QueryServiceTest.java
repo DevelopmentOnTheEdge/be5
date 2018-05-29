@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
+import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;

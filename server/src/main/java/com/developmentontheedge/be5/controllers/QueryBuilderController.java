@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.api.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.api.services.QueryService;
+import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.model.StaticPagePresentation;

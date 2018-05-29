@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.api.services.QueryService;
+import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
 import com.developmentontheedge.be5.metadata.model.Query;

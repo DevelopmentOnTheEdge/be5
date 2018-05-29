@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.api.services.OperationService;
 import com.developmentontheedge.be5.api.services.DocumentGenerator;
-import com.developmentontheedge.be5.api.services.TableModelService;
+import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.api.services.model.Category;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
