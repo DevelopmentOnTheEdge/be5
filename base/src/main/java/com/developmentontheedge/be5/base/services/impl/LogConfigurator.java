@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.impl;
+package com.developmentontheedge.be5.base.services.impl;
 
 import java.io.IOException;
 import java.io.InputStream;

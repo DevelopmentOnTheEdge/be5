@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.impl;
 
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.base.impl.ProjectProviderImpl;
+import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;

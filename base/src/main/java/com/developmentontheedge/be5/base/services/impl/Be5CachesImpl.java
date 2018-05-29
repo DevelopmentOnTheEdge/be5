@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.impl;
+package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Configurable;
