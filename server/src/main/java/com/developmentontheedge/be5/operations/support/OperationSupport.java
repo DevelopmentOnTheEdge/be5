@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.api.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.DbService;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.FrontendConstants;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.api.services.DataSourceService;
+import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.sql.format.Dbms;
 
 import javax.sql.DataSource;

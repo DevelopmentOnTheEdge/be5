@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.api.helpers.OperationHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.services.validation.Validator;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.DbService;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;

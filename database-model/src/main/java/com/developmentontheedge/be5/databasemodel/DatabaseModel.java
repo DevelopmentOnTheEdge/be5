@@ -4,9 +4,9 @@ import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMeta
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
-import com.developmentontheedge.be5.api.services.impl.SqlHelper;
+import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.api.services.DbService;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelImplMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.util;
 
-import com.developmentontheedge.be5.api.util.SqlUtils;
+import com.developmentontheedge.be5.database.util.SqlUtils;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;

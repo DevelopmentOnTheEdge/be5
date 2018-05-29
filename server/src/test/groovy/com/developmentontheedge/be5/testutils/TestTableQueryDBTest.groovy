@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.testutils
 
 import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.api.services.DbService
+import com.developmentontheedge.be5.database.DbService
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest

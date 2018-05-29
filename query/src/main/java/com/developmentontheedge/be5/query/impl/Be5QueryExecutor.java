@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
+import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.DataSourceService;
-import com.developmentontheedge.be5.api.services.DbService;
-import com.developmentontheedge.be5.api.sql.ResultSetParser;
+import com.developmentontheedge.be5.database.DataSourceService;
+import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;

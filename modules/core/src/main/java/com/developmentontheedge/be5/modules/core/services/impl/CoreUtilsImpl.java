@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.api.services.Be5Caches;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.DbService;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.util.BlobUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 

@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.system.queries;
 
-import com.developmentontheedge.be5.api.services.DataSourceService;
+import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.queries.support.TableBuilderSupport;
 import com.developmentontheedge.be5.query.model.TableModel;
 import org.apache.commons.dbcp.BasicDataSource;

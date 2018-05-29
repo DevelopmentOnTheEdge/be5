@@ -1,7 +1,7 @@
 package src.groovy.operations
 
 import com.developmentontheedge.be5.exceptions.Be5Exception
-import com.developmentontheedge.be5.api.services.ConnectionService
+import com.developmentontheedge.be5.database.ConnectionService
 import javax.inject.Inject
 import com.developmentontheedge.be5.operations.support.OperationSupport
 import com.developmentontheedge.be5.operation.TransactionalOperation

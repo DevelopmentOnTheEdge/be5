@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
-import com.developmentontheedge.be5.api.services.DbService
+import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModel

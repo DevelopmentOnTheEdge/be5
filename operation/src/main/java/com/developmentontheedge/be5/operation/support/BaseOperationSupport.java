@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.support;
 
-import com.developmentontheedge.be5.api.services.DbService;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.OperationsFactory;
 import com.developmentontheedge.be5.api.services.validation.Validator;

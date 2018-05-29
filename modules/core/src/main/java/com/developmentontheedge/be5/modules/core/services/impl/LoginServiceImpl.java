@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.api.helpers.MenuHelper;
 import com.developmentontheedge.be5.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.api.helpers.UserHelper;
 import com.developmentontheedge.be5.api.services.CoreUtils;
-import com.developmentontheedge.be5.api.services.DbService;
+import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.MetadataUtils;
 import com.developmentontheedge.be5.model.Action;

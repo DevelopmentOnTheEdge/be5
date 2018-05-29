@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.api.services.ConnectionService;
-import com.developmentontheedge.be5.api.sql.SqlExecutor;
-import com.developmentontheedge.be5.api.sql.SqlExecutorVoid;
+import com.developmentontheedge.be5.database.ConnectionService;
+import com.developmentontheedge.be5.database.sql.SqlExecutor;
+import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 
 import java.sql.Connection;
 import java.sql.SQLException;
