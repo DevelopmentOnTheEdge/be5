@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.api.UserInfoProvider;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;

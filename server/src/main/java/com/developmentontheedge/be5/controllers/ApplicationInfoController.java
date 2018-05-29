@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.api.Controller;
 import com.developmentontheedge.be5.api.Request;
 import com.developmentontheedge.be5.api.Response;
 import com.developmentontheedge.be5.api.support.ControllerSupport;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.helpers.UserAwareMeta;
 
 import javax.inject.Inject;

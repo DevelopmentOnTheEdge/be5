@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.util;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

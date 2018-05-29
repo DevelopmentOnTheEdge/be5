@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.base.impl;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Project;

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.api;
 import java.util.List;
 import java.util.Map;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 
 /**
  * <p>An interface providing access to key-value style parameters (e.g. from HTTP request or WebSocket request).

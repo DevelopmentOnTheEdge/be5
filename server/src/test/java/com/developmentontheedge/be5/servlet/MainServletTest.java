@@ -1,24 +1,6 @@
 package com.developmentontheedge.be5.servlet;
 
-import com.developmentontheedge.be5.api.Request;
-import com.developmentontheedge.be5.api.Response;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import javax.inject.Inject;
-import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -26,7 +8,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 public class MainServletTest extends ServerBe5ProjectTest

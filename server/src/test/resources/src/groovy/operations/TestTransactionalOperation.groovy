@@ -1,6 +1,6 @@
 package src.groovy.operations
 
-import com.developmentontheedge.be5.exceptions.Be5Exception
+import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.database.ConnectionService
 import javax.inject.Inject
 import com.developmentontheedge.be5.operations.support.OperationSupport

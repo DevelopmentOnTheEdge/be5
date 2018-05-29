@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.util;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 //import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 
 import javax.xml.bind.DatatypeConverter;
@@ -8,8 +8,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;

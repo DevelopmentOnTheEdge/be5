@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 
 
 public class LogConfigurator

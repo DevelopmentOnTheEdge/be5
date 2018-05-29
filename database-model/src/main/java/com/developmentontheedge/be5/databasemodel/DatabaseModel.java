@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel;
 
 import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.api.services.Meta;

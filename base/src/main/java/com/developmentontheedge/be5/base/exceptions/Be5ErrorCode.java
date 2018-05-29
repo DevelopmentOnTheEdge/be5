@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.exceptions;
+package com.developmentontheedge.be5.base.exceptions;
 
 
 public enum Be5ErrorCode

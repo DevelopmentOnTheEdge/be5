@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.exceptions;
+package com.developmentontheedge.be5.base.exceptions;
 
 import com.developmentontheedge.be5.util.HtmlUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;

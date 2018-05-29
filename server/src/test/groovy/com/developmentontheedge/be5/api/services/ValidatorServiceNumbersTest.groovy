@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.services
 
-import com.developmentontheedge.be5.exceptions.Be5Exception
+import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.api.services.validation.Validator
 import javax.inject.Inject
 import com.developmentontheedge.be5.model.beans.GDynamicPropertySetSupport

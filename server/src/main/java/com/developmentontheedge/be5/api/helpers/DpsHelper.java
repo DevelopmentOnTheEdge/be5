@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.api.helpers;
 
-import com.developmentontheedge.be5.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.api.services.Meta;
 import com.developmentontheedge.be5.api.services.validation.ValidationRules;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
