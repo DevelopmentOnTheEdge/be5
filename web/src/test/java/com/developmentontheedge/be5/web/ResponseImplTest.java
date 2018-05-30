@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.web;
 
-import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.ResponseImpl;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;

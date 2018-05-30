@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.api.impl;
+package com.developmentontheedge.be5.web;
 
-import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import org.junit.Before;
 import org.junit.Test;
