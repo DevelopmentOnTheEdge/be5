@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.MethodProvider;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -13,18 +14,18 @@ import java.util.Map;
 
 public class RecordModelBase<T> extends DynamicPropertySetBlocked implements RecordModel<T>
 {
-    private final EntityModelBase<T> entityModelBase;
+    private final EntityModel<T> entityModel;
     private final T id;
 
-    RecordModelBase(T id, EntityModelBase<T> entityModelBase, DynamicPropertySet dps)
+    public RecordModelBase(T id, EntityModel<T> entityModel, DynamicPropertySet dps)
     {
         super( dps );
-        if(dps.getProperty(entityModelBase.getPrimaryKeyName()) == null)
+        if(dps.getProperty(entityModel.getPrimaryKeyName()) == null)
         {
-            throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModelBase.getPrimaryKeyName() + "'");
+            throw Be5Exception.internal("DynamicPropertySet not contain primaryKey '" + entityModel.getPrimaryKeyName() + "'");
         }
         this.id = id;
-        this.entityModelBase = entityModelBase;
+        this.entityModel = entityModel;
     }
 
     @Override
@@ -36,19 +37,19 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     @Override
     public int remove()
     {
-        return entityModelBase.remove( id );
+        return entityModel.remove( id );
     }
 
     @Override
     public String toString()
     {
-        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModelBase.getPrimaryKeyName() + " = " + getPrimaryKey() + " ] }";
+        return super.toString() + " { " + this.getClass().getSimpleName() + " [ " + entityModel.getPrimaryKeyName() + " = " + getPrimaryKey() + " ] }";
     }
 
     @Override
     public void update( String propertyName, Object value )
     {
-        entityModelBase.set( getPrimaryKey(), propertyName, value );
+        entityModel.set( getPrimaryKey(), propertyName, value );
 
         super.setValueHidden( propertyName, value );
     }
@@ -56,7 +57,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     @Override
     public void update( Map<String, Object> values )
     {
-        entityModelBase.set( getPrimaryKey(), values );
+        entityModel.set( getPrimaryKey(), values );
 
         for( String propertyName : values.keySet() )
         {
@@ -72,36 +73,36 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     {
         throw new IllegalAccessError( "You can't use this operation. Use EntityModel#set() to update value in database." );
     }
-
-    public class MethodProviderBase implements MethodProvider
-    {
-        protected final Method method;
-
-        MethodProviderBase( Method method )
-        {
-            this.method = method;
-        }
-
-        @Override
-        public Object invoke()
-        {
-            return invoke( new Object[]{} );
-        }
-
-        @Override
-        public Object invoke( Object... args )
-        {
-            try
-            {
-                Object[] fullArgs = new Object[ args.length + 1 ];
-                fullArgs[ 0 ] = RecordModelBase.this;
-                System.arraycopy(args, 0, fullArgs, 1, args.length);
-                return method.invoke( entityModelBase, fullArgs );
-            }
-            catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
-            {
-                throw new RuntimeException( e );
-            }
-        }
-    }
+//
+//    public class MethodProviderBase implements MethodProvider
+//    {
+//        protected final Method method;
+//
+//        MethodProviderBase( Method method )
+//        {
+//            this.method = method;
+//        }
+//
+//        @Override
+//        public Object invoke()
+//        {
+//            return invoke( new Object[]{} );
+//        }
+//
+//        @Override
+//        public Object invoke( Object... args )
+//        {
+//            try
+//            {
+//                Object[] fullArgs = new Object[ args.length + 1 ];
+//                fullArgs[ 0 ] = RecordModelBase.this;
+//                System.arraycopy(args, 0, fullArgs, 1, args.length);
+//                return method.invoke(entityModel, fullArgs );
+//            }
+//            catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
+//            {
+//                throw new RuntimeException( e );
+//            }
+//        }
+//    }
 }

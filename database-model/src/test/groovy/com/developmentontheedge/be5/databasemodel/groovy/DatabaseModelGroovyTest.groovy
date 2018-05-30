@@ -289,32 +289,35 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //        return false;
 //    }
 
-//    @Test - use operationHelper instead, move test or delete
-//    void testGetList()
-//    {
-//        testtableAdmin << [
-//                "name": "TestName",
-//                "value": "1"]
-//
-//        testtableAdmin << [
-//                "name": "TestName2",
-//                "value": "2"]
-//
-//        List<RecordModel> list = testtableAdmin.toList()
-//
-//        assertTrue( listContains( list, "name", "TestName" ) )
-//        assertTrue( listContains( list, "value", "1" ) )
-//
-//        assertTrue( listContains( list, "name", "TestName2" ) )
-//        assertTrue( listContains( list, "value", "2" ) )
-//
-//
-//        list = testtableAdmin.toList( value: "1" )
-//        assertTrue( listContains( list, "name", "TestName" ) )
-//
-//        list = testtableAdmin.toList( name: "TestName3" )
-//        assertTrue list.empty
-//    }
+    @Test
+    void testGetList()
+    {
+        testtableAdmin << [
+                "name": "TestName",
+                "value": "1"]
+
+        testtableAdmin << [
+                "name": "TestName2",
+                "value": "2"]
+
+        List<RecordModel> list = testtableAdmin.toList()
+
+        assertTrue( listContains( list, "name", "TestName" ) )
+        assertTrue( listContains( list, "value", "1" ) )
+
+        assertTrue( listContains( list, "name", "TestName2" ) )
+        assertTrue( listContains( list, "value", "2" ) )
+
+
+        list = testtableAdmin.toList( value: "1" )
+        assertTrue( listContains( list, "name", "TestName" ) )
+
+        list = testtableAdmin.toList( name: "TestName3" )
+        assertTrue list.empty
+
+        def array = testtableAdmin.toArray()
+        assertTrue( arrayContains( array, "name", "TestName" ) )
+    }
 
 //    @Test
 //    void testOperationGenerate()
@@ -555,6 +558,18 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //    }
 
     private static boolean listContains(List<DynamicPropertySet> recs, String propertyName, String value )
+    {
+        for( DynamicPropertySet rec : recs )
+        {
+            if( rec.getValueAsString( propertyName ).equals( value ) )
+            {
+                return true
+            }
+        }
+        return false
+    }
+
+    private static boolean arrayContains(DynamicPropertySet[] recs, String propertyName, String value )
     {
         for( DynamicPropertySet rec : recs )
         {

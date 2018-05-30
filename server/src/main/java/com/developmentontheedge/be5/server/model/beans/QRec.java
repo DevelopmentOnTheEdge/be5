@@ -1,5 +1,7 @@
-package com.developmentontheedge.be5.databasemodel.model;
+package com.developmentontheedge.be5.server.model.beans;
 
+import com.developmentontheedge.be5.base.services.GroovyRegister;
+import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -16,6 +18,11 @@ import java.util.List;
 
 public class QRec extends DynamicPropertySetSupport
 {
+    static
+    {
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, QRec.class );
+    }
+
     public static QRec fromList(List<DynamicPropertySet> dpsList)
     {
         if(dpsList.size() == 0)

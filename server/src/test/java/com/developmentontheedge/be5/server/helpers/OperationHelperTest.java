@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
 import javax.inject.Inject;
-import com.developmentontheedge.be5.databasemodel.model.QRec;
+import com.developmentontheedge.be5.server.model.beans.QRec;
 import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest;
 
 import com.developmentontheedge.beans.DynamicPropertySet;

@@ -17,8 +17,8 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.model.AstSelect;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -81,18 +81,49 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
 
-        AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
+        String sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
-                .where(conditions);
+                .where(conditions).format();
 
-        DynamicPropertySetSupport dps = db.select(sql.format(),
-                rs -> DpsUtils.setValues(getDps(), rs),
-                conditions.values().toArray());
+        DynamicPropertySetSupport dps = db.select(sql,
+                rs -> DpsUtils.setValues(getDps(), rs), conditions.values().toArray());
 
         return getRecordModel(dps);
     }
 
-    public DynamicPropertySetSupport getDps()
+    @Override
+    public List<RecordModel<T>> toList()
+    {
+        return toList( emptyMap() );
+    }
+
+    @Override
+    public RecordModel<T>[] toArray()
+    {
+        return toArray( emptyMap() );
+    }
+
+    @Override
+    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
+    {
+        Objects.requireNonNull(conditions);
+
+        String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
+
+        return db.list(sql, this::getRecordModel, conditions.values().toArray());
+    }
+
+    @Override
+    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
+    {
+        Objects.requireNonNull(conditions);
+
+        List<RecordModel<T>> recordModels = toList(conditions);
+        RecordModel<T>[] arr = new RecordModel[recordModels.size()];
+        return recordModels.toArray( arr );
+    }
+
+    private DynamicPropertySetSupport getDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         Map<String, ColumnDef> columns = meta.getColumns(entity);
@@ -103,7 +134,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         return dps;
     }
 
-    public DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
@@ -115,6 +146,11 @@ public class EntityModelBase<T> implements EntityModel<T>
         T primaryKey = (T)dps.getProperty(getPrimaryKeyName()).getValue();
 
         return new RecordModelBase<>(primaryKey, this, dps );
+    }
+
+    private RecordModel<T> getRecordModel(ResultSet rs)
+    {
+        return getRecordModel(DpsUtils.setValues(getDps(), rs));
     }
 
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
@@ -135,12 +171,13 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public long count( Map<String, ? super Object> conditions ) {
+    public long count( Map<String, ? super Object> conditions )
+    {
         Objects.requireNonNull(conditions);
 
-        AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
+        String sql = Ast.selectCount().from(entity.getName()).where(conditions).format();
 
-        return db.oneLong(sql.format(), conditions.values().toArray());
+        return db.oneLong(sql, conditions.values().toArray());
     }
 
     @Override
@@ -303,39 +340,6 @@ public class EntityModelBase<T> implements EntityModel<T>
         return entity.getPrimaryKey();
     }
 
-//    @Override
-//    public List<RecordModel<T>> toList()
-//    {
-//        return toList( emptyMap() );
-//    }
-//
-//    @Override
-//    public RecordModel<T>[] toArray()
-//    {
-//        return toArray( emptyMap() );
-//    }
-
-//    @Override
-//    public List<RecordModel<T>> toList( Map<String, ? super Object> conditions )
-//    {
-//        Objects.requireNonNull(conditions);
-//
-//        String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
-//
-//        return operationHelper.readAsRecords(sql, conditions.values().toArray()).stream()
-//                .map(this::getRecordModel)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public RecordModel<T>[] toArray( Map<String, ? super Object> conditions )
-//    {
-//        Objects.requireNonNull(conditions);
-//
-//        List<RecordModel<T>> recordModels = toList(conditions);
-//        RecordModel<T>[] arr = new RecordModel[recordModels.size()];
-//        return recordModels.toArray( arr );
-//    }
 //
 //    @Override
 //    public List<RecordModel> collect()
@@ -428,15 +432,6 @@ public class EntityModelBase<T> implements EntityModel<T>
 //
 //        db.update(dpsHelper.generateUpdateSqlForConditions(entity, dps, conditions),
 //                ObjectArrays.concat(dpsHelper.getValuesFromJson(dps), castValues(entity, conditions), Object.class));
-//    }
-//
-//    @Override
-//    public OperationModel getOperation( String operationName )
-//    {
-//        return new OperationModelBase(meta, operationExecutor)
-//                .setEntityName(entity.getName())
-//                .setQueryName("from another operation")
-//                .setOperationName(operationName);
 //    }
 
     @Override

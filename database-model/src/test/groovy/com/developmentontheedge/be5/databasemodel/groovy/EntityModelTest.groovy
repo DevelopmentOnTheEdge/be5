@@ -1,21 +1,26 @@
-package com.developmentontheedge.be5.databasemodel
+package com.developmentontheedge.be5.databasemodel.groovy
 
-import javax.inject.Inject
+import com.developmentontheedge.be5.database.sql.ResultSetParser
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
+import com.developmentontheedge.be5.databasemodel.DatabaseModelSqlMockProjectTest
+import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
+import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Matchers
 
-import static org.mockito.Matchers.anyString
-import static org.mockito.Matchers.anyVararg
+import javax.inject.Inject
+
+import static org.junit.Assert.assertEquals
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
-import static org.junit.Assert.assertEquals
 
-
-class EntityModelAddTest extends DatabaseModelSqlMockProjectTest
+class EntityModelTest extends DatabaseModelSqlMockProjectTest
 {
     @Inject private DatabaseModel database
 
@@ -97,4 +102,17 @@ class EntityModelAddTest extends DatabaseModelSqlMockProjectTest
         assertEquals("2", id)
     }
 
+    @Test
+    void simpleMockTestExample() throws Exception
+    {
+        when(DbServiceMock.mock.select(anyString(),
+                Matchers.<ResultSetParser<DynamicPropertySet>> any(), eq(4444L))).thenReturn(getDpsS([
+                ID    : 4444L,
+                name  : "test",
+                value    : 123
+        ]))
+
+        def rec = database.getEntity("testtableAdmin").get(4444L)
+        assertEquals("test", rec.getValue("name"))
+    }
 }

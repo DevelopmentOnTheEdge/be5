@@ -23,6 +23,7 @@ public class ErrorTitles
 		TITLES.put(NOT_INITIALIZED, "Server is not properly initialized: try again later");
 		TITLES.put(ACCESS_DENIED, "Access denied");
 		TITLES.put(ACCESS_DENIED_TO_QUERY, "Access denied to query $1.$2");
+		TITLES.put(OPERATION_NOT_ASSIGNED_TO_QUERY, "Operation '$1.$3' not assigned to query '$2'");
 		TITLES.put(ACCESS_DENIED_TO_OPERATION, "Access denied to operation $1.$2");
 		TITLES.put(INTERNAL_ERROR_IN_OPERATION, "Internal error occured during operation $1.$2");
 		TITLES.put(INTERNAL_ERROR_IN_OPERATION_EXTENDER, "Internal error occured during operation extender $1");

@@ -1,13 +1,12 @@
-package com.developmentontheedge.be5.databasemodel.model
+package com.developmentontheedge.be5.server.model.beans
 
-import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
-import com.developmentontheedge.be5.databasemodel.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 
 
-class GroovyDpsGetPropertyTest extends DatabaseModelProjectDbTest
+class GroovyDpsGetPropertyTest extends ServerBe5ProjectDBTest
 {
     private GDynamicPropertySetSupport dps
 

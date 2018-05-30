@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.server.helpers.OperationHelper
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter
 import javax.inject.Inject
-import com.developmentontheedge.be5.databasemodel.model.QRec
+import com.developmentontheedge.be5.server.model.beans.QRec
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet

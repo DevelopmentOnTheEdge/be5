@@ -297,7 +297,7 @@ public class MetaImpl implements Meta
         {
             if(getProject().findOperation(entityName, name) != null)
             {
-                throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);//todo add - for current query
+                throw Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY.exception(entityName, queryName, name);
             }
             else
             {
