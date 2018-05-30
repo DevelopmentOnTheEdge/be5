@@ -17,8 +17,8 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.developmentontheedge.sql.format.Ast;
-import com.developmentontheedge.sql.model.AstSelect;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -81,12 +81,11 @@ public class EntityModelBase<T> implements EntityModel<T>
         Objects.requireNonNull(conditions);
         checkPrimaryKey(conditions);
 
-        AstSelect sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
+        String sql = Ast.select(addPrimaryKeyColumnIfNotEmpty(columns))
                 .from(entity.getName())
-                .where(conditions);
+                .where(conditions).format();
 
-        return db.select(sql.format(), rs -> getRecordModel(DpsUtils.setValues(getDps(), rs)),
-                conditions.values().toArray());
+        return db.select(sql, this::getRecordModel, conditions.values().toArray());
     }
 
     @Override
@@ -108,8 +107,7 @@ public class EntityModelBase<T> implements EntityModel<T>
 
         String sql = Ast.selectAll().from(entity.getName()).where(conditions).format();
 
-        return db.list(sql, rs -> getRecordModel(DpsUtils.setValues(getDps(), rs)),
-                conditions.values().toArray());
+        return db.list(sql, this::getRecordModel, conditions.values().toArray());
     }
 
     @Override
@@ -122,7 +120,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         return recordModels.toArray( arr );
     }
 
-    public DynamicPropertySetSupport getDps()
+    private DynamicPropertySetSupport getDps()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport();
         Map<String, ColumnDef> columns = meta.getColumns(entity);
@@ -133,7 +131,7 @@ public class EntityModelBase<T> implements EntityModel<T>
         return dps;
     }
 
-    public DynamicProperty getDynamicProperty(ColumnDef columnDef)
+    private DynamicProperty getDynamicProperty(ColumnDef columnDef)
     {
         return new DynamicProperty(columnDef.getName(), meta.getColumnType(columnDef));
     }
@@ -145,6 +143,11 @@ public class EntityModelBase<T> implements EntityModel<T>
         T primaryKey = (T)dps.getProperty(getPrimaryKeyName()).getValue();
 
         return new RecordModelBase<>(primaryKey, this, dps );
+    }
+
+    private RecordModel<T> getRecordModel(ResultSet rs)
+    {
+        return getRecordModel(DpsUtils.setValues(getDps(), rs));
     }
 
     private List<String> addPrimaryKeyColumnIfNotEmpty(List<String> columns)
@@ -165,12 +168,13 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public long count( Map<String, ? super Object> conditions ) {
+    public long count( Map<String, ? super Object> conditions )
+    {
         Objects.requireNonNull(conditions);
 
-        AstSelect sql = Ast.selectCount().from(entity.getName()).where(conditions);
+        String sql = Ast.selectCount().from(entity.getName()).where(conditions).format();
 
-        return db.oneLong(sql.format(), conditions.values().toArray());
+        return db.oneLong(sql, conditions.values().toArray());
     }
 
     @Override
