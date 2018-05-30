@@ -59,7 +59,7 @@ public abstract class BaseTestUtils
 
     protected static final Jsonb jsonb = JsonbBuilder.create();
 
-    @Inject private Meta meta;
+    @Inject protected Meta meta;
     @Inject protected UserAwareMeta userAwareMeta;
     @Inject protected DbService db;
 

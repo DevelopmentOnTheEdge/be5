@@ -1,10 +1,10 @@
 package src.groovy.queries
 
 import com.developmentontheedge.be5.query.model.TableModel
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport
+import com.developmentontheedge.be5.query.support.BaseTableBuilderSupport
 
 
-class TestGroovyTable extends TableBuilderSupport
+class TestGroovyTable extends BaseTableBuilderSupport
 {
     @Override
     TableModel getTableModel()

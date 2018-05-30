@@ -42,4 +42,18 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         assertEquals("{'content':'user1<br/> user2','options':{}}",
                 oneQuotes(jsonb.toJson(tableModel.getRows().get(0).getCells().get(2))));
     }
+
+    @Test
+    public void groovyTableTest() throws Exception
+    {
+        TableModel tableModel = tableModelService.
+                getTableModel(meta.getQuery("testtableAdmin", "TestGroovyTable"), new HashMap<>());
+
+        assertEquals("[{'name':'name','title':'name'},{'name':'value','title':'value'}]", oneQuotes(jsonb.toJson(tableModel.getColumns())));
+
+        assertEquals("[{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}],'id':'0'}," +
+                        "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}],'id':'0'}]"
+                , oneQuotes(jsonb.toJson(tableModel.getRows())));
+    }
+
 }
