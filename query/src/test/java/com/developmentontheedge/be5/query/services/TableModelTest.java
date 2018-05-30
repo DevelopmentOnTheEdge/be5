@@ -26,9 +26,9 @@ public class TableModelTest extends QueryBe5ProjectDBTest
         db.update("delete from testtable");
         db.insert("insert into testtable (name, value) VALUES (?, ?)","tableModelTest", "1");
 
-        db.update("delete from testtUser");
-        db.insert("insert into testtUser (name, value) VALUES (?, ?)","tableModelTest", "user1");
-        db.insert("insert into testtUser (name, value) VALUES (?, ?)","tableModelTest", "user2");
+        db.update("delete from testSubQuery");
+        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)","tableModelTest", "user1");
+        db.insert("insert into testSubQuery (name, value) VALUES (?, ?)","tableModelTest", "user2");
     }
 
     @Test

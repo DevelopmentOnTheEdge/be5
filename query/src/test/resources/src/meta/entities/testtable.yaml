@@ -59,9 +59,9 @@ testtable:
               t.name AS "Name",
               t.value AS "Value",
               '<sql>SELECT u.value
-                    FROM testtUser u
+                    FROM testSubQuery u
                     WHERE u.name = '<var:___Name />'
-               </sql>' AS "testtUserValues"
+               </sql>' AS "testSubQueryValues"
             FROM
               testtable t
   - TestMultipleColumn:

@@ -6,6 +6,7 @@ queryTestProject:
   application:
   - testtable
   - testtableAdmin
+  - testSubQuery
   scripts:
   - Post-db
   - dictionaries
