@@ -1,0 +1,13 @@
+queryTestProject:
+  features: logging
+  l10n: ru
+  projectFileStructure: {}
+  modules: []
+  application:
+  - testtable
+  - testtableAdmin
+  - testSubQuery
+  scripts:
+  - Post-db
+  - dictionaries
+

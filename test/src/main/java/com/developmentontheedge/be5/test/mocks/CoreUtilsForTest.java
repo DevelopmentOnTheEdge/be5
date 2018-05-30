@@ -1,6 +1,6 @@
-package com.developmentontheedge.be5.server.test.mocks;
+package com.developmentontheedge.be5.test.mocks;
 
-import com.developmentontheedge.be5.server.services.CoreUtils;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 
 import java.util.Map;
 

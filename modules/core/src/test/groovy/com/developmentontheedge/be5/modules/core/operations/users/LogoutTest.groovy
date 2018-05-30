@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.web.Request
 import com.developmentontheedge.be5.web.Session
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectTest
 import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel

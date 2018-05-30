@@ -1,0 +1,15 @@
+testSubQuery:
+  type: table
+  displayName: testSubQuery
+  order: '8'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: VARCHAR(30)

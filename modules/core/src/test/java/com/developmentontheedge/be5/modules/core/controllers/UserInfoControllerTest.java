@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectTest;
 import com.developmentontheedge.be5.web.Response;
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
-public class UserInfoComponentTest extends CoreBe5ProjectTest
+public class UserInfoControllerTest extends CoreBe5ProjectTest
 {
     @Inject private UserInfoController component;
 

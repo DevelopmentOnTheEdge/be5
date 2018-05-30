@@ -1,26 +1,26 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.query.services.impl;
 
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.base.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.server.services.CoreUtils;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.query.services.QueryService;
-import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.impl.SqlTableBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.util.LayoutUtils;
+import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.query.services.TableModelService;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.developmentontheedge.be5.server.RestApiConstants.LIMIT;
-import static com.developmentontheedge.be5.server.RestApiConstants.OFFSET;
-import static com.developmentontheedge.be5.server.RestApiConstants.ORDER_COLUMN;
-import static com.developmentontheedge.be5.server.RestApiConstants.ORDER_DIR;
+import static com.developmentontheedge.be5.query.TableConstants.LIMIT;
+import static com.developmentontheedge.be5.query.TableConstants.OFFSET;
+import static com.developmentontheedge.be5.query.TableConstants.ORDER_COLUMN;
+import static com.developmentontheedge.be5.query.TableConstants.ORDER_DIR;
 
 
 public class TableModelServiceImpl implements TableModelService
@@ -30,16 +30,18 @@ public class TableModelServiceImpl implements TableModelService
     private final GroovyRegister groovyRegister;
     private final Injector injector;
     private final QueryService queryService;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public TableModelServiceImpl(UserAwareMeta userAwareMeta, CoreUtils coreUtils, GroovyRegister groovyRegister,
-                                 Injector injector, QueryService queryService)
+                                 Injector injector, QueryService queryService, UserInfoProvider userInfoProvider)
     {
         this.userAwareMeta = userAwareMeta;
         this.coreUtils = coreUtils;
         this.groovyRegister = groovyRegister;
         this.injector = injector;
         this.queryService = queryService;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class TableModelServiceImpl implements TableModelService
     @Override
     public SqlTableBuilder builder(Query query, Map<String, ?> parameters)
     {
-        return new SqlTableBuilder(query, (Map<String, Object>) parameters, UserInfoHolder.getUserInfo(), queryService, userAwareMeta);
+        return new SqlTableBuilder(query, (Map<String, Object>) parameters, userInfoProvider.get(), queryService, userAwareMeta);
     }
 
     private TableModel getSqlTableModel(Query query, Map<String, Object> parameters)
@@ -85,7 +87,7 @@ public class TableModelServiceImpl implements TableModelService
                     coreUtils.getSystemSetting("be5_defaultPageLimit", "10")).toString());
         }
 
-        return new SqlTableBuilder(query, parameters, UserInfoHolder.getUserInfo(), queryService, userAwareMeta)
+        return new SqlTableBuilder(query, parameters, userInfoProvider.get(), queryService, userAwareMeta)
                 .sortOrder(orderColumn, orderDir)
                 .offset(offset)
                 .limit(Math.min(limit, maxLimit))

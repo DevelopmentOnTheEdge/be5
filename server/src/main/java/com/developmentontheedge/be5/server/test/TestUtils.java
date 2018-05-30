@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.test;
 
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -7,7 +8,7 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.be5.server.services.CategoriesService;
-import com.developmentontheedge.be5.server.services.CoreUtils;
+import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
@@ -21,7 +22,7 @@ import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.test.mocks.CategoriesServiceForTest;
-import com.developmentontheedge.be5.server.test.mocks.CoreUtilsForTest;
+import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.server.util.Either;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.base.util.Utils;
@@ -66,8 +67,6 @@ public abstract class TestUtils extends BaseTestUtils
     @Inject protected UserAwareMeta userAwareMeta;
     @Inject protected DatabaseModel database;
     @Inject protected DbService db;
-
-    protected static final Jsonb jsonb = JsonbBuilder.create();
 
     protected void initUserWithRoles(String... roles)
     {

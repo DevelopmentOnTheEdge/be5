@@ -10,8 +10,8 @@ import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
 import com.developmentontheedge.be5.operation.OperationModule;
-import com.developmentontheedge.be5.query.services.QueryService;
-import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.query.QueryModule;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.controllers.ApplicationInfoController;
 import com.developmentontheedge.be5.server.controllers.DownloadController;
 import com.developmentontheedge.be5.server.controllers.FormController;
@@ -30,8 +30,7 @@ import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.OperationService;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.OperationServiceImpl;
-import com.developmentontheedge.be5.server.services.impl.QueryServiceImpl;
-import com.developmentontheedge.be5.server.services.impl.TableModelServiceImpl;
+import com.developmentontheedge.be5.server.services.impl.QuerySessionProvider;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
@@ -44,6 +43,7 @@ public class ServerModule extends ServletModule
     {
         install(new BaseModule());
         install(new OperationModule());
+        install(new QueryModule());
 
         bind(TableController.class).in(Scopes.SINGLETON);
         bind(FormController.class).in(Scopes.SINGLETON);
@@ -75,10 +75,9 @@ public class ServerModule extends ServletModule
 
         bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
         bind(DbService.class).to(DbServiceImpl.class).in(Scopes.SINGLETON);
-        bind(QueryService.class).to(QueryServiceImpl.class).in(Scopes.SINGLETON);
         bind(OperationService.class).to(OperationServiceImpl.class).in(Scopes.SINGLETON);
-        bind(TableModelService.class).to(TableModelServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
+        bind(QuerySession.class).to(QuerySessionProvider.class).in(Scopes.SINGLETON);
     }
 }

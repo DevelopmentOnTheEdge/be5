@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.util;
+package com.developmentontheedge.be5.base.util;
 
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.beans.json.JsonFactory;
