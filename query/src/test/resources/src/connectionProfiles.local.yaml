@@ -9,6 +9,6 @@ connectionProfiles:
       properties:
       - PROJECT_SOURCE: direct
     profileForIntegrationTests:
-      connectionUrl: jdbc:h2:~/profileForIntegrationTestsServer
+      connectionUrl: jdbc:h2:~/profileForIntegrationTestsQuery
       username: sa
       password: ''
