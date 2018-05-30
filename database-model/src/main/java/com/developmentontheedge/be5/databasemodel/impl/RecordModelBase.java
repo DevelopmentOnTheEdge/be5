@@ -73,36 +73,36 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     {
         throw new IllegalAccessError( "You can't use this operation. Use EntityModel#set() to update value in database." );
     }
-
-    public class MethodProviderBase implements MethodProvider
-    {
-        protected final Method method;
-
-        MethodProviderBase( Method method )
-        {
-            this.method = method;
-        }
-
-        @Override
-        public Object invoke()
-        {
-            return invoke( new Object[]{} );
-        }
-
-        @Override
-        public Object invoke( Object... args )
-        {
-            try
-            {
-                Object[] fullArgs = new Object[ args.length + 1 ];
-                fullArgs[ 0 ] = RecordModelBase.this;
-                System.arraycopy(args, 0, fullArgs, 1, args.length);
-                return method.invoke(entityModel, fullArgs );
-            }
-            catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
-            {
-                throw new RuntimeException( e );
-            }
-        }
-    }
+//
+//    public class MethodProviderBase implements MethodProvider
+//    {
+//        protected final Method method;
+//
+//        MethodProviderBase( Method method )
+//        {
+//            this.method = method;
+//        }
+//
+//        @Override
+//        public Object invoke()
+//        {
+//            return invoke( new Object[]{} );
+//        }
+//
+//        @Override
+//        public Object invoke( Object... args )
+//        {
+//            try
+//            {
+//                Object[] fullArgs = new Object[ args.length + 1 ];
+//                fullArgs[ 0 ] = RecordModelBase.this;
+//                System.arraycopy(args, 0, fullArgs, 1, args.length);
+//                return method.invoke(entityModel, fullArgs );
+//            }
+//            catch( IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
+//            {
+//                throw new RuntimeException( e );
+//            }
+//        }
+//    }
 }

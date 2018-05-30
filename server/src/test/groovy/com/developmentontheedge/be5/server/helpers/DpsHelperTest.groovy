@@ -2,9 +2,7 @@ package com.developmentontheedge.be5.server.helpers
 
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.base.util.DpsUtils
-
-import javax.inject.Inject
-import com.developmentontheedge.be5.databasemodel.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.server.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
@@ -16,8 +14,9 @@ import com.google.common.collect.ImmutableMap
 import org.junit.Before
 import org.junit.Test
 
-import static org.junit.Assert.*
+import javax.inject.Inject
 
+import static org.junit.Assert.*
 
 class DpsHelperTest extends ServerBe5ProjectDBTest
 {

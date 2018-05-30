@@ -1,8 +1,7 @@
-package com.developmentontheedge.be5.databasemodel.model
+package com.developmentontheedge.be5.server.model.beans
 
-import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
-import com.developmentontheedge.be5.databasemodel.model.GDynamicPropertySetSupport
-import com.developmentontheedge.be5.databasemodel.test.Rule
+import com.developmentontheedge.be5.operation.services.validation.ValidationRules
+import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Test
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class GroovyDPSTest extends DatabaseModelProjectDbTest
+class GroovyDPSTest extends ServerBe5ProjectDBTest
 {
     private GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport()
 
@@ -41,7 +40,7 @@ class GroovyDPSTest extends DatabaseModelProjectDbTest
             GROUP_ID = 1
             GROUP_NAME = "Test"
             GROUP_CLASSES = "col-md-8"
-            VALIDATION_RULES = new Rule("test", "10")
+            VALIDATION_RULES = ValidationRules.range(1, 10)
             EXTRA_ATTRS = [["search": "all"]]
             COLUMN_SIZE_ATTR = 10
             INPUT_SIZE_ATTR = 10
@@ -71,7 +70,7 @@ class GroovyDPSTest extends DatabaseModelProjectDbTest
 
         assertEquals("newValue", dps["input3"].getValue() )
 
-        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue','input4':'input4value'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupId':'1','groupName':'Test','groupClasses':'col-md-8','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','inputSize':'10','placeholder':'Select...','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':'10','type':'test'}},'/input2':{'displayName':'New Display Name','canBeNull':true},'/input3':{'displayName':'Input 3'},'/input4':{'displayName':'Input 4'}},'order':['/reasonMulti','/input2','/input3','/input4']}",
+        assertEquals("{'values':{'reasonMulti':123,'input2':'value2','input3':'newValue','input4':'input4value'},'meta':{'/reasonMulti':{'displayName':'Множественный выбор','type':'Integer','hidden':true,'reloadOnChange':true,'reloadOnFocusOut':true,'rawValue':true,'groupId':'1','groupName':'Test','groupClasses':'col-md-8','readOnly':true,'multipleSelectionList':true,'passwordField':true,'labelField':true,'cssClasses':'col-lg-6','columnSize':'10','inputSize':'10','placeholder':'Select...','status':'error','message':'Can't be null','defaultValue':'1234','tagList':[['fired','Уволен'],['other','Иная причина']],'extraAttrs':[],'validationRules':{'attr':{'max':'10','min':'1'},'type':'range'}},'/input2':{'displayName':'New Display Name','canBeNull':true},'/input3':{'displayName':'Input 3'},'/input4':{'displayName':'Input 4'}},'order':['/reasonMulti','/input2','/input3','/input4']}",
                 oneQuotes(JsonFactory.dps(dps).toString()))
     }
 

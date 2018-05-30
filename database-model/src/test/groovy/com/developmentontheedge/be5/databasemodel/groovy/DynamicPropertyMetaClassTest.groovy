@@ -39,4 +39,37 @@ class DynamicPropertyMetaClassTest extends DatabaseModelProjectDbTest
         assertEquals true, testField.getAttribute(BeanInfoConstants.READ_ONLY)
     }
 
+    @Test
+    void setProperty()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+
+        dps.testField = [
+                DISPLAY_NAME: "Test Field",
+                value: 1L,
+                TYPE: Long,
+                GROUP_ID: 1
+        ]
+
+        DynamicProperty testField = dps.getProperty("testField")
+
+        assertEquals "Test Field", testField.getDisplayName()
+        assertEquals Long.class, testField.getType()
+        assertEquals 1L, testField.getValue()
+        assertEquals 1, testField.getAttribute(BeanInfoConstants.GROUP_ID)
+    }
+
+    @Test
+    void setPropertyNull()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+
+        dps.testField = null
+
+        DynamicProperty testField = dps.getProperty("testField")
+
+        assertEquals "testField", testField.getDisplayName()
+        assertEquals String.class, testField.getType()
+        assertEquals null, testField.getValue()
+    }
 }

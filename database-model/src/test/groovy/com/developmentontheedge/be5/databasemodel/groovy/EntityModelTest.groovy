@@ -1,23 +1,23 @@
-package com.developmentontheedge.be5.databasemodel
+package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser
-import com.developmentontheedge.beans.DynamicPropertySet
-import org.mockito.Matchers
-
-import javax.inject.Inject
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
+import com.developmentontheedge.be5.databasemodel.DatabaseModelSqlMockProjectTest
+import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
+import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Matchers
 
-import static org.mockito.Matchers.anyString
-import static org.mockito.Matchers.anyVararg
-import static org.mockito.Matchers.eq
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.when
+import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
+import static org.mockito.Matchers.*
+import static org.mockito.Mockito.verify
+import static org.mockito.Mockito.when
 
 
 class EntityModelTest extends DatabaseModelSqlMockProjectTest
