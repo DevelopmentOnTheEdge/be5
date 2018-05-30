@@ -85,7 +85,10 @@ public class EntityModelBase<T> implements EntityModel<T>
                 .from(entity.getName())
                 .where(conditions).format();
 
-        return db.select(sql, this::getRecordModel, conditions.values().toArray());
+        DynamicPropertySetSupport dps = db.select(sql,
+                rs -> DpsUtils.setValues(getDps(), rs), conditions.values().toArray());
+
+        return getRecordModel(dps);
     }
 
     @Override
