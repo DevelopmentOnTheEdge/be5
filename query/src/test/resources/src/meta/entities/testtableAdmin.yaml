@@ -1,0 +1,135 @@
+testtableAdmin:
+  type: table
+  displayName: testtableAdmin
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(30)
+    - value:
+        type: INT
+        canBeNull: true
+  queries:
+  - All records:
+      defaultView: true
+      type: 1D
+      roles: Administrator
+      operations:
+      - TestOperation
+      - TestGroovyOp
+      - OperationWithExtend
+      - OperationWithExtend2
+      - Filter
+      - OldRedirectFilter
+      - ErrorProcessing
+      - TransactionTestOp
+      - Delete
+      - Edit
+      - PrintParamsInsertOp
+      - PrintParamsCustomOp
+      - TestTransactionalOperation
+      - TestOperationProperty
+      - Insert
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t
+  - Query without operations:
+      type: 1D_unknown
+      roles: '@AllRoles'
+      code: |-
+        SELECT
+          t.name AS "Name",
+          t.value AS "Value"
+        FROM
+          testtable t
+  - Test 1D unknown:
+      type: 1D_unknown
+      roles: Administrator
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t
+  - Test null in subQuery:
+      type: 1D_unknown
+      roles: SystemDeveloper
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value",
+              '<sql>SELECT name
+                    FROM testtableAdmin t
+                    WHERE t.value = <var:Value />
+               </sql>' AS "NameFromSubQuery"
+            FROM
+              testtableAdmin t
+  - TestGroovyTable:
+      type: Groovy
+      invisible: true
+      roles: [SystemDeveloper, Administrator]
+      file: TestGroovyTable.groovy
+  operations:
+  - TestOperation:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.TestOperation
+  - TestOperationProperty:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.TestOperationProperty
+  - TestTransactionalOperation:
+      type: Groovy
+      roles: Administrator
+      file: TestTransactionalOperation.groovy
+  - TestGroovyOp:
+      type: Groovy
+      roles: Administrator
+      file: TestGroovyOp.groovy
+  - OperationWithExtend2:
+      type: Groovy
+      roles: Administrator
+      file: OperationWithExtend2.groovy
+  - OperationWithExtend:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/OperationWithExtend.groovy
+  - PrintParamsInsertOp:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/PrintParamsInsertOp.groovy
+  - PrintParamsCustomOp:
+      type: Groovy
+      roles: Administrator
+      file: testtableAdmin/PrintParamsCustomOp.groovy
+  - TransactionTestOp:
+      type: Groovy
+      roles: Administrator
+      file: operationService/TransactionTestOp.groovy
+  - ErrorProcessing:
+      type: Groovy
+      roles: Administrator
+      file: operationService/ErrorProcessing.groovy
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.DeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - Filter:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.FilterOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation

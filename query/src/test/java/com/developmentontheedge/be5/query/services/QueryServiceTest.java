@@ -1,18 +1,17 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.query.services;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.impl.Be5QueryExecutor;
-import com.developmentontheedge.be5.query.services.QueryService;
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class QueryServiceTest extends ServerBe5ProjectDBTest
+public class QueryServiceTest extends QueryBe5ProjectDBTest
 {
     @Inject private ProjectProvider projectProvider;
     @Inject private DbService db;
@@ -31,7 +30,7 @@ public class QueryServiceTest extends ServerBe5ProjectDBTest
     private Query query;
 
     @Before
-    public void hasOneRow()
+    public void insertOneRow()
     {
         query = projectProvider.getProject().getEntity("testtable").getQueries().get("All records");
         db.update("delete from testtable");
