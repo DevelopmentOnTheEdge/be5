@@ -30,11 +30,6 @@ public interface RestApiConstants
      */
     String SELECTED_ROWS = "selectedRows";
 
-    String OFFSET = "_offset_";
-    String LIMIT = "_limit_";
-    String ORDER_COLUMN = "_orderColumn_";
-    String ORDER_DIR = "_orderDir_";
-
     // json api
 
     String TIMESTAMP_PARAM = "_ts_";

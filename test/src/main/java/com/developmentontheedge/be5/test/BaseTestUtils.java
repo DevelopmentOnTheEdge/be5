@@ -33,8 +33,8 @@ import org.junit.Before;
 import org.mockito.Matchers;
 
 import javax.inject.Inject;
-//import javax.json.bind.Jsonb;
-//import javax.json.bind.JsonbBuilder;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,6 +56,8 @@ import static org.mockito.Mockito.when;
 public abstract class BaseTestUtils
 {
     public static final Logger log = Logger.getLogger(BaseTestUtils.class.getName());
+
+    protected static final Jsonb jsonb = JsonbBuilder.create();
 
     @Inject private Meta meta;
     @Inject protected UserAwareMeta userAwareMeta;

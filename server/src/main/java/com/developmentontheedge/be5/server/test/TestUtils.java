@@ -68,8 +68,6 @@ public abstract class TestUtils extends BaseTestUtils
     @Inject protected DatabaseModel database;
     @Inject protected DbService db;
 
-    protected static final Jsonb jsonb = JsonbBuilder.create();
-
     protected void initUserWithRoles(String... roles)
     {
         TestSession testSession = new TestSession();
