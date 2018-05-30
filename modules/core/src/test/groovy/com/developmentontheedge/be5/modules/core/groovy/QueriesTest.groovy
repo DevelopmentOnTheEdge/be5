@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.modules.core.groovy
 
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.server.services.DocumentGenerator
-import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.query.model.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
 import javax.inject.Inject
