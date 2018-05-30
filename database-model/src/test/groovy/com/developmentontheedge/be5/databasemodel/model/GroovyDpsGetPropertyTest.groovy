@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.model
 
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
-import com.developmentontheedge.be5.databasemodel.model.GDynamicPropertySetSupport
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

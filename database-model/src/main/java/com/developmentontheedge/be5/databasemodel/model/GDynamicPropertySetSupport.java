@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.databasemodel.model;
 
+import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -14,6 +16,11 @@ import java.util.Objects;
 
 public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 {
+    static
+    {
+        GroovyRegister.registerMetaClass( GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class );
+    }
+
     public DynamicProperty getAt(String name)
     {
         return super.getProperty(name);
