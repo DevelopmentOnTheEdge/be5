@@ -1,5 +1,5 @@
 
-### GdslGenegator
+### GroovyDSLGenerator
 Генерирует GroovyDSL для таблиц в проекте    
 GroovyDSL - добавляет поддержку мета классов для groovy:
 ```groovy
@@ -17,35 +17,26 @@ contribute(context(ctype: "com.developmentontheedge.be5.databasemodel.EntityMode
 
 Добавление в проект:
 ```xml
- <dependency>
-  <groupId>com.developmentontheedge.be5</groupId>
-  <artifactId>be5-maven-plugin</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
- </dependency>
-``` 
-```xml
  <plugins>
    <plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>exec-maven-plugin</artifactId>
-    <version>1.6.0</version>
-    <executions>
-     <execution>
-      <id>GdslGenegator</id>
-      <goals>
-       <goal>java</goal>
-      </goals>
-      <phase>compile</phase>
-      <configuration>
-       <mainClass>com.developmentontheedge.be5.maven.gdsl.GdslGenegator</mainClass>
-       <arguments>
-        <argument>${project.build.directory}/generated-sources/java/</argument>
-        <argument/>
-        <argument>${project.artifactId}</argument>
-       </arguments>
-      </configuration>
-     </execution>
-    </executions>
+       <groupId>com.developmentontheedge.be5</groupId>
+       <artifactId>be5-maven-plugin</artifactId>
+       <version>0.1.1-SNAPSHOT</version>
+       <configuration>
+        <projectPath>./</projectPath>
+       </configuration>
+       <executions>
+        <execution>
+         <id>generate-groovy-dsl</id>
+         <phase>compile</phase>
+         <goals>
+          <goal>generate-groovy-dsl</goal>
+         </goals>
+         <configuration>
+          <fileName>${project.build.directory}/generated-sources/java/${project.artifactId}</fileName>
+         </configuration>
+        </execution>
+       </executions>
    </plugin>
    <plugin>
     <groupId>org.codehaus.mojo</groupId>

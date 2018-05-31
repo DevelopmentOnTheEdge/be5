@@ -6,11 +6,12 @@ import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
-import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import static org.junit.Assert.*
+import javax.inject.Inject
+
+import static org.junit.Assert.assertEquals
 
 
 class CoreUtilsTest extends CoreBe5ProjectDBTest

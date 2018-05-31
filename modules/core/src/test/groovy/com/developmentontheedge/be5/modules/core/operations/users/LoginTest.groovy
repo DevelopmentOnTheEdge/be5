@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.server.servlet.UserInfoHolder
 import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.modules.core.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
 import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
 
-class LoginTest extends CoreBe5ProjectTest
+class LoginTest extends CoreBe5ProjectDbMockTest
 {
     @Before
     void init(){

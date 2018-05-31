@@ -1,51 +1,60 @@
 package com.developmentontheedge.be5.maven.gdsl;
 
+import com.developmentontheedge.be5.maven.Be5Mojo;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
-public class GdslGenerator
+@Mojo( name = "generate-groovy-dsl")
+public class GroovyDSLGenerator extends Be5Mojo<GroovyDSLGenerator>
 {
-    private static final Logger log = Logger.getLogger(GdslGenerator.class.getName());
+    private static final Logger log = Logger.getLogger(GroovyDSLGenerator.class.getName());
 
     private int entityCount = 0;
 
-    public static void main(String[] args) throws IOException
+    @Parameter(property = "FILE_NAME")
+    protected String fileName;
+
+    @Override
+    public void execute() throws MojoFailureException
     {
-        String generatedSourcesPath = args[0];
-        String packageName = args[1];
-        if(packageName == null){
-            packageName = "";
-        }else{
-            if(!packageName.endsWith("."))packageName += ".";
+        try
+        {
+            generate(fileName.replace(".", "/") + "GroovyDSL");
         }
-
-        String serviceClassName = args[2] + "DatabaseModel";
-
-        new GdslGenerator(generatedSourcesPath, packageName, serviceClassName);
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
-    public GdslGenerator(String generatedSourcesPath, String packageName, String serviceClassName) throws IOException
+    public void generate(String fileName) throws IOException
     {
         Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(GdslGenerator.class, "/gdsl");
+        cfg.setClassForTemplateLoading(GroovyDSLGenerator.class, "/gdsl");
         cfg.setDefaultEncoding("UTF-8");
 
-        File file = Paths.get(generatedSourcesPath + packageName.replace(".", "/") + serviceClassName + ".gdsl").toFile();
+        File file = Paths.get(fileName + ".gdsl").toFile();
 
         if(file.exists() && !file.isDirectory())
         {
-            log.info("Generate skipped, file exists: " + packageName + "." + serviceClassName);
+            log.info("Generate skipped, file exists: " + fileName);
             return;
         }
 
@@ -53,18 +62,17 @@ public class GdslGenerator
 
         try
         {
-            createService(generatedSourcesPath, packageName, serviceClassName, cfg);
+            createDSL(fileName, cfg);
         }
         catch (ProjectLoadException e)
         {
             e.printStackTrace();
         }
 
-        log.info("Generate successful: " + entityCount + " entities added.\n" + packageName + serviceClassName);
+        log.info("Generate successful: " + entityCount + " entities added.\n" + file.getAbsolutePath());
     }
 
-    private void createService(String generatedSourcesPath, String packageName,
-                               String serviceClassName, Configuration cfg) throws IOException, ProjectLoadException
+    private void createDSL(String fileName, Configuration cfg) throws IOException, ProjectLoadException
     {
         Template serviceTpl = cfg.getTemplate("/entities.ftl");
 
@@ -84,8 +92,10 @@ public class GdslGenerator
             entityNames.add(entity.getName());
         }
         input.put("entityNames", entityNames);
-        Utils.createFile(generatedSourcesPath, packageName, serviceClassName+ ".gdsl", serviceTpl, input);
+        Utils.createFile(fileName + ".gdsl", serviceTpl, input);
     }
 
-
+    @Override protected GroovyDSLGenerator me() {
+        return this;
+    }
 }

@@ -17,6 +17,7 @@
   <module>metadata</module>
   <module>maven</module>
   <module>base</module>
+  <module>test-base</module>
   <module>operation</module>
   <module>query</module>
   <module>database-model</module>

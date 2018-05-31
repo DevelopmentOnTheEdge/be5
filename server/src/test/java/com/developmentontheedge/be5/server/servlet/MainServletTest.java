@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.servlet;
 
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;

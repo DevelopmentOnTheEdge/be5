@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.servlet;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;

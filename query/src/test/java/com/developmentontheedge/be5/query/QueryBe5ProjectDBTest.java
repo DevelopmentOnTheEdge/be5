@@ -12,7 +12,7 @@ import com.google.inject.util.Modules;
 public abstract class QueryBe5ProjectDBTest extends BaseTestUtils
 {
     private static final Injector injector = initInjector(
-            Modules.override(new BaseModule()).with(new TestProjectProviderModule()),
+            Modules.override(new BaseModule()).with(new BaseDbTestModule()),
             new QueryModule(),
             new TestQueryModule()
     );

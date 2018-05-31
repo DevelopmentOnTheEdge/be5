@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
 
-class LoadTest extends CoreBe5ProjectTest
+class LoadTest extends CoreBe5ProjectDbMockTest
 {
     @Inject ProjectProvider projectProvider
 

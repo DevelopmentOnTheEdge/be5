@@ -1,19 +1,23 @@
-package com.developmentontheedge.be5.server.test;
+package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.servlet.TemplateModule;
+import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
 
-public abstract class ServerBe5ProjectTest extends TestUtils
+public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
 {
     private static final Injector injector = initInjector(
-            Modules.override(new ServerModule(), new TemplateModule()).with(new ServerTestModule()),
+            Modules.override(new ServerModule()).with(new ServerDBTestModule()),
             new CoreModuleForTest()
     );
+
+    static {
+        initDb(injector);
+    }
 
     @Override
     public Injector getInjector()
@@ -21,13 +25,14 @@ public abstract class ServerBe5ProjectTest extends TestUtils
         return injector;
     }
 
-    private static class ServerTestModule extends AbstractModule
+    private static class ServerDBTestModule extends AbstractModule
     {
         @Override
         protected void configure()
         {
-            install(new SqlMockModule());
-            bind(QuerySession.class).to(ServerBe5ProjectDBTest.QuerySessionForTest.class);
+            install(new BaseDbTestModule());
+            bind(QuerySession.class).to(ServerTestQuerySession.class);
         }
     }
+
 }

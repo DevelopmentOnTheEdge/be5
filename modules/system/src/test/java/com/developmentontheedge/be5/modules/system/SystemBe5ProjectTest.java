@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.system;
 
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.server.test.TestUtils;
+import com.developmentontheedge.be5.test.TestUtils;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
@@ -12,8 +12,8 @@ public abstract class SystemBe5ProjectTest extends TestUtils
             Modules.override(
                     new ServerModule(),
                     new SystemModule(),
-                    new CoreModuleForTest()
-            ).with(new SqlMockModule())
+                    new CoreTestModule()
+            ).with(new DbMockTestModule())
     );
 
     @Override

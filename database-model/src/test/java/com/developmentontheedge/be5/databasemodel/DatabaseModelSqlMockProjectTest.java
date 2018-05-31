@@ -13,7 +13,7 @@ public abstract class DatabaseModelSqlMockProjectTest extends BaseTestUtils
     @Inject protected DatabaseModel database;
 
     private static final Injector injector = initInjector(
-            Modules.override(new BaseModule()).with(new SqlMockModule())
+            Modules.override(new BaseModule()).with(new BaseDbMockTestModule())
     );
 
     @Override

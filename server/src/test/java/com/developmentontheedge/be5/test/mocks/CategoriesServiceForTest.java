@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.test.mocks;
+package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.services.model.Category;

@@ -36,7 +36,7 @@ public abstract class OperationsSqlMockProjectTest extends BaseTestUtils
         initProjectWithOperation();
 
         injector = initInjector(
-            Modules.override(new BaseModule()).with(new SqlMockModule()),
+            Modules.override(new BaseModule()).with(new BaseDbMockTestModule()),
             new OperationModule()
         );
 
