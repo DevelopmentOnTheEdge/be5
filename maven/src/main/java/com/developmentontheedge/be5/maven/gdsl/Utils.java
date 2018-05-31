@@ -12,21 +12,22 @@ import java.util.Map;
 
 public class Utils
 {
-    public static void createFile(String generatedSourcesPath, String packageName, String fileName,
-                            Template template, Map<String, Object> input)
+    public static void createFile(String fileName, Template template, Map<String, Object> input)
     {
         try
         {
-            Paths.get(generatedSourcesPath + packageName.replace(".", "/")).toFile().mkdirs();
-            Writer fileWriter = new FileWriter(new File(generatedSourcesPath + packageName.replace(".", "/") + "/" + fileName));
+            Paths.get(fileName.substring(0, fileName.lastIndexOf("/"))).toFile().mkdirs();
+            Writer fileWriter = new FileWriter(new File(fileName));
 
             try
             {
                 template.process(input, fileWriter);
-            } catch (TemplateException e)
+            }
+            catch (TemplateException e)
             {
                 e.printStackTrace();
-            } finally
+            }
+            finally
             {
                 fileWriter.close();
             }

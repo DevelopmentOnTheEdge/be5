@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.maven.gdsl;
 import com.developmentontheedge.be5.maven.TestUtils;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,15 +15,16 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 
 
-public class GdslGeneratorTest extends TestUtils
+public class GroovyDSLGeneratorTest extends TestUtils
 {
     @Test
-    public void test() throws IOException
+    public void test() throws IOException, MojoFailureException
     {
-        GdslGenerator.main(new String[]{tpmProjectPath.toAbsolutePath().toString() + "/",
-                "", ""});
+        GroovyDSLGenerator groovyDSLGenerator = new GroovyDSLGenerator();
+        groovyDSLGenerator.fileName = tpmProjectPath.toAbsolutePath().toString() + "/";
+        groovyDSLGenerator.execute();
 
-        String result = readFile(tpmProjectPath.toAbsolutePath().toString() + "/DatabaseModel.gdsl", Charsets.UTF_8);
+        String result = readFile(tpmProjectPath.toAbsolutePath().toString() + "/GroovyDSL.gdsl", Charsets.UTF_8);
 
         URL url = Resources.getResource("gdsl/test.txt");
         String test = Resources.toString(url, Charsets.UTF_8);
