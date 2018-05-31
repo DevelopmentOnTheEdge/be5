@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services.impl
 
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder
-import com.developmentontheedge.be5.modules.core.CoreBe5ProjectTest
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
 import com.developmentontheedge.be5.modules.core.services.LoginService
 import javax.inject.Inject
 import org.junit.Before
@@ -10,7 +10,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 
-class LoginServiceImplTest extends CoreBe5ProjectTest
+class LoginServiceImplTest extends CoreBe5ProjectDbMockTest
 {
     @Inject LoginService loginService
 

@@ -2,18 +2,10 @@ package com.developmentontheedge.be5.modules.core.services
 
 import com.developmentontheedge.be5.base.services.Be5Caches
 import com.developmentontheedge.be5.base.services.CoreUtils
-import com.developmentontheedge.be5.base.services.ProjectProvider
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
-import com.developmentontheedge.be5.modules.core.CoreModule
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl
-import com.developmentontheedge.be5.server.ServerModule
-import com.developmentontheedge.be5.test.TestProjectProvider
-import com.developmentontheedge.be5.test.TestUtils
-import com.google.inject.AbstractModule
-import com.google.inject.Injector
-import com.google.inject.Scopes
-import com.google.inject.util.Modules
 import org.junit.Before
 import org.junit.Test
 
@@ -22,30 +14,8 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 
 
-class CoreUtilsTest extends TestUtils
+class CoreUtilsTest extends CoreBe5ProjectDBTest
 {
-    private static final Injector injector = initInjector(
-            Modules.override(
-                    new ServerModule(),
-                    new CoreModule()
-            ).with(new Module())
-    )
-
-    @Override
-    Injector getInjector()
-    {
-        return injector
-    }
-
-    static class Module extends AbstractModule
-    {
-        @Override
-        protected void configure()
-        {
-            bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON)
-        }
-    }
-
     @Inject DatabaseModel database
     @Inject DbService db
     @Inject CoreUtils utils
