@@ -1,10 +1,7 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.modules.core.CoreModule;
 import com.developmentontheedge.be5.test.TestUtils;
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
@@ -15,7 +12,7 @@ public abstract class CoreBe5ProjectDBTest extends TestUtils
             Modules.override(
                     new ServerModule(),
                     new CoreModule()
-            ).with(new ServerDBTestModule())
+            ).with(new DbTestModule())
     );
 
     static {
@@ -26,25 +23,5 @@ public abstract class CoreBe5ProjectDBTest extends TestUtils
     public Injector getInjector()
     {
         return injector;
-    }
-
-
-    private static class ServerDBTestModule extends AbstractModule
-    {
-        @Override
-        protected void configure()
-        {
-            install(new TestProjectProviderModule());
-            bind(QuerySession.class).to(QuerySessionForTest.class);
-        }
-    }
-
-    public static class QuerySessionForTest implements QuerySession
-    {
-        @Override
-        public Object get(String name)
-        {
-            return null;
-        }
     }
 }

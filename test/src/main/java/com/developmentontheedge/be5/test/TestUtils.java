@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.beans.QRec;
@@ -20,9 +21,11 @@ import com.developmentontheedge.be5.server.services.OperationService;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.util.Either;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
+import com.developmentontheedge.be5.test.mocks.TestQuerySession;
+import com.developmentontheedge.be5.test.mocks.TestRequest;
+import com.developmentontheedge.be5.test.mocks.TestSession;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.google.common.collect.ImmutableMap;
@@ -294,13 +297,33 @@ public abstract class TestUtils extends BaseTestUtils
         }
     }
 
-    public static class CoreModuleForTest extends AbstractModule
+    public static class CoreTestModule extends AbstractModule
     {
         @Override
         protected void configure()
         {
             bind(CoreUtils.class).to(CoreUtilsForTest.class).in(Scopes.SINGLETON);
             bind(CategoriesService.class).to(CategoriesServiceForTest.class).in(Scopes.SINGLETON);
+        }
+    }
+
+    public static class DbMockTestModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            install(new BaseDbMockTestModule());
+            bind(QuerySession.class).to(TestQuerySession.class);
+        }
+    }
+
+    public static class DbTestModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            install(new BaseDbTestModule());
+            bind(QuerySession.class).to(TestQuerySession.class);
         }
     }
 

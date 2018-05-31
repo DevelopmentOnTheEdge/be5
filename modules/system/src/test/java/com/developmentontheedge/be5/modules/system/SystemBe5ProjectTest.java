@@ -12,8 +12,8 @@ public abstract class SystemBe5ProjectTest extends TestUtils
             Modules.override(
                     new ServerModule(),
                     new SystemModule(),
-                    new CoreModuleForTest()
-            ).with(new SqlMockModule())
+                    new CoreTestModule()
+            ).with(new DbMockTestModule())
     );
 
     @Override

@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.server.services.impl
 
-import com.developmentontheedge.be5.test.TestUtils
+import com.developmentontheedge.be5.test.ServerTestUtils
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.Test
 
 import static org.junit.Assert.*
 
 
-class OperationServiceImplTest extends TestUtils
+class OperationServiceImplTest extends ServerTestUtils
 {
     @Test
     void replaceValuesToStringDigitsAndDate()

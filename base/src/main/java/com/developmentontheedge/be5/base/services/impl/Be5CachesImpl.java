@@ -15,11 +15,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Config>
 {
-    private Config config = new Config();
+    private Config config;
 
-    class Config
+    public static class Config
     {
         Map<String, Integer> cacheSizes = new HashMap<>();
+
+        public Config(Map<String, Integer> cacheSizes)
+        {
+            this.cacheSizes = cacheSizes;
+        }
     }
 
     private Map<String, Cache> caches = new ConcurrentHashMap<>();

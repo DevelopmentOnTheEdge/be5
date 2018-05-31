@@ -189,7 +189,7 @@ public abstract class BaseTestUtils
         }
     }
 
-    public static class SqlMockModule extends AbstractModule
+    public static class BaseDbMockTestModule extends AbstractModule
     {
         @Override
         protected void configure()
@@ -214,13 +214,14 @@ public abstract class BaseTestUtils
         }
     }
 
-    public static class TestProjectProviderModule extends AbstractModule
+    public static class BaseDbTestModule extends AbstractModule
     {
         @Override
         protected void configure()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
             bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
+            bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
         }
     }
 

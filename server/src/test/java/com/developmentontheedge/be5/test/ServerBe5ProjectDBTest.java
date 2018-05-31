@@ -2,12 +2,13 @@ package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;
+import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
 
-public abstract class ServerBe5ProjectDBTest extends TestUtils
+public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
 {
     private static final Injector injector = initInjector(
             Modules.override(new ServerModule()).with(new ServerDBTestModule()),
@@ -29,17 +30,9 @@ public abstract class ServerBe5ProjectDBTest extends TestUtils
         @Override
         protected void configure()
         {
-            install(new TestProjectProviderModule());
-            bind(QuerySession.class).to(QuerySessionForTest.class);
+            install(new BaseDbTestModule());
+            bind(QuerySession.class).to(ServerTestQuerySession.class);
         }
     }
 
-    public static class QuerySessionForTest implements QuerySession
-    {
-        @Override
-        public Object get(String name)
-        {
-            return null;
-        }
-    }
 }

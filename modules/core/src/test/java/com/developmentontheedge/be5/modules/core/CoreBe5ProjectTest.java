@@ -14,22 +14,12 @@ public abstract class CoreBe5ProjectTest extends TestUtils
             Modules.override(
                     new ServerModule(),
                     new CoreModule()
-            ).with(new ServerTestModule())
+            ).with(new DbMockTestModule())
     );
 
     @Override
     public Injector getInjector()
     {
         return injector;
-    }
-
-    private static class ServerTestModule extends AbstractModule
-    {
-        @Override
-        protected void configure()
-        {
-            install(new SqlMockModule());
-            bind(QuerySession.class).to(CoreBe5ProjectDBTest.QuerySessionForTest.class);
-        }
     }
 }

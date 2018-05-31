@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server
 
 import com.developmentontheedge.be5.server.model.Base64File
-import com.developmentontheedge.be5.test.TestUtils
+import com.developmentontheedge.be5.test.ServerTestUtils
 import com.developmentontheedge.be5.server.util.ParseRequestUtils
 import com.developmentontheedge.be5.web.Request
 import com.google.common.collect.ImmutableMap
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
 
-class RequestTest extends TestUtils
+class RequestTest extends ServerTestUtils
 {
     HttpServletRequest rawRequest
 

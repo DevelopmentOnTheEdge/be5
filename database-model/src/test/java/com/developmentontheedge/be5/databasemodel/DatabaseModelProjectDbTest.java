@@ -13,7 +13,7 @@ public abstract class DatabaseModelProjectDbTest extends BaseTestUtils
     @Inject protected DatabaseModel database;
 
     private static final Injector injector = initInjector(
-            Modules.override(new BaseModule()).with(new TestProjectProviderModule())
+            Modules.override(new BaseModule()).with(new BaseDbTestModule())
     );
 
     static {

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.test;
+package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
@@ -10,23 +10,23 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class TestRequest implements Request
+public class ServerTestRequest implements Request
 {
     private Session session = null;
 
-    public TestRequest(Session session)
+    public ServerTestRequest(Session session)
     {
         this.session = session;
     }
 
-    public TestRequest()
+    public ServerTestRequest()
     {
     }
 
     @Override
     public Session getSession()
     {
-        return session == null ? new TestSession() : session;
+        return session == null ? new ServerTestSession() : session;
     }
 
     @Override

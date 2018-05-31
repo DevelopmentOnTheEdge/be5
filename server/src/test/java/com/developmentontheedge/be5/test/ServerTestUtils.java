@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.test;
 
+import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
+import com.developmentontheedge.be5.test.mocks.ServerTestSession;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -50,7 +52,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public abstract class TestUtils extends BaseTestUtils
+public abstract class ServerTestUtils extends BaseTestUtils
 {
     public static final Logger log = Logger.getLogger(BaseTestUtils.class.getName());
 
@@ -66,11 +68,11 @@ public abstract class TestUtils extends BaseTestUtils
 
     protected void initUserWithRoles(String... roles)
     {
-        TestSession testSession = new TestSession();
+        ServerTestSession testSession = new ServerTestSession();
         UserInfo userInfo = getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
                 Locale.US, "", testSession);
 
-        UserInfoHolder.setRequest(new TestRequest(testSession));
+        UserInfoHolder.setRequest(new ServerTestRequest(testSession));
         UserInfoProviderForTest.userInfo = userInfo;
     }
 

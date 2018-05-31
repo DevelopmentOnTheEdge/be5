@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.test;
+package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.web.Session;
 
@@ -52,7 +52,7 @@ public class TestSession implements Session
     @Override
     public void invalidate()
     {
-
+        map.clear();
     }
 
     @Override

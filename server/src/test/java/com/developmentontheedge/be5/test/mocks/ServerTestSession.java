@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.test;
+package com.developmentontheedge.be5.test.mocks;
 
 import com.developmentontheedge.be5.web.Session;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class TestSession implements Session
+public class ServerTestSession implements Session
 {
     private Map<String, Object> map = new HashMap<>();
 
@@ -52,7 +52,7 @@ public class TestSession implements Session
     @Override
     public void invalidate()
     {
-
+        map.clear();
     }
 
     @Override
