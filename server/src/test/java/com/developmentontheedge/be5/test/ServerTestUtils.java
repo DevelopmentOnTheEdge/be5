@@ -1,11 +1,14 @@
 package com.developmentontheedge.be5.test;
 
+import com.developmentontheedge.be5.query.QuerySession;
+import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
 import com.developmentontheedge.be5.test.mocks.ServerTestSession;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.base.services.CoreUtils;
@@ -305,4 +308,14 @@ public abstract class ServerTestUtils extends BaseTestUtils
         }
     }
 
+    public static class ServerWebTestModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            bind(Session.class).to(ServerTestSession.class);
+            bind(QuerySession.class).to(ServerTestQuerySession.class);
+            //todo add request
+        }
+    }
 }

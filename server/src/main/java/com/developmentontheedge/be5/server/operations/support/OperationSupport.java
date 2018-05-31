@@ -36,8 +36,9 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     @Inject public OperationHelper helper;
     @Inject public Validator validator;
 
+    @Inject protected Session session;
+
     protected Request request;
-    protected Session session;
     protected UserInfo userInfo;
 
     @Override
@@ -46,7 +47,7 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         super.initialize(info, context, operationResult);
 
         this.request = UserInfoHolder.getRequest();
-        this.session = UserInfoHolder.getSession();
+        //this.session = UserInfoHolder.getSession();
         this.userInfo = UserInfoHolder.getUserInfo();
     }
 

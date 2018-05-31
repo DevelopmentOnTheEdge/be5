@@ -27,6 +27,7 @@ import com.developmentontheedge.be5.test.mocks.TestQuerySession;
 import com.developmentontheedge.be5.test.mocks.TestRequest;
 import com.developmentontheedge.be5.test.mocks.TestSession;
 import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
@@ -67,6 +68,8 @@ public abstract class TestUtils extends BaseTestUtils
     @Inject protected UserAwareMeta userAwareMeta;
     @Inject protected DatabaseModel database;
     @Inject protected DbService db;
+
+    @Inject protected Session session;
 
     protected void initUserWithRoles(String... roles)
     {
@@ -249,11 +252,7 @@ public abstract class TestUtils extends BaseTestUtils
     protected void setSession(String name, Object value)
     {
         UserInfoHolder.getSession().set(name, value);
-    }
-
-    protected Object getSession(String name)
-    {
-        return UserInfoHolder.getSession().get(name);
+        session.set(name, value);
     }
 
     public static class ShowCreatedOperations extends TestWatcher
@@ -313,7 +312,7 @@ public abstract class TestUtils extends BaseTestUtils
         protected void configure()
         {
             install(new BaseDbMockTestModule());
-            bind(QuerySession.class).to(TestQuerySession.class);
+            install(new WebTestModule());
         }
     }
 
@@ -323,7 +322,18 @@ public abstract class TestUtils extends BaseTestUtils
         protected void configure()
         {
             install(new BaseDbTestModule());
+            install(new WebTestModule());
+        }
+    }
+
+    public static class WebTestModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            bind(Session.class).to(TestSession.class);
             bind(QuerySession.class).to(TestQuerySession.class);
+            //todo add request
         }
     }
 

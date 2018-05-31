@@ -31,6 +31,7 @@ public abstract class ServerBe5ProjectDBTest extends ServerTestUtils
         protected void configure()
         {
             install(new BaseDbTestModule());
+            install(new ServerWebTestModule());
             bind(QuerySession.class).to(ServerTestQuerySession.class);
         }
     }

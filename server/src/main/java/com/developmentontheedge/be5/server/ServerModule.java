@@ -32,6 +32,8 @@ import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.OperationServiceImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionProvider;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
+import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
 
@@ -79,5 +81,7 @@ public class ServerModule extends ServletModule
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
         bind(QuerySession.class).to(QuerySessionProvider.class).in(Scopes.SINGLETON);
+
+        bind(Session.class).to(SessionImpl.class);
     }
 }

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.web.impl;
 
 import com.developmentontheedge.be5.web.Session;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -14,6 +15,7 @@ public class SessionImpl implements Session
 {
     private HttpSession rawSession;
 
+    @Inject
     public SessionImpl(HttpSession session)
     {
         this.rawSession = session;

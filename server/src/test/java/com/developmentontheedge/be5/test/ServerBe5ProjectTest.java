@@ -8,7 +8,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
 
-
 public abstract class ServerBe5ProjectTest extends ServerTestUtils
 {
     private static final Injector injector = initInjector(
@@ -28,6 +27,7 @@ public abstract class ServerBe5ProjectTest extends ServerTestUtils
         protected void configure()
         {
             install(new BaseDbMockTestModule());
+            install(new ServerWebTestModule());
             bind(QuerySession.class).to(ServerTestQuerySession.class);
         }
     }

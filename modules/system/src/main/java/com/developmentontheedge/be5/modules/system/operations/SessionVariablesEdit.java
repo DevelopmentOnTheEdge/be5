@@ -14,7 +14,7 @@ public class SessionVariablesEdit extends GOperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        Object variable = session.getAt(context.getRecord());
+        Object variable = session.get(context.getRecord());
         if (variable == null)
         {
             setResult(OperationResult.error("Session variable \'" + String.valueOf(getContext().getRecords()[0]) + "\' not found"));
