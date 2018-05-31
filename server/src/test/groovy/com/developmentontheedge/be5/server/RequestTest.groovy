@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.server
 
-import com.developmentontheedge.be5.server.RestApiConstants
 import com.developmentontheedge.be5.server.model.Base64File
-import com.developmentontheedge.be5.server.test.TestUtils
+import com.developmentontheedge.be5.test.TestUtils
 import com.developmentontheedge.be5.server.util.ParseRequestUtils
 import com.developmentontheedge.be5.web.Request
 import com.google.common.collect.ImmutableMap

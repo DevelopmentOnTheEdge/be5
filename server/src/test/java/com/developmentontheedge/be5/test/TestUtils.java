@@ -1,7 +1,5 @@
-package com.developmentontheedge.be5.server.test;
+package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.query.QuerySession;
-import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -21,7 +19,7 @@ import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.test.mocks.CategoriesServiceForTest;
+import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.server.util.Either;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
@@ -35,8 +33,6 @@ import org.junit.runner.Description;
 import org.mockito.Mockito;
 
 import javax.inject.Inject;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;

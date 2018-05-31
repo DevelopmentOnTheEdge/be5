@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.operation.model.OperationInfo
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.operation.services.OperationExecutor
 import com.developmentontheedge.be5.operation.services.OperationsFactory
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Test
 
 import javax.inject.Inject

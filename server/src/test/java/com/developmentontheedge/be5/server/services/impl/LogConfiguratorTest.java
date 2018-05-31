@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.services.impl;
 import javax.inject.Inject;
 
 import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
 

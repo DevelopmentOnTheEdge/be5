@@ -2,8 +2,7 @@ package com.developmentontheedge.be5.modules.core;
 
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;
-import com.developmentontheedge.be5.modules.core.CoreModule;
-import com.developmentontheedge.be5.server.test.TestUtils;
+import com.developmentontheedge.be5.test.TestUtils;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;

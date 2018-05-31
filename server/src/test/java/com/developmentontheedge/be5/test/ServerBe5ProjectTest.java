@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.test;
+package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.model.beans
 
 import com.developmentontheedge.be5.operation.services.validation.ValidationRules
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.json.JsonFactory
 import groovy.transform.TypeChecked
 import org.junit.Test

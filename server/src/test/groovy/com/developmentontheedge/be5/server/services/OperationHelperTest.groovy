@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.query.sql.DpsRecordAdapter
 import javax.inject.Inject
 import com.developmentontheedge.be5.server.model.beans.QRec
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import com.developmentontheedge.beans.DynamicPropertySet
 import org.junit.Before
 import org.junit.Test

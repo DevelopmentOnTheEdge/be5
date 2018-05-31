@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import javax.inject.Inject;
 
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.metadata.RoleType;
 import org.junit.Before;

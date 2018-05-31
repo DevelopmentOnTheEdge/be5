@@ -25,6 +25,7 @@
   <module>server</module>
   <module>modules/core</module>
   <module>modules/system</module>
+  <module>test</module>
  </modules>
 
  <distributionManagement>

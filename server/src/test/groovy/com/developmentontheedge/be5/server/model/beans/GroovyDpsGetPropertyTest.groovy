@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.model.beans
 
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals

@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.server.test.ServerBe5ProjectDBTest;
-import com.developmentontheedge.be5.server.test.TestUtils;
+import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
+import com.developmentontheedge.be5.test.TestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
