@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.base.services.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -26,16 +26,23 @@ public class LogConfigurator
             }
 
             LogManager.getLogManager().readConfiguration(resourceAsStream);
-            String level = log.getLevel() != null ? log.getLevel().getName() :
-                    log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
-
-            log.info("Log configured. Level: " + level +
-                    " Handlers: " + Arrays.asList(log.getParent().getHandlers()));
         }
         catch (IOException e)
         {
             throw Be5Exception.internal(e);
         }
+
+        String parentLevel = log.getParent().getLevel() != null ? log.getParent().getLevel().getName() : "null";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Log root level: ").append(parentLevel);
+
+        for (Handler handler : log.getParent().getHandlers())
+        {
+            sb.append("\n - ").append(handler.getClass().getName()).append(" ").append(handler.getLevel());
+        }
+
+        log.info(sb.toString());
     }
 
 }
