@@ -1,14 +1,10 @@
 package com.developmentontheedge.be5.web.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Objects;
 
-import javax.servlet.http.HttpServletResponse;
-
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 
 /**
  * Guarantees correct usage of the low-level response.
@@ -29,7 +25,7 @@ public class RawResponseWrapper {
 
     public void setContentType(String contentType)
     {
-        checkNotNull(contentType);
+        Objects.requireNonNull(contentType);
         checkState(!contentTypeIsSet);
         rawResponse.setContentType(contentType);
         contentTypeIsSet = true;
@@ -50,7 +46,7 @@ public class RawResponseWrapper {
     
     public void append(String string)
     {
-        checkNotNull(string);
+        Objects.requireNonNull(string);
         getWriter().append(string);
     }
 
@@ -75,7 +71,7 @@ public class RawResponseWrapper {
             }
             catch (IOException e)
             {
-                throw Be5Exception.internal(e);
+                throw new RuntimeException(e);
             }
         }
         
@@ -86,5 +82,11 @@ public class RawResponseWrapper {
     {
         return rawResponse;
     }
-    
+
+    private static void checkState(boolean expression)
+    {
+        if (!expression) {
+            throw new IllegalStateException();
+        }
+    }
 }
