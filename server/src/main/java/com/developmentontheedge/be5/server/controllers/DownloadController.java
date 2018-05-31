@@ -1,12 +1,13 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.databasemodel.RecordModel;
+import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.util.ResponseUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 
@@ -69,7 +70,7 @@ public class DownloadController extends ControllerSupport implements Controller
             throw Be5Exception.internal("Unknown data type");
         }
 
-        res.sendFile(download, filename, contentType, charset, in);
+        ResponseUtils.sendFile(res, download, filename, contentType, charset, in);
     }
 
 }

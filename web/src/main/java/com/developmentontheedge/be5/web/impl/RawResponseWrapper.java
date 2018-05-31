@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Guarantees correct usage of the low-level response.
@@ -84,4 +83,10 @@ public class RawResponseWrapper {
         return rawResponse;
     }
 
+    private static void checkState(boolean expression)
+    {
+        if (!expression) {
+            throw new IllegalStateException();
+        }
+    }
 }

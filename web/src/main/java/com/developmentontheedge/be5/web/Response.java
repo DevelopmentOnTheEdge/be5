@@ -5,11 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
-import com.google.common.io.ByteStreams;
-import com.google.common.net.UrlEscapers;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 
@@ -94,31 +89,4 @@ public interface Response
      * Returns a raw response. Used only for low-level API. Should not be used in ordinary components.
      */
     HttpServletResponse getRawResponse();
-
-    default void sendFile(boolean download, String filename, String contentType, String charset, InputStream in)
-    {
-        HttpServletResponse response = getRawResponse();
-
-        response.setContentType(contentType + "; charset=" + charset);
-        //response.setCharacterEncoding(encoding);
-
-        if (download)
-        {
-            response.setHeader("Content-disposition","attachment; filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-        else
-        {
-            response.setHeader("Content-disposition","filename=" + UrlEscapers.urlFormParameterEscaper().escape(filename));
-        }
-
-        try
-        {
-            ByteStreams.copy(in, response.getOutputStream());
-            in.close();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
 }
