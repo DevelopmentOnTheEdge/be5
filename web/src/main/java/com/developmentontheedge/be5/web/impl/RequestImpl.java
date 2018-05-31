@@ -1,5 +1,10 @@
 package com.developmentontheedge.be5.web.impl;
 
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
@@ -8,12 +13,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Session;
 
 
 public class RequestImpl implements Request
@@ -34,16 +33,13 @@ public class RequestImpl implements Request
     @Override
     public Object getAttribute(String name)
     {
-    	HttpSession session = rawRequest.getSession();
-        return session == null ? null : session.getAttribute(name);
+        return rawRequest.getSession().getAttribute(name);
     }
     
     @Override
     public void setAttribute(String name, Object value)
     {
-    	HttpSession session = rawRequest.getSession();
-    	if(session != null)
-    	    session.setAttribute(name, value);
+    	rawRequest.setAttribute(name, value);
     }
 
     @Override
@@ -93,54 +89,6 @@ public class RequestImpl implements Request
         }
         return values;
     }
-
-//
-//    @Override
-//    public <T> T getValuesFromJson(String parameterName, Class<T> clazz) throws Be5Exception
-//    {
-//        return jsonb.fromJson(get(parameterName), clazz);
-//    }
-
-//
-//    /**
-//     * for query
-//     */
-//    @Override
-//    public Map<String, String> getValuesFromJsonAsStrings(String parameter) throws Be5Exception
-//    {
-//        String valuesString = get(parameter);
-//        if(Strings.isNullOrEmpty(valuesString))
-//        {
-//            return Collections.emptyMap();
-//        }
-//
-//        Map<String, String> fieldValues = new HashMap<>();
-//
-//        try
-//        {
-//            JsonObject values = (JsonObject) new JsonParser().parse(valuesString);
-//            for (Map.Entry entry: values.entrySet())
-//            {
-//                fieldValues.put(entry.getKey().toString(), ((JsonElement)entry.getValue()).getAsString());
-//            }
-////            JsonArray values = (JsonArray) new JsonParser().parse(valuesString);
-////            for (int i = 0; i < values.size(); i++)
-////            {
-////                JsonObject pair = (JsonObject) values.get(i);
-////                String name = pair.get("name").getAsString();
-////                String value = pair.get("value").getAsString();
-////                if( !"".equals(value) )
-////                {
-////                    fieldValues.put(name, value);
-////                }
-////            }
-//        }
-//        catch (ClassCastException e)
-//        {
-//            throw Be5Exception.invalidRequestParameter(log, e, parameter, valuesString);
-//        }
-//		return fieldValues;
-//    }
 
 	@Override
     public Map<String, String[]> getParameters()

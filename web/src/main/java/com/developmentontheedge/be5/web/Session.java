@@ -55,7 +55,7 @@ public interface Session
     void remove(String name);
 
     @SuppressWarnings("unchecked")
-    Map<String, Object> getAllAttributes();
+    Map<String, Object> getAttributes();
 
     void invalidate();
 }

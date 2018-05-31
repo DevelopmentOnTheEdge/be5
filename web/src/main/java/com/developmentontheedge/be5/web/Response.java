@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.web;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
@@ -119,7 +118,7 @@ public interface Response
         }
         catch (IOException e)
         {
-            throw Be5Exception.internal(e);
+            throw new RuntimeException(e);
         }
     }
 }

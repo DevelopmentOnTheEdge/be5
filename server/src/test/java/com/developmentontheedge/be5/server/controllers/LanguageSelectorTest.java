@@ -46,7 +46,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
     @Test
     public void generateLanguageParameterIsAbsent()
     {
-        expectedEx.expect(Be5Exception.class);
+        expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage(ErrorTitles.formatTitle(Be5ErrorCode.PARAMETER_ABSENT, "language"));
 
         Response response = mock(Response.class);

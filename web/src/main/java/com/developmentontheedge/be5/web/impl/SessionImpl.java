@@ -14,7 +14,7 @@ public class SessionImpl implements Session
 {
     private HttpSession rawSession;
 
-    SessionImpl(HttpSession session)
+    public SessionImpl(HttpSession session)
     {
         this.rawSession = session;
     }
@@ -40,7 +40,7 @@ public class SessionImpl implements Session
     @Override
     public void remove(String name)
     {
-        set(name, null);
+        rawSession.removeAttribute(name);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class SessionImpl implements Session
 
     @Override
     @SuppressWarnings("unchecked")
-    public Map<String, Object> getAllAttributes()
+    public Map<String, Object> getAttributes()
     {
         Map<String, Object> map = new HashMap<>();
 
