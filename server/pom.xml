@@ -60,7 +60,7 @@
 
 		<dependency>
 			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-test</artifactId>
+			<artifactId>be5-test-base</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
 
