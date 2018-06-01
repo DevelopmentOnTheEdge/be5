@@ -12,48 +12,48 @@ import java.util.Map;
 
 public class SessionImpl implements Session
 {
-    private HttpSession rawSession;
+    private HttpSession raw;
 
     public SessionImpl(HttpSession session)
     {
-        this.rawSession = session;
+        this.raw = session;
     }
 
     @Override
     public String getSessionId()
     {
-        return rawSession.getId();
+        return raw.getId();
     }
 
     @Override
     public Object get(String name)
     {
-        return rawSession.getAttribute(name);
+        return raw.getAttribute(name);
     }
 
     @Override
     public void set(String name, Object value)
     {
-        rawSession.setAttribute(name, value);
+        raw.setAttribute(name, value);
     }
 
     @Override
     public void remove(String name)
     {
-        rawSession.removeAttribute(name);
+        raw.removeAttribute(name);
     }
 
     @Override
     public HttpSession getRawSession()
     {
-        return rawSession;
+        return raw;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<String> getAttributeNames()
     {
-        return Collections.list(rawSession.getAttributeNames());
+        return Collections.list(raw.getAttributeNames());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SessionImpl implements Session
     {
         Map<String, Object> map = new HashMap<>();
 
-        Enumeration<String> enumeration = rawSession.getAttributeNames();
+        Enumeration<String> enumeration = raw.getAttributeNames();
         while (enumeration.hasMoreElements()) {
             String name = enumeration.nextElement();
             map.put(name, get(name));
@@ -74,6 +74,6 @@ public class SessionImpl implements Session
     @Override
     public void invalidate()
     {
-        rawSession.invalidate();
+        raw.invalidate();
     }
 }

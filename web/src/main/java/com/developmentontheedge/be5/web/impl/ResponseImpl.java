@@ -18,11 +18,11 @@ public class ResponseImpl implements Response
     /**
      * Guarantees correct state of the response.
      */
-    private final RawResponseWrapper response;
+    private final RawResponseWrapper rawWrapper;
     
     public ResponseImpl(HttpServletResponse rawResponse)
     {
-        this.response = new RawResponseWrapper(rawResponse);
+        this.rawWrapper = new RawResponseWrapper(rawResponse);
     }
 
     /**
@@ -110,7 +110,7 @@ public class ResponseImpl implements Response
     @Override
     public void setStatus(int status)
     {
-        response.setStatus(status);
+        rawWrapper.setStatus(status);
     }
 
     @Override
@@ -145,10 +145,10 @@ public class ResponseImpl implements Response
     {
         // The MIME media type for JSON text is 'application/json'.
         // The default encoding is UTF-8. Source: RFC 4627, http://www.ietf.org/rfc/rfc4627.txt.
-        response.setContentType(contentType);
+        rawWrapper.setContentType(contentType);
         //response.setCharacterEncoding(StandardCharsets.UTF_8);
-        response.append(text);
-        response.flush();
+        rawWrapper.append(text);
+        rawWrapper.flush();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class ResponseImpl implements Response
     @Override
     public HttpServletResponse getRawResponse()
     {
-        return response.getRawResponse();
+        return rawWrapper.getRawResponse();
     }
 
 }

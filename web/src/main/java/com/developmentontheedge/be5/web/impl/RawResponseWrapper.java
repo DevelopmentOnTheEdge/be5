@@ -11,36 +11,36 @@ import java.util.Objects;
  * 
  * @author asko
  */
-public class RawResponseWrapper {
-
-    private final HttpServletResponse rawResponse;
+public class RawResponseWrapper
+{
+    private final HttpServletResponse raw;
     private PrintWriter out = null;
     private boolean contentTypeIsSet = false;
     //private boolean characterEncodingIsSet = false;
 
     RawResponseWrapper(HttpServletResponse rawResponse)
     {
-        this.rawResponse = rawResponse;
+        this.raw = rawResponse;
     }
 
     public void setContentType(String contentType)
     {
         Objects.requireNonNull(contentType);
         checkState(!contentTypeIsSet);
-        rawResponse.setContentType(contentType);
+        raw.setContentType(contentType);
         contentTypeIsSet = true;
     }
 
     public void setStatus(int status)
     {
-        rawResponse.setStatus(status);
+        raw.setStatus(status);
     }
 
 //    void setCharacterEncoding(Charset charset)
 //    {
 //        checkNotNull(charset);
 //        checkState(!characterEncodingIsSet);
-//        rawResponse.setCharacterEncoding(charset.name());
+//        raw.setCharacterEncoding(charset.name());
 //        characterEncodingIsSet = true;
 //    }
     
@@ -67,7 +67,7 @@ public class RawResponseWrapper {
         {
             try
             {
-                out = rawResponse.getWriter();
+                out = raw.getWriter();
             }
             catch (IOException e)
             {
@@ -80,7 +80,7 @@ public class RawResponseWrapper {
     
     HttpServletResponse getRawResponse()
     {
-        return rawResponse;
+        return raw;
     }
 
     private static void checkState(boolean expression)
