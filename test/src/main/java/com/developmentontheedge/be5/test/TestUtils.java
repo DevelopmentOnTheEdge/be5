@@ -249,6 +249,7 @@ public abstract class TestUtils extends BaseTestUtils
     protected void setSession(String name, Object value)
     {
         UserInfoHolder.getSession().set(name, value);
+        TestQuerySession.map.put(name, value);
     }
 
     protected Object getSession(String name)
