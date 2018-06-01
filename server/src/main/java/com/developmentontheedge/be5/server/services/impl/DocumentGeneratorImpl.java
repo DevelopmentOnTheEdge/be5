@@ -1,38 +1,38 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.server.services.OperationService;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.query.services.TableModelService;
-import com.developmentontheedge.be5.server.services.model.Category;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.model.StaticPagePresentation;
-import com.developmentontheedge.be5.query.model.InitialRow;
-import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
-import com.developmentontheedge.be5.server.services.model.Operations;
-import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.model.ColumnModel;
+import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.query.model.ColumnModel;
+import com.developmentontheedge.be5.query.model.InitialRow;
+import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
+import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
+import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
+import com.developmentontheedge.be5.server.services.CategoriesService;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.OperationService;
+import com.developmentontheedge.be5.server.services.model.Category;
+import com.developmentontheedge.be5.server.services.model.Operations;
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.server.util.HashUrlUtils;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.server.util.Either;
-import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.server.util.HashUrlUtils;
-import com.developmentontheedge.be5.base.util.LayoutUtils;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -61,7 +61,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public DocumentGeneratorImpl(
@@ -71,7 +71,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             OperationExecutor operationExecutor,
             CategoriesService categoriesService,
             TableModelService tableModelService,
-            ResponseHelper responseHelper)
+            JsonApiResponseHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;

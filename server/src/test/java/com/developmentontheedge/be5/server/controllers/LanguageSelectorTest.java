@@ -33,7 +33,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response);
+        component.generate(getMockRequest("/api/languageSelector/"), response);
 
 
         verify(response).sendAsRawJson(eq(languageSelectorResponse));
@@ -50,7 +50,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
 
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("select"), response);
+        component.generate(getSpyMockRequest("/api/languageSelector/select"), response);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
     {
         Response response = mock(Response.class);
 
-        Request request = getSpyMockRequest("select", ImmutableMap.of("language", "RU") );
+        Request request = getSpyMockRequest("/api/languageSelector/select", ImmutableMap.of("language", "RU") );
 
         component.generate(request, response);
 

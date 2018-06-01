@@ -30,7 +30,7 @@ public class RequestImplTest
     public void getParameterValues()
     {
         when(rawRequest.getParameterValues("ids[]")).thenReturn(new String[]{"1", "2"});
-        Request req = new RequestImpl(rawRequest, "test");
+        Request req = new RequestImpl(rawRequest);
 
         assertEquals(Arrays.asList("1", "2"), req.getList("ids"));
     }
@@ -39,7 +39,7 @@ public class RequestImplTest
     public void getParameterValuesOneValue()
     {
         when(rawRequest.getParameter("ids")).thenReturn("1");
-        Request req = new RequestImpl(rawRequest, "test");
+        Request req = new RequestImpl(rawRequest);
 
         assertEquals(Collections.singletonList("1"), req.getList("ids"));
     }

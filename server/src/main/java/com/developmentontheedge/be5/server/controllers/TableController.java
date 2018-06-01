@@ -1,22 +1,22 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.base.util.HashUrl;
+import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -28,18 +28,18 @@ import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
-public class TableController extends ControllerSupport
+public class TableController extends ApiControllerSupport
 {
     private static final Logger log = Logger.getLogger(TableController.class.getName());
 
     private final DocumentGenerator documentGenerator;
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService,
-                           UserAwareMeta userAwareMeta, ResponseHelper responseHelper)
+                           UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper)
     {
         this.documentGenerator = documentGenerator;
         this.tableModelService = tableModelService;
@@ -48,7 +48,7 @@ public class TableController extends ControllerSupport
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -74,7 +74,7 @@ public class TableController extends ControllerSupport
         {
             TableModel tableModel = tableModelService.getTableModel(query, parameters);
 
-            switch (req.getRequestUri())
+            switch (requestSubUrl)
             {
                 case "":
                     JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters, tableModel);

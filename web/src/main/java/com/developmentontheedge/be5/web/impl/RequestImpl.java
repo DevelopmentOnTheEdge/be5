@@ -12,46 +12,41 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class RequestImpl implements Request
 {
-    public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
-
-    private final HttpServletRequest rawRequest;
-    private final String requestUri;
+    private final HttpServletRequest raw;
     private final String remoteAddr;
     
-    public RequestImpl(HttpServletRequest rawRequest, String requestUri)
+    public RequestImpl(HttpServletRequest raw)
     {
-        this.rawRequest = rawRequest;
-        this.requestUri = requestUri;
-        this.remoteAddr = getClientIpAddr(rawRequest);
+        this.raw = raw;
+        this.remoteAddr = getClientIpAddr(raw);
     }
 
     @Override
     public Object getAttribute(String name)
     {
-        return rawRequest.getSession().getAttribute(name);
+        return raw.getSession().getAttribute(name);
     }
     
     @Override
     public void setAttribute(String name, Object value)
     {
-    	rawRequest.setAttribute(name, value);
+    	raw.setAttribute(name, value);
     }
 
     @Override
     public Session getSession()
     {
-        return new SessionImpl(rawRequest.getSession());
+        return new SessionImpl(raw.getSession());
     }
 
     @Override
     public Session getSession(boolean create)
     {
-        HttpSession rawSession = rawRequest.getSession(create);
+        HttpSession rawSession = raw.getSession(create);
         if(rawSession == null)return null;
         return new SessionImpl(rawSession);
     }
@@ -65,7 +60,7 @@ public class RequestImpl implements Request
     @Override
     public String get(String name)
     {
-        return rawRequest.getParameter(name);
+        return raw.getParameter(name);
     }
 
     @Override
@@ -77,10 +72,10 @@ public class RequestImpl implements Request
     @Override
     public String[] getParameterValues(String name)
     {
-        String[] values = rawRequest.getParameterValues(name + "[]");
+        String[] values = raw.getParameterValues(name + "[]");
         if(values == null)
         {
-            String value = rawRequest.getParameter(name);
+            String value = raw.getParameter(name);
             if(value != null){
                 return new String[]{value};
             }else{
@@ -93,13 +88,13 @@ public class RequestImpl implements Request
 	@Override
     public Map<String, String[]> getParameters()
     {
-        return Collections.unmodifiableMap((Map<String, String[]>)rawRequest.getParameterMap());
+        return Collections.unmodifiableMap((Map<String, String[]>) raw.getParameterMap());
     }
     
 	@Override
     public String getRequestUri()
     {
-        return requestUri;
+        return raw.getRequestURI();
     }
     
     @Override
@@ -111,13 +106,13 @@ public class RequestImpl implements Request
     @Override
     public Locale getLocale()
     {
-        return rawRequest.getLocale();
+        return raw.getLocale();
     }
 
     @Override
 	public HttpServletRequest getRawRequest()
     {
-		return rawRequest;
+		return raw;
 	}
 
     @Override
@@ -129,23 +124,23 @@ public class RequestImpl implements Request
     @Override
     public String getServerUrl()
     {
-        String scheme = rawRequest.getScheme() + "://";
-        String serverName = rawRequest.getServerName();
-        String serverPort = (rawRequest.getServerPort() == 80) ? "" : ":" + rawRequest.getServerPort();
+        String scheme = raw.getScheme() + "://";
+        String serverName = raw.getServerName();
+        String serverPort = (raw.getServerPort() == 80) ? "" : ":" + raw.getServerPort();
         return scheme + serverName + serverPort;
     }
 
     @Override
     public String getServerUrlWithContext()
     {
-        String contextPath = rawRequest.getContextPath();
+        String contextPath = raw.getContextPath();
         return getServerUrl() + contextPath;
     }
 
     @Override
     public String getContextPath()
     {
-        return rawRequest.getContextPath();
+        return raw.getContextPath();
     }
 
     @Override
@@ -153,7 +148,7 @@ public class RequestImpl implements Request
     {
         StringBuilder sb = new StringBuilder();
 
-        try(BufferedReader br = rawRequest.getReader()){
+        try(BufferedReader br = raw.getReader()){
             String str;
             while( (str = br.readLine()) != null )
             {

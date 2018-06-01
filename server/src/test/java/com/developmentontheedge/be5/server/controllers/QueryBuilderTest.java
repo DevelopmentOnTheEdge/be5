@@ -23,7 +23,7 @@ public class QueryBuilderTest extends SqlMockOperationTest
     public void generate()
     {
         Response response = mock(Response.class);
-        component.generate(getSpyMockRequest("queryBuilder", ImmutableMap.of(
+        component.generate(getSpyMockRequest("/api/queryBuilder/", ImmutableMap.of(
                 "sql", "select * from testtable limit 1",
                 RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())), response);
 

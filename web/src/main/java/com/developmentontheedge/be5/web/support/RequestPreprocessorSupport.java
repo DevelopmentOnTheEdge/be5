@@ -1,8 +1,7 @@
-package com.developmentontheedge.be5.server.support;
+package com.developmentontheedge.be5.web.support;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.RequestPreprocessor;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 
 import javax.servlet.Filter;
@@ -30,9 +29,7 @@ public abstract class RequestPreprocessorSupport implements RequestPreprocessor,
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
-        Request req = new RequestImpl(request, request.getRequestURI());
-
-        UserInfoHolder.setRequest(req);
+        Request req = new RequestImpl(request);
 
         preprocessUrl(req, ServletUtils.getResponse(request, response));
 

@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.base.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 
 import javax.inject.Inject;
@@ -16,14 +16,14 @@ import java.util.logging.Logger;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 
 
-public class ResponseHelper
+public class JsonApiResponseHelper
 {
-    public final Logger log = Logger.getLogger(ResponseHelper.class.getName());
+    public final Logger log = Logger.getLogger(JsonApiResponseHelper.class.getName());
 
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public ResponseHelper(UserInfoProvider userInfoProvider)
+    public JsonApiResponseHelper(UserInfoProvider userInfoProvider)
     {
         this.userInfoProvider = userInfoProvider;
     }

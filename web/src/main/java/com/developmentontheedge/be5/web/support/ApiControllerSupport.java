@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.server.support;
+package com.developmentontheedge.be5.web.support;
 
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
@@ -15,9 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public abstract class ControllerSupport extends HttpServlet implements Controller
+public abstract class ApiControllerSupport extends HttpServlet implements Controller
 {
-    protected static final Logger log = Logger.getLogger(ControllerSupport.class.getName());
+    protected static final Logger log = Logger.getLogger(ApiControllerSupport.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,9 +33,7 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
 
     private void respond(HttpServletRequest request, HttpServletResponse response)
     {
-        Request req = new RequestImpl(request, getApiSubUrl(request.getRequestURI()));
-
-        UserInfoHolder.setRequest(req);
+        Request req = new RequestImpl(request);
 
         try
         {
@@ -47,6 +45,15 @@ public abstract class ControllerSupport extends HttpServlet implements Controlle
         }
     }
 
+    @Override
+    public final void generate(Request req, Response res)
+    {
+        generate(req, res, getApiSubUrl(req.getRequestUri()));
+    }
+
+    protected abstract void generate(Request req, Response res, String subUrl);
+
+    //todo remove google.common
     private String getApiSubUrl(String requestUri)
     {
         String[] uriParts = requestUri.split("/");

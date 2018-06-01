@@ -1,27 +1,27 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.server.model.FormPresentation;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.util.Either;
-import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import javax.inject.Inject;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,7 +33,7 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
-public class FormController extends ControllerSupport
+public class FormController extends ApiControllerSupport
 {
     private static final Logger log = Logger.getLogger(FormController.class.getName());
 
@@ -41,12 +41,12 @@ public class FormController extends ControllerSupport
     private final DocumentGenerator documentGenerator;
     private final UserHelper userHelper;
     private final UserAwareMeta userAwareMeta;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
     private final Stage stage;
 
     @Inject
     public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
-                          UserHelper userHelper, UserAwareMeta userAwareMeta, ResponseHelper responseHelper, Stage stage)
+                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
@@ -57,7 +57,7 @@ public class FormController extends ControllerSupport
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         if(stage == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
         {
@@ -94,7 +94,7 @@ public class FormController extends ControllerSupport
 
         try
         {
-            switch (req.getRequestUri())
+            switch (requestSubUrl)
             {
                 case "":
                     data = documentGenerator.generateForm(operation, values);
