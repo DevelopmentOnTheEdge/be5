@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.support;
 
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.RequestPreprocessor;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
@@ -31,8 +30,6 @@ public abstract class RequestPreprocessorSupport implements RequestPreprocessor,
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
         Request req = new RequestImpl(request);
-
-        UserInfoHolder.setRequest(req);
 
         preprocessUrl(req, ServletUtils.getResponse(request, response));
 

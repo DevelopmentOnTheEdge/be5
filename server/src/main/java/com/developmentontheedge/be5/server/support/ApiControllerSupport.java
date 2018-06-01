@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.support;
 
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -36,8 +35,6 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
     {
         Request req = new RequestImpl(request);
 
-        UserInfoHolder.setRequest(req);
-
         try
         {
             generate(req, ServletUtils.getResponse(request, response));
@@ -56,6 +53,7 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
 
     protected abstract void generate(Request req, Response res, String subUrl);
 
+    //todo remove google.common
     private String getApiSubUrl(String requestUri)
     {
         String[] uriParts = requestUri.split("/");

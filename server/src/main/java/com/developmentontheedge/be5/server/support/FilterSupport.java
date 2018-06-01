@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.server.support;
 
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
@@ -29,7 +28,6 @@ public abstract class FilterSupport implements Filter
     {
         Request req = new RequestImpl((HttpServletRequest)servletRequest);
 
-        UserInfoHolder.setRequest(req);
 
         filter(req, ServletUtils.getResponse(req.getRawRequest(), (HttpServletResponse)servletResponse), filterChain);
     }
