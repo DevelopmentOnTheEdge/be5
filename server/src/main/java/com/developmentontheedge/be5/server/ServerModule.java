@@ -24,7 +24,7 @@ import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.OperationHelper;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.OperationService;
@@ -71,7 +71,7 @@ public class ServerModule extends ServletModule
         bind(SqlHelper.class).in(Scopes.SINGLETON);
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);
-        bind(ResponseHelper.class).in(Scopes.SINGLETON);
+        bind(JsonApiResponseHelper.class).in(Scopes.SINGLETON);
 
         bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
         bind(DbService.class).to(DbServiceImpl.class).in(Scopes.SINGLETON);

@@ -16,7 +16,7 @@ import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TableOperationPresentation;
@@ -61,7 +61,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public DocumentGeneratorImpl(
@@ -71,7 +71,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             OperationExecutor operationExecutor,
             CategoriesService categoriesService,
             TableModelService tableModelService,
-            ResponseHelper responseHelper)
+            JsonApiResponseHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;

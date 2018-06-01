@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -35,11 +35,11 @@ public class TableController extends ApiControllerSupport
     private final DocumentGenerator documentGenerator;
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService,
-                           UserAwareMeta userAwareMeta, ResponseHelper responseHelper)
+                           UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper)
     {
         this.documentGenerator = documentGenerator;
         this.tableModelService = tableModelService;

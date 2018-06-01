@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
@@ -52,11 +52,11 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
     private final DocumentGenerator documentGenerator;
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
-                                  QueryService queryService, ResponseHelper responseHelper)
+                                  QueryService queryService, JsonApiResponseHelper responseHelper)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;

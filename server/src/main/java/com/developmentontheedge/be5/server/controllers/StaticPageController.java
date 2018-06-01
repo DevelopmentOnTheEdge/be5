@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
@@ -22,10 +22,10 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 public class StaticPageController extends ApiControllerSupport
 {
     private final ProjectProvider projectProvider;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
-    public StaticPageController(ProjectProvider projectProvider, ResponseHelper responseHelper)
+    public StaticPageController(ProjectProvider projectProvider, JsonApiResponseHelper responseHelper)
     {
         this.projectProvider = projectProvider;
         this.responseHelper = responseHelper;

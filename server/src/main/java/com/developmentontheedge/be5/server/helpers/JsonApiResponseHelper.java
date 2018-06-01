@@ -16,14 +16,14 @@ import java.util.logging.Logger;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 
 
-public class ResponseHelper
+public class JsonApiResponseHelper
 {
-    public final Logger log = Logger.getLogger(ResponseHelper.class.getName());
+    public final Logger log = Logger.getLogger(JsonApiResponseHelper.class.getName());
 
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public ResponseHelper(UserInfoProvider userInfoProvider)
+    public JsonApiResponseHelper(UserInfoProvider userInfoProvider)
     {
         this.userInfoProvider = userInfoProvider;
     }

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
@@ -41,12 +41,12 @@ public class FormController extends ApiControllerSupport
     private final DocumentGenerator documentGenerator;
     private final UserHelper userHelper;
     private final UserAwareMeta userAwareMeta;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
     private final Stage stage;
 
     @Inject
     public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
-                          UserHelper userHelper, UserAwareMeta userAwareMeta, ResponseHelper responseHelper, Stage stage)
+                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
