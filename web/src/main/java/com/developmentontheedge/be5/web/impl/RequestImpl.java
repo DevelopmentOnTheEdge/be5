@@ -12,13 +12,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class RequestImpl implements Request
 {
-    public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
-
     private final HttpServletRequest rawRequest;
     private final String remoteAddr;
     
