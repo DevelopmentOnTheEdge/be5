@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.web.SessionConstants;
 import com.developmentontheedge.be5.base.UserInfoProvider;
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.web.SessionConstants;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

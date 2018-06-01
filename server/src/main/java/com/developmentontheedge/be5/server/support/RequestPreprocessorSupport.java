@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.support;
 
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.RequestPreprocessor;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 
 import javax.servlet.Filter;

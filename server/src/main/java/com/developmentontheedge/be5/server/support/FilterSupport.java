@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.support;
 
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 
 import javax.servlet.Filter;
@@ -27,14 +27,11 @@ public abstract class FilterSupport implements Filter
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException
     {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
-        HttpServletResponse response = (HttpServletResponse)servletResponse;
-
-        Request req = new RequestImpl(request);
+        Request req = new RequestImpl((HttpServletRequest)servletRequest);
 
         UserInfoHolder.setRequest(req);
 
-        filter(req, ServletUtils.getResponse(request, response), filterChain);
+        filter(req, ServletUtils.getResponse(req.getRawRequest(), (HttpServletResponse)servletResponse), filterChain);
     }
 
     @Override
