@@ -20,13 +20,11 @@ public class RequestImpl implements Request
     public static final Logger log = Logger.getLogger(RequestImpl.class.getName());
 
     private final HttpServletRequest rawRequest;
-    private final String requestUri;
     private final String remoteAddr;
     
-    public RequestImpl(HttpServletRequest rawRequest, String requestUri)
+    public RequestImpl(HttpServletRequest rawRequest)
     {
         this.rawRequest = rawRequest;
-        this.requestUri = requestUri;
         this.remoteAddr = getClientIpAddr(rawRequest);
     }
 
@@ -99,7 +97,7 @@ public class RequestImpl implements Request
 	@Override
     public String getRequestUri()
     {
-        return requestUri;
+        return rawRequest.getRequestURI();
     }
     
     @Override

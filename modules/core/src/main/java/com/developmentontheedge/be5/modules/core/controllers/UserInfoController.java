@@ -4,14 +4,14 @@ import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
 import com.google.common.base.Splitter;
 
 import javax.inject.Inject;
 
 
-public class UserInfoController extends ControllerSupport implements Controller
+public class UserInfoController extends ApiControllerSupport implements Controller
 {
     private final LoginService loginService;
 
@@ -22,9 +22,9 @@ public class UserInfoController extends ControllerSupport implements Controller
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
-        switch (req.getRequestUri())
+        switch (requestSubUrl)
         {
             case "":
                 res.sendAsRawJson(loginService.getUserInfoModel());

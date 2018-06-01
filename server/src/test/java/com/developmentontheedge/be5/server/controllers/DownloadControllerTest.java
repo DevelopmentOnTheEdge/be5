@@ -20,7 +20,7 @@ public class DownloadControllerTest extends ServerBe5ProjectTest
     public void test()
     {
         Response response = mock(Response.class);
-        Request req = getSpyMockRequest("", ImmutableMap.<String, Object>builder()
+        Request req = getSpyMockRequest("/api/download/", ImmutableMap.<String, Object>builder()
             .put("_t_", "attachments")
             .put("_typeColumn_", "mimeType")
             .put("_charsetColumn_", "mimeCharset")

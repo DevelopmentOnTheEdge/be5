@@ -30,7 +30,7 @@ public abstract class RequestPreprocessorSupport implements RequestPreprocessor,
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
-        Request req = new RequestImpl(request, request.getRequestURI());
+        Request req = new RequestImpl(request);
 
         UserInfoHolder.setRequest(req);
 

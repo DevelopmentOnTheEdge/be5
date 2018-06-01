@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.helpers.ResponseHelper;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
@@ -19,7 +19,7 @@ import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
-public class StaticPageController extends ControllerSupport
+public class StaticPageController extends ApiControllerSupport
 {
     private final ProjectProvider projectProvider;
     private final ResponseHelper responseHelper;
@@ -32,21 +32,20 @@ public class StaticPageController extends ControllerSupport
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         String language = UserInfoHolder.getLanguage();
-        String page = req.getRequestUri();
-        String staticPageContent = projectProvider.getProject().getStaticPageContent(language, page);
+        String staticPageContent = projectProvider.getProject().getStaticPageContent(language, requestSubUrl);
 
         if (staticPageContent == null)
         {
-            String msg = ErrorTitles.formatTitle(Be5ErrorCode.NOT_FOUND, "static/" + page);
+            String msg = ErrorTitles.formatTitle(Be5ErrorCode.NOT_FOUND, "static/" + requestSubUrl);
             log.fine(msg);
 
             //todo localize
             res.sendErrorAsJson(
                     new ErrorModel("404", msg,
-                            Collections.singletonMap(SELF_LINK, "static/" + page)),
+                            Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)
             );
         }
@@ -54,7 +53,7 @@ public class StaticPageController extends ControllerSupport
         {
             res.sendAsJson(
                     new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent),
-                            Collections.singletonMap(SELF_LINK, "static/" + page)),
+                            Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)
             );
         }

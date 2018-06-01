@@ -7,7 +7,7 @@ import com.developmentontheedge.be5.server.helpers.ResponseHelper;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.server.model.FormPresentation;
@@ -33,7 +33,7 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
-public class FormController extends ControllerSupport
+public class FormController extends ApiControllerSupport
 {
     private static final Logger log = Logger.getLogger(FormController.class.getName());
 
@@ -57,7 +57,7 @@ public class FormController extends ControllerSupport
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         if(stage == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
         {
@@ -94,7 +94,7 @@ public class FormController extends ControllerSupport
 
         try
         {
-            switch (req.getRequestUri())
+            switch (requestSubUrl)
             {
                 case "":
                     data = documentGenerator.generateForm(operation, values);

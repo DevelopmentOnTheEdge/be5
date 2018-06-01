@@ -102,7 +102,7 @@ public abstract class ServerTestUtils extends BaseTestUtils
             when(httpServletRequest.getParameter(k)).thenReturn((String) v)
         );
 
-        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null));
+        Request request = Mockito.spy(new RequestImpl(httpServletRequest));
         when(request.getRequestUri()).thenReturn(requestUri);
 
         for (Map.Entry<String, Object> entry: sessionValues.entrySet())

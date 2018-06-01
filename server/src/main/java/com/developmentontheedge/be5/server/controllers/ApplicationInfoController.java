@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * ApplicationInfoComponent returns ApplicationInfo(title, url) for current application (servlet context).
  */
-public class ApplicationInfoController extends ControllerSupport implements Controller
+public class ApplicationInfoController extends ApiControllerSupport implements Controller
 {
     public static class ApplicationInfo
     {
@@ -46,7 +46,7 @@ public class ApplicationInfoController extends ControllerSupport implements Cont
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         final ApplicationInfo appInfo;
         

@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
+import com.developmentontheedge.be5.server.support.ApiControllerSupport;
 import com.developmentontheedge.be5.server.util.ResponseUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
@@ -20,7 +20,7 @@ import java.io.InputStream;
  * Example url
  * api/download?_t_=attachments&_typeColumn_=mimeType&_charsetColumn_=mimeCharset&_filenameColumn_=name&_dataColumn_=data&_download_=yes&ID=7326
  */
-public class DownloadController extends ControllerSupport implements Controller
+public class DownloadController extends ApiControllerSupport implements Controller
 {
     private final DatabaseModel database;
 
@@ -31,7 +31,7 @@ public class DownloadController extends ControllerSupport implements Controller
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         String entity         = req.getNonEmpty("_t_");
         String ID             = req.getNonEmpty("ID");

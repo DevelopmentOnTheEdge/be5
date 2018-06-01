@@ -28,7 +28,7 @@ public class MenuTest extends ServerBe5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response);
+        component.generate(getMockRequest("/api/menu/"), response);
 
         verify(response).sendAsRawJson(isA(MenuController.MenuResponse.class));
     }
@@ -38,7 +38,7 @@ public class MenuTest extends ServerBe5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("withIds"), response);
+        component.generate(getMockRequest("/api/menu/withIds"), response);
 
         verify(response).sendAsRawJson(isA(MenuController.MenuResponse.class));
     }
@@ -48,7 +48,7 @@ public class MenuTest extends ServerBe5ProjectTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("foo"), response);
+        component.generate(getMockRequest("/api/menu/foo"), response);
 
         verify(response).sendUnknownActionError();
     }
