@@ -9,7 +9,7 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 
 
-public class UserInfoProviderImpl implements UserInfoProvider
+public class UserInfoProviderImpl implements UserInfoProvider, Provider<UserInfo>
 {
     private final Provider<HttpSession> session;
 
