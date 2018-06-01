@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.support;
+package com.developmentontheedge.be5.web.support;
 
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
