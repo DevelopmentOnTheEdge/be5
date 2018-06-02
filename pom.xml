@@ -11,16 +11,21 @@
 
  <modules>
   <module>database</module>
+  <module>freemarker-patched</module>
   <module>dbms</module>
   <module>sql</module>
-  <module>freemarker-patched</module>
   <module>metadata</module>
-  <module>server</module>
   <module>maven</module>
-  <module>modules/core</module>
   <module>base</module>
+  <module>test-base</module>
   <module>operation</module>
   <module>query</module>
+  <module>database-model</module>
+  <module>web</module>
+  <module>server</module>
+  <module>modules/core</module>
+  <module>modules/system</module>
+  <module>test</module>
  </modules>
 
  <distributionManagement>

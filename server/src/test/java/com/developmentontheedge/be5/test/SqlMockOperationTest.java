@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.api.helpers.DpsHelper;
-import com.developmentontheedge.be5.api.services.Meta;
+import com.developmentontheedge.be5.server.helpers.DpsHelper;
+import com.developmentontheedge.be5.base.services.Meta;
 
 import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;

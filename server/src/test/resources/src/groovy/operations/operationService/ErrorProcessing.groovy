@@ -1,9 +1,9 @@
 package src.groovy.operations.operationService
 
-import com.developmentontheedge.be5.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.Operation
-import com.developmentontheedge.be5.operation.OperationResult
-import com.developmentontheedge.be5.operation.OperationStatus
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport
+import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.operation.model.OperationResult
+import com.developmentontheedge.be5.operation.model.OperationStatus
 import groovy.transform.TypeChecked
 
 import static org.junit.Assert.assertEquals

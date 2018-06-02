@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services.impl.model;
 
-import com.developmentontheedge.be5.api.services.model.Category;
+import com.developmentontheedge.be5.server.services.model.Category;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

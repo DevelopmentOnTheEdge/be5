@@ -24,6 +24,18 @@
 
 		<dependency>
 			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-web</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-database-model</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.developmentontheedge.be5</groupId>
 			<artifactId>be5-query</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
@@ -32,12 +44,6 @@
 			<groupId>com.developmentontheedge</groupId>
 			<artifactId>beans-json</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -53,33 +59,17 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.193</version>
+			<groupId>com.developmentontheedge.be5</groupId>
+			<artifactId>be5-test-base</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.10.19</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.developmentontheedge.be5</groupId>
 			<artifactId>be5-maven-plugin</artifactId>
 			<version>0.1.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-base</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

@@ -47,18 +47,18 @@ users:
   - Delete:
       records: 2
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentDeleteOperation
+      code: com.developmentontheedge.be5.server.operations.SilentDeleteOperation
   - Edit:
       records: 1
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentEditOperation
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
   - Insert:
       roles: Administrator
-      code: com.developmentontheedge.be5.operations.SilentInsertOperation
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
   - Filter:
       roles: Administrator
       layout: '{"type":"inlineMiniForm", "bsSize":"sm"}'
-      code: com.developmentontheedge.be5.operations.FilterByParamsInQueryOperation
+      code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
   - Login:
       roles: Guest
       code: com.developmentontheedge.be5.modules.core.operations.users.Login

@@ -1,7 +1,7 @@
 package src.groovy.operations.testtableAdmin
 
-import com.developmentontheedge.be5.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.OperationResult
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport
+import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.beans.DynamicPropertySet
 
 class PrintParamsCustomOp extends GOperationSupport

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.services
 
-import com.developmentontheedge.be5.api.services.CategoriesService
-import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectDBTest
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
+import com.developmentontheedge.be5.server.services.CategoriesService
 
 import javax.inject.Inject
 import org.junit.Before

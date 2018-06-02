@@ -1,16 +1,15 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.api.FrontendConstants;
-import com.developmentontheedge.be5.api.sql.DpsRecordAdapter;
-import com.developmentontheedge.be5.api.services.Meta;
-import com.developmentontheedge.be5.exceptions.Be5Exception;
-import com.developmentontheedge.be5.api.services.DataSourceService;
-import com.developmentontheedge.be5.api.services.DbService;
-import com.developmentontheedge.be5.api.sql.ResultSetParser;
+import com.developmentontheedge.be5.base.FrontendConstants;
+import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
+import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.model.UserInfo;
+import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
@@ -18,16 +17,12 @@ import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
-import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
-import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.QueryContext;
 import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.DefaultParserContext;
-import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
 
 import one.util.streamex.StreamEx;
@@ -140,15 +135,13 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
     private final UserInfo userInfo;
     private final QuerySession querySession;
 
-    private final Context context;
     private ExecutorQueryContext executorQueryContext;
     private ContextApplier contextApplier;
-    private final ParserContext parserContext;
     private ExecuteType executeType;
 
 
-    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo, QuerySession querySession,
-                            DataSourceService databaseService, Meta meta, DbService db)
+    public Be5QueryExecutor(Query query, Map<String, List<String>> parameters, UserInfo userInfo,
+                            QuerySession querySession, Meta meta, DbService db)
     {
         super(query);
 
@@ -161,8 +154,6 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
 
         this.executorQueryContext = new ExecutorQueryContext();
         this.contextApplier = new ContextApplier( executorQueryContext );
-        this.context = new Context( databaseService.getDbms() );
-        this.parserContext = new DefaultParserContext();
         this.executeType = ExecuteType.DEFAULT;
 
         selectable = !query.getOperationNames().isEmpty() && query.getType() == QueryType.D1;
@@ -247,15 +238,14 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         if(executeType == ExecuteType.DEFAULT)
         {
             // SORT ORDER
-            applySort(ast, getSchema(new Formatter().format(ast, context, parserContext)), dql,
-                    getOrderColumn(), getOrderDir());
+            applySort(ast, getSchema(ast.getQuery().toString()), dql, getOrderColumn(), getOrderDir());
 
             // LIMITS
             new LimitsApplier( offset, limit ).transform( ast );
             dql.log("With limits", ast);
         }
 
-        return new Formatter().format( ast, context, parserContext );
+        return ast.getQuery().toString();
     }
 
     private DynamicProperty[] getSchema(String sql)
@@ -380,7 +370,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             return Collections.emptyList();
         }
 
-        String finalSql = new Formatter().format(subQuery.getQuery(), context, parserContext);
+        String finalSql = subQuery.getQuery().toString();
 
         List<DynamicPropertySet> dynamicPropertySets;
 

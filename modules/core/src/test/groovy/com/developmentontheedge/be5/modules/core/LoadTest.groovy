@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.modules.core
 
-import com.developmentontheedge.be5.api.services.ProjectProvider
-import com.developmentontheedge.be5.modules.core.controllers.CoreBe5ProjectTest
+import com.developmentontheedge.be5.base.services.ProjectProvider
 
 import javax.inject.Inject
 import com.developmentontheedge.be5.maven.AppValidate
@@ -12,9 +11,10 @@ import org.junit.Test
 
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertNotNull
 
 
-class LoadTest extends CoreBe5ProjectTest
+class LoadTest extends CoreBe5ProjectDbMockTest
 {
     @Inject ProjectProvider projectProvider
 
@@ -24,7 +24,8 @@ class LoadTest extends CoreBe5ProjectTest
         assertEquals("core", projectProvider.getProject().getAppName())
 
         BeModelCollection<Module> modules = projectProvider.getProject().getModules()
-        assertEquals(0, modules.getSize())
+        assertEquals(1, modules.getSize())
+        assertNotNull(modules.get("system"))
     }
 
     @Test
