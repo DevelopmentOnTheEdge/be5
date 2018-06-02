@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;

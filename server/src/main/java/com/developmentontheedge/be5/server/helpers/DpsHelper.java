@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.operation.util.FilterUtil;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -448,7 +448,7 @@ public class DpsHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(columnDef.getTableTo(),
-                            ParseRequestUtils.getOperationParamsWithoutFilter(operationParams)));
+                            FilterUtil.getOperationParamsWithoutFilter(operationParams)));
         }
     }
 
@@ -539,7 +539,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
     {
-        Map<String, ?> params = ParseRequestUtils.getOperationParamsWithoutFilter(operationParams);
+        Map<String, ?> params = FilterUtil.getOperationParamsWithoutFilter(operationParams);
 
         for (Map.Entry<String, ?> entry : params.entrySet())
         {
