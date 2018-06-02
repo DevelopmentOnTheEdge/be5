@@ -17,9 +17,9 @@ import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.beans.QRec;
 import com.developmentontheedge.be5.server.services.CategoriesService;
-import com.developmentontheedge.be5.server.services.OperationService;
+import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
@@ -107,7 +107,7 @@ public abstract class TestUtils extends BaseTestUtils
             when(httpServletRequest.getParameter(k)).thenReturn((String) v)
         );
 
-        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null));
+        Request request = Mockito.spy(new RequestImpl(httpServletRequest));
         when(request.getRequestUri()).thenReturn(requestUri);
 
         for (Map.Entry<String, Object> entry: sessionValues.entrySet())

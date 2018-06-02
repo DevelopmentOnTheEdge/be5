@@ -1,18 +1,17 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.helpers.MenuHelper;
-
-import com.developmentontheedge.be5.server.support.ControllerSupport;
-import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
 import java.util.List;
 
 
-public class MenuController extends ControllerSupport implements Controller
+public class MenuController extends ApiControllerSupport implements Controller
 {
     private final MenuHelper menuHelper;
 
@@ -36,9 +35,9 @@ public class MenuController extends ControllerSupport implements Controller
      * </pre>
      */
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
-        switch (req.getRequestUri())
+        switch (requestSubUrl)
         {
             case "":
                 res.sendAsRawJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.TABLE)));

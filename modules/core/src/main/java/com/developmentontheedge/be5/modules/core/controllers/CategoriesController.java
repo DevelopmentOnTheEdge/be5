@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
-import com.developmentontheedge.be5.server.services.CategoriesService;
+import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
 
 
-public class CategoriesController extends ControllerSupport implements Controller
+public class CategoriesController extends ApiControllerSupport implements Controller
 {
     private final CategoriesService categoriesService;
 
@@ -21,9 +21,9 @@ public class CategoriesController extends ControllerSupport implements Controlle
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
-        switch (req.getRequestUri())
+        switch (requestSubUrl)
         {
             case "forest":
                 res.sendAsRawJson(categoriesService.getCategoriesForest(

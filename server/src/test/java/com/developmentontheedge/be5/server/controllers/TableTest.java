@@ -24,7 +24,7 @@ public class TableTest extends SqlMockOperationTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("", ImmutableMap.of(
+        component.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 RestApiConstants.ENTITY,"testtable",
                 RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime(),
                 RestApiConstants.QUERY,"All records")), response);

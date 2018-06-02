@@ -1,29 +1,29 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.ResponseHelper;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.server.model.StaticPagePresentation;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.query.services.QueryService;
+import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.model.StaticPagePresentation;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.web.Controller;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -41,7 +41,7 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.web.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
-public class QueryBuilderController extends ControllerSupport implements Controller
+public class QueryBuilderController extends ApiControllerSupport implements Controller
 {
     private static final String entityName = "queryBuilderComponent";
 
@@ -52,11 +52,11 @@ public class QueryBuilderController extends ControllerSupport implements Control
     private final DocumentGenerator documentGenerator;
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
-    private final ResponseHelper responseHelper;
+    private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
-                                  QueryService queryService, ResponseHelper responseHelper)
+                                  QueryService queryService, JsonApiResponseHelper responseHelper)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
@@ -66,7 +66,7 @@ public class QueryBuilderController extends ControllerSupport implements Control
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
         resourceDataList = new ArrayList<>();
         errorModelList = new ArrayList<>();

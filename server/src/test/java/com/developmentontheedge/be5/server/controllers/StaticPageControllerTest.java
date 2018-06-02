@@ -27,7 +27,7 @@ public class StaticPageControllerTest extends ServerBe5ProjectTest
     public void generate()
     {
         Response response = mock(Response.class);
-        String page = "info.be";
+        String page = "/api/static/info.be";
         Request req = getSpyMockRequest(page, ImmutableMap.of(TIMESTAMP_PARAM, "123456789"));
 
 
@@ -46,7 +46,7 @@ public class StaticPageControllerTest extends ServerBe5ProjectTest
     {
         Response response = mock(Response.class);
 
-        String page = "foo.be";
+        String page = "/api/static/foo.be";
         component.generate(getMockRequest(page), response);
 
         verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class));

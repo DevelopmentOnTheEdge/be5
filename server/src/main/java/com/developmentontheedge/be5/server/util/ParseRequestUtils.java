@@ -124,26 +124,6 @@ public class ParseRequestUtils
         return map;
     }
 
-    public static Map<String, Object> getOperationParamsWithoutFilter(Map<String, Object> operationParams)
-    {
-        if (!operationParams.containsKey(SEARCH_PARAM))
-        {
-            return operationParams;
-        }
-
-        if (operationParams.get(SEARCH_PRESETS_PARAM) == null)
-        {
-            return Collections.emptyMap();
-        }
-
-        List<String> notFilterParams = Arrays.asList(((String)operationParams.get(SEARCH_PRESETS_PARAM)).split(","));
-
-        return operationParams.entrySet()
-                .stream()
-                .filter(e -> notFilterParams.contains(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
     public static String getRequestWithoutContext(String contextPath, String requestUri)
     {
         String reqWithoutContext = requestUri.replaceFirst(contextPath, "");

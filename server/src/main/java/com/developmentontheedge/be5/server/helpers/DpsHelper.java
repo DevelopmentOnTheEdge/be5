@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.GroovyOperation;
@@ -12,8 +12,8 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.be5.base.util.DpsUtils;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
+import com.developmentontheedge.be5.operation.util.FilterUtil;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -35,11 +35,19 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.HIDDEN_COLUMN_PREFIX;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BIGINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BOOL;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CHAR;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CURRENCY;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_DECIMAL;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_INT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_TEXT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UBIGINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UINT;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_VARCHAR;
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.range;
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.step;
-import static com.developmentontheedge.be5.metadata.DatabaseConstants.*;
-import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
-import static com.developmentontheedge.be5.base.util.DpsUtils.setValues;
 
 
 public class DpsHelper
@@ -440,7 +448,7 @@ public class DpsHelper
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
                     operationHelper.getTagsFromSelectionView(columnDef.getTableTo(),
-                            ParseRequestUtils.getOperationParamsWithoutFilter(operationParams)));
+                            FilterUtil.getOperationParamsWithoutFilter(operationParams)));
         }
     }
 
@@ -531,7 +539,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T setOperationParams(T dps, Map<String, Object> operationParams)
     {
-        Map<String, ?> params = ParseRequestUtils.getOperationParamsWithoutFilter(operationParams);
+        Map<String, ?> params = FilterUtil.getOperationParamsWithoutFilter(operationParams);
 
         for (Map.Entry<String, ?> entry : params.entrySet())
         {

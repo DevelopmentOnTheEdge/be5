@@ -72,7 +72,7 @@ class FormTest extends ServerBe5ProjectTest
     {
         String values = jsonb.toJson([name:"test1", value: "2"])
 
-        component.generate(getSpyMockRequest("", ImmutableMap.<String, Object>builder()
+        component.generate(getSpyMockRequest("/api/form/", ImmutableMap.<String, Object>builder()
                 .put(RestApiConstants.ENTITY, "testtableAdmin")
                 .put(RestApiConstants.QUERY, queryName)
                 .put(RestApiConstants.OPERATION, "Insert")

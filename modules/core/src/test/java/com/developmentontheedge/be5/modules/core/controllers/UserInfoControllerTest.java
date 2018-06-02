@@ -38,7 +38,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response);
+        component.generate(getMockRequest("/api/userInfo/"), response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
                 true,
@@ -55,7 +55,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         initGuest();
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response);
+        component.generate(getMockRequest("/api/userInfo/"), response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
                 false,
@@ -74,7 +74,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
+        component.generate(getSpyMockRequest("/api/userInfo/", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
                 response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
@@ -91,7 +91,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("", ImmutableMap.of("roles", "")),
+        component.generate(getSpyMockRequest("/api/userInfo/", ImmutableMap.of("roles", "")),
                 response);
 
         verify(response).sendAsRawJson(new UserInfoModel(
@@ -108,7 +108,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getSpyMockRequest("selectRoles",
+        component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
                 ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response);
 
         verify(response).sendAsRawJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));

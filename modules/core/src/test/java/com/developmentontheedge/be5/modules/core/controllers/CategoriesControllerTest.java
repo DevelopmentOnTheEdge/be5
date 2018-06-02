@@ -21,7 +21,7 @@ public class CategoriesControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest("forest"), response);
+        component.generate(getMockRequest("/api/categories/forest"), response);
 
         verify(response).sendAsRawJson(eq(new ArrayList<>()));
     }
@@ -31,7 +31,7 @@ public class CategoriesControllerTest extends CoreBe5ProjectDbMockTest
     {
         Response response = mock(Response.class);
 
-        component.generate(getMockRequest(""), response);
+        component.generate(getMockRequest("/api/categories/"), response);
 
         verify(response).sendUnknownActionError();
     }

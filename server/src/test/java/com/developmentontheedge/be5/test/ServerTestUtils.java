@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.server.services.OperationService;
+import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.server.model.beans.QRec;
 import com.developmentontheedge.be5.base.model.UserInfo;
@@ -26,7 +26,7 @@ import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
-import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.google.common.collect.ImmutableMap;
@@ -105,7 +105,7 @@ public abstract class ServerTestUtils extends BaseTestUtils
             when(httpServletRequest.getParameter(k)).thenReturn((String) v)
         );
 
-        Request request = Mockito.spy(new RequestImpl(httpServletRequest, null));
+        Request request = Mockito.spy(new RequestImpl(httpServletRequest));
         when(request.getRequestUri()).thenReturn(requestUri);
 
         for (Map.Entry<String, Object> entry: sessionValues.entrySet())

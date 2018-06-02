@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.web.SessionConstants;
+import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.SessionConstants;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;

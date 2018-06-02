@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.util
 
+import com.developmentontheedge.be5.operation.util.FilterUtil
 import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
@@ -22,7 +23,7 @@ class ParseRequestUtilsTest
     @Test
     void setOperationParamsTest()
     {
-        assertEquals([payable:"no"], ParseRequestUtils.getOperationParamsWithoutFilter([payable:"no"]))
+        assertEquals([payable:"no"], FilterUtil.getOperationParamsWithoutFilter([payable:"no"]))
     }
 
     @Test
@@ -30,7 +31,7 @@ class ParseRequestUtilsTest
     {
         def map = [payable:"no", (SEARCH_PARAM):"true"]
 
-        assertEquals([:], ParseRequestUtils.getOperationParamsWithoutFilter(map))
+        assertEquals([:], FilterUtil.getOperationParamsWithoutFilter(map))
     }
 
     @Test
@@ -38,7 +39,7 @@ class ParseRequestUtilsTest
     {
         def map = [payable:"no", CODE:"123", (SEARCH_PARAM): "true", (SEARCH_PRESETS_PARAM): "payable,CODE"]
 
-        assertEquals([CODE:"123", payable:"no"], ParseRequestUtils.getOperationParamsWithoutFilter(map))
+        assertEquals([CODE:"123", payable:"no"], FilterUtil.getOperationParamsWithoutFilter(map))
     }
 
 }

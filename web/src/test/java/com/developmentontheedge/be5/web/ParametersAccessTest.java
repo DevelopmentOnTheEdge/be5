@@ -25,7 +25,7 @@ public class ParametersAccessTest
     public void setUp() throws Exception
     {
         httpServletRequest = mock(HttpServletRequest.class);
-        req = new RequestImpl(httpServletRequest, "");
+        req = new RequestImpl(httpServletRequest);
     }
 
     @Test

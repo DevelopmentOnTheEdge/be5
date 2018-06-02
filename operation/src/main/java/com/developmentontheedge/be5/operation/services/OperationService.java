@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.server.services;
+package com.developmentontheedge.be5.operation.services;
 
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.operation.util.Either;
 
 import java.util.Map;
 

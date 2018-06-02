@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.support.ControllerSupport;
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class LanguageSelectorController extends ControllerSupport implements Controller
+public class LanguageSelectorController extends ApiControllerSupport implements Controller
 {
     private final Meta meta;
     private final ProjectProvider projectProvider;
@@ -86,18 +86,18 @@ public class LanguageSelectorController extends ControllerSupport implements Con
     }
 
     @Override
-    public void generate(Request req, Response res)
+    public void generate(Request req, Response res, String requestSubUrl)
     {
-        switch( req.getRequestUri() )
+        switch(requestSubUrl)
         {
-        case "":
-            res.sendAsRawJson(getInitialData());
-            return;
-        case "select":
-            res.sendAsRawJson(selectLanguage(req));
-            return;
-        default:
-            res.sendUnknownActionError();
+            case "":
+                res.sendAsRawJson(getInitialData());
+                return;
+            case "select":
+                res.sendAsRawJson(selectLanguage(req));
+                return;
+            default:
+                res.sendUnknownActionError();
         }
     }
 
