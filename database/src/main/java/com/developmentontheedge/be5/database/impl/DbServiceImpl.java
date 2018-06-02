@@ -77,7 +77,7 @@ public class DbServiceImpl implements DbService
     }
 
     @Override
-    public int updateWithoutBeSql(String sql, Object... params)
+    public int updateUnsafe(String sql, Object... params)
     {
         return execute(false, conn -> updateUnsafe(conn, sql, params));
     }

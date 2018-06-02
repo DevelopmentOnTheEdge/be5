@@ -18,11 +18,13 @@ public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
     @Test
     public void testSimple()
     {
-        db.transaction(conn -> {
+        long countUser1 = db.transactionWithResult(conn -> {
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)","user1", "pass1");
             db.insert("INSERT INTO persons (name, password) VALUES (?,?)","user12", "pass2");
+
+            return db.one("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
         });
-        long countUser1 = db.one("SELECT count(*) FROM persons WHERE name LIKE 'user1%'" );
+
         assertEquals(2, countUser1);
     }
 
