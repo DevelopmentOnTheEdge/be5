@@ -1,28 +1,20 @@
 package com.developmentontheedge.be5.maven;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.model.TableReference;
+import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -32,29 +24,22 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
  * Usage example: 
  * mvn be5:validate -DBE5_DEBUG=true
  */
-@Mojo( name = "validate")
-public class AppValidate extends Be5Mojo<AppValidate>
+public class AppValidate extends DatabaseOperationSupport<AppValidate>
 {
-    @Parameter (property = "BE5_RDBMS")
     String rdbmsName;
 
-    @Parameter (property = "BE5_SKIP_VALIDATION")
     boolean skipValidation = false;
 
-    @Parameter (property = "BE5_CHECK_QUERY")
     String queryPath;
 
-    @Parameter (property = "BE5_CHECK_ROLES")
     boolean checkRoles;
-    
-    @Parameter (property = "BE5_CHECK_DDL")
+
     String ddlPath;
 
-    @Parameter (property = "BE5_SAVE_PROJECT")
     boolean saveProject;
 
     @Override
-    public void execute() throws MojoFailureException
+    public void execute() throws DatabaseTargetException
     {
         initLogging();
         
@@ -71,7 +56,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
         checkProfileProtection();
     }
 
-    private void checkProfileProtection() throws MojoFailureException
+    private void checkProfileProtection() throws DatabaseTargetException
     {
         if(be5Project.getConnectionProfile() != null &&
                 be5Project.getConnectionProfile().isProtected() &&
@@ -95,12 +80,12 @@ public class AppValidate extends Be5Mojo<AppValidate>
                 unlockProtectedProfile = true;
             } else 
             {
-                throw new MojoFailureException("Aborted");
+                throw new DatabaseTargetException("Aborted");
             }
         }
     }
 
-    private void loadModules() throws MojoFailureException
+    private void loadModules() throws DatabaseTargetException
     {
         LoadContext loadContext = new LoadContext();
         //List<ProjectElementException> errors = new ArrayList<>();
@@ -115,7 +100,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
         }
         catch ( ProjectLoadException e )
         {
-            throw new MojoFailureException("Can not load project modules", e);
+            throw new DatabaseTargetException("Can not load project modules", e);
         }
         checkErrors( loadContext, "Modules have %d error(s)" );
     }
@@ -131,7 +116,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
         }
     }
 
-    private void validateProject() throws MojoFailureException
+    private void validateProject() throws DatabaseTargetException
     {
         List<ProjectElementException> errors = new ArrayList<>();
         if( skipValidation )
@@ -152,7 +137,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
             }
             if(count > 0)
             {
-                throw new MojoFailureException("Project has " + count + " errors." );
+                throw new DatabaseTargetException("Project has " + count + " errors." );
             }
             
             getLog().info("Project is valid.");
@@ -188,7 +173,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
 //        return moduleErrors;
 //    }
 
-    private void saveProject() throws MojoFailureException
+    private void saveProject() throws DatabaseTargetException
     {
         if( saveProject )
         {
@@ -199,25 +184,25 @@ public class AppValidate extends Be5Mojo<AppValidate>
             }
             catch(ProjectSaveException e)
             {
-                throw new MojoFailureException("Can not save project.", e);
+                throw new DatabaseTargetException("Can not save project.", e);
             }
         }
     }
 
-    private void checkDdl() throws MojoFailureException
+    private void checkDdl() throws DatabaseTargetException
     {
         if( ddlPath != null)
         {
             Entity entity = be5Project.getEntity(ddlPath);
             if(entity == null)
             {
-                throw new MojoFailureException("Invalid entity: " +  ddlPath);
+                throw new DatabaseTargetException("Invalid entity: " +  ddlPath);
             }
 
             DdlElement scheme = entity.getScheme();
             if(scheme == null)
             {
-                throw new MojoFailureException("Entity has no scheme: " + ddlPath);
+                throw new DatabaseTargetException("Entity has no scheme: " + ddlPath);
             }
             
             getLog().info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
@@ -233,7 +218,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
         }
     }
 
-    private void checkQuery() throws MojoFailureException
+    private void checkQuery() throws DatabaseTargetException
     {
         if( queryPath == null)
             return;
@@ -241,7 +226,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
         int pos = queryPath.indexOf( '.' );
         if(pos <= 0)
         {
-            throw new MojoFailureException("Invalid query path supplied: " + queryPath);
+            throw new DatabaseTargetException("Invalid query path supplied: " + queryPath);
         }
         
         String entityName = queryPath.substring( 0, pos );
@@ -249,7 +234,7 @@ public class AppValidate extends Be5Mojo<AppValidate>
         Entity entity = be5Project.getEntity( entityName );
         if(entity == null)
         {
-            throw new MojoFailureException("Invalid entity: " + entityName);
+            throw new DatabaseTargetException("Invalid entity: " + entityName);
         }
 
         Query query = entity.getQueries().get( queryName );
@@ -262,13 +247,13 @@ public class AppValidate extends Be5Mojo<AppValidate>
             }
             catch(UnsupportedEncodingException e)
             {
-                throw new MojoFailureException("Can not load query, path=" + queryPath, e);
+                throw new DatabaseTargetException("Can not load query, path=" + queryPath, e);
             }
         }
 
         if(query == null)
         {
-            throw new MojoFailureException("Invalid query: "+queryName);
+            throw new DatabaseTargetException("Invalid query: "+queryName);
         }
         
         getLog().info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );

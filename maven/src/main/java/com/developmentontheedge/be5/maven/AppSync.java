@@ -27,6 +27,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
+import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
@@ -41,15 +42,10 @@ import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 
-@Mojo( name = "sync")
-public class AppSync extends Be5Mojo<AppSync>
+public class AppSync extends DatabaseOperationSupport<AppSync>
 {
-    @Parameter (property = "BE5_FORCE_UPDATE")
     boolean forceUpdate;
 //
 //    @Parameter (property = "BE5_UPDATE_CLONES")
@@ -66,7 +62,7 @@ public class AppSync extends Be5Mojo<AppSync>
     ///////////////////////////////////////////////////////////////////
     
     @Override
-    public void execute() throws MojoFailureException
+    public void execute() throws DatabaseTargetException
     {
         init();
 
@@ -116,17 +112,17 @@ public class AppSync extends Be5Mojo<AppSync>
         catch (FreemarkerSqlException | ExtendedSqlException | SQLException e ) //ReadException | ProjectLoadException | SQLException e )
         {
             if(debug)
-                throw new MojoFailureException("Synchronisation error: " + e.getMessage(), e);
-            throw new MojoFailureException("Synchronisation error: " + e.getMessage());
+                throw new DatabaseTargetException("Synchronisation error: " + e.getMessage(), e);
+            throw new DatabaseTargetException("Synchronisation error: " + e.getMessage());
         }
         catch( IOException | ProcessInterruptedException e )
         {
-            throw new MojoFailureException("Synchronisation error: " + e.getMessage(), e);
+            throw new DatabaseTargetException("Synchronisation error: " + e.getMessage(), e);
         }
         catch( Throwable t )
         {
         	t.printStackTrace();
-            throw new MojoFailureException("Synchronisation error: " + t.getMessage(), t);
+            throw new DatabaseTargetException("Synchronisation error: " + t.getMessage(), t);
         }
         finally
         {

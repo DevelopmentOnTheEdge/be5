@@ -1,7 +1,8 @@
 package com.developmentontheedge.be5.maven.generate;
 
-import com.developmentontheedge.be5.maven.Be5Mojo;
+import com.developmentontheedge.be5.maven.DatabaseOperationSupport;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 @Mojo( name = "generate-context")
-public class GenerateContext extends Be5Mojo<GenerateContext>
+public class GenerateContext extends AbstractMojo
 {
     private static final Logger log = Logger.getLogger(GenerateContext.class.getName());
 

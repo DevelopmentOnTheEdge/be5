@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 
@@ -21,23 +22,20 @@ import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
 
-@Mojo( name = "tools")
-public class AppTools extends Be5Mojo<AppTools>
+public class AppTools extends DatabaseOperationSupport<AppTools>
 {
     private InputStream inputStream = System.in;
 
     @Override
-    public void execute() throws MojoFailureException
+    public void execute() throws DatabaseTargetException
     {
         init();
 
         BeConnectionProfile prof = be5Project.getConnectionProfile();
         if(prof == null)
         {
-            throw new MojoFailureException("Connection profile is required for SQL console");
+            throw new DatabaseTargetException("Connection profile is required for SQL console");
         }
         try
         {
@@ -99,7 +97,7 @@ public class AppTools extends Be5Mojo<AppTools>
         }
         catch (Exception e)
         {
-            throw new MojoFailureException("Console error: " + e.getMessage(), e);
+            throw new DatabaseTargetException("Console error: " + e.getMessage(), e);
         }
     }
 

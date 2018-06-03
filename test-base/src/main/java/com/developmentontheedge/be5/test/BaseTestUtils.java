@@ -10,8 +10,9 @@ import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
-import com.developmentontheedge.be5.maven.AppDb;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.operations.AppDb;
+import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
@@ -162,18 +163,11 @@ public abstract class BaseTestUtils
         if(project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
-            try
-            {
-                log.info(JULLogger.infoBlock("Execute be5:create-db"));
-                new AppDb()
-                        .setLogger(new JULLogger(log))
-                        .setBe5Project(project)
-                        .execute();
-            }
-            catch (MojoFailureException e)
-            {
-                throw new RuntimeException(e);
-            }
+            log.info(JULLogger.infoBlock("Execute be5:create-db"));
+            new AppDb()
+                    .setLogger(new JULLogger(log))
+                    .setBe5Project(project)
+                    .execute();
         }
         else
         {

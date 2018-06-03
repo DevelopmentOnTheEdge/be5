@@ -1,11 +1,5 @@
 package com.developmentontheedge.be5.maven;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-
-import java.io.PrintStream;
-
-import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
@@ -16,11 +10,14 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
+
+import java.io.PrintStream;
 
 
-@Mojo( name = "create-db")
-public class AppDb extends Be5Mojo<AppDb>
+public class AppDb extends DatabaseOperationSupport<AppDb>
 {
     private BeSqlExecutor sql;
     private PrintStream ps;
@@ -39,7 +36,7 @@ public class AppDb extends Be5Mojo<AppDb>
     }
 
     @Override
-    public void execute() throws MojoFailureException
+    public void execute() throws DatabaseTargetException
     {
         init();
         
@@ -54,7 +51,7 @@ public class AppDb extends Be5Mojo<AppDb>
                 Module module = be5Project.getModule( moduleName );
                 if(module == null)
                 {
-                    throw new MojoFailureException("Module '" + moduleName + "' not found!");
+                    throw new DatabaseTargetException("Module '" + moduleName + "' not found!");
                 }
                 createDb(module);
             }
@@ -69,7 +66,7 @@ public class AppDb extends Be5Mojo<AppDb>
             }
             getLog().info("Created tables: " + createdTables + ", created views: " + createdViews);
         }
-        catch( MojoFailureException e )
+        catch( DatabaseTargetException e )
         {
             throw e;
         }
@@ -77,15 +74,15 @@ public class AppDb extends Be5Mojo<AppDb>
         {
             if(debug) {
                 e.printStackTrace();
-                throw new MojoFailureException("Setup db error", e);
+                throw new DatabaseTargetException("Setup db error", e);
             }
             
-            throw new MojoFailureException(e.getMessage());
+            throw new DatabaseTargetException(e.getMessage());
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            throw new MojoFailureException("Setup db error", e);
+            throw new DatabaseTargetException("Setup db error", e);
         }
         finally
         {

@@ -14,27 +14,21 @@ import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.dbms.SqlExecutor;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
-
-@Mojo( name = "data")
-public class AppData extends Be5Mojo<AppData>
+public class AppData extends DatabaseOperationSupport<AppData>
 {
-    @Parameter(property = "BE5_SCRIPT")
     private String script = FreemarkerCatalog.DATA;
 
-    @Parameter(property = "BE5_IGNORE_MISSING")
     private boolean ignoreMissing = false;
 
     @Override
-    public void execute() throws MojoFailureException
+    public void execute() throws DatabaseTargetException
     {
         init();
 
@@ -83,7 +77,7 @@ public class AppData extends Be5Mojo<AppData>
                                 continue;
                             }
                             else
-                                throw new MojoFailureException( "Module '"+moduleName+"' not found" );
+                                throw new DatabaseTargetException( "Module '"+moduleName+"' not found" );
                         }
                         scriptsCatalog = module.getFreemarkerScripts();
                     }
@@ -97,7 +91,7 @@ public class AppData extends Be5Mojo<AppData>
                         continue;
                     }
                     else
-                        throw new MojoFailureException("FTL script "+scriptName+" not found");
+                        throw new DatabaseTargetException("FTL script "+scriptName+" not found");
                 }
                 scripts.add( freemarkerScript );
             }
@@ -110,11 +104,11 @@ public class AppData extends Be5Mojo<AppData>
         }
         catch( ProjectElementException | FreemarkerSqlException e )
         {
-            throw new MojoFailureException(e.getMessage(), e);
+            throw new DatabaseTargetException(e.getMessage(), e);
         }
         catch(Exception e)
         {
-            throw new MojoFailureException(e.getMessage(), e);
+            throw new DatabaseTargetException(e.getMessage(), e);
         }
         finally
         {
