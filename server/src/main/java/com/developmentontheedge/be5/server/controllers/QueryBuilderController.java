@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.FrontendConstants;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
@@ -15,7 +16,6 @@ import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
@@ -53,16 +53,18 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
     private final JsonApiResponseHelper responseHelper;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
-                                  QueryService queryService, JsonApiResponseHelper responseHelper)
+                                  QueryService queryService, JsonApiResponseHelper responseHelper, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
         this.projectProvider = projectProvider;
         this.queryService = queryService;
         this.responseHelper = responseHelper;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         resourceDataList = new ArrayList<>();
         errorModelList = new ArrayList<>();
 
-        if(UserInfoHolder.isSystemDeveloper())
+        if(userInfoProvider.isSystemDeveloper())
         {
             String sql = req.get("sql");
             boolean execute = sql != null;
@@ -193,7 +195,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
 
     private void select(String sql, Request req)
     {
-        String userQBuilderQueryName = UserInfoHolder.getUserName() + "Query";
+        String userQBuilderQueryName = userInfoProvider.get().getUserName() + "Query";
 
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 

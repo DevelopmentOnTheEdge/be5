@@ -10,9 +10,9 @@ import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.support.BaseTableBuilderSupport;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.OperationHelper;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.SessionConstants;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -27,17 +27,16 @@ public abstract class TableBuilderSupport extends BaseTableBuilderSupport
     @Inject public OperationHelper helper;
     @Inject public Validator validator;
 
-    protected Request request;
-    protected Session session;
+    @Inject protected Request request;
+    @Inject protected Session session;
+
     protected UserInfo userInfo;
 
     public TableBuilder initialize(Query query, Map<String, Object> parameters)
     {
         super.initialize(query, parameters);
 
-        this.request = UserInfoHolder.getRequest();
-        this.session = UserInfoHolder.getSession();
-        this.userInfo = UserInfoHolder.getUserInfo();
+        this.userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
 
         return this;
     }

@@ -26,14 +26,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     void before()
     {
         testtableAdmin = database.getEntity("testtableAdmin")
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
         db.update("DELETE FROM testtableAdmin")
-    }
-
-    @After
-    void after()
-    {
-        initUserWithRoles(RoleType.ROLE_GUEST)
     }
 
     @Test

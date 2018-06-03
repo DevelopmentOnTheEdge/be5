@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -22,6 +23,11 @@ public class OperationHelperTest extends ServerBe5ProjectDBTest
 {
     @Inject private OperationHelper helper;
 
+    @Before
+    public void setUpTestUtils()
+    {
+        initGuest();
+    }
 
     @Test
     public void getTagsFromEnum()

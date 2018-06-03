@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.query.services;
 
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.be5.query.model.TableModel;
@@ -23,6 +24,8 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     @Before
     public void testTableQueryDBTestBefore()
     {
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+
         db.update("delete from testtable");
         db.insert("insert into testtable (name, value) VALUES (?, ?)","tableModelTest", "1");
 

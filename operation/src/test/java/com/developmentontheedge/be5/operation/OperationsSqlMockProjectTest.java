@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
@@ -11,7 +12,10 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.operation.test.ErrorProcessing;
 import com.developmentontheedge.be5.test.BaseTestUtils;
+import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -36,7 +40,7 @@ public abstract class OperationsSqlMockProjectTest extends BaseTestUtils
         initProjectWithOperation();
 
         injector = initInjector(
-            Modules.override(new BaseModule()).with(new BaseDbMockTestModule()),
+            Modules.override(new BaseModule()).with(new OperationsTestModule()),
             new OperationModule()
         );
 
@@ -47,6 +51,16 @@ public abstract class OperationsSqlMockProjectTest extends BaseTestUtils
     public Injector getInjector()
     {
         return injector;
+    }
+
+    public static class OperationsTestModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            install(new BaseDbMockTestModule());
+            bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
+        }
     }
 
     private static void initProjectWithOperation() throws IOException

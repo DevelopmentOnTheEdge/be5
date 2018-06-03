@@ -327,8 +327,8 @@ public class OperationExecutorImpl implements OperationExecutor
                 throw Be5Exception.internal("Unknown action type '" + operationInfo.getType() + "'");
         }
 
-        operation.initialize(operationInfo, operationContext, OperationResult.create());
         injector.injectMembers(operation);
+        operation.initialize(operationInfo, operationContext, OperationResult.create());
 
         return operation;
     }

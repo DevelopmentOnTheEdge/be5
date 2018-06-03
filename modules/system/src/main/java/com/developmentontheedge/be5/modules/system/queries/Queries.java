@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.util.ActionUtils;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class Queries extends TableBuilderSupport
         }
         else
         {
-            meta.getOrderedEntities(UserInfoHolder.getLanguage()).forEach(
+            meta.getOrderedEntities(userInfo.getLanguage()).forEach(
                     e -> addQueries(e.getName())
             );
         }

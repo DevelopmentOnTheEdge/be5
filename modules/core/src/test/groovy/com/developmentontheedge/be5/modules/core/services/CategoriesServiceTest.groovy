@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.modules.core.services
 
+import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDBTest
 import com.developmentontheedge.be5.server.services.CategoriesService
 
@@ -15,8 +16,10 @@ class CategoriesServiceTest extends CoreBe5ProjectDBTest
     @Inject CategoriesService categoriesService
 
     @Before
-    void setUp() throws Exception
+    void setUp()
     {
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+
         db.update("DELETE FROM categories")
 
         database.categories.add([

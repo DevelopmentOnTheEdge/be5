@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.base.BaseModule;
-import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.impl.ConnectionServiceImpl;
@@ -22,20 +22,21 @@ import com.developmentontheedge.be5.server.controllers.StaticPageController;
 import com.developmentontheedge.be5.server.controllers.TableController;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
+import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.OperationHelper;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
-import com.developmentontheedge.be5.operation.services.impl.OperationServiceImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionProvider;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
+import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
+import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.be5.web.impl.SessionImpl;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
+import com.google.inject.servlet.ServletScopes;
 
 
 public class ServerModule extends ServletModule
@@ -77,11 +78,11 @@ public class ServerModule extends ServletModule
 
         bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
         bind(DbService.class).to(DbServiceImpl.class).in(Scopes.SINGLETON);
-        bind(OperationService.class).to(OperationServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
         bind(QuerySession.class).to(QuerySessionProvider.class).in(Scopes.SINGLETON);
 
-        bind(Session.class).to(SessionImpl.class);
+        bind(Session.class).to(SessionImpl.class).in(ServletScopes.SESSION);
+        bind(Request.class).to(RequestImpl.class).in(ServletScopes.REQUEST);
     }
 }

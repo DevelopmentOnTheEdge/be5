@@ -25,16 +25,6 @@ class EntityModelTest extends DatabaseModelSqlMockProjectTest
     @Inject private DatabaseModel database
 
     @Before
-    void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
-    }
-
-    @After
-    void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST)
-    }
-
-    @Before
     void before(){
         DbServiceMock.clearMock()
     }

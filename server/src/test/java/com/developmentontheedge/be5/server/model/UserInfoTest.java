@@ -4,8 +4,6 @@ import javax.inject.Inject;
 
 import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.test.mocks.ServerTestSession;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +24,7 @@ public class UserInfoTest extends ServerBe5ProjectTest
     public void setUpTestUser()
     {
         List<String> roles = Arrays.asList("1", "2");
-        ui = userHelper.saveUser("test", roles, roles, Locale.US, "", new ServerTestSession());
+        ui = userHelper.saveUser("test", roles, roles, Locale.US, "");
 
         assertEquals(roles, ui.getCurrentRoles());
     }
@@ -35,7 +33,7 @@ public class UserInfoTest extends ServerBe5ProjectTest
     public void testGuestLocale()
     {
         initGuest();
-        assertEquals("ru", UserInfoHolder.getLanguage());
+        assertEquals("ru", userInfoProvider.get().getLanguage());
     }
 
 }

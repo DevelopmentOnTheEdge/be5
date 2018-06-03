@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.servlet;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -29,13 +30,15 @@ public class TemplateFilter extends FilterSupport
     private final UserAwareMeta userAwareMeta;
     private final UserHelper userHelper;
     private final Meta meta;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper, ProjectProvider projectProvider, Meta meta)
+    public TemplateFilter(UserAwareMeta userAwareMeta, UserHelper userHelper, ProjectProvider projectProvider, Meta meta, UserInfoProvider userInfoProvider)
     {
         this.userAwareMeta = userAwareMeta;
         this.userHelper = userHelper;
         this.meta = meta;
+        this.userInfoProvider = userInfoProvider;
 
         projectProvider.addToReload(() -> templateEngine.clearTemplateCache());
     }
@@ -66,9 +69,9 @@ public class TemplateFilter extends FilterSupport
     @Override
     public void filter(Request req, Response res, FilterChain chain) throws IOException, ServletException
     {
-        if (UserInfoHolder.getUserInfo() == null)
+        if (userInfoProvider.get() == null)
         {
-            userHelper.initGuest(req);
+            userHelper.initGuest();
         }
 
         String reqWithoutContext = ParseRequestUtils.getRequestWithoutContext(req.getContextPath(), req.getRequestUri());

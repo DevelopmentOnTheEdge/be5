@@ -17,7 +17,7 @@ public class Logout extends GOperationSupport
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        userHelper.logout(request);
+        userHelper.logout();
 
         setResult(OperationResult.finished(null,
                 CoreFrontendActions.updateUserAndOpenDefaultRoute(loginService.getUserInfoModel())));

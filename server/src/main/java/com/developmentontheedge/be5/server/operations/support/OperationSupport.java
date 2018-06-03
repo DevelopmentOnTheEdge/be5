@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.OperationHelper;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
@@ -21,6 +20,7 @@ import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
+import com.developmentontheedge.be5.web.SessionConstants;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -37,8 +37,8 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     @Inject public Validator validator;
 
     @Inject protected Session session;
+    @Inject protected Request request;
 
-    protected Request request;
     protected UserInfo userInfo;
 
     @Override
@@ -46,9 +46,7 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     {
         super.initialize(info, context, operationResult);
 
-        this.request = UserInfoHolder.getRequest();
-        //this.session = UserInfoHolder.getSession();
-        this.userInfo = UserInfoHolder.getUserInfo();
+        this.userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
     }
 
     public void redirectThisOperation()

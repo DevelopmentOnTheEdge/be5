@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.helpers;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -14,7 +15,6 @@ import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.be5.server.model.beans.QRec;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -39,13 +39,14 @@ public class OperationHelper
     private final UserAwareMeta userAwareMeta;
     private final QueryService queryService;
     private final TableModelService tableModelService;
+    private final UserInfoProvider userInfoProvider;
 
     public static final String yes = "yes";
     public static final String no = "no";
 
     @Inject
     public OperationHelper(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           TableModelService tableModelService, QueryService queryService)
+                           TableModelService tableModelService, QueryService queryService, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;
@@ -54,6 +55,7 @@ public class OperationHelper
         this.queryService = queryService;
 
         tagsCache = be5Caches.createCache("Tags");
+        this.userInfoProvider = userInfoProvider;
     }
 
 //    public HashUrl createQueryUrl(Request req)
@@ -134,7 +136,7 @@ public class OperationHelper
         if(query.isCacheable())
         {
             return tagsCache.get(entityName + "getTagsFromCustomSelectionView" + query.getEntity() +
-                            parameters.toString() + UserInfoHolder.getLanguage(),
+                            parameters.toString() + userInfoProvider.get().getLanguage(),
                     k -> getTagsFromCustomSelectionViewExecute(query, parameters)
             );
         }
@@ -252,7 +254,7 @@ public class OperationHelper
     public String[][] getTagsFromEnum(ColumnDef columnDef)
     {
         String tableName = columnDef.getEntity().getName();
-        return tagsCache.get(tableName + "getTagsFromEnum" + columnDef.getName() + UserInfoHolder.getLanguage(), k ->
+        return tagsCache.get(tableName + "getTagsFromEnum" + columnDef.getName() + userInfoProvider.get().getLanguage(), k ->
         {
             String[] enumValues = columnDef.getType().getEnumValues();
 
@@ -269,7 +271,7 @@ public class OperationHelper
 
     public String[][] getTagsYesNo()
     {
-        return tagsCache.get("getTagsYesNo" + UserInfoHolder.getLanguage(), k ->
+        return tagsCache.get("getTagsYesNo" + userInfoProvider.get().getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
             arr[0] = new String[]{yes, userAwareMeta.getColumnTitle("query.jsp", "page", yes)};
@@ -280,7 +282,7 @@ public class OperationHelper
 
     public String[][] getTagsNoYes()
     {
-        return tagsCache.get("getTagsNoYes" + UserInfoHolder.getLanguage(), k ->
+        return tagsCache.get("getTagsNoYes" + userInfoProvider.get().getLanguage(), k ->
         {
             String[][] arr = new String[2][2];
             arr[0] = new String[]{no, userAwareMeta.getColumnTitle("query.jsp", "page", no)};

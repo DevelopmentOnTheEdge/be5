@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.test;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.developmentontheedge.be5.test.mocks.ServerTestRequest;
@@ -18,12 +20,10 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.server.model.beans.QRec;
-import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.operation.util.Either;
@@ -69,14 +69,22 @@ public abstract class ServerTestUtils extends BaseTestUtils
     @Inject protected DatabaseModel database;
     @Inject protected DbService db;
 
+    @Inject protected Session session;
+    @Inject protected UserInfoProvider userInfoProvider;
+
     protected void initUserWithRoles(String... roles)
     {
-        ServerTestSession testSession = new ServerTestSession();
-        UserInfo userInfo = getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
-                Locale.US, "", testSession);
+        //ServerTestSession testSession = new ServerTestSession();
+        getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
+                Locale.US, "");
 
-        UserInfoHolder.setRequest(new ServerTestRequest(testSession));
-        UserInfoProviderForTest.userInfo = userInfo;
+        //UserInfoHolder.setRequest(new ServerTestRequest(testSession));
+        //UserInfoProviderForTest.userInfo = userInfo;
+    }
+
+    protected void initGuest()
+    {
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     protected Request getMockRequest(String requestUri)
@@ -247,16 +255,6 @@ public abstract class ServerTestUtils extends BaseTestUtils
         return operation;
     }
 
-    protected void setSession(String name, Object value)
-    {
-        UserInfoHolder.getSession().set(name, value);
-    }
-
-    protected Object getSession(String name)
-    {
-        return UserInfoHolder.getSession().get(name);
-    }
-
     public static class ShowCreatedOperations extends TestWatcher
     {
         private static List<Operation> operations = Collections.synchronizedList(new ArrayList<>());
@@ -313,9 +311,10 @@ public abstract class ServerTestUtils extends BaseTestUtils
         @Override
         protected void configure()
         {
-            bind(Session.class).to(ServerTestSession.class);
-            bind(QuerySession.class).to(ServerTestQuerySession.class);
-            //todo add request
+            bind(Session.class).to(ServerTestSession.class).in(Scopes.SINGLETON);
+            bind(QuerySession.class).to(ServerTestQuerySession.class).in(Scopes.SINGLETON);
+            bind(Request.class).to(ServerTestRequest.class).in(Scopes.SINGLETON);
         }
     }
+
 }

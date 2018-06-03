@@ -26,6 +26,12 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     DynamicPropertySet dps
 
     @Before
+    void setUpTestUtils()
+    {
+        initGuest()
+    }
+
+    @Before
     void before()
     {
         dps = new DynamicPropertySetSupport()

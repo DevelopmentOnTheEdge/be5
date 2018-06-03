@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.server.servlet.TemplateModule;
-import com.developmentontheedge.be5.test.mocks.ServerTestQuerySession;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.util.Modules;
+
 
 public abstract class ServerBe5ProjectTest extends ServerTestUtils
 {
@@ -28,7 +27,6 @@ public abstract class ServerBe5ProjectTest extends ServerTestUtils
         {
             install(new BaseDbMockTestModule());
             install(new ServerWebTestModule());
-            bind(QuerySession.class).to(ServerTestQuerySession.class);
         }
     }
 }

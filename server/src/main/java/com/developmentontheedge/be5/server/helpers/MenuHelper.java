@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
@@ -8,7 +10,6 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.server.model.Action;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.util.ActionUtils;
 
 import javax.inject.Inject;
@@ -24,12 +25,14 @@ public class MenuHelper
 
     private final UserAwareMeta userAwareMeta;
     private final Meta meta;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public MenuHelper(UserAwareMeta userAwareMeta, Meta meta)
+    public MenuHelper(UserAwareMeta userAwareMeta, Meta meta, UserInfoProvider userInfoProvider)
     {
         this.userAwareMeta = userAwareMeta;
         this.meta = meta;
+        this.userInfoProvider = userInfoProvider;
     }
 
     public Action getDefaultAction()
@@ -72,8 +75,9 @@ public class MenuHelper
      */
     public List<RootNode> collectEntities(boolean withIds, EntityType entityType)
     {
-        List<String> roles = UserInfoHolder.getCurrentRoles();
-        String language = UserInfoHolder.getLanguage();
+        UserInfo userInfo = userInfoProvider.get();
+        List<String> roles = userInfo.getCurrentRoles();
+        String language = userInfo.getLanguage();
         List<RootNode> out = new ArrayList<>();
 
         for (Entity entity : meta.getOrderedEntities(entityType, language))

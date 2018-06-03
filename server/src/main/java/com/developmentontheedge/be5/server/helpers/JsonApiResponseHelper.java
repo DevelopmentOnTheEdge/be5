@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
-import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
 
@@ -30,7 +29,7 @@ public class JsonApiResponseHelper
 
     public String exceptionAsString(Throwable e)
     {
-        if(userInfoProvider.get().getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER))
+        if(userInfoProvider.isSystemDeveloper())
         {
             StringWriter sw = new StringWriter();
             if (e instanceof Be5Exception && e.getCause() != null)

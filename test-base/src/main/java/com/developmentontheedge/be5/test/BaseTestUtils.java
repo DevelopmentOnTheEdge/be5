@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.database.ConnectionService;
@@ -10,14 +11,13 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.maven.AppDb;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
 import com.developmentontheedge.be5.test.mocks.DataSourceServiceMock;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -63,16 +63,17 @@ public abstract class BaseTestUtils
     @Inject protected UserAwareMeta userAwareMeta;
     @Inject protected DbService db;
 
+    @Inject protected UserInfoProvider userInfoProvider;
+
     protected static final String TEST_USER = "testUser";
     //protected static final Jsonb jsonb = JsonbBuilder.create();
 
     @Before
-    public void setUpTestUtils()
+    public void setUpBaseTestUtils()
     {
         if(getInjector() != null)
         {
             getInjector().injectMembers(this);
-            initGuest();
         }
     }
 
@@ -81,19 +82,10 @@ public abstract class BaseTestUtils
         return null;
     }
 
-    protected void initUserWithRoles(String... roles)
+    protected void setStaticUserInfo(String... roles)
     {
-//        TestSession testSession = new TestSession();
-//        UserInfo userInfo = getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
-//                Locale.US, "", testSession);
-//
-//        UserInfoHolder.setRequest(new TestRequest(testSession));
-        UserInfoProviderForTest.userInfo = new UserInfo(TEST_USER, Arrays.asList(roles), Arrays.asList(roles));
-    }
-
-    protected void initGuest()
-    {
-        initUserWithRoles(RoleType.ROLE_GUEST);
+        StaticUserInfoProvider.userInfo = new UserInfo(TEST_USER, Arrays.asList(roles), Arrays.asList(roles));
+        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.1");
     }
 
     protected static Injector initInjector(Module... modules)
@@ -195,22 +187,11 @@ public abstract class BaseTestUtils
         protected void configure()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
-            bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
 
             bind(DbService.class).to(DbServiceMock.class).in(Scopes.SINGLETON);
             bind(DataSourceService.class).to(DataSourceServiceMock.class).in(Scopes.SINGLETON);
             bind(ConnectionService.class).to(ConnectionServiceMock.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
-        }
-    }
-
-    public static class UserInfoProviderForTest implements UserInfoProvider
-    {
-        public static UserInfo userInfo;
-        @Override
-        public UserInfo get()
-        {
-            return userInfo;
         }
     }
 
@@ -220,7 +201,6 @@ public abstract class BaseTestUtils
         protected void configure()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
-            bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
             bind(Be5Caches.class).to(Be5CachesForTest.class).in(Scopes.SINGLETON);
         }
     }

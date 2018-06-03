@@ -2,16 +2,13 @@ package com.developmentontheedge.be5.modules.system.operations
 
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
-import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.model.OperationStatus
-import com.developmentontheedge.be5.server.util.Either
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertNotNull
 import static org.mockito.Matchers.anyString
 import static org.mockito.Matchers.anyVararg
 import static org.mockito.Mockito.when
@@ -27,7 +24,7 @@ class SessionVariablesEditTest extends SystemBe5ProjectTest
     @Test
     void testGet()
     {
-        setSession("remoteAddr", "199.168.0.1")
+        session.set("remoteAddr", "199.168.0.1")
 
         Object first = generateOperation("_system_", "Session variables", "SessionVariablesEdit", "remoteAddr", "").getFirst()
 

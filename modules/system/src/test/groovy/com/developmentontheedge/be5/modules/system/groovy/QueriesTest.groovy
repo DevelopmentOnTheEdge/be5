@@ -1,10 +1,13 @@
 package com.developmentontheedge.be5.modules.system.groovy
 
 import com.developmentontheedge.be5.base.services.Meta
+import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.server.services.DocumentGenerator
 import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
 import com.developmentontheedge.be5.query.model.CellModel
 import com.developmentontheedge.be5.metadata.model.Query
+import org.junit.Before
+
 import javax.inject.Inject
 import org.junit.Test
 
@@ -16,6 +19,11 @@ class QueriesTest extends SystemBe5ProjectTest
 {
     @Inject DocumentGenerator documentGenerator
     @Inject Meta meta
+
+    @Before
+    void setUp(){
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER)
+    }
 
     @Test
     void getEntities()
@@ -32,7 +40,7 @@ class QueriesTest extends SystemBe5ProjectTest
     @Test
     void getSessionVariables()
     {
-        setSession("test", "value")
+        session.set("test", "value")
         Query query = meta.getQuery("_system_", "Session variables")
 
         def table = documentGenerator.getTablePresentation(query, Collections.emptyMap())

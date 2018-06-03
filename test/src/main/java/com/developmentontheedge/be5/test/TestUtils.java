@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
@@ -18,7 +18,6 @@ import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.beans.QRec;
 import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.operation.services.OperationService;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
@@ -32,6 +31,7 @@ import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -71,14 +71,23 @@ public abstract class TestUtils extends BaseTestUtils
 
     @Inject protected Session session;
 
+    protected static final String TEST_USER = "testUser";
+
+    @Before
+    public void setUpTestUtils()
+    {
+        initGuest();
+    }
+
     protected void initUserWithRoles(String... roles)
     {
-        TestSession testSession = new TestSession();
-        UserInfo userInfo = getInjector().getInstance(UserHelper.class).saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles),
-                Locale.US, "", testSession);
+        getInjector().getInstance(UserHelper.class).
+                saveUser(TEST_USER, Arrays.asList(roles), Arrays.asList(roles), Locale.US, "");
+    }
 
-        UserInfoHolder.setRequest(new TestRequest(testSession));
-        UserInfoProviderForTest.userInfo = userInfo;
+    protected void initGuest()
+    {
+        initUserWithRoles(RoleType.ROLE_GUEST);
     }
 
     protected Request getMockRequest(String requestUri)
@@ -249,12 +258,6 @@ public abstract class TestUtils extends BaseTestUtils
         return operation;
     }
 
-    protected void setSession(String name, Object value)
-    {
-        UserInfoHolder.getSession().set(name, value);
-        session.set(name, value);
-    }
-
     public static class ShowCreatedOperations extends TestWatcher
     {
         private static List<Operation> operations = Collections.synchronizedList(new ArrayList<>());
@@ -331,9 +334,9 @@ public abstract class TestUtils extends BaseTestUtils
         @Override
         protected void configure()
         {
-            bind(Session.class).to(TestSession.class);
-            bind(QuerySession.class).to(TestQuerySession.class);
-            //todo add request
+            bind(Session.class).to(TestSession.class).in(Scopes.SINGLETON);
+            bind(QuerySession.class).to(TestQuerySession.class).in(Scopes.SINGLETON);
+            bind(Request.class).to(TestRequest.class).in(Scopes.SINGLETON);
         }
     }
 

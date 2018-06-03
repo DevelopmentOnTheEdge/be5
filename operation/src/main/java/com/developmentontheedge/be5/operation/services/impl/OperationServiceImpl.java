@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
-import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationResult;
@@ -31,7 +30,7 @@ public class OperationServiceImpl implements OperationService
 
     private final OperationExecutor operationExecutor;
     private final Validator validator;
-    private final  UserInfoProvider userInfoProvider;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public OperationServiceImpl(OperationExecutor operationExecutor, Validator validator, UserInfoProvider userInfoProvider)
@@ -68,7 +67,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                if(userInfoProvider.get().getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER))
+                if(userInfoProvider.isSystemDeveloper())
                 {
                     log.log(Level.INFO, "error on generate in validate parameters", e);
                     operation.setResult(OperationResult.error(e));

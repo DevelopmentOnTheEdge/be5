@@ -1,8 +1,10 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.database.DbService;
@@ -31,14 +33,17 @@ public class LoginServiceImpl implements LoginService
     private final UserHelper userHelper;
     private final CoreUtils coreUtils;
     private final MenuHelper menuHelper;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public LoginServiceImpl(DbService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper)
+    public LoginServiceImpl(DbService db, UserHelper userHelper, CoreUtils coreUtils, MenuHelper menuHelper,
+                            UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.userHelper = userHelper;
         this.coreUtils = coreUtils;
         this.menuHelper = menuHelper;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -60,12 +65,14 @@ public class LoginServiceImpl implements LoginService
             }
         }
 
+        UserInfo userInfo = userInfoProvider.get();
+
         return new UserInfoModel(
-                UserInfoHolder.isLoggedIn(),
-                UserInfoHolder.getUserName(),
-                UserInfoHolder.getAvailableRoles(),
-                UserInfoHolder.getCurrentRoles(),
-                UserInfoHolder.getUserInfo().getCreationTime().toInstant(),
+                !RoleType.ROLE_GUEST.equals(userInfo.getUserName()),
+                userInfo.getUserName(),
+                userInfo.getAvailableRoles(),
+                userInfo.getCurrentRoles(),
+                userInfo.getCreationTime().toInstant(),
                 defaultRouteCall
         );
     }
@@ -103,7 +110,7 @@ public class LoginServiceImpl implements LoginService
         }
 
         userHelper.saveUser(username, availableRoles, currentRoles,
-                req.getLocale(), req.getRemoteAddr(), req.getSession());
+                req.getLocale(), req.getRemoteAddr());
 
         log.fine("Login user: " + username);
     }
@@ -111,12 +118,12 @@ public class LoginServiceImpl implements LoginService
     @Override
     public void setCurrentRoles(List<String> roles)
     {
-        List<String> availableCurrentRoles = getAvailableCurrentRoles(roles, UserInfoHolder.getAvailableRoles());
+        List<String> availableCurrentRoles = getAvailableCurrentRoles(roles, userInfoProvider.get().getAvailableRoles());
 
-        coreUtils.setUserSetting(UserInfoHolder.getUserName(), DatabaseConstants.CURRENT_ROLE_LIST,
+        coreUtils.setUserSetting(userInfoProvider.get().getUserName(), DatabaseConstants.CURRENT_ROLE_LIST,
                 MetadataUtils.toInClause(roles));
 
-        UserInfoHolder.getUserInfo().setCurrentRoles(availableCurrentRoles);
+        userInfoProvider.get().setCurrentRoles(availableCurrentRoles);
     }
 
     private List<String> getAvailableCurrentRoles(List<String> roles, List<String> availableRoles)

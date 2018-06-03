@@ -1,21 +1,19 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.database.DbService
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
-import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.beans.BeanInfoConstants
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import javax.inject.Inject
 
+import javax.inject.Inject
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
 
 import static org.junit.Assert.*
-
 
 class SpecialColumnsTest extends DatabaseModelProjectDbTest
 {
@@ -26,13 +24,9 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     String tableName
 
     @Before
-    void beforeClass(){
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
-    }
-
-    @After
-    void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
+    void beforeClass()
+    {
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
     }
 
     @Before
@@ -52,7 +46,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
 
         assertEquals 1, db.oneLong("select count(*) from $tableName")
 
-        initGuest()
+        setStaticUserInfo(RoleType.ROLE_GUEST)
         table << [
             name : "test2",
             value: (Short)2
