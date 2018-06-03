@@ -8,10 +8,12 @@ public class AppDbTest extends TestUtils
     @Test
     public void createDb() throws Exception
     {
-        new AppDb()
-                .setBe5ProjectPath(tpmProjectPath.toString())
-                .setProfileName(profileTestMavenPlugin)
-                .execute();
+        AppDbMojo appDbMojo = new AppDbMojo();
+
+        //appDbMojo.execute();
+//                .setBe5ProjectPath(tpmProjectPath.toString())
+//                .setProfileName(profileTestMavenPlugin)
+//                .execute();
     }
 
 }

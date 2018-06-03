@@ -146,6 +146,12 @@ public class AppData extends DatabaseOperationSupport<AppData>
         return this;
     }
 
+    public AppData setIgnoreMissing(boolean ignoreMissing)
+    {
+        this.ignoreMissing = ignoreMissing;
+        return this;
+    }
+
     @Override public AppData me() {
         return this;
     }

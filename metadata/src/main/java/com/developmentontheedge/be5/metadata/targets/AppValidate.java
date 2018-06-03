@@ -277,6 +277,24 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         return this;
     }
 
+    public AppValidate setRdbmsName(String rdbmsName)
+    {
+        this.rdbmsName = rdbmsName;
+        return this;
+    }
+
+    public AppValidate setSkipValidation(boolean skipValidation)
+    {
+        this.skipValidation = skipValidation;
+        return this;
+    }
+
+    public AppValidate setSaveProject(boolean saveProject)
+    {
+        this.saveProject = saveProject;
+        return this;
+    }
+
     @Override public AppValidate me() {
         return this;
     }

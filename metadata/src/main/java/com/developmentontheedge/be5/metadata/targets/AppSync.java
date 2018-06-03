@@ -547,6 +547,12 @@ public class AppSync extends DatabaseOperationSupport<AppSync>
 //        fixPrimaryKey( cloneDdl, mainDdl );
 //    }
 
+    public AppSync setForceUpdate(boolean forceUpdate)
+    {
+        this.forceUpdate = forceUpdate;
+        return me();
+    }
+
     @Override public AppSync me() {
         return this;
     }

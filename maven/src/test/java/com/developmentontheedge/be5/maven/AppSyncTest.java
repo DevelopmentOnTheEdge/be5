@@ -10,9 +10,9 @@ public class AppSyncTest extends TestUtils
     {
         createTestDB();
 
-        new AppSync()
-                .setBe5Project(project)
-                .setProfileName(profileTestMavenPlugin)
-                .execute();
+//        new AppSyncMojo()
+//                .setBe5Project(project)
+//                .setProfileName(profileTestMavenPlugin)
+//                .execute();
     }
 }

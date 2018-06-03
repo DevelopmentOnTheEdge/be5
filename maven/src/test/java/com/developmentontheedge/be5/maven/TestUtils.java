@@ -75,13 +75,13 @@ public abstract class TestUtils
 
     void createTestDB() throws Exception
     {
-        AppDb appDb = new AppDb();
-        appDb.setBe5Project(project)
-                .setProfileName(profileTestMavenPlugin)
-                .execute();
-
-        assertEquals(2, appDb.getCreatedTables());
-        assertEquals(0, appDb.getCreatedViews());
+//        AppDbMojo appDb = new AppDbMojo();
+//        appDb.setBe5Project(project)
+//                .setProfileName(profileTestMavenPlugin)
+//                .execute();
+//
+//        assertEquals(2, appDb.getCreatedTables());
+//        assertEquals(0, appDb.getCreatedViews());
     }
 
 }
