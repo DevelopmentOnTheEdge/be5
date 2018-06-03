@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.services
 
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.operation.services.OperationExecutor
+import org.junit.Before
 
 import javax.inject.Inject
 
@@ -18,6 +19,12 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     @Inject private Meta meta
     @Inject private DocumentGenerator documentGenerator
     @Inject private OperationExecutor operationExecutor
+
+    @Before
+    void setUp()
+    {
+        initGuest()
+    }
 
     @Test
     void getTablePresentation()
