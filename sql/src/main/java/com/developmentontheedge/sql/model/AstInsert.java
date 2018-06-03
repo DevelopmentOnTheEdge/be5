@@ -18,9 +18,5 @@ public class AstInsert extends SimpleNode
         this.nodePrefix = "INSERT INTO";
     }
 
-    public AstInsert(SqlParser p, int id) {
-        super(p, id);
-    }
-
 }
 /* JavaCC - OriginalChecksum=ec9000574ec02417ecc88ef864f687c7 (do not edit this line) */

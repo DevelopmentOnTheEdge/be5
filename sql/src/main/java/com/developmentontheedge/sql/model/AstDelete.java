@@ -45,11 +45,6 @@ public class AstDelete extends SimpleNode
         return children().select( AstWhere.class ).findFirst().orElse( null );
     }
 
-    public AstDelete(SqlParser p, int id)
-    {
-        super(p, id);
-    }
-
     public AstDelete whereInPredicate(String columnName, int count)
     {
         Objects.requireNonNull( columnName );

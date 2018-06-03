@@ -29,12 +29,12 @@ public class ParserXmlTest extends TestCase
         suite.addTest(new XmlTestSuite(relativePath+"count.xml", targetFactory));
         suite.addTest(new XmlTestSuite(relativePath+"limit.xml", targetFactory));
         suite.addTest(new XmlTestSuite(relativePath+"be.xml", targetFactory));
-//      suite.addTest(new XmlTestSuite(relativePath+"functions.xml", targetFactory));
+        suite.addTest(new XmlTestSuite(relativePath+"functions.xml", targetFactory));
         suite.addTest(new XmlTestSuite(relativePath+"payments.xml", targetFactory));
         suite.addTest(new XmlTestSuite(relativePath+"realty.xml", targetFactory));
         suite.addTest(new XmlTestSuite(relativePath+"biostore.xml", targetFactory));
 
-//      suite.addTest(new XmlTestSuite(relativePath+"single.xml", targetFactory));
+        //suite.addTest(new XmlTestSuite(relativePath+"single.xml", targetFactory));
         
         return suite;
     }

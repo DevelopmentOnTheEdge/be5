@@ -21,9 +21,5 @@ public class AstInsertValueList extends SimpleNode
         this.childrenDelimiter = ",";
     }
 
-    public AstInsertValueList(SqlParser p, int id) {
-    super(p, id);
-  }
-
 }
 /* JavaCC - OriginalChecksum=8625c4c8db6e4bb5e885968ee8040626 (do not edit this line) */

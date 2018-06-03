@@ -16,10 +16,5 @@ public class AstUpdateSetItem extends SimpleNode
         super(id);
     }
 
-    public AstUpdateSetItem(SqlParser p, int id)
-    {
-        super(p, id);
-    }
-
 }
 /* JavaCC - OriginalChecksum=2d2ef14f6ac0af9b95689a59af95a989 (do not edit this line) */

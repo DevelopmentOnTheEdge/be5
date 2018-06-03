@@ -47,10 +47,6 @@ public class AstUpdate extends SimpleNode
         return children().select( AstWhere.class ).findFirst().orElse( null );
     }
 
-    public AstUpdate(SqlParser p, int id) {
-        super(p, id);
-    }
-
     public AstUpdate whereInWithReplacementParameter(String columnName, int count)
     {
         Objects.requireNonNull( columnName );
