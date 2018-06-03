@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.maven.gdsl;
 
-import com.developmentontheedge.be5.maven.DatabaseOperationSupport;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.maven.plugin.DatabaseTargetException;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 
 @Mojo( name = "generate-groovy-dsl")
-public class GroovyDSLGenerator extends DatabaseOperationSupport<GroovyDSLGenerator>
+public class GroovyDSLGenerator extends AbstractMojo
 {
     private static final Logger log = Logger.getLogger(GroovyDSLGenerator.class.getName());
 
@@ -32,7 +32,7 @@ public class GroovyDSLGenerator extends DatabaseOperationSupport<GroovyDSLGenera
     protected String fileName;
 
     @Override
-    public void execute() throws DatabaseTargetException
+    public void execute() throws MojoFailureException
     {
         try
         {
@@ -95,7 +95,7 @@ public class GroovyDSLGenerator extends DatabaseOperationSupport<GroovyDSLGenera
         Utils.createFile(fileName + ".gdsl", serviceTpl, input);
     }
 
-    @Override protected GroovyDSLGenerator me() {
-        return this;
-    }
+//    @Override protected GroovyDSLGenerator me() {
+//        return this;
+//    }
 }

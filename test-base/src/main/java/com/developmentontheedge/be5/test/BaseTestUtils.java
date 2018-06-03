@@ -11,8 +11,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.operations.AppDb;
-import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
+import com.developmentontheedge.be5.metadata.targets.AppDb;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
@@ -29,7 +28,6 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 import com.google.inject.Stage;
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
 import org.mockito.Matchers;
 

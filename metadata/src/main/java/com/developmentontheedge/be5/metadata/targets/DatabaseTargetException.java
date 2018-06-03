@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.metadata.operations;
+package com.developmentontheedge.be5.metadata.targets;
 
 
 public class DatabaseTargetException extends RuntimeException

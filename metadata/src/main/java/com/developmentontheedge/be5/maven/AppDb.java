@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
-import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
+import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 
@@ -173,7 +173,7 @@ public class AppDb extends DatabaseOperationSupport<AppDb>
         return createdViews;
     }
 
-    @Override protected AppDb me() {
+    @Override public AppDb me() {
         return this;
     }
 }

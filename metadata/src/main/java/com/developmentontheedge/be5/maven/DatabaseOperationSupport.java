@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.operations.DatabaseTargetException;
+import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -32,34 +32,34 @@ public abstract class DatabaseOperationSupport<T>
 
     public abstract void execute() throws DatabaseTargetException;
 
-    protected abstract T me();
+    public abstract T me();
 
-    protected ProcessController logger = new JULLogger(log);
+    public ProcessController logger = new JULLogger(log);
 
-	protected DbmsConnector connector;
+	public DbmsConnector connector;
 
     ///////////////////////////////////////////////////////////////////
     // Properties
     //
     public File projectPath;
 
-    boolean unlockProtectedProfile = false;
+    public boolean unlockProtectedProfile = false;
 
-    boolean debug = false;
+    public boolean debug = false;
 
-    File logPath = Paths.get("target/sql").toFile();
+    public File logPath = Paths.get("target/sql").toFile();
 
-    protected String connectionProfileName;
+    public String connectionProfileName;
 
-    protected String connectionPassword;
+    public String connectionPassword;
 
-    protected Project be5Project;
+    public Project be5Project;
 
     ///////////////////////////////////////////////////////////////////
 
     private File logFile;
 
-    protected Logger getLog()
+    public Logger getLog()
     {
         return log;
     }
@@ -132,7 +132,7 @@ public abstract class DatabaseOperationSupport<T>
     /**
      * Configures JUL (java.util.logging).
      */
-    protected void initLogging()
+    public void initLogging()
     {
     	// configure JUL logging
     	String ln = System.lineSeparator();
@@ -157,7 +157,7 @@ public abstract class DatabaseOperationSupport<T>
         }    	
     }
 
-    protected Project loadProject(final Path root) throws DatabaseTargetException
+    public Project loadProject(final Path root) throws DatabaseTargetException
     {
         final LoadContext loadContext = new LoadContext();
         Project prj;
@@ -173,7 +173,7 @@ public abstract class DatabaseOperationSupport<T>
         return prj;
     }
 
-    PrintStream createPrintStream(String name)
+    public PrintStream createPrintStream(String name)
     {
         if(logPath != null)
         {
@@ -191,7 +191,7 @@ public abstract class DatabaseOperationSupport<T>
         return null;
     }
 
-    void logSqlFilePath()
+    public void logSqlFilePath()
     {
         if(logPath != null)
         {
@@ -199,12 +199,12 @@ public abstract class DatabaseOperationSupport<T>
         }
     }
 
-    protected void displayError(ProjectElementException error)
+    public void displayError(ProjectElementException error)
     {
         error.format( System.err );
     }
 
-    protected void checkErrors(final LoadContext loadContext, String messageTemplate) throws DatabaseTargetException
+    public void checkErrors(final LoadContext loadContext, String messageTemplate) throws DatabaseTargetException
     {
         if(!loadContext.getWarnings().isEmpty())
         {
@@ -223,14 +223,14 @@ public abstract class DatabaseOperationSupport<T>
     }
     
 
-//    protected void dumpSql( String ddlString )
+//    public void dumpSql( String ddlString )
 //    {
 //        System.err.println( MultiSqlParser.normalize( be5Project.getDatabaseSystem().getType(), ddlString ) );
 //    }
 //
 //    ///////////////////////////////////////////////////////////////////
 //
-//    protected String readString( String prompt, String defaultValue, Object... values ) throws IOException
+//    public String readString( String prompt, String defaultValue, Object... values ) throws IOException
 //    {
 //        StringBuilder fullPrompt = new StringBuilder(prompt);
 //        Set<String> vals = new TreeSet<>();
