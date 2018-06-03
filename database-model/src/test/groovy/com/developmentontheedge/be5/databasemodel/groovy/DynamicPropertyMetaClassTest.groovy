@@ -40,6 +40,23 @@ class DynamicPropertyMetaClassTest extends DatabaseModelProjectDbTest
     }
 
     @Test
+    void leftShiftChangeValue()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+
+        dps << [
+                name: "testField",
+                value: 1L
+        ]
+
+        DynamicPropertyMetaClass.leftShift(dps.getProperty("testField"), ImmutableMap.of(
+                "value", 2L
+        ))
+
+        assertEquals 2L, dps.getProperty("testField").getValue()
+    }
+
+    @Test
     void setProperty()
     {
         DynamicPropertySet dps = new DynamicPropertySetSupport()

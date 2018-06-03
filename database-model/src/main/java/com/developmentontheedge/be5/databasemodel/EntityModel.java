@@ -237,11 +237,5 @@ public interface EntityModel<T>
      */
     String getPrimaryKeyName();
 
-    /**
-     * Returns real table name of entity.
-     * @return table name
-     */
-    String getTableName();
-
     Entity getEntity();
 }

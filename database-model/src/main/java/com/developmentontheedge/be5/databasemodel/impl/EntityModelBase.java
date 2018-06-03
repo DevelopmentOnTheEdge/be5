@@ -11,7 +11,6 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
-import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -323,12 +322,6 @@ public class EntityModelBase<T> implements EntityModel<T>
     }
 
     @Override
-    public String getTableName()
-    {
-        return getEntityName();
-    }
-
-    @Override
     public String getEntityName()
     {
         return this.entity.getName();
@@ -359,11 +352,6 @@ public class EntityModelBase<T> implements EntityModel<T>
 //        records.getBy( values );
 //        return handler.getResult();
 //    }
-
-    private boolean isDictionary()
-    {
-        return EntityType.DICTIONARY == entity.getType();
-    }
 
     @Override
     public String toString()
@@ -439,16 +427,4 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         return entity;
     }
-
-    @Override
-    public boolean equals( Object o )
-    {
-        if( !( o instanceof EntityModel) )
-        {
-            return false;
-        }
-        EntityModel e = ( EntityModel )o;
-        return e.getEntityName().equals( getEntityName() );
-    }
-
 }

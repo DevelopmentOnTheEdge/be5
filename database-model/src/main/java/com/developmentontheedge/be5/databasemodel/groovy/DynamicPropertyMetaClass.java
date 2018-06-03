@@ -1,14 +1,15 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
 import groovy.lang.GroovyObjectSupport;
-import org.codehaus.groovy.runtime.GStringImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyUtils.*;
 
 /**
  * Created by ruslan on 26.11.15.
@@ -30,27 +31,20 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
             this.dp = dp;
         }
 
-
-        private static Map<String, String> getAllPropertyAttributes()
-        {
-            return DynamicPropertySetMetaClass.beanInfoConstants;
-        }
-
         @Override
         public Object getProperty( String name )
         {
-            String attributeName = getAllPropertyAttributes().get(name);
+            String attributeName = beanInfoConstants.get(name);
             return dp.getAttribute( attributeName != null ? attributeName : name );
         }
 
         @Override
         public void setProperty( String name, Object value )
         {
-            String attributeName = getAllPropertyAttributes().get(name);
+            String attributeName = beanInfoConstants.get(name);
             dp.setAttribute( attributeName != null ? attributeName : name, value );
         }
     }
-
 
     @Override
     public Object getProperty( Object object, String property )
@@ -63,59 +57,23 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         return super.getProperty( object, property );
     }
 
-    public static DynamicProperty leftShift( DynamicProperty dp, Map<String, Object> map )
+    public static DynamicProperty leftShift( DynamicProperty dp, Map<String, Object> properties )
     {
+        Map<String, Object> map = new HashMap<>(properties);
+
         removeFromMap( map, "name" );
 
-        Object value = removeFromMap( map, "value" );
-        if(value != null && value.getClass() == GStringImpl.class)
-        {
-            value =  value.toString();
-        }
-
         Class type = ( Class )removeFromMap( map, "TYPE" );
-        if( type == java.sql.Date.class && value != null )
-        {
-            value = Utils.changeType( value, java.sql.Date.class );
-        }
-
-        Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
-        String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
-
         if( type != null )dp.setType( type );
-        if( value != null )dp.setValue( value );
-        if( isHidden == Boolean.TRUE )dp.setHidden( true );
-        if( displayName != null )dp.setDisplayName( displayName );
 
-        for( String key : map.keySet() )
+        if(map.containsKey("value"))
         {
-            String attributeName = DynamicPropertySetMetaClass.beanInfoConstants.get(key);
-            if( attributeName != null )
-            {
-                dp.setAttribute(attributeName, map.get(key));
-            }
-            else
-            {
-                log.warning("Not found attribute: " + key + " in BeanInfoConstants");
-            }
+            Object value = processValue(removeFromMap(map, "value"), type);
+            dp.setValue(value);
         }
+
+        setAttributes(dp, map);
+
         return dp;
-    }
-
-    private static Object removeFromMap( Map map, Object element )
-    {
-        if( map.containsKey( element ) )
-        {
-            return map.remove( element );
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    private static String asString( Object o )
-    {
-        return o != null ? o.toString() : null;
     }
 }

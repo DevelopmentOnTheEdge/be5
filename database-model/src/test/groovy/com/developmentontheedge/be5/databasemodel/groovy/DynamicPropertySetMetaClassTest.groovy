@@ -13,15 +13,21 @@ import static org.junit.Assert.assertEquals
 class DynamicPropertySetMetaClassTest
 {
     @Test
-    void leftShiftTest() {
+    void leftShiftTest()
+    {
         DynamicPropertySet dps = new DynamicPropertySetSupport();
 
-        DynamicPropertySet dynamicProperties = DynamicPropertySetMetaClass.leftShift(dps, ImmutableMap.of(
+        DynamicPropertySetMetaClass.leftShift(dps, ImmutableMap.of(
                 "name", "testField",
                 "DISPLAY_NAME", "Test Field",
                 "value", 1L,
                 "TYPE", Long.class,
                 "GROUP_ID", 1
+        ))
+
+        DynamicPropertySet dynamicProperties = DynamicPropertySetMetaClass.leftShift(dps, ImmutableMap.of(
+                "name", "testField",
+                "GROUP_NAME", "Test group name"
         ))
 
         assertEquals dynamicProperties, dps
@@ -31,5 +37,6 @@ class DynamicPropertySetMetaClassTest
         assertEquals(Long.class, testField.getType())
         assertEquals(1L, testField.getValue())
         assertEquals(1, testField.getAttribute(BeanInfoConstants.GROUP_ID))
+        assertEquals("Test group name", testField.getAttribute(BeanInfoConstants.GROUP_NAME))
     }
 }
