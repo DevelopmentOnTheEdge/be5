@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
-import com.developmentontheedge.be5.web.Request
-import com.developmentontheedge.be5.web.Session
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder
+import com.developmentontheedge.be5.base.services.UserInfoProvider
 import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
@@ -18,14 +16,17 @@ import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Matchers
 
+import javax.inject.Inject
+
 import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
-import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
 
 class LoginTest extends CoreBe5ProjectDbMockTest
 {
+    @Inject UserInfoProvider userInfoProvider
+
     @Before
     void init(){
         initUserWithRoles(RoleType.ROLE_GUEST)
@@ -43,11 +44,11 @@ class LoginTest extends CoreBe5ProjectDbMockTest
     @Test
     void execute()
     {
-        def request = mock(Request.class)
-        UserInfoHolder.setRequest(request)
-
-        def session = mock(Session.class)
-        when(request.getSession()).thenReturn(session)
+//        def request = mock(Request.class)
+//        UserInfoHolder.setRequest(request)
+//
+//        def session = mock(Session.class)
+//        when(request.getSession()).thenReturn(session)
 
         String testPass = "testPass"
 
@@ -68,10 +69,10 @@ class LoginTest extends CoreBe5ProjectDbMockTest
         assertEquals OperationStatus.FINISHED, second.getStatus()
         assertEquals null, second.getMessage()
 
-        assertEquals TEST_USER, UserInfoHolder.getUserInfo().userName
-        assertEquals Arrays.asList("Test1", "Test2"), UserInfoHolder.getUserInfo().availableRoles
-        assertEquals Arrays.asList("Test1"), UserInfoHolder.getUserInfo().currentRoles
-        assertEquals session, UserInfoHolder.getSession()
+        assertEquals TEST_USER, userInfoProvider.get().userName
+        assertEquals Arrays.asList("Test1", "Test2"), userInfoProvider.get().availableRoles
+        assertEquals Arrays.asList("Test1"), userInfoProvider.get().currentRoles
+        //assertEquals session, UserInfoHolder.getSession()
 
         def actions = (FrontendAction[]) second.getDetails()
 

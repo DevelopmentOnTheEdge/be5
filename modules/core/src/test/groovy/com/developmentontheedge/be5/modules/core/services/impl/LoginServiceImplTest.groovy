@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.modules.core.services.impl
 
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
 import com.developmentontheedge.be5.modules.core.services.LoginService
 import javax.inject.Inject
@@ -31,10 +30,10 @@ class LoginServiceImplTest extends CoreBe5ProjectDbMockTest
     @Test
     void testSetCurrentRoles()
     {
-        assertEquals (['1', '2'], UserInfoHolder.currentRoles)
+        assertEquals (['1', '2'], userInfoProvider.get().currentRoles)
         loginService.setCurrentRoles(['1'])
 
-        assertEquals (['1'], UserInfoHolder.currentRoles)
+        assertEquals (['1'], userInfoProvider.get().currentRoles)
     }
 
     @Test
@@ -42,7 +41,7 @@ class LoginServiceImplTest extends CoreBe5ProjectDbMockTest
     {
         loginService.setCurrentRoles(['3'])
 
-        assertEquals ([], UserInfoHolder.currentRoles)
+        assertEquals ([], userInfoProvider.get().currentRoles)
     }
 
 }

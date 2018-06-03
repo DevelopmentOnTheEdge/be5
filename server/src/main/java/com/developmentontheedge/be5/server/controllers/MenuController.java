@@ -40,13 +40,13 @@ public class MenuController extends ApiControllerSupport implements Controller
         switch (requestSubUrl)
         {
             case "":
-                res.sendAsRawJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.TABLE)));
+                res.sendAsJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.TABLE)));
                 return;
             case "dictionary":
-                res.sendAsRawJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.DICTIONARY)));
+                res.sendAsJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.DICTIONARY)));
                 return;
             case "withIds":
-                res.sendAsRawJson(new MenuResponse(menuHelper.collectEntities(true, EntityType.TABLE)));
+                res.sendAsJson(new MenuResponse(menuHelper.collectEntities(true, EntityType.TABLE)));
                 return;
             default:
                 res.sendUnknownActionError();

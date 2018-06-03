@@ -1,16 +1,16 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.operation.services.impl;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.services.validation.Validator;
-import com.developmentontheedge.be5.server.services.OperationService;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.util.Either;
-import com.developmentontheedge.be5.server.util.ParseRequestUtils;
+import com.developmentontheedge.be5.operation.util.Either;
+import com.developmentontheedge.be5.operation.util.FilterUtil;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
@@ -30,12 +30,14 @@ public class OperationServiceImpl implements OperationService
 
     private final OperationExecutor operationExecutor;
     private final Validator validator;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public OperationServiceImpl(OperationExecutor operationExecutor, Validator validator)
+    public OperationServiceImpl(OperationExecutor operationExecutor, Validator validator, UserInfoProvider userInfoProvider)
     {
         this.operationExecutor = operationExecutor;
         this.validator = validator;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class OperationServiceImpl implements OperationService
             }
             catch (RuntimeException e)
             {
-                if(UserInfoHolder.isSystemDeveloper())
+                if(userInfoProvider.isSystemDeveloper())
                 {
                     log.log(Level.INFO, "error on generate in validate parameters", e);
                     operation.setResult(OperationResult.error(e));
@@ -123,7 +125,7 @@ public class OperationServiceImpl implements OperationService
     private static Map<String, Object> getPresetValues(OperationContext context, Map<String, Object> values)
     {
         Map<String, Object> presetValues =
-                new HashMap<>(ParseRequestUtils.getOperationParamsWithoutFilter(context.getOperationParams()));
+                new HashMap<>(FilterUtil.getOperationParamsWithoutFilter(context.getOperationParams()));
 
         presetValues.putAll(values);
         return presetValues;

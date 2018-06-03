@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.test.TestProjectProvider;
 import com.developmentontheedge.be5.test.TestUtils;
-import com.developmentontheedge.be5.test.mocks.TestQuerySession;
+import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
@@ -32,8 +31,7 @@ public abstract class CoreBe5ProjectDBTest extends TestUtils
         protected void configure()
         {
             bind(ProjectProvider.class).to(TestProjectProvider.class).in(Scopes.SINGLETON);
-            bind(UserInfoProvider.class).to(UserInfoProviderForTest.class).in(Scopes.SINGLETON);
-            bind(QuerySession.class).to(TestQuerySession.class);
+            install(new WebTestModule());
         }
     }
 

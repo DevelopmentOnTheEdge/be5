@@ -4,13 +4,13 @@ import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.SessionConstants;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,16 +27,18 @@ public class UserHelper
 
     private final Meta meta;
     private final Stage stage;
+    private final Provider<Request> requestProvider;
 
     @Inject
-    public UserHelper(Meta meta, Stage stage)
+    public UserHelper(Meta meta, Stage stage, Provider<Request> requestProvider)
     {
         this.meta = meta;
         this.stage = stage;
+        this.requestProvider = requestProvider;
     }
 
     public UserInfo saveUser(String userName, List<String> availableRoles, List<String> currentRoles,
-                             Locale locale, String remoteAddr, Session session)
+                             Locale locale, String remoteAddr)
     {
         if(stage != Stage.PRODUCTION && ModuleLoader2.getDevRoles().size() > 0)
         {
@@ -54,7 +56,7 @@ public class UserHelper
         ui.setRemoteAddr(remoteAddr);
         ui.setLocale(meta.getLocale(locale));
 
-        UserInfoHolder.setUserInfo(ui);
+        Session session = requestProvider.get().getSession();
 
         session.set("remoteAddr", remoteAddr);
         session.set(SessionConstants.USER_INFO, ui);
@@ -63,24 +65,26 @@ public class UserHelper
         return ui;
     }
 
-    public void logout(Request req)
+    public void logout()
     {
-        req.getSession().invalidate();
+        Session session = requestProvider.get().getSession();
+        UserInfo userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
+        String username = userInfo.getUserName();
 
-        String username = UserInfoHolder.getUserName();
-
-        initGuest(req);
+        //session.invalidate();
+        initGuest();
 
         log.info("Logout user: " + username);
     }
 
-    public void initGuest(Request req)
+    public void initGuest()
     {
+        Request req = requestProvider.get();
         Objects.requireNonNull(req);
 
         List<String> roles = Collections.singletonList(RoleType.ROLE_GUEST);
 
-        saveUser(RoleType.ROLE_GUEST, roles, roles, req.getLocale(), req.getRemoteAddr(), req.getSession());
+        saveUser(RoleType.ROLE_GUEST, roles, roles, req.getLocale(), req.getRemoteAddr());
     }
 
 }

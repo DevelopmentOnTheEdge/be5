@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
@@ -23,18 +23,20 @@ public class StaticPageController extends ApiControllerSupport
 {
     private final ProjectProvider projectProvider;
     private final JsonApiResponseHelper responseHelper;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public StaticPageController(ProjectProvider projectProvider, JsonApiResponseHelper responseHelper)
+    public StaticPageController(ProjectProvider projectProvider, JsonApiResponseHelper responseHelper, UserInfoProvider userInfoProvider)
     {
         this.projectProvider = projectProvider;
         this.responseHelper = responseHelper;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        String language = UserInfoHolder.getLanguage();
+        String language = userInfoProvider.get().getLanguage();
         String staticPageContent = projectProvider.getProject().getStaticPageContent(language, requestSubUrl);
 
         if (staticPageContent == null)
@@ -43,7 +45,7 @@ public class StaticPageController extends ApiControllerSupport
             log.fine(msg);
 
             //todo localize
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     new ErrorModel("404", msg,
                             Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)
@@ -51,7 +53,7 @@ public class StaticPageController extends ApiControllerSupport
         }
         else
         {
-            res.sendAsJson(
+            responseHelper.sendAsJson(
                     new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent),
                             Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)

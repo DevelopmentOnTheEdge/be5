@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class TestSession implements Session
 {
-    private Map<String, Object> map = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
 
     @Override
     public String getSessionId()

@@ -15,7 +15,7 @@ import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
@@ -82,7 +82,7 @@ public class TableController extends ApiControllerSupport
                     res.sendAsJson(document);
                     return;
                 case "update":
-                    res.sendAsRawJson(new MoreRows(
+                    res.sendAsJson(new MoreRows(
                             tableModel.getTotalNumberOfRows().intValue(),
                             tableModel.getTotalNumberOfRows().intValue(),
                             new MoreRowsBuilder(selectable).build(tableModel)
@@ -110,7 +110,7 @@ public class TableController extends ApiControllerSupport
 
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
-        res.sendErrorAsJson(
+        responseHelper.sendErrorAsJson(
                 responseHelper.getErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
                 responseHelper.getDefaultMeta(req)
         );

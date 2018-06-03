@@ -40,7 +40,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
 
         component.generate(getMockRequest("/api/userInfo/"), response);
 
-        verify(response).sendAsRawJson(new UserInfoModel(
+        verify(response).sendAsJson(new UserInfoModel(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -57,7 +57,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
 
         component.generate(getMockRequest("/api/userInfo/"), response);
 
-        verify(response).sendAsRawJson(new UserInfoModel(
+        verify(response).sendAsJson(new UserInfoModel(
                 false,
                 RoleType.ROLE_GUEST,
                 Collections.singletonList(RoleType.ROLE_GUEST),
@@ -77,7 +77,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         component.generate(getSpyMockRequest("/api/userInfo/", ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)),
                 response);
 
-        verify(response).sendAsRawJson(new UserInfoModel(
+        verify(response).sendAsJson(new UserInfoModel(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -94,7 +94,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         component.generate(getSpyMockRequest("/api/userInfo/", ImmutableMap.of("roles", "")),
                 response);
 
-        verify(response).sendAsRawJson(new UserInfoModel(
+        verify(response).sendAsJson(new UserInfoModel(
                 true,
                 TEST_USER,
                 Collections.singletonList(RoleType.ROLE_ADMINISTRATOR),
@@ -111,7 +111,7 @@ public class UserInfoControllerTest extends CoreBe5ProjectDbMockTest
         component.generate(getSpyMockRequest("/api/userInfo/selectRoles",
                 ImmutableMap.of("roles", RoleType.ROLE_ADMINISTRATOR)), response);
 
-        verify(response).sendAsRawJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));
+        verify(response).sendAsJson(eq(ImmutableList.of(RoleType.ROLE_ADMINISTRATOR)));
 
         verify(DbServiceMock.mock).update("UPDATE user_prefs SET pref_value = ? WHERE pref_name = ? AND user_name = ?",
                 "('Administrator')",

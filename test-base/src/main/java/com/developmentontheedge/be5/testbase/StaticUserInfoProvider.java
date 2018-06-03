@@ -1,31 +1,25 @@
-package com.developmentontheedge.be5.server.services.impl;
+package com.developmentontheedge.be5.testbase;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.web.SessionConstants;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
 import java.util.Locale;
 
-
-public class UserInfoProviderImpl implements UserInfoProvider, Provider<UserInfo>
+public class StaticUserInfoProvider implements UserInfoProvider
 {
-    private final Provider<Session> session;
-
-    @Inject
-    public UserInfoProviderImpl(Provider<Session> session)
-    {
-        this.session = session;
-    }
+    public static UserInfo userInfo;
 
     @Override
     public UserInfo get()
     {
-        return (UserInfo)session.get().get(SessionConstants.USER_INFO);
+        return userInfo;
+    }
+
+    public static void setUserInfo(UserInfo newUserInfo)
+    {
+        userInfo = newUserInfo;
     }
 
     @Override
@@ -75,5 +69,4 @@ public class UserInfoProviderImpl implements UserInfoProvider, Provider<UserInfo
     {
         return getCurrentRoles().contains(RoleType.ROLE_SYSTEM_DEVELOPER);
     }
-
 }

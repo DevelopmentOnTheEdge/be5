@@ -2,44 +2,13 @@ package com.developmentontheedge.be5.web;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
-import java.util.Map;
-
 
 /**
  * <p>The main interface for sending responses.</p>
- * 
- * <p>If the client sent an incorrect route to the backend ({@link Request#getRequestUri()} returns an unexpected value), then
- * you must send the corresponding response with {@link Response#sendUnknownActionError()}.</p>
  */
 public interface Response
 {
-    void sendAsJson(JsonApiModel jsonApiModel);
-
-    void sendAsJson(ResourceData data, Object meta);
-
-    void sendAsJson(ResourceData data, ResourceData[] included, Object meta);
-
-    void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links);
-
-    void sendErrorAsJson(ErrorModel error, Object meta);
-
-    void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta);
-
-    void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links);
-
-    //void sendErrorsAsJson(Object[] errors, Object meta);
-
-//    /**
-//     * <p>The conventional way to send untyped responses. It is recommended to use typed responses.</p>
-//     *
-//     * @param value will be serialized
-//     */
-//    void sendErrorsAsJson(Object value);
-
-    void sendAsRawJson(Object value);
+    void sendAsJson(Object value);
 
     /**
      * @param value object for send as json
@@ -64,7 +33,7 @@ public interface Response
      * The conventional way to respond when the {@link Request#getRequestUri()} returns an unexpected value.
      */
     void sendUnknownActionError();
-    
+
 //    /**
 //     * A way to report about an occured error.
 //     */

@@ -30,7 +30,7 @@ public class MenuTest extends ServerBe5ProjectTest
 
         component.generate(getMockRequest("/api/menu/"), response);
 
-        verify(response).sendAsRawJson(isA(MenuController.MenuResponse.class));
+        verify(response).sendAsJson(isA(MenuController.MenuResponse.class));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class MenuTest extends ServerBe5ProjectTest
 
         component.generate(getMockRequest("/api/menu/withIds"), response);
 
-        verify(response).sendAsRawJson(isA(MenuController.MenuResponse.class));
+        verify(response).sendAsJson(isA(MenuController.MenuResponse.class));
     }
 
     @Test

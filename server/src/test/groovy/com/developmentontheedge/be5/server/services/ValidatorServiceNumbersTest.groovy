@@ -18,6 +18,7 @@ class ValidatorServiceNumbersTest extends ServerBe5ProjectTest
 
     @Before
     void initDps(){
+        initGuest()
         dps = new GDynamicPropertySetSupport()
     }
 

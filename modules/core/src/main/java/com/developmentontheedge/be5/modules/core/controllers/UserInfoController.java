@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -14,11 +14,13 @@ import javax.inject.Inject;
 public class UserInfoController extends ApiControllerSupport implements Controller
 {
     private final LoginService loginService;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public UserInfoController(LoginService loginService)
+    public UserInfoController(LoginService loginService, UserInfoProvider userInfoProvider)
     {
         this.loginService = loginService;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class UserInfoController extends ApiControllerSupport implements Controll
         switch (requestSubUrl)
         {
             case "":
-                res.sendAsRawJson(loginService.getUserInfoModel());
+                res.sendAsJson(loginService.getUserInfoModel());
                 return;
             case "selectRoles":
                 selectRolesAndSendNewState(req, res);
@@ -43,6 +45,6 @@ public class UserInfoController extends ApiControllerSupport implements Controll
 
         loginService.setCurrentRoles(Splitter.on(',').splitToList(roles));
 
-        res.sendAsRawJson(UserInfoHolder.getCurrentRoles());
+        res.sendAsJson(userInfoProvider.get().getCurrentRoles());
     }
 }

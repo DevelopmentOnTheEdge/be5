@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.services.impl;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -23,16 +24,15 @@ import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.server.services.OperationService;
+import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.server.services.model.Category;
 import com.developmentontheedge.be5.server.services.model.Operations;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
@@ -61,6 +61,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
+    private final UserInfoProvider userInfoProvider;
     private final JsonApiResponseHelper responseHelper;
 
     @Inject
@@ -71,6 +72,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             OperationExecutor operationExecutor,
             CategoriesService categoriesService,
             TableModelService tableModelService,
+            UserInfoProvider userInfoProvider,
             JsonApiResponseHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
@@ -79,6 +81,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         this.operationExecutor = operationExecutor;
         this.categoriesService = categoriesService;
         this.tableModelService = tableModelService;
+        this.userInfoProvider = userInfoProvider;
         this.responseHelper = responseHelper;
     }
 
@@ -155,7 +158,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private List<TableOperationPresentation> collectOperations(Query query)
     {
         List<TableOperationPresentation> operations = new ArrayList<>();
-        List<String> userRoles = UserInfoHolder.getCurrentRoles();
+        List<String> userRoles = userInfoProvider.get().getCurrentRoles();
 
         for (Operation operation : getQueryOperations(query))
         {
@@ -273,7 +276,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             ErrorModel errorModel = null;
             if(operation.getResult().getStatus() == OperationStatus.ERROR)
             {
-                if (UserInfoHolder.isSystemDeveloper())
+                if (userInfoProvider.isSystemDeveloper())
                 {
                     errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), HashUrlUtils.getUrl(operation));
                 }

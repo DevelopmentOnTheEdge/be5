@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.services.impl;
 
-import com.developmentontheedge.be5.base.UserInfoProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
@@ -138,8 +138,8 @@ public class TableModelServiceImpl implements TableModelService
             throw Be5Exception.internal("TableBuilder " + query.getQuery() + " is null." );
         }
 
-        tableBuilder.initialize(query, parameters);
         injector.injectMembers(tableBuilder);
+        tableBuilder.initialize(query, parameters);
 
         return tableBuilder.getTableModel();
     }

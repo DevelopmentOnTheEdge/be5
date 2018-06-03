@@ -23,7 +23,7 @@ public class CategoriesControllerTest extends CoreBe5ProjectDbMockTest
 
         component.generate(getMockRequest("/api/categories/forest"), response);
 
-        verify(response).sendAsRawJson(eq(new ArrayList<>()));
+        verify(response).sendAsJson(eq(new ArrayList<>()));
     }
 
     @Test

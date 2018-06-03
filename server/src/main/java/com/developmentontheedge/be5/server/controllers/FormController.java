@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.HashUrl;
@@ -11,13 +12,12 @@ import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
-import com.developmentontheedge.be5.server.util.Either;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
@@ -43,10 +43,12 @@ public class FormController extends ApiControllerSupport
     private final UserAwareMeta userAwareMeta;
     private final JsonApiResponseHelper responseHelper;
     private final Stage stage;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
-                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper, Stage stage)
+                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper,
+                          UserInfoProvider userInfoProvider, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
@@ -54,14 +56,15 @@ public class FormController extends ApiControllerSupport
         this.userAwareMeta = userAwareMeta;
         this.responseHelper = responseHelper;
         this.stage = stage;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        if(stage == Stage.DEVELOPMENT && UserInfoHolder.getUserInfo() == null)
+        if(stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
         {
-            userHelper.initGuest(req);
+            userHelper.initGuest();
         }
 
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
@@ -83,7 +86,7 @@ public class FormController extends ApiControllerSupport
         catch (Be5Exception e)
         {
             log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
                     responseHelper.getDefaultMeta(req)
             );
@@ -112,14 +115,14 @@ public class FormController extends ApiControllerSupport
             HashUrl url2 = HashUrlUtils.getUrl(operation);
             log.log(Level.SEVERE, "Error in operation: " + url2.toString(), e);
 
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     documentGenerator.getErrorModel(e, url2),
                     responseHelper.getDefaultMeta(req)
             );
             return;
         }
 
-        res.sendAsJson(
+        responseHelper.sendAsJson(
                 new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                         Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())),
                 responseHelper.getDefaultMeta(req)

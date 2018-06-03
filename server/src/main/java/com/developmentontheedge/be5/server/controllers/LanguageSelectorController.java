@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.server.servlet.UserInfoHolder;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -24,12 +24,14 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
 {
     private final Meta meta;
     private final ProjectProvider projectProvider;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public LanguageSelectorController(Meta meta, ProjectProvider projectProvider)
+    public LanguageSelectorController(Meta meta, ProjectProvider projectProvider, UserInfoProvider userInfoProvider1)
     {
         this.meta = meta;
         this.projectProvider = projectProvider;
+        this.userInfoProvider = userInfoProvider1;
     }
 
     public static class LanguageSelectorResponse
@@ -91,10 +93,10 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
         switch(requestSubUrl)
         {
             case "":
-                res.sendAsRawJson(getInitialData());
+                res.sendAsJson(getInitialData());
                 return;
             case "select":
-                res.sendAsRawJson(selectLanguage(req));
+                res.sendAsJson(selectLanguage(req));
                 return;
             default:
                 res.sendUnknownActionError();
@@ -109,7 +111,7 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
     private LanguageSelectorResponse selectLanguage(Request req)
     {
         Locale language = meta.getLocale(new Locale(req.getNonEmpty("language")));
-        UserInfoHolder.getUserInfo().setLocale(language);
+        userInfoProvider.get().setLocale(language);
 
         return getState();
     }
@@ -120,7 +122,7 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 
-        String selectedLanguage = UserInfoHolder.getLanguage().toUpperCase();
+        String selectedLanguage = userInfoProvider.get().getLanguage().toUpperCase();
         Map<String, String> messages = readMessages(project, selectedLanguage);
         
         return new LanguageSelectorResponse(languages, selectedLanguage, messages);

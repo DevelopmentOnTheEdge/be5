@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.server.model.FrontendAction;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 
 
 public interface FrontendActions

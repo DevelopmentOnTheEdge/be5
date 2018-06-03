@@ -3,6 +3,7 @@ package com.developmentontheedge.be5.test.mocks;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -14,26 +15,22 @@ public class TestRequest implements Request
 {
     private Session session = null;
 
+    @Inject
     public TestRequest(Session session)
     {
         this.session = session;
     }
 
-    public TestRequest()
-    {
-    }
-
     @Override
     public Session getSession()
     {
-        return session == null ? new TestSession() : session;
+        return session;
     }
 
     @Override
     public Session getSession(boolean create)
     {
-        if(create)return getSession();
-        else return session;
+        return session;
     }
 
     @Override

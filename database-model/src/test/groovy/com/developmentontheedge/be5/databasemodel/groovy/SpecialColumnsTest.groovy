@@ -2,25 +2,22 @@ package com.developmentontheedge.be5.databasemodel.groovy
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.database.DbService
+import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
-import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.test.BaseTestUtils
+import com.developmentontheedge.be5.testbase.StaticUserInfoProvider
 import com.developmentontheedge.beans.BeanInfoConstants
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 
 import javax.inject.Inject
-
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
 
 import static org.junit.Assert.*
-
 
 class SpecialColumnsTest extends DatabaseModelProjectDbTest
 {
@@ -33,13 +30,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     @Before
     void beforeClass()
     {
-        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
-        BaseTestUtils.UserInfoProviderForTest.userInfo.setRemoteAddr("192.168.0.1")
-    }
-
-    @After
-    void afterClass(){
-        initUserWithRoles(RoleType.ROLE_GUEST);
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.1")
     }
 
     @Before
@@ -59,7 +51,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
 
         assertEquals 1, db.oneLong("select count(*) from $tableName")
 
-        initGuest()
+        setStaticUserInfo(RoleType.ROLE_GUEST)
         table << [
             name : "test2",
             value: (Short)2
@@ -157,7 +149,7 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
 
         Thread.sleep(1)
 
-        BaseTestUtils.UserInfoProviderForTest.userInfo.setRemoteAddr("192.168.0.2")
+        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.2")
 
         table[id] = [
                 "name": "editName",

@@ -1,18 +1,19 @@
 package com.developmentontheedge.be5.server.servlet;
 
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
-import javax.inject.Inject;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.SessionConstants;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -58,13 +59,13 @@ public class TemplateFilterTest extends ServerBe5ProjectTest
     @Test
     public void skip() throws IOException, ServletException
     {
-        UserInfoHolder.setUserInfo(null);
+        session.set(SessionConstants.USER_INFO, null);
 
         when(req.getContextPath()).thenReturn("/");
 
         templateFilter.filter(req, res, filterChain);
 
-        assertEquals(RoleType.ROLE_GUEST, UserInfoHolder.getUserName());
+        assertEquals(RoleType.ROLE_GUEST, ((UserInfo)session.get(SessionConstants.USER_INFO)).getUserName());
         verify(filterChain, only()).doFilter(any(), any());
     }
 
