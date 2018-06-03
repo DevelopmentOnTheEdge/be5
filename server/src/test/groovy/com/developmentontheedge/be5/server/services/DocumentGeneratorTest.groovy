@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.operation.services.OperationExecutor
 import javax.inject.Inject
 
 import com.developmentontheedge.be5.server.model.TablePresentation
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel
 import groovy.transform.TypeChecked
 import org.junit.Test
 

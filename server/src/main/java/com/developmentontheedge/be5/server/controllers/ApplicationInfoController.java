@@ -53,7 +53,7 @@ public class ApplicationInfoController extends ApiControllerSupport implements C
         try
         {
             appInfo = getApplicationInfo(req);
-            res.sendAsRawJson(appInfo);
+            res.sendAsJson(appInfo);
         }
         catch (Exception e)
         {

@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server.operations
 
 import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.server.model.TablePresentation
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.operation.util.Either

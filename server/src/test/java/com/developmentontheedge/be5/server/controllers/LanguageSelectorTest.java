@@ -36,7 +36,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
         component.generate(getMockRequest("/api/languageSelector/"), response);
 
 
-        verify(response).sendAsRawJson(eq(languageSelectorResponse));
+        verify(response).sendAsJson(eq(languageSelectorResponse));
     }
 
     @Rule
@@ -62,6 +62,6 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
 
         component.generate(request, response);
 
-        verify(response).sendAsRawJson(eq(languageSelectorResponse));
+        verify(response).sendAsJson(eq(languageSelectorResponse));
     }
 }

@@ -17,7 +17,7 @@ import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
@@ -47,7 +47,8 @@ public class FormController extends ApiControllerSupport
 
     @Inject
     public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
-                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper, Stage stage, UserInfoProvider userInfoProvider)
+                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper,
+                          UserInfoProvider userInfoProvider, Stage stage)
     {
         this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
@@ -85,7 +86,7 @@ public class FormController extends ApiControllerSupport
         catch (Be5Exception e)
         {
             log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
                     responseHelper.getDefaultMeta(req)
             );
@@ -114,14 +115,14 @@ public class FormController extends ApiControllerSupport
             HashUrl url2 = HashUrlUtils.getUrl(operation);
             log.log(Level.SEVERE, "Error in operation: " + url2.toString(), e);
 
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     documentGenerator.getErrorModel(e, url2),
                     responseHelper.getDefaultMeta(req)
             );
             return;
         }
 
-        res.sendAsJson(
+        responseHelper.sendAsJson(
                 new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
                         Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())),
                 responseHelper.getDefaultMeta(req)

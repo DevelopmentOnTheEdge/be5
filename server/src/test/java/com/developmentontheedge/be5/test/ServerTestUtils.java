@@ -10,6 +10,7 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.developmentontheedge.be5.server.services.CategoriesService;
@@ -314,6 +315,7 @@ public abstract class ServerTestUtils extends BaseTestUtils
             bind(Session.class).to(ServerTestSession.class).in(Scopes.SINGLETON);
             bind(QuerySession.class).to(ServerTestQuerySession.class).in(Scopes.SINGLETON);
             bind(Request.class).to(ServerTestRequest.class).in(Scopes.SINGLETON);
+            bind(Response.class).to(ServerTestResponse.class).in(Scopes.SINGLETON);
         }
     }
 

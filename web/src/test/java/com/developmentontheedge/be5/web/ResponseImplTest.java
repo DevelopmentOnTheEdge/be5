@@ -1,14 +1,11 @@
 package com.developmentontheedge.be5.web;
 
 import com.developmentontheedge.be5.web.impl.ResponseImpl;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -37,7 +34,7 @@ public class ResponseImplTest
     public void sendAsRawJson()
     {
         Action call = new Action("call", "test/path");
-        response.sendAsRawJson(call);
+        response.sendAsJson(call);
 
         verify(writer).append(doubleQuotes("{'arg':'test/path','name':'call'}"));
     }
@@ -47,19 +44,19 @@ public class ResponseImplTest
     {
         assertEquals(rawResponse, response.getRawResponse());
     }
-
-    @Test
-    public void testJsonObject()
-    {
-        JsonApiModel jsonApiModel = JsonApiModel.data(new ResourceData("testType", "test", Collections.singletonMap("self", "url")),
-                Collections.singletonMap("_ts_", 1503291145939L));
-        response.sendAsJson(jsonApiModel);
-
-        verify(writer).append(doubleQuotes("{" +
-                "'data':{'attributes':'test','links':{'self':'url'},'type':'testType'}," +
-                "'meta':{'_ts_':1503291145939}" +
-                "}"));
-    }
+//
+//    @Test
+//    public void testJsonObject()
+//    {
+//        JsonApiModel jsonApiModel = JsonApiModel.data(new ResourceData("testType", "test", Collections.singletonMap("self", "url")),
+//                Collections.singletonMap("_ts_", 1503291145939L));
+//        response.sendAsJson(jsonApiModel);
+//
+//        verify(writer).append(doubleQuotes("{" +
+//                "'data':{'attributes':'test','links':{'self':'url'},'type':'testType'}," +
+//                "'meta':{'_ts_':1503291145939}" +
+//                "}"));
+//    }
 
     public class Action
     {

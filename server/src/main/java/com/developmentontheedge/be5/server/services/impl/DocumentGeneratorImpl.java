@@ -30,9 +30,9 @@ import com.developmentontheedge.be5.server.services.model.Operations;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;

@@ -26,7 +26,7 @@ public class CategoriesController extends ApiControllerSupport implements Contro
         switch (requestSubUrl)
         {
             case "forest":
-                res.sendAsRawJson(categoriesService.getCategoriesForest(
+                res.sendAsJson(categoriesService.getCategoriesForest(
                                 req.getNonEmpty(RestApiConstants.ENTITY),
                                 req.getBoolean("hideEmpty", false)
                 ));

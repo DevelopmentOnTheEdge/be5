@@ -8,8 +8,8 @@ import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
@@ -45,7 +45,7 @@ public class StaticPageController extends ApiControllerSupport
             log.fine(msg);
 
             //todo localize
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     new ErrorModel("404", msg,
                             Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)
@@ -53,7 +53,7 @@ public class StaticPageController extends ApiControllerSupport
         }
         else
         {
-            res.sendAsJson(
+            responseHelper.sendAsJson(
                     new ResourceData(STATIC_ACTION, new StaticPagePresentation("", staticPageContent),
                             Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)

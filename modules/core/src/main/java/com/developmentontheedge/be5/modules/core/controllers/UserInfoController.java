@@ -29,7 +29,7 @@ public class UserInfoController extends ApiControllerSupport implements Controll
         switch (requestSubUrl)
         {
             case "":
-                res.sendAsRawJson(loginService.getUserInfoModel());
+                res.sendAsJson(loginService.getUserInfoModel());
                 return;
             case "selectRoles":
                 selectRolesAndSendNewState(req, res);
@@ -45,6 +45,6 @@ public class UserInfoController extends ApiControllerSupport implements Controll
 
         loginService.setCurrentRoles(Splitter.on(',').splitToList(roles));
 
-        res.sendAsRawJson(userInfoProvider.get().getCurrentRoles());
+        res.sendAsJson(userInfoProvider.get().getCurrentRoles());
     }
 }

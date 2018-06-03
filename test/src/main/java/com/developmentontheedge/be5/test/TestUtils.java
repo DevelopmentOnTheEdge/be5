@@ -24,8 +24,10 @@ import com.developmentontheedge.be5.test.mocks.CategoriesServiceForTest;
 import com.developmentontheedge.be5.test.mocks.CoreUtilsForTest;
 import com.developmentontheedge.be5.test.mocks.TestQuerySession;
 import com.developmentontheedge.be5.test.mocks.TestRequest;
+import com.developmentontheedge.be5.test.mocks.TestResponse;
 import com.developmentontheedge.be5.test.mocks.TestSession;
 import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 import com.google.common.collect.ImmutableMap;
@@ -337,6 +339,7 @@ public abstract class TestUtils extends BaseTestUtils
             bind(Session.class).to(TestSession.class).in(Scopes.SINGLETON);
             bind(QuerySession.class).to(TestQuerySession.class).in(Scopes.SINGLETON);
             bind(Request.class).to(TestRequest.class).in(Scopes.SINGLETON);
+            bind(Response.class).to(TestResponse.class).in(Scopes.SINGLETON);
         }
     }
 

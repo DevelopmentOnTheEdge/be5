@@ -93,10 +93,10 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
         switch(requestSubUrl)
         {
             case "":
-                res.sendAsRawJson(getInitialData());
+                res.sendAsJson(getInitialData());
                 return;
             case "select":
-                res.sendAsRawJson(selectLanguage(req));
+                res.sendAsJson(selectLanguage(req));
                 return;
             default:
                 res.sendUnknownActionError();

@@ -1,14 +1,11 @@
 package com.developmentontheedge.be5.web.impl;
 
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
 
+import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 
 public class ResponseImpl implements Response
@@ -19,56 +16,11 @@ public class ResponseImpl implements Response
      * Guarantees correct state of the response.
      */
     private final RawResponseWrapper rawWrapper;
-    
+
+    @Inject
     public ResponseImpl(HttpServletResponse rawResponse)
     {
         this.rawWrapper = new RawResponseWrapper(rawResponse);
-    }
-
-    /**
-     * New json api? see JsonApiModel, ResourceData
-     */
-    @Override
-    public void sendAsJson(JsonApiModel jsonApiModel)
-    {
-        sendAsRawJson(jsonApiModel);
-    }
-
-    @Override
-    public void sendAsJson(ResourceData data, Object meta)
-    {
-        sendAsRawJson(JsonApiModel.data(data, meta));
-    }
-
-    @Override
-    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta)
-    {
-        sendAsRawJson(JsonApiModel.data(data, included, meta));
-    }
-
-    @Override
-    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
-    {
-        sendAsRawJson(JsonApiModel.data(data, included, meta, links));
-    }
-
-    @Override
-    public void sendErrorAsJson(ErrorModel error, Object meta)
-    {
-        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
-        sendAsRawJson(JsonApiModel.error(error, meta));
-    }
-
-    @Override
-    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta)
-    {
-        sendAsRawJson(JsonApiModel.error(error, included, meta));
-    }
-
-    @Override
-    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
-    {
-        sendAsRawJson(JsonApiModel.error(error, included, meta, links));
     }
 
 //    @Override
@@ -95,7 +47,7 @@ public class ResponseImpl implements Response
 //    }
 
     @Override
-    public void sendAsRawJson(Object value)
+    public void sendAsJson(Object value)
     {
         sendJson(jsonb.toJson(value));
     }
@@ -138,7 +90,8 @@ public class ResponseImpl implements Response
     @Override
     public void sendUnknownActionError()
     {
-        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), null);
+        //todo send error http code
+        sendAsJson("Unknown component action.");
     }
     
     private void sendText(String contentType, String text)

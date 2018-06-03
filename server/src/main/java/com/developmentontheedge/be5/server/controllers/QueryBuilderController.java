@@ -20,9 +20,9 @@ import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.web.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.web.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
@@ -155,7 +155,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         }
         else
         {
-            res.sendErrorAsJson(
+            responseHelper.sendErrorAsJson(
                     responseHelper.getErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
                             Collections.singletonMap(SELF_LINK, "queryBuilder")),
                     responseHelper.getDefaultMeta(req)
