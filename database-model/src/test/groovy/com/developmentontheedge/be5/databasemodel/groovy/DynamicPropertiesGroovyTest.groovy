@@ -114,39 +114,6 @@ class DynamicPropertiesGroovyTest extends DatabaseModelProjectDbTest
     }
 
     @Test
-    @Ignore
-    void testQRec()
-    {
-        def rec = database.operations( table_name : "operations", name : "Clone" )
-        def id = rec.getPrimaryKey
-        try {
-            assert rec.table_name == "operations"
-            rec.table_name = "cool"
-            assert database.operations[ id ].table_name == "cool"
-        } finally {
-            rec.table_name = "operations"
-        }
-    }
-
-    @Test
-    @Ignore
-    void testQRecWithLeftShiftAndMap()
-    {
-        def rec = database.operations( table_name : "operations", name : "Clone" )
-        def id = rec.getPrimaryKey
-        try {
-            assert rec.table_name == "operations"
-            assert rec.name == "Clone"
-            rec << [ table_name : "newTableName", name: "newName" ]
-            assert database.operations[ id ].table_name == "newTableName"
-            assert database.operations[ id ].name == "newName"
-        } finally {
-            rec.table_name = "operations"
-            rec.name = "Clone"
-        }
-    }
-//
-    @Test
     void testGetAttribute()
     {
         DynamicPropertySetSupport dps = new DynamicPropertySetSupport()
@@ -194,6 +161,21 @@ class DynamicPropertiesGroovyTest extends DatabaseModelProjectDbTest
                 value: 1
         ]
         assertEquals 1, dps[ '$testProperty' ]
+    }
+
+    @Test
+    void testGStringImplConvertToString()
+    {
+        DynamicPropertySet dps = new DynamicPropertySetSupport()
+        def test = "1"
+        dps << [
+                name : "property1",
+                value: "test value ${test}"
+        ]
+        assertEquals String.class, dps.getValue("property1").getClass()
+
+        dps[ "property2" ] = "test value ${test}"
+        assertEquals String.class, dps.getValue("property2").getClass()
     }
 
     @Test

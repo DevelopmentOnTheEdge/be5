@@ -34,13 +34,13 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        }
         return super.getProperty( entityModel, property );
     }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public void setProperty( Object object, String entityName, Object values )
-    {
-        ( ( EntityModel )object ).add( ( Map<String, String> )values );
-    }
+//
+//    @Override
+//    @SuppressWarnings( "unchecked" )
+//    public void setProperty( Object object, String entityName, Object values )
+//    {
+//        ( ( EntityModel )object ).add( ( Map<String, String> )values );
+//    }
 
 //    private static Object callClosureWithDelegate( Closure closure, Object delegate )
 //    {
@@ -100,17 +100,17 @@ public class EntityModelMetaClass extends ExtensionMethodsMetaClass
 //        return self.toArray( values );
 //    }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Object invokeMethod( Object object, String entityName, Object args )
-    {
-        return ( ( EntityModel )object ).getBy( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
-    }
-
-    public static <R> R leftShift( Object object, Map<String, ? super Object> values )
-    {
-        return (R) ( ( EntityModel<R> )object ).add( values );
-    }
+//    @Override
+//    @SuppressWarnings( "unchecked" )
+//    public Object invokeMethod( Object object, String entityName, Object args )
+//    {
+//        return ( ( EntityModel )object ).getBy( ( Map<String, String> )( ( Object[] )args )[ 0 ] );
+//    }
+//
+//    public static <R> R leftShift( Object object, Map<String, ? super Object> values )
+//    {
+//        return (R) ( ( EntityModel<R> )object ).add( values );
+//    }
 
     public static RecordModel call( EntityModel self, Map<String, ? super Object> values )
     {

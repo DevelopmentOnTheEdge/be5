@@ -8,9 +8,11 @@
             concat(a, b, c) FROM t]]></query>
 
         <format dbms="mysql"><![CDATA[SELECT
-            concat(a, b, c) FROM t]]></format>
-        <format dbms="db2,oracle,postgres,sqlserver"><![CDATA[SELECT
+            CONCAT(a, b, c) FROM t]]></format>
+        <format dbms="db2,oracle,postgres"><![CDATA[SELECT
             a || b || c FROM t]]></format>
+        <!--<format dbms="sqlserver"><![CDATA[SELECT-->
+            <!--a || b || c FROM t]]></format>-->
     </parser>
   </test>
 
@@ -20,9 +22,11 @@
             concat(a,b,c) FROM t]]></query>
 
         <format dbms="mysql"><![CDATA[SELECT
-            concat(a,b,c) FROM t]]></format>
-        <format dbms="db2,oracle,postgres,sqlserver"><![CDATA[SELECT
+            CONCAT(a, b, c) FROM t]]></format>
+        <format dbms="db2,oracle,postgres"><![CDATA[SELECT
             a || b || c FROM t]]></format>
+        <!--<format dbms="sqlserver"><![CDATA[SELECT-->
+            <!--a || b || c FROM t]]></format>-->
     </parser>
   </test>
 
@@ -33,9 +37,11 @@
 
         <dump/>
         <format dbms="mysql"><![CDATA[SELECT
-            concat(a, b, c) FROM t]]></format>
-        <format dbms="db2,oracle,postgres,sqlserver"><![CDATA[SELECT
+            CONCAT(a , b , c) FROM t]]></format>
+        <format dbms="db2,oracle,postgres"><![CDATA[SELECT
             a || b || c FROM t]]></format>
+        <!--<format dbms="sqlserver"><![CDATA[SELECT-->
+            <!--a || b || c FROM t]]></format>-->
     </parser>
   </test>
 

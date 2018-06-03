@@ -164,4 +164,22 @@ public class SubQueryTest
         AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
         assertEquals("SELECT field.ref FROM table.name LIMIT 2", subQuery.getQuery().format());
     }
+
+    @Test
+    public void testOutColumns()
+    {
+        AstStart start = SqlQuery.parse( "SELECT ID, '<sql limit=\"2\" queryName=\"test\"" +
+                "outColumns=\"Foo\"></sql>' FROM table" );
+        QueryResolver resolver = (entity, query) -> {
+            assertNull(entity);
+            assertEquals("test", query);
+            return "SELECT name AS \"Name\", foo AS \"Foo\", bar AS \"Bar\" FROM subTable WHERE tableID=<var:ID/>";
+        };
+        ContextApplier contextApplier = new ContextApplier( new BasicQueryContext.Builder().queryResolver( resolver ).build() );
+        contextApplier.applyContext( start );
+        String key = contextApplier.subQueryKeys().findFirst().get();
+        Map<String, String> vars = Collections.singletonMap( "ID", "5" );
+        AstBeSqlSubQuery subQuery = contextApplier.applyVars( key, vars::get );
+        assertEquals("SELECT foo AS \"Foo\" FROM subTable WHERE tableID = 5 LIMIT 2", subQuery.getQuery().format());
+    }
 }

@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
-public class SqlServiceTest extends Be5ProjectDbBaseTest
+public class DbServiceTest extends Be5ProjectDbBaseTest
 {
     private static final ResultSetParser<TestPerson> parser = rs ->
             new TestPerson(rs.getLong("id"),rs.getString("name"),
@@ -31,6 +32,14 @@ public class SqlServiceTest extends Be5ProjectDbBaseTest
         assertEquals(1, update);
         db.insert("INSERT INTO persons (name, password, email) VALUES (?,?,?)",
                 "user2", "pass2", "email2@mail.ru");
+    }
+
+    @Test
+    public void updateUnsafe()
+    {
+        db.updateUnsafe("ALTER TABLE persons ADD column_test varchar(40)");
+
+        assertNull(db.one("select column_test from persons"));
     }
 
     @Test

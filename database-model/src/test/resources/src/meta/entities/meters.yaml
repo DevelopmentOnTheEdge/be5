@@ -25,7 +25,12 @@ meters:
     - modificationDate___:
         type: TIMESTAMP
         canBeNull: true
+    - ipInserted___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - ipModified___:
+        type: VARCHAR(100)
+        canBeNull: true
     - isDeleted___:
         type: ENUM('no','yes')
         defaultValue: '''no'''
-    #todo add ip special columns

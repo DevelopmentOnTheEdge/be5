@@ -23,7 +23,7 @@ public interface DbService
 
     //todo add QueryRunner batch, insertBatch
 
-    int updateWithoutBeSql(String sql, Object... params);
+    int updateUnsafe(String sql, Object... params);
 
     <T> T insert(String sql, Object... params);
 

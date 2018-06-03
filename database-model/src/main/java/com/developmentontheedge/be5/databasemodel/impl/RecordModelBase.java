@@ -2,13 +2,10 @@ package com.developmentontheedge.be5.databasemodel.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
-import com.developmentontheedge.be5.databasemodel.MethodProvider;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetBlocked;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 
@@ -17,7 +14,7 @@ public class RecordModelBase<T> extends DynamicPropertySetBlocked implements Rec
     private final EntityModel<T> entityModel;
     private final T id;
 
-    public RecordModelBase(T id, EntityModel<T> entityModel, DynamicPropertySet dps)
+    RecordModelBase(T id, EntityModel<T> entityModel, DynamicPropertySet dps)
     {
         super( dps );
         if(dps.getProperty(entityModel.getPrimaryKeyName()) == null)

@@ -1987,8 +1987,8 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
         <else></else>
     </if> AND 3 = 3)]]></format>
   </parser>
- </test> 
- 
+ </test>
+
  <test name="if-in-else">
   <parser>
    <query><![CDATA[SELECT * from t where 1=1
@@ -2184,6 +2184,185 @@ SELECT b + b, D(b + b)+ 2 FROM table t]]></format>
    <format dbms="postgres"><![CDATA[SELECT * FROM table
           ORDER BY m.Name, mc.billingMonth desc
          ]]></format>
+  </parser>
+ </test>
+
+
+ <test name="expr_AND_existPattern_false">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID&&lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+  </parser>
+ </test>
+
+ <test name="expr_AND_existPattern_true">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID&&lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+   AND 3 = 3)]]></format>
+  </parser>
+ </test>
+
+ <test name="expr_AND_equalsMatcher_false">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID==test&&lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+  </parser>
+ </test>
+ <test name="expr_AND_equalsMatcher_true">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID==test&&lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="test" />
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+AND 3 = 3)]]></format>
+  </parser>
+ </test>
+
+ <test name="expr_AND_notEqualsMatcher_false">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID!=test&&lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="test" />
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+  </parser>
+ </test>
+ <test name="expr_AND_notEqualsMatcher_true">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID!=test&&lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+AND 3 = 3)]]></format>
+  </parser>
+ </test>
+
+ <test name="expr_AND_notExistsMatcher_false">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID&&!lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 3 = 3)]]></format>
+  </parser>
+ </test>
+ <test name="expr_AND_notExistsMatcher_true">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID&&!lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+AND 3 = 3)]]></format>
+  </parser>
+ </test>
+
+ <test name="expr_OR_notExistsMatcher_false">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="!personID||!lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="lastName" value="foo" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+AND 3 = 3)]]></format>
+  </parser>
+ </test>
+ <test name="expr_OR_notEqualsMatcher_true">
+  <parser>
+   <query><![CDATA[SELECT * FROM t WHERE (1=1
+      <if expr="personID!=test||lastName">
+        <then>
+            AND 2=2
+        </then>
+        <else>
+        </else>
+    </if> AND 3=3)]]></query>
+   <applyContext>
+    <parameter name="personID" value="bar" />
+   </applyContext>
+   <format dbms="oracle"><![CDATA[SELECT * FROM t WHERE (1 = 1 AND 2 = 2
+AND 3 = 3)]]></format>
   </parser>
  </test>
 

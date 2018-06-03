@@ -18,10 +18,5 @@ public class AstUpdateSetList extends SimpleNode
         this.nodePrefix = "SET";
         this.childrenDelimiter = ",";
     }
-
-    public AstUpdateSetList(SqlParser p, int id) {
-        super(p, id);
-    }
-
 }
 /* JavaCC - OriginalChecksum=e26d075436197d894b98048e7d0550ae (do not edit this line) */

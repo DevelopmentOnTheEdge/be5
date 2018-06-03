@@ -20,7 +20,7 @@ public class SqlHelperTest
     private SqlHelper sqlHelper;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         db = mock(DbService.class);
         sqlHelper = new SqlHelper(db);

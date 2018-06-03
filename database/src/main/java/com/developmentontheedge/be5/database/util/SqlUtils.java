@@ -13,7 +13,7 @@ import java.sql.Types;
 
 public class SqlUtils
 {
-    public static Object getSqlValue(Class<?> clazz, ResultSet rs, int idx)
+    public static <T> T getSqlValue(Class<T> clazz, ResultSet rs, int idx)
     {
         try{
             Object object = rs.getObject(idx);
@@ -24,27 +24,27 @@ public class SqlUtils
 
             if(clazz == Double.class && object.getClass() == BigDecimal.class)
             {
-                return ((BigDecimal)object).doubleValue();
+                return (T) (Double) ((BigDecimal)object).doubleValue();
             }
 
             if(clazz == Long.class && object.getClass() == BigInteger.class)
             {
-                return ((BigInteger)object).longValue();
+                return (T) (Long) ((BigInteger)object).longValue();
             }
 
             if(clazz == Short.class && object.getClass() == Integer.class)
             {
-                return ((Integer)object).shortValue();
+                return (T) (Short) ((Integer)object).shortValue();
             }
 
             if(clazz == Integer.class && object.getClass() == Long.class)
             {
-                return ((Long)object).intValue();
+                return (T) (Integer) ((Long)object).intValue();
             }
 
             if(clazz == String.class && object.getClass() == byte[].class)
             {
-                return new String((byte[])object);
+                return (T) new String((byte[])object);
             }
 
             return clazz.cast(object);

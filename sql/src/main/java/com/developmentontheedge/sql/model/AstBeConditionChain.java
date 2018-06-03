@@ -8,9 +8,5 @@ class AstBeConditionChain extends SimpleNode {
     super(id);
   }
 
-  public AstBeConditionChain(SqlParser p, int id) {
-    super(p, id);
-  }
-
 }
 /* JavaCC - OriginalChecksum=8dab093f1dfb7b8ccdc96e7621b002ad (do not edit this line) */

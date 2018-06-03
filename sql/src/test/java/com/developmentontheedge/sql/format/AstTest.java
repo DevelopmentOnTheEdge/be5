@@ -1,6 +1,7 @@
 package com.developmentontheedge.sql.format;
 
 import com.developmentontheedge.sql.model.AstSelect;
+import com.developmentontheedge.sql.model.AstWhere;
 import com.google.common.collect.ImmutableList;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -68,6 +69,27 @@ public class AstTest
     }
 
     @Test
+    public void selectWhere3()
+    {
+        AstSelect users = Ast.selectCount().from("users").where("name", "test");
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name = ?",
+                users.format());
+    }
+
+    @Test
+    public void selectWhereReplace()
+    {
+        AstSelect users = Ast.selectCount().from("users").where("name", "test");
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name = ?",
+                users.format());
+
+        users.where(new AstWhere(Collections.singletonMap("foo", "bar")));
+
+        assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE foo = ?",
+                users.format());
+    }
+
+    @Test
     public void selectWhereLike()
     {
         Map<String, ? super Object> names = new HashMap<>();
@@ -81,6 +103,22 @@ public class AstTest
         AstSelect users2 = Ast.selectCount().from("users").where(names);
         assertEquals("SELECT COUNT(*) AS \"count\" FROM users WHERE name LIKE ?",
                 users2.format());
+    }
+
+    @Test
+    public void limit()
+    {
+        AstSelect users = Ast.selectAll().from("users").limit(10);
+        assertEquals("SELECT * FROM users LIMIT 10",
+                users.format());
+    }
+
+    @Test
+    public void limitWithOffset()
+    {
+        AstSelect users = Ast.selectAll().from("users").limit(20,10);
+        assertEquals("SELECT * FROM users LIMIT 20, 10",
+                users.format());
     }
 
     /**

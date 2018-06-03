@@ -66,7 +66,7 @@ public class Simplifier
             if(fun.child(0).format().trim().equals(fun.child(1).format().trim())) {
                 fun.replaceWith(new AstIdentifierConstant("TRUE"));
             }
-        } else if(fun.getFunction().getName().equals("!=")) {
+        } else if(fun.getFunction().getName().equals("<>")) {
             if(fun.child(0).format().trim().equals(fun.child(1).format().trim())) {
                 fun.replaceWith(new AstIdentifierConstant("FALSE"));
             }
@@ -85,9 +85,9 @@ public class Simplifier
             SimpleNode child = node.child(0);
             String childStr = child.format().trim();
             if(childStr.equals("TRUE"))
-                child.replaceWith(new AstIdentifierConstant("FALSE"));
+                child.jjtGetParent().replaceWith(new AstIdentifierConstant("FALSE"));
             else if(childStr.equals("FALSE"))
-                child.replaceWith(new AstIdentifierConstant("TRUE"));
+                child.jjtGetParent().replaceWith(new AstIdentifierConstant("TRUE"));
         }
     }
 

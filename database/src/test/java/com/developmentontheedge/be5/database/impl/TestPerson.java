@@ -8,14 +8,14 @@ public class TestPerson
     public static final BeanHandler<TestPerson> beanHandler = new BeanHandler<>(TestPerson.class);
     public static final BeanListHandler<TestPerson> beanListHandler = new BeanListHandler<>(TestPerson.class);
 
-    private long id;
+    private Long id;
     private String name;
     private String password;
     private String email;
 
     public TestPerson(){}
 
-    public TestPerson(long id, String name, String password, String email)
+    public TestPerson(Long id, String name, String password, String email)
     {
         this.id = id;
         this.name = name;

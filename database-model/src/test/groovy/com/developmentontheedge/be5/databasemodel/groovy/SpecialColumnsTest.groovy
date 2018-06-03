@@ -1,13 +1,17 @@
 package com.developmentontheedge.be5.databasemodel.groovy
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.testbase.StaticUserInfoProvider
 import com.developmentontheedge.beans.BeanInfoConstants
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 import javax.inject.Inject
 import java.util.stream.Collectors
@@ -26,7 +30,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
     @Before
     void beforeClass()
     {
-        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER);
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.1")
     }
 
     @Before
@@ -64,7 +69,8 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
                 .map({ p -> p.getName() }).collect(Collectors.toList())
 
         assertEquals(["ID", "name","value",  "whoInserted___", "whoModified___",
-                      "creationDate___", "modificationDate___", "isDeleted___"], propertyList)
+                      "creationDate___", "modificationDate___",
+                      "ipInserted___", "ipModified___",  "isDeleted___"], propertyList)
     }
 
     @Test
@@ -138,7 +144,12 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
                 "value": (Short)1
         ]
 
+        assertEquals "192.168.0.1", table[ id ].$ipInserted___
+        assertEquals "192.168.0.1", table[ id ].$ipModified___
+
         Thread.sleep(1)
+
+        StaticUserInfoProvider.userInfo.setRemoteAddr("192.168.0.2")
 
         table[id] = [
                 "name": "editName",
@@ -146,9 +157,28 @@ class SpecialColumnsTest extends DatabaseModelProjectDbTest
 
         assertEquals "editName", table[ id ].$name
 
+        assertEquals "192.168.0.1", table[ id ].$ipInserted___
+        assertEquals "192.168.0.2", table[ id ].$ipModified___
+
         assertTrue table[ id ].$creationDate___ < table[ id ].$modificationDate___
         assertEquals table[ id ].$whoModified___, table[ id ].$whoInserted___
         assertEquals "no", table[ id ].$isDeleted___
     }
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none()
+
+    @Test
+    void checkDpsColumnsTest()
+    {
+        expectedEx.expect(Be5Exception.class)
+        expectedEx.expectMessage("Dps columns errors for modelElements 'meters'\n" +
+                "Dps not contain notNull column 'value'\n" +
+                "Entity not contain column 'value2'")
+
+        table << [
+                "name": "test",
+                "value2": (Short)1
+        ]
+    }
 }

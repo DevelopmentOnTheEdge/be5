@@ -1,43 +1,18 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
-import com.developmentontheedge.be5.base.util.Utils;
-import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
-import org.codehaus.groovy.runtime.GStringImpl;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import java.util.Objects;
+
+import static com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyUtils.*;
 
 
 public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends GDynamicPropertySetMetaClass
 {
-    private static final Logger log = Logger.getLogger(DynamicPropertySetMetaClass.class.getName());
-
-    static final Map<String, String> beanInfoConstants = new HashMap<>();
-    static {
-        Field[] fields = BeanInfoConstants.class.getDeclaredFields();
-        for (Field f : fields)
-        {
-            if (Modifier.isStatic(f.getModifiers())) {
-                try{
-                    beanInfoConstants.put(f.getName(),
-                            BeanInfoConstants.class.getDeclaredField( f.getName() ).get( null ).toString());
-                }
-                catch( Exception exc )
-                {
-                    throw new RuntimeException( exc );
-                }
-            }
-        }
-    }
-
     public DynamicPropertySetMetaClass( Class<T> theClass )
     {
         super( theClass );
@@ -65,25 +40,13 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
 
         if( dps.getProperty( propertyName ) != null )
         {
-            dps.setValue( propertyName, value );
+            dps.setValue( propertyName, processValue(value, dps.getProperty( propertyName ).getType()) );
             return;
         }
 
         DynamicProperty dp = new DynamicProperty( propertyName, value.getClass() );
-        dp.setValue( value );
+        dp.setValue( processValue(value,  null) );
         dps.add( dp );
-    }
-
-    private static Object removeFromMap( Map map, Object element )
-    {
-        if( map.containsKey( element ) )
-        {
-            return map.remove( element );
-        }
-        else
-        {
-            return null;
-        }
     }
 
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, DynamicProperty property )
@@ -92,59 +55,35 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
         return dps;
     }
 
-    public static DynamicPropertySet leftShift( DynamicPropertySet dps, List<Object> properties )
-    {
-        Map<String, Object> map = new HashMap<>();
-        //todo
-        return leftShift(dps, map);
-    }
-
-    //todo refactoring duplicate code
     public static DynamicPropertySet leftShift( DynamicPropertySet dps, Map<String, Object> properties )
     {
-        Map<String, Object> map = new HashMap<>();
-        map.putAll( properties );
+        Map<String, Object> map = new HashMap<>(properties);
+
         String name = asString( removeFromMap( map, "name" ) );
-        if( name == null )
-        {
-            name = "null";
-        }
-        Object value = removeFromMap( map, "value" );
-        if(value != null && value.getClass() == GStringImpl.class)
-        {
-            value =  value.toString();
-        }
-        String displayName = asString( removeFromMap( map, "DISPLAY_NAME" ) );
-        Boolean isHidden = ( Boolean )removeFromMap( map, "HIDDEN" );
+        Objects.requireNonNull(name);
         Class type = ( Class )removeFromMap( map, "TYPE" );
 
-        if( type == java.sql.Date.class && value != null )
-        {
-            value = Utils.changeType( value, java.sql.Date.class );
-        }
+        boolean isContainName = map.containsKey("name");
+        Object value = processValue(removeFromMap( map, "value" ), type);
+
         DynamicProperty dp = dps.getProperty( name );
         if( dp == null )
         {
-            dp = new DynamicProperty( name, type != null ? type : value != null ? value.getClass() : String.class );
+            dp = new DynamicProperty(
+                    name,
+                    type != null ? type : value != null ? value.getClass() : String.class,
+                    value
+            );
             dps.add( dp );
         }
-
-        dp.setValue( value );
-        if( displayName != null )dp.setDisplayName( displayName );
-        if( isHidden == Boolean.TRUE )dp.setHidden( true );
-
-        for( String key : map.keySet() )
+        else
         {
-            String attributeName = beanInfoConstants.get(key);
-            if( attributeName != null )
-            {
-                dp.setAttribute( attributeName, map.get( key ) );
-            }
-            else
-            {
-                log.warning("Not found attribute: " + key + " in BeanInfoConstants");
-            }
+            if( type != null )dp.setType( type );
+            if(isContainName)dp.setValue( value );
         }
+
+        setAttributes(dp, map);
+
         return dps;
     }
 
@@ -164,8 +103,4 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
         return clonedDps;
     }
 
-    private static String asString( Object o )
-    {
-        return o != null ? o.toString() : null;
-    }
 }

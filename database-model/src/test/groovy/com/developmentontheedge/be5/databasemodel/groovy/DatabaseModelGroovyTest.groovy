@@ -4,8 +4,10 @@ import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.metadata.model.EntityType
 import com.developmentontheedge.be5.test.BaseTestUtils
 import com.developmentontheedge.beans.DynamicPropertySet
+import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -43,7 +45,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
         testtableAdmin[id] << [
                 "value": 2
         ]
-        Assert.assertEquals(2, db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
+        assertEquals(2, db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "TestName"))
 
         def testtableAdmin = testtableAdmin
 
@@ -64,13 +66,24 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     }
 
     @Test
-    void testGetColumns()
+    void getColumnsByTest()
     {
         testtableAdmin << [ "name": "TestName", "value": "1"]
 
         RecordModel rec = testtableAdmin.getColumnsBy(["value"],
                 ["name": "TestName"]
         )
+
+        assertEquals null, rec.getValue("name")
+        assertEquals 1, rec.getValue("value")
+    }
+
+    @Test
+    void getColumnsTest()
+    {
+        def id = testtableAdmin << ["name": "TestName", "value": "1"]
+
+        RecordModel rec = testtableAdmin.getColumns(["value"], id)
 
         assertEquals null, rec.getValue("name")
         assertEquals 1, rec.getValue("value")
@@ -84,6 +97,15 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
                 "value": "2"]
 
         assert db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+    }
+
+    @Test
+    void testInsertDps()
+    {
+        testtableAdmin.add(getDpsS("name": "foo", "value": 3))
+
+        assertEquals 1, db.oneLong("SELECT count(1) FROM testtableAdmin " +
+                        "WHERE name = ? AND value = ?", "foo", 3)
     }
 
     @Test
@@ -143,10 +165,18 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     }
 
     @Test
-    void testGetEntity()
+    void isEmptyTest()
     {
-        assertEquals "testtableAdmin", testtableAdmin.tableName
         assertTrue testtableAdmin.empty
+    }
+
+    @Test
+    void metaTest()
+    {
+        assertEquals "testtableAdmin", testtableAdmin.entityName
+        assertEquals "ID", testtableAdmin.primaryKeyName
+        assertEquals EntityType.TABLE, testtableAdmin.entity.getType()
+        assertEquals "EntityModelBase[ entityName = testtableAdmin ]", testtableAdmin.toString()
     }
 
 //    @Test
@@ -194,7 +224,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     }
 
     @Test
-    void testDelete()
+    void removeByTest()
     {
         def id = testtableAdmin << [ "name": "TestName", "value": 1]
         def id2 = testtableAdmin << [ "name": "TestName2", "value": 1]
@@ -203,6 +233,17 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
         assertEquals 1, testtableAdmin.removeBy( ["name": "TestName2"] )
         assertNotNull testtableAdmin[ id ]
         assertNull testtableAdmin[ id2 ]
+    }
+
+    @Test
+    void removeAllTest()
+    {
+        testtableAdmin << [ "name": "TestName", "value": 1]
+        testtableAdmin << [ "name": "TestName2", "value": 1]
+
+        assertFalse testtableAdmin.empty
+        testtableAdmin.removeAll()
+        assertTrue testtableAdmin.empty
     }
 
     @Test
@@ -242,7 +283,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
         assertEquals "TestName3", record.$name
         assertEquals "TestName3", testtableAdmin[id].$name
 
-        testtableAdmin[id] = BaseTestUtils.getDpsS("name": "TestName4")//putAt(id, map)
+        testtableAdmin[id] = getDpsS("name": "TestName4")
 
         assertEquals "TestName4", testtableAdmin[id].$name
     }
@@ -256,8 +297,24 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 
         def rec = testtableAdmin( ["name": "TestName2"] )
         assertEquals( 123, rec.$value )
+
+        rec.remove()
+
+        assertNull(testtableAdmin( ["name": "TestName2"] ))
     }
 
+    @Test
+    void toStringTest()
+    {
+        def id = testtableAdmin << [
+                "name": "TestName2",
+                "value": "123"]
+
+        assertEquals("DECORATOR->DPS(com.developmentontheedge.beans.DynamicPropertySetSupport):\n" +
+                "  1. ID (class java.lang.Long) - ${id}\n" +
+                "  2. name (class java.lang.String) - TestName2\n" +
+                "  3. value (class java.lang.Integer) - 123 { RecordModelBase [ ID = ${id} ] }", testtableAdmin[ id ].toString())
+    }
 
     @Test
     void testGetRecord()

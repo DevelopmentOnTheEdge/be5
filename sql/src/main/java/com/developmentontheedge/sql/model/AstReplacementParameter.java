@@ -20,10 +20,6 @@ public class AstReplacementParameter extends SimpleNode
         super(id);
     }
 
-    public AstReplacementParameter(SqlParser p, int id) {
-        super(p, id);
-    }
-
     public void setValue(String value)
     {
         this.nodeContent = value;

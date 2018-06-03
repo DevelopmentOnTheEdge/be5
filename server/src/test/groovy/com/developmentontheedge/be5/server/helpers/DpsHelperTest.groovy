@@ -361,29 +361,4 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         }
         assertEquals "1.0E-300", dpsHelper.getPrecision(300)
     }
-
-    @Test
-    void setValueIfOneTag()
-    {
-        def dps = new GDynamicPropertySetSupport()
-        dps.add("test") {
-            TAG_LIST_ATTR = [["one", "one"]] as String[][]
-        }
-        DpsUtils.setValueIfOneTag(dps, ImmutableList.of("test"))
-
-        assertEquals "one", dps.getValue("test")
-    }
-
-    @Test
-    void setValueIfOneTag_canBeNull()
-    {
-        def dps = new GDynamicPropertySetSupport()
-        dps.add("test") {
-            TAG_LIST_ATTR = [["one", "one"]] as String[][]
-            CAN_BE_NULL = true
-        }
-        DpsUtils.setValueIfOneTag(dps, ImmutableList.of("test"))
-
-        assertEquals null, dps.getValue("test")
-    }
 }
