@@ -29,6 +29,17 @@ public class ColumnsApplier
                     derivedColumn.remove();
                 }
             }
+
+            if(selectList.jjtGetNumChildren() == 0)
+            {
+                throw new IllegalStateException("selectList is empty");
+            }
+
+            AstDerivedColumn lastColumn = (AstDerivedColumn)selectList.jjtGetChild(selectList.jjtGetNumChildren() -1);
+            lastColumn.setSuffixComma(false);
+
+            AstDerivedColumn firstColumn = (AstDerivedColumn)selectList.jjtGetChild(0);
+            firstColumn.removeSpecialPrefix();
         }
     }
 }
