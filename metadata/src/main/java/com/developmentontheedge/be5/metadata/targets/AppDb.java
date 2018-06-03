@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.maven;
+package com.developmentontheedge.be5.metadata.targets;
 
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
-import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 

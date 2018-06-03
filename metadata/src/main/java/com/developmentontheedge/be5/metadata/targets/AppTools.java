@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.maven;
+package com.developmentontheedge.be5.metadata.targets;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

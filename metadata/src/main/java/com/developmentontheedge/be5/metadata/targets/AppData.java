@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.maven;
+package com.developmentontheedge.be5.metadata.targets;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
-import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
