@@ -31,7 +31,7 @@ public class DataSourceServiceImpl implements DataSourceService
     @Inject
     public DataSourceServiceImpl(ProjectProvider projectProvider)
     {
-        Project project = projectProvider.getProject();
+        Project project = projectProvider.get();
         String configInfo;
 
         Connection conn = null;

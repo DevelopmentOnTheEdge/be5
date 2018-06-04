@@ -529,7 +529,7 @@ public class MetaImpl implements Meta
 
     private Project getProject()
     {
-        return projectProvider.getProject();
+        return projectProvider.get();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class TestProjectProvider implements ProjectProvider
     }
 
     @Override
-    public Project getProject()
+    public Project get()
     {
         return project;
     }

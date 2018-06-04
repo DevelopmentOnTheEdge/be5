@@ -20,9 +20,9 @@ class LoadTest extends SystemBe5ProjectTest
     @Test
     void testLoadModuleCore() throws IOException, URISyntaxException, ProjectLoadException
     {
-        assertEquals("system", projectProvider.getProject().getAppName())
+        assertEquals("system", projectProvider.get().getAppName())
 
-        BeModelCollection<Module> modules = projectProvider.getProject().getModules()
+        BeModelCollection<Module> modules = projectProvider.get().getModules()
         assertEquals(0, modules.getSize())
     }
 

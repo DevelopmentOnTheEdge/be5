@@ -156,7 +156,7 @@ public abstract class BaseTestUtils
 
     protected static void initDb(Injector injector)
     {
-        Project project = injector.getInstance(ProjectProvider.class).getProject();
+        Project project = injector.getInstance(ProjectProvider.class).get();
 
         if(project.getConnectionProfileName() != null &&
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))

@@ -37,7 +37,7 @@ public class StaticPageController extends ApiControllerSupport
     public void generate(Request req, Response res, String requestSubUrl)
     {
         String language = userInfoProvider.get().getLanguage();
-        String staticPageContent = projectProvider.getProject().getStaticPageContent(language, requestSubUrl);
+        String staticPageContent = projectProvider.get().getStaticPageContent(language, requestSubUrl);
 
         if (staticPageContent == null)
         {

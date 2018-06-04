@@ -63,7 +63,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     @Override
     public void compileLocalizations()
     {
-        localizations = CompiledLocalizations.from(projectProvider.getProject());
+        localizations = CompiledLocalizations.from(projectProvider.get());
     }
 
     /* (non-Javadoc)

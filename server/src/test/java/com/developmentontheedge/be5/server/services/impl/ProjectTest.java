@@ -19,7 +19,7 @@ public class ProjectTest
     @Test
     public void testGetQuery()
     {
-        Project project = projectProvider.getProject();
+        Project project = projectProvider.get();
         assertEquals("SELECT\n" +
                 "  t.name AS \"Name\",\n" +
                 "  t.value AS \"Value\"\n" +
@@ -31,7 +31,7 @@ public class ProjectTest
     @Test
     public void testQueryCompiledValidate() throws ProjectElementException
     {
-        Query testQuery = projectProvider.getProject().getEntity("testtable").getQueries().get("All records");
+        Query testQuery = projectProvider.get().getEntity("testtable").getQueries().get("All records");
 
         String validatedQuery = testQuery.getQueryCompiled().validate().trim();
         assertNotNull(validatedQuery);

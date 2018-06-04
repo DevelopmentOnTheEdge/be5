@@ -199,7 +199,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
 
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        Entity entity = new Entity( entityName, projectProvider.getProject().getApplication(), EntityType.TABLE );
+        Entity entity = new Entity( entityName, projectProvider.get().getApplication(), EntityType.TABLE );
         DataElementUtils.save( entity );
 
         Query query = new Query( userQBuilderQueryName, entity );

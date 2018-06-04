@@ -118,7 +118,7 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
 
     private LanguageSelectorResponse getState()
     {
-        Project project = projectProvider.getProject();
+        Project project = projectProvider.get();
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 

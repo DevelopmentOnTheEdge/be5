@@ -32,7 +32,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Before
     public void insertOneRow()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("All records");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("All records");
         db.update("delete from testtable");
         db.insert("insert into testtable (name, value) VALUES (?, ?)",
                 "testBe5QueryExecutor", "1");
@@ -71,7 +71,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testMultipleColumn()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestMultipleColumn");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestMultipleColumn");
 
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
@@ -82,7 +82,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testMultipleColumnLong()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestMultipleColumnLong");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestMultipleColumnLong");
 
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
@@ -93,7 +93,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test
     public void testResolveTypeOfRefColumn()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumn");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumn");
 
         assertEquals("SELECT *\n" +
                 "FROM testtable\n" +
@@ -105,7 +105,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Ignore
     public void testTestResolveRefColumnByAlias()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnByAlias");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnByAlias");
 
         assertEquals("SELECT *\n" +
                 "FROM testtable t\n" +
@@ -116,14 +116,14 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test(expected = RuntimeException.class)
     public void testResolveUnknownColumn()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumn");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumn");
         queryService.build(query, Collections.singletonMap("unknownColumn", "test")).execute();
     }
 
     @Test(expected = Be5Exception.class)
     public void testResolveTypeOfRefColumnError()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnIllegalAE");
         Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();
@@ -132,7 +132,7 @@ public class QueryServiceTest extends QueryBe5ProjectDBTest
     @Test(expected = Be5Exception.class)
     public void testResolveTypeOfRefColumnNPE()
     {
-        query = projectProvider.getProject().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
+        query = projectProvider.get().getEntity("testtable").getQueries().get("TestResolveRefColumnNPE");
         Be5QueryExecutor be5QueryExecutor = queryService.build(query, new HashMap<>());
 
         be5QueryExecutor.execute();

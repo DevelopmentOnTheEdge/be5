@@ -43,7 +43,7 @@ public class ProjectProviderImpl implements ProjectProvider
     }
 
     @Override
-    public synchronized Project getProject()
+    public synchronized Project get()
     {
     	if(dirty || project == null)
     	{
@@ -102,7 +102,7 @@ public class ProjectProviderImpl implements ProjectProvider
     public synchronized void reloadProject()
     {
         this.dirty = true;
-        getProject();
+        get();
     }
 
 }
