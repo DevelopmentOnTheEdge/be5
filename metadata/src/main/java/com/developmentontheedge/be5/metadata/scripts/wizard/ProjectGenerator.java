@@ -1,36 +1,8 @@
-package com.developmentontheedge.be5.maven.wizard;
+package com.developmentontheedge.be5.metadata.scripts.wizard;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-
-import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.EntitiesFactory;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
-import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
-import com.developmentontheedge.be5.metadata.model.Icon;
-import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
-import com.developmentontheedge.be5.metadata.model.Localizations;
-import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 //import com.developmentontheedge.be5.metadata.util.ModuleUtils;
 //import com.beanexplorer.enterprise.operations.SendPassword;
-import com.developmentontheedge.be5.metadata.util.ModuleUtils;
-import com.google.common.base.Charsets;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.io.CharStreams;
+
 
 public class ProjectGenerator
 {

@@ -1,6 +1,11 @@
-package com.developmentontheedge.be5.maven;
+package com.developmentontheedge.be5.metadata.scripts;
 
-import com.developmentontheedge.be5.metadata.model.*;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -17,7 +22,7 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class TestUtils
+public abstract class ScriptTestUtils
 {
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
@@ -75,13 +80,13 @@ public abstract class TestUtils
 
     void createTestDB() throws Exception
     {
-//        AppDbMojo appDb = new AppDbMojo();
-//        appDb.setBe5Project(project)
-//                .setProfileName(profileTestMavenPlugin)
-//                .execute();
-//
-//        assertEquals(2, appDb.getCreatedTables());
-//        assertEquals(0, appDb.getCreatedViews());
+        AppDb appDb = new AppDb();
+        appDb.setBe5Project(project)
+                .setProfileName(profileTestMavenPlugin)
+                .execute();
+
+        assertEquals(2, appDb.getCreatedTables());
+        assertEquals(0, appDb.getCreatedViews());
     }
 
 }

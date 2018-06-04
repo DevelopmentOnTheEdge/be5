@@ -10,9 +10,11 @@ public class AppSyncTest extends TestUtils
     {
         createTestDB();
 
-        new AppSync()
-                .setBe5Project(project)
-                .setProfileName(profileTestMavenPlugin)
-                .execute();
+        AppSyncMojo mojo = new AppSyncMojo();
+
+        mojo.projectPath = tpmProjectPath.toFile();
+        mojo.connectionProfileName = profileTestMavenPlugin;
+
+        mojo.execute();
     }
 }

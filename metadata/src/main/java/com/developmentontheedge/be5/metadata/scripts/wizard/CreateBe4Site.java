@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.maven.wizard;
+package com.developmentontheedge.be5.metadata.scripts.wizard;
 
 public final class CreateBe4Site //extends BETask
 {

@@ -1,10 +1,9 @@
-package com.developmentontheedge.be5.maven.generate;
+package com.developmentontheedge.be5.metadata.scripts.generate;
 
-import com.developmentontheedge.be5.maven.Be5Mojo;
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
+import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
+import com.developmentontheedge.be5.metadata.scripts.ScriptException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,21 +16,18 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
-@Mojo( name = "generate-context")
-public class GenerateContext extends Be5Mojo<GenerateContext>
+public class GenerateContext extends ScriptSupport<GenerateContext>
 {
     private static final Logger log = Logger.getLogger(GenerateContext.class.getName());
 
-    @Parameter(property = "GENERATE_CONTEXT_PATH")
     private String generateContextPath;
 
-    @Parameter(property = "SKIP_GENERATE_CONTEXT")
     private boolean skipGenerateContextPath = false;
 
     private String generateFilePath;
 
     @Override
-    public void execute() throws MojoFailureException
+    public void execute()
     {
         if(skipGenerateContextPath)
         {
@@ -47,7 +43,7 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
 
         generateFilePath = generateContextPath + "/context.xml";
 
-        if(generateContextPath == null)throw new MojoFailureException("generateContextPath is null");
+        if(generateContextPath == null)throw new ScriptException("generateContextPath is null");
 
         File file = Paths.get(generateFilePath).toFile();
 
@@ -63,13 +59,13 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
         {
             createFile();
         }
-        catch (IOException e)
+        catch (IOException | ProjectLoadException e)
         {
             e.printStackTrace();
         }
     }
 
-    private void createFile() throws IOException, MojoFailureException
+    private void createFile() throws IOException, ScriptException, ProjectLoadException
     {
         String text;
 
@@ -90,12 +86,12 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
         getLog().info("context.xml created in " + generateContextPath);
     }
 
-    private String replacePlaceholders(String text) throws MojoFailureException
+    private String replacePlaceholders(String text) throws ScriptException, ProjectLoadException
     {
         BeConnectionProfile prof = be5Project.getConnectionProfile();
         if(prof == null)
         {
-            throw new MojoFailureException("Connection profile is required for 'generate-context'");
+            throw new ScriptException("Connection profile is required for 'generate-context'");
         }
 
         return text.
@@ -111,7 +107,13 @@ public class GenerateContext extends Be5Mojo<GenerateContext>
         return this;
     }
 
-    @Override protected GenerateContext me() {
+    public GenerateContext setSkipGenerateContextPath(boolean skipGenerateContextPath)
+    {
+        this.skipGenerateContextPath = skipGenerateContextPath;
+        return this;
+    }
+
+    @Override public GenerateContext me() {
         return this;
     }
 }
