@@ -3,22 +3,13 @@ package com.developmentontheedge.be5.databasemodel.groovy
 import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
 import com.developmentontheedge.be5.databasemodel.EntityModel
 import com.developmentontheedge.be5.databasemodel.RecordModel
-import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.metadata.model.EntityType
 import com.developmentontheedge.be5.test.BaseTestUtils
 import com.developmentontheedge.beans.DynamicPropertySet
-import com.developmentontheedge.beans.DynamicPropertySetSupport
-import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertFalse
-import static org.junit.Assert.assertNotNull
-import static org.junit.Assert.assertNull
-import static org.junit.Assert.assertTrue
-
+import static org.junit.Assert.*
 
 class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 {
@@ -27,7 +18,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
     @Before
     void before()
     {
-        testtableAdmin = database.getEntity("testtableAdmin")
+        testtableAdmin = database["testtableAdmin"]
         db.update("DELETE FROM testtableAdmin")
     }
 

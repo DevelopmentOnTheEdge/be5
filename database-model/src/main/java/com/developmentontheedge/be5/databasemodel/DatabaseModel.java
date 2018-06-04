@@ -1,16 +1,16 @@
 package com.developmentontheedge.be5.databasemodel;
 
-import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
-import com.developmentontheedge.be5.database.impl.SqlHelper;
+import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.groovy.DatabaseModelImplMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
 import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
-import com.developmentontheedge.be5.base.services.GroovyRegister;
+import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
+import com.developmentontheedge.be5.databasemodel.impl.EntityModelBase;
+import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -57,5 +57,10 @@ final public class DatabaseModel implements EntityAccess
         if (entity == null)throw Be5Exception.unknownEntity(entityName);
 
         return new EntityModelBase<>(sqlService, sqlHelper, columnsHelper, meta, entity);
+    }
+
+    public <T> EntityModel<T> getAt( String entityName )
+    {
+        return getEntity(entityName);
     }
 }
