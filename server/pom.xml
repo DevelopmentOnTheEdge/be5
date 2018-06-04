@@ -75,14 +75,6 @@
 	</dependencies>
 	
 	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>*.yaml</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>com.developmentontheedge.be5</groupId>
