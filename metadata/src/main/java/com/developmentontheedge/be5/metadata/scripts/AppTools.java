@@ -22,19 +22,19 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 
 
-public class AppTools extends DatabaseOperationSupport<AppTools>
+public class AppTools extends ScriptSupport<AppTools>
 {
     private InputStream inputStream = System.in;
 
     @Override
-    public void execute() throws DatabaseTargetException
+    public void execute() throws ScriptException
     {
         init();
 
         BeConnectionProfile prof = be5Project.getConnectionProfile();
         if(prof == null)
         {
-            throw new DatabaseTargetException("Connection profile is required for SQL console");
+            throw new ScriptException("Connection profile is required for SQL console");
         }
         try
         {
@@ -96,7 +96,7 @@ public class AppTools extends DatabaseOperationSupport<AppTools>
         }
         catch (Exception e)
         {
-            throw new DatabaseTargetException("Console error: " + e.getMessage(), e);
+            throw new ScriptException("Console error: " + e.getMessage(), e);
         }
     }
 

@@ -23,7 +23,7 @@ import com.developmentontheedge.be5.metadata.sql.Rdbms;
  * Usage example: 
  * mvn be5:validate -DBE5_DEBUG=true
  */
-public class AppValidate extends DatabaseOperationSupport<AppValidate>
+public class AppValidate extends ScriptSupport<AppValidate>
 {
     String rdbmsName;
 
@@ -38,7 +38,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
     boolean saveProject;
 
     @Override
-    public void execute() throws DatabaseTargetException
+    public void execute() throws ScriptException
     {
         initLogging();
         
@@ -55,7 +55,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         checkProfileProtection();
     }
 
-    private void checkProfileProtection() throws DatabaseTargetException
+    private void checkProfileProtection() throws ScriptException
     {
         if(be5Project.getConnectionProfile() != null &&
                 be5Project.getConnectionProfile().isProtected() &&
@@ -79,12 +79,12 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
                 unlockProtectedProfile = true;
             } else 
             {
-                throw new DatabaseTargetException("Aborted");
+                throw new ScriptException("Aborted");
             }
         }
     }
 
-    private void loadModules() throws DatabaseTargetException
+    private void loadModules() throws ScriptException
     {
         LoadContext loadContext = new LoadContext();
         //List<ProjectElementException> errors = new ArrayList<>();
@@ -99,7 +99,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         }
         catch ( ProjectLoadException e )
         {
-            throw new DatabaseTargetException("Can not load project modules", e);
+            throw new ScriptException("Can not load project modules", e);
         }
         checkErrors( loadContext, "Modules have %d error(s)" );
     }
@@ -115,7 +115,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         }
     }
 
-    private void validateProject() throws DatabaseTargetException
+    private void validateProject() throws ScriptException
     {
         List<ProjectElementException> errors = new ArrayList<>();
         if( skipValidation )
@@ -136,7 +136,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
             }
             if(count > 0)
             {
-                throw new DatabaseTargetException("Project has " + count + " errors." );
+                throw new ScriptException("Project has " + count + " errors." );
             }
             
             getLog().info("Project is valid.");
@@ -172,7 +172,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
 //        return moduleErrors;
 //    }
 
-    private void saveProject() throws DatabaseTargetException
+    private void saveProject() throws ScriptException
     {
         if( saveProject )
         {
@@ -183,25 +183,25 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
             }
             catch(ProjectSaveException e)
             {
-                throw new DatabaseTargetException("Can not save project.", e);
+                throw new ScriptException("Can not save project.", e);
             }
         }
     }
 
-    private void checkDdl() throws DatabaseTargetException
+    private void checkDdl() throws ScriptException
     {
         if( ddlPath != null)
         {
             Entity entity = be5Project.getEntity(ddlPath);
             if(entity == null)
             {
-                throw new DatabaseTargetException("Invalid entity: " +  ddlPath);
+                throw new ScriptException("Invalid entity: " +  ddlPath);
             }
 
             DdlElement scheme = entity.getScheme();
             if(scheme == null)
             {
-                throw new DatabaseTargetException("Entity has no scheme: " + ddlPath);
+                throw new ScriptException("Entity has no scheme: " + ddlPath);
             }
             
             getLog().info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
@@ -217,7 +217,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         }
     }
 
-    private void checkQuery() throws DatabaseTargetException
+    private void checkQuery() throws ScriptException
     {
         if( queryPath == null)
             return;
@@ -225,7 +225,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         int pos = queryPath.indexOf( '.' );
         if(pos <= 0)
         {
-            throw new DatabaseTargetException("Invalid query path supplied: " + queryPath);
+            throw new ScriptException("Invalid query path supplied: " + queryPath);
         }
         
         String entityName = queryPath.substring( 0, pos );
@@ -233,7 +233,7 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
         Entity entity = be5Project.getEntity( entityName );
         if(entity == null)
         {
-            throw new DatabaseTargetException("Invalid entity: " + entityName);
+            throw new ScriptException("Invalid entity: " + entityName);
         }
 
         Query query = entity.getQueries().get( queryName );
@@ -246,13 +246,13 @@ public class AppValidate extends DatabaseOperationSupport<AppValidate>
             }
             catch(UnsupportedEncodingException e)
             {
-                throw new DatabaseTargetException("Can not load query, path=" + queryPath, e);
+                throw new ScriptException("Can not load query, path=" + queryPath, e);
             }
         }
 
         if(query == null)
         {
-            throw new DatabaseTargetException("Invalid query: "+queryName);
+            throw new ScriptException("Invalid query: "+queryName);
         }
         
         getLog().info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );

@@ -25,11 +25,12 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SimpleConnector;
 
-public abstract class DatabaseOperationSupport<T>
-{
-    private static final Logger log = Logger.getLogger(DatabaseOperationSupport.class.getName());
 
-    public abstract void execute() throws DatabaseTargetException;
+public abstract class ScriptSupport<T>
+{
+    private static final Logger log = Logger.getLogger(ScriptSupport.class.getName());
+
+    public abstract void execute() throws ScriptException;
 
     public abstract T me();
 
@@ -63,13 +64,13 @@ public abstract class DatabaseOperationSupport<T>
         return log;
     }
 
-    public void init() throws DatabaseTargetException
+    public void init() throws ScriptException
     {
         initProject();
         initConnector();
     }
 
-    public void initConnector() throws DatabaseTargetException
+    public void initConnector() throws ScriptException
     {
         if(connectionProfileName != null)
         {
@@ -90,14 +91,14 @@ public abstract class DatabaseOperationSupport<T>
         }
         else
         {
-            throw new DatabaseTargetException(
+            throw new ScriptException(
                     "Please specify connection profile: create "
                             + be5Project.getProjectFileStructure().getSelectedProfileFile()
                             + " file with profile name or use -DBE5_PROFILE=...");
         }
     }
 
-    public void initProject() throws DatabaseTargetException
+    public void initProject() throws ScriptException
     {
         long startTime = System.nanoTime();
         initLogging();
@@ -105,7 +106,7 @@ public abstract class DatabaseOperationSupport<T>
         if(be5Project == null)
         {
             if (projectPath == null)
-                throw new DatabaseTargetException("Please specify projectPath attribute");
+                throw new ScriptException("Please specify projectPath attribute");
 
             getLog().info("Reading be5 project from '" + projectPath + "'...");
 
@@ -122,7 +123,7 @@ public abstract class DatabaseOperationSupport<T>
             catch (ProjectLoadException e)
             {
                 e.printStackTrace();
-                throw new DatabaseTargetException(e.getMessage());
+                throw new ScriptException(e.getMessage());
             }
         }
 
@@ -156,7 +157,7 @@ public abstract class DatabaseOperationSupport<T>
         }    	
     }
 
-    public Project loadProject(final Path root) throws DatabaseTargetException
+    public Project loadProject(final Path root) throws ScriptException
     {
         final LoadContext loadContext = new LoadContext();
         Project prj;
@@ -166,7 +167,7 @@ public abstract class DatabaseOperationSupport<T>
         }
         catch(ProjectLoadException | RuntimeException e)
         {
-            throw new DatabaseTargetException("\nCan not load project", e);
+            throw new ScriptException("\nCan not load project", e);
         }
         checkErrors( loadContext, "Project has %d error(s)" );
         return prj;
@@ -203,7 +204,7 @@ public abstract class DatabaseOperationSupport<T>
         error.format( System.err );
     }
 
-    public void checkErrors(final LoadContext loadContext, String messageTemplate) throws DatabaseTargetException
+    public void checkErrors(final LoadContext loadContext, String messageTemplate) throws ScriptException
     {
         if(!loadContext.getWarnings().isEmpty())
         {
@@ -217,7 +218,7 @@ public abstract class DatabaseOperationSupport<T>
                     System.err.println( "Error: "+exception.getMessage() );
                 }
             }
-            throw new DatabaseTargetException( messageTemplate.replace( "%d", String.valueOf( loadContext.getWarnings().size() ) ) );
+            throw new ScriptException( messageTemplate.replace( "%d", String.valueOf( loadContext.getWarnings().size() ) ) );
         }
     }
     

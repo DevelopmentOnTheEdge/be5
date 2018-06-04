@@ -16,7 +16,7 @@ import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import java.io.PrintStream;
 
 
-public class AppDb extends DatabaseOperationSupport<AppDb>
+public class AppDb extends ScriptSupport<AppDb>
 {
     private BeSqlExecutor sql;
     private PrintStream ps;
@@ -35,7 +35,7 @@ public class AppDb extends DatabaseOperationSupport<AppDb>
     }
 
     @Override
-    public void execute() throws DatabaseTargetException
+    public void execute() throws ScriptException
     {
         init();
         
@@ -50,7 +50,7 @@ public class AppDb extends DatabaseOperationSupport<AppDb>
                 Module module = be5Project.getModule( moduleName );
                 if(module == null)
                 {
-                    throw new DatabaseTargetException("Module '" + moduleName + "' not found!");
+                    throw new ScriptException("Module '" + moduleName + "' not found!");
                 }
                 createDb(module);
             }
@@ -65,7 +65,7 @@ public class AppDb extends DatabaseOperationSupport<AppDb>
             }
             getLog().info("Created tables: " + createdTables + ", created views: " + createdViews);
         }
-        catch( DatabaseTargetException e )
+        catch( ScriptException e )
         {
             throw e;
         }
@@ -73,15 +73,15 @@ public class AppDb extends DatabaseOperationSupport<AppDb>
         {
             if(debug) {
                 e.printStackTrace();
-                throw new DatabaseTargetException("Setup db error", e);
+                throw new ScriptException("Setup db error", e);
             }
             
-            throw new DatabaseTargetException(e.getMessage());
+            throw new ScriptException(e.getMessage());
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            throw new DatabaseTargetException("Setup db error", e);
+            throw new ScriptException("Setup db error", e);
         }
         finally
         {

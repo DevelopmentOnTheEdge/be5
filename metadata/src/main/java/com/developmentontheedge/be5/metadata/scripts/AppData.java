@@ -20,14 +20,14 @@ import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.dbms.SqlExecutor;
 
 
-public class AppData extends DatabaseOperationSupport<AppData>
+public class AppData extends ScriptSupport<AppData>
 {
     private String script = FreemarkerCatalog.DATA;
 
     private boolean ignoreMissing = false;
 
     @Override
-    public void execute() throws DatabaseTargetException
+    public void execute() throws ScriptException
     {
         init();
 
@@ -76,7 +76,7 @@ public class AppData extends DatabaseOperationSupport<AppData>
                                 continue;
                             }
                             else
-                                throw new DatabaseTargetException( "Module '"+moduleName+"' not found" );
+                                throw new ScriptException( "Module '"+moduleName+"' not found" );
                         }
                         scriptsCatalog = module.getFreemarkerScripts();
                     }
@@ -86,11 +86,11 @@ public class AppData extends DatabaseOperationSupport<AppData>
                 {
                     if(ignoreMissing)
                     {
-                        System.err.println( "Warning: FTL script "+scriptName+" not found");
+                        System.err.println( "Warning: FTL script '"+scriptName+"' not found");
                         continue;
                     }
                     else
-                        throw new DatabaseTargetException("FTL script "+scriptName+" not found");
+                        throw new ScriptException("FTL script '"+scriptName+"' not found");
                 }
                 scripts.add( freemarkerScript );
             }
@@ -103,11 +103,11 @@ public class AppData extends DatabaseOperationSupport<AppData>
         }
         catch( ProjectElementException | FreemarkerSqlException e )
         {
-            throw new DatabaseTargetException(e.getMessage(), e);
+            throw new ScriptException(e.getMessage(), e);
         }
         catch(Exception e)
         {
-            throw new DatabaseTargetException(e.getMessage(), e);
+            throw new ScriptException(e.getMessage(), e);
         }
         finally
         {

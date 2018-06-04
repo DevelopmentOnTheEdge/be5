@@ -43,7 +43,7 @@ import com.developmentontheedge.dbms.MultiSqlParser;
 
 
 
-public class AppSync extends DatabaseOperationSupport<AppSync>
+public class AppSync extends ScriptSupport<AppSync>
 {
     boolean forceUpdate;
 //
@@ -61,7 +61,7 @@ public class AppSync extends DatabaseOperationSupport<AppSync>
     ///////////////////////////////////////////////////////////////////
     
     @Override
-    public void execute() throws DatabaseTargetException
+    public void execute() throws ScriptException
     {
         init();
 
@@ -111,17 +111,17 @@ public class AppSync extends DatabaseOperationSupport<AppSync>
         catch (FreemarkerSqlException | ExtendedSqlException | SQLException e ) //ReadException | ProjectLoadException | SQLException e )
         {
             if(debug)
-                throw new DatabaseTargetException("Synchronisation error: " + e.getMessage(), e);
-            throw new DatabaseTargetException("Synchronisation error: " + e.getMessage());
+                throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
+            throw new ScriptException("Synchronisation error: " + e.getMessage());
         }
         catch( IOException | ProcessInterruptedException e )
         {
-            throw new DatabaseTargetException("Synchronisation error: " + e.getMessage(), e);
+            throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
         }
         catch( Throwable t )
         {
         	t.printStackTrace();
-            throw new DatabaseTargetException("Synchronisation error: " + t.getMessage(), t);
+            throw new ScriptException("Synchronisation error: " + t.getMessage(), t);
         }
         finally
         {

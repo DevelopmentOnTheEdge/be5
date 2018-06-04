@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.metadata.scripts.generate;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.scripts.DatabaseOperationSupport;
-import com.developmentontheedge.be5.metadata.scripts.DatabaseTargetException;
+import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
+import com.developmentontheedge.be5.metadata.scripts.ScriptException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
-public class GenerateContext extends DatabaseOperationSupport<GenerateContext>
+public class GenerateContext extends ScriptSupport<GenerateContext>
 {
     private static final Logger log = Logger.getLogger(GenerateContext.class.getName());
 
@@ -43,7 +43,7 @@ public class GenerateContext extends DatabaseOperationSupport<GenerateContext>
 
         generateFilePath = generateContextPath + "/context.xml";
 
-        if(generateContextPath == null)throw new DatabaseTargetException("generateContextPath is null");
+        if(generateContextPath == null)throw new ScriptException("generateContextPath is null");
 
         File file = Paths.get(generateFilePath).toFile();
 
@@ -65,7 +65,7 @@ public class GenerateContext extends DatabaseOperationSupport<GenerateContext>
         }
     }
 
-    private void createFile() throws IOException, DatabaseTargetException, ProjectLoadException
+    private void createFile() throws IOException, ScriptException, ProjectLoadException
     {
         String text;
 
@@ -86,12 +86,12 @@ public class GenerateContext extends DatabaseOperationSupport<GenerateContext>
         getLog().info("context.xml created in " + generateContextPath);
     }
 
-    private String replacePlaceholders(String text) throws DatabaseTargetException, ProjectLoadException
+    private String replacePlaceholders(String text) throws ScriptException, ProjectLoadException
     {
         BeConnectionProfile prof = be5Project.getConnectionProfile();
         if(prof == null)
         {
-            throw new DatabaseTargetException("Connection profile is required for 'generate-context'");
+            throw new ScriptException("Connection profile is required for 'generate-context'");
         }
 
         return text.

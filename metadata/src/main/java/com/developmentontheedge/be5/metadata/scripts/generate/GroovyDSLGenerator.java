@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.metadata.scripts.generate;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.scripts.DatabaseOperationSupport;
+import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-public class GroovyDSLGenerator extends DatabaseOperationSupport
+public class GroovyDSLGenerator extends ScriptSupport
 {
     private static final Logger log = Logger.getLogger(GroovyDSLGenerator.class.getName());
 
