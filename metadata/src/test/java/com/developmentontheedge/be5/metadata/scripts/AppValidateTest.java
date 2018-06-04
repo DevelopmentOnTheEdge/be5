@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.logging.Logger;
 
 
-public class AppValidateTest extends TestUtils
+public class AppValidateTest extends ScriptTestUtils
 {
     @Test
     public void validate()

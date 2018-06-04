@@ -1,3 +1,5 @@
+package gdsl
+
 contribute(context(ctype: "com.developmentontheedge.beans.DynamicPropertySetSupport")) {
 
     method name: 'getAt', type: 'java.lang.Object', params: [name: String]

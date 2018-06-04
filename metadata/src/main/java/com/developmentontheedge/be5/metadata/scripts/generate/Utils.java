@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.maven.gdsl;
+package com.developmentontheedge.be5.metadata.scripts.generate;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

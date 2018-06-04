@@ -1,15 +1,12 @@
-package com.developmentontheedge.be5.maven.gdsl;
+package com.developmentontheedge.be5.metadata.scripts.generate;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.scripts.DatabaseOperationSupport;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,18 +18,16 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-@Mojo( name = "generate-groovy-dsl")
-public class GroovyDSLGenerator extends AbstractMojo
+public class GroovyDSLGenerator extends DatabaseOperationSupport
 {
     private static final Logger log = Logger.getLogger(GroovyDSLGenerator.class.getName());
 
     private int entityCount = 0;
 
-    @Parameter(property = "FILE_NAME")
     protected String fileName;
 
     @Override
-    public void execute() throws MojoFailureException
+    public void execute()
     {
         try
         {
@@ -95,7 +90,13 @@ public class GroovyDSLGenerator extends AbstractMojo
         Utils.createFile(fileName + ".gdsl", serviceTpl, input);
     }
 
-//    @Override protected GroovyDSLGenerator me() {
-//        return this;
-//    }
+    public GroovyDSLGenerator setFileName(String fileName)
+    {
+        this.fileName = fileName;
+        return this;
+    }
+
+    @Override public GroovyDSLGenerator me() {
+        return this;
+    }
 }

@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.maven;
 
-import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
-import com.developmentontheedge.dbms.DbmsConnector;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 

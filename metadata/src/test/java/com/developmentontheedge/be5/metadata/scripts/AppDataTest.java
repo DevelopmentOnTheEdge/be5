@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.metadata.scripts;
 
 import org.junit.Test;
 
-public class AppDataTest extends TestUtils
+public class AppDataTest extends ScriptTestUtils
 {
     @Test
     public void data() throws Exception

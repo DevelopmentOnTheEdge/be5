@@ -1,9 +1,9 @@
-package com.developmentontheedge.be5.maven.gdsl;
+package com.developmentontheedge.be5.metadata.scripts.generate;
 
-import com.developmentontheedge.be5.maven.TestUtils;
+
+import com.developmentontheedge.be5.metadata.scripts.ScriptTestUtils;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,10 +15,10 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 
 
-public class GroovyDSLGeneratorTest extends TestUtils
+public class GroovyDSLGeneratorTest extends ScriptTestUtils
 {
     @Test
-    public void test() throws IOException, MojoFailureException
+    public void test() throws IOException
     {
         GroovyDSLGenerator groovyDSLGenerator = new GroovyDSLGenerator();
         groovyDSLGenerator.fileName = tpmProjectPath.toAbsolutePath().toString() + "/";

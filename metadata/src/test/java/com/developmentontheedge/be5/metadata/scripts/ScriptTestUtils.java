@@ -22,7 +22,7 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class TestUtils
+public abstract class ScriptTestUtils
 {
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();

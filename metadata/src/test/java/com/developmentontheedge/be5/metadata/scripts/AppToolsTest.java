@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class AppToolsTest extends TestUtils
+public class AppToolsTest extends ScriptTestUtils
 {
     private AppTools appTools;
 
