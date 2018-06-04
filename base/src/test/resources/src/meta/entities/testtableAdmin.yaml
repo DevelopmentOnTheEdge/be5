@@ -1,0 +1,16 @@
+testtableAdmin:
+  type: table
+  displayName: testtableAdmin
+  order: '10'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(30)
+    - value:
+        type: INT
+        canBeNull: true

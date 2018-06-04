@@ -1,0 +1,16 @@
+testProject:
+  features: logging
+  l10n: ru
+  projectFileStructure: {}
+  modules: []
+  application:
+  - meters
+  - testtable
+  - testtableAdmin
+  - testTags
+  - testCollection
+  - testGenCollection
+  scripts:
+  - Post-db
+  - dictionaries
+

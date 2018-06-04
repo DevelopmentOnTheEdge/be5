@@ -1,0 +1,15 @@
+testtable:
+  type: table
+  displayName: testtable
+  order: '9'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: VARCHAR(30)

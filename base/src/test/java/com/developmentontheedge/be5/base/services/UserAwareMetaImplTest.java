@@ -1,14 +1,14 @@
-package com.developmentontheedge.be5.server.helpers.impl;
+package com.developmentontheedge.be5.base.services;
 
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.base.BaseTest;
 import org.junit.Test;
 
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserAwareMetaImplTest extends ServerBe5ProjectTest
+
+public class UserAwareMetaImplTest extends BaseTest
 {
     @Inject private UserAwareMeta userAwareMeta;
 
