@@ -1,11 +1,10 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
+import com.developmentontheedge.be5.base.model.groovy.ExtensionMethodsMetaClass;
 import com.developmentontheedge.be5.databasemodel.EntityModel;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 

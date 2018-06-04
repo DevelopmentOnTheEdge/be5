@@ -1,5 +1,6 @@
-package com.developmentontheedge.be5.base.util;
+package com.developmentontheedge.be5.base;
 
+import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.common.collect.ImmutableList;

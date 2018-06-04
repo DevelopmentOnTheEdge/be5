@@ -4,7 +4,7 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
-import com.developmentontheedge.be5.server.helpers.OperationHelper;
+import com.developmentontheedge.be5.server.helpers.QueryHelper;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
 import com.developmentontheedge.be5.base.services.Meta;
@@ -33,7 +33,7 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
     @Inject public DbService db;
     @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
-    @Inject public OperationHelper helper;
+    @Inject public QueryHelper helper;
     @Inject public Validator validator;
 
     @Inject protected Session session;

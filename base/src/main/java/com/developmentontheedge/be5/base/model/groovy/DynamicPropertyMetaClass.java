@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.databasemodel.groovy;
+package com.developmentontheedge.be5.base.model.groovy;
 
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyUtils.*;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.*;
 
 /**
  * Created by ruslan on 26.11.15.
@@ -23,7 +23,7 @@ public class DynamicPropertyMetaClass<T extends DynamicPropertySet> extends Exte
         super( theClass );
     }
 
-    final public static class AttributeAccessor extends GroovyObjectSupport
+    public final static class AttributeAccessor extends GroovyObjectSupport
     {
         final private DynamicProperty dp;
         private AttributeAccessor( DynamicProperty dp )

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.databasemodel.groovy;
+package com.developmentontheedge.be5.base.model.groovy;
 
 public class PropertyAccessHelper {
 

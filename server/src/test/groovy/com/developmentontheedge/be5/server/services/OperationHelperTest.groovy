@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.server.services
 
-import com.developmentontheedge.be5.server.helpers.OperationHelper
+import com.developmentontheedge.be5.server.helpers.QueryHelper
 import com.developmentontheedge.be5.database.DbService
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class OperationHelperTest extends ServerBe5ProjectDBTest
 {
     @Inject private DbService db
     @Inject private DatabaseModel database
-    @Inject private OperationHelper helper
+    @Inject private QueryHelper helper
 
     @Before
     void before()

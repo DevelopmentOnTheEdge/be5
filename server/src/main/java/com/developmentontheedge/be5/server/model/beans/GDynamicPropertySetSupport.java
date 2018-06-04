@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.model.beans;
 
 import com.developmentontheedge.be5.base.services.GroovyRegister;
-import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyMetaClass;
-import com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertySetMetaClass;
-import com.developmentontheedge.be5.databasemodel.groovy.GDynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
+import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
+import com.developmentontheedge.be5.base.model.groovy.GDynamicPropertySetMetaClass;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;

@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.databasemodel.groovy;
+package com.developmentontheedge.be5.base.model.groovy;
 
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.developmentontheedge.be5.databasemodel.groovy.DynamicPropertyUtils.*;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.*;
 
 
 public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends GDynamicPropertySetMetaClass

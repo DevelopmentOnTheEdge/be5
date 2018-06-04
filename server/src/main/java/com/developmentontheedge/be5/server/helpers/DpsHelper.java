@@ -56,10 +56,10 @@ public class DpsHelper
 
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final OperationHelper operationHelper;
+    private final QueryHelper operationHelper;
 
     @Inject
-    public DpsHelper(Meta meta, OperationHelper operationHelper, UserAwareMeta userAwareMeta)
+    public DpsHelper(Meta meta, QueryHelper operationHelper, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;

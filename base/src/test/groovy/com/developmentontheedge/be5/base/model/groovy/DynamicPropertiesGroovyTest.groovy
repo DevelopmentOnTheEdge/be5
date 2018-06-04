@@ -1,24 +1,15 @@
-package com.developmentontheedge.be5.databasemodel.groovy
+package com.developmentontheedge.be5.base.model.groovy
 
-import com.developmentontheedge.be5.databasemodel.DatabaseModel
-import com.developmentontheedge.be5.databasemodel.DatabaseModelProjectDbTest
-
-import javax.inject.Inject
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
-
-import org.junit.Ignore
 import org.junit.Test
 
-
-import static org.junit.Assert.*
 import static com.developmentontheedge.beans.BeanInfoConstants.*
+import static org.junit.Assert.*
 
-class DynamicPropertiesGroovyTest extends DatabaseModelProjectDbTest
+class DynamicPropertiesGroovyTest extends RegisterMetaClass
 {
-    @Inject private DatabaseModel database
-
     @Test
     void testSetValue()
     {

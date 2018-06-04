@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.databasemodel.groovy;
 
+import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.databasemodel.RecordModel;
 import com.developmentontheedge.beans.DynamicPropertySet;
 

@@ -30,7 +30,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-public class OperationHelper
+public class QueryHelper
 {
     private final Cache<String, String[][]> tagsCache;
 
@@ -45,8 +45,8 @@ public class OperationHelper
     public static final String no = "no";
 
     @Inject
-    public OperationHelper(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                           TableModelService tableModelService, QueryService queryService, UserInfoProvider userInfoProvider)
+    public QueryHelper(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
+                       TableModelService tableModelService, QueryService queryService, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;

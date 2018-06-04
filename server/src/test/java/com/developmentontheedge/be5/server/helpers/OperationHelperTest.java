@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 public class OperationHelperTest extends ServerBe5ProjectDBTest
 {
-    @Inject private OperationHelper helper;
+    @Inject private QueryHelper helper;
 
     @Before
     public void setUpTestUtils()

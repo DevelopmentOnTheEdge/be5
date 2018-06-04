@@ -1,5 +1,7 @@
 package com.developmentontheedge.be5.base;
 
+import com.developmentontheedge.be5.base.model.groovy.DynamicPropertyMetaClass;
+import com.developmentontheedge.be5.base.model.groovy.DynamicPropertySetMetaClass;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl;
 import com.developmentontheedge.be5.base.services.Be5Caches;
@@ -17,12 +19,22 @@ import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.base.services.impl.MetaImpl;
 import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
+import com.developmentontheedge.beans.DynamicProperty;
+import com.developmentontheedge.beans.DynamicPropertySetDecorator;
+import com.developmentontheedge.beans.DynamicPropertySetSupport;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 
 
 public class BaseModule extends AbstractModule
 {
+    static
+    {
+        GroovyRegister.registerMetaClass( DynamicPropertyMetaClass.class, DynamicProperty.class );
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetSupport.class );
+        GroovyRegister.registerMetaClass( DynamicPropertySetMetaClass.class, DynamicPropertySetDecorator.class );
+    }
+
     @Override
     protected void configure()
     {
