@@ -9,7 +9,7 @@ import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.developmentontheedge.be5.query.TableBuilder;
 import com.developmentontheedge.be5.query.support.BaseTableBuilderSupport;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
-import com.developmentontheedge.be5.server.helpers.QueryHelper;
+import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.SessionConstants;
@@ -24,7 +24,7 @@ public abstract class TableBuilderSupport extends BaseTableBuilderSupport
     @Inject public DbService db;
     @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
-    @Inject public QueryHelper helper;
+    @Inject public QueriesService queries;
     @Inject public Validator validator;
 
     @Inject protected Request request;

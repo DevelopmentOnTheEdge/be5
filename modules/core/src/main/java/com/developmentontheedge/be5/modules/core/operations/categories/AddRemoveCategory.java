@@ -27,7 +27,7 @@ public class AddRemoveCategory extends GOperationSupport
             return null;
 
         DynamicProperty prop = new DynamicProperty( "categoryID", "Category", Long.class );
-        prop.setAttribute( TAG_LIST_ATTR, helper.getTagsFromSelectionView(
+        prop.setAttribute( TAG_LIST_ATTR, queries.getTagsFromSelectionView(
                 "categories", Collections.singletonMap( "entity", getInfo().getEntityName() )) );
         dps.add( prop );
 

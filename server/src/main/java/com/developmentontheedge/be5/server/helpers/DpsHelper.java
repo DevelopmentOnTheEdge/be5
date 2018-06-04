@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.be5.operation.services.validation.ValidationRules;
 import com.developmentontheedge.be5.operation.util.FilterUtil;
+import com.developmentontheedge.be5.query.services.QueriesService;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -56,14 +57,14 @@ public class DpsHelper
 
     private final Meta meta;
     private final UserAwareMeta userAwareMeta;
-    private final QueryHelper operationHelper;
+    private final QueriesService queries;
 
     @Inject
-    public DpsHelper(Meta meta, QueryHelper operationHelper, UserAwareMeta userAwareMeta)
+    public DpsHelper(Meta meta, QueriesService queries, UserAwareMeta userAwareMeta)
     {
         this.meta = meta;
         this.userAwareMeta = userAwareMeta;
-        this.operationHelper = operationHelper;
+        this.queries = queries;
     }
 
 //    public <T extends DynamicPropertySet> T addDp(T dps, BeModelElement modelElements, ResultSet resultSet, Map<String, Object> operationParams)
@@ -438,16 +439,16 @@ public class DpsHelper
     public void addTags(DynamicProperty dp, ColumnDef columnDef, Map<String, Object> operationParams)
     {
         if(columnDef.getType().getTypeName().equals(TYPE_BOOL)){
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsYesNo());
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsYesNo());
         }
         else if(columnDef.getType().getEnumValues() != Strings2.EMPTY)
         {
-            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, operationHelper.getTagsFromEnum(columnDef));
+            dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR, queries.getTagsFromEnum(columnDef));
         }
         else if(columnDef.getTableTo() != null && meta.getEntity(columnDef.getTableTo()) != null )
         {
             dp.setAttribute(BeanInfoConstants.TAG_LIST_ATTR,
-                    operationHelper.getTagsFromSelectionView(columnDef.getTableTo(),
+                    queries.getTagsFromSelectionView(columnDef.getTableTo(),
                             FilterUtil.getOperationParamsWithoutFilter(operationParams)));
         }
     }

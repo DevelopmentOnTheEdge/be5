@@ -20,7 +20,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
-import com.developmentontheedge.be5.server.model.beans.QRec;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;

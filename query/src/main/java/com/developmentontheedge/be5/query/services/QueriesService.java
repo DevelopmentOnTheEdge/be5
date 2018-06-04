@@ -1,9 +1,9 @@
-package com.developmentontheedge.be5.server.helpers;
+package com.developmentontheedge.be5.query.services;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.Be5Caches;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
@@ -11,10 +11,8 @@ import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.query.services.QueryService;
-import com.developmentontheedge.be5.query.services.TableModelService;
+import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
-import com.developmentontheedge.be5.server.model.beans.QRec;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -30,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-public class QueryHelper
+public class QueriesService
 {
     private final Cache<String, String[][]> tagsCache;
 
@@ -45,8 +43,8 @@ public class QueryHelper
     public static final String no = "no";
 
     @Inject
-    public QueryHelper(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
-                       TableModelService tableModelService, QueryService queryService, UserInfoProvider userInfoProvider)
+    public QueriesService(DbService db, Meta meta, UserAwareMeta userAwareMeta, Be5Caches be5Caches,
+                          TableModelService tableModelService, QueryService queryService, UserInfoProvider userInfoProvider)
     {
         this.db = db;
         this.meta = meta;
