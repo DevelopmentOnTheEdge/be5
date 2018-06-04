@@ -7,23 +7,16 @@ public class AppDataTest extends TestUtils
     @Test
     public void data() throws Exception
     {
-//        createTestDB();
-//
-//        new AppData()
-//                .setBe5Project(project)
-//                .setProfileName(profileTestMavenPlugin)
-//                .execute();
+        createTestDB();
+
+        AppDataMojo mojo = new AppDataMojo();
+
+        mojo.projectPath = tpmProjectPath.toFile();
+        mojo.connectionProfileName = profileTestMavenPlugin;
+        mojo.script = "all:Post-db;testModule:Post-db;Post-db";
+        mojo.ignoreMissing = false;
+
+        mojo.execute();
     }
 
-    @Test
-    public void dataManyFiles() throws Exception
-    {
-//        createTestDB();
-//
-//        new AppData()
-//                .setBe5Project(project)
-//                .setProfileName(profileTestMavenPlugin)
-//                .setScript("all:Post-db;testModule:Post-db;Post-db")
-//                .execute();
-    }
 }

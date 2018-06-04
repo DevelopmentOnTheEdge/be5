@@ -13,6 +13,9 @@ public class AppDbMojo extends Be5Mojo
         new AppDb()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)
+                .setConnectionPassword(connectionPassword)
+                .setLogPath(logPath)
+                .setLogger(logger)
                 .execute();
     }
 

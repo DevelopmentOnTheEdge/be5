@@ -11,10 +11,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class GenerateContextMojo extends Be5Mojo
 {
     @Parameter(property = "GENERATE_CONTEXT_PATH")
-    private String generateContextPath;
+    String generateContextPath;
 
     @Parameter(property = "SKIP_GENERATE_CONTEXT")
-    private boolean skipGenerateContextPath = false;
+    boolean skipGenerateContextPath = false;
 
     @Override
     public void execute() throws MojoFailureException
@@ -22,8 +22,10 @@ public class GenerateContextMojo extends Be5Mojo
         new GenerateContext()
                 .setBe5ProjectPath(projectPath.getPath())
                 .setProfileName(connectionProfileName)
+                .setConnectionPassword(connectionPassword)
                 .setGenerateContextPath(generateContextPath)
                 .setSkipGenerateContextPath(skipGenerateContextPath)
+                .setLogger(logger)
                 .execute();
     }
 }

@@ -10,10 +10,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class AppDataMojo extends Be5Mojo
 {
     @Parameter(property = "BE5_SCRIPT")
-    private String script = FreemarkerCatalog.DATA;
+    String script = FreemarkerCatalog.DATA;
 
     @Parameter(property = "BE5_IGNORE_MISSING")
-    private boolean ignoreMissing = false;
+    boolean ignoreMissing = false;
 
     @Override
     public void execute()
@@ -21,6 +21,9 @@ public class AppDataMojo extends Be5Mojo
         new AppData()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)
+                .setConnectionPassword(connectionPassword)
+                .setLogPath(logPath)
+                .setLogger(logger)
                 .setScript(script)
                 .setIgnoreMissing(ignoreMissing)
                 .execute();

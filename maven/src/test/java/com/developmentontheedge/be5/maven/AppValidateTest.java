@@ -11,10 +11,13 @@ public class AppValidateTest extends TestUtils
     @Test
     public void validate() throws Exception
     {
-//        new AppValidateMojo()
 //                .setLogger(new JULLogger(Logger.getLogger(AppValidateTest.class.getName())))
-//                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString())
-//                .execute();
+
+        AppValidateMojo mojo = new AppValidateMojo();
+
+        mojo.projectPath = tpmProjectPath.toFile();
+
+        mojo.execute();
     }
 
     @Test

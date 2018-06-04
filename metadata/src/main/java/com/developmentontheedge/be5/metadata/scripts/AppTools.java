@@ -157,6 +157,12 @@ public class AppTools extends ScriptSupport<AppTools>
         return this;
     }
 
+    public AppTools setInputStream(InputStream inputStream)
+    {
+        this.inputStream = inputStream;
+        return this;
+    }
+
     @Override public AppTools me() {
         return this;
     }

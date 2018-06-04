@@ -3,44 +3,44 @@ package com.developmentontheedge.be5.maven;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 
 public class AppToolsTest extends TestUtils
 {
-//    private AppTools appTools;
-//
-//    @Before
-//    public void setUpAppTools() throws Exception
-//    {
-//        createTestDB();
-//
-//        appTools = new AppTools();
-//        appTools
-//                .setBe5Project(project)
-//                .setProfileName(profileTestMavenPlugin)
-//                .setBe5ProjectPath(tpmProjectPath.toAbsolutePath().toString());
-//    }
-//
-//    @Test
-//    public void sql() throws Exception
-//    {
-//        appTools
-//                .setInputStream("select * from entity")
-//                .execute();
-//    }
-//
-//    @Test
-//    public void error() throws Exception
-//    {
-//        appTools
-//                .setInputStream("select * from entityError")
-//                .execute();
-//    }
-//
-//    @Test
-//    public void ftl() throws Exception
-//    {
-//        appTools
-//                .setInputStream("//${concat('a'?asDate, 'b', 'c'?str)}")
-//                .execute();
-//    }
+    private AppToolsMojo mojo;
+
+    @Before
+    public void setUpAppTools() throws Exception
+    {
+        createTestDB();
+
+        mojo = new AppToolsMojo();
+
+        mojo.projectPath = tpmProjectPath.toFile();
+        mojo.connectionProfileName = profileTestMavenPlugin;
+    }
+
+    @Test
+    public void sql() throws Exception
+    {
+        mojo.inputStream = inputStream("select * from entity");
+
+        mojo.execute();
+    }
+
+    public InputStream inputStream(String str)
+    {
+        try
+        {
+            return new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8.name()));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

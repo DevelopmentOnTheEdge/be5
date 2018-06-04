@@ -9,7 +9,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class AppSyncMojo extends Be5Mojo
 {
     @Parameter (property = "BE5_FORCE_UPDATE")
-    boolean forceUpdate;
+    private boolean forceUpdate = false;
 //
 //    @Parameter (property = "BE5_UPDATE_CLONES")
 //    boolean updateClones;
@@ -26,6 +26,9 @@ public class AppSyncMojo extends Be5Mojo
         new AppSync()
                 .setBe5ProjectPath(projectPath.toPath())
                 .setProfileName(connectionProfileName)
+                .setConnectionPassword(connectionPassword)
+                .setLogPath(logPath)
+                .setLogger(logger)
                 .setForceUpdate(forceUpdate)
                 .execute();
     }

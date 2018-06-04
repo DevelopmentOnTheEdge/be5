@@ -299,4 +299,10 @@ public abstract class ScriptSupport<T>
         this.connectionProfileName = connectionProfileName;
         return me();
     }
+
+    public T setConnectionPassword(String connectionPassword)
+    {
+        this.connectionPassword = connectionPassword;
+        return me();
+    }
 }

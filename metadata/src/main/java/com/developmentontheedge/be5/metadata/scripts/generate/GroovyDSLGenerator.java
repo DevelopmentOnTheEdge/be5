@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-public class GroovyDSLGenerator extends ScriptSupport
+public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
 {
     private static final Logger log = Logger.getLogger(GroovyDSLGenerator.class.getName());
 

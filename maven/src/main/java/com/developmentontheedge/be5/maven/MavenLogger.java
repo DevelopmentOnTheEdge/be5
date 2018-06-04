@@ -4,11 +4,13 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 
 import org.apache.maven.plugin.logging.Log;
 
+
 public class MavenLogger implements ProcessController
 {
     private Log log;
 
-    MavenLogger(Log log){
+    public MavenLogger(Log log)
+    {
         this.log = log;
     }
 
