@@ -64,13 +64,13 @@ public abstract class ScriptSupport<T>
         return log;
     }
 
-    public void init() throws ScriptException
+    public void init()
     {
         initProject();
         initConnector();
     }
 
-    public void initConnector() throws ScriptException
+    public void initConnector()
     {
         if(connectionProfileName != null)
         {
@@ -98,7 +98,7 @@ public abstract class ScriptSupport<T>
         }
     }
 
-    public void initProject() throws ScriptException
+    public void initProject()
     {
         long startTime = System.nanoTime();
         initLogging();

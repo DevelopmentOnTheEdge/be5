@@ -2,9 +2,7 @@ package com.developmentontheedge.be5.metadata.scripts.generate;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -71,8 +69,9 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
     {
         Template serviceTpl = cfg.getTemplate("/entities.ftl");
 
-        Project project = ModuleLoader2.findAndLoadProjectWithModules(false);
-        List<Entity> entities = project.getAllEntities();
+        init();
+
+        List<Entity> entities = be5Project.getAllEntities();
 
         Map<String, Object> input = new HashMap<>();
 //        input.put("serviceClassName", serviceClassName);

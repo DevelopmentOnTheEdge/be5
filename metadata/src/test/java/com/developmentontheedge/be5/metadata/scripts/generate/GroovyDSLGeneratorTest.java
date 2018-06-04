@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts.generate;
 
-
 import com.developmentontheedge.be5.metadata.scripts.ScriptTestUtils;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -20,9 +19,11 @@ public class GroovyDSLGeneratorTest extends ScriptTestUtils
     @Test
     public void test() throws IOException
     {
-        GroovyDSLGenerator groovyDSLGenerator = new GroovyDSLGenerator();
-        groovyDSLGenerator.fileName = tpmProjectPath.toAbsolutePath().toString() + "/";
-        groovyDSLGenerator.execute();
+        new GroovyDSLGenerator()
+                .setBe5ProjectPath(tpmProjectPath)
+                .setProfileName(profileTestMavenPlugin)
+                .setFileName(tpmProjectPath.toAbsolutePath().toString() + "/")
+                .execute();
 
         String result = readFile(tpmProjectPath.toAbsolutePath().toString() + "/GroovyDSL.gdsl", Charsets.UTF_8);
 
