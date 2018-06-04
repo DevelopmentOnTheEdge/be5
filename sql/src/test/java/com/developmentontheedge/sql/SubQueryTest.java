@@ -1,20 +1,20 @@
 package com.developmentontheedge.sql;
 
-import static org.junit.Assert.*;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.developmentontheedge.sql.format.BasicQueryContext;
 import com.developmentontheedge.sql.format.BasicQueryContext.QueryResolver;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 public class SubQueryTest

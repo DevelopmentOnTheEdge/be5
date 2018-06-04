@@ -5,7 +5,8 @@ import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM
-import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
 
 
 class ParseRequestUtilsTest

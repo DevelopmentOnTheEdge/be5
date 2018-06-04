@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.metadata.util;
 
+import one.util.streamex.StreamEx;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-
-import one.util.streamex.StreamEx;
 
 public class Strings2
 {

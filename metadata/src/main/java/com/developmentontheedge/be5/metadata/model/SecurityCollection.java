@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class SecurityCollection extends BeVectorCollection<BeModelElement>
 {

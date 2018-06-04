@@ -1,9 +1,5 @@
 package com.developmentontheedge.be5.metadata.sql.type;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
@@ -12,6 +8,9 @@ import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.ExtendedSqlException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class PostgresTypeManagerTest extends BaseTypeManagerTest
 {

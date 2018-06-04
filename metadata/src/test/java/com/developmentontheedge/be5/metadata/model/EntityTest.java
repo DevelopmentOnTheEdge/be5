@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
-
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import org.junit.Test;
 
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class EntityTest
 {

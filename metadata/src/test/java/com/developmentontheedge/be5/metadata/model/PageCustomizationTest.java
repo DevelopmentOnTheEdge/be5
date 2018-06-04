@@ -1,13 +1,16 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PageCustomizationTest
 {

@@ -11,7 +11,6 @@ import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;

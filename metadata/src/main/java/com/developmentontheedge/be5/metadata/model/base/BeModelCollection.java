@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model.base;
 
+import one.util.streamex.StreamEx;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import one.util.streamex.StreamEx;
 
 public interface BeModelCollection<T extends BeModelElement> extends BeModelElement, Iterable<T>
 {

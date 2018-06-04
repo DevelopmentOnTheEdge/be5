@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.beans.IntrospectionException;
-
 import com.developmentontheedge.be5.metadata.model.editors.RoleMultiSelector;
 import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.PropertyDescriptorEx;
+
+import java.beans.IntrospectionException;
 
 public class RoleSetBeanInfo extends BeanInfoEx
 {

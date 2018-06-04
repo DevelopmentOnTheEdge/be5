@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.base.util;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-//import com.developmentontheedge.be5.api.helpers.UserInfoHolder;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.DatatypeConfigurationException;

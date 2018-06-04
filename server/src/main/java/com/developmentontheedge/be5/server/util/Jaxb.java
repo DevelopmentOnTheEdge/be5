@@ -1,13 +1,12 @@
 package com.developmentontheedge.be5.server.util;
 
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Jaxb
 {

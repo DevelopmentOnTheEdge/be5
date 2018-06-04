@@ -1,9 +1,6 @@
 package com.developmentontheedge.be5.maven;
 
-import com.developmentontheedge.be5.metadata.util.JULLogger;
 import org.junit.Test;
-
-import java.util.logging.Logger;
 
 
 public class AppValidateTest extends TestUtils

@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.metadata.model;
 
 import com.developmentontheedge.beans.BeanInfoEx;
-
 import com.developmentontheedge.beans.PropertyDescriptorEx;
 
 public class ModuleBeanInfo extends BeanInfoEx

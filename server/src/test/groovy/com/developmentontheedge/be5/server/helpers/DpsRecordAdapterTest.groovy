@@ -1,12 +1,13 @@
 package com.developmentontheedge.be5.server.helpers
 
 import com.developmentontheedge.be5.databasemodel.DatabaseModel
-import javax.inject.Inject
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
-import org.junit.Before;
+import org.junit.Before
 import org.junit.Test
 
-import static org.junit.Assert.*
+import javax.inject.Inject
+
+import static org.junit.Assert.assertEquals
 
 
 class DpsRecordAdapterTest extends ServerBe5ProjectDBTest

@@ -1,9 +1,11 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.beans.util.Beans;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 class TestHelpers
 {

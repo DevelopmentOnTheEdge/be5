@@ -1,12 +1,11 @@
 package com.developmentontheedge.sql.model;
 
-import java.util.HashMap;
-import java.util.Locale;
-
-import one.util.streamex.StreamEx;
-
 import com.developmentontheedge.sql.format.DateFormat;
 import com.developmentontheedge.sql.format.Dbms;
+import one.util.streamex.StreamEx;
+
+import java.util.HashMap;
+import java.util.Locale;
 
 /**
  *

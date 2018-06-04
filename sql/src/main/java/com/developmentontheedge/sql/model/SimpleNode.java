@@ -2,14 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-import one.util.streamex.StreamEx;
 
 public class SimpleNode implements Node, Cloneable
 {

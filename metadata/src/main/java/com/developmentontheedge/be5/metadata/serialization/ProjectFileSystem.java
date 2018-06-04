@@ -1,5 +1,27 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.exception.ReadException;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfileType;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfiles;
+import com.developmentontheedge.be5.metadata.model.Daemons;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
+import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
+import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
+import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
+import com.developmentontheedge.be5.metadata.model.MassChanges;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.PageCustomizations;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
+import com.developmentontheedge.be5.metadata.model.SecurityCollection;
+import com.developmentontheedge.be5.metadata.model.SourceFileCollection;
+import com.developmentontheedge.be5.metadata.model.StaticPages;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
@@ -21,29 +43,6 @@ import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.developmentontheedge.be5.metadata.exception.ReadException;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfileType;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfiles;
-import com.developmentontheedge.be5.metadata.model.Daemons;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
-import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
-import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
-import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
-import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
-import com.developmentontheedge.be5.metadata.model.MassChanges;
-import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.PageCustomizations;
-import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
-import com.developmentontheedge.be5.metadata.model.SecurityCollection;
-import com.developmentontheedge.be5.metadata.model.SourceFileCollection;
-import com.developmentontheedge.be5.metadata.model.StaticPages;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-
-import one.util.streamex.EntryStream;
-import one.util.streamex.StreamEx;
 
 public class ProjectFileSystem
 {

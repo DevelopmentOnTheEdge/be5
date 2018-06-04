@@ -1,17 +1,12 @@
 package com.developmentontheedge.be5.metadata.model.editors;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.beans.editors.CustomEditorSupport;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ClassSelector extends CustomEditorSupport
 {

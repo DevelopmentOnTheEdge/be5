@@ -12,8 +12,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
-import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.SUCCESS;
 import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.ERROR;
+import static com.developmentontheedge.be5.operation.services.validation.Validation.Status.SUCCESS;
 
 
 public class Validator

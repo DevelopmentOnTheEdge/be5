@@ -2,14 +2,16 @@ package com.developmentontheedge.be5.base.model.groovy;
 
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
-
 import groovy.lang.GroovyObjectSupport;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.*;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.beanInfoConstants;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.processValue;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.removeFromMap;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.setAttributes;
 
 /**
  * Created by ruslan on 26.11.15.

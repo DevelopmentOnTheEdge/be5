@@ -5,12 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

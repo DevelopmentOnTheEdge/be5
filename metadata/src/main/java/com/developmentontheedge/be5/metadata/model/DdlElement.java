@@ -1,13 +1,12 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.beans.annot.PropertyName;
-
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.SqlExecutor;
+
+import java.util.List;
 
 public interface DdlElement extends BeModelElement
 {

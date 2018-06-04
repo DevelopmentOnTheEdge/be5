@@ -2,13 +2,6 @@ package com.developmentontheedge.be5.server.servlet;
 
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-
 
 public class MainServletTest extends ServerBe5ProjectTest
 {

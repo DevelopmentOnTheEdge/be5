@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.query.impl;
 
+import com.developmentontheedge.beans.DynamicProperty;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.developmentontheedge.beans.DynamicProperty;
 
 public class DynamicPropertyMeta
 {

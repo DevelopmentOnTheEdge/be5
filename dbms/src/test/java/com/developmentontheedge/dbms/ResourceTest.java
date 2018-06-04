@@ -1,8 +1,8 @@
 package com.developmentontheedge.dbms;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 public class ResourceTest
 {

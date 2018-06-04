@@ -2,7 +2,6 @@ package com.developmentontheedge.be5.metadata.model;
 
 import com.developmentontheedge.be5.metadata.model.editors.ModuleSelector;
 import com.developmentontheedge.beans.BeanInfoEx;
-
 import com.developmentontheedge.beans.PropertyDescriptorEx;
 
 public class JavaScriptFormBeanInfo extends BeanInfoEx

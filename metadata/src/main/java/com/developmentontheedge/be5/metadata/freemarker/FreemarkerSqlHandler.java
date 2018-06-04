@@ -1,11 +1,5 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
@@ -17,9 +11,14 @@ import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlConsumer;
 import com.developmentontheedge.dbms.SqlExecutor;
 import com.developmentontheedge.dbms.SqlHandler;
-
 import freemarker.core.Environment;
 import freemarker.core.TemplateElement;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FreemarkerSqlHandler implements SqlHandler
 {

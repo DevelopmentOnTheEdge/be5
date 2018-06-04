@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata;
 
+import junit.framework.Assert;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-
-import junit.framework.Assert;
 
 public class TestUtils
 {

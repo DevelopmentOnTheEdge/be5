@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.metadata.model.editors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuickFilter;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.editors.StringTagEditor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuerySelector extends StringTagEditor
 {

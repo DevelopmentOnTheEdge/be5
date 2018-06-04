@@ -4,10 +4,10 @@ import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
-import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import com.google.common.collect.ImmutableMap
+import org.junit.Test
 
-import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
 
 class DynamicPropertyMetaClassTest extends RegisterMetaClass
 {

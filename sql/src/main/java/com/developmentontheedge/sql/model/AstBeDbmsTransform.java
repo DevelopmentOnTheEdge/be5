@@ -1,9 +1,9 @@
 package com.developmentontheedge.sql.model;
 
+import com.developmentontheedge.sql.format.Dbms;
+
 import java.util.EnumSet;
 import java.util.Map;
-
-import com.developmentontheedge.sql.format.Dbms;
 
 public class AstBeDbmsTransform extends SimpleNode
 {

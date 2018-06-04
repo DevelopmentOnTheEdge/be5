@@ -1,5 +1,9 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.model.LocalizationElement.SpecialTopic;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,12 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-
-import com.developmentontheedge.be5.metadata.model.LocalizationElement.SpecialTopic;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
-import com.developmentontheedge.beans.annot.PropertyName;
-
-import static com.developmentontheedge.be5.metadata.DatabaseConstants.L10N_TOPIC_OPERATION_NAME;
 
 public class EntityLocalizations extends BeModelElementSupport
 {

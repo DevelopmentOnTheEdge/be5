@@ -1,14 +1,15 @@
 package com.developmentontheedge.be5.server.util;
 
 import com.developmentontheedge.be5.base.services.Meta;
-import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertEquals;
 
 public class ActionHelperTest extends ServerBe5ProjectTest
 {

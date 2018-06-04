@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import org.junit.Test;
 
 import java.util.Arrays;

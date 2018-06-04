@@ -11,7 +11,8 @@ import java.util.Random;
 
 import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createScript;
 import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.getProject;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class WatchDirTest

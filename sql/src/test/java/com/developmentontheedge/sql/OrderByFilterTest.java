@@ -1,13 +1,5 @@
 package com.developmentontheedge.sql;
 
-import static org.junit.Assert.*;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.Dbms;
 import com.developmentontheedge.sql.format.Formatter;
@@ -15,6 +7,13 @@ import com.developmentontheedge.sql.format.OrderByFilter;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class OrderByFilterTest
 {

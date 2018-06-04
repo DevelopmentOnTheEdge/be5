@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
-import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.beans.json.JsonFactory;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.metadata.sql.pojo;
 
-import java.util.Arrays;
-
 import com.developmentontheedge.be5.metadata.util.ObjectCache;
+
+import java.util.Arrays;
 
 public class SqlColumnInfo
 {

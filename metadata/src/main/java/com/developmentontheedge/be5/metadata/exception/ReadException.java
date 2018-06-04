@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.exception;
 
-import java.nio.file.Path;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+
+import java.nio.file.Path;
 
 public class ReadException extends Exception implements Formattable
 {

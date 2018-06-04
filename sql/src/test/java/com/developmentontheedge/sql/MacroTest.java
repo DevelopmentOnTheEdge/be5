@@ -1,9 +1,5 @@
 package com.developmentontheedge.sql;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.Dbms;
 import com.developmentontheedge.sql.format.Formatter;
@@ -12,6 +8,9 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SqlParser;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class MacroTest
 {

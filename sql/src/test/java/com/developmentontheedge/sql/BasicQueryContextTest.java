@@ -1,11 +1,11 @@
 package com.developmentontheedge.sql;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.developmentontheedge.sql.format.BasicQueryContext;
 import com.developmentontheedge.sql.format.QueryContext;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class BasicQueryContextTest
 {

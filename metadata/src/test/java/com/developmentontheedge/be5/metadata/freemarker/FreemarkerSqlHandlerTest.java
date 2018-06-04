@@ -1,18 +1,5 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.junit.Test;
-
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -23,6 +10,18 @@ import com.developmentontheedge.be5.metadata.util.WriterLogger;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.SqlExecutor;
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
 
 public class FreemarkerSqlHandlerTest
 {

@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.server.services
 
-import com.developmentontheedge.be5.base.services.UserAwareMeta
 import com.developmentontheedge.be5.base.services.ProjectProvider
+import com.developmentontheedge.be5.base.services.UserAwareMeta
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader
-
-import javax.inject.Inject
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import groovy.transform.TypeChecked
 import org.junit.Test
 
-import static org.junit.Assert.*
+import javax.inject.Inject
+
+import static org.junit.Assert.assertEquals
 
 
 @TypeChecked

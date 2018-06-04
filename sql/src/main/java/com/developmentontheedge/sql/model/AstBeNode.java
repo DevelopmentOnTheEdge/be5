@@ -1,12 +1,12 @@
 package com.developmentontheedge.sql.model;
 
+import one.util.streamex.EntryStream;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import one.util.streamex.EntryStream;
 
 public abstract class AstBeNode extends SimpleNode
 {

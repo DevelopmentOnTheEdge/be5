@@ -3,13 +3,11 @@ package src.groovy.operations
 import com.developmentontheedge.be5.base.services.UserAwareMeta
 import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl
 import com.developmentontheedge.be5.base.util.DpsUtils
+import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 
 import javax.inject.Inject
-import com.developmentontheedge.be5.server.operations.support.GOperationSupport
-import com.developmentontheedge.be5.operation.model.Operation
-
 import java.sql.Date
-
 
 class TestGroovyOp extends GOperationSupport implements Operation
 {

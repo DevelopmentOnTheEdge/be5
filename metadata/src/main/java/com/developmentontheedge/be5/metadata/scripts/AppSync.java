@@ -1,18 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
@@ -40,6 +27,19 @@ import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.MultiSqlParser;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 
 

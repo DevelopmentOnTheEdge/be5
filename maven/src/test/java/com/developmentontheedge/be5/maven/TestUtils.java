@@ -1,6 +1,11 @@
 package com.developmentontheedge.be5.maven;
 
-import com.developmentontheedge.be5.metadata.model.*;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
@@ -14,8 +19,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
 
 public abstract class TestUtils
 {

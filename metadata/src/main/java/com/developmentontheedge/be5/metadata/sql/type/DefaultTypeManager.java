@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.sql.type;
 
-import java.util.Arrays;
-
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.ColumnFunction;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.util.Strings2;
+
+import java.util.Arrays;
 
 /**
  * Type manager for unknown Dbms

@@ -1,15 +1,14 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createOperation;
-import static org.junit.Assert.*;
-
-import java.util.Collections;
-
 import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import java.util.Collections;
+
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createOperation;
+import static org.junit.Assert.assertEquals;
 
 public class MassChangeTest
 {

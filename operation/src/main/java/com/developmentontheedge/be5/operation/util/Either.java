@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.operation.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 public class Either<T, U>
 {

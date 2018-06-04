@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.server.services
 
 import com.developmentontheedge.be5.base.services.ProjectProvider
 import com.developmentontheedge.be5.database.DbService
-
-import javax.inject.Inject
 import com.developmentontheedge.be5.test.ServerBe5ProjectDBTest
 import org.junit.Before
+
+import javax.inject.Inject
 
 abstract class TestTableQueryDBTest extends ServerBe5ProjectDBTest
 {

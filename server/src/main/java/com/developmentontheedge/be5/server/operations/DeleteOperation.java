@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.server.operations;
 
+import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 import com.developmentontheedge.be5.operation.model.TransactionalOperation;
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.server.operations.support.OperationSupport;
 
 import java.util.List;
 import java.util.Map;

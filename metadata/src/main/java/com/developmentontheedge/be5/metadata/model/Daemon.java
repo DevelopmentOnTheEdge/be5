@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Objects;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.Objects;
 
 public class Daemon extends BeModelElementSupport
 {

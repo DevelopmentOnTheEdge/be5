@@ -1,30 +1,7 @@
 package com.developmentontheedge.be5.metadata.serialization.yaml;
 
-import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-
-import one.util.streamex.StreamEx;
-
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.error.MarkedYAMLException;
-import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.nodes.Node;
-
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.QueryType;
-
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfileType;
@@ -41,14 +18,13 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScriptOrCatalog;
+import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.metadata.model.Icon;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForm;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
 import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
-import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
-import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
 import com.developmentontheedge.be5.metadata.model.Localizations;
@@ -70,6 +46,7 @@ import com.developmentontheedge.be5.metadata.model.RoleGroup;
 import com.developmentontheedge.be5.metadata.model.SecurityCollection;
 import com.developmentontheedge.be5.metadata.model.SourceFile;
 import com.developmentontheedge.be5.metadata.model.SourceFileOperation;
+import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 import com.developmentontheedge.be5.metadata.model.StaticPage;
 import com.developmentontheedge.be5.metadata.model.StaticPages;
@@ -93,9 +70,71 @@ import com.developmentontheedge.be5.metadata.serialization.SerializationConstant
 import com.developmentontheedge.be5.metadata.util.ObjectCache;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.util.Beans;
+import one.util.streamex.StreamEx;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.MarkedYAMLException;
+import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.nodes.Node;
+
+import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
 import static com.developmentontheedge.be5.metadata.MetadataUtils.classPathToFileName;
-import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.*;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_CLASS_NAME;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_ENTITY_TEMPLATE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_ENTITY_TYPE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_FEATURES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_FILEPATH;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_ICON;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_LOCALIZATIONS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_LOCALIZATION_TOPICS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_MODULE_PROJECT;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_OPERATION_TYPE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_CODE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_QUERY_OPERATIONS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.ATTR_ROLES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_APPLICATION;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_BUGTRACKERS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_CODE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_COLUMNS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_COMMENT;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_CONNECTION_PROFILES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_CONNECTION_PROFILES_INNER;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_CUSTOMIZATIONS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_DAEMONS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_ENTITIES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_EXTRAS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_INDICES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_JS_FORMS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_LOCALIZATION_ENTRIES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_MACRO_FILES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_MASS_CHANGES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_MODULES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_OLD_NAMES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_PROJECT_FILE_STRUCTURE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_PROPERTIES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_REFERENCE;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_REFERENCES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_REQUESTED_PROPERTIES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_ROLES;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_ROLE_GROUPS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_SCHEME;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_SCRIPTS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_SECURITY;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_SETTINGS;
+import static com.developmentontheedge.be5.metadata.serialization.SerializationConstants.TAG_VIEW_DEFINITION;
 
 
 public class YamlDeserializer

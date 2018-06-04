@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.metadata.model.base;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.beans.BeanInfoEx;
+
+import java.beans.PropertyDescriptor;
 
 public class BeVectorCollectionBeanInfo extends BeanInfoEx
 {

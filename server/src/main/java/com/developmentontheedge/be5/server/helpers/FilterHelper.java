@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;

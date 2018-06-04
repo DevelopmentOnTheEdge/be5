@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
@@ -12,6 +9,9 @@ import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateNumberModel;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Class to convert Freemarker objects to Yaml elements

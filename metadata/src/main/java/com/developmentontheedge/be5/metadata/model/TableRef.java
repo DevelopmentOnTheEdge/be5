@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Arrays;
-
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
-
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithOriginModule;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.Arrays;
 
 @PropertyName("Table cross-reference")
 public class TableRef extends BeModelElementSupport implements TableReference, BeElementWithOriginModule

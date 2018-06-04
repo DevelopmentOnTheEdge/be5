@@ -1,18 +1,17 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.beans.annot.PropertyDescription;
+import com.developmentontheedge.beans.annot.PropertyName;
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import one.util.streamex.StreamEx;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.beans.annot.PropertyDescription;
-import com.developmentontheedge.beans.annot.PropertyName;
 
 @PropertyName("Operation")
 public class Operation extends EntityItem

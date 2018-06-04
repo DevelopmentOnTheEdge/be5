@@ -1,7 +1,5 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.Map;
-
 import com.developmentontheedge.sql.model.AstDerivedColumn;
 import com.developmentontheedge.sql.model.AstFrom;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
@@ -15,6 +13,8 @@ import com.developmentontheedge.sql.model.AstSelectList;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.Token;
+
+import java.util.Map;
 
 public class OrderByFilter
 {

@@ -2,11 +2,12 @@ package com.developmentontheedge.be5.modules.core.services.impl
 
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
 import com.developmentontheedge.be5.modules.core.services.LoginService
-import javax.inject.Inject
 import org.junit.Before
 import org.junit.Test
 
-import static org.junit.Assert.*
+import javax.inject.Inject
+
+import static org.junit.Assert.assertEquals
 
 
 class LoginServiceImplTest extends CoreBe5ProjectDbMockTest

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import java.util.Objects;
-
 import com.developmentontheedge.be5.metadata.model.Entity;
+
+import java.util.Objects;
 
 /**
  * Note that this class is not a part of the public API.

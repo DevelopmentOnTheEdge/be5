@@ -1,21 +1,7 @@
 package com.developmentontheedge.be5.metadata.util;
 
-import static org.junit.Assert.*;
-
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.metadata.serialization.Serialization;
-
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
+import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -25,7 +11,20 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
+import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ModuleUtilsTest
 {

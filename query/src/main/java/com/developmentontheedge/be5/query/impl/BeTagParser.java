@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.query.impl;
 
+import one.util.streamex.EntryStream;
+
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import one.util.streamex.EntryStream;
 
 // Parser to parse BE tags like <blahbla/>;<foo bar="baz" a="b" c="d"/>;<oneMoreTag/>
 public class BeTagParser

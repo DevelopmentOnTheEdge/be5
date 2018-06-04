@@ -1,5 +1,11 @@
 package com.developmentontheedge.be5.metadata.serialization.yaml;
 
+import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
+import org.yaml.snakeyaml.nodes.CollectionNode;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.SequenceNode;
+import org.yaml.snakeyaml.representer.Representer;
+
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
@@ -8,13 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.yaml.snakeyaml.nodes.CollectionNode;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.SequenceNode;
-import org.yaml.snakeyaml.representer.Representer;
-
-import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
 
 /**
  * @author asko

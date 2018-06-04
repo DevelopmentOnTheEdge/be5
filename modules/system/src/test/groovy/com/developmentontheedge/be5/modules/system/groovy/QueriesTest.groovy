@@ -2,18 +2,17 @@ package com.developmentontheedge.be5.modules.system.groovy
 
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.metadata.RoleType
-import com.developmentontheedge.be5.server.services.DocumentGenerator
+import com.developmentontheedge.be5.metadata.model.Query
 import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
 import com.developmentontheedge.be5.query.model.CellModel
-import com.developmentontheedge.be5.metadata.model.Query
+import com.developmentontheedge.be5.server.services.DocumentGenerator
 import org.junit.Before
+import org.junit.Test
 
 import javax.inject.Inject
-import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertTrue
-
 
 class QueriesTest extends SystemBe5ProjectTest
 {

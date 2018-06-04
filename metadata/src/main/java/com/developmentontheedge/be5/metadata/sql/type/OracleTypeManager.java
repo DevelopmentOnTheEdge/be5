@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.metadata.sql.type;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.ColumnFunction;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OracleTypeManager extends DefaultTypeManager
 {

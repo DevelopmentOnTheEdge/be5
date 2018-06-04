@@ -1,5 +1,14 @@
 package com.developmentontheedge.be5.metadata.sql.schema;
 
+import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
+import com.developmentontheedge.be5.metadata.model.ColumnFunction;
+import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
+import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
+import com.developmentontheedge.be5.metadata.util.ProcessController;
+import com.developmentontheedge.dbms.DbmsConnector;
+import com.developmentontheedge.dbms.ExtendedSqlException;
+import com.developmentontheedge.dbms.SqlExecutor;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,16 +20,6 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.dbms.SqlExecutor;
-
-import com.developmentontheedge.be5.metadata.exception.ProcessInterruptedException;
-import com.developmentontheedge.be5.metadata.model.ColumnFunction;
-import com.developmentontheedge.be5.metadata.sql.pojo.IndexInfo;
-import com.developmentontheedge.be5.metadata.sql.pojo.SqlColumnInfo;
-import com.developmentontheedge.be5.metadata.util.ProcessController;
-import com.developmentontheedge.dbms.ExtendedSqlException;
 
 public class Db2SchemaReader extends DefaultSchemaReader
 {

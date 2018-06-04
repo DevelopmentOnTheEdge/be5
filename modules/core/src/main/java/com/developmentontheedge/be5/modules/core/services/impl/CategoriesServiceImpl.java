@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
 import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
+import com.developmentontheedge.be5.modules.core.util.Generators;
 import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.services.model.Category;
-import com.developmentontheedge.be5.modules.core.services.impl.model.MutableCategory;
-import com.developmentontheedge.be5.modules.core.util.Generators;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 

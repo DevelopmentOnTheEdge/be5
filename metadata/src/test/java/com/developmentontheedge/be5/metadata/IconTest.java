@@ -1,12 +1,5 @@
 package com.developmentontheedge.be5.metadata;
 
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.EntityType;
-import com.developmentontheedge.be5.metadata.model.Icon;
-import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.Project;
-
 import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.junit.Test;

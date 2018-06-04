@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;

@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server
 
 import com.developmentontheedge.be5.server.model.Base64File
-import com.developmentontheedge.be5.test.ServerTestUtils
 import com.developmentontheedge.be5.server.util.ParseRequestUtils
+import com.developmentontheedge.be5.test.ServerTestUtils
 import com.developmentontheedge.be5.web.Request
 import com.google.common.collect.ImmutableMap
 import org.junit.Before
@@ -11,10 +11,9 @@ import org.junit.Test
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
-import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-
 
 class RequestTest extends ServerTestUtils
 {

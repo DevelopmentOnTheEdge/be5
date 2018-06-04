@@ -1,28 +1,12 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.QueryLink;
+import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -44,10 +28,25 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
-import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.sql.format.SqlTypeUtils;
 
 import javax.inject.Inject;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 public class MetaImpl implements Meta

@@ -5,10 +5,10 @@ import com.developmentontheedge.be5.database.sql.ResultSetParser
 import com.developmentontheedge.be5.metadata.DatabaseConstants
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
-import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
@@ -21,7 +21,6 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.when
-
 
 class LoginTest extends CoreBe5ProjectDbMockTest
 {

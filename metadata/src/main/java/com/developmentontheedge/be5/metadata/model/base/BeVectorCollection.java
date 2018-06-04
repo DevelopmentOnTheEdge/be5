@@ -1,5 +1,9 @@
 package com.developmentontheedge.be5.metadata.model.base;
 
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,13 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-
 import java.util.TreeMap;
-
-import one.util.streamex.StreamEx;
 
 /**
  * Main DataCollection implementation for BE4

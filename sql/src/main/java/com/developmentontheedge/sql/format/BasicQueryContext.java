@@ -1,5 +1,8 @@
 package com.developmentontheedge.sql.format;
 
+import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,9 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
-import one.util.streamex.StreamEx;
 
 
 public class BasicQueryContext implements QueryContext

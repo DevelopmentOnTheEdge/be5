@@ -1,16 +1,14 @@
 package com.developmentontheedge.be5.server.services
 
 import com.developmentontheedge.be5.base.services.Meta
-
-import javax.inject.Inject
-
 import groovy.transform.TypeChecked
 import org.junit.Test
+
+import javax.inject.Inject
 
 import static com.developmentontheedge.be5.metadata.model.EntityType.COLLECTION
 import static com.developmentontheedge.be5.metadata.model.EntityType.GENERIC_COLLECTION
 import static org.junit.Assert.assertEquals
-
 
 @TypeChecked
 class MetaTest extends TestTableQueryDBTest

@@ -1,11 +1,10 @@
 package com.developmentontheedge.be5.modules.core.controllers;
 
-import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
-import com.developmentontheedge.be5.web.Response;
-import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.developmentontheedge.be5.web.Response;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -13,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-
+import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Collections;
 

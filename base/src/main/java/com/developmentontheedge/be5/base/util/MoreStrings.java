@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.base.util;
 
-import static com.google.common.base.Preconditions.*;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -11,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 /**

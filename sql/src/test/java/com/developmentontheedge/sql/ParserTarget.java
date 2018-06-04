@@ -1,12 +1,5 @@
 package com.developmentontheedge.sql;
 
-import static junit.framework.TestCase.*;
-import junit.framework.ComparisonFailure;
-import one.util.streamex.IntStreamEx;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import com.developmentontheedge.sql.format.BasicQueryContext;
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
@@ -19,9 +12,16 @@ import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlParser;
 import com.developmentontheedge.xmltest.Target;
 import com.developmentontheedge.xmltest.XmlTest;
+import junit.framework.ComparisonFailure;
+import one.util.streamex.IntStreamEx;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.fail;
 
 public class ParserTarget extends Target
 {

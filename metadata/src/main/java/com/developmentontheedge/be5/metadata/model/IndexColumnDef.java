@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IndexColumnDef extends BeModelElementSupport
 {

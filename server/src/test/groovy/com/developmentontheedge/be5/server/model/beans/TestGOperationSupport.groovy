@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.model.beans
 
-import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 import com.developmentontheedge.be5.operation.model.Operation
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 
 class TestGOperationSupport extends GOperationSupport implements Operation
 {

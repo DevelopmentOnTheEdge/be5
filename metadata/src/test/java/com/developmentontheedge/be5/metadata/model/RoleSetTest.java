@@ -1,17 +1,17 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import one.util.streamex.StreamEx;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import one.util.streamex.StreamEx;
-
-import org.junit.Test;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RoleSetTest
 {

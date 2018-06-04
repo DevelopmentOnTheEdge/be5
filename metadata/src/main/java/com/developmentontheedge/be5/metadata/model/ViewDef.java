@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.beans.annot.PropertyName;
 import com.developmentontheedge.dbms.SqlExecutor;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * SQL view definition

@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server.services.model;
 
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.util.Collections3;
+
+import java.util.List;
 
 
 public class Operations

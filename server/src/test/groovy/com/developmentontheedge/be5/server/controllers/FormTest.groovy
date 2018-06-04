@@ -1,17 +1,16 @@
 package com.developmentontheedge.be5.server.controllers
 
-import com.developmentontheedge.be5.web.Response
-import com.developmentontheedge.be5.server.RestApiConstants
-
-import javax.inject.Inject
-
 import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.server.RestApiConstants
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
+import com.developmentontheedge.be5.web.Response
 import com.google.common.collect.ImmutableMap
 import groovy.transform.TypeChecked
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+
+import javax.inject.Inject
 
 import static org.mockito.Mockito.mock
 

@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.be5.metadata.model.editors.ClassSelector;
 import com.developmentontheedge.be5.metadata.model.editors.ModuleSelector;
 import com.developmentontheedge.be5.metadata.model.editors.OperationSelector;
 import com.developmentontheedge.be5.metadata.model.editors.QueryTypeSelector;
 import com.developmentontheedge.beans.BeanInfoEx;
 import com.developmentontheedge.beans.PropertyDescriptorEx;
+
+import java.beans.PropertyDescriptor;
 
 public class QueryBeanInfo extends BeanInfoEx
 {

@@ -45,7 +45,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
-import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.*;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createEntity;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createModule;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createOperation;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createQuery;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createScheme;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createScript;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createStaticPage;
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.getProject;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -2,8 +2,8 @@ package com.developmentontheedge.be5.metadata.scripts.generate;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
-import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
 import com.developmentontheedge.be5.metadata.scripts.ScriptException;
+import com.developmentontheedge.be5.metadata.scripts.ScriptSupport;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,12 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
@@ -21,6 +14,13 @@ import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * name = selector rule

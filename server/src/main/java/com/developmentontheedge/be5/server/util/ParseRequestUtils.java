@@ -10,16 +10,10 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM;
 
 
 public class ParseRequestUtils

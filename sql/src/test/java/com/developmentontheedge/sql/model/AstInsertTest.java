@@ -2,7 +2,7 @@ package com.developmentontheedge.sql.model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AstInsertTest
 {

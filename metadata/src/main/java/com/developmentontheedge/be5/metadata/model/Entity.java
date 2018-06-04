@@ -1,16 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeFileBasedElement;
@@ -21,6 +10,17 @@ import com.developmentontheedge.be5.metadata.util.EnumsWithHumanReadableName;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @PropertyName("Entity")
 public class Entity extends BeVectorCollection<BeModelElement> implements BeFileBasedElement

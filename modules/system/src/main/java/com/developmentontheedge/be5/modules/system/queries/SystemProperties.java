@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.system.queries;
 
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 
 import java.util.Enumeration;
 import java.util.Properties;

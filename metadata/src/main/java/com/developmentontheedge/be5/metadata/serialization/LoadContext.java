@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.exception.ReadException;
+import one.util.streamex.StreamEx;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.exception.ReadException;
-
-import one.util.streamex.StreamEx;
 
 public class LoadContext
 {

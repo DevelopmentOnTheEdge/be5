@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.metadata.sql;
 
 import com.developmentontheedge.dbms.DbmsConnector;
-import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.ExtendedSqlException;
 import com.developmentontheedge.dbms.SqlExecutor;
 

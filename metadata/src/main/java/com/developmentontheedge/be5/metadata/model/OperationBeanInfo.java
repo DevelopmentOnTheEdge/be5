@@ -1,13 +1,12 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.be5.metadata.model.editors.ModuleSelector;
 import com.developmentontheedge.be5.metadata.model.editors.OperationLoggingSelector;
 import com.developmentontheedge.be5.metadata.model.editors.OperationVisibilityOptionsSelector;
 import com.developmentontheedge.beans.BeanInfoEx;
-
 import com.developmentontheedge.beans.PropertyDescriptorEx;
+
+import java.beans.PropertyDescriptor;
 
 public class OperationBeanInfo extends BeanInfoEx
 {

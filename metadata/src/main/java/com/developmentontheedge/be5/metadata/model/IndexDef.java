@@ -1,8 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithOriginModule;
@@ -10,6 +7,9 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.beans.annot.PropertyName;
 import com.developmentontheedge.dbms.SqlExecutor;
+
+import java.util.Collections;
+import java.util.List;
 
 public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implements DdlElement, BeElementWithOriginModule
 {

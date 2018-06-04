@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.base.util;
 
-import com.developmentontheedge.be5.base.util.Utils;
 import org.junit.Test;
 
 import java.sql.Time;
@@ -11,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class UtilsTest
 {

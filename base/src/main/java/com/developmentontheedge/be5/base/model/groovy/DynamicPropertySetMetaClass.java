@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.*;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.asString;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.processValue;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.removeFromMap;
+import static com.developmentontheedge.be5.base.model.groovy.DynamicPropertyUtils.setAttributes;
 
 
 public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends GDynamicPropertySetMetaClass

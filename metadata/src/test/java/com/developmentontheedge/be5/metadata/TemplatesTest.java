@@ -1,12 +1,6 @@
 package com.developmentontheedge.be5.metadata;
 
 import com.developmentontheedge.be5.metadata.exception.ReadException;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.model.Templates;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-
 import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.junit.Test;

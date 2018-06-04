@@ -1,17 +1,5 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.logging.Logger;
-
-import com.developmentontheedge.sql.model.AstOrderingElement;
-import one.util.streamex.StreamEx;
-
 import com.developmentontheedge.sql.model.AstBeCondition;
 import com.developmentontheedge.sql.model.AstBeConditionChain;
 import com.developmentontheedge.sql.model.AstBeDictionary;
@@ -31,6 +19,7 @@ import com.developmentontheedge.sql.model.AstIdentifierConstant;
 import com.developmentontheedge.sql.model.AstInPredicate;
 import com.developmentontheedge.sql.model.AstInValueList;
 import com.developmentontheedge.sql.model.AstNumericConstant;
+import com.developmentontheedge.sql.model.AstOrderingElement;
 import com.developmentontheedge.sql.model.AstParenthesis;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstStringConstant;
@@ -40,6 +29,16 @@ import com.developmentontheedge.sql.model.ExprEvaluator;
 import com.developmentontheedge.sql.model.SimpleNode;
 import com.developmentontheedge.sql.model.SqlParserTreeConstants;
 import com.developmentontheedge.sql.model.SqlQuery;
+import one.util.streamex.StreamEx;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.logging.Logger;
 
 public class ContextApplier
 {

@@ -1,5 +1,14 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.exception.ReadException;
+import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.MarkedYAMLException;
+import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.nodes.Node;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,16 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.error.MarkedYAMLException;
-import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.nodes.Node;
-
-import com.developmentontheedge.be5.metadata.exception.ReadException;
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
-import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
 
 public class Templates
 {

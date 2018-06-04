@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.test;
 
-import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.base.services.Meta;
-
-import javax.inject.Inject;
 import com.developmentontheedge.be5.metadata.RoleType;
+import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
 import org.junit.After;
 import org.junit.Before;
+
+import javax.inject.Inject;
 
 
 public abstract class SqlMockOperationTest extends ServerBe5ProjectTest

@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FreemarkerScript extends SourceFile implements TemplateElement, FreemarkerScriptOrCatalog
 {

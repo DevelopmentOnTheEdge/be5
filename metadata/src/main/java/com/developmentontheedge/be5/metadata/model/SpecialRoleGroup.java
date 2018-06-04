@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+
+import java.util.Collections;
+import java.util.List;
 
 public class SpecialRoleGroup extends RoleGroup
 {

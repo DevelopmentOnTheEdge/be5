@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import com.developmentontheedge.beans.PropertyDescriptorEx;
-
 import com.developmentontheedge.beans.BeanInfoEx;
+import com.developmentontheedge.beans.PropertyDescriptorEx;
 
 public class ParseResultBeanInfo extends BeanInfoEx
 {

@@ -1,6 +1,15 @@
 package com.developmentontheedge.sql;
 
-import static org.junit.Assert.*;
+import com.developmentontheedge.sql.format.ColumnRef;
+import com.developmentontheedge.sql.format.Context;
+import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.FilterApplier;
+import com.developmentontheedge.sql.format.Formatter;
+import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.DefaultParserContext;
+import com.developmentontheedge.sql.model.SqlQuery;
+import one.util.streamex.EntryStream;
+import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,18 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import one.util.streamex.EntryStream;
-
-import org.junit.Test;
-
-import com.developmentontheedge.sql.format.ColumnRef;
-import com.developmentontheedge.sql.format.Context;
-import com.developmentontheedge.sql.format.Dbms;
-import com.developmentontheedge.sql.format.FilterApplier;
-import com.developmentontheedge.sql.format.Formatter;
-import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.DefaultParserContext;
-import com.developmentontheedge.sql.model.SqlQuery;
+import static org.junit.Assert.assertEquals;
 
 
 public class FilterApplierTest

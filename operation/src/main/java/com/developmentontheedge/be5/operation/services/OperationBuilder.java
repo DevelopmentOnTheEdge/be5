@@ -1,11 +1,13 @@
 package com.developmentontheedge.be5.operation.services;
 
 //import com.developmentontheedge.be5.databasemodel.groovy.GOperationModelBaseBuilder;
+
 import com.developmentontheedge.be5.operation.model.Operation;
-//import groovy.lang.Closure;
-//import groovy.lang.DelegatesTo;
 
 import java.util.Map;
+
+//import groovy.lang.Closure;
+//import groovy.lang.DelegatesTo;
 
 
 public interface OperationBuilder
