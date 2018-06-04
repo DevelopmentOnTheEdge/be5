@@ -11,7 +11,7 @@ import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.targets.AppDb;
+import com.developmentontheedge.be5.metadata.scripts.AppDb;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;

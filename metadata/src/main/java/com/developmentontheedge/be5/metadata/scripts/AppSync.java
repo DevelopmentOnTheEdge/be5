@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.metadata.targets;
+package com.developmentontheedge.be5.metadata.scripts;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -27,7 +27,6 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.ViewDef;
-import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;

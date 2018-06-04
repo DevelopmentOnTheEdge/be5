@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.metadata.targets;
+package com.developmentontheedge.be5.metadata.scripts;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,6 @@ import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;

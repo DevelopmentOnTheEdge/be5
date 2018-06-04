@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.metadata.targets;
+package com.developmentontheedge.be5.metadata.scripts;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.developmentontheedge.be5.metadata.targets.DatabaseTargetException;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 

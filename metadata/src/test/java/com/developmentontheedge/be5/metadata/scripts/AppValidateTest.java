@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.metadata.targets;
+package com.developmentontheedge.be5.metadata.scripts;
 
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import org.junit.Test;

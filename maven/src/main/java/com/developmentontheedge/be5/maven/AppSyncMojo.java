@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.maven;
 
-import com.developmentontheedge.be5.metadata.targets.AppSync;
+import com.developmentontheedge.be5.metadata.scripts.AppSync;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 

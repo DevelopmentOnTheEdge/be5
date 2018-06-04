@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.modules.system
 import com.developmentontheedge.be5.base.services.ProjectProvider
 
 import javax.inject.Inject
-import com.developmentontheedge.be5.metadata.targets.AppValidate
+import com.developmentontheedge.be5.metadata.scripts.AppValidate
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException
 import com.developmentontheedge.be5.metadata.model.Module
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection

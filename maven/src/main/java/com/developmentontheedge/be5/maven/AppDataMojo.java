@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.maven;
 
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
-import com.developmentontheedge.be5.metadata.targets.AppData;
+import com.developmentontheedge.be5.metadata.scripts.AppData;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
