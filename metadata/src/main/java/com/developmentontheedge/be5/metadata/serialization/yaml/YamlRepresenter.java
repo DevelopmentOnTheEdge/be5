@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.metadata.serialization.yaml;
 
 import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.nodes.CollectionNode;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.SequenceNode;
@@ -114,7 +115,7 @@ class YamlRepresenter extends Representer
         {
             if ( getFlowStyle( data ) )
             {
-                ( ( CollectionNode ) represented ).setFlowStyle( true );
+                ( ( CollectionNode ) represented ).setFlowStyle( DumperOptions.FlowStyle.FLOW );
             }
         }
     }
