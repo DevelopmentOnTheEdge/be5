@@ -2,14 +2,13 @@ package com.developmentontheedge.be5.server.operations.operationParams
 
 import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.operation.model.OperationResult
-import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.operation.util.Either
+import com.developmentontheedge.be5.test.SqlMockOperationTest
 import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PRESETS_PARAM
 import static org.junit.Assert.assertEquals
-
 
 class CustomOpTest extends SqlMockOperationTest
 {

@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.be5.metadata.model.editors.ConnectionProfileNameSelector;
 import com.developmentontheedge.be5.metadata.model.editors.FeaturesSelector;
 import com.developmentontheedge.beans.BeanInfoEx;
+
+import java.beans.PropertyDescriptor;
 
 public class ProjectBeanInfo extends BeanInfoEx
 {

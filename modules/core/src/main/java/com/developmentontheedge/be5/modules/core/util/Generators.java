@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.modules.core.util;
 
-import static java.util.Objects.*;
+import com.google.common.collect.ImmutableList;
+import one.util.streamex.StreamEx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import one.util.streamex.StreamEx;
-
-import com.google.common.collect.ImmutableList;
+import static java.util.Objects.requireNonNull;
 
 public class Generators
 {

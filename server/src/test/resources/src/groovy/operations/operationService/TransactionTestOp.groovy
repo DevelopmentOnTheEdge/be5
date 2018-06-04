@@ -1,8 +1,7 @@
 package src.groovy.operations.operationService
 
-import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 import com.developmentontheedge.be5.operation.model.TransactionalOperation
-
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport
 
 class TransactionTestOp extends GOperationSupport implements TransactionalOperation
 {

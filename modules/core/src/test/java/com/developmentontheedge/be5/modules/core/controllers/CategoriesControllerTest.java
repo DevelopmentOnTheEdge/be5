@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.modules.core.controllers;
 
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest;
 import com.developmentontheedge.be5.web.Response;
-import javax.inject.Inject;
 import org.junit.Test;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static org.mockito.Matchers.eq;

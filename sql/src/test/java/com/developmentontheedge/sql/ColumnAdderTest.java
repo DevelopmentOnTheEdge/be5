@@ -1,12 +1,11 @@
 package com.developmentontheedge.sql;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.developmentontheedge.sql.format.ColumnAdder;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class ColumnAdderTest
 {

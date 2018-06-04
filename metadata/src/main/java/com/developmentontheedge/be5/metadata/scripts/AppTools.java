@@ -1,17 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
-
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
@@ -20,6 +8,22 @@ import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.util.NullLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.ExtendedSqlException;
+import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 public class AppTools extends ScriptSupport<AppTools>

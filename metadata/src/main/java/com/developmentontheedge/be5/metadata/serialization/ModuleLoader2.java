@@ -1,5 +1,15 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
+import com.developmentontheedge.be5.metadata.exception.ReadException;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
+import com.developmentontheedge.be5.metadata.util.JULLogger;
+import com.developmentontheedge.be5.metadata.util.ProcessController;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
-import com.developmentontheedge.be5.metadata.exception.ReadException;
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
-import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
-import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.be5.metadata.util.ProcessController;
-import org.yaml.snakeyaml.Yaml;
 
 import static java.util.stream.Collectors.joining;
 

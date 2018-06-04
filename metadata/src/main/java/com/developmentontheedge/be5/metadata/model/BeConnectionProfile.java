@@ -1,14 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import one.util.streamex.StreamEx;
-
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithProperties;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.metadata.sql.ConnectionUrl;
@@ -19,6 +10,14 @@ import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
+import one.util.streamex.StreamEx;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BeConnectionProfile extends BeModelElementSupport implements BeElementWithProperties
 {

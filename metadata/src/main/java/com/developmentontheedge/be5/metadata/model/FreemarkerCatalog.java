@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @PropertyName("Freemarker Scripts")
 public class FreemarkerCatalog extends BeVectorCollection<FreemarkerScriptOrCatalog> implements FreemarkerScriptOrCatalog

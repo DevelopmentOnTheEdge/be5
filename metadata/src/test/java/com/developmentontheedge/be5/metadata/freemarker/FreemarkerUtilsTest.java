@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class FreemarkerUtilsTest
 {

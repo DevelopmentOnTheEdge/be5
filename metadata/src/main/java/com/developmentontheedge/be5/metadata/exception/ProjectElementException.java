@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.exception;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
-import com.developmentontheedge.beans.annot.PropertyName;
 
 @PropertyName("Error")
 public class ProjectElementException extends Exception implements Formattable

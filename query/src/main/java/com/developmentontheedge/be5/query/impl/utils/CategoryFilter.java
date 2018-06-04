@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
-import java.util.Optional;
-
 import com.developmentontheedge.sql.model.AstConcatExpression;
 import com.developmentontheedge.sql.model.AstFieldReference;
 import com.developmentontheedge.sql.model.AstFunNode;
@@ -14,6 +12,8 @@ import com.developmentontheedge.sql.model.AstStringConstant;
 import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.JoinType;
+
+import java.util.Optional;
 
 
 public class CategoryFilter

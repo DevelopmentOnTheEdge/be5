@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model.editors;
 
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.editors.GenericMultiSelectEditor;
+
+import java.util.List;
 
 public class RoleMultiSelector extends GenericMultiSelectEditor
 {

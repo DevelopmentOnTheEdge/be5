@@ -2,10 +2,9 @@ package com.developmentontheedge.be5.modules.system.groovy
 
 import com.developmentontheedge.be5.base.services.Meta
 import com.developmentontheedge.be5.modules.system.SystemBe5ProjectTest
-
-import javax.inject.Inject
 import org.junit.Test
 
+import javax.inject.Inject
 
 class DataSourceQueryTest extends SystemBe5ProjectTest
 {

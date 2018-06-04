@@ -7,10 +7,15 @@ import com.developmentontheedge.be5.metadata.sql.macro.MySqlMacroProcessorStrate
 import com.developmentontheedge.be5.metadata.sql.macro.OracleMacroProcessorStrategy;
 import com.developmentontheedge.be5.metadata.sql.macro.PostgresMacroProcessorStrategy;
 import com.developmentontheedge.be5.metadata.sql.macro.SqlServerMacroProcessorStrategy;
-import com.developmentontheedge.be5.metadata.sql.schema.*;
+import com.developmentontheedge.be5.metadata.sql.schema.Db2SchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.DbmsSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.H2SchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.MySqlSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.OracleSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.PostgresSchemaReader;
+import com.developmentontheedge.be5.metadata.sql.schema.SqlServerSchemaReader;
 import com.developmentontheedge.be5.metadata.sql.type.Db2TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
-import com.developmentontheedge.be5.metadata.sql.type.DefaultTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.H2TypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.MySqlTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.OracleTypeManager;

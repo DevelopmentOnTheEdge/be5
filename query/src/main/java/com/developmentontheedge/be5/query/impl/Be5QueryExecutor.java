@@ -1,19 +1,19 @@
 package com.developmentontheedge.be5.query.impl;
 
 import com.developmentontheedge.be5.base.FrontendConstants;
-import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
-import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.VarResolver;
 import com.developmentontheedge.be5.query.impl.utils.CategoryFilter;
 import com.developmentontheedge.be5.query.impl.utils.DebugQueryLogger;
+import com.developmentontheedge.be5.query.sql.DpsRecordAdapter;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -24,7 +24,6 @@ import com.developmentontheedge.sql.format.Simplifier;
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
-
 import one.util.streamex.StreamEx;
 
 import java.sql.PreparedStatement;
@@ -37,7 +36,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.*;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.addIDColumnIfNeeded;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applyFilters;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.applySort;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.countFromQuery;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.resolveTypeOfRefColumn;
+import static com.developmentontheedge.be5.query.impl.utils.QueryUtils.resolveTypes;
 
 
 /**

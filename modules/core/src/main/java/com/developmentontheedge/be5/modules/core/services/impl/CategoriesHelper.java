@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.modules.core.services.impl;
 
-import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.base.util.Utils;
-import javax.inject.Inject;
+import com.developmentontheedge.be5.database.DbService;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

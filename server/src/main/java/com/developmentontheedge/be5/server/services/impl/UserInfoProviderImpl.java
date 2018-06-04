@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services.impl;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.web.Session;
 import com.developmentontheedge.be5.web.SessionConstants;

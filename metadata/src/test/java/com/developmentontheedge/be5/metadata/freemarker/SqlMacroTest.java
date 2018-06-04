@@ -1,14 +1,13 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class SqlMacroTest

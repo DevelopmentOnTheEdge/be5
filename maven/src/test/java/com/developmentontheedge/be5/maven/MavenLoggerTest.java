@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.maven;
 
-import org.junit.Test;
 import org.apache.maven.plugin.logging.Log;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

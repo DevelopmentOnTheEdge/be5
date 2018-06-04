@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.metadata.exception;
 
-import com.developmentontheedge.beans.PropertyDescriptorEx;
-
 import com.developmentontheedge.beans.BeanInfoEx;
+import com.developmentontheedge.beans.PropertyDescriptorEx;
 
 public class ProjectElementExceptionBeanInfo extends BeanInfoEx
 {

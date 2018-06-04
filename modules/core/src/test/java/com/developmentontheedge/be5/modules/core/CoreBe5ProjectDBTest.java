@@ -1,11 +1,9 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.server.ServerModule;
 import com.developmentontheedge.be5.test.TestProjectProvider;
 import com.developmentontheedge.be5.test.TestUtils;
-import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;

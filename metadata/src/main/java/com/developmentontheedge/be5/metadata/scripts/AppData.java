@@ -1,12 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.developmentontheedge.be5.metadata.exception.FreemarkerSqlException;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.freemarker.FreemarkerSqlHandler;
@@ -18,6 +11,13 @@ import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.sql.BeSqlExecutor;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.dbms.SqlExecutor;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AppData extends ScriptSupport<AppData>

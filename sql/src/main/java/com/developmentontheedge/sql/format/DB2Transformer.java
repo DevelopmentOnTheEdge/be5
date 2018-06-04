@@ -1,8 +1,5 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.developmentontheedge.sql.model.AstBetweenPredicate;
 import com.developmentontheedge.sql.model.AstCast;
 import com.developmentontheedge.sql.model.AstConcatExpression;
@@ -34,6 +31,9 @@ import com.developmentontheedge.sql.model.Function;
 import com.developmentontheedge.sql.model.PredefinedFunction;
 import com.developmentontheedge.sql.model.SimpleNode;
 import com.developmentontheedge.sql.model.SqlParserTreeConstants;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DB2Transformer extends GenericDbmsTransformer
 {

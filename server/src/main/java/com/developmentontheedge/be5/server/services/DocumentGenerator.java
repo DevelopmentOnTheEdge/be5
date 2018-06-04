@@ -4,10 +4,10 @@ import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
-import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 

@@ -1,14 +1,17 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
-import org.junit.Test;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.ExtendedSqlException;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class TableDefTest
 {

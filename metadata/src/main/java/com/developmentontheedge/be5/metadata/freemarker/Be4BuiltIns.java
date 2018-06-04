@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.sql.macro.IMacroProcessorStrategy;
-
 import freemarker.core.BuiltIn;
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;

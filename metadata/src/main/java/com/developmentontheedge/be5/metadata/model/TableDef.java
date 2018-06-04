@@ -1,6 +1,18 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static com.developmentontheedge.be5.metadata.model.SqlColumnType.*;
+import com.developmentontheedge.be5.metadata.MetadataUtils;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
+import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.beans.annot.PropertyName;
+import com.developmentontheedge.dbms.ExtendedSqlException;
+import com.developmentontheedge.dbms.SqlExecutor;
+import one.util.streamex.MoreCollectors;
+import one.util.streamex.StreamEx;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,21 +25,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import one.util.streamex.MoreCollectors;
-import one.util.streamex.StreamEx;
-
-import com.developmentontheedge.be5.metadata.MetadataUtils;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.sql.type.DbmsTypeManager;
-import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.beans.annot.PropertyName;
-import com.developmentontheedge.dbms.ExtendedSqlException;
-import com.developmentontheedge.dbms.SqlExecutor;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BOOL;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CHAR;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_DECIMAL;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_ENUM;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_UNKNOWN;
+import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_VARCHAR;
 
 public class TableDef extends BeVectorCollection<BeModelElement> implements DdlElement
 {

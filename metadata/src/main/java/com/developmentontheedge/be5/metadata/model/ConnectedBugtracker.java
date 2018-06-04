@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.developmentontheedge.beans.annot.PropertyName;
 
 public class ConnectedBugtracker
 {

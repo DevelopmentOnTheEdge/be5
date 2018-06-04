@@ -5,7 +5,8 @@ import com.developmentontheedge.be5.test.ServerTestUtils
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.Test
 
-import static org.junit.Assert.*
+import static org.junit.Assert.assertArrayEquals
+import static org.junit.Assert.assertEquals
 
 
 class OperationServiceImplTest extends ServerTestUtils

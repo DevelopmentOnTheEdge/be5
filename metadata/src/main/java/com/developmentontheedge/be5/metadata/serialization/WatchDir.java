@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
-import static java.nio.file.LinkOption.*;
-import static java.nio.file.StandardWatchEventKinds.*;
+import com.developmentontheedge.be5.metadata.model.Project;
+import one.util.streamex.StreamEx;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -23,9 +23,11 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.developmentontheedge.be5.metadata.model.Project;
-
-import one.util.streamex.StreamEx;
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 public class WatchDir
 {

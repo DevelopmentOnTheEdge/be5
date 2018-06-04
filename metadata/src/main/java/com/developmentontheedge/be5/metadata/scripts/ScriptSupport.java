@@ -1,15 +1,5 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
@@ -24,6 +14,16 @@ import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.metadata.util.ProcessController;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.SimpleConnector;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 
 public abstract class ScriptSupport<T>
@@ -64,13 +64,13 @@ public abstract class ScriptSupport<T>
         return log;
     }
 
-    public void init() throws ScriptException
+    public void init()
     {
         initProject();
         initConnector();
     }
 
-    public void initConnector() throws ScriptException
+    public void initConnector()
     {
         if(connectionProfileName != null)
         {
@@ -98,7 +98,7 @@ public abstract class ScriptSupport<T>
         }
     }
 
-    public void initProject() throws ScriptException
+    public void initProject()
     {
         long startTime = System.nanoTime();
         initLogging();

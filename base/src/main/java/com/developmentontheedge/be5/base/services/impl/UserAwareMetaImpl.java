@@ -1,24 +1,23 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
-import com.developmentontheedge.be5.base.util.MoreStrings;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 
 public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
@@ -63,7 +62,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     @Override
     public void compileLocalizations()
     {
-        localizations = CompiledLocalizations.from(projectProvider.getProject());
+        localizations = CompiledLocalizations.from(projectProvider.get());
     }
 
     /* (non-Javadoc)

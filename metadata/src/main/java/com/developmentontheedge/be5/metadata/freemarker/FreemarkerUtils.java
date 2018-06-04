@@ -1,12 +1,5 @@
 package com.developmentontheedge.be5.metadata.freemarker;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.util.Map;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.FreemarkerCatalog;
 import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
@@ -16,7 +9,6 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
-
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.SoftCacheStorage;
 import freemarker.cache.TemplateLoader;
@@ -27,6 +19,12 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModelException;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.Writer;
+import java.util.Map;
 
 public final class FreemarkerUtils
 {

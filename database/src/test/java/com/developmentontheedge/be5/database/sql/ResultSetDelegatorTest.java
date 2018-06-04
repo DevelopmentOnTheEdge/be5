@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class ResultSetDelegatorTest
 {

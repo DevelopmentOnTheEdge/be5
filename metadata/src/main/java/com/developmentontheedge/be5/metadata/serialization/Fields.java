@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
+import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.model.Operation;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.QueryType;
-import com.developmentontheedge.be5.metadata.model.Operation;
 
 
 public class Fields

@@ -2,11 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
+import one.util.streamex.IntStreamEx;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
-
-import one.util.streamex.IntStreamEx;
 
 public class AstSelect extends SimpleNode
 {

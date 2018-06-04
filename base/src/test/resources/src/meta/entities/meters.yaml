@@ -1,0 +1,36 @@
+meters:
+  type: table
+  displayName: meters
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(50)
+        defaultValue: '''Н/Д'''
+    - value:
+        type: SMALLINT
+    - whoInserted___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - whoModified___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - creationDate___:
+        type: TIMESTAMP
+        canBeNull: true
+    - modificationDate___:
+        type: TIMESTAMP
+        canBeNull: true
+    - ipInserted___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - ipModified___:
+        type: VARCHAR(100)
+        canBeNull: true
+    - isDeleted___:
+        type: ENUM('no','yes')
+        defaultValue: '''no'''

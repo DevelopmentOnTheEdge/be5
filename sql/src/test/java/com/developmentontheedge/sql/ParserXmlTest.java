@@ -1,11 +1,10 @@
 package com.developmentontheedge.sql;
 
+import com.developmentontheedge.xmltest.TargetFactory;
+import com.developmentontheedge.xmltest.XmlTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import com.developmentontheedge.xmltest.TargetFactory;
-import com.developmentontheedge.xmltest.XmlTestSuite;
 
 public class ParserXmlTest extends TestCase
 {

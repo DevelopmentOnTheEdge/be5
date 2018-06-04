@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.modules.system.queries;
 
 import com.developmentontheedge.be5.base.services.Be5Caches;
-import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import com.github.benmanes.caffeine.cache.Cache;
 
 import javax.inject.Inject;

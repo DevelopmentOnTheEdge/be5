@@ -12,6 +12,9 @@ public class GroovyDSLGeneratorTest extends TestUtils
     public void test() throws IOException
     {
         GroovyDSLGeneratorMojo mojo = new GroovyDSLGeneratorMojo();
+        mojo.projectPath = tpmProjectPath.toFile();
+        mojo.connectionProfileName = profileTestMavenPlugin;
+
         mojo.fileName = tpmProjectPath.toAbsolutePath().toString() + "/";
 
         mojo.execute();

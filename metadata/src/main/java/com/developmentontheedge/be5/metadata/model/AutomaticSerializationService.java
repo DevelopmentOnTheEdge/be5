@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 
 public class AutomaticSerializationService
 {

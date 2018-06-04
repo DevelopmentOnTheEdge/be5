@@ -3,12 +3,12 @@ package com.developmentontheedge.be5.operation.services.validation;
 import com.developmentontheedge.be5.operation.TestUtils;
 import org.junit.Test;
 
-import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.*;
+import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.Rule;
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.pattern;
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.range;
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.step;
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.unique;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 
 public class ValidationRulesTest extends TestUtils

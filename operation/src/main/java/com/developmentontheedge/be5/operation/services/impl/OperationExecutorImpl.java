@@ -1,12 +1,10 @@
 package com.developmentontheedge.be5.operation.services.impl;
 
-import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
+import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.metadata.model.GroovyOperationExtender;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
@@ -15,9 +13,10 @@ import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.model.TransactionalOperation;
-import com.developmentontheedge.be5.base.util.Utils;
+import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
+import com.developmentontheedge.be5.operation.services.OperationExecutor;
+import com.developmentontheedge.be5.operation.services.validation.Validator;
 import com.google.inject.Injector;
-
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -29,7 +28,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.developmentontheedge.be5.metadata.model.Operation.*;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_DOTNET;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVA;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVADOTNET;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVAFUNCTION;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JAVASCRIPT;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_JSSERVER;
+import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_SQL;
 
 
 public class OperationExecutorImpl implements OperationExecutor

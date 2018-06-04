@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.server;
 
-import com.developmentontheedge.be5.web.impl.ResponseImpl;
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.server.util.Jaxb;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Response;
+import com.developmentontheedge.be5.web.impl.ResponseImpl;
 import org.junit.Before;
 import org.junit.Test;
 

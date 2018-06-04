@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.query.services.impl;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.base.services.GroovyRegister;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.TableBuilder;

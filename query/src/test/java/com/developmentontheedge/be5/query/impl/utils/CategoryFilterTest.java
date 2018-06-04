@@ -1,15 +1,14 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.developmentontheedge.sql.format.Context;
 import com.developmentontheedge.sql.format.Dbms;
 import com.developmentontheedge.sql.format.Formatter;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SqlQuery;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class CategoryFilterTest

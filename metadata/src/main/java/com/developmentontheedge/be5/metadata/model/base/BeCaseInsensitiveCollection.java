@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.model.base;
 
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 
 public class BeCaseInsensitiveCollection<T extends BeModelElement> extends BeVectorCollection<T>
 {

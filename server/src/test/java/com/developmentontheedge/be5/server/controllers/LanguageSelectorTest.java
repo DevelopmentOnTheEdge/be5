@@ -1,17 +1,16 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import javax.inject.Inject;
-
+import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import javax.inject.Inject;
 import java.util.Collections;
 
 import static org.mockito.Matchers.eq;

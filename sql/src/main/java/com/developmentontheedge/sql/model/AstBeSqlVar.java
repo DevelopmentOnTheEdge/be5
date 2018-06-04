@@ -2,9 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=true,NODE_PREFIX=Ast,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package com.developmentontheedge.sql.model;
 
-import java.util.Set;
-
 import one.util.streamex.StreamEx;
+
+import java.util.Set;
 
 public class AstBeSqlVar extends AstBeNode
 {

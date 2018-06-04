@@ -1,5 +1,12 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.beans.annot.PropertyDescription;
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,13 +15,6 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.beans.annot.PropertyDescription;
-import com.developmentontheedge.beans.annot.PropertyName;
 
 public class ColumnDef extends TableRef
 {

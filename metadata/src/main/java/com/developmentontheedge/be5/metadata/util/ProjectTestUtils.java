@@ -1,6 +1,19 @@
 package com.developmentontheedge.be5.metadata.util;
 
-import com.developmentontheedge.be5.metadata.model.*;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
+import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.EntityType;
+import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
+import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Operation;
+import com.developmentontheedge.be5.metadata.model.PageCustomization;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.StaticPage;
+import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 

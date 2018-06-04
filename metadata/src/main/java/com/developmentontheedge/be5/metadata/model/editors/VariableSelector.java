@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model.editors;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.beans.editors.StringTagEditor;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class VariableSelector extends StringTagEditor
 {

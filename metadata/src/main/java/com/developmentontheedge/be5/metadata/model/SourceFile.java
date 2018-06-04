@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.model.base.BeFileBasedElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.be5.metadata.serialization.ProjectFileSystem;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SourceFile extends BeModelElementSupport implements BeFileBasedElement
 {

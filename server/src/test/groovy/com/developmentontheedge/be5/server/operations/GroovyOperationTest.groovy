@@ -3,16 +3,15 @@ package com.developmentontheedge.be5.server.operations
 import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
-import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
 
-import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.verify
-
 
 class GroovyOperationTest extends SqlMockOperationTest
 {

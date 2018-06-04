@@ -1,5 +1,17 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.DatabaseConstants;
+import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
+import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.beans.annot.PropertyDescription;
+import com.developmentontheedge.beans.annot.PropertyName;
+import com.developmentontheedge.beans.model.ComponentFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,20 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.developmentontheedge.beans.annot.PropertyDescription;
-import com.developmentontheedge.beans.annot.PropertyName;
-import com.developmentontheedge.beans.model.ComponentFactory;
-
-import com.developmentontheedge.be5.metadata.DatabaseConstants;
-import com.developmentontheedge.be5.metadata.QueryType;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
-import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
-import com.developmentontheedge.be5.metadata.util.Strings2;
 
 
 @PropertyName("Query")

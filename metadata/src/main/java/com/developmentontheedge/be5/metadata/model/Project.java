@@ -1,5 +1,32 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.freemarker.FreemarkerUtils;
+import com.developmentontheedge.be5.metadata.model.base.BeElementWithProperties;
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
+import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
+import com.developmentontheedge.be5.metadata.serialization.LoadContext;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
+import com.developmentontheedge.be5.metadata.sql.macro.IMacroProcessorStrategy;
+import com.developmentontheedge.beans.annot.PropertyDescription;
+import com.developmentontheedge.beans.annot.PropertyName;
+import com.developmentontheedge.sql.format.Context;
+import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.DbmsTransformer;
+import com.developmentontheedge.sql.format.MacroExpander;
+import com.developmentontheedge.sql.model.AstStart;
+import com.developmentontheedge.sql.model.SqlParser;
+import freemarker.core.Environment;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
+import one.util.streamex.StreamEx;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
@@ -17,36 +44,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import one.util.streamex.StreamEx;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.freemarker.FreemarkerUtils;
-import com.developmentontheedge.be5.metadata.model.base.BeElementWithProperties;
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
-import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
-import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
-import com.developmentontheedge.be5.metadata.sql.macro.IMacroProcessorStrategy;
-import com.developmentontheedge.beans.annot.PropertyDescription;
-import com.developmentontheedge.beans.annot.PropertyName;
-import com.developmentontheedge.sql.format.Context;	       
-import com.developmentontheedge.sql.format.Dbms;
-import com.developmentontheedge.sql.format.DbmsTransformer;
-import com.developmentontheedge.sql.format.MacroExpander;
-import com.developmentontheedge.sql.model.AstStart;
-import com.developmentontheedge.sql.model.SqlParser;
-
-import freemarker.core.Environment;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 
 /**
  * Root entry for BeanExplorer project.

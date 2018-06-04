@@ -1,7 +1,5 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.function.Predicate;
-
 import com.developmentontheedge.sql.model.AstCase;
 import com.developmentontheedge.sql.model.AstCaseElse;
 import com.developmentontheedge.sql.model.AstCast;
@@ -25,6 +23,8 @@ import com.developmentontheedge.sql.model.DbSpecificFunction;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.ParserContext;
 import com.developmentontheedge.sql.model.SimpleNode;
+
+import java.util.function.Predicate;
 
 abstract public class GenericDbmsTransformer implements DbmsTransformer
 {

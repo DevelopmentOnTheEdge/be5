@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.web.Controller;
@@ -118,7 +118,7 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
 
     private LanguageSelectorResponse getState()
     {
-        Project project = projectProvider.getProject();
+        Project project = projectProvider.get();
 
         List<String> languages = Arrays.stream(project.getLanguages()).map(String::toUpperCase).collect(Collectors.toList());
 

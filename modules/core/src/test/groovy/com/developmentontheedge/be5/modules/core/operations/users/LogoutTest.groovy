@@ -1,20 +1,18 @@
 package com.developmentontheedge.be5.modules.core.operations.users
 
-import com.developmentontheedge.be5.web.Request
-import com.developmentontheedge.be5.web.Session
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.modules.core.CoreBe5ProjectDbMockTest
-import com.developmentontheedge.be5.server.model.FrontendAction
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel
 import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.server.model.FrontendAction
+import com.developmentontheedge.be5.web.Request
+import com.developmentontheedge.be5.web.Session
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
 import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
-
 
 class LogoutTest extends CoreBe5ProjectDbMockTest
 {

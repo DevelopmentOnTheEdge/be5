@@ -1,16 +1,14 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
+import com.developmentontheedge.be5.metadata.model.EntityLocalizations.LocalizationRow;
+import one.util.streamex.StreamEx;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-import one.util.streamex.StreamEx;
-
-import org.junit.Test;
-
-import com.developmentontheedge.be5.metadata.model.EntityLocalizations.LocalizationRow;
+import static org.junit.Assert.assertEquals;
 
 public class EntityLocalizationsTest
 {

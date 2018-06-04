@@ -1,15 +1,15 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.web.Request;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
@@ -37,7 +37,7 @@ public class StaticPageController extends ApiControllerSupport
     public void generate(Request req, Response res, String requestSubUrl)
     {
         String language = userInfoProvider.get().getLanguage();
-        String staticPageContent = projectProvider.getProject().getStaticPageContent(language, requestSubUrl);
+        String staticPageContent = projectProvider.get().getStaticPageContent(language, requestSubUrl);
 
         if (staticPageContent == null)
         {

@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createStaticPage;
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createStaticPage;
+import static org.junit.Assert.assertEquals;
 
 
 public class StaticPageTest

@@ -1,20 +1,18 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.test.ServerTestResponse;
-import com.developmentontheedge.be5.web.Request;
-import javax.inject.Inject;
-
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
+import com.developmentontheedge.be5.test.ServerTestResponse;
+import com.developmentontheedge.be5.web.Request;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 

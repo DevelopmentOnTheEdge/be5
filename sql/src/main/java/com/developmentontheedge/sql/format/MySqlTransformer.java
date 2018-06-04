@@ -1,8 +1,5 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import com.developmentontheedge.sql.model.AstCase;
 import com.developmentontheedge.sql.model.AstCaseElse;
 import com.developmentontheedge.sql.model.AstCast;
@@ -30,6 +27,9 @@ import com.developmentontheedge.sql.model.Function;
 import com.developmentontheedge.sql.model.Node;
 import com.developmentontheedge.sql.model.PredefinedFunction;
 import com.developmentontheedge.sql.model.SimpleNode;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class MySqlTransformer extends GenericDbmsTransformer
 {

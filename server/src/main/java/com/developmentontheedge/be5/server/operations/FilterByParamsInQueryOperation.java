@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.server.operations;
 
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
-import javax.inject.Inject;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
 
+import javax.inject.Inject;
 import java.util.Map;
 
 

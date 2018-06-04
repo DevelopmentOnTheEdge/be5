@@ -1,10 +1,9 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.beans.BeanInfoEx;
-
 import com.developmentontheedge.beans.PropertyDescriptorEx;
+
+import java.beans.PropertyDescriptor;
 
 public class RoleBeanInfo extends BeanInfoEx
 {

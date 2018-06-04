@@ -9,7 +9,7 @@ import org.junit.Test
 
 import javax.inject.Inject
 
-import static org.junit.Assert.*
+import static org.junit.Assert.assertEquals
 
 
 class RecordModelTest extends DatabaseModelProjectDbTest

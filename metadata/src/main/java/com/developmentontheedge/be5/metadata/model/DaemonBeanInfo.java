@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.be5.metadata.model.editors.ClassSelector;
 import com.developmentontheedge.be5.metadata.model.editors.DaemonTypeSelector;
 import com.developmentontheedge.beans.BeanInfoEx;
+
+import java.beans.PropertyDescriptor;
 
 public class DaemonBeanInfo extends BeanInfoEx
 {

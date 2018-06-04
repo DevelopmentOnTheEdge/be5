@@ -1,12 +1,5 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
@@ -16,6 +9,13 @@ import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
 import com.developmentontheedge.be5.metadata.model.base.TemplateElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class PageCustomization extends BeModelElementSupport implements TemplateElement
 {

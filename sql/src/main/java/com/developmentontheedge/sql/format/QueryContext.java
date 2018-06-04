@@ -1,10 +1,10 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.List;
-import java.util.Map;
-
 import com.developmentontheedge.sql.model.AstBeSqlSubQuery;
 import one.util.streamex.StreamEx;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Query execution context

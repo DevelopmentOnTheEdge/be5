@@ -1,12 +1,12 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Objects;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.beans.annot.PropertyDescription;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.Objects;
 
 public class StaticPage extends BeVectorCollection<BeModelElement>
 {

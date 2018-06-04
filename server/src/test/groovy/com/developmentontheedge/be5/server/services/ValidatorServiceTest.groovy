@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.server.services
 
+import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.services.validation.Validator
-import javax.inject.Inject
-import com.developmentontheedge.be5.server.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
@@ -10,9 +9,10 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 
+import javax.inject.Inject
+
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
-
 
 class ValidatorServiceTest extends ServerBe5ProjectTest
 {

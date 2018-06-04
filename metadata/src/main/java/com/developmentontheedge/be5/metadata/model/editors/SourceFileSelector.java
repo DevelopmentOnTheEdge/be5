@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model.editors;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.util.Strings2;
 import com.developmentontheedge.beans.editors.StringTagEditor;
+
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 
 public class SourceFileSelector extends StringTagEditor
 {

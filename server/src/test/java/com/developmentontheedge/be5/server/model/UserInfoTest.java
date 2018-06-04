@@ -1,13 +1,12 @@
 package com.developmentontheedge.be5.server.model;
 
-import javax.inject.Inject;
-
 import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;

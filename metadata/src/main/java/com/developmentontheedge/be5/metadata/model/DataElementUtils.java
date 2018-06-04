@@ -1,18 +1,17 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import com.developmentontheedge.be5.metadata.model.base.BeElementWithOriginModule;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 import com.developmentontheedge.be5.metadata.model.base.DataElementPath;
-
 import one.util.streamex.StreamEx;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DataElementUtils
 {

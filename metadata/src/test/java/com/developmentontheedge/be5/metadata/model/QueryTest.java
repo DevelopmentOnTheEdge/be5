@@ -1,17 +1,19 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import static org.junit.Assert.*;
+import com.developmentontheedge.be5.metadata.QueryType;
+import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import one.util.streamex.StreamEx;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.developmentontheedge.be5.metadata.QueryType;
-import one.util.streamex.StreamEx;
-
-import org.junit.Test;
-
-import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class QueryTest
 {

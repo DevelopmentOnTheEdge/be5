@@ -1,14 +1,10 @@
 package com.developmentontheedge.be5.metadata.sql.type;
 
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
-import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
-import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
-import one.util.streamex.MoreCollectors;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class H2TypeManager extends DefaultTypeManager

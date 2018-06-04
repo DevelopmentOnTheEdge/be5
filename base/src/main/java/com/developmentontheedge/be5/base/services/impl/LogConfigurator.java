@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.base.services.impl;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 
 
 public class LogConfigurator

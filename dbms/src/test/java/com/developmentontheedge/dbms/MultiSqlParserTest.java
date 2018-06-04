@@ -1,9 +1,9 @@
 package com.developmentontheedge.dbms;
 
+import junit.framework.TestCase;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 public class MultiSqlParserTest extends TestCase
 {

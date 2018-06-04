@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.modules.core;
 
-import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.base.services.CoreUtils;
 import com.developmentontheedge.be5.modules.core.controllers.CategoriesController;
 import com.developmentontheedge.be5.modules.core.controllers.UserInfoController;
@@ -9,6 +8,7 @@ import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesServiceImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.CoreUtilsImpl;
 import com.developmentontheedge.be5.modules.core.services.impl.LoginServiceImpl;
+import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
 

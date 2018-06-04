@@ -1,17 +1,17 @@
 package com.developmentontheedge.be5.query.impl;
 
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.model.UserInfo;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.base.model.UserInfo;
 import com.developmentontheedge.be5.query.QueryExecutor;
 import com.developmentontheedge.be5.query.model.CellModel;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.RawCellModel;
 import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
+import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetAsMap;

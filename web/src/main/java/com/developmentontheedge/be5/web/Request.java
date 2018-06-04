@@ -1,9 +1,8 @@
 package com.developmentontheedge.be5.web;
 
-import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Locale;
 
 /**
  * Request injected to components.

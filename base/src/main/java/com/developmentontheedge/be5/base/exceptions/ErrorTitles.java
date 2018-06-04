@@ -1,8 +1,26 @@
 package com.developmentontheedge.be5.base.exceptions;
 
-import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.*;
-
 import java.util.EnumMap;
+
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.ACCESS_DENIED;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.ACCESS_DENIED_TO_OPERATION;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.ACCESS_DENIED_TO_QUERY;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.INTERNAL_ERROR;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.INTERNAL_ERROR_IN_QUERY;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NOT_FOUND;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NOT_INITIALIZED;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NO_OPERATION_IN_QUERY;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.PARAMETER_ABSENT;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.PARAMETER_EMPTY;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.PARAMETER_INVALID;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.STATE_INVALID;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_COMPONENT;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_ENTITY;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_OPERATION;
+import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_QUERY;
 
 public class ErrorTitles
 {

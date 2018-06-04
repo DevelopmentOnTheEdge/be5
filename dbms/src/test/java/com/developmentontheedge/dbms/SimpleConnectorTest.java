@@ -8,7 +8,7 @@ import org.zapodot.junit.db.EmbeddedDatabaseRule;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.zapodot.junit.db.EmbeddedDatabaseRule.CompatibilityMode.PostgreSQL;
 
 public class SimpleConnectorTest

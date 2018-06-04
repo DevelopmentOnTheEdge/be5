@@ -1,14 +1,14 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.beans.annot.PropertyName;
 
 public class RoleSet extends InheritableStringSet
 {

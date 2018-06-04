@@ -1,9 +1,9 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Collection;
-
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
+
+import java.util.Collection;
 
 public class Localizations extends BeVectorCollection<LanguageLocalizations>
 {

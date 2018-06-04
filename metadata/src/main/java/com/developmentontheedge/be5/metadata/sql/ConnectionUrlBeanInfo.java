@@ -1,8 +1,8 @@
 package com.developmentontheedge.be5.metadata.sql;
 
-import java.beans.PropertyDescriptor;
-
 import com.developmentontheedge.beans.BeanInfoEx;
+
+import java.beans.PropertyDescriptor;
 
 public class ConnectionUrlBeanInfo extends BeanInfoEx
 {

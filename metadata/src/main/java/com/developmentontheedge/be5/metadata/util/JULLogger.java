@@ -1,8 +1,6 @@
 package com.developmentontheedge.be5.metadata.util;
 
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class JULLogger implements ProcessController
 {

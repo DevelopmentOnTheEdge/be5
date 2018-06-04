@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.model.EntityLocalizations.LocalizationRow;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import com.developmentontheedge.be5.metadata.model.EntityLocalizations.LocalizationRow;
 
 public class Projects
 {

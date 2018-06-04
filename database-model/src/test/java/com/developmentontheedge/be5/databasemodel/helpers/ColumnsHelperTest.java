@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.databasemodel.helpers;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 
 public class ColumnsHelperTest

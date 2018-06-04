@@ -1,20 +1,18 @@
 package com.developmentontheedge.be5.metadata.serialization;
 
-import static org.junit.Assert.*;
+import com.developmentontheedge.be5.metadata.model.Project;
+import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import one.util.streamex.EntryStream;
-import one.util.streamex.StreamEx;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
-import com.developmentontheedge.be5.metadata.model.Project;
+import static org.junit.Assert.assertTrue;
 
 public class ProjectFileSystemTest
 {

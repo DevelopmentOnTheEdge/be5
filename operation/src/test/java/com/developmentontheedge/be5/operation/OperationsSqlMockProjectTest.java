@@ -1,8 +1,7 @@
 package com.developmentontheedge.be5.operation;
 
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
-import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.base.BaseModule;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -10,6 +9,7 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
+import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.be5.operation.test.ErrorProcessing;
 import com.developmentontheedge.be5.test.BaseTestUtils;
 import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;

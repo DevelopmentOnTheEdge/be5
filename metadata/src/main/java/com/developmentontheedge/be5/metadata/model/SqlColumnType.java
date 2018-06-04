@@ -1,11 +1,11 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.util.Strings2;
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.developmentontheedge.be5.metadata.util.Strings2;
-import com.developmentontheedge.beans.annot.PropertyName;
 
 @PropertyName("Column type")
 public class SqlColumnType

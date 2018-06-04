@@ -2,9 +2,9 @@ package com.developmentontheedge.be5.modules.core.operations.users;
 
 import com.developmentontheedge.be5.modules.core.api.CoreFrontendActions;
 import com.developmentontheedge.be5.modules.core.services.LoginService;
-import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
 
 import javax.inject.Inject;
 

@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.metadata.model;
 
+import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
+import com.developmentontheedge.beans.annot.PropertyName;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,9 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-
-import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
-import com.developmentontheedge.beans.annot.PropertyName;
 
 public class InheritableStringSet
 {

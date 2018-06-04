@@ -1,17 +1,11 @@
 package com.developmentontheedge.sql.format;
 
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.developmentontheedge.sql.model.AstBeSqlVar;
-import com.developmentontheedge.sql.model.AstInValueList;
-
 import com.developmentontheedge.sql.model.AstBooleanExpression;
 import com.developmentontheedge.sql.model.AstFrom;
 import com.developmentontheedge.sql.model.AstFunNode;
 import com.developmentontheedge.sql.model.AstIdentifierConstant;
+import com.developmentontheedge.sql.model.AstInValueList;
 import com.developmentontheedge.sql.model.AstJoinSpecification;
 import com.developmentontheedge.sql.model.AstNumericConstant;
 import com.developmentontheedge.sql.model.AstParenthesis;
@@ -24,6 +18,11 @@ import com.developmentontheedge.sql.model.AstTableRef;
 import com.developmentontheedge.sql.model.AstWhere;
 import com.developmentontheedge.sql.model.DefaultParserContext;
 import com.developmentontheedge.sql.model.SimpleNode;
+
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 

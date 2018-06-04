@@ -37,7 +37,7 @@ public class TableModelTest extends QueryBe5ProjectDBTest
     @Test
     public void testExecuteSubQuery()
     {
-        Query query = projectProvider.getProject().getEntity("testtable").getQueries().get("Sub Query");
+        Query query = projectProvider.get().getEntity("testtable").getQueries().get("Sub Query");
         TableModel tableModel = tableModelService.builder(query, new HashMap<>())
                 .limit(20)
                 .build();

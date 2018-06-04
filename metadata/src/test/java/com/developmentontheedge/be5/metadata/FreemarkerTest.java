@@ -1,9 +1,5 @@
 package com.developmentontheedge.be5.metadata;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.freemarker.FreemarkerUtils;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
@@ -14,9 +10,12 @@ import com.developmentontheedge.be5.metadata.model.FreemarkerScript;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
-
-import junit.framework.TestCase;
 import freemarker.template.Configuration;
+import junit.framework.TestCase;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class FreemarkerTest extends TestCase

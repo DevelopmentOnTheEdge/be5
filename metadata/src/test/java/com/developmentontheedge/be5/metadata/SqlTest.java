@@ -1,16 +1,13 @@
 package com.developmentontheedge.be5.metadata;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import junit.framework.TestCase;
-
-import com.developmentontheedge.be5.metadata.sql.ConnectionUrl;
-import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.dbms.DbmsType;
 import com.developmentontheedge.dbms.MultiSqlConsumer;
 import com.developmentontheedge.dbms.MultiSqlParser;
 import com.developmentontheedge.dbms.SqlHandler;
+import junit.framework.TestCase;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SqlTest extends TestCase
 {

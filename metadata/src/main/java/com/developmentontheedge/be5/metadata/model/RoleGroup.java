@@ -1,13 +1,13 @@
 package com.developmentontheedge.be5.metadata.model;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 import com.developmentontheedge.beans.annot.PropertyName;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class RoleGroup extends BeModelElementSupport
 {

@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.metadata.sql.type;
 
-import static org.junit.Assert.*;
-
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -10,6 +8,8 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.SqlColumnType;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
+
+import static org.junit.Assert.assertEquals;
 
 public class BaseTypeManagerTest
 {

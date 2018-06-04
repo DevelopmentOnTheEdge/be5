@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.modules.core.api;
 
-import com.developmentontheedge.be5.server.model.FrontendAction;
 import com.developmentontheedge.be5.modules.core.model.UserInfoModel;
+import com.developmentontheedge.be5.server.model.FrontendAction;
 
 
 public interface CoreFrontendActions

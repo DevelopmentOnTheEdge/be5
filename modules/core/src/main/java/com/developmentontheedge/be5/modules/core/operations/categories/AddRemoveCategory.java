@@ -1,10 +1,10 @@
 package com.developmentontheedge.be5.modules.core.operations.categories;
 
+import com.developmentontheedge.be5.base.util.DpsUtils;
+import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.modules.core.services.impl.CategoriesHelper;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.operations.support.GOperationSupport;
-import com.developmentontheedge.be5.base.util.DpsUtils;
-import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.google.common.collect.ObjectArrays;
 
@@ -27,7 +27,7 @@ public class AddRemoveCategory extends GOperationSupport
             return null;
 
         DynamicProperty prop = new DynamicProperty( "categoryID", "Category", Long.class );
-        prop.setAttribute( TAG_LIST_ATTR, helper.getTagsFromSelectionView(
+        prop.setAttribute( TAG_LIST_ATTR, queries.getTagsFromSelectionView(
                 "categories", Collections.singletonMap( "entity", getInfo().getEntityName() )) );
         dps.add( prop );
 
