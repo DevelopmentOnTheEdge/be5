@@ -1,10 +1,10 @@
-package com.developmentontheedge.be5.server.operations
+package com.developmentontheedge.be5.operation.test
 
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.operation.util.Either
-import com.developmentontheedge.be5.test.SqlMockOperationTest
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Test
@@ -13,13 +13,13 @@ import static org.junit.Assert.assertEquals
 import static org.mockito.Matchers.eq
 import static org.mockito.Mockito.verify
 
-class GroovyOperationTest extends SqlMockOperationTest
+class GroovyOperationTest extends OperationsSqlMockProjectTest
 {
     @Test
     void emptyValues()
     {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "TestGroovyOp", "0","{}")
+                "testtableAdmin", "All records", "TestGroovyOp", "0", [:])
 
         assertEquals("{'values':{'name':'Test','beginDate':'2017-07-01','reason':'vacation','reasonMulti':['vacation','sick']},'meta':{'/name':{'displayName':'Имя'},'/beginDate':{'displayName':'Дата начала','type':'Date','readOnly':true},'/reason':{'displayName':'Причина снятия предыдущего работника','tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]},'/reasonMulti':{'displayName':'Множественный выбор','multipleSelectionList':true,'tagList':[['fired','Уволен'],['vacation','Отпуск'],['sick','На больничном'],['other','Иная причина']]}},'order':['/name','/beginDate','/reason','/reasonMulti']}",
                 oneQuotes(JsonFactory.bean(generate.getFirst())))

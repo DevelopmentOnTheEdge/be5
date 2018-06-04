@@ -43,7 +43,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void generateErrorOnExecute()
     {
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Internal error occured during operation testEntity.ErrorProcessing");
+        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing");
         executeAndCheck("generateError");
     }
 
@@ -67,7 +67,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void executeError()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Internal error occured during operation testEntity.ErrorProcessing");
+        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing");
         executeAndCheck("executeError");
     }
 
@@ -75,7 +75,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void executeOperationWithoutParams()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Internal error occured during operation testEntity.ErrorProcessing");
+        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing");
         executeAndCheck("withoutParams");
     }
 
@@ -83,7 +83,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(1);
         map.put("name", value);
-        Operation operation = operations.get("testEntity", "ErrorProcessing").setPresetValues(map).execute();
+        Operation operation = operations.get("testtableAdmin", "ErrorProcessing").setPresetValues(map).execute();
 
         Assert.assertEquals(OperationStatus.ERROR, operation.getStatus());
     }

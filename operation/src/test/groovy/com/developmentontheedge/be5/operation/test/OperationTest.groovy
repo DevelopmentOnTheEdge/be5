@@ -1,19 +1,22 @@
-package com.developmentontheedge.be5.server.operations
+package com.developmentontheedge.be5.operation.test
 
 import com.developmentontheedge.be5.base.FrontendConstants
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.model.OperationContext
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.util.Either
-import com.developmentontheedge.be5.test.SqlMockOperationTest
+import com.developmentontheedge.be5.test.BaseTestUtils
 import com.developmentontheedge.be5.test.mocks.DbServiceMock
 import com.developmentontheedge.beans.json.JsonFactory
 import com.google.common.collect.ImmutableMap
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
 import static org.mockito.Mockito.verify
 
-class OperationTest extends SqlMockOperationTest
+
+class OperationTest extends OperationsSqlMockProjectTest
 {
     @Test
     void testOperation()
@@ -35,7 +38,7 @@ class OperationTest extends SqlMockOperationTest
 
         OperationResult result = executeOperation("testtableAdmin", "All records", "TestOperation", "",
                 ImmutableMap.of("name","testName","value", "1")).getSecond()
-        assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation"), result)
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records"), result)
     }
 
     @Test
@@ -44,13 +47,13 @@ class OperationTest extends SqlMockOperationTest
         OperationResult result = executeOperation(createOperation("testtableAdmin", "TestOperation",
                 new OperationContext([] as String[], "All records", ["name": "foo"])),
                 ImmutableMap.of("name","testName","value", "1")).getSecond()
-        assertEquals(OperationResult.redirect("form/testtableAdmin/All records/TestOperation/name=foo"), result)
+        assertEquals(OperationResult.redirect("table/testtableAdmin/All records/name=foo"), result)
     }
 
     @Test
     void testOperationParameters()
     {
-        Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0","{}")
+        Either<Object, OperationResult> generate = generateOperation("testtableAdmin", "All records", "TestOperation", "0", [:])
 
         assertEquals("{'name':'','value':'0'}", oneQuotes(JsonFactory.bean(generate.getFirst()).getJsonObject("values").toString()))
     }
@@ -116,7 +119,7 @@ class OperationTest extends SqlMockOperationTest
     void testPropertyInvokeInit()
     {
         Either<Object, OperationResult> generate = generateOperation(
-                "testtableAdmin", "All records", "TestOperationProperty", "0", "{}")
+                "testtableAdmin", "All records", "TestOperationProperty", "0", [:])
 
         assertEquals("{" +
                         "'simple':''," +
@@ -148,6 +151,7 @@ class OperationTest extends SqlMockOperationTest
     }
 
     @Test
+    @Ignore
     void testOperationInvokeNullInsteadEmptyString()
     {
         executeOperation("testTags", "All records", "Insert", "",
