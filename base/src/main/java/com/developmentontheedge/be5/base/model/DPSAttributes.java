@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.server.model.beans;
+package com.developmentontheedge.be5.base.model;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.server.services
 
+import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.operation.services.validation.Validator
-import com.developmentontheedge.be5.server.model.beans.GDynamicPropertySetSupport
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
