@@ -46,7 +46,6 @@ public abstract class BaseTest
         @Override
         protected void configure()
         {
-            install(new BaseModule());
             bind(UserInfoProvider.class).to(StaticUserInfoProvider.class).in(Scopes.SINGLETON);
         }
     }
