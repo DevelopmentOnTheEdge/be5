@@ -13,6 +13,7 @@ class CustomOperation extends BaseOperationSupport implements Operation
     {
         //dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name", "value"], context.getOperationParams(), presetValues)
         dps.add("name")
+        dps.add("value")
 
         def newCalculatedValue = '4'
 

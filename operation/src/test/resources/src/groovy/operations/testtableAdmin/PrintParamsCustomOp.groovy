@@ -1,6 +1,7 @@
 package src.groovy.operations.testtableAdmin
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.base.util.DpsUtils
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport
 import com.developmentontheedge.beans.DynamicPropertySet
@@ -17,7 +18,7 @@ class PrintParamsCustomOp extends BaseOperationSupport
         dps.add("name")
         dps.add("value")
 
-        return dps
+        return DpsUtils.setValues(dps, presetValues)
     }
 
     @Override

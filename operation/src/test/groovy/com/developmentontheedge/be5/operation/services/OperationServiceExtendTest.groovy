@@ -1,10 +1,11 @@
-package com.developmentontheedge.be5.server.services
+package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.services.ProjectProvider
 import com.developmentontheedge.be5.base.services.UserAwareMeta
-import com.developmentontheedge.be5.operation.services.GroovyOperationLoader
-import com.developmentontheedge.be5.test.SqlMockOperationTest
+import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import groovy.transform.TypeChecked
+import org.junit.Before
 import org.junit.Test
 
 import javax.inject.Inject
@@ -13,11 +14,17 @@ import static org.junit.Assert.assertEquals
 
 
 @TypeChecked
-class OperationServiceExtendTest extends SqlMockOperationTest
+class OperationServiceExtendTest extends OperationsSqlMockProjectTest
 {
     @Inject UserAwareMeta userAwareMeta
     @Inject GroovyOperationLoader groovyOperationLoader
     @Inject ProjectProvider projectProvider
+
+    @Before
+    void setUp()
+    {
+        setStaticUserInfo(RoleType.ROLE_SYSTEM_DEVELOPER)
+    }
 
     @Test
     void getSuperOperationSimpleNameTest()

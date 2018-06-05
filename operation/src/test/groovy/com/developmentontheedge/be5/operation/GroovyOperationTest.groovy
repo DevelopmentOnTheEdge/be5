@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.operation.test
+package com.developmentontheedge.be5.operation
 
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.model.Operation

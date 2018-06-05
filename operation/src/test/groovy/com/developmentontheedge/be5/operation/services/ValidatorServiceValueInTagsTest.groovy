@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.server.services
+package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.services.validation.Validator
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +12,7 @@ import javax.inject.Inject
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNull
 
-class ValidatorServiceValueInTagsTest extends ServerBe5ProjectTest
+class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
 {
     @Inject Validator validator
     GDynamicPropertySetSupport dps

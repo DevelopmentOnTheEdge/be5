@@ -18,11 +18,6 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-    @Before
-    public void init()
-    {
-    }
-
     @Test
     public void generateErrorInPropertyOnExecute()
     {

@@ -1,8 +1,8 @@
-package com.developmentontheedge.be5.server.services
+package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.services.validation.Validator
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.BeanInfoConstants
 import com.developmentontheedge.beans.DynamicProperty
 import org.junit.Before
@@ -14,7 +14,7 @@ import javax.inject.Inject
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 
-class ValidatorServiceTest extends ServerBe5ProjectTest
+class ValidatorServiceTest extends OperationsSqlMockProjectTest
 {
     @Inject Validator validator
     GDynamicPropertySetSupport dps

@@ -1,9 +1,10 @@
-package com.developmentontheedge.be5.server.services
+package com.developmentontheedge.be5.operation.services
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.base.model.GDynamicPropertySetSupport
+import com.developmentontheedge.be5.metadata.RoleType
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.be5.operation.services.validation.Validator
-import com.developmentontheedge.be5.test.ServerBe5ProjectTest
 import com.developmentontheedge.beans.json.JsonFactory
 import org.junit.Before
 import org.junit.Test
@@ -12,14 +13,14 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-class ValidatorServiceNumbersTest extends ServerBe5ProjectTest
+class ValidatorServiceNumbersTest extends OperationsSqlMockProjectTest
 {
     @Inject Validator validator
     GDynamicPropertySetSupport dps
 
     @Before
     void initDps(){
-        initGuest()
+        setStaticUserInfo(RoleType.ROLE_GUEST)
         dps = new GDynamicPropertySetSupport()
     }
 

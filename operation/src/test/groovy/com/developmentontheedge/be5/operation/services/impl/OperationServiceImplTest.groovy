@@ -1,15 +1,13 @@
-package com.developmentontheedge.be5.server.services.impl
+package com.developmentontheedge.be5.operation.services.impl
 
-import com.developmentontheedge.be5.operation.services.impl.OperationServiceImpl
-import com.developmentontheedge.be5.test.ServerTestUtils
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 import org.junit.Test
 
 import static org.junit.Assert.assertArrayEquals
 import static org.junit.Assert.assertEquals
 
-
-class OperationServiceImplTest extends ServerTestUtils
+class OperationServiceImplTest extends OperationsSqlMockProjectTest
 {
     @Test
     void replaceValuesToStringDigitsAndDate()

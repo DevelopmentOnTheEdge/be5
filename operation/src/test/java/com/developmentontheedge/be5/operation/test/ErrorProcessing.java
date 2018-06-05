@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
+import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
 import com.developmentontheedge.beans.DynamicPropertySet;
@@ -20,13 +21,14 @@ public class ErrorProcessing extends BaseOperationSupport implements Operation
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        if (presetValues.get("name").equals("withoutParams"))
+        if ("withoutParams".equals(presetValues.get("name")))
         {
             return null;
         }
 
         dps.add(new DynamicPropertyBuilder("name", String.class)
                 .value(presetValues.getOrDefault("name", ""))
+                .attr(BeanInfoConstants.COLUMN_SIZE_ATTR, 30)
                 .get());
 
         dps.add(new DynamicPropertyBuilder("propertyForAnotherEntity", String.class).value("text").get());
