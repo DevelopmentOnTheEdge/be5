@@ -1,142 +1,142 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>be5-server</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
-	<packaging>jar</packaging>
+  <artifactId>be5-server</artifactId>
+  <version>0.1.2-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-	<name>be5 server</name>
-	<description>Core BE 5 server.</description>
+  <name>be5 server</name>
+  <description>Core BE 5 server.</description>
 
-	<parent>
-		<groupId>com.developmentontheedge.be5</groupId>
-		<artifactId>be5</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.developmentontheedge.be5</groupId>
+    <artifactId>be5</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+  </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-operation</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-operation</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-web</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-web</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-database-model</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-database-model</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-query</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-query</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge</groupId>
-			<artifactId>beans-json</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge</groupId>
+      <artifactId>beans-json</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
+    </dependency>
 
-		<dependency>
-			<groupId>javax.websocket</groupId>
-			<artifactId>javax.websocket-api</artifactId>
-			<version>1.1</version>
-		</dependency>
+    <dependency>
+      <groupId>javax.websocket</groupId>
+      <artifactId>javax.websocket-api</artifactId>
+      <version>1.1</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf</artifactId>
-			<version>3.0.8.RELEASE</version>
-		</dependency>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+      <version>3.0.8.RELEASE</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-test-base</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-test-base</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-maven-plugin</artifactId>
-			<version>0.1.1-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-maven-plugin</artifactId>
+      <version>0.1.1-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
 
-	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.developmentontheedge.be5</groupId>
-				<artifactId>be5-maven-plugin</artifactId>
-				<version>0.1.1-SNAPSHOT</version>
-				<configuration>
-					<projectPath>./src/test/resources/</projectPath>
-					<saveProject>true</saveProject>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>1.4.193</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>addTestSources</goal>
-							<goal>compileTests</goal>
-							<goal>removeTestStubs</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+  </dependencies>
 
-			<!--plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<quiet>true</quiet>
-							<additionalparam>-Xdoclint:none</additionalparam>
-							<tags>
-								<tag>
-									<name>todo</name>
-									<placement>a</placement>
-									<head>TODO:</head>
-								</tag>
-								<tag>
-									<name>pending</name>
-									<placement>a</placement>
-									<head>PENDING:</head>
-								</tag>
-							</tags>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin-->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.developmentontheedge.be5</groupId>
+        <artifactId>be5-maven-plugin</artifactId>
+        <version>0.1.1-SNAPSHOT</version>
+        <configuration>
+          <projectPath>./src/test/resources/</projectPath>
+          <saveProject>true</saveProject>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.193</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>addTestSources</goal>
+              <goal>compileTests</goal>
+              <goal>removeTestStubs</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-		</plugins>
-	</build>
+      <!--plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.3</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <quiet>true</quiet>
+              <additionalparam>-Xdoclint:none</additionalparam>
+              <tags>
+                <tag>
+                  <name>todo</name>
+                  <placement>a</placement>
+                  <head>TODO:</head>
+                </tag>
+                <tag>
+                  <name>pending</name>
+                  <placement>a</placement>
+                  <head>PENDING:</head>
+                </tag>
+              </tags>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin-->
+
+    </plugins>
+  </build>
 </project>

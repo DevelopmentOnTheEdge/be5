@@ -1,84 +1,84 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.developmentontheedge.be5.modules</groupId>
-	<artifactId>be5-modules-system</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+  <groupId>com.developmentontheedge.be5.modules</groupId>
+  <artifactId>be5-modules-system</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
 
-	<name>be5 modules system</name>
+  <name>be5 modules system</name>
 
-	<distributionManagement>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>dote</id>
-			<name>DOTE Repository</name>
-			<url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>dote-snapshots</id>
-			<name>DOTE Snapshots</name>
-			<url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>dote</id>
+      <name>DOTE Repository</name>
+      <url>http://nexus.dote.ru/nexus/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>dote-snapshots</id>
+      <name>DOTE Snapshots</name>
+      <url>http://nexus.dote.ru/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-	</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-server</artifactId>
-			<version>0.1.2-SNAPSHOT</version>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-server</artifactId>
+      <version>0.1.2-SNAPSHOT</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.developmentontheedge.be5</groupId>
-			<artifactId>be5-test</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.developmentontheedge.be5</groupId>
+      <artifactId>be5-test</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
 
-	</dependencies>
+  </dependencies>
 
-	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}</directory>
-				<excludes>
-					<exclude>.*</exclude>
-					<exclude>src/html/**/*.*</exclude>
-					<exclude>.idea/**/*</exclude>
-					<exclude>src/frontend/**/*</exclude>
-					<exclude>node_modules/**/*</exclude>
-					<exclude>dist/**/*</exclude>
-					<exclude>src/main/java/**/*.*</exclude>
-					<exclude>target/**/*.*</exclude>
-					<exclude>test/**/*.*</exclude>
-				</excludes>
-			</resource>
-		</resources>
+  <build>
+    <resources>
+      <resource>
+        <directory>${basedir}</directory>
+        <excludes>
+          <exclude>.*</exclude>
+          <exclude>src/html/**/*.*</exclude>
+          <exclude>.idea/**/*</exclude>
+          <exclude>src/frontend/**/*</exclude>
+          <exclude>node_modules/**/*</exclude>
+          <exclude>dist/**/*</exclude>
+          <exclude>src/main/java/**/*.*</exclude>
+          <exclude>target/**/*.*</exclude>
+          <exclude>test/**/*.*</exclude>
+        </excludes>
+      </resource>
+    </resources>
 
-		<plugins>
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-													<goal>addTestSources</goal>
-													<goal>compileTests</goal>
-													<goal>removeTestStubs</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-		</plugins>
-	</build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>addTestSources</goal>
+              <goal>compileTests</goal>
+              <goal>removeTestStubs</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
