@@ -8,32 +8,22 @@ import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
-/**
- * ApplicationInfoComponent returns ApplicationInfo(title, url) for current application (servlet context).
- */
+
 public class ApplicationInfoController extends ApiControllerSupport implements Controller
 {
     public static class ApplicationInfo
     {
-       
-        ApplicationInfo(String title, String url)
+        private String title;
+
+        ApplicationInfo(String title)
         {
             this.title = title;
-            this.url = url;
         }
 
-        private String title;
         public String getTitle()
         {
         	return title;
-        }
-        
-        final String url;
-        public String getURL()
-        {
-        	return url;
         }
     }
 
@@ -48,12 +38,9 @@ public class ApplicationInfoController extends ApiControllerSupport implements C
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
-        final ApplicationInfo appInfo;
-        
         try
         {
-            appInfo = getApplicationInfo(req);
-            res.sendAsJson(appInfo);
+            res.sendAsJson(getApplicationInfo());
         }
         catch (Exception e)
         {
@@ -61,55 +48,48 @@ public class ApplicationInfoController extends ApiControllerSupport implements C
         }
     }
 
-    public ApplicationInfo getApplicationInfo(Request req)
+    public ApplicationInfo getApplicationInfo()
     {
         String title = userAwareMeta
                 .getColumnTitle("index", "page", "title");
 
-        String url = "";
-        HttpServletRequest request = req.getRawRequest();
-        if( request != null )
-        {
-            url = getContextPrefix( request );
-        }
-
-        return new ApplicationInfo(title, url);
+        return new ApplicationInfo(title);
     }
 
-    /**
-     * Getting link from the request regardless of it's parameters
-     *
-     * @param request
-     * @return link
-     */
-    private static String getContextPrefix( HttpServletRequest request )
-    {
-        String ret;
-        if( request.isSecure() )
-        {
-            ret = "https://";
-        }
-        else
-        {
-            ret = "http://";
-        }
-
-        ret += request.getServerName();
-
-        int port = request.getServerPort();
-
-        if( request.isSecure() && port != 443 && port != 0 )
-        {
-            ret += ":" + port;
-        }
-        else if( !request.isSecure() && port != 80 && port != 0 )
-        {
-            ret += ":" + port;
-        }
-
-        ret += request.getContextPath() + "/";
-
-        return ret;
-    }
+//    /**
+//     * Getting link from the request regardless of it's parameters
+//     *
+//     * @param request
+//     * @return link
+//     */
+//    private static String getContextPrefix( HttpServletRequest request )
+//    {
+//        String ret;
+//        if( request.isSecure() )
+//        {
+//            ret = "https://";
+//        }
+//        else
+//        {
+//            ret = "http://";
+//        }
+//
+//        ret += request.getServerName();
+//
+//        int port = request.getServerPort();
+//
+//        if( request.isSecure() && port != 443 && port != 0 )
+//        {
+//            ret += ":" + port;
+//        }
+//        else if( !request.isSecure() && port != 80 && port != 0 )
+//        {
+//            ret += ":" + port;
+//        }
+//
+//        ret += request.getContextPath() + "/";
+//
+//        return ret;
+//    }
     
 }
