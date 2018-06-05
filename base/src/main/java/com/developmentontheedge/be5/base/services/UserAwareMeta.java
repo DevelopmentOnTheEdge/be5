@@ -21,7 +21,7 @@ public interface UserAwareMeta
     /**
      * Returns a localized title in user's preferred language. Ignores entity's display name.
      */
-    Optional<String> getLocalizedEntityTitle(String entityName);
+    String getLocalizedEntityTitle(String entityName);
 
     /**
      * Returns a localized title of a query in user's preferred language.

@@ -1,6 +1,6 @@
 testTags:
   type: dictionary
-  displayName: Property Types
+  displayName: Test Tags
   primaryKey: CODE
   scheme:
     columns:

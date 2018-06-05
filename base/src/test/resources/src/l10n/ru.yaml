@@ -59,6 +59,9 @@ ru:
       - 'no': нет
       - 'yes': да
   - testTags:
+    - topics: displayName
+      entries:
+      - displayName: Тест теги
     - topics: viewName
       entries:
       - All records: Все записи
@@ -77,6 +80,9 @@ ru:
       - Municipal: Муниципальный
       - Regional: Региональный
       - admlevel: Административный уровень
+    - topics: All records2
+      entries:
+      - CODE: Код2
   - default:
     - topics: operationName
       entries:

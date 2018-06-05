@@ -41,7 +41,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     private final Meta meta;
     private final ProjectProvider projectProvider;
     private final UserInfoProvider userInfoProvider;
-    
+
     @Inject
     public UserAwareMetaImpl(Meta meta, ProjectProvider projectProvider, UserInfoProvider userInfoProvider)
     {
@@ -69,11 +69,14 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
      * @see com.developmentontheedge.enterprise.components.Meta#getLocalizedEntityTitle(com.developmentontheedge.enterprise.metadata.model.Entity)
      */
     @Override
-    public String getLocalizedEntityTitle(Entity entity) {
-        Optional<String> localization = getLocalizedEntityTitle(entity.getName());
+    public String getLocalizedEntityTitle(Entity entity)
+    {
+        Optional<String> localization = localizations.getEntityTitle(getLanguage(), entity.getName());
 
-        if (!localization.isPresent()) {
-            if (!Strings.isNullOrEmpty(entity.getDisplayName())) {
+        if (!localization.isPresent())
+        {
+            if (!Strings.isNullOrEmpty(entity.getDisplayName()))
+            {
                 return entity.getDisplayName();
             }
             return entity.getName();
@@ -83,17 +86,20 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
-    public Optional<String> getLocalizedEntityTitle(String entity) {
-        return localizations.getEntityTitle(getLanguage(), entity);
+    public String getLocalizedEntityTitle(String entity)
+    {
+        return getLocalizedEntityTitle(meta.getEntity(entity));
     }
 
     @Override
-    public String getLocalizedQueryTitle(String entity, String query) {
+    public String getLocalizedQueryTitle(String entity, String query)
+    {
         return localizations.getQueryTitle(getLanguage(), entity, query);
     }
 
     @Override
-    public String getLocalizedOperationTitle(Operation operation) {
+    public String getLocalizedOperationTitle(Operation operation)
+    {
         return localizations.getOperationTitle(getLanguage(),
                 operation.getEntity().getName(), operation.getName());
     }
@@ -117,9 +123,9 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
                 localizations.get(getLanguage(), entity, query, message).orElse(content)
         );
 
-        if(localized.startsWith("{{{") && localized.endsWith("}}}"))
+        if (localized.startsWith("{{{") && localized.endsWith("}}}"))
         {
-            String clearContent = localized.substring(3,localized.length()-3);
+            String clearContent = localized.substring(3, localized.length() - 3);
             return localizations.get(getLanguage(), entity, query, clearContent)
                     .orElse(clearContent);
         }
@@ -140,12 +146,16 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     }
 
     @Override
-    public QuerySettings getQuerySettings(Query query) {
+    public QuerySettings getQuerySettings(Query query)
+    {
         List<String> currentRoles = userInfoProvider.get().getCurrentRoles();
-        for(QuerySettings settings: query.getQuerySettings()) {
+        for (QuerySettings settings : query.getQuerySettings())
+        {
             Set<String> roles = settings.getRoles().getFinalRoles();
-            for(String role : currentRoles) {
-                if(roles.contains(role)) {
+            for (String role : currentRoles)
+            {
+                if (roles.contains(role))
+                {
                     return settings;
                 }
             }
@@ -194,7 +204,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
         for (String queryName : defaultQueries)
         {
             Optional<String> columnTitle = localizations.get(getLanguage(), entityName, queryName, columnName);
-            if(columnTitle.isPresent())return columnTitle.get();
+            if (columnTitle.isPresent()) return columnTitle.get();
         }
         return columnName;
     }

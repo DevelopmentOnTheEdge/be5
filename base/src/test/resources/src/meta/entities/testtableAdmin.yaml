@@ -1,6 +1,6 @@
 testtableAdmin:
   type: table
-  displayName: testtableAdmin
+  displayName: Testtable Admin
   order: '10'
   primaryKey: ID
   scheme:
@@ -14,3 +14,26 @@ testtableAdmin:
     - value:
         type: INT
         canBeNull: true
+  queries:
+  - All records:
+      defaultView: true
+      type: 1D
+      roles: Administrator
+      operations:
+      - AdministratorOperationForQuery
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t
+  operations:
+  - AdministratorOperation:
+      type: Groovy
+      roles: Administrator
+      file: AdministratorOperation.groovy
+  - AdministratorOperationForQuery:
+      type: Groovy
+      roles: Administrator
+      file: AdministratorOperationForQuery.groovy
