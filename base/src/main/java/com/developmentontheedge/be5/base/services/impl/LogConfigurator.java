@@ -21,10 +21,11 @@ public class LogConfigurator
             if (resourceAsStream == null)
             {
                 log.info("File not found: " + path + ", log not configured.");
-                return;
             }
-
-            LogManager.getLogManager().readConfiguration(resourceAsStream);
+            else
+            {
+                LogManager.getLogManager().readConfiguration(resourceAsStream);
+            }
         }
         catch (IOException e)
         {
