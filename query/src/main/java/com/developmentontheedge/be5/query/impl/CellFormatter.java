@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.query.impl;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.base.util.Unzipper;
+import com.developmentontheedge.be5.query.util.Unzipper;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.QueryExecutor;

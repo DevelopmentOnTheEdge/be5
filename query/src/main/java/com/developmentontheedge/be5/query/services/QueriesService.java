@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -121,11 +120,7 @@ public class QueriesService
 
     public String[][] getTagsFromCustomSelectionView(String tableName, String queryName, Map<String, ?> parameters)
     {
-        Optional<Query> query = meta.findQuery(tableName, queryName);
-        if (!query.isPresent())
-            throw new IllegalArgumentException("Query " + tableName + "." + queryName + " not found.");
-
-        return getTagsFromCustomSelectionView(query.get(), parameters);
+        return getTagsFromCustomSelectionView(meta.getQuery(tableName, queryName), parameters);
     }
 
     public String[][] getTagsFromCustomSelectionView(Query query, Map<String, ?> parameters)

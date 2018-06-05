@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.base.util;
+package com.developmentontheedge.be5.query.util;
 
 import java.util.function.Consumer;
 import java.util.regex.Matcher;

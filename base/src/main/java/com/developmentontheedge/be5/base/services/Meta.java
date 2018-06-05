@@ -12,7 +12,6 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public interface Meta
@@ -74,11 +73,11 @@ public interface Meta
 
     List<String> getQueryNames(Entity entity);
 
-    Optional<Entity> findEntity(String entityName);
-
-    Optional<Query> findQuery(String entityName, String queryName);
-    
-    Optional<Query> findQuery(QueryLink link);
+//    Optional<Entity> findEntity(String entityName);
+//
+//    Optional<Query> findQuery(String entityName, String queryName);
+//
+//    Optional<Query> findQuery(QueryLink link);
 
     Map<String, ColumnDef> getColumns(String entityName);
 
@@ -113,10 +112,10 @@ public interface Meta
     Class<?> getColumnType(ColumnDef columnDef);
 
     Class<?> getColumnType(Entity entity, String columnName);
-
-    boolean isNumericColumn(String entityName, String columnName);
-
-    boolean isNumericColumn(Entity entity, String columnName);
+//
+//    boolean isNumericColumn(String entityName, String columnName);
+//
+//    boolean isNumericColumn(Entity entity, String columnName);
     /**
      * Returns a localized title. Takes into consideration its display name.
      */

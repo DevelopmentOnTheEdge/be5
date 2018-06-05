@@ -4,7 +4,6 @@ import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
-import com.developmentontheedge.be5.base.services.QueryLink;
 import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
@@ -28,7 +27,6 @@ import com.developmentontheedge.be5.metadata.model.TableReference;
 import com.developmentontheedge.be5.metadata.model.base.BeCaseInsensitiveCollection;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
-import com.developmentontheedge.sql.format.SqlTypeUtils;
 
 import javax.inject.Inject;
 import java.sql.Date;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -51,7 +48,6 @@ import java.util.stream.StreamSupport;
 
 public class MetaImpl implements Meta
 {
-
     /**
      * Predicates.
      */
@@ -376,7 +372,7 @@ public class MetaImpl implements Meta
         Query query = entity.getQueries().get(queryName);
         if (query == null)
         {
-            throw Be5ErrorCode.UNKNOWN_QUERY.exception(entityName, queryName);
+            throw Be5Exception.unknownQuery(entityName, queryName);
         }
 
         return query;
@@ -389,32 +385,32 @@ public class MetaImpl implements Meta
                 .map(BeModelElementSupport::getName).toList();
     }
 
-    @Override
-    public Optional<Query> findQuery(String entityName, String queryName)
-    {
-        Objects.requireNonNull(entityName);
-        Objects.requireNonNull(queryName);
-
-        return findEntity(entityName).flatMap(entity -> findQuery(entity, queryName));
-    }
-
-    private Optional<Query> findQuery(Entity entity, String queryName)
-    {
-        return Optional.ofNullable(entity.getQueries().get(queryName));
-    }
-
-    @Override
-    public Optional<Query> findQuery(QueryLink link)
-    {
-        Objects.requireNonNull(link);
-        return findQuery(link.getEntityName(), link.getQueryName());
-    }
+//    @Override
+//    public Optional<Query> findQuery(String entityName, String queryName)
+//    {
+//        Objects.requireNonNull(entityName);
+//        Objects.requireNonNull(queryName);
+//
+//        return findEntity(entityName).flatMap(entity -> findQuery(entity, queryName));
+//    }
+//
+//    private Optional<Query> findQuery(Entity entity, String queryName)
+//    {
+//        return Optional.ofNullable(entity.getQueries().get(queryName));
+//    }
+//
+//    @Override
+//    public Optional<Query> findQuery(QueryLink link)
+//    {
+//        Objects.requireNonNull(link);
+//        return findQuery(link.getEntityName(), link.getQueryName());
+//    }
 
     @Override
     public Map<String, ColumnDef> getColumns(String entityName)
     {
         Objects.requireNonNull(entityName);
-        return findEntity(entityName).map(this::getColumns).orElse(null);
+        return getColumns(getEntity(entityName));
     }
 
     @Override
@@ -495,30 +491,30 @@ public class MetaImpl implements Meta
         }
     }
 
-    @Override
-    public boolean isNumericColumn(String entityName, String columnName)
-    {
-        Objects.requireNonNull(entityName);
-        return isNumericColumn(getEntity(entityName), columnName);
-    }
+//    @Override
+//    public boolean isNumericColumn(String entityName, String columnName)
+//    {
+//        Objects.requireNonNull(entityName);
+//        return isNumericColumn(getEntity(entityName), columnName);
+//    }
+//
+//    @Override
+//    public boolean isNumericColumn(Entity entity, String columnName)
+//    {
+//        Objects.requireNonNull(entity);
+//        Objects.requireNonNull(columnName);
+//
+//        return SqlTypeUtils.isNumber(getColumnType(getColumn(entity, columnName)));
+//    }
 
-    @Override
-    public boolean isNumericColumn(Entity entity, String columnName)
-    {
-        Objects.requireNonNull(entity);
-        Objects.requireNonNull(columnName);
-
-        return SqlTypeUtils.isNumber(getColumnType(getColumn(entity, columnName)));
-    }
-
-    /**
-     * Tries to find a entity with the specified name.
-     */
-    @Override
-    public Optional<Entity> findEntity(String entityName)
-    {
-        return Optional.ofNullable(getProject().getEntity(entityName));
-    }
+//    /**
+//     * Tries to find a entity with the specified name.
+//     */
+//    @Override
+//    public Optional<Entity> findEntity(String entityName)
+//    {
+//        return Optional.ofNullable(getProject().getEntity(entityName));
+//    }
 
     @Override
     public String getStaticPageContent(String language, String name)
