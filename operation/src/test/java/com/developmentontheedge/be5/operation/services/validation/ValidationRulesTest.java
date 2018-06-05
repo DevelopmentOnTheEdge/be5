@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.operation.services.validation;
 
-import com.developmentontheedge.be5.operation.TestUtils;
+import com.developmentontheedge.be5.operation.OperationTestUtils;
 import org.junit.Test;
 
 import static com.developmentontheedge.be5.operation.services.validation.ValidationRules.Rule;
@@ -11,7 +11,7 @@ import static com.developmentontheedge.be5.operation.services.validation.Validat
 import static org.junit.Assert.assertEquals;
 
 
-public class ValidationRulesTest extends TestUtils
+public class ValidationRulesTest extends OperationTestUtils
 {
     @Test
     public void rangeTest()

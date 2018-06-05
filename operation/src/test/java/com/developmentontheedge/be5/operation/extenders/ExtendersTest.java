@@ -1,8 +1,11 @@
-package com.developmentontheedge.be5.server.operations.extenders;
+package com.developmentontheedge.be5.operation.extenders;
 
+import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.test.SqlMockOperationTest;
 import com.developmentontheedge.be5.test.mocks.DbServiceMock;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,19 +15,25 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
-public class ExtendersTest extends SqlMockOperationTest
+public class ExtendersTest extends OperationsSqlMockProjectTest
 {
+    @Before
+    public void setUp()
+    {
+        DbServiceMock.clearMock();
+    }
+
     @Test
     public void testInsertWithExtender()
     {
         assertEquals(OperationResult.redirect("table/testtable/All records"),
                 executeOperation("testtable", "All records", "InsertWithExtender", "",
-                        "{'name':'test','value':'1'}").getSecond());
+                        ImmutableMap.of("name","test", "value", 1L)).getSecond());
 
         verify(DbServiceMock.mock).update("update testTable name = 'preInvoke' WHERE 1=2");
 
         verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
-                "VALUES (?, ?)", "test", "1");
+                "VALUES (?, ?)", "test", 1L);
 
         verify(DbServiceMock.mock).update("update testTable name = 'postInvoke' WHERE 1=2");
 
@@ -38,7 +47,7 @@ public class ExtendersTest extends SqlMockOperationTest
     {
         assertEquals(OperationResult.finished("Skip invoke"),
                 executeOperation("testtable", "All records", "InsertWithSkipExtender", "",
-                        "{'name':'test','value':'1'}").getSecond());
+                        ImmutableMap.of("name","test", "value", 1L)).getSecond());
 
         verify(DbServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkip' WHERE 1=2");
 
@@ -52,11 +61,11 @@ public class ExtendersTest extends SqlMockOperationTest
     {
         assertEquals(OperationResult.redirect("table/testtable/All records"),
                 executeOperation("testtable", "All records", "InsertWithGroovyExtender", "",
-                        "{'name':'test','value':'1'}").getSecond());
+                        ImmutableMap.of("name","test", "value", 1L)).getSecond());
 
         verify(DbServiceMock.mock).update("update testTable name = 'preInvokeBeforeSkipGroovy' WHERE 1=2");
 
         verify(DbServiceMock.mock).insert("INSERT INTO testtable (name, value) " +
-                "VALUES (?, ?)", "test", "1");
+                "VALUES (?, ?)", "test", 1L);
     }
 }

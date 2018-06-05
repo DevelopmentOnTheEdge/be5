@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.util;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.model.Base64File;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
@@ -18,12 +19,6 @@ import java.util.Map;
 
 public class ParseRequestUtils
 {
-    public static String[] selectedRows(String selectedRowsString)
-    {
-        if(selectedRowsString.trim().isEmpty())return new String[0];
-        return selectedRowsString.split(",");
-    }
-
     public static Map<String, Object> getValuesFromJson(String valuesString) throws Be5Exception
     {
         if(Strings.isNullOrEmpty(valuesString))
@@ -98,24 +93,7 @@ public class ParseRequestUtils
 
         }
 
-        return replaceEmptyStringToNull(fieldValues);
-    }
-
-    public static Map<String, Object> replaceEmptyStringToNull(Map<String, Object> values)
-    {
-        HashMap<String, Object> map = new HashMap<>();
-        for (Map.Entry<String, Object> entry : values.entrySet())
-        {
-            if( "".equals(entry.getValue()) )
-            {
-                map.put(entry.getKey(), null);
-            }
-            else
-            {
-                map.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return map;
+        return OperationUtils.replaceEmptyStringToNull(fieldValues);
     }
 
     public static String getRequestWithoutContext(String contextPath, String requestUri)

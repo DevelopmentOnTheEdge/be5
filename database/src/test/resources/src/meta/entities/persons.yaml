@@ -15,11 +15,3 @@ persons:
     - email:
         type: VARCHAR(255)
         canBeNull: true
-  queries:
-  - '*** Selection view ***':
-      type: 1D_unknown
-      roles: '@AllRolesExceptGuest'
-      code: |-
-        SELECT
-            p.ID AS "Code", p.name AS "Name"
-        FROM persons p

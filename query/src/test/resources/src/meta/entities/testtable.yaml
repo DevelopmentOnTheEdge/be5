@@ -17,15 +17,6 @@ testtable:
   - All records:
       type: 1D_unknown
       roles: '@AllRoles'
-      operations:
-      - Edit
-      - Insert
-      - Filter
-      - OldRedirectFilter
-      - CustomOperation
-      - InsertWithExtender
-      - InsertWithSkipExtender
-      - InsertWithGroovyExtender
       code: |-
         SELECT
           t.name AS "Name",
@@ -45,8 +36,6 @@ testtable:
   - TableWithFilter:
       type: 1D_unknown
       layout: '{"topForm":"FilterByParamsInQueryOperation"}'
-      operations:
-      - FilterByParamsInQueryOperation
       roles: SystemDeveloper
       code: |-
          SELECT 1
@@ -118,40 +107,3 @@ testtable:
         FROM testtable
         WHERE 1=1
           AND name = <parameter:name refColumn="testtable.unknownColumn" />
-  operations:
-  - Filter:
-      roles: Administrator
-      code: com.developmentontheedge.be5.server.operations.FilterOperation
-  - FilterByParamsInQueryOperation:
-      roles: '@AllRoles'
-      code: com.developmentontheedge.be5.server.operations.FilterByParamsInQueryOperation
-  - OldRedirectFilter:
-      type: Groovy
-      roles: Administrator
-      file: testtableAdmin/OldRedirectFilter.groovy
-  - Edit:
-      records: 1
-      roles: Administrator
-      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
-  - Insert:
-      roles: Administrator
-      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
-  - InsertWithExtender:
-      roles: Administrator
-      extenders:
-      - className: com.developmentontheedge.be5.server.operations.extenders.TestExtender
-      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
-  - InsertWithSkipExtender:
-      roles: Administrator
-      extenders:
-      - className: com.developmentontheedge.be5.server.operations.extenders.TestSkipExtender
-      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
-  - InsertWithGroovyExtender:
-      roles: Administrator
-      extenders:
-      - file: TestGroovyExtender.groovy
-      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
-  - CustomOperation:
-      type: Groovy
-      roles: Administrator
-      file: testtableAdmin/CustomOperation.groovy

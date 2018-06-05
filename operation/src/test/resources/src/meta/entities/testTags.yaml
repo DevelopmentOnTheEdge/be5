@@ -28,6 +28,11 @@ testTags:
   - All records:
       type: 1D_unknown
       roles: '@AllRoles'
+      operations:
+      - Delete
+      - Edit
+      - Insert
+      - OperationWithCanBeNull
       code: |-
         SELECT *
         FROM testTags
@@ -50,3 +55,19 @@ testTags:
       code: |-
         SELECT *
         FROM testTags
+  operations:
+  - Delete:
+      records: 2
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.DeleteOperation
+  - Edit:
+      records: 1
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentEditOperation
+  - Insert:
+      roles: Administrator
+      code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - OperationWithCanBeNull:
+      type: Groovy
+      roles: Administrator
+      file: testTags/OperationWithCanBeNull.groovy

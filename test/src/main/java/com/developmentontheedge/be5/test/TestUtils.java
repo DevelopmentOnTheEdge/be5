@@ -14,6 +14,7 @@ import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
+import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.query.QuerySession;
 import com.developmentontheedge.be5.query.model.beans.QRec;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -52,7 +53,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.developmentontheedge.be5.metadata.model.Operation.OPERATION_TYPE_GROOVY;
-import static com.developmentontheedge.be5.server.util.ParseRequestUtils.replaceEmptyStringToNull;
+import static com.developmentontheedge.be5.operation.util.OperationUtils.replaceEmptyStringToNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -246,7 +247,7 @@ public abstract class TestUtils extends BaseTestUtils
     {
         OperationInfo operationInfo = new OperationInfo(meta.getOperation(entityName, queryName, operationName));
 
-        String[] stringSelectedRows = ParseRequestUtils.selectedRows(selectedRowsParam);
+        String[] stringSelectedRows = OperationUtils.selectedRows(selectedRowsParam);
         Object[] selectedRows = stringSelectedRows;
         if(!operationInfo.getEntityName().startsWith("_"))
         {

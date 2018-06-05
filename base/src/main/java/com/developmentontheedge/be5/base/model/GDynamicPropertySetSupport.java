@@ -65,6 +65,11 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
 
+    public DynamicProperty add(String propertyName)
+    {
+        return add(propertyName, propertyName, Closure.IDENTITY);
+    }
+
     public DynamicProperty add(String propertyName, String displayName)
     {
         return add(propertyName, displayName, Closure.IDENTITY);

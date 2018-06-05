@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.util
 
 import com.developmentontheedge.be5.operation.util.FilterUtil
+import com.developmentontheedge.be5.operation.util.OperationUtils
 import org.junit.Test
 
 import static com.developmentontheedge.be5.base.FrontendConstants.SEARCH_PARAM
@@ -14,11 +15,11 @@ class ParseRequestUtilsTest
     @Test
     void selectedRowsTest()
     {
-        assertTrue( Arrays.equals(["1","2","3"] as String[], ParseRequestUtils.selectedRows("1,2,3")))
+        assertTrue( Arrays.equals(["1","2","3"] as String[], OperationUtils.selectedRows("1,2,3")))
 
-        assertTrue( Arrays.equals(["1"] as String[], ParseRequestUtils.selectedRows("1")))
+        assertTrue( Arrays.equals(["1"] as String[], OperationUtils.selectedRows("1")))
 
-        assertTrue( Arrays.equals([] as String[], ParseRequestUtils.selectedRows("")))
+        assertTrue( Arrays.equals([] as String[], OperationUtils.selectedRows("")))
     }
 
     @Test

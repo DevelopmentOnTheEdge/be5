@@ -23,6 +23,9 @@ testtable:
       - Filter
       - OldRedirectFilter
       - CustomOperation
+      - InsertWithExtender
+      - InsertWithSkipExtender
+      - InsertWithGroovyExtender
       code: |-
         SELECT
           t.name AS "Name",
@@ -133,6 +136,21 @@ testtable:
   - Insert:
       roles: Administrator
       code: com.developmentontheedge.be5.server.operations.SilentInsertOperation
+  - InsertWithExtender:
+      roles: Administrator
+      extenders:
+      - className: com.developmentontheedge.be5.operation.extenders.TestExtender
+      code: com.developmentontheedge.be5.operation.test.TestOperation
+  - InsertWithSkipExtender:
+      roles: Administrator
+      extenders:
+      - className: com.developmentontheedge.be5.operation.extenders.TestSkipExtender
+      code: com.developmentontheedge.be5.operation.test.TestOperation
+  - InsertWithGroovyExtender:
+      roles: Administrator
+      extenders:
+      - file: TestGroovyExtender.groovy
+      code: com.developmentontheedge.be5.operation.test.TestOperation
   - CustomOperation:
       type: Groovy
       roles: Administrator

@@ -2,10 +2,6 @@ package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.base.BaseModule;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
-import com.developmentontheedge.be5.database.ConnectionService;
-import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.database.impl.ConnectionServiceImpl;
-import com.developmentontheedge.be5.database.impl.DbServiceImpl;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
 import com.developmentontheedge.be5.databasemodel.DatabaseModel;
 import com.developmentontheedge.be5.databasemodel.helpers.ColumnsHelper;
@@ -76,8 +72,6 @@ public class ServerModule extends ServletModule
         bind(MenuHelper.class).in(Scopes.SINGLETON);
         bind(JsonApiResponseHelper.class).in(Scopes.SINGLETON);
 
-        bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
-        bind(DbService.class).to(DbServiceImpl.class).in(Scopes.SINGLETON);
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
         bind(QuerySession.class).to(QuerySessionProvider.class).in(Scopes.SINGLETON);
