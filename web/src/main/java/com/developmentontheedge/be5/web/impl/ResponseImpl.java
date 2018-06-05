@@ -53,7 +53,7 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendError(Object value, int status)
+    public void sendErrorAsJson(Object value, int status)
     {
         setStatus(status);
         sendJson(jsonb.toJson(value));
@@ -74,9 +74,9 @@ public class ResponseImpl implements Response
     }
 
     @Override
-    public void sendHtml(String content)
+    public void sendHtml(String html)
     {
-        sendText("text/html;charset=UTF-8", content);
+        sendText("text/html;charset=UTF-8", html);
     }
 
     @Override
@@ -86,14 +86,7 @@ public class ResponseImpl implements Response
         // RFC 2376, http://www.ietf.org/rfc/rfc2376.txt
         sendText("application/xml;charset=UTF-8", xml);
     }
-    
-    @Override
-    public void sendUnknownActionError()
-    {
-        //todo send error http code
-        sendAsJson("Unknown component action.");
-    }
-    
+
     private void sendText(String contentType, String text)
     {
         // The MIME media type for JSON text is 'application/json'.
@@ -104,12 +97,6 @@ public class ResponseImpl implements Response
         rawWrapper.flush();
     }
 
-    @Override
-    public void sendTextError(String message)
-    {
-        sendText("text/plain;charset=UTF-8", message);
-    }
-    
     @Override
     public HttpServletResponse getRawResponse()
     {

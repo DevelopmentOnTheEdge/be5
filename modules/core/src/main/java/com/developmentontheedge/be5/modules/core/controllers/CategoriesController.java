@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class CategoriesController extends ApiControllerSupport implements Controller
@@ -32,7 +33,7 @@ public class CategoriesController extends ApiControllerSupport implements Contro
                 ));
                 return;
             default:
-                res.sendUnknownActionError();
+                res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

@@ -120,12 +120,12 @@ public class ServerTestRequest implements Request
     @Override
     public Object getAttribute(String name)
     {
-        return null;
+        return session.get(name);
     }
 
     @Override
     public void setAttribute(String name, Object value)
     {
-
+        session.set(name, value);
     }
 }

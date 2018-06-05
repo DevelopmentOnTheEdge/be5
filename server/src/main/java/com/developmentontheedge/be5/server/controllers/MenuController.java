@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -49,7 +50,7 @@ public class MenuController extends ApiControllerSupport implements Controller
                 res.sendAsJson(new MenuResponse(menuHelper.collectEntities(true, EntityType.TABLE)));
                 return;
             default:
-                res.sendUnknownActionError();
+                res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

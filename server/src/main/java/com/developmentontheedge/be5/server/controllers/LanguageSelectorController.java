@@ -12,6 +12,7 @@ import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +100,7 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
                 res.sendAsJson(selectLanguage(req));
                 return;
             default:
-                res.sendUnknownActionError();
+                res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

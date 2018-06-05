@@ -22,14 +22,14 @@ public class ParametersAccessTest
     private Request req;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         httpServletRequest = mock(HttpServletRequest.class);
         req = new RequestImpl(httpServletRequest);
     }
 
     @Test
-    public void getNonEmpty() throws Exception
+    public void getNonEmpty()
     {
         when(httpServletRequest.getParameter("name")).thenReturn("value");
 
@@ -37,7 +37,7 @@ public class ParametersAccessTest
     }
 
     @Test
-    public void getNonEmptyMissing() throws Exception
+    public void getNonEmptyMissing()
     {
         when(httpServletRequest.getParameter("name")).thenReturn(null);
 
@@ -48,7 +48,7 @@ public class ParametersAccessTest
     }
 
     @Test
-    public void getNonEmptyEmpty() throws Exception
+    public void getNonEmptyEmpty()
     {
         when(httpServletRequest.getParameter("name")).thenReturn("  ");
 
@@ -59,7 +59,7 @@ public class ParametersAccessTest
     }
 
     @Test
-    public void getBoolean() throws Exception
+    public void getBoolean()
     {
         when(httpServletRequest.getParameter("name")).thenReturn("true");
 
@@ -67,10 +67,52 @@ public class ParametersAccessTest
     }
 
     @Test
-    public void getBooleanFalse() throws Exception
+    public void getBooleanFalse()
     {
         when(httpServletRequest.getParameter("name")).thenReturn("yes");
 
         assertEquals(false, req.getBoolean("name", false));
+    }
+
+    @Test
+    public void getOrDefault()
+    {
+        when(httpServletRequest.getParameter("name")).thenReturn("bar");
+
+        assertEquals("bar", req.getOrDefault("name", "foo"));
+    }
+
+    @Test
+    public void getOrDefault_null()
+    {
+        assertEquals("foo", req.getOrDefault("name", "foo"));
+    }
+
+    @Test
+    public void getOrEmpty()
+    {
+        when(httpServletRequest.getParameter("name")).thenReturn("bar");
+
+        assertEquals("bar", req.getOrEmpty("name"));
+    }
+
+    @Test
+    public void getOrEmpty_default()
+    {
+        assertEquals("", req.getOrEmpty("name"));
+    }
+
+    @Test
+    public void getInteger()
+    {
+        when(httpServletRequest.getParameter("name")).thenReturn("123");
+
+        assertEquals(123, (int)req.getInteger("name"));
+    }
+
+    @Test
+    public void getInteger_null()
+    {
+        assertEquals(null, req.getInteger("name"));
     }
 }

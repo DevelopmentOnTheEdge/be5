@@ -4,13 +4,10 @@ import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,17 +50,17 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
 
     protected abstract void generate(Request req, Response res, String subUrl);
 
-    //todo remove google.common
     private String getApiSubUrl(String requestUri)
     {
-        String[] uriParts = requestUri.split("/");
-        int ind = 1;
+        assert requestUri.startsWith("/api/");
 
-        while (!"api".equals(uriParts[ind]) && ind + 1 < uriParts.length)
+        if(requestUri.indexOf('/', 5) != -1)
         {
-            ind++;
+            return requestUri.substring(requestUri.indexOf('/', 5) + 1, requestUri.length());
         }
-
-        return Joiner.on('/').join(Iterables.skip(Arrays.asList(uriParts), ind + 2));
+        else
+        {
+            return "";
+        }
     }
 }

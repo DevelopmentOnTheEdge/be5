@@ -28,16 +28,14 @@ public interface ParametersAccess
     
     default Integer getInteger(String parameter)
     {
-        String s = get(parameter);
-
-        return s != null ? Integer.parseInt(s) : null;
+        return getInteger(parameter, null);
     }
 
-    default Integer getInteger(String parameter, int defaultValue)
+    default Integer getInteger(String parameter, Integer defaultValue)
     {
         String s = get(parameter);
 
-        return s != null ? Integer.parseInt(s) : defaultValue;
+        return s != null ? (Integer)Integer.parseInt(s) : defaultValue;
     }
     
     /**

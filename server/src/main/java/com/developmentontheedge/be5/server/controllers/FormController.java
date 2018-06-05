@@ -107,7 +107,7 @@ public class FormController extends ApiControllerSupport
                     data = documentGenerator.executeForm(operation, values);
                     break;
                 default:
-                    res.sendUnknownActionError();
+                    responseHelper.sendUnknownActionError();
                     return;
             }
         }

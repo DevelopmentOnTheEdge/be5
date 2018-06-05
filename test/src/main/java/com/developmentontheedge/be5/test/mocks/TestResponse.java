@@ -23,9 +23,9 @@ public class TestResponse implements Response
     }
 
     @Override
-    public void sendError(Object value, int status)
+    public void sendErrorAsJson(Object value, int status)
     {
-        mock.sendError(value, status);
+        mock.sendErrorAsJson(value, status);
     }
 
     @Override
@@ -50,18 +50,6 @@ public class TestResponse implements Response
     public void sendXml(String xml)
     {
         mock.sendXml(xml);
-    }
-
-    @Override
-    public void sendUnknownActionError()
-    {
-        mock.sendUnknownActionError();
-    }
-
-    @Override
-    public void sendTextError(String messagee)
-    {
-        mock.sendTextError(messagee);
     }
 
     @Override

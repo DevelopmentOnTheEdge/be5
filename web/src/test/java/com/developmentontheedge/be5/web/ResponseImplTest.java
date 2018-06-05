@@ -31,11 +31,22 @@ public class ResponseImplTest
     }
 
     @Test
-    public void sendAsRawJson()
+    public void sendAsJson()
     {
         Action call = new Action("call", "test/path");
         response.sendAsJson(call);
 
+        verify(rawResponse).setContentType("application/json;charset=UTF-8");
+        verify(writer).append(doubleQuotes("{'arg':'test/path','name':'call'}"));
+    }
+
+    @Test
+    public void sendError()
+    {
+        Action call = new Action("call", "test/path");
+        response.sendErrorAsJson(call, HttpServletResponse.SC_FORBIDDEN);
+
+        verify(rawResponse).setStatus(HttpServletResponse.SC_FORBIDDEN);
         verify(writer).append(doubleQuotes("{'arg':'test/path','name':'call'}"));
     }
 

@@ -89,7 +89,7 @@ public class TableController extends ApiControllerSupport
                     ));
                     return;
                 default:
-                    res.sendUnknownActionError();
+                    responseHelper.sendUnknownActionError();
             }
         }
         catch (Be5Exception e)

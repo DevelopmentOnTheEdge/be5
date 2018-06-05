@@ -16,12 +16,4 @@ class AbstractProjectTestTest extends ServerBe5ProjectTest
         assertEquals "12", request.getAttribute("companyID")
     }
 
-    @Test
-    void testSession()
-    {
-        Request request = getSpyMockRecForOp("testtableAdmin", "All records", "TestOperation", "0",
-                "", ["companyID": "12"])
-        def session = request.getSession()
-        assertEquals "12", session["companyID"]
-    }
 }

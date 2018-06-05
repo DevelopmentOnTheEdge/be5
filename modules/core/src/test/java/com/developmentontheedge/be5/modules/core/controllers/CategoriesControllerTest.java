@@ -33,6 +33,6 @@ public class CategoriesControllerTest extends CoreBe5ProjectDbMockTest
 
         component.generate(getMockRequest("/api/categories/"), response);
 
-        verify(response).sendUnknownActionError();
+        verify(response).sendErrorAsJson(eq("Unknown action"), eq(404));
     }
 }

@@ -28,7 +28,6 @@ public abstract class FilterSupport implements Filter
     {
         Request req = new RequestImpl((HttpServletRequest)servletRequest);
 
-
         filter(req, ServletUtils.getResponse(req.getRawRequest(), (HttpServletResponse)servletResponse), filterChain);
     }
 

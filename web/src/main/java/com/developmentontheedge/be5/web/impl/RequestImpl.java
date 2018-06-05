@@ -30,7 +30,7 @@ public class RequestImpl implements Request
     @Override
     public Object getAttribute(String name)
     {
-        return raw.getSession().getAttribute(name);
+        return raw.getAttribute(name);
     }
     
     @Override
@@ -152,8 +152,15 @@ public class RequestImpl implements Request
 
         try(BufferedReader br = raw.getReader()){
             String str;
+
+            if((str = br.readLine()) != null)
+            {
+                sb.append(str);
+            }
+
             while( (str = br.readLine()) != null )
             {
+                sb.append("\n");
                 sb.append(str);
             }
         }
