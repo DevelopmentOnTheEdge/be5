@@ -31,7 +31,7 @@ public class OperationContext
 
     public <T> T getRecord()
     {
-        if(records.length != 1)throw new RuntimeException("Expected one record");
+        if(records.length != 1)throw new IllegalStateException("Expected one record");
         return (T)records[0];
     }
 

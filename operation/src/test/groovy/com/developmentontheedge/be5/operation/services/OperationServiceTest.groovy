@@ -49,6 +49,8 @@ class OperationServiceTest extends OperationsSqlMockProjectTest
     @Test
     void generatePropertyErrorReload()
     {
+        setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR, RoleType.ROLE_SYSTEM_DEVELOPER)
+
         def operation = propertyError(['_reloadcontrol_':'/name','name':'generateErrorInProperty'])
 
         assertEquals OperationStatus.GENERATE, operation.getResult().getStatus()

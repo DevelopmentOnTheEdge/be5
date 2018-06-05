@@ -38,13 +38,13 @@ public enum OperationStatus
         return value;
     }
 
-    public static OperationStatus parse(String str)
-    {
-        for( OperationStatus s : values() )
-         {
-            if( s.value.equals(str))
-                return s;
-         }
-        return null;
-    }
+//    public static OperationStatus parse(String str)
+//    {
+//        for( OperationStatus s : values() )
+//        {
+//            if( s.value.equals(str))
+//                return s;
+//        }
+//        return null;
+//    }
 }

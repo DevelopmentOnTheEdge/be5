@@ -1,16 +1,21 @@
 package com.developmentontheedge.be5.operation;
 
+import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationsFactory;
+import com.developmentontheedge.beans.json.JsonFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class OperationsFactoryTest extends OperationsSqlMockProjectTest
@@ -80,7 +85,32 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
         map.put("name", value);
         Operation operation = operations.get("testtableAdmin", "ErrorProcessing").setPresetValues(map).execute();
 
-        Assert.assertEquals(OperationStatus.ERROR, operation.getStatus());
+        assertEquals(OperationStatus.ERROR, operation.getStatus());
+    }
+
+    @Test
+    public void executeOk()
+    {
+        Operation operation = operations.get("testtableAdmin", "ErrorProcessing")
+                .setPresetValues(Collections.emptyMap())
+                .execute();
+
+        assertEquals(OperationStatus.FINISHED, operation.getStatus());
+    }
+
+    @Test
+    public void testBuilder()
+    {
+        Object generate = operations.get("testtableAdmin", "ErrorProcessing")
+                .setPresetValues(Collections.emptyMap())
+                .setQueryName("All records")
+                .setRecords(new Long[]{1L})
+                .setOperationParams(Collections.singletonMap(FrontendConstants.SEARCH_PARAM, false))
+                .generate();
+
+        assertEquals("{'values':{'name':'','propertyForAnotherEntity':'text'},'meta':{'/name':{'displayName':'name','columnSize':'30'}," +
+                        "'/propertyForAnotherEntity':{'displayName':'propertyForAnotherEntity'}},'order':['/name','/propertyForAnotherEntity']}",
+                oneQuotes(JsonFactory.bean(generate).toString()));
     }
 
     public OperationsFactory getOperations()

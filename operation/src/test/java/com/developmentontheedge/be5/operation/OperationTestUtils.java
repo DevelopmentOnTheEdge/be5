@@ -31,8 +31,8 @@ public class OperationTestUtils extends BaseTestUtils
     @Rule
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
 
+    @Inject protected Meta meta;
     @Inject private OperationService operationService;
-    @Inject private Meta meta;
     @Inject private OperationExecutor operationExecutor;
 
     protected static final Jsonb jsonb = JsonbBuilder.create();
