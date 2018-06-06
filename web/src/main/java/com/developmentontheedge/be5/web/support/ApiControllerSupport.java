@@ -45,16 +45,18 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
     @Override
     public final void generate(Request req, Response res)
     {
-        generate(req, res, getApiSubUrl(req.getRequestUri()));
+        generate(req, res, getApiSubUrl(req));
     }
 
     protected abstract void generate(Request req, Response res, String subUrl);
 
-    private String getApiSubUrl(String requestUri)
+    private String getApiSubUrl(Request req)
     {
-        assert requestUri.startsWith("/api/");
+        String requestUri = req.getRequestUri();
 
-        if(requestUri.indexOf('/', 5) != -1)
+        String apiWithContext = req.getContextPath() + "/api/";
+
+        if(requestUri.indexOf('/', apiWithContext.length()) != -1)
         {
             return requestUri.substring(requestUri.indexOf('/', 5) + 1, requestUri.length());
         }
