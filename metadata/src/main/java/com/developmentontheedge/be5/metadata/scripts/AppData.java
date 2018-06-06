@@ -72,7 +72,7 @@ public class AppData extends ScriptSupport<AppData>
                         {
                             if(ignoreMissing)
                             {
-                                System.err.println( "Warning: module '"+moduleName+"' not found" );
+                                logger.error( "Warning: module '"+moduleName+"' not found" );
                                 continue;
                             }
                             else
@@ -86,7 +86,7 @@ public class AppData extends ScriptSupport<AppData>
                 {
                     if(ignoreMissing)
                     {
-                        System.err.println( "Warning: FTL script '"+scriptName+"' not found");
+                        logger.error( "Warning: FTL script '"+scriptName+"' not found");
                         continue;
                     }
                     else
@@ -123,10 +123,10 @@ public class AppData extends ScriptSupport<AppData>
     protected void executeScript( final SqlExecutor sqlExecutor, FreemarkerScript freemarkerScript ) throws ProjectElementException, IOException
     {
         String compiled = freemarkerScript.getResult().validate();
-        if(logPath != null)
+        if(sqlPath != null)
         {
             Files.write(
-                    logPath.toPath().resolve(
+                    sqlPath.toPath().resolve(
                             be5Project.getName() + "_script_" + freemarkerScript.getModule().getName() + "_"
                                 + freemarkerScript.getName() + ".compiled" ), compiled.getBytes( StandardCharsets.UTF_8 ) );
         }
@@ -135,7 +135,7 @@ public class AppData extends ScriptSupport<AppData>
             return;
         DataElementPath path = freemarkerScript.getCompletePath();
         if(debug)
-            System.err.println( sql );
+            logger.error( sql );
         sqlExecutor.comment( "Execute " + path );
         new FreemarkerSqlHandler(sqlExecutor, debug, logger).execute(freemarkerScript);
     }

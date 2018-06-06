@@ -42,7 +42,7 @@ public class AppTools extends ScriptSupport<AppTools>
         }
         try
         {
-            getLog().info("Welcome to FTL/SQL console!");
+            logger.info("Welcome to FTL/SQL console!");
             BeSqlExecutor sql = new BeSqlExecutor( connector )
             {
                 @Override
@@ -69,7 +69,7 @@ public class AppTools extends ScriptSupport<AppTools>
             ProcessController log = new NullLogger();
             while(true)
             {
-                getLog().info("Enter FTL/SQL (use 'quit' to exit):");
+                logger.info("Enter FTL/SQL (use 'quit' to exit):");
                 String line = new BufferedReader( new InputStreamReader( inputStream ) ).readLine();
                 if(line == null)
                 {
@@ -83,9 +83,9 @@ public class AppTools extends ScriptSupport<AppTools>
                 fs.setSource( line );
                 ParseResult result = fs.getResult();
                 if(result.getResult() != null) {
-                    getLog().info("SQL> "+result.getResult());
+                    logger.info("SQL> "+result.getResult());
                 } else {
-                    getLog().info("ERROR> "+result.getError());
+                    logger.info("ERROR> "+result.getError());
                     continue;
                 }
                 try
@@ -94,7 +94,7 @@ public class AppTools extends ScriptSupport<AppTools>
                 }
                 catch ( Exception e )
                 {
-                    getLog().info("ERROR> "+e.getMessage());
+                    logger.info("ERROR> "+e.getMessage());
                 }
             }
         }

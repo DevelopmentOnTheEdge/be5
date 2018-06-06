@@ -63,7 +63,7 @@ public class AppDb extends ScriptSupport<AppDb>
                 }
                 createDb(be5Project.getApplication());
             }
-            getLog().info("Created tables: " + createdTables + ", created views: " + createdViews);
+            logger.info("Created tables: " + createdTables + ", created views: " + createdViews);
         }
         catch( ScriptException e )
         {

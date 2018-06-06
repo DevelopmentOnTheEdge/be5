@@ -83,7 +83,7 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
         writer.println(resultContext);
         writer.close();
 
-        getLog().info("context.xml created in " + generateContextPath);
+        logger.info("context.xml created in " + generateContextPath);
     }
 
     private String replacePlaceholders(String text) throws ScriptException, ProjectLoadException

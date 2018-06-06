@@ -47,7 +47,7 @@ public abstract class ScriptSupport<T>
 
     public boolean debug = false;
 
-    public File logPath = Paths.get("target/sql").toFile();
+    public File sqlPath = Paths.get("target/sql").toFile();
 
     public String connectionProfileName;
 
@@ -57,12 +57,7 @@ public abstract class ScriptSupport<T>
 
     ///////////////////////////////////////////////////////////////////
 
-    private File logFile;
-
-    public ProcessController getLog()
-    {
-        return logger;
-    }
+    private File sqlFile;
 
     public void init()
     {
@@ -87,7 +82,7 @@ public abstract class ScriptSupport<T>
                     profile.getConnectionUrl(), profile.getUsername(),
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
-            getLog().info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
+            logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
         }
         else
         {
@@ -108,7 +103,7 @@ public abstract class ScriptSupport<T>
             if (projectPath == null)
                 throw new ScriptException("Please specify projectPath attribute");
 
-            getLog().info("Reading be5 project from '" + projectPath + "'...");
+            logger.info("Reading be5 project from '" + projectPath + "'...");
 
             be5Project = loadProject(projectPath.toPath());
             if (debug)
@@ -127,7 +122,7 @@ public abstract class ScriptSupport<T>
             }
         }
 
-        getLog().info(ModuleLoader2.logLoadedProject(be5Project, startTime));
+        logger.info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
     /**
      * Configures JUL (java.util.logging).
@@ -153,7 +148,7 @@ public abstract class ScriptSupport<T>
         } 
     	catch (IOException e) 
     	{
-            System.err.println("Could not setup logger configuration: " + e.toString());
+            logger.error("Could not setup logger configuration: " + e.toString());
         }    	
     }
 
@@ -175,13 +170,13 @@ public abstract class ScriptSupport<T>
 
     public PrintStream createPrintStream(String name)
     {
-        if(logPath != null)
+        if(sqlPath != null)
         {
-            logPath.mkdirs();
+            sqlPath.mkdirs();
             try
             {
-                logFile = new File(logPath, name);
-                return new PrintStream(logFile, "UTF-8");
+                sqlFile = new File(sqlPath, name);
+                return new PrintStream(sqlFile, "UTF-8");
             }
             catch (Exception e)
             {
@@ -193,9 +188,9 @@ public abstract class ScriptSupport<T>
 
     public void logSqlFilePath()
     {
-        if(logPath != null)
+        if(sqlPath != null)
         {
-            getLog().info("Logs: " + logFile.getAbsolutePath());
+            logger.info("Logs: " + sqlFile.getAbsolutePath());
         }
     }
 
@@ -215,7 +210,7 @@ public abstract class ScriptSupport<T>
                     exception.printStackTrace();
                 } else
                 {
-                    System.err.println( "Error: "+exception.getMessage() );
+                    logger.error( "Error: "+exception.getMessage() );
                 }
             }
             throw new ScriptException( messageTemplate.replace( "%d", String.valueOf( loadContext.getWarnings().size() ) ) );
@@ -225,7 +220,7 @@ public abstract class ScriptSupport<T>
 
 //    public void dumpSql( String ddlString )
 //    {
-//        System.err.println( MultiSqlParser.normalize( be5Project.getDatabaseSystem().getType(), ddlString ) );
+//        logger.error( MultiSqlParser.normalize( be5Project.getDatabaseSystem().getType(), ddlString ) );
 //    }
 //
 //    ///////////////////////////////////////////////////////////////////
@@ -255,7 +250,7 @@ public abstract class ScriptSupport<T>
 //        String result;
 //        do
 //        {
-//            System.err.println( fullPrompt );
+//            logger.error( fullPrompt );
 //            String line = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
 //            result = line == null ? "" : line.trim();
 //            if(result.isEmpty() && defaultValue != null)
@@ -266,7 +261,7 @@ public abstract class ScriptSupport<T>
 
     public T setLogPath(File logPath)
     {
-        this.logPath = logPath;
+        this.sqlPath = logPath;
         return me();
     }
 

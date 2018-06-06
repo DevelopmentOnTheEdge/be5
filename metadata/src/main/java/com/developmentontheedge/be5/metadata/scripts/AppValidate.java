@@ -42,7 +42,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
     {
         initLogging();
         
-        getLog().info("Reading project from " + projectPath );
+        logger.info("Reading project from " + projectPath );
         this.be5Project = loadProject( projectPath.toPath() );
 
         setRdbms();
@@ -61,10 +61,10 @@ public class AppValidate extends ScriptSupport<AppValidate>
                 be5Project.getConnectionProfile().isProtected() &&
                 ! unlockProtectedProfile )
         {
-            System.err.println( "=== WARNING! ===" ); 
-            System.err.println( "You are using the protected profile '" + be5Project.getConnectionProfileName()+"'");
-            System.err.println( "The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
-            System.err.println( "Type the profile name to confirm its usage:" );
+            logger.error( "=== WARNING! ===" );
+            logger.error( "You are using the protected profile '" + be5Project.getConnectionProfileName()+"'");
+            logger.error( "The following database may be modified due to this command: " + be5Project.getConnectionProfile().getConnectionUrl());
+            logger.error( "Type the profile name to confirm its usage:" );
             String line = "";
             try
             {
@@ -120,11 +120,11 @@ public class AppValidate extends ScriptSupport<AppValidate>
         List<ProjectElementException> errors = new ArrayList<>();
         if( skipValidation )
         {
-            getLog().info("Validation skipped");
+            logger.info("Validation skipped");
         } 
         else
         {
-            getLog().info("Validating...");
+            logger.info("Validating...");
             errors.addAll( be5Project.getErrors() );
             int count = 0;
             for(ProjectElementException error : errors)
@@ -139,7 +139,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
                 throw new ScriptException("Project has " + count + " errors." );
             }
             
-            getLog().info("Project is valid.");
+            logger.info("Project is valid.");
             skipValidation = true;
         }
     }
@@ -178,7 +178,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
         {
             try
             {
-                getLog().info("Saving...");
+                logger.info("Saving...");
                 Serialization.save(be5Project, be5Project.getLocation());
             }
             catch(ProjectSaveException e)
@@ -204,7 +204,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
                 throw new ScriptException("Entity has no scheme: " + ddlPath);
             }
             
-            getLog().info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
+            logger.info("DDL: " + scheme.getDdl().replaceAll("\n", System.lineSeparator()));
         }
     }
     
@@ -212,7 +212,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
     {
         if( checkRoles )
         {
-            getLog().info("Available roles:" + System.lineSeparator() + " - " +
+            logger.info("Available roles:" + System.lineSeparator() + " - " +
                     String.join( System.lineSeparator()+ " - " , be5Project.getAvailableRoles()));
         }
     }
@@ -255,7 +255,7 @@ public class AppValidate extends ScriptSupport<AppValidate>
             throw new ScriptException("Invalid query: "+queryName);
         }
         
-        getLog().info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
+        logger.info("Query: " + query.getQueryCompiled().getResult().replaceAll( "\n", System.lineSeparator()) );
     }
 
     public AppValidate setCheckQueryPath(String queryPath)

@@ -37,4 +37,13 @@ public class MultipleProcessController implements ProcessController
             controller.info(msg);
         }
     }
+
+    @Override
+    public void error(String msg)
+    {
+        for(ProcessController controller : controllers)
+        {
+            controller.error(msg);
+        }
+    }
 }

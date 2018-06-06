@@ -45,4 +45,10 @@ public class DerivedController implements ProcessController
     {
         primary.info(msg);
     }
+
+    @Override
+    public void error(String msg)
+    {
+        primary.error(msg);
+    }
 }

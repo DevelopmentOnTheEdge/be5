@@ -35,6 +35,12 @@ public class JULLogger implements ProcessController
         log.info(msg);
     }
 
+    @Override
+    public void error(String msg)
+    {
+        log.severe(msg);
+    }
+
 //    public static String infoBlock(String level, String info)
 //    {
 //        return "[" + level + "] " + IntStream.range(0,72 - level.length() - 3).map(ch -> "-").collect(Collectors.joining()) +

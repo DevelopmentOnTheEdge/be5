@@ -9,4 +9,6 @@ public interface ProcessController
     void setProgress(double progress) throws ProcessInterruptedException;
 
     void info(String msg);
+
+    void error(String msg);
 }

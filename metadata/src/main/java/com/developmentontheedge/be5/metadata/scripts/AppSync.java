@@ -87,7 +87,7 @@ public class AppSync extends ScriptSupport<AppSync>
 
             if( ddlString.isEmpty() )
             {
-            	getLog().info("Database scheme is up-to-date");
+            	logger.info("Database scheme is up-to-date");
             	return;
             } 
             
@@ -100,9 +100,9 @@ public class AppSync extends ScriptSupport<AppSync>
             }
             else
             {
-                System.err.println("The following statements should be executed to update database scheme:");
-                System.err.println(ddlString);
-                System.err.println("Use -DBE5_FORCE_UPDATE=true, for apply");
+                logger.error("The following statements should be executed to update database scheme:");
+                logger.error(ddlString);
+                logger.error("Use -DBE5_FORCE_UPDATE=true, for apply");
             }
             
             checkSynchronizationStatus();
@@ -140,7 +140,7 @@ public class AppSync extends ScriptSupport<AppSync>
 /*        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
         if(!warnings.isEmpty())
         {
-            System.err.println( "Synchronization of " + databaseSynchronizer.getProject().getName()+" produced "+warnings.size()+" warning(s):" );
+            logger.error( "Synchronization of " + databaseSynchronizer.getProject().getName()+" produced "+warnings.size()+" warning(s):" );
             for(ProjectElementException warning : warnings)
             {
                 displayError( warning );
@@ -163,7 +163,7 @@ public class AppSync extends ScriptSupport<AppSync>
     
     private void readSchema() throws ExtendedSqlException, SQLException, ProcessInterruptedException
     {
-        getLog().info("Read database scheme ...");
+        logger.info("Read database scheme ...");
         long time = System.currentTimeMillis();
         
         ProcessController controller = new NullLogger();
@@ -180,16 +180,16 @@ public class AppSync extends ScriptSupport<AppSync>
         {
             if(!warnings.isEmpty())
             {
-                System.err.println(warnings.size() + " warning(s) during loading the project from " + sqlExecutor.getConnector().getConnectString() );
+                logger.error(warnings.size() + " warning(s) during loading the project from " + sqlExecutor.getConnector().getConnectString() );
                 Collections.sort( warnings );
                 for(String warning : warnings)
                 {
-                    System.err.println(warning);
+                    logger.error(warning);
                 }
             }
         }
         
-        getLog().info("comleted, " + (System.currentTimeMillis() - time) + "ms.");
+        logger.info("comleted, " + (System.currentTimeMillis() - time) + "ms.");
     }
 
     private void createEntities() throws ExtendedSqlException, SQLException
@@ -428,7 +428,7 @@ public class AppSync extends ScriptSupport<AppSync>
             }
             else
             {
-                getLog().info("Skip table with schema: " + newScheme.getEntityName());
+                logger.info("Skip table with schema: " + newScheme.getEntityName());
             }
         }
         
@@ -441,7 +441,7 @@ public class AppSync extends ScriptSupport<AppSync>
 //
 //                if( !oldScheme.withoutDbScheme() )
 //                {
-//                    getLog().info("Skip table with schema: " + oldScheme.getEntityName());
+//                    logger.info("Skip table with schema: " + oldScheme.getEntityName());
 //                    continue;
 //                }
 //

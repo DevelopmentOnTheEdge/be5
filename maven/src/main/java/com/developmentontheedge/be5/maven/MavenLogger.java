@@ -31,4 +31,9 @@ public class MavenLogger implements ProcessController
         log.info(msg);
     }
 
+    @Override
+    public void error(String msg)
+    {
+        log.error(msg);
+    }
 }
