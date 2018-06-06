@@ -7,4 +7,6 @@ public interface ProcessController
     void setOperationName(String name);
     
     void setProgress(double progress) throws ProcessInterruptedException;
+
+    void info(String msg);
 }

@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class WriterLogger implements ProcessController
 {
-    PrintStream ps;
+    private final PrintStream ps;
     
     public WriterLogger()
     {
@@ -29,4 +29,11 @@ public class WriterLogger implements ProcessController
     {
         ps.printf("%.2f%%%n", progress*100);
     }
+
+    @Override
+    public void info(String msg)
+    {
+        ps.println( msg );
+    }
+
 }

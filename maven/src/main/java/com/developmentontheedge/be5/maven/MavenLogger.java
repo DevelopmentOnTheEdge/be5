@@ -6,7 +6,7 @@ import org.apache.maven.plugin.logging.Log;
 
 public class MavenLogger implements ProcessController
 {
-    private Log log;
+    private final Log log;
 
     public MavenLogger(Log log)
     {
@@ -24,4 +24,11 @@ public class MavenLogger implements ProcessController
     {
         log.info("  progress: " + progress*100 + "%");
     }
+
+    @Override
+    public void info(String msg)
+    {
+        log.info(msg);
+    }
+
 }

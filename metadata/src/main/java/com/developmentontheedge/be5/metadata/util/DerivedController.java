@@ -39,4 +39,10 @@ public class DerivedController implements ProcessController
     {
         primary.setProgress( progress*(to-from)+from );
     }
+
+    @Override
+    public void info(String msg)
+    {
+        primary.info(msg);
+    }
 }

@@ -28,4 +28,13 @@ public class MultipleProcessController implements ProcessController
             controller.setProgress( progress );
         }
     }
+
+    @Override
+    public void info(String msg)
+    {
+        for(ProcessController controller : controllers)
+        {
+            controller.info(msg);
+        }
+    }
 }

@@ -16,4 +16,9 @@ public class NullLogger implements ProcessController
     public void setProgress( double progress )
     {
     }
+
+    @Override
+    public void info(String msg)
+    {
+    }
 }

@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 public class JULLogger implements ProcessController
 {
-	protected Logger log; 
+	protected final Logger log;
     
     public JULLogger(Logger log)
     {
@@ -27,6 +27,12 @@ public class JULLogger implements ProcessController
         return "------------------------------------------------------------------" +
                 "\n" + info +
                 "\n------------------------------------------------------------------------";
+    }
+
+    @Override
+    public void info(String msg)
+    {
+        log.info(msg);
     }
 
 //    public static String infoBlock(String level, String info)

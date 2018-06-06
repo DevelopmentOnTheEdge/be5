@@ -59,9 +59,9 @@ public abstract class ScriptSupport<T>
 
     private File logFile;
 
-    public Logger getLog()
+    public ProcessController getLog()
     {
-        return log;
+        return logger;
     }
 
     public void init()
