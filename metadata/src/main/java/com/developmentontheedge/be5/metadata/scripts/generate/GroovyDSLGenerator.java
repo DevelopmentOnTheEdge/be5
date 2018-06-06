@@ -69,7 +69,7 @@ public class GroovyDSLGenerator extends ScriptSupport<GroovyDSLGenerator>
     {
         Template serviceTpl = cfg.getTemplate("/entities.ftl");
 
-        init();
+        initProject();
 
         List<Entity> entities = be5Project.getAllEntities();
 
