@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 
 public class AppSync extends ScriptSupport<AppSync>
 {
-    boolean forceUpdate;
+    private boolean forceUpdate;
 //
 //    @Parameter (property = "BE5_UPDATE_CLONES")
 //    boolean updateClones;

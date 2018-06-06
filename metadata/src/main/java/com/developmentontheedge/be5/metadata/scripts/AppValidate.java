@@ -1,13 +1,10 @@
 package com.developmentontheedge.be5.metadata.scripts;
 
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
-import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.metadata.serialization.LoadContext;
-import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 
@@ -25,28 +22,25 @@ import java.util.Locale;
  */
 public class AppValidate extends ScriptSupport<AppValidate>
 {
-    String rdbmsName;
+    private String rdbmsName;
 
-    boolean skipValidation = false;
+    private boolean skipValidation = false;
 
-    String queryPath;
+    private String queryPath;
 
-    boolean checkRoles;
+    private boolean checkRoles;
 
-    String ddlPath;
+    private String ddlPath;
 
-    boolean saveProject;
+    private boolean saveProject;
 
     @Override
     public void execute() throws ScriptException
     {
-        initLogging();
-        
         logger.info("Reading project from " + projectPath );
-        this.be5Project = loadProject( projectPath.toPath() );
+        initProject();
 
         setRdbms();
-        loadModules();
         validateProject();
         checkQuery();
         checkRoles();
@@ -82,26 +76,6 @@ public class AppValidate extends ScriptSupport<AppValidate>
                 throw new ScriptException("Aborted");
             }
         }
-    }
-
-    private void loadModules() throws ScriptException
-    {
-        LoadContext loadContext = new LoadContext();
-        //List<ProjectElementException> errors = new ArrayList<>();
-        try
-        {
-//            final Project model = be5Project;
-//            List<Project> moduleProjects = ModuleLoader2.loadModules(model, logger, loadContext);
-//            errors.addAll( validateDeps(moduleProjects) );
-//            ModuleLoader2.mergeAllModules( model, moduleProjects, loadContext );
-
-            ModuleLoader2.mergeModules(be5Project, logger);
-        }
-        catch ( ProjectLoadException e )
-        {
-            throw new ScriptException("Can not load project modules", e);
-        }
-        checkErrors( loadContext, "Modules have %d error(s)" );
     }
 
     private void setRdbms()

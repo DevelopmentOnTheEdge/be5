@@ -7,7 +7,6 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
-import com.developmentontheedge.be5.metadata.serialization.Serialization;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
@@ -19,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -95,7 +95,6 @@ public abstract class ScriptSupport<T>
 
     public void initProject()
     {
-        long startTime = System.nanoTime();
         initLogging();
 
         if(be5Project == null)
@@ -105,24 +104,20 @@ public abstract class ScriptSupport<T>
 
             logger.info("Reading be5 project from '" + projectPath + "'...");
 
-            be5Project = loadProject(projectPath.toPath());
+            try
+            {
+                be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath());
+            }
+            catch (ProjectLoadException | MalformedURLException e)
+            {
+                e.printStackTrace();
+            }
+
             if (debug)
             {
                 be5Project.setDebugStream(System.err);
             }
-
-            try
-            {
-                ModuleLoader2.mergeModules(be5Project, logger);
-            }
-            catch (ProjectLoadException e)
-            {
-                e.printStackTrace();
-                throw new ScriptException(e.getMessage());
-            }
         }
-
-        logger.info(ModuleLoader2.logLoadedProject(be5Project, startTime));
     }
     /**
      * Configures JUL (java.util.logging).
@@ -149,23 +144,7 @@ public abstract class ScriptSupport<T>
     	catch (IOException e) 
     	{
             logger.error("Could not setup logger configuration: " + e.toString());
-        }    	
-    }
-
-    public Project loadProject(final Path root) throws ScriptException
-    {
-        final LoadContext loadContext = new LoadContext();
-        Project prj;
-        try
-        {
-            prj = Serialization.load(root, loadContext);
         }
-        catch(ProjectLoadException | RuntimeException e)
-        {
-            throw new ScriptException("\nCan not load project", e);
-        }
-        checkErrors( loadContext, "Project has %d error(s)" );
-        return prj;
     }
 
     public PrintStream createPrintStream(String name)

@@ -14,15 +14,18 @@ public class LoadContext
     public void addWarning(ReadException ex)
     {
         throw new RuntimeException(ex);
-        //warnings.add( ex );
     }
     
     public List<ReadException> getWarnings()
     {
         return Collections.unmodifiableList( warnings );
     }
-    
-    public void check() throws IllegalStateException
+
+    /**
+     * fail fast used
+     */
+    @Deprecated
+    public void check()
     {
         if(!warnings.isEmpty())
         {

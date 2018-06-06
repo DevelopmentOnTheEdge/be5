@@ -13,7 +13,7 @@ public class AppDataTest extends TestUtils
 
         mojo.projectPath = tpmProjectPath.toFile();
         mojo.connectionProfileName = profileTestMavenPlugin;
-        mojo.script = "all:Post-db;testModule:Post-db;Post-db";
+        mojo.script = "Post-db";
         mojo.ignoreMissing = false;
 
         mojo.execute();

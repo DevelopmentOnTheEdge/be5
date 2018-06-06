@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.joining;
+
 
 public class ModuleLoader2
 {
@@ -55,6 +57,11 @@ public class ModuleLoader2
 
     private static synchronized void loadAllProjects(boolean dirty)
     {
+        loadAllProjects(dirty, Collections.emptyList());
+    }
+
+    private static synchronized void loadAllProjects(boolean dirty, List<URL> additionalUrls)
+    {
         if( modulesMap != null && !dirty)
             return;
 
@@ -62,6 +69,8 @@ public class ModuleLoader2
         {
             ArrayList<URL> urls = Collections.list(ModuleLoader2.class.getClassLoader().getResources(
                     ProjectFileStructure.PROJECT_FILE_NAME_WITHOUT_SUFFIX + ProjectFileStructure.FORMAT_SUFFIX));
+
+            urls.addAll(additionalUrls);
             loadAllProjects(urls);
         }
         catch (IOException e)
@@ -139,10 +148,22 @@ public class ModuleLoader2
         return modulesMap.get(name).getLocation();
     }
 
+    public static Project loadProjectWithModules(Path projectPath) throws ProjectLoadException, MalformedURLException
+    {
+        loadAllProjects(false, Collections.singletonList(projectPath.resolve("project.yaml").toUri().toURL()));
+
+        return findProjectAndMergeModules();
+    }
+
     public static Project findAndLoadProjectWithModules(boolean dirty) throws ProjectLoadException
     {
         loadAllProjects(dirty);
 
+        return findProjectAndMergeModules();
+    }
+
+    public static Project findProjectAndMergeModules() throws ProjectLoadException
+    {
         Project project = null;
 
         if(modulesMap.size() == 0)
