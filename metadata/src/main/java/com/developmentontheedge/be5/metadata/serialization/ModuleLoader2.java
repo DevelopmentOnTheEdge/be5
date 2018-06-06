@@ -43,6 +43,56 @@ public class ModuleLoader2
     private static Map<String, Path> pathsToProjectsToHotReload = new HashMap<>();
     private static List<String> devRoles = new ArrayList<>();
 
+    public static Project loadProjectWithModules(Path projectPath) throws ProjectLoadException, MalformedURLException
+    {
+        loadAllProjects(false, Collections.singletonList(projectPath.resolve("project.yaml").toUri().toURL()));
+
+        return findProjectAndMergeModules();
+    }
+
+    public static Project findAndLoadProjectWithModules(boolean dirty) throws ProjectLoadException
+    {
+        loadAllProjects(dirty);
+
+        return findProjectAndMergeModules();
+    }
+
+    private static Project findProjectAndMergeModules() throws ProjectLoadException
+    {
+        Project project = null;
+
+        if(modulesMap.size() == 0)
+        {
+            throw new RuntimeException("modulesMap is empty");
+        }
+
+        for (Map.Entry<String,Project> module: modulesMap.entrySet())
+        {
+            if(module.getValue() != null && !module.getValue().isModuleProject())
+            {
+                if(project != null)
+                {
+                    throw new RuntimeException("Several projects were found: " + project + ", " + module);
+                }
+                else
+                {
+                    project = module.getValue();
+                }
+            }
+        }
+
+        if(project == null)
+        {
+            //todo create new not module project for tests?
+            log.info("Project not found, try load main module.");
+            project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
+        }
+
+        ModuleLoader2.mergeModules(project, new JULLogger(log));
+
+        return project;
+    }
+
     public static Map<String, Project> getModulesMap()
     {
         return modulesMap;
@@ -146,56 +196,6 @@ public class ModuleLoader2
         loadAllProjects(false);
         
         return modulesMap.get(name).getLocation();
-    }
-
-    public static Project loadProjectWithModules(Path projectPath) throws ProjectLoadException, MalformedURLException
-    {
-        loadAllProjects(false, Collections.singletonList(projectPath.resolve("project.yaml").toUri().toURL()));
-
-        return findProjectAndMergeModules();
-    }
-
-    public static Project findAndLoadProjectWithModules(boolean dirty) throws ProjectLoadException
-    {
-        loadAllProjects(dirty);
-
-        return findProjectAndMergeModules();
-    }
-
-    public static Project findProjectAndMergeModules() throws ProjectLoadException
-    {
-        Project project = null;
-
-        if(modulesMap.size() == 0)
-        {
-            throw new RuntimeException("modulesMap is empty");
-        }
-
-        for (Map.Entry<String,Project> module: modulesMap.entrySet())
-        {
-            if(module.getValue() != null && !module.getValue().isModuleProject())
-            {
-                if(project != null)
-                {
-                    throw new RuntimeException("Several projects were found: " + project + ", " + module);
-                }
-                else
-                {
-                    project = module.getValue();
-                }
-            }
-        }
-
-        if(project == null)
-        {
-            //todo create new not module project for tests?
-            log.info("Project not found, try load main module.");
-            project = new ProjectTopologicalSort(modulesMap.values()).getRoot();
-        }
-
-        ModuleLoader2.mergeModules(project, new JULLogger(log));
-
-        return project;
     }
 
     public static void addModuleScripts( Project project ) throws ReadException
@@ -325,7 +325,7 @@ public class ModuleLoader2
         return null;
     }
 
-    public static String logLoadedProject(Project project, long startTime)
+    private static String logLoadedProject(Project project, long startTime)
     {
         StringBuilder sb = new StringBuilder();
         if(project.isModuleProject())
@@ -396,7 +396,7 @@ public class ModuleLoader2
     private static String getProjectName(URL url) throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-        Map<String, Object> module = (Map<String, Object>)new Yaml().load(reader);
+        Map<String, Object> module = new Yaml().load(reader);
         return module.entrySet().iterator().next().getKey();
     }
 
@@ -425,7 +425,7 @@ public class ModuleLoader2
         if(urls.size() == 1)
         {
             BufferedReader reader = new BufferedReader(new InputStreamReader(urls.get(0).openStream(), "utf-8"));
-            Map<String, Object> content = (Map<String, Object>) new Yaml().load(reader);
+            Map<String, Object> content = new Yaml().load(reader);
 
             initPathsForDev(content);
             if(content.get("roles") != null)

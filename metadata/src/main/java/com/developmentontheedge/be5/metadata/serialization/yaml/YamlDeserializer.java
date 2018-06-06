@@ -2294,8 +2294,7 @@ public class YamlDeserializer
      */
     public static BeConnectionProfile deserializeConnectionProfile( final LoadContext loadContext, final String serialized, final Project project ) throws ReadException
     {
-        @SuppressWarnings( "unchecked" ) // unsafe
-        final LinkedHashMap<String, Object> namedProfile = ( LinkedHashMap<String, Object> ) new Yaml().load( serialized );
+        final LinkedHashMap<String, Object> namedProfile = new Yaml().load( serialized );
         final String profileName = namedProfile.keySet().iterator().next();
         @SuppressWarnings( "unchecked" ) // unsafe
         final Map<String, Object> serializedProfileBody = ( Map<String, Object> ) namedProfile.get( profileName );
