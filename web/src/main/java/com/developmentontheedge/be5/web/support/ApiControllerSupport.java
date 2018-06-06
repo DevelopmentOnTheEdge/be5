@@ -56,9 +56,11 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
 
         String apiWithContext = req.getContextPath() + "/api/";
 
-        if(requestUri.indexOf('/', apiWithContext.length()) != -1)
+        int subIndex = requestUri.indexOf('/', apiWithContext.length());
+
+        if(subIndex != -1)
         {
-            return requestUri.substring(requestUri.indexOf('/', 5) + 1, requestUri.length());
+            return requestUri.substring(subIndex + 1, requestUri.length());
         }
         else
         {

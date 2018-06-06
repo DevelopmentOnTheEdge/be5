@@ -74,7 +74,7 @@ public class ApiControllerSupportTest
     public void subUrlWithContext()
     {
         when(request.getContextPath()).thenReturn("/context");
-        when(request.getRequestURI()).thenReturn("/api/test/foo/bar");
+        when(request.getRequestURI()).thenReturn("/context/api/test/foo/bar");
         controller.doPost(request, response);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq("foo/bar"));
