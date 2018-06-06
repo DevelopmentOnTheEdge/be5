@@ -2,12 +2,12 @@ package src.groovy.operations.testTags
 
 import com.developmentontheedge.be5.operation.model.Operation
 import com.developmentontheedge.be5.operation.model.OperationResult
-import com.developmentontheedge.be5.operation.support.BaseOperationSupport
+import com.developmentontheedge.be5.operation.support.TestOperationSupport
 import com.developmentontheedge.beans.DynamicPropertySet
 import com.developmentontheedge.beans.DynamicPropertySetSupport
 
 
-class OperationWithCanBeNull extends BaseOperationSupport implements Operation
+class OperationWithCanBeNull extends TestOperationSupport implements Operation
 {
     @Override
     Object getParameters(Map<String, Object> presetValues) throws Exception

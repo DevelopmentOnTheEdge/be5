@@ -28,13 +28,13 @@ import java.util.Map;
 
 public abstract class OperationSupport extends BaseOperationSupport implements Operation
 {
-    @Inject public DatabaseModel database;
-    @Inject public OperationsFactory operations;
-    @Inject public DbService db;
-    @Inject public DpsHelper dpsHelper;
     @Inject public Meta meta;
-    @Inject public QueriesService queries;
+    @Inject public DbService db;
+    @Inject public DatabaseModel database;
+    @Inject public DpsHelper dpsHelper;
     @Inject public Validator validator;
+    @Inject public OperationsFactory operations;
+    @Inject public QueriesService queries;
 
     @Inject protected Session session;
     @Inject protected Request request;
@@ -47,6 +47,11 @@ public abstract class OperationSupport extends BaseOperationSupport implements O
         super.initialize(info, context, operationResult);
 
         this.userInfo = (UserInfo) session.get(SessionConstants.USER_INFO);
+    }
+
+    public Query getQuery()
+    {
+        return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
     }
 
     public void redirectThisOperation()
