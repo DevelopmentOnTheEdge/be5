@@ -38,7 +38,7 @@ public class CellModel
         return options;
     }
 
-    public CellModel add(String type, String attribute, String value)
+    public CellModel option(String type, String attribute, String value)
     {
         options.computeIfAbsent(type, k -> new HashMap<>());
         options.get(type).put(attribute, value);
