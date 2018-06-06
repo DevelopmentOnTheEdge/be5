@@ -1,6 +1,5 @@
-package com.developmentontheedge.be5.modules.system.queries;
+package com.developmentontheedge.be5.modules.system.queries.meta;
 
-import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -10,8 +9,9 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.server.queries.support.TableBuilderSupport;
 import com.developmentontheedge.be5.server.util.ActionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 
 
 public class Entities extends TableBuilderSupport
@@ -24,26 +24,25 @@ public class Entities extends TableBuilderSupport
         List<Entity> entities = meta.getOrderedEntities(userInfo.getLanguage());
         for (Entity entity : entities)
         {
-            List<CellModel> cells = new ArrayList<CellModel>();
-
-            CellModel name = new CellModel(entity.getName());
+            CellModel name = cell(entity.getName());
             Query allRecords = entity.getQueries().get(DatabaseConstants.ALL_RECORDS_VIEW);
-            if (allRecords != null) name.add("link", "url", ActionUtils.toAction(allRecords).getArg());
+            if (allRecords != null) name.option("link", "url", ActionUtils.toAction(allRecords).getArg());
 
-            cells.add(name);
-            cells.add(new CellModel(entity.getTypeString()));
-            cells.add(new CellModel(meta.getColumns(entity).size()));
+            addRow(cells(name,
+                entity.getTypeString(),
+                meta.getColumns(entity).size(),
 
-            cells.add(new CellModel(meta.getQueryNames(entity).size())
-                    .add("link", "url",
-                            new HashUrl(FrontendConstants.TABLE_ACTION, "_system_", "Queries")
-                                .named("entity", entity.getName()).toString()));
+                cell(meta.getQueryNames(entity).size())
+                    .option("link", "url",
+                        new HashUrl(TABLE_ACTION, "_system_", "Queries")
+                            .named("entity", entity.getName()).toString()),
 
-            cells.add(new CellModel(meta.getOperationNames(entity).size()));
-
-            addRow(cells);
+                cell(meta.getOperationNames(entity).size())
+                        .option("link", "url",
+                                new HashUrl(TABLE_ACTION, "_system_", "Operations")
+                                        .named("entity", entity.getName()).toString())
+            ));
         }
-
 
         return table(columns, rows);
     }

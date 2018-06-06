@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.operation.test;
 
 import com.developmentontheedge.be5.base.util.DpsUtils;
 import com.developmentontheedge.be5.database.impl.SqlHelper;
-import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
+import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 
-public class TestOperationProperty extends BaseOperationSupport
+public class TestOperationProperty extends TestOperationSupport
 {
     @Inject SqlHelper sqlHelper;
 

@@ -13,12 +13,17 @@ _system_:
   - Entities:
       type: Java
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.system.queries.Entities
+      code: com.developmentontheedge.be5.modules.system.queries.meta.Entities
   - Queries:
       type: Java
       invisible: true
       roles: [SystemDeveloper, Administrator]
-      code: com.developmentontheedge.be5.modules.system.queries.Queries
+      code: com.developmentontheedge.be5.modules.system.queries.meta.Queries
+  - Operations:
+      type: Java
+      invisible: true
+      roles: [SystemDeveloper, Administrator]
+      code: com.developmentontheedge.be5.modules.system.queries.meta.Operations
   - Session variables:
       type: Java
       roles: [SystemDeveloper, Administrator]

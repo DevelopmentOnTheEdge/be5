@@ -2,10 +2,10 @@ package com.developmentontheedge.be5.operation.extenders;
 
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.support.BaseOperationExtenderSupport;
+import com.developmentontheedge.be5.operation.support.TestOperationExtenderSupport;
 
 
-public class TestSkipExtender extends BaseOperationExtenderSupport
+public class TestSkipExtender extends TestOperationExtenderSupport
 {
     @Override
     public void preInvoke(Operation op, Object parameters) throws Exception

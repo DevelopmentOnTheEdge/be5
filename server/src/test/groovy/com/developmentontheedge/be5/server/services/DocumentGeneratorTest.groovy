@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
+
 @TypeChecked
 class DocumentGeneratorTest extends TestTableQueryDBTest
 {
@@ -106,20 +107,6 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
                     "{'options':{}}," +
                     "{'content':'','options':{}}" +
                 "]}]", oneQuotes(jsonb.toJson(table.getRows())))
-    }
-
-    @Test
-    void groovyTableTest()
-    {
-        def table = (TablePresentation)documentGenerator.
-                getTablePresentation(meta.getQuery("testtableAdmin", "TestGroovyTable"), new HashMap<>())
-
-        assertEquals "['name','value']", oneQuotes(jsonb.toJson(table.getColumns()))
-
-        assertEquals("[" +
-                "{'cells':[{'content':'a1','options':{}},{'content':'b1','options':{}}]}," +
-                "{'cells':[{'content':'a2','options':{}},{'content':'b2','options':{}}]}]"
-                , oneQuotes(jsonb.toJson(table.getRows())))
     }
 
     @Test

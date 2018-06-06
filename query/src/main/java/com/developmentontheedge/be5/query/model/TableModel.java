@@ -17,11 +17,12 @@ public class TableModel
     public final int orderColumn;
     public final String orderDir;
 
-    public TableModel(List<ColumnModel> columns, List<RowModel> rows, boolean selectable, Long totalNumberOfRows, boolean hasAggregate, int offset, int limit, int orderColumn, String orderDir)
+    public TableModel(List<ColumnModel> columns, List<RowModel> rows, boolean selectable, Long totalNumberOfRows,
+                      boolean hasAggregate, int offset, int limit, int orderColumn, String orderDir)
     {
         this.selectable = selectable;
-        this.columns = Collections.unmodifiableList( columns );
-        this.rows = Collections.unmodifiableList( rows );
+        this.columns = Collections.unmodifiableList(columns);
+        this.rows = Collections.unmodifiableList(rows);
         this.totalNumberOfRows = totalNumberOfRows;
         this.hasAggregate = hasAggregate;
 
@@ -43,6 +44,7 @@ public class TableModel
 
     /**
      * Returns prepared rows. Note that this table doesn't contain all the SQL table rows.
+     *
      * @see TableModel#getTotalNumberOfRows()
      */
     public List<RowModel> getRows()
@@ -58,7 +60,8 @@ public class TableModel
         return totalNumberOfRows;
     }
 
-    public boolean isHasAggregate() {
+    public boolean isHasAggregate()
+    {
         return hasAggregate;
     }
 }

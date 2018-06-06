@@ -8,6 +8,7 @@ import com.developmentontheedge.be5.query.model.RowModel;
 import com.developmentontheedge.be5.query.model.TableModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -42,17 +43,26 @@ public abstract class BaseTableBuilderSupport implements TableBuilder
         }
     }
 
-    public List<CellModel> cells(Object firstContent, Object... contents)
+    public List<CellModel> cells(Object cell, Object... cells)
     {
+        List<Object> allCells = new ArrayList<>();
+        allCells.add(cell);
+        allCells.addAll(Arrays.asList(cells));
+
         List<CellModel> columns = new ArrayList<>();
-        columns.add(new CellModel(firstContent, new HashMap<>() ));
-        if(contents != null)
+
+        for (Object currentCell : allCells)
         {
-            for (Object content : contents)
+            if(currentCell instanceof CellModel)
             {
-                columns.add(new CellModel(content, new HashMap<>() ));
+                columns.add((CellModel)currentCell);
+            }
+            else
+            {
+                columns.add(new CellModel(currentCell, new HashMap<>() ));
             }
         }
+
         return Collections.unmodifiableList(columns);
     }
 
@@ -62,6 +72,11 @@ public abstract class BaseTableBuilderSupport implements TableBuilder
         columns.add(firstCell);
         Collections.addAll(columns, cells);
         return Collections.unmodifiableList(columns);
+    }
+
+    public CellModel cell(Object content)
+    {
+        return new CellModel(content);
     }
 
     public void addRow(List<CellModel> cells)

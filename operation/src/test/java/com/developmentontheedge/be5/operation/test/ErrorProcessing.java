@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.operation.test;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.operation.support.BaseOperationSupport;
+import com.developmentontheedge.be5.operation.support.TestOperationSupport;
 import com.developmentontheedge.beans.BeanInfoConstants;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertyBuilder;
@@ -14,7 +14,7 @@ import org.junit.Assert;
 import java.util.Map;
 
 
-public class ErrorProcessing extends BaseOperationSupport implements Operation
+public class ErrorProcessing extends TestOperationSupport implements Operation
 {
     private DynamicPropertySet dps = new DynamicPropertySetSupport();
 

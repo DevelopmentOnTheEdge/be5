@@ -33,6 +33,7 @@ public class ApiControllerSupportTest
     @Test
     public void generate()
     {
+        when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/api/test");
         controller.doPost(request, response);
 
@@ -42,6 +43,7 @@ public class ApiControllerSupportTest
     @Test
     public void generate2()
     {
+        when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/api/test/");
         controller.doPost(request, response);
 
@@ -51,6 +53,7 @@ public class ApiControllerSupportTest
     @Test
     public void subUrl()
     {
+        when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/api/test/path");
         controller.doPost(request, response);
 
@@ -60,7 +63,18 @@ public class ApiControllerSupportTest
     @Test
     public void subUrl2()
     {
+        when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/api/test/foo/bar");
+        controller.doPost(request, response);
+
+        verify(controller).generate(any(Request.class), any(Response.class), eq("foo/bar"));
+    }
+
+    @Test
+    public void subUrlWithContext()
+    {
+        when(request.getContextPath()).thenReturn("/context");
+        when(request.getRequestURI()).thenReturn("/context/api/test/foo/bar");
         controller.doPost(request, response);
 
         verify(controller).generate(any(Request.class), any(Response.class), eq("foo/bar"));
@@ -69,6 +83,7 @@ public class ApiControllerSupportTest
     @Test
     public void doGet()
     {
+        when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/api/test");
         controller.doGet(request, response);
 

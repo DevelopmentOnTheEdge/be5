@@ -9,10 +9,9 @@ class TestGroovyTable extends TableBuilderSupport
     @Override
     TableModel getTableModel()
     {
-        addColumns("name", "value")
+        addColumns(userInfo.getUserName())
 
-        addRow(cells("a1", "b1"))
-        addRow(cells("a2", "b2"))
+        addRow(cells(userInfo.getCurrentRoles().toString()))
 
         return table(columns, rows)
     }

@@ -1,18 +1,11 @@
 package com.developmentontheedge.be5.operation.support;
 
-import com.developmentontheedge.be5.base.model.UserInfo;
-import com.developmentontheedge.be5.base.services.Meta;
-import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.operation.services.OperationsFactory;
-import com.developmentontheedge.be5.operation.services.validation.Validator;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,16 +13,9 @@ import java.util.Map;
 
 public abstract class BaseOperationSupport implements Operation
 {
-    @Inject public OperationsFactory operations;
-    @Inject public DbService db;
-    @Inject public Meta meta;
-    @Inject public Validator validator;
-
     protected OperationInfo info;
     protected OperationContext context;
     private OperationResult operationResult;
-
-    protected UserInfo userInfo;
 
     private final Map<String, Object> redirectParams = new HashMap<>();
 
@@ -81,11 +67,6 @@ public abstract class BaseOperationSupport implements Operation
     public void setResult(OperationResult operationResult)
     {
         this.operationResult = operationResult;
-    }
-
-    public Query getQuery()
-    {
-        return meta.getQuery(getInfo().getEntityName(), context.getQueryName());
     }
 
     @Override
