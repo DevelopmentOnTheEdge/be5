@@ -21,11 +21,6 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         GroovyRegister.registerMetaClass( GDynamicPropertySetMetaClass.class, GDynamicPropertySetSupport.class );
     }
 
-    public DynamicProperty getAt(String name)
-    {
-        return super.getProperty(name);
-    }
-
 //may be add
 //    public DynamicProperty setAt(String name, String value)
 //    {
@@ -50,6 +45,7 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
 
         DynamicProperty property = new DynamicProperty(propertyName, builder.getTYPE());
         add(property);
+
         return DynamicPropertyMetaClass.leftShift(property, builder.getMap());
     }
 
@@ -101,9 +97,11 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
         return dpsAttributes;
     }
 
-    /**
-     * не @TypeChecked
-     */
+    public Object getAt(String name)
+    {
+        return getValue(name);
+    }
+
     @Deprecated
     public void putAt(String propertyName, Map<String, Object> value)
     {

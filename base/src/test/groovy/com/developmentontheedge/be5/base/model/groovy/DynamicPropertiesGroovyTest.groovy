@@ -8,6 +8,7 @@ import org.junit.Test
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 import static org.junit.Assert.*
 
+
 class DynamicPropertiesGroovyTest extends RegisterMetaClass
 {
     @Test
@@ -151,7 +152,10 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
                 name : "testProperty",
                 value: 1
         ]
-        assertEquals 1, dps[ '$testProperty' ]
+        assertEquals 1, dps['testProperty']
+
+        assertEquals null, dps['$testProperty']
+        assertEquals null, dps['_testProperty']
     }
 
     @Test

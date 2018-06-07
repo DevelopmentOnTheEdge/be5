@@ -48,7 +48,7 @@ class TestGroovyOp extends GOperationSupport implements Operation
         ]
 
         //@Deprecated
-        dps["beginDate"] << [READ_ONLY: true]
+        dps.getProperty("beginDate") << [READ_ONLY: true]
         //dps.edit("beginDate") { READ_ONLY = true }
 
 //        dps.add {
