@@ -114,10 +114,4 @@ public class GDynamicPropertySetSupport extends DynamicPropertySetSupport
     {
         return DynamicPropertySetMetaClass.leftShift(this, properties);
     }
-
-    @Deprecated
-    public DynamicPropertySet add( Map<String, ?> properties )
-    {
-        return DynamicPropertySetMetaClass.leftShift(this, (Map<String, Object>)properties);
-    }
 }
