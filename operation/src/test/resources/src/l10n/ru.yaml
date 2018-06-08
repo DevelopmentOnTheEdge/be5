@@ -11,6 +11,7 @@ ru:
       entries:
       - 'Entity not found: $1': 'Объект не найден: $1'
       - 'Access denied': В доступе отказано
+      - Error in operation: Ошибка в операции
     - topics: validation
       entries:
       - Please enter only digits.: Здесь должны быть только цифры.

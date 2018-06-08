@@ -12,6 +12,7 @@ ru:
       entries:
       - 'Entity not found: $1': 'Объект не найден: $1'
       - 'Access denied': В доступе отказано
+      - Error in operation: Ошибка в операции
       - Incorrect username or password.: Неправильно указано имя пользователя или пароль.
     - topics: validation
       entries:

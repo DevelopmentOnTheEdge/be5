@@ -70,7 +70,7 @@ public class OperationServiceImpl implements OperationService
                 if(userInfoProvider.isSystemDeveloper())
                 {
                     log.log(Level.INFO, "error on generate in validate parameters", e);
-                    //operation.setResult(OperationResult.error(e));
+                    //operation.setResult(OperationResult.error(e.getMessage(), e));
                 }
             }
         }
@@ -104,7 +104,7 @@ public class OperationServiceImpl implements OperationService
             catch (RuntimeException e)
             {
                 log.log(Level.INFO, "error on execute in parameters", e);
-                operation.setResult(OperationResult.error(e));
+                //remove duplicate operation.setResult(OperationResult.error(e));
                 return replaceNullValueToEmptyStringAndReturn(parameters);
             }
 
