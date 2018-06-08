@@ -23,7 +23,7 @@ import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
-import com.developmentontheedge.be5.server.services.impl.QuerySessionProvider;
+import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -74,8 +74,8 @@ public class ServerModule extends ServletModule
 
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
-        bind(QuerySession.class).to(QuerySessionProvider.class).in(Scopes.SINGLETON);
 
+        bind(QuerySession.class).to(QuerySessionImpl.class).in(ServletScopes.SESSION);
         bind(Session.class).to(SessionImpl.class).in(ServletScopes.SESSION);
         bind(Request.class).to(RequestImpl.class).in(ServletScopes.REQUEST);
         bind(Response.class).to(ResponseImpl.class).in(ServletScopes.REQUEST);

@@ -162,7 +162,7 @@ public abstract class TestUtils extends BaseTestUtils
         return getSpyMockRecForOp(entity, query, operation, selectedRows, values, new HashMap<>());
     }
 
-    public static QRec getQRec(Map<String, Object> nameValues)
+    public static QRec getQRec(Map<String, ?> nameValues)
     {
         return getDps(new QRec(), nameValues);
     }

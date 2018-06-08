@@ -17,7 +17,6 @@ public class ExtensionMethodsMetaClass extends DelegatingMetaClass
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public Object invokeMethod( Object object, String methodName, Object[] args )
     {
         try

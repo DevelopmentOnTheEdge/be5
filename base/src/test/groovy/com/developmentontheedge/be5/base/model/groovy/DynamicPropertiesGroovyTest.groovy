@@ -8,6 +8,7 @@ import org.junit.Test
 import static com.developmentontheedge.beans.BeanInfoConstants.*
 import static org.junit.Assert.*
 
+
 class DynamicPropertiesGroovyTest extends RegisterMetaClass
 {
     @Test
@@ -91,8 +92,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
 
         final def tags = ['A': 'a', 'B': 'b', 'C': 'c', 'D': 'd']
         assertEquals tags, property.getAttribute( TAG_LIST_ATTR )
-        assertTrue property.getAttribute( RELOAD_ON_CHANGE )
-        assertTrue property.getAttribute( RAW_VALUE )
+        assertTrue((boolean)property.getAttribute( RELOAD_ON_CHANGE ))
+        assertTrue((boolean)property.getAttribute( RAW_VALUE ))
     }
 
     @Test
@@ -100,8 +101,8 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
     {
         DynamicPropertySet dps = [ a : "a", b : "b" ] as DynamicPropertySetSupport
         DynamicProperty property = new DynamicProperty( "d", String, "d" )
-        assert ( ( dps << property ).hasProperty( "d" ) )
-        assert dps.hasProperty( "d" )
+        assertTrue ( ( dps << property ).hasProperty( "d" ) )
+        assertTrue dps.hasProperty( "d" )
     }
 
     @Test
@@ -151,7 +152,10 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
                 name : "testProperty",
                 value: 1
         ]
-        assertEquals 1, dps[ '$testProperty' ]
+        assertEquals 1, dps['testProperty']
+
+        assertEquals null, dps['$testProperty']
+        assertEquals null, dps['_testProperty']
     }
 
     @Test
@@ -188,10 +192,10 @@ class DynamicPropertiesGroovyTest extends RegisterMetaClass
         def dps2 = [ d : "d", e : "e", f : "f" ] as DynamicPropertySetSupport
 
         DynamicPropertySetSupport dps3 = dps1 + dps2
-        assert dps1.size() == 3
-        assert dps2.size() == 3
+        assertTrue dps1.size() == 3
+        assertTrue dps2.size() == 3
         [ a : "a", b : "b", c : "c", d : "d", e : "e", f : "f" ].each( { a, b ->
-            assert dps3.getValue( a ) == b
+            assertTrue dps3.getValue( a ) == b
         } )
     }
 

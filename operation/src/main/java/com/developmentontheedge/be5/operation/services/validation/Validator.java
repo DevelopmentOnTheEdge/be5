@@ -122,16 +122,27 @@ public class Validator
         }
     }
 
-    public void setSuccess(DynamicProperty property)
+    public void setSuccess(DynamicPropertySet dps, String name)
     {
-        property.setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
-        property.setAttribute( BeanInfoConstants.MESSAGE, "" );
+        setSuccess(dps, name, "");
+    }
+
+    public void setSuccess(DynamicPropertySet dps, String name, String message)
+    {
+        dps.getProperty(name).setAttribute( BeanInfoConstants.STATUS, SUCCESS.toString() );
+        dps.getProperty(name).setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
     public void setError(DynamicProperty property, String message)
     {
         property.setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
         property.setAttribute( BeanInfoConstants.MESSAGE, message );
+    }
+
+    public void setError(DynamicPropertySet dps, String name, String message)
+    {
+        dps.getProperty(name).setAttribute( BeanInfoConstants.STATUS, ERROR.toString() );
+        dps.getProperty(name).setAttribute( BeanInfoConstants.MESSAGE, message );
     }
 
     @Deprecated

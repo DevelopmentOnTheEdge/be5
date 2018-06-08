@@ -118,14 +118,14 @@ public abstract class BaseTestUtils
         return list.stream().collect(Collectors.joining(","));
     }
 
-    public static DynamicPropertySetSupport getDpsS(Map<String, Object> nameValues)
+    public static DynamicPropertySetSupport getDpsS(Map<String, ?> nameValues)
     {
         return getDps(new DynamicPropertySetSupport(), nameValues);
     }
 
-    public static <T extends DynamicPropertySet> T getDps(T dps, Map<String, Object> nameValues)
+    public static <T extends DynamicPropertySet> T getDps(T dps, Map<String, ?> nameValues)
     {
-        for(Map.Entry<String, Object> entry : nameValues.entrySet())
+        for(Map.Entry<String, ?> entry : nameValues.entrySet())
         {
             dps.add(new DynamicProperty(entry.getKey(), entry.getValue().getClass(), entry.getValue()));
         }

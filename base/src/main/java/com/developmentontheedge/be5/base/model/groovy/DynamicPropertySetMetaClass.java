@@ -22,6 +22,24 @@ public class DynamicPropertySetMetaClass<T extends DynamicPropertySet> extends G
     }
 
     @Override
+    public Object invokeMethod( Object object, String methodName, Object[] args )
+    {
+        if("getAt".equals(methodName))
+        {
+            return getAt((DynamicPropertySet)object, (String) args[0]);
+        }
+        else
+        {
+            return super.invokeMethod(object, methodName, args);
+        }
+    }
+
+    public Object getAt(DynamicPropertySet dps, String name)
+    {
+        return dps.getValue(name);
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
     public void setProperty( Object object, String propertyName, Object value )
     {

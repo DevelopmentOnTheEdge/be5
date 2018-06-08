@@ -11,6 +11,7 @@ import org.junit.Test
 
 import static org.junit.Assert.*
 
+
 class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 {
     EntityModel testtableAdmin
@@ -40,8 +41,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 
         def testtableAdmin = testtableAdmin
 
-        assert db.oneLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
-        assert testtableAdmin( ["name": "TestName"] ) != null
+        assertTrue db.oneLong("SELECT id FROM testtableAdmin WHERE name = ?", "TestName") != null
+        assertTrue testtableAdmin( ["name": "TestName"] ) != null
     }
 
     @Test
@@ -87,7 +88,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
                 "name": "InsertName",
                 "value": "2"]
 
-        assert db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
+        assertTrue db.oneInteger("SELECT value FROM testtableAdmin WHERE name = ?", "InsertName") == 2
     }
 
     @Test
@@ -198,12 +199,12 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
                 "name": "TestName1",
                 "value": 1]
 
-        assert testtableAdmin[ id ] != null
+        assertTrue testtableAdmin[ id ] != null
 
         assertFalse testtableAdmin.empty
         assertEquals 1, testtableAdmin.remove( id )
 
-        assert testtableAdmin[ id ] == null
+        assertTrue testtableAdmin[ id ] == null
         assertTrue testtableAdmin.empty
 
         assertEquals 0, testtableAdmin.remove( id )
@@ -246,9 +247,9 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 
         assertEquals 2, testtableAdmin.remove( id, id2 )
 
-        assert testtableAdmin[ id ] == null
-        assert testtableAdmin[ id2 ] == null
-        assert testtableAdmin[ id3 ] != null
+        assertTrue testtableAdmin[ id ] == null
+        assertTrue testtableAdmin[ id2 ] == null
+        assertTrue testtableAdmin[ id3 ] != null
     }
 
     @Test
@@ -500,8 +501,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //        def tableName = database.operations;
 //        boolean oneTimeTrigger = false;
 //        def list = tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations', Name : 'Clone' ] ).collect();
-//        assert list.size() == 1;
-//        assert 'Java', list.$Type;
+//        assertTrue list.size() == 1;
+//        assertTrue 'Java', list.$Type;
 //    }
 //
 //    public void testQueryCollectWithClosure()
@@ -513,8 +514,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //        def list = tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
 //            dps.Name == 'Clone'
 //        }
-//        assert list.size() == 1;
-//        assert 'Java', list.$Type;
+//        assertTrue list.size() == 1;
+//        assertTrue 'Java', list.$Type;
 //    }
 //
 //    public void testQueryEachWithClosure()
@@ -526,8 +527,8 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //        def list = tableName.query( DatabaseConstants.ALL_RECORDS_VIEW, [ table_name : 'operations' ] ).collect { dps, rn ->
 //            dps.Name == 'Clone'
 //        }
-//        assert list.size() == 1;
-//        assert 'Java', list.$Type;
+//        assertTrue list.size() == 1;
+//        assertTrue 'Java', list.$Type;
 //    }
 //
 //    public void testQueryEach()
@@ -562,7 +563,7 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //    {
 //        setUp()
 //        def database = DatabaseModel.makeInstance( connector, UserInfo.ADMIN );
-//        assert database.operations( table_name : 'operationExtension', name : 'Edit' ) != null
+//        assertTrue database.operations( table_name : 'operationExtension', name : 'Edit' ) != null
 //        def opID = database.operationExtension << [
 //            table_name : 'operationExtension',
 //            operation_name : 'Edit',
@@ -586,11 +587,11 @@ class DatabaseModelGroovyTest extends DatabaseModelProjectDbTest
 //        ];
 //        try
 //        {
-//            assert database.operationExtension[ opID ] != null;
+//            assertTrue database.operationExtension[ opID ] != null;
 //            def op = database.operationExtension.createOperation( 'Edit' )
 //            op.records = [ opID ];
 //            op.invoke();
-//            assert database.operationExtension[ opID ] == null;
+//            assertTrue database.operationExtension[ opID ] == null;
 //        }
 //        finally
 //        {
