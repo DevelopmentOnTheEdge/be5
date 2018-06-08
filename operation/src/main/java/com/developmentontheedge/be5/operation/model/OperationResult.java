@@ -127,6 +127,11 @@ public class OperationResult
         return new OperationResult(OperationStatus.REDIRECTED, url);
     }
 
+    /**
+     * @param message - Error message for client
+     * @param details - Error only for SystemDeveloper role
+     * @return OperationResult
+     */
     public static OperationResult error(String message, Throwable details)
     {
         return new OperationResult(OperationStatus.ERROR, message, details); 
@@ -134,7 +139,7 @@ public class OperationResult
 
     public static OperationResult error(Throwable details)
     {
-        return new OperationResult(OperationStatus.ERROR, details.getMessage(), details);
+        return new OperationResult(OperationStatus.ERROR, "Error in operation", details);
     }
 
     public static OperationResult error(String message)

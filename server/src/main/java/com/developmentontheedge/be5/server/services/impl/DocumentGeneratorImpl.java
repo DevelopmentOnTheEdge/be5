@@ -302,26 +302,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         if(result.getStatus() == OperationStatus.ERROR)
         {
-            if (result.getDetails() != null &&
-                    result.getDetails().getClass() == Be5Exception.class &&
-                    ((Be5Exception) (result.getDetails())).getCause() != null)
-            {
-                Throwable cause = ((Be5Exception) (result.getDetails())).getCause();
-
-                String message;
-                if (cause.getMessage() != null)
-                {
-                    message = cause.getMessage().split(System.getProperty("line.separator"))[0];
-                } else
-                {
-                    message = cause.getClass().getSimpleName();
-                }
-                return OperationResult.error(message, null);
-            }
-            else
-            {
-                return OperationResult.error(result.getMessage().split(System.getProperty("line.separator"))[0], null);
-            }
+            return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()));
         }
         else
         {

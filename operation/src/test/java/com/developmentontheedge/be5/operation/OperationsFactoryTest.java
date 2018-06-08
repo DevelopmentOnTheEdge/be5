@@ -4,16 +4,12 @@ import com.developmentontheedge.be5.base.FrontendConstants;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
-import com.developmentontheedge.be5.operation.services.OperationsFactory;
 import com.developmentontheedge.beans.json.JsonFactory;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +18,14 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
 {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
+
+//    @Test
+//    public void generateErrorInPropertyOnGenerate()
+//    {
+//        expectedEx.expect(IllegalArgumentException.class);
+//        expectedEx.expectMessage("Error in property (getParameters)");
+//        //executeAndCheck("generateErrorInProperty");
+//    }
 
     @Test
     public void generateErrorInPropertyOnExecute()
@@ -79,11 +83,11 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
         executeAndCheck("withoutParams");
     }
 
-    public void executeAndCheck(String value)
+    private void executeAndCheck(String value)
     {
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(1);
-        map.put("name", value);
-        Operation operation = operations.get("testtableAdmin", "ErrorProcessing").setPresetValues(map).execute();
+        Operation operation = operations.get("testtableAdmin", "ErrorProcessing")
+                .setPresetValues(Collections.singletonMap("name", value))
+                .execute();
 
         assertEquals(OperationStatus.ERROR, operation.getStatus());
     }
@@ -111,16 +115,6 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
         assertEquals("{'values':{'name':'','propertyForAnotherEntity':'text'},'meta':{'/name':{'displayName':'name','columnSize':'30'}," +
                         "'/propertyForAnotherEntity':{'displayName':'propertyForAnotherEntity'}},'order':['/name','/propertyForAnotherEntity']}",
                 oneQuotes(JsonFactory.bean(generate).toString()));
-    }
-
-    public OperationsFactory getOperations()
-    {
-        return operations;
-    }
-
-    public void setOperations(OperationsFactory operations)
-    {
-        this.operations = operations;
     }
 
 }
