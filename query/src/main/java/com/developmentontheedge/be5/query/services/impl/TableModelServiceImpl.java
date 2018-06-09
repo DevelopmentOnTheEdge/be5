@@ -108,7 +108,7 @@ public class TableModelServiceImpl implements TableModelService
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
-                    throw Be5Exception.internalInQuery(e, query);
+                    throw Be5Exception.internalInQuery(query, e);
                 }
             case GROOVY:
                 try

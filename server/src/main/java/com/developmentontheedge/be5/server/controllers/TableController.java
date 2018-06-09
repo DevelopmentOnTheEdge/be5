@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
+import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -11,6 +12,7 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
@@ -36,15 +38,17 @@ public class TableController extends ApiControllerSupport
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
     private final JsonApiResponseHelper responseHelper;
+    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService,
-                           UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper)
+                           UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper, UserInfoProvider userInfoProvider)
     {
         this.documentGenerator = documentGenerator;
         this.tableModelService = tableModelService;
         this.userAwareMeta = userAwareMeta;
         this.responseHelper = responseHelper;
+        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -98,7 +102,7 @@ public class TableController extends ApiControllerSupport
         }
         catch (Throwable e)
         {
-            sendError(req, res, url, Be5Exception.internalInQuery(e, query));
+            sendError(req, res, url, Be5Exception.internalInQuery(query, e));
         }
     }
 
@@ -110,10 +114,20 @@ public class TableController extends ApiControllerSupport
 
         //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
 
-        responseHelper.sendErrorAsJson(
-                responseHelper.getErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
-                responseHelper.getDefaultMeta(req)
-        );
+        if(userInfoProvider.isSystemDeveloper())
+        {
+            responseHelper.sendErrorAsJson(
+                    responseHelper.getErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
+                    responseHelper.getDefaultMeta(req)
+            );
+        }
+        else
+        {
+            responseHelper.sendErrorAsJson(
+                    new ErrorModel("500", e.getTitle()),
+                    responseHelper.getDefaultMeta(req)
+            );
+        }
     }
 
 }

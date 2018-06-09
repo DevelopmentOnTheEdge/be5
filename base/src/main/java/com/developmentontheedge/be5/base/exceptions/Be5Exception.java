@@ -14,29 +14,29 @@ public class Be5Exception extends RuntimeException
 {
     private static final long serialVersionUID = 9189259622768482031L;
 
-    private final String title;
+    private final String message;
     private final Be5ErrorCode code;
 
-    private Be5Exception(Be5ErrorCode code, String title, Throwable cause)
+    private Be5Exception(Be5ErrorCode code, String message, Throwable cause)
     {
-        super(title, cause);
-        this.title = title;
+        super(message, cause);
+        this.message = message;
         this.code = code;
     }
 
-    private Be5Exception(Be5ErrorCode code, String title)
+    private Be5Exception(Be5ErrorCode code, String message)
     {
-        this(code, title, null);
+        this(code, message, null);
     }
 
-    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
-    {
-        super(ErrorTitles.formatTitle(code, parameters), t);
-
-        title = ErrorTitles.formatTitle(code, parameters);
-
-        this.code = code;
-    }
+//    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
+//    {
+//        super(ErrorTitles.formatTitle(code, parameters), t);
+//
+//        title = ErrorTitles.formatTitle(code, parameters);
+//
+//        this.code = code;
+//    }
 
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
@@ -49,9 +49,9 @@ public class Be5Exception extends RuntimeException
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    static Be5Exception create(Be5ErrorCode code, String title, Throwable t)
+    static Be5Exception create(Be5ErrorCode code, String message, Throwable t)
     {
-        return new Be5Exception(code, title, t);
+        return new Be5Exception(code, message, t);
     }
     
     public static Be5Exception accessDenied()
@@ -64,29 +64,29 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.INTERNAL_ERROR.exception(title);
     }
 
-    public static Be5Exception internal(Throwable t)
+    public static Be5Exception internal(Throwable cause)
     {
-        return internal(t, "");
+        return internal("", cause);
     }
 
-    public static Be5Exception internal(Throwable t, String title)
+    public static Be5Exception internal(String message, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR.rethrow(t, title);
+        return Be5ErrorCode.INTERNAL_ERROR.rethrow(cause, message);
     }
 
-    public static Be5Exception internalInQuery(Throwable t, Query q)
+    public static Be5Exception internalInQuery(Query q, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(t, q.getEntity().getName(), q.getName());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(cause, q.getEntity().getName(), q.getName());
     }
 
-    public static Be5Exception internalInOperation(Throwable t, Operation o)
+    public static Be5Exception internalInOperation(Operation o, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow(cause, o.getEntity().getName(), o.getName());
     }
 
-    public static Be5Exception internalInOperationExtender(Throwable t, OperationExtender operationExtender)
+    public static Be5Exception internalInOperationExtender(OperationExtender operationExtender, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow( t, operationExtender.getClassName());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow(cause, operationExtender.getClassName());
     }
 
     public static Be5Exception unknownEntity(String entityName)
@@ -111,7 +111,7 @@ public class Be5Exception extends RuntimeException
 
     public String getTitle()
     {
-        return title;
+        return message;
     }
 
     public static String getMessage(Throwable err)
@@ -167,14 +167,14 @@ public class Be5Exception extends RuntimeException
 
         Be5Exception that = (Be5Exception) o;
 
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
         return code == that.code;
     }
 
     @Override
     public int hashCode()
     {
-        int result = title != null ? title.hashCode() : 0;
+        int result = message != null ? message.hashCode() : 0;
         result = 31 * result + (code != null ? code.hashCode() : 0);
         return result;
     }

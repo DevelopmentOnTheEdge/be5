@@ -356,7 +356,7 @@ public class MetaImpl implements Meta
         }
         catch( ProjectElementException e )
         {
-            throw Be5Exception.internalInQuery( e, query );
+            throw Be5Exception.internalInQuery(query, e);
         }
     }
 

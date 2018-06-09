@@ -90,7 +90,7 @@ public class ProjectProviderImpl implements ProjectProvider
         }
         catch(ProjectLoadException | IOException e)
         {
-        	throw Be5Exception.internal(e, "Can not load project");
+        	throw Be5Exception.internal("Can not load project", e);
         }
         finally
         {

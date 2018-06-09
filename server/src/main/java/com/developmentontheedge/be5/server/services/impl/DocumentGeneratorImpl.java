@@ -315,7 +315,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         String additionalMessage = Be5Exception.getMessage(e);
 
-        //TODO if(UserInfoHolder.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
+        //TODO if(userInfoProvider.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
 
         return responseHelper.getErrorModel(Be5Exception.internal(e), additionalMessage,
                 Collections.singletonMap(SELF_LINK, url.toString()));

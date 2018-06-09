@@ -70,7 +70,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (Throwable e)
         {
-            Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+            Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
             //operation.setResult(OperationResult.error(be5Exception));
             throw be5Exception;
         }
@@ -146,7 +146,7 @@ public class OperationExecutorImpl implements OperationExecutor
         }
         catch (Throwable e)
         {
-            Be5Exception be5Exception = Be5Exception.internalInOperation(e, operation.getInfo().getModel());
+            Be5Exception be5Exception = Be5Exception.internalInOperation(operation.getInfo().getModel(), e);
             operation.setResult(OperationResult.error(be5Exception));
 
             log.log(Level.SEVERE, "error on callInvoke", be5Exception);
@@ -203,8 +203,8 @@ public class OperationExecutorImpl implements OperationExecutor
                     }
                     else
                     {
-                        throw Be5Exception.internalInOperationExtender(
-                                new Error("Class " + groovyExtender.getCode() + " is null."), groovyExtender);
+                        throw Be5Exception.internalInOperationExtender(groovyExtender,
+                                new RuntimeException("Class " + groovyExtender.getCode() + " is null."));
                     }
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
@@ -213,7 +213,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 catch ( Throwable e )
                 {
-                    throw Be5Exception.internalInOperationExtender(e, groovyExtender);
+                    throw Be5Exception.internalInOperationExtender(groovyExtender, e);
                 }
             }
             else
@@ -225,7 +225,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
-                    throw Be5Exception.internalInOperationExtender(e, operationExtenderModel);
+                    throw Be5Exception.internalInOperationExtender(operationExtenderModel, e);
                 }
             }
 
@@ -300,8 +300,8 @@ public class OperationExecutorImpl implements OperationExecutor
                     }
                     else
                     {
-                        throw Be5Exception.internalInOperation(
-                                new Error("Class " + operationInfo.getCode() + " is null."), operationInfo.getModel());
+                        throw Be5Exception.internalInOperation(operationInfo.getModel(),
+                                new Error("Class " + operationInfo.getCode() + " is null."));
                     }
                 }
                 catch( NoClassDefFoundError | IllegalAccessException | InstantiationException e )
@@ -310,7 +310,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 catch ( Throwable e )
                 {
-                    throw Be5Exception.internalInOperation(e, operationInfo.getModel());
+                    throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
                 }
                 break;
             case OPERATION_TYPE_JAVA:
@@ -321,7 +321,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 }
                 catch (ClassNotFoundException | IllegalAccessException | InstantiationException e)
                 {
-                    throw Be5Exception.internalInOperation(e, operationInfo.getModel());
+                    throw Be5Exception.internalInOperation(operationInfo.getModel(), e);
                 }
             case OPERATION_TYPE_JAVAFUNCTION:
             case OPERATION_TYPE_SQL:

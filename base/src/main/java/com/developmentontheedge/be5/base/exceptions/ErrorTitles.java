@@ -18,6 +18,7 @@ import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_OPERATION;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_QUERY;
 
+
 public class ErrorTitles
 {
 	private static final EnumMap<Be5ErrorCode, String> TITLES = new EnumMap<>(Be5ErrorCode.class);
