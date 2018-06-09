@@ -13,7 +13,6 @@ import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.INTERNAL
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.INVALID_STATE;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NOT_FOUND;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NOT_INITIALIZED;
-import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NO_OPERATION_IN_QUERY;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_ENTITY;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_OPERATION;
@@ -29,7 +28,6 @@ public class ErrorTitles
 		TITLES.put(UNKNOWN_ENTITY, "Entity not found: $1");
 		TITLES.put(UNKNOWN_QUERY, "Query not found: $1.$2");
 		TITLES.put(UNKNOWN_OPERATION, "Operation not found: $1.$2");
-		TITLES.put(NO_OPERATION_IN_QUERY, "Operation $1.$3 is not available in query: $2");
 		TITLES.put(INTERNAL_ERROR, "Internal error occurred: $1");
 		TITLES.put(INVALID_STATE, "Invalid state: $1");
 		TITLES.put(NOT_INITIALIZED, "Server is not properly initialized: try again later");
