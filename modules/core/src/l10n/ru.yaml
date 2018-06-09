@@ -10,8 +10,9 @@ ru:
   - messages.l10n:
     - topics: exception
       entries:
-      - 'Entity not found: $1': 'Объект не найден: $1'
-      - 'Access denied': В доступе отказано
+      - 'Internal error occured: $1': 'Произошла внутренняя ошибка: $1'
+      - 'Entity not found: $1': 'Сущность не найдена: $1'
+      - 'Access denied': Доступ запрещен
       - Error in operation: Ошибка в операции
       - Incorrect username or password.: Неправильно указано имя пользователя или пароль.
     - topics: validation

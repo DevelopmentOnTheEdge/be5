@@ -5,24 +5,28 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 
+import java.util.List;
+
 
 public class Be5Exception extends RuntimeException
 {
     private static final long serialVersionUID = 9189259622768482031L;
 
-    private final String message;
     private final Be5ErrorCode code;
+    private final List<String> parameters;
+    private final String generatedMessage;
 
-    private Be5Exception(Be5ErrorCode code, String message, Throwable cause)
+    private Be5Exception(Be5ErrorCode code, List<String> parameters, String generatedMessage, Throwable cause)
     {
-        super(message, cause);
-        this.message = message;
+        super(generatedMessage, cause);
+        this.generatedMessage = generatedMessage;
         this.code = code;
+        this.parameters = parameters;
     }
 
-    private Be5Exception(Be5ErrorCode code, String message)
+    private Be5Exception(Be5ErrorCode code, List<String> parameters, String generatedMessage)
     {
-        this(code, message, null);
+        this(code, parameters, generatedMessage, null);
     }
 
 //    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
@@ -37,17 +41,17 @@ public class Be5Exception extends RuntimeException
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    static Be5Exception create(Be5ErrorCode code, String title)
+    static Be5Exception create(Be5ErrorCode code, List<String> parameters, String title)
     {
-        return new Be5Exception(code, title);
+        return new Be5Exception(code, parameters, title);
     }
     
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    static Be5Exception create(Be5ErrorCode code, String message, Throwable t)
+    static Be5Exception create(Be5ErrorCode code, List<String> parameters, String message, Throwable t)
     {
-        return new Be5Exception(code, message, t);
+        return new Be5Exception(code, parameters, message, t);
     }
     
     public static Be5Exception accessDenied()
@@ -132,7 +136,12 @@ public class Be5Exception extends RuntimeException
 
     public String getTitle()
     {
-        return message;
+        return generatedMessage;
+    }
+
+    public List<String> getParameters()
+    {
+        return parameters;
     }
 
     public static String getMessage(Throwable err)
@@ -188,13 +197,13 @@ public class Be5Exception extends RuntimeException
 
         Be5Exception that = (Be5Exception) o;
 
-        return (message != null ? message.equals(that.message) : that.message == null) && code == that.code;
+        return (generatedMessage != null ? generatedMessage.equals(that.generatedMessage) : that.generatedMessage == null) && code == that.code;
     }
 
     @Override
     public int hashCode()
     {
-        int result = message != null ? message.hashCode() : 0;
+        int result = generatedMessage != null ? generatedMessage.hashCode() : 0;
         result = 31 * result + (code != null ? code.hashCode() : 0);
         return result;
     }

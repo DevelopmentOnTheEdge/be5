@@ -1,5 +1,8 @@
 package com.developmentontheedge.be5.base.exceptions;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public enum Be5ErrorCode
 {
@@ -12,22 +15,24 @@ public enum Be5ErrorCode
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
      */
-    public Be5Exception exception(Object... parameters)
+    public Be5Exception exception(String... parameters)
     {
-        String msg = ErrorTitles.formatTitle(this, parameters);
+        List<String> paramList = Arrays.asList(parameters);
+        String msg = ErrorTitles.formatTitle(this, paramList);
 
-        return Be5Exception.create(this, msg);
+        return Be5Exception.create(this, paramList, msg);
     }
 
     /**
      * Creates a {@link Be5Exception} by the code and a formatted message. Note
      * that this method is not a part of the API.
      */
-    Be5Exception rethrow(Throwable t, Object... parameters)
+    Be5Exception rethrow(Throwable t, String... parameters)
     {
-        String msg = ErrorTitles.formatTitle(this, parameters);
+        List<String> paramList = Arrays.asList(parameters);
+        String msg = ErrorTitles.formatTitle(this, paramList);
 
-        return Be5Exception.create(this, msg, t);
+        return Be5Exception.create(this, paramList, msg, t);
     }
 
     public boolean isInternal()

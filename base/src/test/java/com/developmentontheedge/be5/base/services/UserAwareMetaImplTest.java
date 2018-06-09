@@ -53,16 +53,27 @@ public class UserAwareMetaImplTest extends BaseTest
     public void getOperation_Access_denied()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Access denied to operation testtableAdmin.AdministratorOperation");
+        expectedEx.expectMessage("Access denied to operation: testtableAdmin.AdministratorOperation");
 
         userAwareMeta.getOperation("testtableAdmin", "AdministratorOperation");
+    }
+
+    @Test
+    public void getLocalizedBe5ErrorMessage()
+    {
+        Be5Exception be5Exception = Be5Exception.internal("test");
+
+        assertEquals("Internal error occured: test", be5Exception.getTitle());
+
+        assertEquals("Произошла внутренняя ошибка: test",
+                userAwareMeta.getLocalizedBe5ErrorMessage(be5Exception));
     }
 
     @Test
     public void getOperationForQueryAssigned()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Access denied to operation testtableAdmin.AdministratorOperation");
+        expectedEx.expectMessage("Access denied to operation: testtableAdmin.AdministratorOperation");
 
         userAwareMeta.getOperation("testtableAdmin", "All records", "AdministratorOperationForQuery");
     }
@@ -73,7 +84,7 @@ public class UserAwareMetaImplTest extends BaseTest
         setStaticUserInfo(RoleType.ROLE_ADMINISTRATOR);
 
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Operation 'testtableAdmin.AdministratorOperation' not assigned to query 'All records'");
+        expectedEx.expectMessage("Operation 'testtableAdmin.AdministratorOperation' not assigned to query: 'All records'");
 
         userAwareMeta.getOperation("testtableAdmin", "All records", "AdministratorOperation");
     }
@@ -97,7 +108,7 @@ public class UserAwareMetaImplTest extends BaseTest
     public void getQuery2()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Access denied to query testtableAdmin.All records");
+        expectedEx.expectMessage("Access denied to query: testtableAdmin.All records");
 
         userAwareMeta.getQuery("testtableAdmin", "All records");
     }

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -65,9 +66,16 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
         localizations = CompiledLocalizations.from(projectProvider.get());
     }
 
-    /* (non-Javadoc)
-     * @see com.developmentontheedge.enterprise.components.Meta#getLocalizedEntityTitle(com.developmentontheedge.enterprise.metadata.model.Entity)
-     */
+    //todo localize entity, query, operation names
+    @Override
+    public String getLocalizedBe5ErrorMessage(Be5Exception e)
+    {
+        return ErrorTitles.formatTitle(
+                getLocalizedExceptionMessage(ErrorTitles.getTitle(e.getCode())),
+                e.getParameters()
+        );
+    }
+
     @Override
     public String getLocalizedEntityTitle(Entity entity)
     {

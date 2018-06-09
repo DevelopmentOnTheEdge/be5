@@ -1,17 +1,17 @@
 package com.developmentontheedge.be5.base.services;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.QuerySettings;
 
-import java.util.Optional;
-
 //TODO rename UserMeta
 public interface UserAwareMeta
 {
-
     void compileLocalizations();
+
+    String getLocalizedBe5ErrorMessage(Be5Exception e);
 
     /**
      * Returns a localized title in user's preferred language.
