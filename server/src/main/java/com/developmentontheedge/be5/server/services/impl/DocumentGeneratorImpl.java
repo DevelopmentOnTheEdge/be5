@@ -227,14 +227,10 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
             if(topFormOperationPresentation.isPresent())
             {
-                com.developmentontheedge.be5.operation.model.Operation operation =
-                        operationExecutor.create(new OperationInfo(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm)), query.getName(), new String[]{}, parameters);
+                ResourceData operationResourceData = formGenerator.generate(query.getEntity().getName(), query.getName(), topForm, new String[]{}, parameters, Collections.emptyMap());
+                operationResourceData.setId("topForm");
 
-                Either<FormPresentation, OperationResult> dataTopForm = formGenerator.generate(operation, Collections.emptyMap());
-                included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
-                        dataTopForm.get(),
-                        Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())));
-
+                included.add(operationResourceData);
 
                 data.getOperations().remove(topFormOperationPresentation.get());
             }

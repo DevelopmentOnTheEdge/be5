@@ -57,7 +57,7 @@ public class FormTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_GUEST);
 
-        generateForQuery("Query without operations");
+        generateForQuery("All records");
 
         //TODO verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class))
     }

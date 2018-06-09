@@ -1,22 +1,20 @@
 package com.developmentontheedge.be5.server.services
 
 import com.developmentontheedge.be5.base.services.Meta
-import com.developmentontheedge.be5.operation.model.OperationInfo
-import com.developmentontheedge.be5.operation.model.OperationResult
+import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.operation.services.OperationExecutor
-import com.developmentontheedge.be5.operation.util.Either
 import com.developmentontheedge.be5.server.model.FormPresentation
-import groovy.transform.TypeChecked
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData
 import org.junit.Before
 import org.junit.Test
 
 import javax.inject.Inject
 
+import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION
 import static org.junit.Assert.assertEquals
 
 
-@TypeChecked
 class FormGeneratorTest extends TestTableQueryDBTest
 {
     @Inject private Meta meta
@@ -26,35 +24,36 @@ class FormGeneratorTest extends TestTableQueryDBTest
     @Before
     void setUp()
     {
-        initGuest()
+        initUserWithRoles(RoleType.ROLE_ADMINISTRATOR)
     }
 
     @Test
     void generateForm()
     {
-        def result = formGenerator.generate(
-                operationExecutor.create(new OperationInfo(meta.getOperation("testtable", "Insert"))
-                        , "All records", [] as String[], [:]),
-                [name: "test1", value: "2"])
+        ResourceData result = formGenerator.generate("testtable", "All records", "Insert",
+                [] as String[], [:], [name: "test1", value: "2"])
+
+        assertEquals(FORM_ACTION, result.getType())
+
+        //result.getAttributes()
 
         assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," +
             "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','selectedRows':'','title':'Добавить'}",
-                oneQuotes(jsonb.toJson(result.getFirst())))
+                oneQuotes(jsonb.toJson(result.attributes)))
     }
 
     @Test
     void executeWithGenerateErrorInProperty()
     {
-        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
-
-        Either<FormPresentation, OperationResult> either = formGenerator
-                .execute(operation, ['name': 'generateErrorInProperty'])
-
+        ResourceData result = formGenerator
+                .execute("testtableAdmin", "All records", "ErrorProcessing",
+                        [] as String[], [:], ['name': 'generateErrorInProperty'])
+        def formPresentation = (FormPresentation) result.getAttributes()
         assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
-                oneQuotes(either.getFirst().getBean().getJsonObject("meta").getJsonObject("/name").toString())
+                oneQuotes(formPresentation.getBean().getJsonObject("meta").getJsonObject("/name").toString())
 
-        assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
+        assertEquals OperationStatus.ERROR, formPresentation.getOperationResult().getStatus()
         assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
-                operation.getResult().getMessage()
+                formPresentation.getOperationResult().getMessage()
     }
 }

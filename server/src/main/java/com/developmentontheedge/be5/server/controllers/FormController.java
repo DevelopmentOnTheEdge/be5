@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
+import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
@@ -55,11 +55,21 @@ public class FormController extends ApiControllerSupport
         Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        JsonApiModel jsonApiModel = formGenerator.getJsonApiModel(requestSubUrl,
-                                        entityName, queryName, operationName, selectedRows, operationParams, values);
+        Object meta = responseHelper.getDefaultMeta(req);
 
-        jsonApiModel.setMeta(responseHelper.getDefaultMeta(req));
-        responseHelper.sendAsJson(jsonApiModel);
+        switch (requestSubUrl)
+        {
+            case "":
+                ResourceData generate = formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values);
+                responseHelper.sendAsJson(generate, meta);
+                break;
+            case "apply":
+                ResourceData execute = formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values);
+                responseHelper.sendAsJson(execute, meta);
+                break;
+            default:
+                responseHelper.sendUnknownActionError();
+        }
     }
 
 }
