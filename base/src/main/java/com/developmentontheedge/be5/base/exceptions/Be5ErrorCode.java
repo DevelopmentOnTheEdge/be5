@@ -39,13 +39,15 @@ public enum Be5ErrorCode
     {
         switch (this)
         {
-        case INTERNAL_ERROR:
-        case INTERNAL_ERROR_IN_OPERATION:
-        case INTERNAL_ERROR_IN_QUERY:
-        case NOT_INITIALIZED:
-            return true;
-        default:
-            return false;
+            case INTERNAL_ERROR:
+            case INTERNAL_ERROR_IN_OPERATION:
+            case INTERNAL_ERROR_IN_OPERATION_EXTENDER:
+            case INTERNAL_ERROR_IN_QUERY:
+            case NOT_INITIALIZED:
+            case INVALID_STATE:
+                return true;
+            default:
+                return false;
         }
     }
 
