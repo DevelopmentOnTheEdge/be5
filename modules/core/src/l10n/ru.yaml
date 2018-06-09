@@ -10,7 +10,7 @@ ru:
   - messages.l10n:
     - topics: exception
       entries:
-      - 'Internal error occured: $1': 'Произошла внутренняя ошибка: $1'
+      - 'Internal error occurred: $1': 'Произошла внутренняя ошибка: $1'
       - 'Entity not found: $1': 'Сущность не найдена: $1'
       - 'Access denied': Доступ запрещен
       - Error in operation: Ошибка в операции

@@ -9,7 +9,7 @@ ru:
   - messages.l10n:
     - topics: exception
       entries:
-      - 'Internal error occured: $1': 'Произошла внутренняя ошибка: $1'
+      - 'Internal error occurred: $1': 'Произошла внутренняя ошибка: $1'
     - topics: validation
       entries:
       - Please enter only digits.: Здесь должны быть только цифры.

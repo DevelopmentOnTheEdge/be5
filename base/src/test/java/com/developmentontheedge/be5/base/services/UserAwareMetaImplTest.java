@@ -63,7 +63,7 @@ public class UserAwareMetaImplTest extends BaseTest
     {
         Be5Exception be5Exception = Be5Exception.internal("test");
 
-        assertEquals("Internal error occured: test", be5Exception.getTitle());
+        assertEquals("Internal error occurred: test", be5Exception.getTitle());
 
         assertEquals("Произошла внутренняя ошибка: test",
                 userAwareMeta.getLocalizedBe5ErrorMessage(be5Exception));

@@ -47,7 +47,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void generateErrorOnExecute()
     {
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing");
+        expectedEx.expectMessage("Internal error occurred during operation testtableAdmin.ErrorProcessing");
         executeAndCheck("generateError");
     }
 
@@ -71,7 +71,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void executeError()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing");
+        expectedEx.expectMessage("Internal error occurred during operation testtableAdmin.ErrorProcessing");
         executeAndCheck("executeError");
     }
 
@@ -79,7 +79,7 @@ public class OperationsFactoryTest extends OperationsSqlMockProjectTest
     public void executeOperationWithoutParams()
     {
         expectedEx.expect(Be5Exception.class);
-        expectedEx.expectMessage("Internal error occured during operation testtableAdmin.ErrorProcessing");
+        expectedEx.expectMessage("Internal error occurred during operation testtableAdmin.ErrorProcessing");
         executeAndCheck("withoutParams");
     }
 
