@@ -11,13 +11,13 @@ import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
+import com.developmentontheedge.be5.query.model.MoreRows;
+import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
@@ -25,16 +25,15 @@ import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
-import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.model.Category;
 import com.developmentontheedge.be5.server.services.model.Operations;
 import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.beans.json.JsonFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -62,31 +61,30 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private final UserAwareMeta userAwareMeta;
     private final GroovyRegister groovyRegister;
-    private final OperationService operationService;
     private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
     private final UserInfoProvider userInfoProvider;
+    private final FormGenerator formGenerator;
     private final JsonApiResponseHelper responseHelper;
 
     @Inject
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
             GroovyRegister groovyRegister,
-            OperationService operationService,
             OperationExecutor operationExecutor,
             CategoriesService categoriesService,
             TableModelService tableModelService,
             UserInfoProvider userInfoProvider,
-            JsonApiResponseHelper responseHelper)
+            FormGenerator formGenerator, JsonApiResponseHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
-        this.operationService = operationService;
         this.operationExecutor = operationExecutor;
         this.categoriesService = categoriesService;
         this.tableModelService = tableModelService;
         this.userInfoProvider = userInfoProvider;
+        this.formGenerator = formGenerator;
         this.responseHelper = responseHelper;
     }
 
@@ -106,7 +104,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //    private Either<FormPresentation, FrontendAction> getFormPresentation(String entityName, String queryName, String operationName,
 //            Operation operation, Map<String, String> presetValues)
 //    {
-//        return new FormGenerator(injector).generateForm(entityName, queryName, operationName, operation, presetValues, req);
+//        return new FormGenerator(injector).generate(entityName, queryName, operationName, operation, presetValues, req);
 //    }
 
     @Override
@@ -232,7 +230,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 com.developmentontheedge.be5.operation.model.Operation operation =
                         operationExecutor.create(new OperationInfo(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm)), query.getName(), new String[]{}, parameters);
 
-                Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
+                Either<FormPresentation, OperationResult> dataTopForm = formGenerator.generate(operation, Collections.emptyMap());
                 included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,
                         dataTopForm.get(),
                         Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())));
@@ -250,130 +248,46 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     }
 
     @Override
-    public JsonApiModel getFormJsonApiModel(String method, String entityName, String queryName, String operationName,
-                                            String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values)
+    public JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters)
     {
-        HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
-
-        com.developmentontheedge.be5.operation.model.Operation operation;
-
         try
         {
-            OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
-            operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
+            Query query = userAwareMeta.getQuery(entityName, queryName);
+            TableModel tableModel = tableModelService.getTableModel(query, parameters);
+
+            return getJsonApiModel(query, parameters, tableModel);
         }
         catch (Be5Exception e)
         {
-            log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
-
-            return JsonApiModel.error(
-                    responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
-                    null);
-
+            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
+            log.log(Level.SEVERE, "Error in table" + url.toString(), e);
+            return JsonApiModel.error(responseHelper.
+                    getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
+    }
 
+    //todo refactor frontend to JsonApiModel
+    @Override
+    public Object updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters)
+    {
         try
         {
-            switch (method)
-            {
-                case "":
-                    Either<FormPresentation, OperationResult> data = generateForm(operation, values);
-                    return JsonApiModel.data(new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                            Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())), null);
-                case "apply":
-                    Either<FormPresentation, OperationResult> applyData = executeForm(operation, values);
-                    return JsonApiModel.data(new ResourceData(applyData.isFirst() ? FORM_ACTION : OPERATION_RESULT, applyData.get(),
-                            Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())), null);
-                default:
-                    return JsonApiModel.error(new ErrorModel("404", "Unknown component action."), null);
-            }
+            Query query = userAwareMeta.getQuery(entityName, queryName);
+            TableModel tableModel = tableModelService.getTableModel(query, parameters);
+
+            return new MoreRows(
+                    tableModel.getTotalNumberOfRows().intValue(),
+                    tableModel.getTotalNumberOfRows().intValue(),
+                    new MoreRowsBuilder(tableModel).build()
+            );
         }
         catch (Be5Exception e)
         {
-            HashUrl url2 = HashUrlUtils.getUrl(operation);
-            log.log(Level.SEVERE, "Error in operation: " + url2.toString(), e);
-
-            return JsonApiModel.error(
-                    getErrorModel(e, url2),
-                    null);
+            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
+            log.log(Level.SEVERE, "Error in table" + url.toString(), e);
+            return JsonApiModel.error(responseHelper.
+                    getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
-    }
-
-    @Override
-    public Either<FormPresentation, OperationResult> generateForm(com.developmentontheedge.be5.operation.model.Operation operation,
-                                                                  Map<String, ?> values)
-    {
-        return processForm(operation, values, false);
-    }
-
-    @Override
-    public Either<FormPresentation, OperationResult> executeForm(com.developmentontheedge.be5.operation.model.Operation operation,
-                                                                 Map<String, ?> values)
-    {
-        return processForm(operation, values, true);
-    }
-
-    private Either<FormPresentation, OperationResult> processForm(com.developmentontheedge.be5.operation.model.Operation operation,
-                                                                  Map<String, ?> values, boolean execute)
-    {
-        Either<Object, OperationResult> result;
-        if(execute)
-        {
-            result = operationService.execute(operation, (Map<String, Object>)values);
-        }
-        else
-        {
-            result = operationService.generate(operation, (Map<String, Object>)values);
-        }
-
-        if(result.isFirst())
-        {
-            ErrorModel errorModel = null;
-            if(operation.getResult().getStatus() == OperationStatus.ERROR)
-            {
-                if (userInfoProvider.isSystemDeveloper())
-                {
-                    errorModel = getErrorModel((Throwable) operation.getResult().getDetails(), HashUrlUtils.getUrl(operation));
-                }
-            }
-
-            return Either.first(new FormPresentation(
-                    operation.getInfo(),
-                    operation.getContext(),
-                    userAwareMeta.getLocalizedOperationTitle(operation.getInfo().getModel()),
-                    JsonFactory.bean(result.getFirst()),
-                    LayoutUtils.getLayoutObject(operation.getInfo().getModel()),
-                    resultForFrontend(operation.getResult()),
-                    errorModel
-            ));
-        }
-        else
-        {
-            return Either.second(resultForFrontend(result.getSecond()));
-        }
-    }
-
-    private OperationResult resultForFrontend(OperationResult result)
-    {
-        if(result.getStatus() == OperationStatus.ERROR)
-        {
-            return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()));
-        }
-        else
-        {
-            return result;
-        }
-    }
-
-    @Override
-    public ErrorModel getErrorModel(Throwable e, HashUrl url)
-    {
-        String additionalMessage = Be5Exception.getMessage(e);
-
-        //TODO if(userInfoProvider.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
-
-        return responseHelper.getErrorModel(Be5Exception.internal(e), additionalMessage,
-                Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
 }

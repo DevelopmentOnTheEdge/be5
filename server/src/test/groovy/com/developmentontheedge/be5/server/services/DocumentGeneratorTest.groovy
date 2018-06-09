@@ -1,23 +1,21 @@
 package com.developmentontheedge.be5.server.services
 
 import com.developmentontheedge.be5.base.services.Meta
-import com.developmentontheedge.be5.operation.model.OperationInfo
-import com.developmentontheedge.be5.operation.model.OperationResult
-import com.developmentontheedge.be5.operation.model.OperationStatus
+import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.services.OperationExecutor
-import com.developmentontheedge.be5.operation.util.Either
-import com.developmentontheedge.be5.server.model.FormPresentation
 import com.developmentontheedge.be5.server.model.TablePresentation
+import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel
-import com.developmentontheedge.beans.json.JsonFactory
+import com.developmentontheedge.be5.test.ServerTestResponse
 import groovy.transform.TypeChecked
 import org.junit.Before
 import org.junit.Test
 
 import javax.inject.Inject
 
+import static junit.framework.TestCase.assertNull
 import static org.junit.Assert.assertEquals
-
+import static org.junit.Assert.assertNotNull
 
 @TypeChecked
 class DocumentGeneratorTest extends TestTableQueryDBTest
@@ -30,6 +28,7 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     void setUp()
     {
         initGuest()
+        ServerTestResponse.newMock()
     }
 
     @Test
@@ -116,31 +115,46 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     }
 
     @Test
-    void generateForm()
+    void getQueryJsonApiForUser()
     {
-        def result = documentGenerator.generateForm(
-                operationExecutor.create(new OperationInfo(meta.getOperation("testtable", "Insert"))
-                        , "All records", [] as String[], [:]),
-                [name: "test1", value: "2"])
+        JsonApiModel queryJsonApiForUser = documentGenerator.
+                queryJsonApiFor("testtable", "All records", Collections.emptyMap());
 
-        assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," +
-            "'entity':'testtable','layout':{},'operation':'Insert','operationParams':{},'operationResult':{'status':'generate'},'query':'All records','selectedRows':'','title':'Добавить'}",
-                oneQuotes(jsonb.toJson(result.getFirst())))
+        assertNotNull(queryJsonApiForUser.getData());
+        assertNull(queryJsonApiForUser.getErrors());
     }
 
     @Test
-    void executeWithGenerateErrorInProperty()
+    void accessDenied()
     {
-        def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
+        JsonApiModel queryJsonApiForUser = documentGenerator.
+                queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
 
-        Either<FormPresentation, OperationResult> either = documentGenerator
-                .executeForm(operation, ['name': 'generateErrorInProperty'])
+        assertEquals(new ErrorModel("403", "Access denied to query: testtableAdmin.All records",
+                Collections.singletonMap("self", "table/testtableAdmin/All records")),
+                queryJsonApiForUser.getErrors()[0]);
+    }
 
-        assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",
-                oneQuotes(either.getFirst().getBean().getJsonObject("meta").getJsonObject("/name").toString())
+    @Test
+    void accessAllowed()
+    {
+        initUserWithRoles(RoleType.ROLE_SYSTEM_DEVELOPER);
 
-        assertEquals OperationStatus.ERROR, operation.getResult().getStatus()
-        assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
-                operation.getResult().getMessage()
+        JsonApiModel queryJsonApiForUser = documentGenerator.
+                queryJsonApiFor("testtableAdmin", "All records", Collections.emptyMap());
+
+        assertNotNull(queryJsonApiForUser.getData());
+        assertNull(queryJsonApiForUser.getErrors());
+    }
+
+    @Test
+    void error()
+    {
+        JsonApiModel queryJsonApiForUser = documentGenerator.queryJsonApiFor("testtable", "Query with error", Collections.emptyMap());
+
+        assertEquals(null, queryJsonApiForUser.getData());
+        assertEquals(new ErrorModel("500", "Internal error occurred during query: testtable.Query with error",
+                Collections.singletonMap("self", "table/testtable/Query with error")),
+                queryJsonApiForUser.getErrors()[0]);
     }
 }

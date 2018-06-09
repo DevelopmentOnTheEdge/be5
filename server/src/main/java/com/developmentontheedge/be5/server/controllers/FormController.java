@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -21,18 +21,18 @@ import static com.google.common.base.Strings.nullToEmpty;
 
 public class FormController extends ApiControllerSupport
 {
-    private final DocumentGenerator documentGenerator;
+    private final FormGenerator formGenerator;
     private final UserHelper userHelper;
     private final JsonApiResponseHelper responseHelper;
     private final Stage stage;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public FormController(DocumentGenerator documentGenerator,
+    public FormController(FormGenerator formGenerator,
                           UserHelper userHelper, JsonApiResponseHelper responseHelper,
                           UserInfoProvider userInfoProvider, Stage stage)
     {
-        this.documentGenerator = documentGenerator;
+        this.formGenerator = formGenerator;
         this.userHelper = userHelper;
         this.responseHelper = responseHelper;
         this.stage = stage;
@@ -55,12 +55,11 @@ public class FormController extends ApiControllerSupport
         Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        JsonApiModel jsonApiModel = documentGenerator.getFormJsonApiModel(requestSubUrl,
+        JsonApiModel jsonApiModel = formGenerator.getJsonApiModel(requestSubUrl,
                                         entityName, queryName, operationName, selectedRows, operationParams, values);
 
         jsonApiModel.setMeta(responseHelper.getDefaultMeta(req));
         responseHelper.sendAsJson(jsonApiModel);
     }
-
 
 }

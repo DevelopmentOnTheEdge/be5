@@ -22,7 +22,9 @@ import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.impl.DocumentGeneratorImpl;
+import com.developmentontheedge.be5.server.services.impl.FormGeneratorImpl;
 import com.developmentontheedge.be5.server.services.impl.QuerySessionImpl;
 import com.developmentontheedge.be5.server.services.impl.UserInfoProviderImpl;
 import com.developmentontheedge.be5.web.Request;
@@ -73,6 +75,7 @@ public class ServerModule extends ServletModule
         bind(JsonApiResponseHelper.class).in(Scopes.SINGLETON);
 
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);
+        bind(FormGenerator.class).to(FormGeneratorImpl.class).in(Scopes.SINGLETON);
         bind(UserInfoProvider.class).to(UserInfoProviderImpl.class).in(Scopes.SINGLETON);
 
         bind(QuerySession.class).to(QuerySessionImpl.class).in(ServletScopes.SESSION);
