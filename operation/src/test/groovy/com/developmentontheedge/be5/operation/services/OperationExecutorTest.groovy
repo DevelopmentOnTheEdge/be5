@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 
-
 class OperationExecutorTest extends OperationBe5ProjectDBTest
 {
     @Inject OperationsFactory operations
@@ -39,5 +38,13 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
         operations.get("testtableAdmin", "TransactionTestOp").execute()
     }
 
+    @Test
+    void create()
+    {
+        def op = operationExecutor.create(meta.getOperation("testtableAdmin", "TransactionTestOp"),
+                "All records", ["1"] as String[], [:])
 
+        assertEquals(OperationStatus.CREATE, op.getStatus())
+        assertEquals(1L, op.getContext().getRecord())
+    }
 }
