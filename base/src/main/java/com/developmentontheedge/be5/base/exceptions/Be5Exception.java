@@ -88,26 +88,6 @@ public class Be5Exception extends RuntimeException
     {
         return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow( t, operationExtender.getClassName());
     }
-    
-    public static Be5Exception invalidRequestParameter(String parameterName, String invalidValue)
-    {
-        return Be5ErrorCode.PARAMETER_INVALID.exception(parameterName, invalidValue);
-    }
-
-    public static Be5Exception invalidRequestParameter(Throwable t, String parameterName, String invalidValue)
-    {
-        return Be5ErrorCode.PARAMETER_INVALID.rethrow(t, parameterName, invalidValue);
-    }
-    
-    public static Be5Exception requestParameterIsAbsent(String parameterName)
-    {
-        return Be5ErrorCode.PARAMETER_ABSENT.exception(parameterName);
-    }
-
-    public static Be5Exception unknownComponent(String name)
-    {
-        return Be5ErrorCode.UNKNOWN_COMPONENT.exception(name);
-    }
 
     public static Be5Exception unknownEntity(String entityName)
     {

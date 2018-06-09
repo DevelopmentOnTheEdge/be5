@@ -1,7 +1,5 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
-import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -45,7 +43,7 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
     public void generateLanguageParameterIsAbsent()
     {
         expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage(ErrorTitles.formatTitle(Be5ErrorCode.PARAMETER_ABSENT, "language"));
+        expectedEx.expectMessage("Invalid request: parameter language is missing.");
 
         Response response = mock(Response.class);
 

@@ -13,11 +13,7 @@ import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NOT_FOUN
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NOT_INITIALIZED;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.NO_OPERATION_IN_QUERY;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY;
-import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.PARAMETER_ABSENT;
-import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.PARAMETER_EMPTY;
-import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.PARAMETER_INVALID;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.STATE_INVALID;
-import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_COMPONENT;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_ENTITY;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_OPERATION;
 import static com.developmentontheedge.be5.base.exceptions.Be5ErrorCode.UNKNOWN_QUERY;
@@ -32,11 +28,7 @@ public class ErrorTitles
 		TITLES.put(UNKNOWN_QUERY, "Query not found: $1.$2");
 		TITLES.put(UNKNOWN_OPERATION, "Operation not found: $1.$2");
 		TITLES.put(NO_OPERATION_IN_QUERY, "Operation $1.$3 is not available in query $2");
-		TITLES.put(UNKNOWN_COMPONENT, "Component not found: $1");
 		TITLES.put(INTERNAL_ERROR, "Internal error occured: $1");
-		TITLES.put(PARAMETER_ABSENT, "Invalid request: parameter $1 is missing");
-		TITLES.put(PARAMETER_EMPTY, "Invalid request: parameter $1 is empty");
-		TITLES.put(PARAMETER_INVALID, "Invalid request: parameter $1 has unacceptable value $2");
 		TITLES.put(STATE_INVALID, "Invalid state: $1");
 		TITLES.put(NOT_INITIALIZED, "Server is not properly initialized: try again later");
 		TITLES.put(ACCESS_DENIED, "Access denied");
