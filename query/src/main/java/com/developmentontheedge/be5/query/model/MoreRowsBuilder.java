@@ -6,12 +6,12 @@ import com.google.common.collect.ImmutableList.Builder;
 import java.util.List;
 
 public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object> {
-    
-    private final boolean selectable;
 
-    public MoreRowsBuilder(boolean selectable)
+    private final TableModel tableModel;
+
+    public MoreRowsBuilder(TableModel tableModel)
     {
-        this.selectable = selectable;
+        this.tableModel = tableModel;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object> {
     {
         Builder<Object> builder = ImmutableList.builder();
 
-        if (selectable)
+        if (tableModel.isSelectable())
         {
             builder = builder.add(rowModel.getId());
         }
@@ -33,4 +33,9 @@ public class MoreRowsBuilder extends TableRowsBuilder<List<Object>, Object> {
         return builder.addAll(cells).build();
     }
 
+    @Override
+    public TableModel getTableModel()
+    {
+        return tableModel;
+    }
 }

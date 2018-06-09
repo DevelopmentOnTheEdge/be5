@@ -2,9 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
@@ -12,7 +10,6 @@ import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
-import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
@@ -38,17 +35,15 @@ public class TableController extends ApiControllerSupport
     private final TableModelService tableModelService;
     private final UserAwareMeta userAwareMeta;
     private final JsonApiResponseHelper responseHelper;
-    private final UserInfoProvider userInfoProvider;
 
     @Inject
     public TableController(DocumentGenerator documentGenerator, TableModelService tableModelService,
-                           UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper, UserInfoProvider userInfoProvider)
+                           UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper)
     {
         this.documentGenerator = documentGenerator;
         this.tableModelService = tableModelService;
         this.userAwareMeta = userAwareMeta;
         this.responseHelper = responseHelper;
-        this.userInfoProvider = userInfoProvider;
     }
 
     @Override
@@ -59,74 +54,59 @@ public class TableController extends ApiControllerSupport
 
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
-
-        Query query;
-        try
+        switch (requestSubUrl)
         {
-            query = userAwareMeta.getQuery(entityName, queryName);
-        }
-        catch (Be5Exception e)
-        {
-            sendError(req, res, url, e);
-            return;
-        }
-
-        final boolean selectable = query.getType() == QueryType.D1 && !query.getOperationNames().isEmpty();
-
-        try
-        {
-            TableModel tableModel = tableModelService.getTableModel(query, parameters);
-
-            switch (requestSubUrl)
-            {
-                case "":
-                    JsonApiModel document = documentGenerator.getJsonApiModel(query, parameters, tableModel);
-                    document.setMeta(responseHelper.getDefaultMeta(req));
-                    res.sendAsJson(document);
-                    return;
-                case "update":
-                    res.sendAsJson(new MoreRows(
-                            tableModel.getTotalNumberOfRows().intValue(),
-                            tableModel.getTotalNumberOfRows().intValue(),
-                            new MoreRowsBuilder(selectable).build(tableModel)
-                    ));
-                    return;
-                default:
-                    responseHelper.sendUnknownActionError();
-            }
-        }
-        catch (Be5Exception e)
-        {
-            sendError(req, res, url, e);
-        }
-        catch (Throwable e)
-        {
-            sendError(req, res, url, Be5Exception.internalInQuery(query, e));
+            case "":
+                JsonApiModel jsonApiForUser = getQueryJsonApiForUser(entityName, queryName, parameters);
+                jsonApiForUser.setMeta(responseHelper.getDefaultMeta(req));
+                res.sendAsJson(jsonApiForUser);
+                return;
+            case "update":
+                res.sendAsJson(getUpdateQueryJsonApiForUser(entityName, queryName, parameters));
+                return;
+            default:
+                responseHelper.sendUnknownActionError();
         }
     }
 
-    private void sendError(Request req, Response res, HashUrl url, Be5Exception e)
+    JsonApiModel getQueryJsonApiForUser(String entityName, String queryName, Map<String, Object> parameters)
     {
-        log.log(Level.SEVERE, "Error in table" + url.toString(), e);
-
-        String message = "";
-
-        //message += GroovyRegister.getErrorCodeLine(e, query.getQuery());
-
-        if(userInfoProvider.isSystemDeveloper())
+        try
         {
-            responseHelper.sendErrorAsJson(
-                    responseHelper.getErrorModel(e, message, Collections.singletonMap(SELF_LINK, url.toString())),
-                    responseHelper.getDefaultMeta(req)
+            Query query = userAwareMeta.getQuery(entityName, queryName);
+            TableModel tableModel = tableModelService.getTableModel(query, parameters);
+
+            return documentGenerator.getJsonApiModel(query, parameters, tableModel);
+        }
+        catch (Be5Exception e)
+        {
+            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
+            log.log(Level.SEVERE, "Error in table" + url.toString(), e);
+            return JsonApiModel.error(responseHelper.
+                    getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
+        }
+    }
+
+    //todo refactor frontend to JsonApiModel
+    Object getUpdateQueryJsonApiForUser(String entityName, String queryName, Map<String, Object> parameters)
+    {
+        try
+        {
+            Query query = userAwareMeta.getQuery(entityName, queryName);
+            TableModel tableModel = tableModelService.getTableModel(query, parameters);
+
+            return new MoreRows(
+                    tableModel.getTotalNumberOfRows().intValue(),
+                    tableModel.getTotalNumberOfRows().intValue(),
+                    new MoreRowsBuilder(tableModel).build()
             );
         }
-        else
+        catch (Be5Exception e)
         {
-            responseHelper.sendErrorAsJson(
-                    new ErrorModel(e.getCode().getHttpStatus(), e.getMessage()),
-                    responseHelper.getDefaultMeta(req)
-            );
+            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
+            log.log(Level.SEVERE, "Error in table" + url.toString(), e);
+            return JsonApiModel.error(responseHelper.
+                    getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
     }
 

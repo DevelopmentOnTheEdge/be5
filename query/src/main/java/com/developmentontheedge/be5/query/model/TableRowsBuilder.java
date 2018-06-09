@@ -8,10 +8,10 @@ public abstract class TableRowsBuilder<RowT, CellT> {
     public TableRowsBuilder() {
     }
     
-    public List<RowT> build(TableModel tableModel) {
+    public List<RowT> build() {
         List<RowT> rows = new ArrayList<>();
         
-        for (RowModel rowModel : tableModel.getRows())
+        for (RowModel rowModel : getTableModel().getRows())
         {
             List<CellT> cells = new ArrayList<>();
             for (CellModel cellModel : rowModel.getCells())
@@ -26,5 +26,6 @@ public abstract class TableRowsBuilder<RowT, CellT> {
     
     protected abstract CellT createCell(CellModel cellModel);
     protected abstract RowT createRow(RowModel rowModel, List<CellT> cells);
-    
+
+    public abstract TableModel getTableModel();
 }

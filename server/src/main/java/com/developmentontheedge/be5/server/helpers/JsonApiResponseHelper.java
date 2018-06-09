@@ -99,8 +99,15 @@ public class JsonApiResponseHelper
 
     public ErrorModel getErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
-        return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e) + additionalMessage,
-                exceptionAsString(e), links);
+        if(userInfoProvider.isSystemDeveloper())
+        {
+            return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e) + additionalMessage,
+                    exceptionAsString(e), links);
+        }
+        else
+        {
+            return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), links);
+        }
     }
 
     public Object getDefaultMeta(Request request)

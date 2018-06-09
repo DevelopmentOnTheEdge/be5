@@ -125,7 +125,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel)
     {
         List<Object> columns = tableModel.getColumns().stream().map(ColumnModel::getTitle).collect(Collectors.toList());
-        List<InitialRow> rows = new InitialRowsBuilder(tableModel.isSelectable()).build(tableModel);
+        List<InitialRow> rows = new InitialRowsBuilder(tableModel).build();
         Long totalNumberOfRows = tableModel.getTotalNumberOfRows();
 
         String entityName = query.getEntity().getName();

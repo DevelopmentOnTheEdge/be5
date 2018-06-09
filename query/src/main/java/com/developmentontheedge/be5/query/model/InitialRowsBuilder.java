@@ -4,12 +4,11 @@ import java.util.List;
 
 public class InitialRowsBuilder extends TableRowsBuilder<InitialRow, Object>
 {
+    private final TableModel tableModel;
 
-    private final boolean selectable;
-
-    public InitialRowsBuilder(boolean selectable)
+    public InitialRowsBuilder(TableModel tableModel)
     {
-        this.selectable = selectable;
+        this.tableModel = tableModel;
     }
 
     @Override
@@ -21,7 +20,12 @@ public class InitialRowsBuilder extends TableRowsBuilder<InitialRow, Object>
     @Override
     protected InitialRow createRow(RowModel rowModel, List<Object> cells)
     {
-        return new InitialRow(selectable ? rowModel.getId() : null, cells);
+        return new InitialRow(tableModel.isSelectable() ? rowModel.getId() : null, cells);
     }
 
+    @Override
+    public TableModel getTableModel()
+    {
+        return tableModel;
+    }
 }
