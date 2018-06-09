@@ -9,6 +9,7 @@ import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
@@ -225,7 +226,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             if(topFormOperationPresentation.isPresent())
             {
                 com.developmentontheedge.be5.operation.model.Operation operation =
-                        operationExecutor.create(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm), query.getName(), new String[]{}, parameters);
+                        operationExecutor.create(new OperationInfo(userAwareMeta.getOperation(query.getEntity().getName(), query.getName(), topForm)), query.getName(), new String[]{}, parameters);
 
                 Either<FormPresentation, OperationResult> dataTopForm = generateForm(operation, Collections.emptyMap());
                 included.add(new ResourceData(TOP_FORM, dataTopForm.isFirst() ? FORM_ACTION : OPERATION_RESULT,

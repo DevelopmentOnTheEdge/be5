@@ -266,11 +266,9 @@ public class OperationExecutorImpl implements OperationExecutor
 //    }
 
     @Override
-    public Operation create(com.developmentontheedge.be5.metadata.model.Operation operationMeta, String queryName,
+    public Operation create(OperationInfo operationInfo, String queryName,
                      String[] stringSelectedRows, Map<String, Object> operationParams)
     {
-        OperationInfo operationInfo = new OperationInfo(operationMeta);
-
         Object[] selectedRows = stringSelectedRows;
         if(!operationInfo.getEntityName().startsWith("_"))
         {

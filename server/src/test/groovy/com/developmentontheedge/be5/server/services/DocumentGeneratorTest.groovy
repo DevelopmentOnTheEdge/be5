@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.services
 
 import com.developmentontheedge.be5.base.services.Meta
+import com.developmentontheedge.be5.operation.model.OperationInfo
 import com.developmentontheedge.be5.operation.model.OperationResult
 import com.developmentontheedge.be5.operation.model.OperationStatus
 import com.developmentontheedge.be5.operation.services.OperationExecutor
@@ -118,7 +119,8 @@ class DocumentGeneratorTest extends TestTableQueryDBTest
     void generateForm()
     {
         def result = documentGenerator.generateForm(
-                operationExecutor.create(meta.getOperation("testtable", "Insert"), "All records", [] as String[], [:]),
+                operationExecutor.create(new OperationInfo(meta.getOperation("testtable", "Insert"))
+                        , "All records", [] as String[], [:]),
                 [name: "test1", value: "2"])
 
         assertEquals("{'bean':{'values':{'name':'test1','value':'2'},'meta':{'/name':{'displayName':'name','columnSize':'20'},'/value':{'displayName':'value','columnSize':'30'}},'order':['/name','/value']}," +

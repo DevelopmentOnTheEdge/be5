@@ -5,6 +5,7 @@ import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.util.Either;
@@ -77,12 +78,11 @@ public class FormController extends ApiControllerSupport
 
         HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
 
-        com.developmentontheedge.be5.metadata.model.Operation operationMeta;
         Operation operation;
         try
         {
-            operationMeta = userAwareMeta.getOperation(entityName, queryName, operationName);
-            operation = operationExecutor.create(operationMeta, queryName, selectedRows, operationParams);
+            OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
+            operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
         }
         catch (Be5Exception e)
         {
