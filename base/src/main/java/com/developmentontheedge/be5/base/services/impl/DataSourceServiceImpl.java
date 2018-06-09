@@ -54,7 +54,7 @@ public class DataSourceServiceImpl implements DataSourceService
         }
         catch ( SQLException e )
         {
-            throw Be5Exception.internal(e, "When fetching datasource");
+            throw Be5Exception.internal("When fetching datasource", e);
         }
         catch (NamingException ignore)
         {
@@ -89,7 +89,7 @@ public class DataSourceServiceImpl implements DataSourceService
                     conn.close();
                 } catch (SQLException e)
                 {
-                    throw Be5Exception.internal(e, "When close conn after fetching datasource");
+                    throw Be5Exception.internal("When close conn after fetching datasource", e);
                 }
             }
         }

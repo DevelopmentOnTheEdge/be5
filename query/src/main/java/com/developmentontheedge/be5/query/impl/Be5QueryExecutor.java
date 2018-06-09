@@ -174,7 +174,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             }
             catch (RuntimeException e)
             {
-                throw Be5Exception.internalInQuery(e, query);
+                throw Be5Exception.internalInQuery(query, e);
             }
         }
 
@@ -208,7 +208,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         catch (RuntimeException e)
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
-            throw Be5Exception.internalInQuery(e, query);
+            throw Be5Exception.internalInQuery(query, e);
 
             //ast = SqlQuery.parse("select 'error'");
         }
@@ -280,8 +280,8 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
             }
             catch( NumberFormatException e )
             {
-                throw Be5Exception.internalInQuery(
-                        new IllegalArgumentException( "Invalid category: " + categoryString, e ), query );
+                throw Be5Exception.internalInQuery(query,
+                        new IllegalArgumentException("Invalid category: " + categoryString, e));
             }
 
             new CategoryFilter(query.getEntity().getName(), query.getEntity().getPrimaryKey(), categoryId).apply( ast );
@@ -385,7 +385,7 @@ public class Be5QueryExecutor extends AbstractQueryExecutor
         catch (Throwable e)
         {
             //TODO only for Document presentation, for operations must be error throw
-            Be5Exception be5Exception = Be5Exception.internalInQuery(e, query);
+            Be5Exception be5Exception = Be5Exception.internalInQuery(query, e);
             log.log(Level.SEVERE, be5Exception.toString() + " Final SQL: " + finalSql, be5Exception);
 
             DynamicPropertySetSupport dynamicProperties = new DynamicPropertySetSupport();

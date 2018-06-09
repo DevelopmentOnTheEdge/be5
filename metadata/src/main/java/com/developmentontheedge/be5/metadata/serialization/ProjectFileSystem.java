@@ -444,7 +444,7 @@ public class ProjectFileSystem
     }
     
     /**
-     * Never throws an exception. Returns null if there is no file or if an error occured;
+     * Never throws an exception. Returns null if there is no file or if an error occurred;
      * 
      * @param moduleName
      * @param name

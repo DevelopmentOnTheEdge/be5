@@ -5,58 +5,66 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 
-/**
- * The general BeanExplorer5 exception. You can create instances of the exception with its static constructors.
- * 
- * @author lan
- */
+import java.util.List;
+
+
 public class Be5Exception extends RuntimeException
 {
     private static final long serialVersionUID = 9189259622768482031L;
 
-    private final String title;
     private final Be5ErrorCode code;
+    private final List<String> parameters;
 
-    private Be5Exception(Be5ErrorCode code, String title, Throwable cause)
+    private Be5Exception(Be5ErrorCode code, List<String> parameters, String message, Throwable cause)
     {
-        super(title, cause);
-        this.title = title;
+        super(message, cause);
         this.code = code;
+        this.parameters = parameters;
     }
 
-    private Be5Exception(Be5ErrorCode code, String title)
+    private Be5Exception(Be5ErrorCode code, List<String> parameters, String message)
     {
-        this(code, title, null);
+        this(code, parameters, message, null);
     }
 
-    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
+//    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
+//    {
+//        super(ErrorTitles.formatTitle(code, parameters), t);
+//
+//        title = ErrorTitles.formatTitle(code, parameters);
+//
+//        this.code = code;
+//    }
+
+    /**
+     * Not a part of the API as you can't create {@link Be5ErrorCode}.
+     */
+    static Be5Exception create(Be5ErrorCode code, List<String> parameters, String title)
     {
-        super(ErrorTitles.formatTitle(code, parameters), t);
-
-        title = ErrorTitles.formatTitle(code, parameters);
-
-        this.code = code;
+        return new Be5Exception(code, parameters, title);
     }
 
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
-    static Be5Exception create(Be5ErrorCode code, String title)
+    static Be5Exception create(Be5ErrorCode code, List<String> parameters, String message, Throwable t)
     {
-        return new Be5Exception(code, title);
+        return new Be5Exception(code, parameters, message, t);
     }
-    
-    /**
-     * Not a part of the API as you can't create {@link Be5ErrorCode}.
-     */
-    static Be5Exception create(Be5ErrorCode code, String title, Throwable t)
-    {
-        return new Be5Exception(code, title, t);
-    }
-    
+
     public static Be5Exception accessDenied()
     {
         return Be5ErrorCode.ACCESS_DENIED.exception();
+    }
+
+    public static Be5Exception accessDeniedToOperation(String entityName, String operationName)
+    {
+        return Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, operationName);
+    }
+
+    public static Be5Exception accessDeniedToQuery(String entityName, String queryName)
+    {
+        return Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
     }
 
     public static Be5Exception internal(String title)
@@ -64,49 +72,34 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.INTERNAL_ERROR.exception(title);
     }
 
-    public static Be5Exception internal(Throwable t)
+    public static Be5Exception internal(Throwable cause)
     {
-        return internal(t, "");
+        return internal("", cause);
     }
 
-    public static Be5Exception internal(Throwable t, String title)
+    public static Be5Exception internal(String message, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR.rethrow(t, title);
+        return Be5ErrorCode.INTERNAL_ERROR.rethrow(cause, message);
     }
 
-    public static Be5Exception internalInQuery(Throwable t, Query q)
+    public static Be5Exception internalInQuery(Query q, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(t, q.getEntity().getName(), q.getName());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_QUERY.rethrow(cause, q.getEntity().getName(), q.getName());
     }
 
-    public static Be5Exception internalInOperation(Throwable t, Operation o)
+    public static Be5Exception internalInOperation(Operation o, Throwable cause)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow( t, o.getEntity().getName(), o.getName());
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow(cause, o.getEntity().getName(), o.getName());
     }
 
-    public static Be5Exception internalInOperationExtender(Throwable t, OperationExtender operationExtender)
+    public static Be5Exception operationNotAssignedToQuery(String entityName, String queryName, String name)
     {
-        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow( t, operationExtender.getClassName());
-    }
-    
-    public static Be5Exception invalidRequestParameter(String parameterName, String invalidValue)
-    {
-        return Be5ErrorCode.PARAMETER_INVALID.exception(parameterName, invalidValue);
+        return Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY.exception(entityName, queryName, name);
     }
 
-    public static Be5Exception invalidRequestParameter(Throwable t, String parameterName, String invalidValue)
+    public static Be5Exception internalInOperationExtender(OperationExtender operationExtender, Throwable cause)
     {
-        return Be5ErrorCode.PARAMETER_INVALID.rethrow(t, parameterName, invalidValue);
-    }
-    
-    public static Be5Exception requestParameterIsAbsent(String parameterName)
-    {
-        return Be5ErrorCode.PARAMETER_ABSENT.exception(parameterName);
-    }
-
-    public static Be5Exception unknownComponent(String name)
-    {
-        return Be5ErrorCode.UNKNOWN_COMPONENT.exception(name);
+        return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow(cause, operationExtender.getClassName());
     }
 
     public static Be5Exception unknownEntity(String entityName)
@@ -118,10 +111,20 @@ public class Be5Exception extends RuntimeException
     {
         return Be5ErrorCode.UNKNOWN_QUERY.exception(entityName, queryName);
     }
-    
+
+    public static Be5Exception unknownOperation(String entityName, String operationName)
+    {
+        return Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, operationName);
+    }
+
+    public static Be5Exception notFound(String element)
+    {
+        return Be5ErrorCode.NOT_FOUND.exception(element);
+    }
+
     public static Be5Exception invalidState(String title)
     {
-        return Be5ErrorCode.STATE_INVALID.exception(title);
+        return Be5ErrorCode.INVALID_STATE.exception(title);
     }
 
     public Be5ErrorCode getCode()
@@ -129,9 +132,14 @@ public class Be5Exception extends RuntimeException
         return code;
     }
 
-    public String getTitle()
+//    public String getMessage()
+//    {
+//        return generatedMessage;
+//    }
+
+    public List<String> getParameters()
     {
-        return title;
+        return parameters;
     }
 
     public static String getMessage(Throwable err)
@@ -147,7 +155,7 @@ public class Be5Exception extends RuntimeException
         if(e.getClass() == NullPointerException.class)
         {
             StackTraceElement[] stackTrace = e.getStackTrace();
-            for (int i = 0; i < Math.min(stackTrace.length, 2); i++)
+            for(int i = 0; i < Math.min(stackTrace.length, 2); i++)
             {
                 out.append(getFullStackTraceLine(stackTrace[i])).append("\n");
             }
@@ -156,7 +164,7 @@ public class Be5Exception extends RuntimeException
         return HtmlUtils.escapeHTML(out.toString());
     }
 
-    public static String getFullStackTraceLine(StackTraceElement e)
+    private static String getFullStackTraceLine(StackTraceElement e)
     {
         return e.getClassName() + "." + e.getMethodName()
                 + "(" + e.getFileName() + ":" + e.getLineNumber() + ")";
@@ -167,8 +175,7 @@ public class Be5Exception extends RuntimeException
         if(e instanceof Be5Exception)
         {
             return e.getClass().getSimpleName() + ": " + e.getMessage() + "\n";
-        }
-        else
+        } else
         {
             return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
         }
@@ -177,25 +184,5 @@ public class Be5Exception extends RuntimeException
     public String getHttpStatusCode()
     {
         return code.getHttpStatus();
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Be5Exception that = (Be5Exception) o;
-
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        return code == that.code;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        return result;
     }
 }

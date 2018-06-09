@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.exceptions.ErrorTitles;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -20,19 +21,19 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 
-public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
+public class UserAwareMetaImpl implements UserAwareMeta
 {
     /**
      * The prefix constant for localized message.
      * <br/>This "{{{".
      */
-    public static final String LOC_MSG_PREFIX = "{{{";
+    private static final String LOC_MSG_PREFIX = "{{{";
 
     /**
      * The postfix constant for localized message.
      * <br/>This "}}}".
      */
-    public static final String LOC_MSG_POSTFIX = "}}}";
+    private static final String LOC_MSG_POSTFIX = "}}}";
 
     private static final Pattern MESSAGE_PATTERN = MoreStrings.variablePattern(LOC_MSG_PREFIX, LOC_MSG_POSTFIX);
 
@@ -65,17 +66,24 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
         localizations = CompiledLocalizations.from(projectProvider.get());
     }
 
-    /* (non-Javadoc)
-     * @see com.developmentontheedge.enterprise.components.Meta#getLocalizedEntityTitle(com.developmentontheedge.enterprise.metadata.model.Entity)
-     */
+    //todo localize entity, query, operation names
+    @Override
+    public String getLocalizedBe5ErrorMessage(Be5Exception e)
+    {
+        return ErrorTitles.formatTitle(
+                getLocalizedExceptionMessage(ErrorTitles.getTitle(e.getCode())),
+                e.getParameters()
+        );
+    }
+
     @Override
     public String getLocalizedEntityTitle(Entity entity)
     {
         Optional<String> localization = localizations.getEntityTitle(getLanguage(), entity.getName());
 
-        if (!localization.isPresent())
+        if(!localization.isPresent())
         {
-            if (!Strings.isNullOrEmpty(entity.getDisplayName()))
+            if(!Strings.isNullOrEmpty(entity.getDisplayName()))
             {
                 return entity.getDisplayName();
             }
@@ -123,7 +131,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
                 localizations.get(getLanguage(), entity, query, message).orElse(content)
         );
 
-        if (localized.startsWith("{{{") && localized.endsWith("}}}"))
+        if(localized.startsWith("{{{") && localized.endsWith("}}}"))
         {
             String clearContent = localized.substring(3, localized.length() - 3);
             return localizations.get(getLanguage(), entity, query, clearContent)
@@ -149,12 +157,12 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public QuerySettings getQuerySettings(Query query)
     {
         List<String> currentRoles = userInfoProvider.get().getCurrentRoles();
-        for (QuerySettings settings : query.getQuerySettings())
+        for(QuerySettings settings : query.getQuerySettings())
         {
             Set<String> roles = settings.getRoles().getFinalRoles();
-            for (String role : currentRoles)
+            for(String role : currentRoles)
             {
-                if (roles.contains(role))
+                if(roles.contains(role))
                 {
                     return settings;
                 }
@@ -167,8 +175,8 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public Operation getOperation(String entityName, String name)
     {
         Operation operation = meta.getOperation(entityName, name);
-        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
+        if(!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
+            throw Be5Exception.accessDeniedToOperation(entityName, name);
 
         return operation;
     }
@@ -177,8 +185,8 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public Operation getOperation(String entityName, String queryName, String name)
     {
         Operation operation = meta.getOperation(entityName, queryName, name);
-        if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
+        if(!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
+            throw Be5Exception.accessDeniedToOperation(entityName, name);
 
         return operation;
     }
@@ -187,8 +195,8 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public Query getQuery(String entityName, String queryName)
     {
         Query query = meta.getQuery(entityName, queryName);
-        if (!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
+        if(!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
+            throw Be5Exception.accessDeniedToQuery(entityName, queryName);
         return query;
     }
 
@@ -201,10 +209,10 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     public String getColumnTitle(String entityName, String columnName)
     {
         ImmutableList<String> defaultQueries = ImmutableList.of("All records");
-        for (String queryName : defaultQueries)
+        for(String queryName : defaultQueries)
         {
             Optional<String> columnTitle = localizations.get(getLanguage(), entityName, queryName, columnName);
-            if (columnTitle.isPresent()) return columnTitle.get();
+            if(columnTitle.isPresent()) return columnTitle.get();
         }
         return columnName;
     }

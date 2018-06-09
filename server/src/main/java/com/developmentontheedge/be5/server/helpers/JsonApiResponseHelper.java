@@ -94,12 +94,12 @@ public class JsonApiResponseHelper
 
     public ErrorModel getErrorModel(Be5Exception e)
     {
-        return new ErrorModel(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e), exceptionAsString(e), null);
+        return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e), exceptionAsString(e), null);
     }
 
     public ErrorModel getErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
-        return new ErrorModel(e.getHttpStatusCode(), e.getTitle(), Be5Exception.getMessage(e) + additionalMessage,
+        return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e) + additionalMessage,
                 exceptionAsString(e), links);
     }
 

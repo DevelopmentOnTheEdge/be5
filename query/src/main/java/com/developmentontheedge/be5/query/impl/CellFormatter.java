@@ -101,7 +101,8 @@ public class CellFormatter
                 }
                 catch (Throwable e)
                 {
-                    throw Be5Exception.internalInQuery(new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e), query);
+                    throw Be5Exception.internalInQuery(query,
+                            new RuntimeException("Error in process COL_ATTR_LINK: " + cell.name, e));
                 }
             }
 

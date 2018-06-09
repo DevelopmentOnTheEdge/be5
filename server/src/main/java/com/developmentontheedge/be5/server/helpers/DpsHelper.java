@@ -314,7 +314,7 @@ public class DpsHelper
         catch (RuntimeException e)
         {
             log.log(Level.SEVERE, "SqlQuery.parse error: " , e);
-            throw Be5Exception.internalInQuery(e, query);
+            throw Be5Exception.internalInQuery(query, e);
         }
 
         List<String> usedParams = ast.tree().select(AstBeParameterTag.class).map(AstBeParameterTag::getName).toList();
