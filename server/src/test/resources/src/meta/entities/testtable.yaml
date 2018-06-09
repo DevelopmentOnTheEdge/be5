@@ -115,6 +115,12 @@ testtable:
         FROM testtable
         WHERE 1=1
           AND name = <parameter:name refColumn="testtable.unknownColumn" />
+  - Query with error:
+      type: 1D_unknown
+      invisible: true
+      roles: '@AllRoles'
+      code: |-
+        Query with error
   operations:
   - Filter:
       roles: Administrator

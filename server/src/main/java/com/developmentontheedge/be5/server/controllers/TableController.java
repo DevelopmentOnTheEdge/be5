@@ -124,7 +124,7 @@ public class TableController extends ApiControllerSupport
         else
         {
             responseHelper.sendErrorAsJson(
-                    new ErrorModel("500", e.getMessage()),
+                    new ErrorModel(e.getCode().getHttpStatus(), e.getMessage()),
                     responseHelper.getDefaultMeta(req)
             );
         }
