@@ -1,22 +1,12 @@
 package com.developmentontheedge.be5.server.controllers;
 
-import com.developmentontheedge.be5.base.exceptions.Be5Exception;
-import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
-import com.developmentontheedge.be5.base.util.HashUrl;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.model.FormPresentation;
-import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -24,38 +14,26 @@ import com.developmentontheedge.be5.web.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
-import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
 public class FormController extends ApiControllerSupport
 {
-    private static final Logger log = Logger.getLogger(FormController.class.getName());
-
-    private final OperationExecutor operationExecutor;
     private final DocumentGenerator documentGenerator;
     private final UserHelper userHelper;
-    private final UserAwareMeta userAwareMeta;
     private final JsonApiResponseHelper responseHelper;
     private final Stage stage;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
-    public FormController(OperationExecutor operationExecutor, DocumentGenerator documentGenerator,
-                          UserHelper userHelper, UserAwareMeta userAwareMeta, JsonApiResponseHelper responseHelper,
+    public FormController(DocumentGenerator documentGenerator,
+                          UserHelper userHelper, JsonApiResponseHelper responseHelper,
                           UserInfoProvider userInfoProvider, Stage stage)
     {
-        this.operationExecutor = operationExecutor;
         this.documentGenerator = documentGenerator;
         this.userHelper = userHelper;
-        this.userAwareMeta = userAwareMeta;
         this.responseHelper = responseHelper;
         this.stage = stage;
         this.userInfoProvider = userInfoProvider;
@@ -64,6 +42,7 @@ public class FormController extends ApiControllerSupport
     @Override
     public void generate(Request req, Response res, String requestSubUrl)
     {
+        //todo move to filter
         if(stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
         {
             userHelper.initGuest();
@@ -76,58 +55,12 @@ public class FormController extends ApiControllerSupport
         Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
+        JsonApiModel jsonApiModel = documentGenerator.getFormJsonApiModel(requestSubUrl,
+                                        entityName, queryName, operationName, selectedRows, operationParams, values);
 
-        Operation operation;
-        try
-        {
-            OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
-            operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
-        }
-        catch (Be5Exception e)
-        {
-            log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
-            responseHelper.sendErrorAsJson(
-                    responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
-                    responseHelper.getDefaultMeta(req)
-            );
-            return;
-        }
-
-        Either<FormPresentation, OperationResult> data;
-
-        try
-        {
-            switch (requestSubUrl)
-            {
-                case "":
-                    data = documentGenerator.generateForm(operation, values);
-                    break;
-                case "apply":
-                    data = documentGenerator.executeForm(operation, values);
-                    break;
-                default:
-                    responseHelper.sendUnknownActionError();
-                    return;
-            }
-        }
-        catch (Be5Exception e)
-        {
-            HashUrl url2 = HashUrlUtils.getUrl(operation);
-            log.log(Level.SEVERE, "Error in operation: " + url2.toString(), e);
-
-            responseHelper.sendErrorAsJson(
-                    documentGenerator.getErrorModel(e, url2),
-                    responseHelper.getDefaultMeta(req)
-            );
-            return;
-        }
-
-        responseHelper.sendAsJson(
-                new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
-                        Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())),
-                responseHelper.getDefaultMeta(req)
-        );
+        jsonApiModel.setMeta(responseHelper.getDefaultMeta(req));
+        responseHelper.sendAsJson(jsonApiModel);
     }
+
 
 }

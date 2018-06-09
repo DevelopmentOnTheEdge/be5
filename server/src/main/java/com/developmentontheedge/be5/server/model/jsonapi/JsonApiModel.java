@@ -77,7 +77,7 @@ public class JsonApiModel
         return data;
     }
 
-    public Object[] getErrors()
+    public ErrorModel[] getErrors()
     {
         return errors;
     }

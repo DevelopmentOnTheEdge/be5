@@ -28,6 +28,9 @@ public interface DocumentGenerator
 
     /* Form */
 
+    JsonApiModel getFormJsonApiModel(String method, String entityName, String queryName, String operationName,
+                                     String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values);
+
     Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
 
     Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);

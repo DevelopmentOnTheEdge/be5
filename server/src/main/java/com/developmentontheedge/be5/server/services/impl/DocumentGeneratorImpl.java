@@ -43,6 +43,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
@@ -56,6 +58,8 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 public class DocumentGeneratorImpl implements DocumentGenerator
 {
+    private static final Logger log = Logger.getLogger(DocumentGeneratorImpl.class.getName());
+
     private final UserAwareMeta userAwareMeta;
     private final GroovyRegister groovyRegister;
     private final OperationService operationService;
@@ -243,6 +247,56 @@ public class DocumentGeneratorImpl implements DocumentGenerator
                 included.toArray(new ResourceData[0]),
                 null
         );
+    }
+
+    @Override
+    public JsonApiModel getFormJsonApiModel(String method, String entityName, String queryName, String operationName,
+                                            String[] selectedRows, Map<String, Object> operationParams, Map<String, Object> values)
+    {
+        HashUrl url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams);
+
+        com.developmentontheedge.be5.operation.model.Operation operation;
+
+        try
+        {
+            OperationInfo operationInfo = new OperationInfo(userAwareMeta.getOperation(entityName, queryName, operationName));
+            operation = operationExecutor.create(operationInfo, queryName, selectedRows, operationParams);
+        }
+        catch (Be5Exception e)
+        {
+            log.log(Level.SEVERE, "Error on create operation: " + url.toString(), e);
+
+            return JsonApiModel.error(
+                    responseHelper.getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())),
+                    null);
+
+        }
+
+        try
+        {
+            switch (method)
+            {
+                case "":
+                    Either<FormPresentation, OperationResult> data = generateForm(operation, values);
+                    return JsonApiModel.data(new ResourceData(data.isFirst() ? FORM_ACTION : OPERATION_RESULT, data.get(),
+                            Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())), null);
+                case "apply":
+                    Either<FormPresentation, OperationResult> applyData = executeForm(operation, values);
+                    return JsonApiModel.data(new ResourceData(applyData.isFirst() ? FORM_ACTION : OPERATION_RESULT, applyData.get(),
+                            Collections.singletonMap(SELF_LINK, HashUrlUtils.getUrl(operation).toString())), null);
+                default:
+                    return JsonApiModel.error(new ErrorModel("404", "Unknown component action."), null);
+            }
+        }
+        catch (Be5Exception e)
+        {
+            HashUrl url2 = HashUrlUtils.getUrl(operation);
+            log.log(Level.SEVERE, "Error in operation: " + url2.toString(), e);
+
+            return JsonApiModel.error(
+                    getErrorModel(e, url2),
+                    null);
+        }
     }
 
     @Override
