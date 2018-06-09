@@ -5,11 +5,7 @@ import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 
-/**
- * The general BeanExplorer5 exception. You can create instances of the exception with its static constructors.
- * 
- * @author lan
- */
+
 public class Be5Exception extends RuntimeException
 {
     private static final long serialVersionUID = 9189259622768482031L;
@@ -126,7 +122,7 @@ public class Be5Exception extends RuntimeException
 
     public static Be5Exception invalidState(String title)
     {
-        return Be5ErrorCode.STATE_INVALID.exception(title);
+        return Be5ErrorCode.INVALID_STATE.exception(title);
     }
 
     public Be5ErrorCode getCode()
@@ -161,7 +157,7 @@ public class Be5Exception extends RuntimeException
         return HtmlUtils.escapeHTML(out.toString());
     }
 
-    public static String getFullStackTraceLine(StackTraceElement e)
+    private static String getFullStackTraceLine(StackTraceElement e)
     {
         return e.getClassName() + "." + e.getMethodName()
                 + "(" + e.getFileName() + ":" + e.getLineNumber() + ")";
@@ -192,8 +188,7 @@ public class Be5Exception extends RuntimeException
 
         Be5Exception that = (Be5Exception) o;
 
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        return code == that.code;
+        return (message != null ? message.equals(that.message) : that.message == null) && code == that.code;
     }
 
     @Override
