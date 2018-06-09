@@ -59,6 +59,16 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.ACCESS_DENIED.exception();
     }
 
+    public static Be5Exception accessDeniedToOperation(String entityName, String operationName)
+    {
+        return Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, operationName);
+    }
+
+    public static Be5Exception accessDeniedToQuery(String entityName, String queryName)
+    {
+        return Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
+    }
+
     public static Be5Exception internal(String title)
     {
         return Be5ErrorCode.INTERNAL_ERROR.exception(title);
@@ -84,6 +94,11 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION.rethrow(cause, o.getEntity().getName(), o.getName());
     }
 
+    public static Be5Exception operationNotAssignedToQuery(String entityName, String queryName, String name)
+    {
+        return Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY.exception(entityName, queryName, name);
+    }
+
     public static Be5Exception internalInOperationExtender(OperationExtender operationExtender, Throwable cause)
     {
         return Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION_EXTENDER.rethrow(cause, operationExtender.getClassName());
@@ -98,7 +113,17 @@ public class Be5Exception extends RuntimeException
     {
         return Be5ErrorCode.UNKNOWN_QUERY.exception(entityName, queryName);
     }
-    
+
+    public static Be5Exception unknownOperation(String entityName, String operationName)
+    {
+        return Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, operationName);
+    }
+
+    public static Be5Exception notFound(String element)
+    {
+        return Be5ErrorCode.NOT_FOUND.exception(element);
+    }
+
     public static Be5Exception invalidState(String title)
     {
         return Be5ErrorCode.STATE_INVALID.exception(title);

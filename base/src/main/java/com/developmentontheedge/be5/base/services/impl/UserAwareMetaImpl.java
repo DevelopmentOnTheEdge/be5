@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
@@ -168,7 +168,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     {
         Operation operation = meta.getOperation(entityName, name);
         if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
+            throw Be5Exception.accessDeniedToOperation(entityName, name);
 
         return operation;
     }
@@ -178,7 +178,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     {
         Operation operation = meta.getOperation(entityName, queryName, name);
         if (!meta.hasAccess(operation.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, name);
+            throw Be5Exception.accessDeniedToOperation(entityName, name);
 
         return operation;
     }
@@ -188,7 +188,7 @@ public class UserAwareMetaImpl implements UserAwareMeta//, Configurable<String>
     {
         Query query = meta.getQuery(entityName, queryName);
         if (!meta.hasAccess(query.getRoles(), userInfoProvider.get().getCurrentRoles()))
-            throw Be5ErrorCode.ACCESS_DENIED_TO_QUERY.exception(entityName, queryName);
+            throw Be5Exception.accessDeniedToQuery(entityName, queryName);
         return query;
     }
 

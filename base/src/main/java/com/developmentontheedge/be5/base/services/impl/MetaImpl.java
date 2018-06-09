@@ -1,6 +1,5 @@
 package com.developmentontheedge.be5.base.services.impl;
 
-import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Meta;
 import com.developmentontheedge.be5.base.services.ProjectProvider;
@@ -292,11 +291,11 @@ public class MetaImpl implements Meta
         {
             if(getProject().findOperation(entityName, name) != null)
             {
-                throw Be5ErrorCode.OPERATION_NOT_ASSIGNED_TO_QUERY.exception(entityName, queryName, name);
+                throw Be5Exception.operationNotAssignedToQuery(entityName, queryName, name);
             }
             else
             {
-                throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, name);
+                throw Be5Exception.unknownOperation(entityName, name);
             }
         }
 
@@ -309,7 +308,7 @@ public class MetaImpl implements Meta
         Operation operation = getProject().findOperation(entityName, name);
         if (operation == null)
         {
-            throw Be5ErrorCode.UNKNOWN_OPERATION.exception(entityName, name);
+            throw Be5Exception.unknownOperation(entityName, name);
         }
         return operation;
     }
