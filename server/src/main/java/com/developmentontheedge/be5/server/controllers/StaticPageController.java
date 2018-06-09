@@ -47,7 +47,7 @@ public class StaticPageController extends ApiControllerSupport
 
             //todo localize
             responseHelper.sendErrorAsJson(
-                    new ErrorModel("404", be5Exception.getTitle(),
+                    new ErrorModel("404", be5Exception.getMessage(),
                             Collections.singletonMap(SELF_LINK, "static/" + requestSubUrl)),
                     responseHelper.getDefaultMeta(req)
             );

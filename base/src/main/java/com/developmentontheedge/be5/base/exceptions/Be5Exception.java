@@ -14,19 +14,17 @@ public class Be5Exception extends RuntimeException
 
     private final Be5ErrorCode code;
     private final List<String> parameters;
-    private final String generatedMessage;
 
-    private Be5Exception(Be5ErrorCode code, List<String> parameters, String generatedMessage, Throwable cause)
+    private Be5Exception(Be5ErrorCode code, List<String> parameters, String message, Throwable cause)
     {
-        super(generatedMessage, cause);
-        this.generatedMessage = generatedMessage;
+        super(message, cause);
         this.code = code;
         this.parameters = parameters;
     }
 
-    private Be5Exception(Be5ErrorCode code, List<String> parameters, String generatedMessage)
+    private Be5Exception(Be5ErrorCode code, List<String> parameters, String message)
     {
-        this(code, parameters, generatedMessage, null);
+        this(code, parameters, message, null);
     }
 
 //    private Be5Exception(Be5ErrorCode code, Throwable t, Object... parameters)
@@ -134,10 +132,10 @@ public class Be5Exception extends RuntimeException
         return code;
     }
 
-    public String getTitle()
-    {
-        return generatedMessage;
-    }
+//    public String getMessage()
+//    {
+//        return generatedMessage;
+//    }
 
     public List<String> getParameters()
     {
@@ -187,24 +185,5 @@ public class Be5Exception extends RuntimeException
     public String getHttpStatusCode()
     {
         return code.getHttpStatus();
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Be5Exception that = (Be5Exception) o;
-
-        return (generatedMessage != null ? generatedMessage.equals(that.generatedMessage) : that.generatedMessage == null) && code == that.code;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = generatedMessage != null ? generatedMessage.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        return result;
     }
 }

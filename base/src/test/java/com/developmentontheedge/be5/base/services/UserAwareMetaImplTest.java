@@ -3,7 +3,6 @@ package com.developmentontheedge.be5.base.services;
 import com.developmentontheedge.be5.base.BaseTest;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.metadata.RoleType;
-import com.developmentontheedge.be5.metadata.model.Operation;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,7 +62,7 @@ public class UserAwareMetaImplTest extends BaseTest
     {
         Be5Exception be5Exception = Be5Exception.internal("test");
 
-        assertEquals("Internal error occurred: test", be5Exception.getTitle());
+        assertEquals("Internal error occurred: test", be5Exception.getMessage());
 
         assertEquals("Произошла внутренняя ошибка: test",
                 userAwareMeta.getLocalizedBe5ErrorMessage(be5Exception));
