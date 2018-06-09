@@ -43,7 +43,7 @@ public class Be5Exception extends RuntimeException
     {
         return new Be5Exception(code, parameters, title);
     }
-    
+
     /**
      * Not a part of the API as you can't create {@link Be5ErrorCode}.
      */
@@ -51,7 +51,7 @@ public class Be5Exception extends RuntimeException
     {
         return new Be5Exception(code, parameters, message, t);
     }
-    
+
     public static Be5Exception accessDenied()
     {
         return Be5ErrorCode.ACCESS_DENIED.exception();
@@ -155,7 +155,7 @@ public class Be5Exception extends RuntimeException
         if(e.getClass() == NullPointerException.class)
         {
             StackTraceElement[] stackTrace = e.getStackTrace();
-            for (int i = 0; i < Math.min(stackTrace.length, 2); i++)
+            for(int i = 0; i < Math.min(stackTrace.length, 2); i++)
             {
                 out.append(getFullStackTraceLine(stackTrace[i])).append("\n");
             }
@@ -175,8 +175,7 @@ public class Be5Exception extends RuntimeException
         if(e instanceof Be5Exception)
         {
             return e.getClass().getSimpleName() + ": " + e.getMessage() + "\n";
-        }
-        else
+        } else
         {
             return e.getClass().getCanonicalName() + ": " + e.getMessage() + "\n";
         }
