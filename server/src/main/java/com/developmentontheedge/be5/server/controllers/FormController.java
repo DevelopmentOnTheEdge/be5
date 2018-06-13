@@ -74,15 +74,12 @@ public class FormController extends ApiControllerSupport
                     );
                     break;
                 default:
-                    responseHelper.sendUnknownActionError();
+                    responseHelper.sendUnknownActionError(req);
             }
         }
         catch(Be5Exception e)
         {
-            responseHelper.sendErrorAsJson(
-                    responseHelper.getErrorModel(e),
-                    responseHelper.getDefaultMeta(req)
-            );
+            responseHelper.sendErrorAsJson(e, req);
         }
     }
 

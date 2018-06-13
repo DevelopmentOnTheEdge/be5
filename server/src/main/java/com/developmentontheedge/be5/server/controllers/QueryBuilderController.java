@@ -134,7 +134,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
                                 update(sql);
                                 break;
                             default:
-                                responseHelper.sendUnknownActionError();
+                                responseHelper.sendUnknownActionError(req);
                                 return;
                         }
                     }

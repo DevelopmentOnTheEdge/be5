@@ -53,6 +53,11 @@ public class JsonApiResponseHelper
         responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta, links));
     }
 
+    public void sendErrorAsJson(Be5Exception e, Request req)
+    {
+        responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e), getDefaultMeta(req)));
+    }
+
     public void sendErrorAsJson(ErrorModel error, Object meta)
     {
         responseProvider.get().sendAsJson(JsonApiModel.error(error, meta));
@@ -68,9 +73,9 @@ public class JsonApiResponseHelper
         responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta, links));
     }
 
-    public void sendUnknownActionError()
+    public void sendUnknownActionError(Request req)
     {
-        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), null);
+        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), getDefaultMeta(req));
     }
 
     private String exceptionAsString(Throwable e)
