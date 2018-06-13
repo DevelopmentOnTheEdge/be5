@@ -41,7 +41,8 @@ class OperationExecutorTest extends OperationBe5ProjectDBTest
     @Test
     void create()
     {
-        def op = operationExecutor.create(meta.getOperation("testtableAdmin", "TransactionTestOp"),
+        def op = operationExecutor.create(
+                new OperationInfo(meta.getOperation("testtableAdmin", "TransactionTestOp")),
                 "All records", ["1"] as String[], [:])
 
         assertEquals(OperationStatus.CREATE, op.getStatus())
