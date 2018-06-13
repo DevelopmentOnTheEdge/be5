@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -33,18 +34,27 @@ public class TableController extends ApiControllerSupport
 
         Map<String, Object> parameters = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        switch (requestSubUrl)
+        try
         {
-            case "":
-                JsonApiModel jsonApiForUser = documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
-                jsonApiForUser.setMeta(responseHelper.getDefaultMeta(req));
-                res.sendAsJson(jsonApiForUser);
-                return;
-            case "update":
-                res.sendAsJson(documentGenerator.updateQueryJsonApi(entityName, queryName, parameters));
-                return;
-            default:
-                responseHelper.sendUnknownActionError();
+            switch(requestSubUrl)
+            {
+                case "":
+                    JsonApiModel jsonApiForUser = documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
+                    jsonApiForUser.setMeta(responseHelper.getDefaultMeta(req));
+                    res.sendAsJson(jsonApiForUser);
+                    return;
+                case "update":
+                    res.sendAsJson(documentGenerator.updateQueryJsonApi(entityName, queryName, parameters));
+                    return;
+                default:
+                    responseHelper.sendUnknownActionError();
+            }
+        } catch(Be5Exception e)
+        {
+            responseHelper.sendErrorAsJson(
+                    responseHelper.getErrorModel(e),
+                    responseHelper.getDefaultMeta(req)
+            );
         }
     }
 

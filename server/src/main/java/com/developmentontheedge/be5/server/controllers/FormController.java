@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
@@ -56,22 +57,31 @@ public class FormController extends ApiControllerSupport
 
         Object meta = responseHelper.getDefaultMeta(req);
 
-        switch (requestSubUrl)
+        try
         {
-            case "":
-                responseHelper.sendAsJson(
-                        formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values),
-                        meta
-                );
-                break;
-            case "apply":
-                responseHelper.sendAsJson(
-                        formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values),
-                        meta
-                );
-                break;
-            default:
-                responseHelper.sendUnknownActionError();
+            switch(requestSubUrl)
+            {
+                case "":
+                    responseHelper.sendAsJson(
+                            formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values),
+                            meta
+                    );
+                    break;
+                case "apply":
+                    responseHelper.sendAsJson(
+                            formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values),
+                            meta
+                    );
+                    break;
+                default:
+                    responseHelper.sendUnknownActionError();
+            }
+        } catch(Be5Exception e)
+        {
+            responseHelper.sendErrorAsJson(
+                    responseHelper.getErrorModel(e),
+                    responseHelper.getDefaultMeta(req)
+            );
         }
     }
 
