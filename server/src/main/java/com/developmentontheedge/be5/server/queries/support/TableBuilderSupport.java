@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.query.support.BaseTableBuilderSupport;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.web.SessionConstants;
+import com.developmentontheedge.be5.server.SessionConstants;
 
 import javax.inject.Inject;
 import java.util.Map;

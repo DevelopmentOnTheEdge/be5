@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.web.SessionConstants.QUERY_BUILDER_HISTORY;
+import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
 public class QueryBuilderController extends ApiControllerSupport implements Controller
