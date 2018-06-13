@@ -45,7 +45,14 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
     @Override
     public final void generate(Request req, Response res)
     {
-        generate(req, res, getApiSubUrl(req));
+        try
+        {
+            generate(req, res, getApiSubUrl(req));
+        }
+        catch(IllegalArgumentException e)
+        {
+            res.sendErrorAsJson(e.getMessage(), HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
     protected abstract void generate(Request req, Response res, String subUrl);
