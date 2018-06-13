@@ -5,7 +5,6 @@ import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
-import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
@@ -60,12 +59,16 @@ public class FormController extends ApiControllerSupport
         switch (requestSubUrl)
         {
             case "":
-                ResourceData generate = formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values);
-                responseHelper.sendAsJson(generate, meta);
+                responseHelper.sendAsJson(
+                        formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values),
+                        meta
+                );
                 break;
             case "apply":
-                ResourceData execute = formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values);
-                responseHelper.sendAsJson(execute, meta);
+                responseHelper.sendAsJson(
+                        formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values),
+                        meta
+                );
                 break;
             default:
                 responseHelper.sendUnknownActionError();

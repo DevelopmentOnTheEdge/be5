@@ -55,7 +55,6 @@ public class JsonApiResponseHelper
 
     public void sendErrorAsJson(ErrorModel error, Object meta)
     {
-        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
         responseProvider.get().sendAsJson(JsonApiModel.error(error, meta));
     }
 
@@ -74,7 +73,7 @@ public class JsonApiResponseHelper
         sendErrorAsJson( new ErrorModel("404", "Unknown component action."), null);
     }
 
-    public String exceptionAsString(Throwable e)
+    private String exceptionAsString(Throwable e)
     {
         if(userInfoProvider.isSystemDeveloper())
         {
