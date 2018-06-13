@@ -76,7 +76,8 @@ public class FormController extends ApiControllerSupport
                 default:
                     responseHelper.sendUnknownActionError();
             }
-        } catch(Be5Exception e)
+        }
+        catch(Be5Exception e)
         {
             responseHelper.sendErrorAsJson(
                     responseHelper.getErrorModel(e),

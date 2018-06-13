@@ -9,10 +9,7 @@ import com.developmentontheedge.be5.base.util.LayoutUtils;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.OperationInfo;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.services.OperationExecutor;
-import com.developmentontheedge.be5.operation.util.Either;
+import com.developmentontheedge.be5.metadata.util.Collections3;
 import com.developmentontheedge.be5.query.model.ColumnModel;
 import com.developmentontheedge.be5.query.model.InitialRow;
 import com.developmentontheedge.be5.query.model.InitialRowsBuilder;
@@ -21,7 +18,6 @@ import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
-import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
@@ -31,8 +27,6 @@ import com.developmentontheedge.be5.server.services.CategoriesService;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
 import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.services.model.Category;
-import com.developmentontheedge.be5.server.services.model.Operations;
-import com.developmentontheedge.be5.server.util.HashUrlUtils;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 
 import javax.inject.Inject;
@@ -47,8 +41,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
-import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
-import static com.developmentontheedge.be5.base.FrontendConstants.OPERATION_RESULT;
 import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TOP_FORM;
@@ -61,7 +53,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private final UserAwareMeta userAwareMeta;
     private final GroovyRegister groovyRegister;
-    private final OperationExecutor operationExecutor;
     private final TableModelService tableModelService;
     private final CategoriesService categoriesService;
     private final UserInfoProvider userInfoProvider;
@@ -72,7 +63,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     public DocumentGeneratorImpl(
             UserAwareMeta userAwareMeta,
             GroovyRegister groovyRegister,
-            OperationExecutor operationExecutor,
             CategoriesService categoriesService,
             TableModelService tableModelService,
             UserInfoProvider userInfoProvider,
@@ -80,7 +70,6 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
-        this.operationExecutor = operationExecutor;
         this.categoriesService = categoriesService;
         this.tableModelService = tableModelService;
         this.userInfoProvider = userInfoProvider;
@@ -165,7 +154,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
         for (Operation operation : getQueryOperations(query))
         {
-            if (Operations.isAllowed(operation, userRoles))
+            if (isAllowed(operation, userRoles))
             {
                 operations.add(presentOperation(query, operation));
             }
@@ -193,7 +182,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 
     private TableOperationPresentation presentOperation(Query query, Operation operation)
     {
-        String visibleWhen = Operations.determineWhenVisible(operation);
+        String visibleWhen = determineWhenVisible(operation);
         String title = userAwareMeta.getLocalizedOperationTitle(query.getEntity().getName(), operation.getName());
         boolean requiresConfirmation = operation.isConfirm();
         boolean isClientSide = Operation.OPERATION_TYPE_JAVASCRIPT.equals(operation.getType());
@@ -284,6 +273,29 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             return JsonApiModel.error(responseHelper.
                     getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
+    }
+
+    private static String determineWhenVisible(Operation operation)
+    {
+        switch (operation.getRecords())
+        {
+            case Operation.VISIBLE_ALWAYS:
+            case Operation.VISIBLE_ALL_OR_SELECTED:
+                return "always";
+            case Operation.VISIBLE_WHEN_ONE_SELECTED_RECORD:
+                return "oneSelected";
+            case Operation.VISIBLE_WHEN_ANY_SELECTED_RECORDS:
+                return "anySelected";
+            case Operation.VISIBLE_WHEN_HAS_RECORDS:
+                return "hasRecords";
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    private static boolean isAllowed(Operation operation, List<String> userRoles)
+    {
+        return Collections3.containsAny(userRoles, operation.getRoles().getFinalRoles());
     }
 
 }
