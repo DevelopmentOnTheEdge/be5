@@ -1,9 +1,10 @@
-package com.developmentontheedge.be5.web.support;
+package com.developmentontheedge.be5.server.servlet.support;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,9 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +27,7 @@ public class RequestPreprocessorSupportTest
     @Before
     public void setUp() throws Exception
     {
-        requestPreprocessorSupport = spy(RequestPreprocessorSupport.class);
+        requestPreprocessorSupport = Mockito.spy(RequestPreprocessorSupport.class);
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         filterChain = mock(FilterChain.class);

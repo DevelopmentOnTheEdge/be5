@@ -10,7 +10,7 @@ import com.developmentontheedge.be5.server.services.FormGenerator;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.support.ApiControllerSupport;
+import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;

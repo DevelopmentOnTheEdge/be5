@@ -1,7 +1,7 @@
-package com.developmentontheedge.be5.web.support;
+package com.developmentontheedge.be5.server.servlet.support;
 
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.RequestPreprocessor;
+import com.developmentontheedge.be5.web.Response;
 import com.developmentontheedge.be5.web.impl.RequestImpl;
 
 import javax.servlet.Filter;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-public abstract class RequestPreprocessorSupport implements RequestPreprocessor, Filter
+public abstract class FilterSupport implements Filter
 {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException
@@ -26,14 +26,9 @@ public abstract class RequestPreprocessorSupport implements RequestPreprocessor,
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException
     {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
-        HttpServletResponse response = (HttpServletResponse)servletResponse;
+        Request req = new RequestImpl((HttpServletRequest)servletRequest);
 
-        Request req = new RequestImpl(request);
-
-        preprocessUrl(req, ServletUtils.getResponse(request, response));
-
-        filterChain.doFilter(servletRequest, servletResponse);
+        filter(req, ServletUtils.getResponse(req.getRawRequest(), (HttpServletResponse)servletResponse), filterChain);
     }
 
     @Override
@@ -42,4 +37,5 @@ public abstract class RequestPreprocessorSupport implements RequestPreprocessor,
 
     }
 
+    public abstract void filter(Request req, Response res, FilterChain chain) throws IOException, ServletException;
 }

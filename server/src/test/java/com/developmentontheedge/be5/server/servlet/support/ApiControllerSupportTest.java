@@ -1,9 +1,10 @@
-package com.developmentontheedge.be5.web.support;
+package com.developmentontheedge.be5.server.servlet.support;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +25,7 @@ public class ApiControllerSupportTest
     @Before
     public void setUp() throws Exception
     {
-        controller = spy(ApiControllerSupport.class);
+        controller = Mockito.spy(ApiControllerSupport.class);
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
     }
