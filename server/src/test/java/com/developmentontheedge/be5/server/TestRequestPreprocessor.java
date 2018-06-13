@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.server;
 
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.support.RequestPreprocessorSupport;
+import com.developmentontheedge.be5.server.servlet.support.RequestPreprocessorSupport;
 import com.google.inject.Stage;
 
 

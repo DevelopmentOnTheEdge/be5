@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.SessionConstants;
+import com.developmentontheedge.be5.server.SessionConstants;
 import org.junit.Before;
 import org.junit.Test;
 

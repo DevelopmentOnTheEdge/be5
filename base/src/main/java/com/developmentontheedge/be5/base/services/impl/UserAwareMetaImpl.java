@@ -232,4 +232,14 @@ public class UserAwareMetaImpl implements UserAwareMeta
     {
         return meta.getLocale(userInfoProvider.get().getLocale()).getLanguage();
     }
+
+    @Override
+    public String getStaticPageContent(String name)
+    {
+        String pageContent = projectProvider.get().getStaticPageContent(getLanguage(), name);
+        if(pageContent == null)
+            throw Be5Exception.notFound("static/" + name);
+
+        return pageContent;
+    }
 }

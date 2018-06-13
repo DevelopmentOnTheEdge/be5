@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.support.FilterSupport;
+import com.developmentontheedge.be5.server.servlet.support.FilterSupport;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;

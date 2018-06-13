@@ -13,7 +13,7 @@ public interface OperationExecutor
 
     Object execute(Operation operation, Map<String, Object> presetValues);
 
-    Operation create(com.developmentontheedge.be5.metadata.model.Operation operation, String queryName,
+    Operation create(OperationInfo operationInfo, String queryName,
                      String[] selectedRows, Map<String, Object> operationParams);
 
     Operation create(OperationInfo operationInfo, OperationContext operationContext);

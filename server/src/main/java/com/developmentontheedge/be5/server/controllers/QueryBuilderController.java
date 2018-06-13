@@ -23,7 +23,7 @@ import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.support.ApiControllerSupport;
+import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
-import static com.developmentontheedge.be5.web.SessionConstants.QUERY_BUILDER_HISTORY;
+import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
 public class QueryBuilderController extends ApiControllerSupport implements Controller
@@ -134,7 +134,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
                                 update(sql);
                                 break;
                             default:
-                                responseHelper.sendUnknownActionError();
+                                responseHelper.sendUnknownActionError(req);
                                 return;
                         }
                     }

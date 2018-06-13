@@ -77,7 +77,7 @@ public class JsonApiModel
         return data;
     }
 
-    public Object[] getErrors()
+    public ErrorModel[] getErrors()
     {
         return errors;
     }
@@ -112,5 +112,33 @@ public class JsonApiModel
                 (included!=null ? ", included=" + Arrays.toString(included) : "") +
                 (links!=null ? ", links=" + links : "") +
         '}';
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+
+        JsonApiModel that = (JsonApiModel) o;
+
+        if(data != null ? !data.equals(that.data) : that.data != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if(!Arrays.equals(errors, that.errors)) return false;
+        if(meta != null ? !meta.equals(that.meta) : that.meta != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if(!Arrays.equals(included, that.included)) return false;
+        return links != null ? links.equals(that.links) : that.links == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = data != null ? data.hashCode() : 0;
+        result = 31 * result + Arrays.hashCode(errors);
+        result = 31 * result + (meta != null ? meta.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(included);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        return result;
     }
 }

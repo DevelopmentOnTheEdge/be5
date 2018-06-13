@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.support.ApiControllerSupport;
+import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;

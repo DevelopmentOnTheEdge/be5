@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.web.support.ApiControllerSupport;
+import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;

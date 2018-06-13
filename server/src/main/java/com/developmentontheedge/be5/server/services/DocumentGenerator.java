@@ -1,14 +1,8 @@
 package com.developmentontheedge.be5.server.services;
 
-import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.metadata.model.Query;
-import com.developmentontheedge.be5.operation.model.Operation;
-import com.developmentontheedge.be5.operation.model.OperationResult;
-import com.developmentontheedge.be5.operation.util.Either;
 import com.developmentontheedge.be5.query.model.TableModel;
-import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
-import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 
 import java.util.Map;
@@ -16,8 +10,9 @@ import java.util.Map;
 
 public interface DocumentGenerator
 {
-    JsonApiModel getStaticPage(String title, String content, String url);
+    JsonApiModel createStaticPage(String title, String content, String url);
 
+    //todo move to TableGenerator, add methods return ResourceData
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters);
 
     TablePresentation getTablePresentation(Query query, Map<String, Object> parameters, TableModel tableModel);
@@ -26,13 +21,10 @@ public interface DocumentGenerator
 
     JsonApiModel getJsonApiModel(Query query, Map<String, Object> parameters, TableModel tableModel);
 
-    /* Form */
+    JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters);
 
-    Either<FormPresentation, OperationResult> generateForm(Operation operation, Map<String, ?> values);
-
-    Either<FormPresentation, OperationResult> executeForm(Operation operation, Map<String, ?> values);
-
-    ErrorModel getErrorModel(Throwable e, HashUrl url);
+    //todo refactor frontend to JsonApiModel
+    Object updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
 
     //    StaticPagePresentation getStatic(Query query);
 }

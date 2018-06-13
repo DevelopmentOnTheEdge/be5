@@ -53,9 +53,13 @@ public class JsonApiResponseHelper
         responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta, links));
     }
 
+    public void sendErrorAsJson(Be5Exception e, Request req)
+    {
+        responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e), getDefaultMeta(req)));
+    }
+
     public void sendErrorAsJson(ErrorModel error, Object meta)
     {
-        //todo use HttpServletResponse.SC_INTERNAL_SERVER_ERROR (comment for prevent frontend errors)
         responseProvider.get().sendAsJson(JsonApiModel.error(error, meta));
     }
 
@@ -69,12 +73,12 @@ public class JsonApiResponseHelper
         responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta, links));
     }
 
-    public void sendUnknownActionError()
+    public void sendUnknownActionError(Request req)
     {
-        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), null);
+        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), getDefaultMeta(req));
     }
 
-    public String exceptionAsString(Throwable e)
+    private String exceptionAsString(Throwable e)
     {
         if(userInfoProvider.isSystemDeveloper())
         {
@@ -94,13 +98,20 @@ public class JsonApiResponseHelper
 
     public ErrorModel getErrorModel(Be5Exception e)
     {
-        return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e), exceptionAsString(e), null);
+        return getErrorModel(e, "", null);
     }
 
     public ErrorModel getErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
     {
-        return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e) + additionalMessage,
-                exceptionAsString(e), links);
+        if(userInfoProvider.isSystemDeveloper())
+        {
+            return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e) + additionalMessage,
+                    exceptionAsString(e), links);
+        }
+        else
+        {
+            return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), links);
+        }
     }
 
     public Object getDefaultMeta(Request request)

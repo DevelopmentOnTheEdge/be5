@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.serialization.ModuleLoader2;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
-import com.developmentontheedge.be5.web.SessionConstants;
+import com.developmentontheedge.be5.server.SessionConstants;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
