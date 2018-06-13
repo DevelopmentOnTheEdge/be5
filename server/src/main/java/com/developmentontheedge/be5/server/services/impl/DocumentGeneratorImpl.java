@@ -108,7 +108,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
 //    }
 
     @Override
-    public JsonApiModel getStaticPage(String title, String content, String url)
+    public JsonApiModel createStaticPage(String title, String content, String url)
     {
         return JsonApiModel.data(
                 new ResourceData(
