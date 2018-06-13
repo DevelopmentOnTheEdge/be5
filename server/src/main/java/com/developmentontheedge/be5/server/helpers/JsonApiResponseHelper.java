@@ -93,7 +93,7 @@ public class JsonApiResponseHelper
 
     public ErrorModel getErrorModel(Be5Exception e)
     {
-        return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e), exceptionAsString(e), null);
+        return getErrorModel(e, "", null);
     }
 
     public ErrorModel getErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
