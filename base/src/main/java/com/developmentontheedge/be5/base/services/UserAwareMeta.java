@@ -78,4 +78,5 @@ public interface UserAwareMeta
      */
     Operation getOperation(String entityName, String queryName, String name);
 
+    String getStaticPageContent(String name);
 }
