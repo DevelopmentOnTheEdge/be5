@@ -421,11 +421,19 @@ public class MetaImpl implements Meta
     {
         BeModelElement scheme = entity.getAvailableElement("Scheme");
         if(scheme == null) return new HashMap<>();
-        BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
 
-        return StreamSupport.stream(columns.spliterator(), false).collect(
-                Utils.toLinkedMap(ColumnDef::getName, Function.identity())
-        );
+        if(scheme instanceof TableDef)
+        {
+            BeCaseInsensitiveCollection<ColumnDef> columns = (BeCaseInsensitiveCollection<ColumnDef>) ((TableDef) scheme).get("Columns");
+
+            return StreamSupport.stream(columns.spliterator(), false).collect(
+                    Utils.toLinkedMap(ColumnDef::getName, Function.identity())
+            );
+        }
+        else
+        {
+            return Collections.emptyMap();
+        }
     }
 
     @Override
