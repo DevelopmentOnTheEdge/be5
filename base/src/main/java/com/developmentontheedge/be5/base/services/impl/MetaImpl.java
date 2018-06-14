@@ -258,7 +258,10 @@ public class MetaImpl implements Meta
 
         if(locale == null || !languages.contains(locale.getLanguage()))
         {
-            return new Locale( languages.get(0) );
+            if(languages.size() > 0)
+                return new Locale( languages.get(0) );
+            else
+                return Locale.US;
         }
         else
         {
