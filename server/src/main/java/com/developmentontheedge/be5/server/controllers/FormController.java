@@ -17,6 +17,7 @@ import com.google.inject.Stage;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
@@ -84,6 +85,9 @@ public class FormController extends ApiControllerSupport
         catch(Be5Exception e)
         {
             String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
+
+            log.log(Level.SEVERE, "Error in operation: " + url + ", on " + requestSubUrl, e);
+
             responseHelper.sendErrorAsJson(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)), req);
         }
     }

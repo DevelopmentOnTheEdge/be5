@@ -169,7 +169,7 @@ public class Be5Exception extends RuntimeException
         return HtmlUtils.escapeHTML(out.toString());
     }
 
-    private static String getFullStackTraceLine(StackTraceElement e)
+    public static String getFullStackTraceLine(StackTraceElement e)
     {
         return e.getClassName() + "." + e.getMethodName()
                 + "(" + e.getFileName() + ":" + e.getLineNumber() + ")";
