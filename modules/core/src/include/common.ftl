@@ -2,7 +2,15 @@
 
 <#macro _sqlMacro><#assign nested><#nested></#assign>${project.addSQLMacro(nested)}</#macro>
 
-<#-- Macros for using in custom scripts -->
+<#macro _copyQuery name>${entity.getQueries().get(name).getQueryCompiled().validate()}</#macro>
+
+<#macro _copySelectionQuery><@_copyQuery "*** Selection view ***"/></#macro>
+
+<#macro _copyAllRecordsQuery><@_copyQuery "All records"/></#macro>
+
+<#macro _bold><#assign nested><#nested></#assign>${concat('<b>'?str, nested, '</b>'?str)}</#macro>
+
+<#macro _italic><#assign nested><#nested></#assign>${concat('<i>'?str, nested, '</i>'?str)}</#macro>
 
 <#macro _systemSetting category key value>
 DELETE FROM systemSettings WHERE section_name = ${category?str} AND setting_name = ${key?str};
