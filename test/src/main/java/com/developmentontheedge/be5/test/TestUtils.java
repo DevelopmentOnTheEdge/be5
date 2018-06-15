@@ -66,8 +66,9 @@ public abstract class TestUtils extends BaseTestUtils
     public ShowCreatedOperations showCreatedOperations = new ShowCreatedOperations();
 
     @Inject private OperationService operationService;
-    @Inject private Meta meta;
     @Inject private OperationExecutor operationExecutor;
+
+    @Inject protected Meta meta;
     @Inject protected UserAwareMeta userAwareMeta;
     @Inject protected DatabaseModel database;
     @Inject protected DbService db;

@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.helpers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
+import com.developmentontheedge.be5.base.services.UserAwareMeta;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HtmlUtils;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
@@ -31,13 +32,16 @@ public class JsonApiResponseHelper
     private final UserInfoProvider userInfoProvider;
     private final GroovyOperationLoader groovyOperationLoader;
     private final Provider<Response> responseProvider;
+    private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public JsonApiResponseHelper(UserInfoProvider userInfoProvider, GroovyOperationLoader groovyOperationLoader, Provider<Response> responseProvider)
+    public JsonApiResponseHelper(UserInfoProvider userInfoProvider, GroovyOperationLoader groovyOperationLoader,
+                                 Provider<Response> responseProvider, UserAwareMeta userAwareMeta)
     {
         this.userInfoProvider = userInfoProvider;
         this.groovyOperationLoader = groovyOperationLoader;
         this.responseProvider = responseProvider;
+        this.userAwareMeta = userAwareMeta;
     }
 
     public void sendAsJson(JsonApiModel jsonApiModel)
@@ -114,7 +118,7 @@ public class JsonApiResponseHelper
         {
             return new ErrorModel(
                     e.getHttpStatusCode(),
-                    e.getMessage(),
+                    userAwareMeta.getLocalizedBe5ErrorMessage(e),
                     Be5Exception.getMessage(e) + getErrorCodeLine(e),
                     exceptionAsString(e),
                     links
@@ -122,7 +126,7 @@ public class JsonApiResponseHelper
         }
         else
         {
-            return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), links);
+            return new ErrorModel(e.getHttpStatusCode(), userAwareMeta.getLocalizedBe5ErrorMessage(e), links);
         }
     }
 

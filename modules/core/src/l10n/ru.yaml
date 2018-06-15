@@ -11,8 +11,10 @@ ru:
     - topics: exception
       entries:
       - 'Internal error occurred: $1': 'Произошла внутренняя ошибка: $1'
+      - 'Internal error occurred during operation: $1.$2': 'Произошла внутренняя ошибка в операции: $1.$2'
+      - 'Internal error occurred during query: $1.$2': 'Произошла внутренняя ошибка в представлении: $1.$2'
       - 'Entity not found: $1': 'Сущность не найдена: $1'
-      - 'Access denied': Доступ запрещен
+      - 'Access denied. $1': 'Доступ запрещен. $1'
       - Error in operation: Ошибка в операции
       - Incorrect username or password.: Неправильно указано имя пользователя или пароль.
     - topics: validation
