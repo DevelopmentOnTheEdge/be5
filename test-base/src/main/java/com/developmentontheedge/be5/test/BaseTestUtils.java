@@ -166,19 +166,7 @@ public abstract class BaseTestUtils
         {
             log.info(JULLogger.infoBlock("Execute be5:create-db"));
 
-            BeConnectionProfile profile = project.getConnectionProfile();
-
-            SimpleConnector connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
-                    profile.getConnectionUrl(), profile.getUsername(), profile.getPassword());
-
-            try
-            {
-                connector.executeUpdate("DROP ALL OBJECTS");
-            }
-            catch(SQLException e)
-            {
-                e.printStackTrace();
-            }
+            dropAllTables(project.getConnectionProfile());
 
             new AppDb()
                     .setLogger(new JULLogger(log))
@@ -188,6 +176,21 @@ public abstract class BaseTestUtils
         else
         {
             log.warning("Fail set '"+ profileForIntegrationTests +"' profile, maybe DatabaseService already initialized." );
+        }
+    }
+
+    private static void dropAllTables(BeConnectionProfile profile)
+    {
+        SimpleConnector connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
+                profile.getConnectionUrl(), profile.getUsername(), profile.getPassword());
+
+        try
+        {
+            connector.executeUpdate("DROP ALL OBJECTS");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
         }
     }
 
