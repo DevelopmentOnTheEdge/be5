@@ -62,7 +62,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
             validator.checkErrorAndCast(dps)
         }catch (RuntimeException e){
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
-            assertEquals("Value is not contained in tags", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
+            assertEquals("Value is not contained in tags: 3", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
             throw e
         }
 
@@ -97,7 +97,7 @@ class ValidatorServiceValueInTagsTest extends OperationsSqlMockProjectTest
             validator.checkErrorAndCast(dps)
         }catch (RuntimeException e){
             assertEquals("error", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('status'))
-            assertEquals("Value is not contained in tags", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
+            assertEquals("Value is not contained in tags: 3", JsonFactory.dpsMeta(dps).getJsonObject("/test").getString('message'))
             throw e
         }
     }
