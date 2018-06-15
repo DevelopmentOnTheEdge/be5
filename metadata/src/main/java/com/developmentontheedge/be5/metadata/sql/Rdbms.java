@@ -32,32 +32,32 @@ import java.util.logging.Logger;
 
 public enum Rdbms
 {
-    DB2( DbmsType.DB2, 
-            new Db2MacroProcessorStrategy(), 
-            new Db2TypeManager(), 
-            new Db2SchemaReader(), 
-            "org.eclipse.datatools.enablement.ibm.db2.luw.connectionProfile", 
+    DB2( DbmsType.DB2,
+            new Db2MacroProcessorStrategy(),
+            new Db2TypeManager(),
+            new Db2SchemaReader(),
+            "org.eclipse.datatools.enablement.ibm.db2.luw.connectionProfile",
             "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97" ),
-    MYSQL( DbmsType.MYSQL, 
-            new MySqlMacroProcessorStrategy(), 
-            new MySqlTypeManager(), 
-            new MySqlSchemaReader(), 
+    MYSQL( DbmsType.MYSQL,
+            new MySqlMacroProcessorStrategy(),
+            new MySqlTypeManager(),
+            new MySqlSchemaReader(),
             "", "com.mysql.jdbc.Driver", "6" ),
-    ORACLE( DbmsType.ORACLE, 
-            new OracleMacroProcessorStrategy(), 
-            new OracleTypeManager(), 
-            new OracleSchemaReader(), 
+    ORACLE( DbmsType.ORACLE,
+            new OracleMacroProcessorStrategy(),
+            new OracleTypeManager(),
+            new OracleSchemaReader(),
             "", "oracle.jdbc.driver.OracleDriver", "11" ),
-    SQLSERVER( DbmsType.SQLSERVER, 
+    SQLSERVER( DbmsType.SQLSERVER,
             new SqlServerMacroProcessorStrategy(),
-            new SqlServerTypeManager(), 
-            new SqlServerSchemaReader(), 
+            new SqlServerTypeManager(),
+            new SqlServerSchemaReader(),
             "org.eclipse.datatools.enablement.msft.sqlserver.connectionProfile",
             "DriverDefn.org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate.Microsoft SQL Server 2008 JDBC Driver", "2008"),
-    POSTGRESQL( DbmsType.POSTGRESQL, 
-            new PostgresMacroProcessorStrategy(), 
-            new PostgresTypeManager(), 
-            new PostgresSchemaReader(), 
+    POSTGRESQL( DbmsType.POSTGRESQL,
+            new PostgresMacroProcessorStrategy(),
+            new PostgresTypeManager(),
+            new PostgresSchemaReader(),
             "", "org.postgresql.Driver", "91" ),
     BESQL(DbmsType.BESQL,
             new BeSQLMacroProcessorStrategy(),
@@ -73,7 +73,7 @@ public enum Rdbms
 
     public static Rdbms getRdbms(final String url)
     {
-        String realUrl = url.startsWith( "jdbc:" )?url.substring( "jdbc:".length() ):url; 
+        String realUrl = url.startsWith( "jdbc:" )?url.substring( "jdbc:".length() ):url;
         if(realUrl.startsWith( "mysql:" ))
         {
             return Rdbms.MYSQL;
@@ -126,7 +126,7 @@ public enum Rdbms
     ///////////////////////////////////////////////////////////////////
     // RDBMS implementation
     //
-    
+
     private final DbmsType type;
     private final IMacroProcessorStrategy macroProcessor;
     private final DbmsTypeManager typeManager;
@@ -134,7 +134,7 @@ public enum Rdbms
     private final String providerId;
     private final String driverDefinition;
     private final String version;
-    
+
     private Rdbms( DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version )
     {
         this.type = type;
@@ -145,12 +145,12 @@ public enum Rdbms
         this.driverDefinition = driverDefinition;
         this.version = version;
     }
-    
+
     public String getName()
     {
         return type.getName();
     }
-    
+
     public String getAntName()
     {
         return type.getName().equals( "postgres" ) ? "postgresql" : type.getName();
@@ -175,12 +175,12 @@ public enum Rdbms
     {
         return providerId;
     }
-    
+
     public String getDriverDefinition()
     {
         return driverDefinition;
     }
-    
+
     public DbmsType getType()
     {
         return type;
@@ -221,9 +221,18 @@ public enum Rdbms
                     url.append( ':' );
                 else
                     url.append( '?' );
+
+                boolean first = true;
                 for(Entry<String, String> entry : properties.entrySet())
                 {
-                    url.append( entry.getKey() ).append( '=' ).append( entry.getValue() ).append( ';' );
+                    if(!first){
+                        if(this == MYSQL)
+                            url.append( '&' );
+                        else
+                            url.append( ';' );
+                    }
+                    first = false;
+                    url.append( entry.getKey() ).append( '=' ).append( entry.getValue() );
                 }
             }
             return url.toString();
