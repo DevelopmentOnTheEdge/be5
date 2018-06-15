@@ -150,18 +150,29 @@ public class FreemarkerTest extends TestCase
         dataModel.put( "project", project );
         Entity entity = new Entity( "myTable", project.getApplication(), EntityType.TABLE );
         DataElementUtils.saveQuiet( entity );
-//TODO        Query query = new Query( "All records", entity );
-//        DataElementUtils.saveQuiet( query );
-//        query.setQuery( "SELECT * FROM ${entity.getName()}" );
-//        Query query2 = new Query("Copy", entity);
-//        DataElementUtils.saveQuiet( query2 );
-//        query2.setQuery( "<@_copyAllRecordsQuery/>" );
-//        assertEquals("SELECT * FROM myTable", query2.getQueryCompiled().validate());
-//
-//        query2.setQuery( "SELECT <@_bold>name</@_bold> FROM myTable" );
-//        assertEquals("SELECT CONCAT( '<b>',name,'</b>' ) FROM myTable", query2.getQueryCompiled().validate());
-//        query2.setQuery( "SELECT <@_bold><@_italic>name</@></@> FROM myTable" );
-//        assertEquals("SELECT CONCAT( '<b>',CONCAT( '<i>',name,'</i>' ),'</b>' ) FROM myTable", query2.getQueryCompiled().validate());
+
+        FreemarkerScript script = new FreemarkerScript( FreemarkerCatalog.MAIN_MACRO_LIBRARY, project.getMacroCollection() );
+        DataElementUtils.saveQuiet( script );
+        script.setSource(
+                "<#macro _copyQuery name>${entity.getQueries().get(name).getQueryCompiled().validate()}</#macro>" +
+                "<#macro _copyAllRecordsQuery><@_copyQuery \"All records\"/></#macro>" +
+                "<#macro _bold><#assign nested><#nested></#assign>${concat('<b>'?str, nested, '</b>'?str)}</#macro>\n" +
+                "<#macro _italic><#assign nested><#nested></#assign>${concat('<i>'?str, nested, '</i>'?str)}</#macro>"
+        );
+        Query query = new Query( "All records", entity );
+        DataElementUtils.saveQuiet( query );
+        query.setQuery( "SELECT * FROM ${entity.getName()}" );
+        Query query2 = new Query("Copy", entity);
+        DataElementUtils.saveQuiet( query2 );
+
+        query2.setQuery( "<@_copyAllRecordsQuery/>" );
+        assertEquals("SELECT * FROM myTable", query2.getQueryCompiled().validate());
+
+        query2.setQuery( "SELECT <@_bold>name</@_bold> FROM myTable" );
+        assertEquals("SELECT CONCAT( '<b>',name,'</b>' ) FROM myTable", query2.getQueryCompiled().validate());
+
+        query2.setQuery( "SELECT <@_bold><@_italic>name</@></@> FROM myTable" );
+        assertEquals("SELECT CONCAT( '<b>',CONCAT( '<i>',name,'</i>' ),'</b>' ) FROM myTable", query2.getQueryCompiled().validate());
     }
     
     public void testProjectMacros() throws ProjectElementException

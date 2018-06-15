@@ -1,7 +1,8 @@
-package com.developmentontheedge.sql.format;
+package com.developmentontheedge.sql.format.dbms;
 
 
-public enum DateFormat {
+public enum DateFormat
+{
     FORMAT_DATE("'YYYY-MM-DD'", "'%Y-%m-%d'"), 
     FORMAT_DATETIME("'YYYY-MM-DD HH24:MI:SS'", "'%Y-%m-%d %H:%i:%S'"), 
     FORMAT_DATE_RUS("'DD.MM.YYYY'", "'%d.%m.%Y'"), 

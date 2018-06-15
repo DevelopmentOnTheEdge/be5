@@ -16,6 +16,7 @@ public class AppDbMojo extends Be5Mojo
                 .setConnectionPassword(connectionPassword)
                 .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .execute();
     }
 

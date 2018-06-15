@@ -25,7 +25,9 @@ public class GenerateContextMojo extends Be5Mojo
                 .setConnectionPassword(connectionPassword)
                 .setGenerateContextPath(generateContextPath)
                 .setSkipGenerateContextPath(skipGenerateContextPath)
+                .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .execute();
     }
 }

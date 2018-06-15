@@ -21,6 +21,7 @@ public class AppToolsMojo extends Be5Mojo
                 .setConnectionPassword(connectionPassword)
                 .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .setInputStream(inputStream)
                 .execute();
     }

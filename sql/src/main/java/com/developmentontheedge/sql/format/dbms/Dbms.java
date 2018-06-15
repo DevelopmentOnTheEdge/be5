@@ -1,4 +1,4 @@
-package com.developmentontheedge.sql.format;
+package com.developmentontheedge.sql.format.dbms;
 
 public enum Dbms
 {

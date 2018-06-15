@@ -47,16 +47,22 @@ public class TableModelServiceImpl implements TableModelService
     @Override
     public TableModel getTableModel(Query query, Map<String, ?> parameters)
     {
-        switch (query.getType())
+        try{
+            switch (query.getType())
+            {
+                case D1:
+                case D1_UNKNOWN:
+                    return getSqlTableModel(query, (Map<String, Object>) parameters);
+                case JAVA:
+                case GROOVY:
+                    return getFromTableBuilder(query, (Map<String, Object>) parameters);
+                default:
+                    throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
+            }
+        }
+        catch(Throwable e)
         {
-            case D1:
-            case D1_UNKNOWN:
-                return getSqlTableModel(query, (Map<String, Object>) parameters);
-            case JAVA:
-            case GROOVY:
-                return getFromTableBuilder(query, (Map<String, Object>) parameters);
-            default:
-                throw Be5Exception.internal("Unknown action type '" + query.getType() + "'");
+            throw Be5Exception.internalInQuery(query, e);
         }
     }
 

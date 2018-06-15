@@ -1,7 +1,7 @@
 package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.dbms.Dbms;
 
 import javax.sql.DataSource;
 

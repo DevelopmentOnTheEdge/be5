@@ -1,4 +1,4 @@
-package com.developmentontheedge.sql.format;
+package com.developmentontheedge.sql.format.dbms;
 
 import com.developmentontheedge.sql.model.AstBetweenPredicate;
 import com.developmentontheedge.sql.model.AstCase;

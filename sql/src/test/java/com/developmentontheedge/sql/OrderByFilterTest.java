@@ -1,8 +1,8 @@
 package com.developmentontheedge.sql;
 
-import com.developmentontheedge.sql.format.Context;
-import com.developmentontheedge.sql.format.Dbms;
-import com.developmentontheedge.sql.format.Formatter;
+import com.developmentontheedge.sql.format.dbms.Context;
+import com.developmentontheedge.sql.format.dbms.Dbms;
+import com.developmentontheedge.sql.format.dbms.Formatter;
 import com.developmentontheedge.sql.format.OrderByFilter;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.DefaultParserContext;

@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -717,6 +718,35 @@ public class Utils
                     throw new IllegalStateException(String.format("Duplicate key %s", u));
                 },
                 LinkedHashMap::new);
+    }
+
+    /**
+     * Generates random password, containing 8 symbols using english alphabet and numbers.
+     *
+     * @param userName user name
+     * @return generated password
+     */
+    public static String newRandomPassword( String userName )
+    {
+        return newRandomPassword( userName, "abcdefghijklmnopqrstuvwxyz0123456789" );
+    }
+
+    /**
+     * Generates random password, containing 8 symbols from specified symbols array.
+     *
+     * @param userName user name
+     * @param pool symbols to use in password
+     * @return generated password
+     */
+    public static String newRandomPassword( String userName, String pool )
+    {
+        StringBuffer pass = new StringBuffer();
+        Random random = userName == null ? new Random() : new Random( System.currentTimeMillis() + userName.hashCode() );
+        for( int i = 0; i < 8; i++ )
+        {
+            pass.append( pool.charAt( random.nextInt( pool.length() ) ) );
+        }
+        return pass.toString();
     }
 
 }

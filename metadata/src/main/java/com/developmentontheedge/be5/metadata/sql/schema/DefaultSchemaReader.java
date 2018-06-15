@@ -20,14 +20,8 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
         try
         {
             Connection connection = connector.getConnection();
-            try
-            {
-                return connection.getMetaData().getUserName();
-            }
-            finally
-            {
-                connector.releaseConnection( connection );
-            }
+
+            return connection.getMetaData().getUserName();
         }
         catch(SQLException ex)
         {
@@ -55,7 +49,6 @@ public abstract class DefaultSchemaReader implements DbmsSchemaReader
         finally
         {
             connector.close( rs );
-            connector.releaseConnection( connection );
         }
         return result;
     }

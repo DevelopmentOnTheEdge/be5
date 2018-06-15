@@ -24,6 +24,7 @@ public class AppDataMojo extends Be5Mojo
                 .setConnectionPassword(connectionPassword)
                 .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .setScript(script)
                 .setIgnoreMissing(ignoreMissing)
                 .execute();

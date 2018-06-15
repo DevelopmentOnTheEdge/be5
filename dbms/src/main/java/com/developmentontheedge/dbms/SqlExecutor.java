@@ -525,10 +525,6 @@ public class SqlExecutor
                 }
                 return null;
             }
-            finally
-            {
-                connector.releaseConnection( conn );
-            }
         }
         catch( Exception e )
         {

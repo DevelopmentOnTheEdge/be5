@@ -1,11 +1,11 @@
 package com.developmentontheedge.sql;
 
 import com.developmentontheedge.sql.format.BasicQueryContext;
-import com.developmentontheedge.sql.format.Context;
+import com.developmentontheedge.sql.format.dbms.Context;
 import com.developmentontheedge.sql.format.ContextApplier;
 import com.developmentontheedge.sql.format.CountApplier;
-import com.developmentontheedge.sql.format.Dbms;
-import com.developmentontheedge.sql.format.Formatter;
+import com.developmentontheedge.sql.format.dbms.Dbms;
+import com.developmentontheedge.sql.format.dbms.Formatter;
 import com.developmentontheedge.sql.format.LimitsApplier;
 import com.developmentontheedge.sql.format.MacroExpander;
 import com.developmentontheedge.sql.model.AstStart;

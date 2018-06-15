@@ -29,6 +29,7 @@ public class AppSyncMojo extends Be5Mojo
                 .setConnectionPassword(connectionPassword)
                 .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .setForceUpdate(forceUpdate)
                 .execute();
     }

@@ -8,7 +8,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.sql.DatabaseUtils;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
-import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.dbms.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.inject.Inject;

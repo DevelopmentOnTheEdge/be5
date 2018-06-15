@@ -57,6 +57,11 @@ public class Be5Exception extends RuntimeException
         return Be5ErrorCode.ACCESS_DENIED.exception();
     }
 
+    public static Be5Exception accessDenied(String info)
+    {
+        return Be5ErrorCode.ACCESS_DENIED.exception(info);
+    }
+
     public static Be5Exception accessDeniedToOperation(String entityName, String operationName)
     {
         return Be5ErrorCode.ACCESS_DENIED_TO_OPERATION.exception(entityName, operationName);
@@ -164,7 +169,7 @@ public class Be5Exception extends RuntimeException
         return HtmlUtils.escapeHTML(out.toString());
     }
 
-    private static String getFullStackTraceLine(StackTraceElement e)
+    public static String getFullStackTraceLine(StackTraceElement e)
     {
         return e.getClassName() + "." + e.getMethodName()
                 + "(" + e.getFileName() + ":" + e.getLineNumber() + ")";

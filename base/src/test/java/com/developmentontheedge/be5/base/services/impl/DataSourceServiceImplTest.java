@@ -2,7 +2,7 @@ package com.developmentontheedge.be5.base.services.impl;
 
 import com.developmentontheedge.be5.base.BaseTest;
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.dbms.Dbms;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.Test;
 

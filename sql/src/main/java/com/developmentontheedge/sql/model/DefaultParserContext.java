@@ -1,7 +1,7 @@
 package com.developmentontheedge.sql.model;
 
-import com.developmentontheedge.sql.format.DateFormat;
-import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.dbms.DateFormat;
+import com.developmentontheedge.sql.format.dbms.Dbms;
 import one.util.streamex.StreamEx;
 
 import java.util.HashMap;

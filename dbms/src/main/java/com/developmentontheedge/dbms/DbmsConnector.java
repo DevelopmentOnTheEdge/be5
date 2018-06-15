@@ -20,6 +20,6 @@ public interface DbmsConnector
 
     Connection getConnection() throws SQLException;
 
-    void releaseConnection( Connection conn );
+    //void releaseConnection( Connection conn );
 
 }
