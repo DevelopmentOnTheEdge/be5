@@ -11,6 +11,7 @@ import com.developmentontheedge.be5.operation.model.Operation;
 import com.developmentontheedge.be5.operation.model.OperationContext;
 import com.developmentontheedge.be5.operation.model.OperationInfo;
 import com.developmentontheedge.be5.operation.model.OperationResult;
+import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
@@ -198,7 +199,12 @@ public abstract class TestUtils extends BaseTestUtils
 
     protected Either<Object, OperationResult> generateOperation(Operation operation, Map<String, Object> presetValues)
     {
-        return operationService.generate(operation, replaceEmptyStringToNull(presetValues));
+        Either<Object, OperationResult> resultEither = operationService.generate(operation, replaceEmptyStringToNull(presetValues));
+        if(operation.getStatus() == OperationStatus.ERROR)
+        {
+            throw (RuntimeException)operation.getResult().getDetails();
+        }
+        return resultEither;
     }
 
     protected Either<Object, OperationResult> executeOperation(String entityName, String queryName, String operationName,
@@ -231,7 +237,12 @@ public abstract class TestUtils extends BaseTestUtils
 
     protected Either<Object, OperationResult> executeOperation(Operation operation, Map<String, Object> presetValues)
     {
-        return operationService.execute(operation, replaceEmptyStringToNull(presetValues));
+        Either<Object, OperationResult> resultEither = operationService.execute(operation, replaceEmptyStringToNull(presetValues));
+        if(operation.getStatus() == OperationStatus.ERROR)
+        {
+            throw (RuntimeException)operation.getResult().getDetails();
+        }
+        return resultEither;
     }
 
     protected Operation createOperation(String entityName, String operationName, OperationContext context)
