@@ -71,12 +71,7 @@ public class AppDb extends ScriptSupport<AppDb>
         }
         catch ( ProjectElementException | FreemarkerSqlException e )
         {
-            if(debug) {
-                e.printStackTrace();
-                throw new ScriptException("Setup db error", e);
-            }
-            
-            throw new ScriptException(e.getMessage());
+            throw new ScriptException("Setup db error", e);
         }
         catch(Exception e)
         {
