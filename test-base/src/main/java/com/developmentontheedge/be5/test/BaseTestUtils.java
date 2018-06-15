@@ -10,8 +10,10 @@ import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DbService;
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.scripts.AppDb;
+import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import com.developmentontheedge.be5.metadata.util.JULLogger;
 import com.developmentontheedge.be5.test.mocks.Be5CachesForTest;
 import com.developmentontheedge.be5.test.mocks.ConnectionServiceMock;
@@ -21,6 +23,7 @@ import com.developmentontheedge.be5.testbase.StaticUserInfoProvider;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySet;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
+import com.developmentontheedge.dbms.SimpleConnector;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -162,6 +165,21 @@ public abstract class BaseTestUtils
                 profileForIntegrationTests.equals(project.getConnectionProfileName()))
         {
             log.info(JULLogger.infoBlock("Execute be5:create-db"));
+
+            BeConnectionProfile profile = project.getConnectionProfile();
+
+            SimpleConnector connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
+                    profile.getConnectionUrl(), profile.getUsername(), profile.getPassword());
+
+            try
+            {
+                connector.executeUpdate("DROP ALL OBJECTS");
+            }
+            catch(SQLException e)
+            {
+                e.printStackTrace();
+            }
+
             new AppDb()
                     .setLogger(new JULLogger(log))
                     .setBe5Project(project)
