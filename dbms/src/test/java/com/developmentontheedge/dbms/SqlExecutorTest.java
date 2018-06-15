@@ -35,7 +35,7 @@ public class SqlExecutorTest
         psOut = new PrintStream( out, true, "UTF-8" );
 
         connector = new SimpleConnector(DbmsType.H2, databaseRule.getConnectionJdbcUrl(),
-                databaseRule.getConnection());
+                databaseRule.getDataSource());
 
         sqlExecutor = new SqlExecutor(connector, psOut, SqlExecutor.getDefaultPropertiesFile());
 
