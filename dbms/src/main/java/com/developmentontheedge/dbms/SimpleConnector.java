@@ -1,9 +1,7 @@
 package com.developmentontheedge.dbms;
 
-import org.apache.commons.dbcp.BasicDataSource;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,36 +14,27 @@ public class SimpleConnector implements DbmsConnector
 
     private final String connectionUrl;
     private final DbmsType type;
-    private final DataSource dataSource;
+    private final Connection connection;
 
     public SimpleConnector(DbmsType type, String connectionUrl, String username, String password)
     {
-        BasicDataSource bds = new BasicDataSource();
-
-        //bds.setDriverClassName(profile.getDriverDefinition());
-        bds.setUrl(connectionUrl);
-        bds.setUsername(username);
-        bds.setPassword(password);
-
         this.type = type;
         this.connectionUrl = connectionUrl;
-
-        dataSource = bds;
-//        try
-//        {
-//            this.connection = DriverManager.getConnection( connectionUrl, username, password );
-//        }
-//        catch (SQLException e)
-//        {
-//            throw propagate(e);
-//        }
+        try
+        {
+            this.connection = DriverManager.getConnection( connectionUrl, username, password );
+        }
+        catch (SQLException e)
+        {
+            throw propagate(e);
+        }
     }
 
-    public SimpleConnector(DbmsType type, String connectionUrl, DataSource dataSource)
+    public SimpleConnector(DbmsType type, String connectionUrl, Connection connection)
     {
         this.type = type;
         this.connectionUrl = connectionUrl;
-        this.dataSource = dataSource;
+        this.connection = connection;
     }
 
     @Override
@@ -63,7 +52,7 @@ public class SimpleConnector implements DbmsConnector
     @Override
     public int executeUpdate( String query ) throws SQLException
     {
-        try(Statement st = getConnection().createStatement())
+        try(Statement st = connection.createStatement())
         {
             return st.executeUpdate( query );
         }
@@ -72,15 +61,15 @@ public class SimpleConnector implements DbmsConnector
     @Override
     public ResultSet executeQuery( String sql ) throws SQLException
     {
-        return getConnection().createStatement().executeQuery(sql);
+        return connection.createStatement().executeQuery( sql );
     }
 
     @Override
     public String executeInsert( String sql ) throws SQLException
     {
-        try(Statement st = getConnection().createStatement())
+        try(Statement st = connection.createStatement())
         {
-            st.execute(sql);
+            st.execute( sql );
         }
         // TODO support return of insert key
         return null;
@@ -119,7 +108,7 @@ public class SimpleConnector implements DbmsConnector
     @Override
     public Connection getConnection() throws SQLException
     {
-        return dataSource.getConnection();
+        return connection;
     }
 
     private void returnConnection(Connection conn)

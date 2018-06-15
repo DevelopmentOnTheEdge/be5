@@ -25,7 +25,7 @@ public class SimpleConnectorTest
     public void setUp() throws Exception
     {
         connector = new SimpleConnector(DbmsType.H2, databaseRule.getConnectionJdbcUrl(),
-                databaseRule.getDataSource());
+                databaseRule.getConnection());
     }
 
     @Test
