@@ -111,33 +111,33 @@ public class SimpleConnector implements DbmsConnector
         return connection;
     }
 
-    private void returnConnection(Connection conn)
-    {
-        try
-        {
-            if(!conn.isClosed())
-            {
-                if(!conn.getAutoCommit())
-                    conn.setAutoCommit(true);
-                conn.close();
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void releaseConnection( Connection conn )
-    {
-        if ( null == conn )
-        {
-            return;
-        }
-
-        returnConnection(conn);
-    }
+//    private void returnConnection(Connection conn)
+//    {
+//        try
+//        {
+//            if(!conn.isClosed())
+//            {
+//                if(!conn.getAutoCommit())
+//                    conn.setAutoCommit(true);
+//                conn.close();
+//            }
+//        }
+//        catch (SQLException e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    @Override
+//    public void releaseConnection( Connection conn )
+//    {
+//        if ( null == conn )
+//        {
+//            return;
+//        }
+//
+//        returnConnection(conn);
+//    }
 
     private RuntimeException propagate(SQLException e) {
         log.log(Level.SEVERE, e.getMessage(), e);

@@ -67,11 +67,11 @@ public class FreemarkerSqlHandlerTest
         {
             throw new UnsupportedOperationException();
         }
-
-        @Override
-        public void releaseConnection( Connection conn )
-        {
-        }
+//
+//        @Override
+//        public void releaseConnection( Connection conn )
+//        {
+//        }
     }
 
     @Test
