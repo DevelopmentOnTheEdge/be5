@@ -1,6 +1,6 @@
 package com.developmentontheedge.sql.model;
 
-import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.dbms.Dbms;
 
 import java.util.Arrays;
 import java.util.Collections;

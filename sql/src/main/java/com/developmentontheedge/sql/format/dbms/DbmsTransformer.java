@@ -1,4 +1,4 @@
-package com.developmentontheedge.sql.format;
+package com.developmentontheedge.sql.format.dbms;
 
 import com.developmentontheedge.sql.model.AstQuery;
 import com.developmentontheedge.sql.model.AstStart;
@@ -11,10 +11,9 @@ import com.developmentontheedge.sql.model.ParserContext;
  */
 public interface DbmsTransformer
 {
-    public void transformAst(AstStart start);
-    public void transformQuery(AstQuery start);
+    void transformAst(AstStart start);
+    void transformQuery(AstQuery start);
 
-    public ParserContext getParserContext();
-    public void setParserContext(ParserContext parserContext);
-
+    ParserContext getParserContext();
+    void setParserContext(ParserContext parserContext);
 }

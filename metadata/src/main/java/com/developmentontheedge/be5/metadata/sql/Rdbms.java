@@ -23,7 +23,7 @@ import com.developmentontheedge.be5.metadata.sql.type.PostgresTypeManager;
 import com.developmentontheedge.be5.metadata.sql.type.SqlServerTypeManager;
 import com.developmentontheedge.dbms.DbmsConnector;
 import com.developmentontheedge.dbms.DbmsType;
-import com.developmentontheedge.sql.format.Dbms;
+import com.developmentontheedge.sql.format.dbms.Dbms;
 
 import java.util.Map;
 import java.util.Map.Entry;
