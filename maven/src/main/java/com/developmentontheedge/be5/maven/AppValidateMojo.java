@@ -12,28 +12,30 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class AppValidateMojo extends Be5Mojo
 {
     @Parameter (property = "BE5_RDBMS")
-    String rdbmsName;
+    private String rdbmsName;
 
     @Parameter (property = "BE5_SKIP_VALIDATION")
-    boolean skipValidation = false;
+    private boolean skipValidation = false;
 
     @Parameter (property = "BE5_CHECK_QUERY")
-    String queryPath;
+    private String queryPath;
 
     @Parameter (property = "BE5_CHECK_ROLES")
-    boolean checkRoles;
+    private boolean checkRoles;
 
     @Parameter (property = "BE5_CHECK_DDL")
-    String ddlPath;
+    private String ddlPath;
 
     @Parameter (property = "BE5_SAVE_PROJECT")
-    boolean saveProject;
+    private boolean saveProject;
 
     @Override
     public void execute()
     {
         new AppValidate()
+                .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .setBe5ProjectPath(projectPath.toPath())
                 .setCheckQueryPath(queryPath)
                 .setDdlPath(ddlPath)

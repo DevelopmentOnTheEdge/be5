@@ -22,7 +22,9 @@ public class GroovyDSLGeneratorMojo extends Be5Mojo
         new GroovyDSLGenerator()
                 .setBe5ProjectPath(projectPath.getPath())
                 .setProfileName(connectionProfileName)
+                .setLogPath(logPath)
                 .setLogger(logger)
+                .setDebug(debug)
                 .setFileName(fileName)
                 .execute();
     }

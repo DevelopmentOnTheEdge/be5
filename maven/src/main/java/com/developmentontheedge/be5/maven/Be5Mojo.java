@@ -16,13 +16,13 @@ public abstract class Be5Mojo extends AbstractMojo
     public File projectPath;
 
     @Parameter (property = "BE5_UNLOCK_PROTECTED_PROFILE")
-    boolean unlockProtectedProfile = false;
+    protected boolean unlockProtectedProfile = false;
 
     @Parameter (property = "BE5_DEBUG")
-    boolean debug = false;
+    protected boolean debug = false;
 
     @Parameter (property = "BE5_LOG_PATH")
-    File logPath = Paths.get("target/sql").toFile();
+    protected File logPath = Paths.get("target/sql").toFile();
 
     @Parameter (property = "BE5_PROFILE")
     public String connectionProfileName;

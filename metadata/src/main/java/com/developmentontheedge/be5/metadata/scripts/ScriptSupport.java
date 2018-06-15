@@ -279,4 +279,10 @@ public abstract class ScriptSupport<T>
         this.connectionPassword = connectionPassword;
         return me();
     }
+
+    public T setDebug(boolean debug)
+    {
+        this.debug = debug;
+        return me();
+    }
 }
