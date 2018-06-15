@@ -30,7 +30,7 @@ public class ErrorTitles
         TITLES.put(UNKNOWN_OPERATION, "Operation not found: $1.$2");
         TITLES.put(NOT_FOUND, "Element not found: $1");
 
-        TITLES.put(ACCESS_DENIED, "Access denied");
+        TITLES.put(ACCESS_DENIED, "Access denied. $1");
         TITLES.put(ACCESS_DENIED_TO_QUERY, "Access denied to query: $1.$2");
         TITLES.put(ACCESS_DENIED_TO_OPERATION, "Access denied to operation: $1.$2");
         TITLES.put(OPERATION_NOT_ASSIGNED_TO_QUERY, "Operation '$1.$3' not assigned to query: '$2'");

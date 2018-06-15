@@ -58,24 +58,24 @@ public class JsonApiResponseHelper
         responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e), getDefaultMeta(req)));
     }
 
-    public void sendErrorAsJson(ErrorModel error, Object meta)
+    public void sendErrorAsJson(ErrorModel error, Request req)
     {
-        responseProvider.get().sendAsJson(JsonApiModel.error(error, meta));
+        responseProvider.get().sendAsJson(JsonApiModel.error(error, getDefaultMeta(req)));
     }
 
-    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta));
-    }
+//    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta)
+//    {
+//        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta));
+//    }
 
-    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta, links));
-    }
+//    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
+//    {
+//        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta, links));
+//    }
 
     public void sendUnknownActionError(Request req)
     {
-        sendErrorAsJson( new ErrorModel("404", "Unknown component action."), getDefaultMeta(req));
+        sendErrorAsJson( Be5Exception.notFound("route" + req.getRequestUri()), req);
     }
 
     private String exceptionAsString(Throwable e)
@@ -98,13 +98,17 @@ public class JsonApiResponseHelper
 
     public ErrorModel getErrorModel(Be5Exception e)
     {
-        return getErrorModel(e, "", null);
+        return getErrorModel(e, null);
     }
 
-    public ErrorModel getErrorModel(Be5Exception e, String additionalMessage, Map<String, String> links)
+    public ErrorModel getErrorModel(Be5Exception e, Map<String, String> links)
     {
         if(userInfoProvider.isSystemDeveloper())
         {
+            String additionalMessage = "";
+
+            //todo additionalMessage = groovyRegister.getErrorCodeLine(e);
+
             return new ErrorModel(e.getHttpStatusCode(), e.getMessage(), Be5Exception.getMessage(e) + additionalMessage,
                     exceptionAsString(e), links);
         }

@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
+import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
 import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
@@ -14,8 +15,11 @@ import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Map;
 
+import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
@@ -79,7 +83,8 @@ public class FormController extends ApiControllerSupport
         }
         catch(Be5Exception e)
         {
-            responseHelper.sendErrorAsJson(e, req);
+            String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
+            responseHelper.sendErrorAsJson(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)), req);
         }
     }
 

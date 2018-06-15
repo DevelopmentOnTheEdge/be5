@@ -156,9 +156,9 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         else
         {
             responseHelper.sendErrorAsJson(
-                    responseHelper.getErrorModel(Be5Exception.accessDenied(), "Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required.",
+                    responseHelper.getErrorModel(Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
                             Collections.singletonMap(SELF_LINK, "queryBuilder")),
-                    responseHelper.getDefaultMeta(req)
+                    req
             );
         }
     }

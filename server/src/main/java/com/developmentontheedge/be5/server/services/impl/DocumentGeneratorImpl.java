@@ -247,7 +247,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
             log.log(Level.SEVERE, "Error in table" + url.toString(), e);
             return JsonApiModel.error(responseHelper.
-                    getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
+                    getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
     }
 
@@ -271,7 +271,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
             log.log(Level.SEVERE, "Error in table" + url.toString(), e);
             return JsonApiModel.error(responseHelper.
-                    getErrorModel(e, "", Collections.singletonMap(SELF_LINK, url.toString())), null);
+                    getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
     }
 

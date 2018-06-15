@@ -210,11 +210,7 @@ public class FormGeneratorImpl implements FormGenerator
     //@Override
     public ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
-        String additionalMessage = Be5Exception.getMessage(e);
-
-        //TODO if(userInfoProvider.isSystemDeveloper())message += groovyRegister.getErrorCodeLine(e);
-
-        return responseHelper.getErrorModel(Be5Exception.internal(e), additionalMessage,
+        return responseHelper.getErrorModel(Be5Exception.internal(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
