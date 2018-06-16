@@ -10,7 +10,6 @@ import java.util.Calendar;
 public class MonthlyDate extends java.sql.Date
 {
     final Calendar calendar = Calendar.getInstance();
-    boolean isNull;
 
     public static final MonthlyDate MAX_VALUE = new MonthlyDate( 2099, 12 );
     public static final MonthlyDate MIN_VALUE = new MonthlyDate( 1900, 1 );
@@ -153,11 +152,6 @@ public class MonthlyDate extends java.sql.Date
     public MonthlyDate getPrevMonth()
     {
         return decrement();
-    }
-
-    public boolean isNull()
-    {
-        return isNull;
     }
 
     public boolean lessThan( MonthlyDate MonthlyDate )
