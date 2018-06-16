@@ -431,7 +431,7 @@ public class DateUtils
         String []timeParts = time.split( ":" );
         int h = Integer.parseInt( timeParts[ 0 ] );
         int m = Integer.parseInt( timeParts[ 1 ] );
-        int s = Integer.parseInt( timeParts.length > 2 ? timeParts[ 3 ] : "0" );
+        int s = Integer.parseInt( timeParts.length > 2 ? timeParts[ 2 ] : "0" );
         return cal.get( Calendar.HOUR_OF_DAY ) < h ||
                cal.get( Calendar.HOUR_OF_DAY ) == h && cal.get( Calendar.MINUTE ) < m ||
                cal.get( Calendar.HOUR_OF_DAY ) == h && cal.get( Calendar.MINUTE ) == m || cal.get( Calendar.SECOND ) < s;
@@ -452,7 +452,7 @@ public class DateUtils
         String []timeParts = time.split( ":" );
         int h = Integer.parseInt( timeParts[ 0 ] );
         int m = Integer.parseInt( timeParts[ 1 ] );
-        int s = Integer.parseInt( timeParts.length > 2 ? timeParts[ 3 ] : "0" );
+        int s = Integer.parseInt( timeParts.length > 2 ? timeParts[ 2 ] : "0" );
         return cal.get( Calendar.HOUR_OF_DAY ) > h ||
                cal.get( Calendar.HOUR_OF_DAY ) == h && cal.get( Calendar.MINUTE ) > m ||
                cal.get( Calendar.HOUR_OF_DAY ) == h && cal.get( Calendar.MINUTE ) == m || cal.get( Calendar.SECOND ) > s;
