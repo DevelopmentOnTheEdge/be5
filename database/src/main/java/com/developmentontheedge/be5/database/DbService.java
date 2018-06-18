@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.database.sql.SqlExecutorVoid;
 import com.developmentontheedge.be5.database.sql.parsers.ScalarParser;
 import org.apache.commons.dbutils.ResultSetHandler;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -39,6 +40,10 @@ public interface DbService
         if(number == null) return null;
 
         Long res;
+        if(number instanceof BigInteger)
+        {
+            return ((BigInteger)number).longValue();
+        }
         if(!(number instanceof Long))
         {
             res = Long.parseLong(number.toString());
