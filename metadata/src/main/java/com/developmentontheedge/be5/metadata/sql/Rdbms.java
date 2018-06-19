@@ -191,7 +191,7 @@ public enum Rdbms
         return type.getDefaultPort();
     }
 
-    public String createConnectionUrl( String host, int port, String database, Map<String, String> properties )
+    public String createConnectionUrl( boolean forContext, String host, int port, String database, Map<String, String> properties )
     {
         switch(this)
         {
@@ -226,10 +226,10 @@ public enum Rdbms
                 for(Entry<String, String> entry : properties.entrySet())
                 {
                     if(!first){
-                        if(this == MYSQL)
-                            url.append( '&' );
-                        else
+                        if(forContext)
                             url.append( ';' );
+                        else
+                            url.append( '&' );
                     }
                     first = false;
                     url.append( entry.getKey() ).append( '=' ).append( entry.getValue() );

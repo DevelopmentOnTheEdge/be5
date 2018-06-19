@@ -144,6 +144,8 @@ public class MailService
             message.setFrom(from);
         }
 
+        message.setContent(body, "text/html;charset=UTF-8");
+
         message.setSubject(subject, enc);
         message.addRecipients(Message.RecipientType.TO, to);
 

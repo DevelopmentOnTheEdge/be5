@@ -283,6 +283,8 @@ public class EntityModelBase<T> implements EntityModel<T>
     {
         Objects.requireNonNull(columnName);
         Objects.requireNonNull(ids);
+        if(ids.length == 0)return 0;
+
         if(columnName.equals(getPrimaryKeyName()))checkPrimaryKey(ids);
 
         Map<String, ColumnDef> columns = meta.getColumns(entity);

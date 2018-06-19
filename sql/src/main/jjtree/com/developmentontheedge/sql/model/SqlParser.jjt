@@ -1751,7 +1751,8 @@ String Identifier() :
     /* BE-specific keywords can be valid SQL identifiers */
     (t1=<DOUBLE_QUOTED> |
     t1=<BACKTICK_QUOTED> |
-    t1=<IDENTIFIER> | t1=<COUNT>
+    t1=<IDENTIFIER> | t1=<COUNT> |
+    t1=<END>
     )
     {
         return t1.image;

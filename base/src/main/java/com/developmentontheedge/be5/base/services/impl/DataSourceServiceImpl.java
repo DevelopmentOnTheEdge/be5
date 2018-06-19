@@ -71,7 +71,7 @@ public class DataSourceServiceImpl implements DataSourceService
             {
                 bds.setDriverClassName(profile.getDriverDefinition());
             }
-            connectUrl = profile.getConnectionUrl();
+            connectUrl = profile.getJdbcUrl().createConnectionUrl(false);
             bds.setUrl(connectUrl);
             userName = profile.getUsername();
             bds.setUsername(userName);
