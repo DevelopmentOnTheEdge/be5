@@ -35,8 +35,9 @@ public class MonthlyDateTest
         assertEquals(new MonthlyDate(dateFormat.parse("2018-06-01")), date);
 
         assertEquals(date, MonthlyDate.min(date, new MonthlyDate()));
-        assertEquals(new MonthlyDate(), MonthlyDate.max(date, new MonthlyDate()));
-        assertEquals(new MonthlyDate(), MonthlyDate.max(date, new MonthlyDate(), MonthlyDate.MIN_VALUE));
+
+        assertEquals(new MonthlyDate(2099, 12), MonthlyDate.max(date, MonthlyDate.MAX_VALUE));
+        assertEquals(MonthlyDate.MAX_VALUE, MonthlyDate.max(date, MonthlyDate.MAX_VALUE, MonthlyDate.MIN_VALUE));
     }
 
     @Test
