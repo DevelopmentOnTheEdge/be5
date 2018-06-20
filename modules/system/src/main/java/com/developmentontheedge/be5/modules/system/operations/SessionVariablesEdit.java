@@ -21,23 +21,23 @@ public class SessionVariablesEdit extends GOperationSupport
             return null;
         }
 
-        dps.add(new DynamicPropertyBuilder("label", String.class)
+        params.add(new DynamicPropertyBuilder("label", String.class)
                 .attr(LABEL_FIELD, true)
                 .value("Тип: " + variable.getClass().getName())
                 .get());
 
-        dps.add(new DynamicPropertyBuilder("newValue", variable.getClass())
+        params.add(new DynamicPropertyBuilder("newValue", variable.getClass())
                 .title("Новое значение:")
                 .value(presetValues.getOrDefault("newValue", variable))
                 .get());
 
-        return dps;
+        return params;
     }
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        session.putAt(context.getRecord(), dps.getValue("newValue"));
+        session.putAt(context.getRecord(), params.getValue("newValue"));
     }
 
 }

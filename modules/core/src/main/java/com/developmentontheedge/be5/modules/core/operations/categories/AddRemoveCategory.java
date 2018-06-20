@@ -29,7 +29,7 @@ public class AddRemoveCategory extends GOperationSupport
         DynamicProperty prop = new DynamicProperty( "categoryID", "Category", Long.class );
         prop.setAttribute( TAG_LIST_ATTR, queries.getTagsFromSelectionView(
                 "categories", Collections.singletonMap( "entity", getInfo().getEntityName() )) );
-        dps.add( prop );
+        params.add( prop );
 
         prop = new DynamicProperty( "operationType", "Operation", String.class );
 
@@ -37,9 +37,9 @@ public class AddRemoveCategory extends GOperationSupport
                 {"Add", "Add to this category and parents"},
                 {"Remove", "Remove from this category and children"} } );
         prop.setValue("Add");
-        dps.add( prop );
+        params.add( prop );
 
-        return DpsUtils.setValues(dps, presetValues);
+        return DpsUtils.setValues(params, presetValues);
     }
 
     @Override
@@ -51,13 +51,13 @@ public class AddRemoveCategory extends GOperationSupport
             return;
         }
 
-        Long categoryID = dps.getValueAsLong( "categoryID" );
+        Long categoryID = params.getValueAsLong( "categoryID" );
 
 
         String entity = getInfo().getEntityName();
         String pk = getInfo().getPrimaryKey();
 
-        if( "Add".equals( dps.getValue( "operationType" ) ) )
+        if( "Add".equals( params.getValue( "operationType" ) ) )
         {
             List<Long> categories = categoriesHelper.getParentCategories(categoryID);
 

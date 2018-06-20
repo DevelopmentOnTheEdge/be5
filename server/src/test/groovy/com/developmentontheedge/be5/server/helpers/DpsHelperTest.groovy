@@ -193,12 +193,12 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
         assertEquals "no", list.get(1).getValue()
 
 //        assertEquals "notContainColumn", list.get(2).getName()
-//        assertEquals String, dps.getProperty("notContainColumn").getType()
-//        assertEquals "2", dps.getProperty("notContainColumn").getValue()
+//        assertEquals String, params.getProperty("notContainColumn").getType()
+//        assertEquals "2", params.getProperty("notContainColumn").getValue()
 
 //        assertEquals "testLong", list.get(2).getName()
-//        assertEquals Long, dps.getProperty("testLong").getType()
-//        assertEquals "3", dps.getProperty("testLong").getValue()
+//        assertEquals Long, params.getProperty("testLong").getType()
+//        assertEquals "3", params.getProperty("testLong").getValue()
     }
 
     @Test

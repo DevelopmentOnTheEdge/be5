@@ -6,5 +6,5 @@ import com.developmentontheedge.be5.operation.model.Operation;
 
 public abstract class GOperationSupport extends OperationSupport implements Operation
 {
-    public GDynamicPropertySetSupport dps = new GDynamicPropertySetSupport();
+    public GDynamicPropertySetSupport params = new GDynamicPropertySetSupport();
 }

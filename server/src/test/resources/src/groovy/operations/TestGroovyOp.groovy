@@ -18,27 +18,27 @@ class TestGroovyOp extends GOperationSupport implements Operation
     {
         if(!userAwareMeta instanceof UserAwareMetaImpl) throw new RuntimeException()
 
-        dps << [
+        params << [
                 name         : "name",
                 DISPLAY_NAME : "Имя",
                 value        : "Test"
         ]
 
-        dps << [
+        params << [
                 name         : "beginDate",
                 DISPLAY_NAME : "Дата начала",
                 TYPE         : Date,
                 value        : "2017-07-01"
         ]
 
-        dps << [
+        params << [
                 name         : "reason",
                 DISPLAY_NAME : "Причина снятия предыдущего работника",
                 TAG_LIST_ATTR: [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][],
                 value        : "vacation"
         ]
 
-        dps << [
+        params << [
                 name                   : "reasonMulti",
                 TYPE                   : String,
                 DISPLAY_NAME           : "Множественный выбор",
@@ -48,10 +48,10 @@ class TestGroovyOp extends GOperationSupport implements Operation
         ]
 
         //@Deprecated
-        dps.getProperty("beginDate") << [READ_ONLY: true]
-        //dps.edit("beginDate") { READ_ONLY = true }
+        params.getProperty("beginDate") << [READ_ONLY: true]
+        //params.edit("beginDate") { READ_ONLY = true }
 
-//        dps.add {
+//        params.add {
 //            name = "name"
 //            DISPLAY_NAME = "Имя"
 //            value = "Test"
@@ -60,21 +60,21 @@ class TestGroovyOp extends GOperationSupport implements Operation
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
 //        java.util.Date utilDate = df.parse("2017-07-01")
 //
-//        dps.add {
+//        params.add {
 //            name = "beginDate"
 //            DISPLAY_NAME = "Дата начала"
 //            TYPE = Date
 //            value = new Date(utilDate.getTime())
 //        }
 //
-//        dps.add {
+//        params.add {
 //            name = "reason"
 //            DISPLAY_NAME = "Причина снятия предыдущего работника"
 //            TAG_LIST_ATTR = [["fired", "Уволен"], ["vacation", "Отпуск"], ["sick", "На больничном"], ["other", "Иная причина"]] as String[][]
 //            value = "vacation"
 //        }
 //
-//        dps.add {
+//        params.add {
 //            name = "reasonMulti"
 //            DISPLAY_NAME = "Множественный выбор"
 //            MULTIPLE_SELECTION_LIST = true
@@ -82,15 +82,15 @@ class TestGroovyOp extends GOperationSupport implements Operation
 //            value = ["vacation", "sick"] as String[]
 //        }
 //
-//        dps.edit("beginDate") { READ_ONLY = true }
+//        params.edit("beginDate") { READ_ONLY = true }
 
-        return DpsUtils.setValues(dps, presetValues)
+        return DpsUtils.setValues(params, presetValues)
     }
 
     @Override
     void invoke(Object parameters) throws Exception
     {
-        db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", dps.$name, dps.$beginDate, dps.$reason)
+        db.update("update fakeTable set name = ?,beginDate = ?,reason = ?", params.$name, params.$beginDate, params.$reason)
     }
 
 }

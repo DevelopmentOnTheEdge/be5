@@ -19,21 +19,21 @@ class ErrorProcessing extends GOperationSupport implements Operation
             return null
         }
 
-        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), ["name"], context.getOperationParams(), presetValues)
+        dpsHelper.addDpForColumns(params, getInfo().getEntity(), ["name"], context.getOperationParams(), presetValues)
 
-        dps.add("propertyForAnotherEntity") {
+        params.add("propertyForAnotherEntity") {
             value = "text"
         }
 
         if(presetValues.containsKey("booleanProperty"))
         {
-            dps.add("booleanProperty") {
+            params.add("booleanProperty") {
                 TYPE  = Boolean
                 value = presetValues.getOrDefault("booleanProperty", false)
             }
         }
         
-        def name = dps.getProperty("name")
+        def name = params.getProperty("name")
 
         if(name.getValue() == "generateErrorInProperty")
         {
@@ -60,15 +60,15 @@ class ErrorProcessing extends GOperationSupport implements Operation
             assertEquals(OperationStatus.EXECUTE, getStatus())
         }
 
-        return dps
+        return params
     }
 
     @Override
     void invoke(Object parameters) throws Exception
     {
-        dps.remove("propertyForAnotherEntity")
+        params.remove("propertyForAnotherEntity")
 
-        def name = dps.getProperty("name")
+        def name = params.getProperty("name")
 
         if(name.getValue() == "executeErrorInProperty")
         {
