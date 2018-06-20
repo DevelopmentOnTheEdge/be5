@@ -29,6 +29,7 @@ import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.AstUpdate;
 import com.developmentontheedge.sql.model.SqlQuery;
+import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
@@ -54,10 +56,12 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
     private final QueryService queryService;
     private final JsonApiResponseHelper responseHelper;
     private final UserInfoProvider userInfoProvider;
+    private final Stage stage;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
-                                  QueryService queryService, JsonApiResponseHelper responseHelper, UserInfoProvider userInfoProvider)
+                                  QueryService queryService, JsonApiResponseHelper responseHelper,
+                                  UserInfoProvider userInfoProvider, Stage stage)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
@@ -65,6 +69,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         this.queryService = queryService;
         this.responseHelper = responseHelper;
         this.userInfoProvider = userInfoProvider;
+        this.stage = stage;
     }
 
     @Override
@@ -145,6 +150,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
                 errorModelList.add(responseHelper.getErrorModel(Be5Exception.internal(e)));
             }
 
+            //todo remove, use fail fast
             res.sendAsJson(JsonApiModel.data(
                     resourceData,
                     errorModelList.toArray(new ErrorModel[0]),
@@ -225,6 +231,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         }
         catch (Be5Exception e)
         {
+            if(stage == Stage.DEVELOPMENT)log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(responseHelper.getErrorModel(e));
         }
 
@@ -239,6 +246,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         }
         catch (Be5Exception e)
         {
+            if(stage == Stage.DEVELOPMENT)log.log(Level.SEVERE, "Error in queryBuilder", e);
             errorModelList.add(responseHelper.getErrorModel(e));
         }
 
