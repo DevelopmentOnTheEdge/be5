@@ -49,6 +49,12 @@ public class DateUtilsTest
 
         assertEquals(1, DateUtils.currentDate().compareTo(date));
 
+        assertEquals(1, DateUtils.addDays(1).compareTo(DateUtils.addDays(-1)));
+        assertEquals(1, DateUtils.curWeekMonday().compareTo(DateUtils.addMonths(-1)));
+        assertEquals(1, DateUtils.curWeekFriday().compareTo(DateUtils.addMonths(-1)));
+        assertEquals(-1, Integer.compare(2016, DateUtils.curYear()));
+        assertEquals(-1, Long.compare(date.getTime(), DateUtils.currentTimestamp().getTime()));
+
         assertEquals(1, DateUtils.curDay().compareTo(date));
         assertEquals(1, DateUtils.prevDay().compareTo(date));
         assertEquals(1, DateUtils.nextDay().compareTo(date));
@@ -65,7 +71,7 @@ public class DateUtilsTest
     {
         Date date = DateUtils.makeDate(2016, 12, 1);
 
-        assertEquals(DateUtils.nextDay(), DateUtils.addDays(DateUtils.prevDay(), 2));
+        assertEquals(DateUtils.nextDay(date), DateUtils.addDays(DateUtils.prevDay(date), 2));
         assertEquals(DateUtils.makeDate(2017, 1, 1), DateUtils.addMonths(date, 1));
     }
 
@@ -73,6 +79,7 @@ public class DateUtilsTest
     public void interval()
     {
         assertTrue(DateUtils.isActual(DateUtils.prevDay(), DateUtils.nextDay(), DateUtils.curDay()));
+        assertTrue(DateUtils.isActualNotNull(DateUtils.prevDay(), DateUtils.nextDay(), DateUtils.curDay()));
         assertTrue(DateUtils.isActual(DateUtils.curMonthBegin(), DateUtils.curMonthEnd(), DateUtils.curDay()));
 
         assertTrue(DateUtils.isIntersect(DateUtils.prevDay(), DateUtils.nextDay(), DateUtils.prevMonthBegin(), DateUtils.nextMonthBegin()));
