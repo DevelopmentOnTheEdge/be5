@@ -79,7 +79,7 @@ public abstract class ScriptSupport<T>
             this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
 
             this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
-                    profile.getConnectionUrl(), profile.getUsername(),
+                    profile.getJdbcUrl().createConnectionUrl(false), profile.getUsername(),
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
             logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
