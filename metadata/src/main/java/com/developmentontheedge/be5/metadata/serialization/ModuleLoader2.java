@@ -157,7 +157,7 @@ public class ModuleLoader2
                         fs = FileSystems.newFileSystem(URI.create(jar), Collections.emptyMap());
                     } catch (FileSystemAlreadyExistsException e) {
                         fs = FileSystems.getFileSystem(URI.create(jar));
-                        log.info("Get exists FileSystem after exception");
+                        log.fine("Get exists FileSystem after exception");
                     }
 
                     Path path = fs.getPath("./");
