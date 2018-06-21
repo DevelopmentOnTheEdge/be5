@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.ALL_RECORDS_VIEW;
+
 
 final public class ActionUtils
 {
@@ -37,31 +39,56 @@ final public class ActionUtils
             {
                 //move to static LegacyUrlParser
                 //mspReceiverCategories.redir
-                if(query.getQuery().contains(".redir")){
-                    String[] parts = query.getQuery().split(".redir");
-                    Map<String, String> params = new HashMap<>();
-                    if(parts.length>1)
-                    {
-                        String[] paramsVal = parts[1].replace("?", "").split("&");
+                if(query.getQuery().contains(".redir")
+                        || query.getQuery().startsWith("q?")
+                        || query.getQuery().startsWith("o?"))
+                {
+                    //ArrayList<String> positional = new ArrayList<>();
+                    String entityName = "_";
+                    Map<String, String> params;
 
-                        for (String s : paramsVal)
+                    if(query.getQuery().contains(".redir"))
+                    {
+                        String[] parts = query.getQuery().split(".redir");
+                        if(parts.length>1)
                         {
-                            String[] split = s.split("=");
-                            params.put(split[0], split[1].replace("+", " "));
+                            String[] paramsVal = parts[1].replace("?", "").split("&");
+
+                            params = getParams(paramsVal);
+                        }else{
+                            params = new HashMap<>();
                         }
+                        entityName = parts[0];
                     }
+                    else if(query.getQuery().startsWith("q?"))
+                    {
+                        params = getParams(query.getQuery().replaceFirst("q\\?", "").split("&"));
+                    }
+                    else if(query.getQuery().startsWith("o?"))
+                    {
+                        params = getParams(query.getQuery().replaceFirst("o\\?", "").split("&"));
+                    }
+                    else
+                    {
+                        params = new HashMap<>();
+                    }
+
+                    if(params.get("_t_") != null)
+                    {
+                        entityName = params.remove("_t_");
+                    }
+
+                    String qn = params.remove("_qn_");
+                    if(qn == null) qn = ALL_RECORDS_VIEW;
+
                     HashUrl hashUrl;
-                    if(params.size() == 0)
+                    if(params.get("_on_") != null)
                     {
-                        hashUrl = new HashUrl("table", parts[0]);
+                        hashUrl = new HashUrl("form", entityName, qn, params.remove("_on_"));
                     }
-                    else if(params.get("_on_") != null)
+                    else
                     {
-                        hashUrl = new HashUrl("form", parts[0], params.remove("_qn_"), params.remove("_on_"));
-                    }
-                    else //if(params.get("_qn_") != null)
-                    {
-                        hashUrl = new HashUrl("table", parts[0], params.remove("_qn_"));
+                        hashUrl = new HashUrl("table", entityName, qn);
                     }
 
                     return Action.call(hashUrl.named(params));
@@ -86,6 +113,18 @@ final public class ActionUtils
         }
     }
 
+    private static Map<String, String> getParams(String[] values)
+    {
+        Map<String, String> params = new HashMap<>();
+
+        for (String s : values)
+        {
+            String[] split = s.split("=");
+            params.put(split[0], split[1].replace("+", " "));
+        }
+        return params;
+    }
+
     public static Action toAction(String query, Operation operation) 
     {
         String entityName = operation.getEntity().getName();
@@ -101,11 +140,6 @@ final public class ActionUtils
     }
     
     private static final Pattern ACTION_PATTERN = Pattern.compile("^\\w+$");
-    
-    private ActionUtils()
-    {
-        throw new IllegalStateException("Must not be instantiated");
-    }
 
     private static boolean isExternalRef(Query query) 
     {

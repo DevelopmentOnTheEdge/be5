@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
+
 public class ActionHelperTest extends ServerBe5ProjectTest
 {
     @Inject private Meta meta;
@@ -36,7 +37,7 @@ public class ActionHelperTest extends ServerBe5ProjectTest
     {
         Query query = getQuery(QueryType.STATIC, "mspReceiverCategories.redir");
 
-        assertEquals("table/mspReceiverCategories",
+        assertEquals("table/mspReceiverCategories/All records",
                 ActionUtils.toAction(query).arg);
     }
 
@@ -45,6 +46,26 @@ public class ActionHelperTest extends ServerBe5ProjectTest
     {
         Query query = getQuery(QueryType.STATIC, "welfareGroups.redir?_qn_=Муниципальные+услуги&value=1");
         assertEquals("table/welfareGroups/Муниципальные услуги/value=1",
+                ActionUtils.toAction(query).arg);
+    }
+
+    @Test
+    public void qLegacyUrl()
+    {
+        Query query = getQuery(QueryType.STATIC, "q?_t_=downloads");
+        assertEquals("table/downloads/All records",
+                ActionUtils.toAction(query).arg);
+
+        Query query2 = getQuery(QueryType.STATIC, "q?_t_=downloads&_qn_=My subscriptions");
+        assertEquals("table/downloads/My subscriptions",
+                ActionUtils.toAction(query2).arg);
+    }
+
+    @Test
+    public void oLegacyUrl()
+    {
+        Query query = getQuery(QueryType.STATIC, "o?_t_=tariffs&_on_=Insert&productID=12");
+        assertEquals("form/tariffs/All records/Insert/productID=12",
                 ActionUtils.toAction(query).arg);
     }
 
