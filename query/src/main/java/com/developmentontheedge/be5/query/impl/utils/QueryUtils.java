@@ -189,6 +189,7 @@ public class QueryUtils
             .map(AstDerivedColumn::getAlias)
             .nonNull()
             .map(alias -> alias.replaceFirst("^\"(.+)\"$", "$1"))
+            .map(String::toUpperCase)
             .has(idColumnLabel);
     }
 

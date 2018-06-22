@@ -25,20 +25,20 @@ public class Login extends GOperationSupport
     @Override
     public Object getParameters(Map<String, Object> presetValues) throws Exception
     {
-        dpsHelper.addDpForColumns(dps, getInfo().getEntity(), Arrays.asList("user_name", "user_pass"), context.getOperationParams(), presetValues);
+        dpsHelper.addDpForColumns(params, getInfo().getEntity(), Arrays.asList("user_name", "user_pass"), context.getOperationParams(), presetValues);
 
-        DynamicProperty user_pass = dps.getProperty("user_pass");
+        DynamicProperty user_pass = params.getProperty("user_pass");
         user_pass.setAttribute(CAN_BE_NULL, false);
         user_pass.setAttribute(PASSWORD_FIELD, true);
 
-        return dps;
+        return params;
     }
 
     @Override
     public void invoke(Object parameters) throws Exception
     {
-        String username = dps.getValueAsString("user_name");
-        if (loginService.loginCheck(username, dps.getValueAsString("user_pass")))
+        String username = params.getValueAsString("user_name");
+        if (loginService.loginCheck(username, params.getValueAsString("user_pass")))
         {
             loginService.saveUser(username, request);
             postLogin(parameters);

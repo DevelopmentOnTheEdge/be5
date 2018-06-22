@@ -209,7 +209,7 @@ public class FormGeneratorImpl implements FormGenerator
     }
 
     //@Override
-    public ErrorModel getErrorModel(Throwable e, HashUrl url)
+    private ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
         log.log(Level.SEVERE, "Error in operation: " + url.toString(), e);
         return responseHelper.getErrorModel(Be5Exception.internal(e),

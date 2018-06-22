@@ -203,8 +203,7 @@ public class ConnectionUrl implements BeElementWithProperties
         return new PropertiesDPS( properties );
     }
 
-    @Override
-    public String toString()
+    public String createConnectionUrl(boolean forContext)
     {
         if(rdbms == null)
         {
@@ -217,6 +216,12 @@ public class ConnectionUrl implements BeElementWithProperties
         {
             props.put( name, properties.getProperty( name ) );
         }
-        return rdbms.createConnectionUrl( host, port, db, props );
+        return rdbms.createConnectionUrl( forContext, host, port, db, props );
+    }
+
+    @Override
+    public String toString()
+    {
+        return createConnectionUrl(true);
     }
 }
