@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.database.util;
 
-import com.developmentontheedge.be5.database.impl.Be5ProjectDbBaseTest;
+import com.developmentontheedge.be5.database.test.DatabaseTest;
 import com.developmentontheedge.be5.database.impl.TestPerson;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import java.sql.Types;
 
 import static org.junit.Assert.assertEquals;
 
-public class SqlUtilsTest extends Be5ProjectDbBaseTest
+public class SqlUtilsTest extends DatabaseTest
 {
     @Before
     public void setUp()

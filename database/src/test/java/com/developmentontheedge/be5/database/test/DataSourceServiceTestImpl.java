@@ -1,4 +1,4 @@
-package com.developmentontheedge.be5.database.impl;
+package com.developmentontheedge.be5.database.test;
 
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.sql.format.dbms.Dbms;

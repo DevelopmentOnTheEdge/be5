@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.database.test.DatabaseTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import static junit.framework.TestCase.assertEquals;
 
 
-public class MultiThreadedTest extends Be5ProjectDbBaseTest
+public class MultiThreadedTest extends DatabaseTest
 {
     @Before
     public void setUp()

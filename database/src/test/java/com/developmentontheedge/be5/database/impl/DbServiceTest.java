@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.database.impl;
 
 import com.developmentontheedge.be5.database.sql.ResultSetParser;
+import com.developmentontheedge.be5.database.test.DatabaseTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
-public class DbServiceTest extends Be5ProjectDbBaseTest
+public class DbServiceTest extends DatabaseTest
 {
     private static final ResultSetParser<TestPerson> parser = rs ->
             new TestPerson(rs.getLong("id"),rs.getString("name"),
