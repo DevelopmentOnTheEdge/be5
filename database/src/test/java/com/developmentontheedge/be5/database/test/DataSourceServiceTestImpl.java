@@ -25,7 +25,7 @@ public class DataSourceServiceTestImpl implements DataSourceService
         {
             Connection connection = ds.getConnection();
             Statement statement = connection.createStatement();
-            statement.execute("DROP TABLE persons; " +
+            statement.execute("DROP TABLE IF EXISTS persons; " +
                     "CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, " +
                     "password VARCHAR(255) NOT NULL, email VARCHAR(255), age INT);");
 
