@@ -26,7 +26,7 @@ public class ConnectionServiceMock implements ConnectionService
     {
         try {
             return executor.run(null);
-        } catch (SQLException e) {
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         }
     }
@@ -36,7 +36,7 @@ public class ConnectionServiceMock implements ConnectionService
     {
         try {
             executor.run(null);
-        } catch (SQLException e) {
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         }
     }
@@ -48,7 +48,19 @@ public class ConnectionServiceMock implements ConnectionService
     }
 
     @Override
-    public RuntimeException rollback(Connection conn, Throwable e)
+    public Connection beginTransaction() throws SQLException
+    {
+        return null;
+    }
+
+    @Override
+    public void endTransaction() throws SQLException
+    {
+
+    }
+
+    @Override
+    public RuntimeException rollbackTransaction(Throwable e)
     {
         return null;
     }

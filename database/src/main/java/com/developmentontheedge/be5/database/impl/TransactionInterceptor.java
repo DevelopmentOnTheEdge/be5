@@ -13,15 +13,6 @@ public class TransactionInterceptor implements MethodInterceptor
     @Override
     public Object invoke(MethodInvocation invocation)
     {
-        return connectionService.transactionWithResult(conn -> {
-            try
-            {
-                return invocation.proceed();
-            }
-            catch (Throwable throwable)
-            {
-                throw new RuntimeException(throwable);
-            }
-        });
+        return connectionService.transactionWithResult(conn -> invocation.proceed());
     }
 }

@@ -112,7 +112,7 @@ public class DbServiceTest extends DatabaseTest
         assertEquals(null, email);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = RuntimeException.class)
     public void testGetNullCustomObjectErrorCallNext() {
         String email = db.select("SELECT email FROM persons WHERE name = ?", rs -> {
                 rs.next();
