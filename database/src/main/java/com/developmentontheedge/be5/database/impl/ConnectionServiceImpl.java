@@ -37,7 +37,7 @@ public class ConnectionServiceImpl implements ConnectionService
         Connection conn = TRANSACT_CONN.get();
         if (conn != null)
         {
-            return conn;//for nested transactions
+            return conn;
         }
         else
         {
@@ -111,9 +111,8 @@ public class ConnectionServiceImpl implements ConnectionService
         }
         catch (SQLException se)
         {
-            log.log(Level.SEVERE, "Unable to rollback transactionWithResult", se);
+            log.log(Level.SEVERE, "Unable to rollback transaction", se);
             return new RuntimeException(e);
-            //return Be5Exception.internal(log, se, "Unable to rollback transactionWithResult", e);
         }
     }
 
