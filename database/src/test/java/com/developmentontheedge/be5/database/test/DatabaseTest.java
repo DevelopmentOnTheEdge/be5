@@ -1,34 +1,49 @@
 package com.developmentontheedge.be5.database.test;
 
 import com.developmentontheedge.be5.database.DataSourceService;
+import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.database.impl.ConnectionServiceImpl;
-import com.developmentontheedge.be5.database.impl.DbServiceImpl;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Scopes;
+import com.google.inject.Stage;
+import com.google.inject.util.Modules;
 import org.junit.Before;
-import org.junit.Rule;
-import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
 import java.util.logging.LogManager;
-
-import static org.zapodot.junit.db.EmbeddedDatabaseRule.CompatibilityMode.PostgreSQL;
 
 
 public abstract class DatabaseTest
 {
-    @Rule
-    public final EmbeddedDatabaseRule databaseRule = EmbeddedDatabaseRule.builder()
-            .withMode(PostgreSQL)
-            .withInitialSql("CREATE TABLE persons ( id BIGSERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255), age INT);")
-            .build();
+    private static final Injector injector = Guice.createInjector(Stage.DEVELOPMENT,
+            Modules.override(new DatabaseModule()).with(new DatabaseModuleTestModule())
+    );
 
-    protected DbService db;
+    @Inject protected DbService db;
 
     @Before
-    public void setUpDb()
+    public void setUpBaseTestUtils()
     {
-        DataSourceService databaseService = new DataSourceServiceTestImpl(databaseRule.getDataSource());
+        if(getInjector() != null)
+        {
+            getInjector().injectMembers(this);
+        }
+    }
 
-        db = new DbServiceImpl(new ConnectionServiceImpl(databaseService), databaseService);
+    public Injector getInjector()
+    {
+        return injector;
+    }
+
+    public static class DatabaseModuleTestModule extends AbstractModule
+    {
+        @Override
+        protected void configure()
+        {
+            bind(DataSourceService.class).to(DataSourceServiceTestImpl.class).in(Scopes.SINGLETON);
+        }
     }
 
     static {

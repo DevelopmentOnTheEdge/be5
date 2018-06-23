@@ -13,7 +13,7 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
     @Before
     public void setUp()
     {
-        db.update("DELETE FROM persons" );
+         db.update("DELETE FROM persons" );
     }
 
     @Test
