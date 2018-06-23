@@ -46,6 +46,27 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
     }
 
     @Test
+    public void testErrorWithInnerTransaction()
+    {
+        try {
+            db.transaction(conn -> {
+                db.transaction(conn2 -> {
+                    db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2","pass2");
+                });
+
+                db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user1","pass1");
+
+                throw new RuntimeException("test rollback");
+            });
+            Assert.fail("Should have thrown Be5Exception");
+        }
+        catch (RuntimeException e) {
+            Assert.assertTrue(true);
+            assertEquals(0L, (long)db.oneLong("SELECT count(*) FROM persons" ));
+        }
+    }
+
+    @Test
     public void testErrorInInnerTransaction()
     {
         try {
@@ -54,9 +75,8 @@ public class DatabaseServiceTransactionTest extends DatabaseTest
 
                 db.transaction(conn2 -> {
                     db.insert("INSERT INTO persons (name, password) VALUES (?,?)", "user2","pass2");
+                    throw new RuntimeException("test rollback");
                 });
-
-                throw new RuntimeException("test rollback");
             });
             Assert.fail("Should have thrown Be5Exception");
         }

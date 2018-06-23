@@ -102,7 +102,7 @@ public class ConnectionServiceImpl implements ConnectionService
     {
         try
         {
-            if (conn != null)
+            if (conn != null && !conn.isClosed())
             {
                 conn.rollback();
             }
