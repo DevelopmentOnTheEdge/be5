@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.database.impl;
 
+import com.developmentontheedge.be5.database.test.DatabaseTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,12 +8,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
-public class DatabaseServiceTransactionTest extends Be5ProjectDbBaseTest
+public class DatabaseServiceTransactionTest extends DatabaseTest
 {
     @Before
     public void setUp()
     {
-        db.update("DELETE FROM persons" );
+         db.update("DELETE FROM persons" );
     }
 
     @Test

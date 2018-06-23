@@ -13,12 +13,8 @@ import com.developmentontheedge.be5.base.services.impl.LogConfigurator;
 import com.developmentontheedge.be5.base.services.impl.MetaImpl;
 import com.developmentontheedge.be5.base.services.impl.ProjectProviderImpl;
 import com.developmentontheedge.be5.base.services.impl.UserAwareMetaImpl;
-import com.developmentontheedge.be5.database.ConnectionService;
 import com.developmentontheedge.be5.database.DataSourceService;
-import com.developmentontheedge.be5.database.DbService;
-import com.developmentontheedge.be5.database.impl.ConnectionServiceImpl;
-import com.developmentontheedge.be5.database.impl.DbServiceImpl;
-import com.developmentontheedge.be5.database.impl.SqlHelper;
+import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.beans.DynamicProperty;
 import com.developmentontheedge.beans.DynamicPropertySetDecorator;
 import com.developmentontheedge.beans.DynamicPropertySetSupport;
@@ -38,16 +34,15 @@ public class BaseModule extends AbstractModule
     @Override
     protected void configure()
     {
-        bind(LogConfigurator.class).asEagerSingleton();
-        bind(GroovyRegister.class).in(Scopes.SINGLETON);
-        bind(SqlHelper.class).in(Scopes.SINGLETON);
+        install(new DatabaseModule());
+        bind(DataSourceService.class).to(DataSourceServiceImpl.class).in(Scopes.SINGLETON);
 
         bind(ProjectProvider.class).to(ProjectProviderImpl.class).in(Scopes.SINGLETON);
-        bind(DataSourceService.class).to(DataSourceServiceImpl.class).in(Scopes.SINGLETON);
-        bind(ConnectionService.class).to(ConnectionServiceImpl.class).in(Scopes.SINGLETON);
-        bind(DbService.class).to(DbServiceImpl.class).in(Scopes.SINGLETON);
         bind(Meta.class).to(MetaImpl.class).in(Scopes.SINGLETON);
         bind(UserAwareMeta.class).to(UserAwareMetaImpl.class).in(Scopes.SINGLETON);
+
+        bind(LogConfigurator.class).asEagerSingleton();
+        bind(GroovyRegister.class).in(Scopes.SINGLETON);
         bind(Be5Caches.class).to(Be5CachesImpl.class).in(Scopes.SINGLETON);
     }
 }
