@@ -3,6 +3,9 @@ package com.developmentontheedge.be5.database.test;
 import com.developmentontheedge.be5.database.DataSourceService;
 import com.developmentontheedge.be5.database.DatabaseModule;
 import com.developmentontheedge.be5.database.DbService;
+import com.developmentontheedge.be5.database.impl.test.TestTransaction2Service;
+import com.developmentontheedge.be5.database.impl.test.TestTransaction2ServiceImpl;
+import com.developmentontheedge.be5.database.impl.test.TestTransactionService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -43,6 +46,8 @@ public abstract class DatabaseTest
         protected void configure()
         {
             bind(DataSourceService.class).to(DataSourceServiceTestImpl.class).in(Scopes.SINGLETON);
+            bind(TestTransactionService.class).in(Scopes.SINGLETON);
+            bind(TestTransaction2Service.class).to(TestTransaction2ServiceImpl.class).in(Scopes.SINGLETON);
         }
     }
 
