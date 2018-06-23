@@ -13,11 +13,15 @@ public interface ConnectionService
 
     Connection getCurrentTxConn();
 
+    Connection beginTransaction() throws SQLException;
+
+    void endTransaction() throws SQLException;
+
+    RuntimeException rollbackTransaction(Throwable e);
+
     <T> T transactionWithResult(SqlExecutor<T> executor);
 
     void transaction(SqlExecutorVoid executor);
 
     void releaseConnection( java.sql.Connection conn );
-
-    RuntimeException rollback(java.sql.Connection conn, Throwable e);
 }

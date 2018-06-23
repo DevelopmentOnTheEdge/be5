@@ -27,6 +27,7 @@ public class ConnectionServiceImpl implements ConnectionService
         this.databaseService = databaseService;
     }
 
+    @Override
     public Connection getCurrentTxConn()
     {
         return TRANSACT_CONN.get();
@@ -34,7 +35,7 @@ public class ConnectionServiceImpl implements ConnectionService
 
     private Connection getTxConnection() throws SQLException
     {
-        Connection conn = TRANSACT_CONN.get();
+        Connection conn = getCurrentTxConn();
         if (conn != null)
         {
             return conn;
@@ -48,39 +49,70 @@ public class ConnectionServiceImpl implements ConnectionService
         }
     }
 
-    private void closeTx(Connection conn)
+    @Override
+    public Connection beginTransaction() throws SQLException
     {
-        returnConnection(conn);
-        TRANSACT_CONN.set(null);
+        Connection txConnection = getTxConnection();
+        if(TRANSACT_CONN_COUNT.get() == null)TRANSACT_CONN_COUNT.set(0);
+        TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
+        return txConnection;
+    }
+
+    @Override
+    public void endTransaction() throws SQLException
+    {
+        Connection txConnection = getCurrentTxConn();
+        TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
+        if(TRANSACT_CONN_COUNT.get() == 0)
+        {
+            try
+            {
+                txConnection.commit();
+            }
+            finally
+            {
+                returnConnection(txConnection);
+                TRANSACT_CONN.set(null);
+            }
+        }
+    }
+
+    @Override
+    public RuntimeException rollbackTransaction(Throwable e)
+    {
+        TRANSACT_CONN_COUNT.set(0);
+        Connection txConnection = getCurrentTxConn();
+        try
+        {
+            if (txConnection != null && !txConnection.isClosed())
+            {
+                txConnection.rollback();
+            }
+            return new RuntimeException(e);
+        }
+        catch (SQLException se)
+        {
+            log.log(Level.SEVERE, "Unable to rollback transaction", se);
+            return new RuntimeException(e);
+        }
+        finally
+        {
+            returnConnection(txConnection);
+            TRANSACT_CONN.set(null);
+        }
     }
 
     @Override
     public <T> T transactionWithResult(SqlExecutor<T> executor)
     {
-        Connection conn = null;
+        Connection conn;
         try {
-            conn = getTxConnection();
-
-            if(TRANSACT_CONN_COUNT.get() == null)TRANSACT_CONN_COUNT.set(0);
-
-            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() + 1);
+            conn = beginTransaction();
             T res = executor.run(conn);
-            TRANSACT_CONN_COUNT.set(TRANSACT_CONN_COUNT.get() - 1);
-
-            if(TRANSACT_CONN_COUNT.get() == 0)
-            {
-                conn.commit();
-            }
-
+            endTransaction();
             return res;
-        } catch (Error | Exception e) {
-            TRANSACT_CONN_COUNT.set(0);
-            throw rollback(conn, e);
-        } finally {
-            if(TRANSACT_CONN_COUNT.get() == 0)
-            {
-                closeTx(conn);
-            }
+        } catch (Throwable e) {
+            throw rollbackTransaction(e);
         }
     }
 
@@ -95,25 +127,6 @@ public class ConnectionServiceImpl implements ConnectionService
             voidExecutor.run(conn);
             return null;
         };
-    }
-
-    @Override
-    public RuntimeException rollback(Connection conn, Throwable e)
-    {
-        try
-        {
-            if (conn != null && !conn.isClosed())
-            {
-                conn.rollback();
-            }
-
-            return new RuntimeException(e);
-        }
-        catch (SQLException se)
-        {
-            log.log(Level.SEVERE, "Unable to rollback transaction", se);
-            return new RuntimeException(e);
-        }
     }
 
     @Override

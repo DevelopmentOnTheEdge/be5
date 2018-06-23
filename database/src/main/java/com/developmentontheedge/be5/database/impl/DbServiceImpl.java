@@ -131,7 +131,7 @@ public class DbServiceImpl implements DbService
             conn = (txConn != null) ? txConn : connectionService.getConnection(isReadOnly);
             return executor.run(conn);
         }
-        catch (SQLException e)
+        catch (Throwable e)
         {
             log.log(Level.SEVERE, "", e);
             throw new RuntimeException(e);

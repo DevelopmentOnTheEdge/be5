@@ -85,7 +85,7 @@ public class OperationExecutorImpl implements OperationExecutor
                 Object parameters = callOperation(operation, presetValues);
                 if(operation.getStatus() == OperationStatus.ERROR)
                 {
-                    connectionService.rollback(connection, (Throwable) operation.getResult().getDetails());
+                    connectionService.rollbackTransaction((Throwable) operation.getResult().getDetails());
                 }
                 return parameters;
             });
