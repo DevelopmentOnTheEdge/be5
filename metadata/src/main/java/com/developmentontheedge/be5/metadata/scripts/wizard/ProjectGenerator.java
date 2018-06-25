@@ -1,69 +1,80 @@
 package com.developmentontheedge.be5.metadata.scripts.wizard;
 
-//import com.developmentontheedge.be5.metadata.util.ModuleUtils;
-//import com.beanexplorer.enterprise.operations.SendPassword;
 
+import com.developmentontheedge.be5.metadata.model.DataElementUtils;
+import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
+import com.developmentontheedge.be5.metadata.model.Localizations;
+import com.developmentontheedge.be5.metadata.model.Module;
+import com.developmentontheedge.be5.metadata.model.Project;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
+import java.util.List;
+
+/**
+ * use Project instead. and to easy support read exists project too
+ */
+@Deprecated
 public class ProjectGenerator
 {
-//    public static final String SYSTEM_MODULE = "core";
-//
-//    public static class Parameters
-//    {
-//        private String projectName;
-//        private String[] languages = new String[] { "ru" };
-//        private String[] features = new String[] { "logging" };
-//        private String[] modules = new String[] { SYSTEM_MODULE };
-//        private String[] roles = new String[] { "Administrator", "DbAdmin", "Guest" };
+    public static final String SYSTEM_MODULE = "core";
+
+    public static class Parameters
+    {
+        private String projectName = "new-project";
+        private String[] languages = new String[] { "ru" };
+        //private String[] features = new String[] { "logging" };
+        private String[] modules = new String[] { SYSTEM_MODULE };
+        private String[] roles = new String[] { "Administrator", "SystemDeveloper", "Guest" };
 //        private String testUserLogin;
 //        private String testUserPassword;
 //        private String testUserRole = "Administrator";
 //        private String connectionUrl;
 //        private boolean createLoginAndLogoutOperations = true;
-//
-//        /**
-//         * This copy constructor uses getters to copy the original object.
-//         *
-//         * @param orig
-//         */
-//        public Parameters( final Parameters orig )
-//        {
-//            this.projectName = orig.getProjectName();
-//            this.languages = orig.getLanguages();
-//            this.features = orig.getFeatures();
-//            this.modules = orig.getModules();
-//            this.roles = orig.getRoles();
+
+        /**
+         * This copy constructor uses getters to copy the original object.
+         *
+         * @param orig
+         */
+        public Parameters( final Parameters orig )
+        {
+            this.projectName = orig.getProjectName();
+            this.languages = orig.getLanguages();
+            //this.features = orig.getFeatures();
+            this.modules = orig.getModules();
+            this.roles = orig.getRoles();
 //            this.testUserLogin = orig.getTestUserLogin();
 //            this.testUserPassword = orig.getTestUserPassword();
 //            this.testUserRole = orig.getTestUserRole();
 //            this.connectionUrl = orig.getConnectionUrl();
 //            this.createLoginAndLogoutOperations = orig.shouldCreateLoginAndLogoutOperations();
-//        }
-//
-//        public Parameters()
-//        {
-//        }
-//
-//        public String getProjectName()
-//        {
-//            return projectName;
-//        }
-//
-//        public void setProjectName( String projectName )
-//        {
-//            this.projectName = projectName;
-//        }
-//
-//        public String[] getLanguages()
-//        {
-//            return languages.clone();
-//        }
-//
-//        public void setLanguages( String[] languages )
-//        {
-//            this.languages = languages;
-//        }
-//
+        }
+
+        public Parameters()
+        {
+        }
+
+        public String getProjectName()
+        {
+            return projectName;
+        }
+
+        public void setProjectName( String projectName )
+        {
+            this.projectName = projectName;
+        }
+
+        public String[] getLanguages()
+        {
+            return languages.clone();
+        }
+
+        public void setLanguages( String[] languages )
+        {
+            this.languages = languages;
+        }
+
 //        public String[] getFeatures()
 //        {
 //            return features.clone();
@@ -73,26 +84,26 @@ public class ProjectGenerator
 //        {
 //            this.features = features;
 //        }
-//
-//        public String[] getModules()
-//        {
-//            return modules.clone();
-//        }
-//
-//        public void setModules( String[] modules )
-//        {
-//            this.modules = modules;
-//        }
-//
-//        public String[] getRoles()
-//        {
-//            return roles.clone();
-//        }
-//
-//        public void setRoles( String[] roles )
-//        {
-//            this.roles = roles;
-//        }
+
+        public String[] getModules()
+        {
+            return modules.clone();
+        }
+
+        public void setModules( String[] modules )
+        {
+            this.modules = modules;
+        }
+
+        public String[] getRoles()
+        {
+            return roles.clone();
+        }
+
+        public void setRoles( String[] roles )
+        {
+            this.roles = roles;
+        }
 //
 //        public String getTestUserLogin()
 //        {
@@ -143,29 +154,29 @@ public class ProjectGenerator
 //        {
 //            this.createLoginAndLogoutOperations = createLoginAndLogoutOperations;
 //        }
-//    }
-//
+    }
+
 //    public interface ISaveProject
 //    {
 //        void save(Project project) throws Exception;
 //    }
 //
-//    private final Parameters parameters;
-//
-//    private ProjectGenerator( final Parameters parameters )
-//    {
-//        this.parameters = parameters;
-//
-//        if ( this.parameters.getProjectName() == null )
-//            throw new NullPointerException();
-//        if ( this.parameters.getLanguages() == null )
-//            throw new NullPointerException();
+    private final Parameters parameters;
+
+    public ProjectGenerator( final Parameters parameters )
+    {
+        this.parameters = parameters;
+
+        if ( this.parameters.getProjectName() == null )
+            throw new NullPointerException();
+        if ( this.parameters.getLanguages() == null )
+            throw new NullPointerException();
 //        if ( this.parameters.getFeatures() == null )
 //            throw new NullPointerException();
-//        if ( this.parameters.getModules() == null )
-//            throw new NullPointerException();
-//        if ( this.parameters.getRoles() == null )
-//            throw new NullPointerException();
+        if ( this.parameters.getModules() == null )
+            throw new NullPointerException();
+        if ( this.parameters.getRoles() == null )
+            throw new NullPointerException();
 //        if ( this.parameters.getTestUserLogin() == null )
 //            throw new NullPointerException();
 //        if ( this.parameters.getTestUserPassword() == null )
@@ -176,50 +187,51 @@ public class ProjectGenerator
 //            throw new NullPointerException();
 //        if ( !Arrays.asList( this.parameters.getRoles() ).contains( this.parameters.getTestUserRole() ) )
 //            throw new IllegalStateException();
-//    }
-//
+    }
+
 //    public static void generate( final Parameters parameters, final ISaveProject saveProject ) throws Exception
 //    {
 //        final ProjectGenerator generator = new ProjectGenerator( parameters );
 //        generator.generate( saveProject );
 //    }
-//
-//    private void generate( final ISaveProject saveProject ) throws Exception
-//    {
-//        final Project project = new Project( parameters.getProjectName() );
-//        setRoles( project );
-//        setLanguages( project );
-//        addModules( project );
-//        ModuleUtils.addModuleScripts( project );
-//        addIncludes( project );
-//        addFeatures( project );
-//        addFtlScripts( project );
-//
+
+    public Project generate()
+    {
+        final Project project = new Project( parameters.getProjectName() );
+        setRoles( project );
+        setLanguages( project );
+        addModules( project );
+        //ModuleUtils.addModuleScripts( project );
+        //addIncludes( project );
+        //addFeatures( project );
+        //addFtlScripts( project );
+
 //        if ( parameters.shouldCreateLoginAndLogoutOperations() )
 //            createLoginAndLogoutOperations( project );
-//
+
 //        saveProject.save( project );
 //        copyTemplateFiles();
 //        correctTemplateFiles();
-//    }
-//
-//    private void setRoles( final Project project )
-//    {
-//        final String[] roles = parameters.getRoles();
-//
-//        for ( final String role : roles )
-//            project.addRole( role );
-//    }
-//
-//    private void setLanguages( final Project project )
-//    {
-//        for ( final String language : parameters.getLanguages() )
-//        {
-//            final Localizations localizations = project.getApplication().getLocalizations();
-//            final LanguageLocalizations languageLocalizations = new LanguageLocalizations( language, localizations );
-//            DataElementUtils.saveQuiet( languageLocalizations );
-//        }
-//    }
+        return project;
+    }
+
+    private void setRoles( final Project project )
+    {
+        final String[] roles = parameters.getRoles();
+
+        for ( final String role : roles )
+            project.addRole( role );
+    }
+
+    private void setLanguages( final Project project )
+    {
+        for ( final String language : parameters.getLanguages() )
+        {
+            final Localizations localizations = project.getApplication().getLocalizations();
+            final LanguageLocalizations languageLocalizations = new LanguageLocalizations( language, localizations );
+            DataElementUtils.saveQuiet( languageLocalizations );
+        }
+    }
 //
 //    private void addFeatures( final Project project )
 //    {
@@ -227,25 +239,25 @@ public class ProjectGenerator
 //        features.add( "logging" );
 //        project.setFeatures( features );
 //    }
-//
-//    private void addModules( final Project project )
-//    {
-//        final String[] modules;
-//
-//        {
-//            final List<String> ms = Lists.newArrayList( parameters.getModules() );
-//            ms.remove( SYSTEM_MODULE );
-//            ms.add( 0, SYSTEM_MODULE );
-//            modules = Iterables.toArray( ms, String.class );
-//        }
-//
-//        for ( final String module : modules )
-//        {
-//            final Module newModule = new Module( module, project.getModules() );
-//            DataElementUtils.saveQuiet( newModule );
-//        }
-//    }
-//
+
+    private void addModules( final Project project )
+    {
+        final String[] modules;
+
+        {
+            final List<String> ms = Lists.newArrayList( parameters.getModules() );
+            ms.remove( SYSTEM_MODULE );
+            ms.add( 0, SYSTEM_MODULE );
+            modules = Iterables.toArray( ms, String.class );
+        }
+
+        for ( final String module : modules )
+        {
+            final Module newModule = new Module( module, project.getModules() );
+            DataElementUtils.saveQuiet( newModule );
+        }
+    }
+
 //    public static void addIncludes( final Project project )
 //    {
 //        final StringBuilder sb = new StringBuilder();
