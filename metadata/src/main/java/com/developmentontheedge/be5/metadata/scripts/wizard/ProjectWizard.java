@@ -19,11 +19,10 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
-import static com.developmentontheedge.be5.metadata.scripts.wizard.ProjectGenerator.SYSTEM_MODULE;
 
 
 public final class ProjectWizard extends ScriptSupport<ProjectWizard>
@@ -290,7 +289,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 //
     private void selectModules( final Parameters parameters )
     {
-        final Set<String> elementsToIgnore = Sets.newHashSet( SYSTEM_MODULE );
+        final Set<String> elementsToIgnore = Collections.emptySet();
         final String addActionTitle = "Add module";
         final String addActionQuery = "Module: ";
         final MenuStrategy strategy = new MenuStrategy() {

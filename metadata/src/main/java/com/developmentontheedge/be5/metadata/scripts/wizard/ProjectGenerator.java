@@ -17,14 +17,12 @@ import java.util.List;
 @Deprecated
 public class ProjectGenerator
 {
-    public static final String SYSTEM_MODULE = "core";
-
     public static class Parameters
     {
         private String projectName = "new-project";
         private String[] languages = new String[] { "ru" };
         //private String[] features = new String[] { "logging" };
-        private String[] modules = new String[] { SYSTEM_MODULE };
+        private String[] modules = new String[] { "core", "system" };
         private String[] roles = new String[] { "Administrator", "SystemDeveloper", "Guest" };
 //        private String testUserLogin;
 //        private String testUserPassword;
@@ -246,8 +244,6 @@ public class ProjectGenerator
 
         {
             final List<String> ms = Lists.newArrayList( parameters.getModules() );
-            ms.remove( SYSTEM_MODULE );
-            ms.add( 0, SYSTEM_MODULE );
             modules = Iterables.toArray( ms, String.class );
         }
 
