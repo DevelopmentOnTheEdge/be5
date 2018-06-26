@@ -35,7 +35,6 @@ import java.lang.reflect.Type;
  * </p>
  *
  * @see Configurable#getConfigurationClass()
- * @see Configurable#configure(Object)
  * @author asko
  */
 public interface Configurable<T> {
@@ -47,7 +46,6 @@ public interface Configurable<T> {
      *
      * <p>You must implement it yourself if your class implements the Configurable indirectly.</p>
      *
-     * @see Configurable#configure(Object)
      * @see Configurable
      */
     @SuppressWarnings("unchecked")
@@ -75,7 +73,5 @@ public interface Configurable<T> {
         
         throw new AssertionError();
     }
-    
-    void configure(T config);
-    
+
 }
