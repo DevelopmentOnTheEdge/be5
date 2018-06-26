@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
@@ -109,6 +110,12 @@ public class RequestImpl implements Request
     public Locale getLocale()
     {
         return raw.getLocale();
+    }
+
+    @Override
+    public ServletInputStream getInputStream() throws IOException
+    {
+        return raw.getInputStream();
     }
 
     @Override

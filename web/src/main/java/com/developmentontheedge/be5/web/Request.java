@@ -1,7 +1,9 @@
 package com.developmentontheedge.be5.web;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -60,4 +62,6 @@ public interface Request extends SessionAccess, ParametersAccess
     String getBody();
 
     Locale getLocale();
+
+    ServletInputStream getInputStream() throws IOException;
 }
