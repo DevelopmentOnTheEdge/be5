@@ -1,9 +1,11 @@
 package com.developmentontheedge.be5.server.controllers;
 
+import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,6 +27,12 @@ public class LanguageSelectorTest extends ServerBe5ProjectTest
             new LanguageSelectorController.LanguageSelectorResponse(
                     Collections.singletonList("RU"), "RU", ImmutableMap.of(
                     "fio","Ф.И.О.","no","нет","yes","да"));
+
+    @Before
+    public void init()
+    {
+        initUserWithRoles(RoleType.ROLE_GUEST);
+    }
 
     @Test
     public void generate()
