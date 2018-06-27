@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.server.servlet.support;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
@@ -35,6 +36,10 @@ public abstract class ApiControllerSupport extends HttpServlet implements Contro
         try
         {
             generate(req, ServletUtils.getResponse(request, response));
+        }
+        catch (Be5Exception e)
+        {
+            log.log(e.getLogLevel(), "Error in controller", e);
         }
         catch (Throwable e)
         {

@@ -85,7 +85,7 @@ public class FormController extends ApiControllerSupport
         catch(Be5Exception e)
         {
             String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
-            log.log(Level.SEVERE, "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
+            log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             responseHelper.sendErrorAsJson(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)), req);
         }
     }

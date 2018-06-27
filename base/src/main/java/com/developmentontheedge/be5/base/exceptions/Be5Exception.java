@@ -6,6 +6,7 @@ import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.Query;
 
 import java.util.List;
+import java.util.logging.Level;
 
 
 public class Be5Exception extends RuntimeException
@@ -189,5 +190,11 @@ public class Be5Exception extends RuntimeException
     public String getHttpStatusCode()
     {
         return code.getHttpStatus();
+    }
+
+    public Level getLogLevel()
+    {
+        if(getCode().isInternal()) return Level.SEVERE;
+        else return Level.FINE;
     }
 }

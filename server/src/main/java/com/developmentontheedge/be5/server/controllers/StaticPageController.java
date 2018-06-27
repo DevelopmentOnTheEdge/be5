@@ -46,7 +46,7 @@ public class StaticPageController extends ApiControllerSupport
         }
         catch(Be5Exception e)
         {
-            log.log(Level.SEVERE, "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
+            log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             responseHelper.sendErrorAsJson(e, req);
         }
     }

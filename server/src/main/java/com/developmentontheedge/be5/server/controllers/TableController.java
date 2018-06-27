@@ -57,7 +57,7 @@ public class TableController extends ApiControllerSupport
         catch(Be5Exception e)
         {
             String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
-            log.log(Level.SEVERE, "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
+            log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
             responseHelper.sendErrorAsJson(e, req);
         }
     }
