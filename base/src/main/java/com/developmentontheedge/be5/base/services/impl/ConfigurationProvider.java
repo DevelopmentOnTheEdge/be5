@@ -32,12 +32,7 @@ public class ConfigurationProvider
         {
             @SuppressWarnings("unchecked")
             Configurable<Object> configurable = (Configurable<Object>) object;
-            Object config = getConfiguration(object.getClass(), configurable.getConfigurationClass());
-            if(config == null)
-            {
-                throw Be5Exception.internal("Config for class in null: " + object.getClass().getCanonicalName());
-            }
-            return config;
+            return getConfiguration(object.getClass(), configurable.getConfigurationClass());
         }
         else
         {
