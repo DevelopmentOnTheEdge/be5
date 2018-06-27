@@ -28,7 +28,6 @@ meters:
     - isDeleted___:
         type: ENUM('no','yes')
         defaultValue: '''no'''
-    #todo add ip special columns
   queries:
   - '*** Selection view ***':
       type: 1D

@@ -214,7 +214,14 @@ class DpsHelperTest extends ServerBe5ProjectDBTest
     {
         dpsHelper.addDp(dps, meta.getEntity("meters"), [:])
         dps.setValue("name", "TestName")
-        assertArrayEquals([null, "TestName", null, null, null, null, null, "no"] as Object[], dpsHelper.getValues(dps))
+        assertArrayEquals([null, "TestName", null] as Object[], dpsHelper.getValues(dps))
+    }
+
+    @Test
+    void getColumnsWithoutSpecialTest()
+    {
+        assertEquals(["ID", "name", "value"] as Set,
+                dpsHelper.getColumnsWithoutSpecial(meta.getEntity("meters")).keySet())
     }
 
     @Test
