@@ -12,10 +12,11 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
 public class TableController extends ApiControllerSupport
@@ -58,7 +59,7 @@ public class TableController extends ApiControllerSupport
         {
             String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
             log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
-            responseHelper.sendErrorAsJson(e, req);
+            responseHelper.sendErrorAsJson(e, req, Collections.singletonMap(SELF_LINK, url));
         }
     }
 

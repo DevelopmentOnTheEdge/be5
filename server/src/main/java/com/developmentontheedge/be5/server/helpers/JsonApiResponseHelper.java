@@ -59,14 +59,19 @@ public class JsonApiResponseHelper
         responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta));
     }
 
-    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta, links));
-    }
+//    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+//    {
+//        responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta, links));
+//    }
 
     public void sendErrorAsJson(Be5Exception e, Request req)
     {
-        responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e), getDefaultMeta(req)));
+        sendErrorAsJson(e, req, null);
+    }
+
+    public void sendErrorAsJson(Be5Exception e, Request req, Map<String, String> links)
+    {
+        responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e, links), getDefaultMeta(req)));
     }
 
     public void sendErrorAsJson(ErrorModel error, Request req)

@@ -155,8 +155,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
                     resourceData,
                     errorModelList.toArray(new ErrorModel[0]),
                     resourceDataList.toArray(new ResourceData[0]),
-                    responseHelper.getDefaultMeta(req),
-                    null
+                    responseHelper.getDefaultMeta(req)
             ));
         }
         else

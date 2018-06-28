@@ -1,7 +1,6 @@
 package com.developmentontheedge.be5.server.model.jsonapi;
 
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  http://jsonapi.org
@@ -26,51 +25,45 @@ public class JsonApiModel
     private Object meta;
 
     private ResourceData[] included;
-    private Map<String, String> links;
+    //private Map<String, String> links;
 
-    private JsonApiModel(ResourceData data, ErrorModel[] errors, Object meta, ResourceData[] included, Map<String, String> links)
+    private JsonApiModel(ResourceData data, ErrorModel[] errors, Object meta, ResourceData[] included)
     {
         this.data = data;
         this.errors = errors;
         this.meta = meta;
         this.included = included;
-        this.links = links;
     }
 
     public static JsonApiModel data(ResourceData data, Object meta)
     {
-        return new JsonApiModel(data, null, meta, null, null);
+        return new JsonApiModel(data, null, meta, null);
     }
 
     public static JsonApiModel data(ResourceData data, ResourceData[] included, Object meta)
     {
-        return new JsonApiModel(data, null, meta, included, null);
+        return new JsonApiModel(data, null, meta, included);
     }
 
-    public static JsonApiModel data(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
-    {
-        return new JsonApiModel(data, null, meta, included, links);
-    }
+//    public static JsonApiModel data(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
+//    {
+//        return new JsonApiModel(data, null, meta, included, links);
+//    }
 
     public static JsonApiModel error(ErrorModel error, Object meta)
     {
-        return new JsonApiModel(null, new ErrorModel[]{error}, meta, null, null);
+        return new JsonApiModel(null, new ErrorModel[]{error}, meta, null);
     }
 
-    public static JsonApiModel error(ErrorModel error, ResourceData[] included, Object meta)
-    {
-        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, null);
-    }
-
-    public static JsonApiModel error(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
-    {
-        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included, links);
-    }
+//    public static JsonApiModel error(ErrorModel error, ResourceData[] included, Object meta)
+//    {
+//        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included);
+//    }
 
     //todo remove, use fail fast
-    public static JsonApiModel data(ResourceData data, ErrorModel[] errorModels, ResourceData[] included, Object meta, Map<String, String> links)
+    public static JsonApiModel data(ResourceData data, ErrorModel[] errorModels, ResourceData[] included, Object meta)
     {
-        return new JsonApiModel(data, errorModels, meta, included, links);
+        return new JsonApiModel(data, errorModels, meta, included);
     }
 
     public ResourceData getData()
@@ -93,11 +86,6 @@ public class JsonApiModel
         return included;
     }
 
-    public Map<String, String> getLinks()
-    {
-        return links;
-    }
-
     public void setMeta(Object meta)
     {
         this.meta = meta;
@@ -111,7 +99,6 @@ public class JsonApiModel
                 (errors!=null ? "errors=" + Arrays.toString(errors) : "") +
                 (meta!=null ? ", meta=" + meta : "") +
                 (included!=null ? ", included=" + Arrays.toString(included) : "") +
-                (links!=null ? ", links=" + links : "") +
         '}';
     }
 
@@ -128,8 +115,7 @@ public class JsonApiModel
         if(!Arrays.equals(errors, that.errors)) return false;
         if(meta != null ? !meta.equals(that.meta) : that.meta != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if(!Arrays.equals(included, that.included)) return false;
-        return links != null ? links.equals(that.links) : that.links == null;
+        return Arrays.equals(included, that.included);
     }
 
     @Override
@@ -139,7 +125,6 @@ public class JsonApiModel
         result = 31 * result + Arrays.hashCode(errors);
         result = 31 * result + (meta != null ? meta.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(included);
-        result = 31 * result + (links != null ? links.hashCode() : 0);
         return result;
     }
 }
