@@ -28,4 +28,6 @@ public interface Response
     void sendXml(String xml);
 
     HttpServletResponse getRawResponse();
+
+    void redirect(String location);
 }

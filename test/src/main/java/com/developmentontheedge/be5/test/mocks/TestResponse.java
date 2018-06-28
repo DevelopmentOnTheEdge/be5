@@ -58,4 +58,9 @@ public class TestResponse implements Response
         return mock.getRawResponse();
     }
 
+    @Override
+    public void redirect(String location)
+    {
+        mock.redirect(location);
+    }
 }
