@@ -1,12 +1,11 @@
 package com.developmentontheedge.be5.server.servlet.support;
 
-import com.developmentontheedge.be5.server.util.annotations.Experimental;
 import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Response;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Experimental
+
 public abstract class JsonApiControllerSupport extends ApiControllerSupport
 {
     @Override
