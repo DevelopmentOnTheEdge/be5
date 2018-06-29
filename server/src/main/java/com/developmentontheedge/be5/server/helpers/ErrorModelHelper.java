@@ -25,9 +25,9 @@ import java.util.logging.Logger;
 import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 
 
-public class JsonApiResponseHelper
+public class ErrorModelHelper
 {
-    public final Logger log = Logger.getLogger(JsonApiResponseHelper.class.getName());
+    public final Logger log = Logger.getLogger(ErrorModelHelper.class.getName());
 
     private final UserInfoProvider userInfoProvider;
     private final GroovyOperationLoader groovyOperationLoader;
@@ -35,8 +35,8 @@ public class JsonApiResponseHelper
     private final UserAwareMeta userAwareMeta;
 
     @Inject
-    public JsonApiResponseHelper(UserInfoProvider userInfoProvider, GroovyOperationLoader groovyOperationLoader,
-                                 Provider<Response> responseProvider, UserAwareMeta userAwareMeta)
+    public ErrorModelHelper(UserInfoProvider userInfoProvider, GroovyOperationLoader groovyOperationLoader,
+                            Provider<Response> responseProvider, UserAwareMeta userAwareMeta)
     {
         this.userInfoProvider = userInfoProvider;
         this.groovyOperationLoader = groovyOperationLoader;
@@ -44,16 +44,19 @@ public class JsonApiResponseHelper
         this.userAwareMeta = userAwareMeta;
     }
 
+    @Deprecated
     public void sendAsJson(JsonApiModel jsonApiModel)
     {
         responseProvider.get().sendAsJson(jsonApiModel);
     }
 
+    @Deprecated
     public void sendAsJson(ResourceData data, Object meta)
     {
         responseProvider.get().sendAsJson(JsonApiModel.data(data, meta));
     }
 
+    @Deprecated
     public void sendAsJson(ResourceData data, ResourceData[] included, Object meta)
     {
         responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta));
@@ -64,16 +67,19 @@ public class JsonApiResponseHelper
 //        responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta, links));
 //    }
 
+    @Deprecated
     public void sendErrorAsJson(Be5Exception e, Request req)
     {
         sendErrorAsJson(e, req, null);
     }
 
+    @Deprecated
     public void sendErrorAsJson(Be5Exception e, Request req, Map<String, String> links)
     {
         responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e, links), getDefaultMeta(req)));
     }
 
+    @Deprecated
     public void sendErrorAsJson(ErrorModel error, Request req)
     {
         responseProvider.get().sendAsJson(JsonApiModel.error(error, getDefaultMeta(req)));
@@ -89,6 +95,7 @@ public class JsonApiResponseHelper
 //        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta, links));
 //    }
 
+    @Deprecated
     public void sendUnknownActionError(Request req)
     {
         sendErrorAsJson( Be5Exception.notFound("route" + req.getRequestUri()), req);

@@ -3,13 +3,12 @@ package com.developmentontheedge.be5.server.controllers;
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -19,20 +18,20 @@ import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
 
-public class TableController extends ApiControllerSupport
+public class TableController extends JsonApiModelController
 {
     private final DocumentGenerator documentGenerator;
-    private final JsonApiResponseHelper responseHelper;
+    private final ErrorModelHelper errorModelHelper;
 
     @Inject
-    public TableController(DocumentGenerator documentGenerator, JsonApiResponseHelper responseHelper)
+    public TableController(DocumentGenerator documentGenerator, ErrorModelHelper errorModelHelper)
     {
         this.documentGenerator = documentGenerator;
-        this.responseHelper = responseHelper;
+        this.errorModelHelper = errorModelHelper;
     }
 
     @Override
-    public void generate(Request req, Response res, String requestSubUrl)
+    public JsonApiModel generate(Request req, String requestSubUrl)
     {
         String entityName = req.getNonEmpty(RestApiConstants.ENTITY);
         String queryName = req.getNonEmpty(RestApiConstants.QUERY);
@@ -44,22 +43,18 @@ public class TableController extends ApiControllerSupport
             switch(requestSubUrl)
             {
                 case "":
-                    JsonApiModel jsonApiForUser = documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
-                    jsonApiForUser.setMeta(responseHelper.getDefaultMeta(req));
-                    res.sendAsJson(jsonApiForUser);
-                    return;
+                    return documentGenerator.queryJsonApiFor(entityName, queryName, parameters);
                 case "update":
-                    res.sendAsJson(documentGenerator.updateQueryJsonApi(entityName, queryName, parameters));
-                    return;
+                    return documentGenerator.updateQueryJsonApi(entityName, queryName, parameters);
                 default:
-                    responseHelper.sendUnknownActionError(req);
+                    return null;
             }
         }
         catch(Be5Exception e)
         {
             String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
             log.log(e.getLogLevel(), "Error in table: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
-            responseHelper.sendErrorAsJson(e, req, Collections.singletonMap(SELF_LINK, url));
+            return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }
     }
 

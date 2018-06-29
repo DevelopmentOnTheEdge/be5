@@ -7,6 +7,7 @@ public interface FrontendConstants
      * The first part of the link to the table.
      */
     String TABLE_ACTION = "table";
+    String TABLE_MORE_ACTION = "table_more";
 
     String STATIC_ACTION = "static";
     

@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.web.Response;
 import javax.servlet.http.HttpServletResponse;
 
 
-public abstract class JsonApiControllerSupport extends ApiControllerSupport
+public abstract class JsonApiController extends ApiControllerSupport
 {
     @Override
     protected final void generate(Request req, Response res, String subUrl)
@@ -14,7 +14,7 @@ public abstract class JsonApiControllerSupport extends ApiControllerSupport
         Object object = generate(req, subUrl);
         if(object != null)
         {
-            res.sendAsJson(generate(req, subUrl));
+            res.sendAsJson(object);
         }
         else
         {

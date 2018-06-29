@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.operation.model.OperationStatus;
 import com.developmentontheedge.be5.operation.services.OperationExecutor;
 import com.developmentontheedge.be5.operation.services.OperationService;
 import com.developmentontheedge.be5.operation.util.Either;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
@@ -41,7 +41,7 @@ public class FormGeneratorImpl implements FormGenerator
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
     private final UserInfoProvider userInfoProvider;
-    private final JsonApiResponseHelper responseHelper;
+    private final ErrorModelHelper responseHelper;
 
     @Inject
     public FormGeneratorImpl(
@@ -50,7 +50,7 @@ public class FormGeneratorImpl implements FormGenerator
             OperationService operationService,
             OperationExecutor operationExecutor,
             UserInfoProvider userInfoProvider,
-            JsonApiResponseHelper responseHelper)
+            ErrorModelHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;

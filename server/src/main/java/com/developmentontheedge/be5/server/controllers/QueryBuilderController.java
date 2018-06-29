@@ -13,7 +13,7 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
@@ -54,13 +54,13 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
     private final DocumentGenerator documentGenerator;
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
-    private final JsonApiResponseHelper responseHelper;
+    private final ErrorModelHelper responseHelper;
     private final UserInfoProvider userInfoProvider;
     private final Stage stage;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
-                                  QueryService queryService, JsonApiResponseHelper responseHelper,
+                                  QueryService queryService, ErrorModelHelper responseHelper,
                                   UserInfoProvider userInfoProvider, Stage stage)
     {
         this.db = db;

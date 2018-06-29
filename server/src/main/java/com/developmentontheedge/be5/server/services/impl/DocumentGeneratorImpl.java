@@ -17,7 +17,7 @@ import com.developmentontheedge.be5.query.model.MoreRows;
 import com.developmentontheedge.be5.query.model.MoreRowsBuilder;
 import com.developmentontheedge.be5.query.model.TableModel;
 import com.developmentontheedge.be5.query.services.TableModelService;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.TableOperationPresentation;
 import com.developmentontheedge.be5.server.model.TablePresentation;
@@ -36,13 +36,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.CATEGORY_ID_PARAM;
 import static com.developmentontheedge.be5.base.FrontendConstants.STATIC_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_ACTION;
+import static com.developmentontheedge.be5.base.FrontendConstants.TABLE_MORE_ACTION;
 import static com.developmentontheedge.be5.base.FrontendConstants.TOP_FORM;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 
@@ -57,7 +57,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final CategoriesService categoriesService;
     private final UserInfoProvider userInfoProvider;
     private final FormGenerator formGenerator;
-    private final JsonApiResponseHelper responseHelper;
+    private final ErrorModelHelper responseHelper;
 
     @Inject
     public DocumentGeneratorImpl(
@@ -66,7 +66,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             CategoriesService categoriesService,
             TableModelService tableModelService,
             UserInfoProvider userInfoProvider,
-            FormGenerator formGenerator, JsonApiResponseHelper responseHelper)
+            FormGenerator formGenerator, ErrorModelHelper responseHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
@@ -251,27 +251,28 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         }
     }
 
-    //todo refactor frontend to JsonApiModel
     @Override
-    public Object updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters)
+    public JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters)
     {
+        String url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters).toString();
+        Map<String, String> links = Collections.singletonMap(SELF_LINK, url);
+
         try
         {
             Query query = userAwareMeta.getQuery(entityName, queryName);
             TableModel tableModel = tableModelService.getTableModel(query, parameters);
 
-            return new MoreRows(
+            return JsonApiModel.data(new ResourceData(TABLE_MORE_ACTION, new MoreRows(
                     tableModel.getTotalNumberOfRows().intValue(),
                     tableModel.getTotalNumberOfRows().intValue(),
                     new MoreRowsBuilder(tableModel).build()
-            );
+            ), links), null);
         }
         catch (Be5Exception e)
         {
-            HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
-            log.log(e.getLogLevel(), "Error in table: " + url.toString(), e);
+            log.log(e.getLogLevel(), "Error in table: " + url, e);
             return JsonApiModel.error(responseHelper.
-                    getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())), null);
+                    getErrorModel(e, links), null);
         }
     }
 

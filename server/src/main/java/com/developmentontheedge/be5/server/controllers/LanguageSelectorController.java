@@ -5,7 +5,7 @@ import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.server.servlet.support.JsonApiControllerSupport;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
 import one.util.streamex.StreamEx;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class LanguageSelectorController extends JsonApiControllerSupport implements Controller
+public class LanguageSelectorController extends JsonApiController implements Controller
 {
     private final Meta meta;
     private final ProjectProvider projectProvider;
