@@ -220,7 +220,7 @@ public class ModuleLoader2
             }
             else
             {
-                throw new RuntimeException("Module project not found " + module.getName());
+                throw new RuntimeException("Module project not found: '" + module.getName() + "'");
             }
         }
         //todo ????? topological sort?

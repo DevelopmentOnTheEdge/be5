@@ -2,29 +2,25 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.model.FormPresentation;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
-import com.developmentontheedge.be5.web.Response;
 import com.google.common.collect.ImmutableMap;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 
 public class FormTest extends ServerBe5ProjectTest
 {
     @Inject private FormController component;
-    private Response response;
-
-    @Before
-    public void setUp()
-    {
-        response = Mockito.mock(Response.class);
-    }
 
     @After
     public void tearDown()
@@ -37,9 +33,13 @@ public class FormTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
 
-        generateForQuery("All records");
+        JsonApiModel jsonApiModel = generateForQuery("All records");
 
-        //TODO verify(response).sendAsJson(any(ResourceData.class), any(Map.class))
+        assertNull(jsonApiModel.getErrors());
+        assertNotNull(jsonApiModel.getData());
+
+        assertEquals("Insert", ((FormPresentation)jsonApiModel.getData().getAttributes()).getOperation());
+        assertEquals("All records", ((FormPresentation)jsonApiModel.getData().getAttributes()).getQuery());
     }
 
     @Test
@@ -47,9 +47,11 @@ public class FormTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
 
-        generateForQuery("Query without operations");
+        JsonApiModel jsonApiModel = generateForQuery("Query without operations");
 
-        //TODO verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class))
+        assertEquals("403", jsonApiModel.getErrors()[0].getStatus());
+        assertEquals("Operation 'testtableAdmin.Insert' not assigned to query: 'Query without operations'",
+                jsonApiModel.getErrors()[0].getTitle());
     }
 
     @Test
@@ -57,12 +59,17 @@ public class FormTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_GUEST);
 
-        generateForQuery("All records");
+        JsonApiModel jsonApiModel = generateForQuery("All records");
 
-        //TODO verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class))
+        assertNotNull(jsonApiModel.getErrors());
+        assertNull(jsonApiModel.getData());
+
+        assertEquals("403", jsonApiModel.getErrors()[0].getStatus());
+        assertEquals("Access denied to operation: testtableAdmin.Insert",
+                jsonApiModel.getErrors()[0].getTitle());
     }
 
-    public void generateForQuery(String queryName)
+    private JsonApiModel generateForQuery(String queryName)
     {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(2);
         map.put("name", "test1");
@@ -72,7 +79,7 @@ public class FormTest extends ServerBe5ProjectTest
         LinkedHashMap<String, String> map1 = new LinkedHashMap<String, String>(1);
         map1.put("name", "test1");
 
-        component.generate(getSpyMockRequest("/api/form/", ImmutableMap.<String, Object>builder()
+        return component.generate(getSpyMockRequest("/api/form/", ImmutableMap.<String, Object>builder()
                 .put(RestApiConstants.ENTITY, "testtableAdmin")
                 .put(RestApiConstants.QUERY, queryName)
                 .put(RestApiConstants.OPERATION, "Insert")
@@ -80,7 +87,7 @@ public class FormTest extends ServerBe5ProjectTest
                 .put(RestApiConstants.OPERATION_PARAMS, jsonb.toJson(map1))
                 .put(RestApiConstants.TIMESTAMP_PARAM, "" + new Date().getTime())
                 .put(RestApiConstants.VALUES, values)
-                .build()), response);
+                .build()), "");
     }
 
 }

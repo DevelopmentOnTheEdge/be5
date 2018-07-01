@@ -1614,8 +1614,9 @@ public class YamlDeserializer
             if ( !project.isModuleProject() )
             {
                 readForms( application.getCollection( Module.JS_FORMS, JavaScriptForm.class ) );
-                readStaticPages( project.getApplication().getStaticPageCollection() );
             }
+
+            readStaticPages( project.getApplication().getStaticPageCollection() );
 
             readCustomization( project.getApplication() );
             project.getAutomaticDeserializationService().registerFile( path, ManagedFileType.PROJECT );

@@ -26,7 +26,7 @@ testtableAdmin:
       - OperationWithExtend2
       - Filter
       - OldRedirectFilter
-      - ErrorProcessing
+      - ServerErrorProcessing
       - TransactionTestOp
       - Delete
       - Edit
@@ -105,10 +105,10 @@ testtableAdmin:
       type: Groovy
       roles: Administrator
       file: operationService/TransactionTestOp.groovy
-  - ErrorProcessing:
+  - ServerErrorProcessing:
       type: Groovy
       roles: Administrator
-      file: operationService/ErrorProcessing.groovy
+      file: operationService/ServerErrorProcessing.groovy
   - Delete:
       records: 2
       roles: Administrator

@@ -46,7 +46,7 @@ class FormGeneratorTest extends TestTableQueryDBTest
     void executeWithGenerateErrorInProperty()
     {
         ResourceData result = formGenerator
-                .execute("testtableAdmin", "All records", "ErrorProcessing",
+                .execute("testtableAdmin", "All records", "ServerErrorProcessing",
                         [] as String[], [:], ['name': 'generateErrorInProperty'])
         def formPresentation = (FormPresentation) result.getAttributes()
         assertEquals "{'displayName':'name','columnSize':'30','status':'error','message':'Error in property (getParameters)'}",

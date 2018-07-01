@@ -5,47 +5,46 @@ import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HashUrl;
 import com.developmentontheedge.be5.operation.util.OperationUtils;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
+import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.services.FormGenerator;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.google.inject.Stage;
 
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
 
 import static com.developmentontheedge.be5.base.FrontendConstants.FORM_ACTION;
 import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.google.common.base.Strings.nullToEmpty;
 
 
-public class FormController extends ApiControllerSupport
+public class FormController extends JsonApiModelController
 {
     private final FormGenerator formGenerator;
     private final UserHelper userHelper;
-    private final JsonApiResponseHelper responseHelper;
+    private final ErrorModelHelper errorModelHelper;
     private final Stage stage;
     private final UserInfoProvider userInfoProvider;
 
     @Inject
     public FormController(FormGenerator formGenerator,
-                          UserHelper userHelper, JsonApiResponseHelper responseHelper,
+                          UserHelper userHelper, ErrorModelHelper errorModelHelper,
                           UserInfoProvider userInfoProvider, Stage stage)
     {
         this.formGenerator = formGenerator;
         this.userHelper = userHelper;
-        this.responseHelper = responseHelper;
+        this.errorModelHelper = errorModelHelper;
         this.stage = stage;
         this.userInfoProvider = userInfoProvider;
     }
 
     @Override
-    public void generate(Request req, Response res, String requestSubUrl)
+    public JsonApiModel generate(Request req, String requestSubUrl)
     {
         //todo move to filter
         if(stage == Stage.DEVELOPMENT && userInfoProvider.get() == null)
@@ -60,33 +59,23 @@ public class FormController extends ApiControllerSupport
         Map<String, Object> operationParams = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.OPERATION_PARAMS));
         Map<String, Object> values = ParseRequestUtils.getValuesFromJson(req.get(RestApiConstants.VALUES));
 
-        Object meta = responseHelper.getDefaultMeta(req);
-
         try
         {
             switch(requestSubUrl)
             {
                 case "":
-                    responseHelper.sendAsJson(
-                            formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values),
-                            meta
-                    );
-                    break;
+                    return data(formGenerator.generate(entityName, queryName, operationName, selectedRows, operationParams, values));
                 case "apply":
-                    responseHelper.sendAsJson(
-                            formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values),
-                            meta
-                    );
-                    break;
+                    return data(formGenerator.execute(entityName, queryName, operationName, selectedRows, operationParams, values));
                 default:
-                    responseHelper.sendUnknownActionError(req);
+                    return null;
             }
         }
         catch(Be5Exception e)
         {
             String url = new HashUrl(FORM_ACTION, entityName, queryName, operationName).named(operationParams).toString();
-            log.log(Level.SEVERE, "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
-            responseHelper.sendErrorAsJson(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)), req);
+            log.log(e.getLogLevel(), "Error in operation: " + url + ", on requestSubUrl = '" + requestSubUrl + "'", e);
+            return error(errorModelHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }
     }
 

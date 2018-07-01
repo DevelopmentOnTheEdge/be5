@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.HIDDEN_COLUMN_PREFIX;
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.specialColumns;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BIGINT;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_BOOL;
 import static com.developmentontheedge.be5.metadata.model.SqlColumnType.TYPE_CHAR;
@@ -144,7 +145,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addTags(T dps, BeModelElement modelElements, Collection<String> columnNames, Map<String, Object> operationParams)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
         for(String propertyName: columnNames)
         {
             DynamicProperty property = dps.getProperty(propertyName);
@@ -156,7 +157,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpsExcludedColumnsWithoutTags(T dps, BeModelElement modelElements, Collection<String> excludedColumns)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
 
         ArrayList<String> excludedColumnsList = new ArrayList<>(excludedColumns);
         for (Map.Entry<String, ColumnDef> entry: columns.entrySet())
@@ -202,7 +203,7 @@ public class DpsHelper
     public <T extends DynamicPropertySet> T addDynamicProperties(T dps, BeModelElement modelElements, 
                                                      Collection<String> propertyNames, Map<String, Object> operationParams)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
 
         for(String propertyName: propertyNames)
         {
@@ -240,7 +241,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addMeta(T dps, BeModelElement modelElements)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
         for(DynamicProperty property : dps)
         {
             ColumnDef columnDef = columns.get(property.getName());
@@ -251,7 +252,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpForColumnsWithoutTags(T dps, BeModelElement modelElements, Collection<String> columnNames)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
         for(String propertyName: columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
@@ -276,7 +277,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpBase(T dps, BeModelElement modelElements)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
         for(Map.Entry<String, ColumnDef> column: columns.entrySet())
         {
             dps.add(getDynamicProperty(column.getValue()));
@@ -286,7 +287,7 @@ public class DpsHelper
 
     public <T extends DynamicPropertySet> T addDpForColumnsBase(T dps, BeModelElement modelElements, Collection<String> columnNames)
     {
-        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        Map<String, ColumnDef> columns = getColumnsWithoutSpecial(modelElements);
         for(String propertyName: columnNames)
         {
             ColumnDef columnDef = columns.get(propertyName);
@@ -572,5 +573,15 @@ public class DpsHelper
         {
             throw new RuntimeException("not supported modelElements");    
         }
+    }
+
+    protected Map<String, ColumnDef> getColumnsWithoutSpecial(BeModelElement modelElements)
+    {
+        Map<String, ColumnDef> columns = meta.getColumns(getEntity(modelElements));
+        for(String specialColumnsName : specialColumns)
+        {
+            columns.remove(specialColumnsName);
+        }
+        return columns;
     }
 }

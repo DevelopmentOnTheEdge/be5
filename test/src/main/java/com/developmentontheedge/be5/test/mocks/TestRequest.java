@@ -4,6 +4,7 @@ import com.developmentontheedge.be5.web.Request;
 import com.developmentontheedge.be5.web.Session;
 
 import javax.inject.Inject;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -83,6 +84,12 @@ public class TestRequest implements Request
 
     @Override
     public Locale getLocale()
+    {
+        return null;
+    }
+
+    @Override
+    public ServletInputStream getInputStream()
     {
         return null;
     }

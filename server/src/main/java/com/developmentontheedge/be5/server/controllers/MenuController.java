@@ -2,17 +2,14 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
-import com.developmentontheedge.be5.web.Controller;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
-public class MenuController extends ApiControllerSupport implements Controller
+public class MenuController extends JsonApiController
 {
     private final MenuHelper menuHelper;
 
@@ -36,21 +33,18 @@ public class MenuController extends ApiControllerSupport implements Controller
      * </pre>
      */
     @Override
-    public void generate(Request req, Response res, String requestSubUrl)
+    public Object generate(Request req, String requestSubUrl)
     {
         switch (requestSubUrl)
         {
             case "":
-                res.sendAsJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.TABLE)));
-                return;
+                return new MenuResponse(menuHelper.collectEntities(false, EntityType.TABLE));
             case "dictionary":
-                res.sendAsJson(new MenuResponse(menuHelper.collectEntities(false, EntityType.DICTIONARY)));
-                return;
+                return new MenuResponse(menuHelper.collectEntities(false, EntityType.DICTIONARY));
             case "withIds":
-                res.sendAsJson(new MenuResponse(menuHelper.collectEntities(true, EntityType.TABLE)));
-                return;
+                return new MenuResponse(menuHelper.collectEntities(true, EntityType.TABLE));
             default:
-                res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
+                return null;
         }
     }
 

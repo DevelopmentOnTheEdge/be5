@@ -27,6 +27,7 @@ testtableAdmin:
       - Filter
       - OldRedirectFilter
       - ErrorProcessing
+      - ErrorProcessingTransactional
       - TransactionTestOp
       - Delete
       - Edit
@@ -84,6 +85,9 @@ testtableAdmin:
   - ErrorProcessing:
       roles: Administrator
       code: com.developmentontheedge.be5.operation.test.ErrorProcessing
+  - ErrorProcessingTransactional:
+      roles: Administrator
+      code: com.developmentontheedge.be5.operation.test.ErrorProcessingTransactional
   - TestTransactionalOperation:
       type: Groovy
       roles: Administrator

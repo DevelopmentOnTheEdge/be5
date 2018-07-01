@@ -5,14 +5,12 @@ import com.developmentontheedge.be5.base.services.ProjectProvider;
 import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.metadata.DatabaseConstants;
 import com.developmentontheedge.be5.metadata.model.Project;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import one.util.streamex.StreamEx;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class LanguageSelectorController extends ApiControllerSupport implements Controller
+public class LanguageSelectorController extends JsonApiController implements Controller
 {
     private final Meta meta;
     private final ProjectProvider projectProvider;
@@ -89,18 +87,16 @@ public class LanguageSelectorController extends ApiControllerSupport implements 
     }
 
     @Override
-    public void generate(Request req, Response res, String requestSubUrl)
+    public Object generate(Request req, String requestSubUrl)
     {
         switch(requestSubUrl)
         {
             case "":
-                res.sendAsJson(getInitialData());
-                return;
+                return getInitialData();
             case "select":
-                res.sendAsJson(selectLanguage(req));
-                return;
+                return selectLanguage(req);
             default:
-                res.sendErrorAsJson("Unknown action", HttpServletResponse.SC_NOT_FOUND);
+                return null;
         }
     }
 

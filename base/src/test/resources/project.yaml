@@ -4,7 +4,6 @@ testProject:
   projectFileStructure: {}
   modules: []
   application:
-  - meters
   - testtable
   - testtableAdmin
   - testTags

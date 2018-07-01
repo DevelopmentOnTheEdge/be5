@@ -18,7 +18,7 @@ import com.developmentontheedge.be5.server.controllers.StaticPageController;
 import com.developmentontheedge.be5.server.controllers.TableController;
 import com.developmentontheedge.be5.server.helpers.DpsHelper;
 import com.developmentontheedge.be5.server.helpers.FilterHelper;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.helpers.MenuHelper;
 import com.developmentontheedge.be5.server.helpers.UserHelper;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
@@ -73,7 +73,7 @@ public class ServerModule extends ServletModule
         bind(SqlHelper.class).in(Scopes.SINGLETON);
         bind(ColumnsHelper.class).in(Scopes.SINGLETON);
         bind(MenuHelper.class).in(Scopes.SINGLETON);
-        bind(JsonApiResponseHelper.class).in(Scopes.SINGLETON);
+        bind(ErrorModelHelper.class).in(Scopes.SINGLETON);
         bind(MailService.class).in(Scopes.SINGLETON);
 
         bind(DocumentGenerator.class).to(DocumentGeneratorImpl.class).in(Scopes.SINGLETON);

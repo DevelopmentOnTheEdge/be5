@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.operation.services
 
+import com.developmentontheedge.be5.base.exceptions.Be5ErrorCode
 import com.developmentontheedge.be5.base.exceptions.Be5Exception
 import com.developmentontheedge.be5.metadata.RoleType
 import com.developmentontheedge.be5.operation.OperationsSqlMockProjectTest
@@ -11,6 +12,8 @@ import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertTrue
+import static org.junit.Assert.fail
 
 class OperationServiceTest extends OperationsSqlMockProjectTest
 {
@@ -153,17 +156,16 @@ class OperationServiceTest extends OperationsSqlMockProjectTest
     {
         def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         generateOperation(operation, ['name':'generateError'])
-
-        assertEquals(OperationStatus.ERROR, operation.getStatus())
     }
 
-    @Test//(expected = Be5Exception)
+    @Test
     void executeError()
     {
         def operation = createOperation("testtableAdmin", "All records", "ErrorProcessing", "")
         executeOperation(operation, ['name':'executeError'])
 
         assertEquals(OperationStatus.ERROR, operation.getStatus())
+        assertEquals(Be5ErrorCode.INTERNAL_ERROR_IN_OPERATION, ((Be5Exception)operation.getResult().getDetails()).code)
     }
 
     @Test

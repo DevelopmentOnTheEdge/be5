@@ -1,5 +1,6 @@
 package com.developmentontheedge.be5.base.services.impl;
 
+import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.Configurable;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
@@ -25,20 +26,17 @@ public class ConfigurationProvider
         configurations = readConfigurations();
     }
 
-    public <T> void configure(T object)
+    public <T> Object configure(T object)
     {
         if (object instanceof Configurable)
         {
             @SuppressWarnings("unchecked")
             Configurable<Object> configurable = (Configurable<Object>) object;
-            Object config = getConfiguration(object.getClass(), configurable.getConfigurationClass());
-
-//            if(config != null)
-//            {
-            configurable.configure(config);
-//            }else{
-//                log.warning("Module '" + object.getClass().getName() + "' not configured.");
-//            }
+            return getConfiguration(object.getClass(), configurable.getConfigurationClass());
+        }
+        else
+        {
+            throw Be5Exception.internal("Class must implement Configurable: " + object.getClass().getCanonicalName());
         }
     }
 

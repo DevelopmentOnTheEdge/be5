@@ -2,15 +2,13 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.base.exceptions.Be5Exception;
 import com.developmentontheedge.be5.base.services.UserAwareMeta;
-import com.developmentontheedge.be5.web.Controller;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiController;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 
 import javax.inject.Inject;
 
 
-public class ApplicationInfoController extends ApiControllerSupport implements Controller
+public class ApplicationInfoController extends JsonApiController
 {
     public static class ApplicationInfo
     {
@@ -36,11 +34,11 @@ public class ApplicationInfoController extends ApiControllerSupport implements C
     }
 
     @Override
-    public void generate(Request req, Response res, String requestSubUrl)
+    public Object generate(Request req, String requestSubUrl)
     {
         try
         {
-            res.sendAsJson(getApplicationInfo());
+            return getApplicationInfo();
         }
         catch (Exception e)
         {

@@ -24,7 +24,7 @@ public interface DocumentGenerator
     JsonApiModel queryJsonApiFor(String entityName, String queryName, Map<String, Object> parameters);
 
     //todo refactor frontend to JsonApiModel
-    Object updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
+    JsonApiModel updateQueryJsonApi(String entityName, String queryName, Map<String, Object> parameters);
 
     //    StaticPagePresentation getStatic(Query query);
 }

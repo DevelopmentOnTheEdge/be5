@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Config>
 {
-    private Config config;
+    private final Config config;
 
     public static class Config
     {
@@ -29,16 +29,10 @@ public class Be5CachesImpl implements Be5Caches, Configurable<Be5CachesImpl.Conf
 
     private Map<String, Cache> caches = new ConcurrentHashMap<>();
 
-    @Override
-    public void configure(Config config)
-    {
-        this.config = config;
-    }
-
     @Inject
     public Be5CachesImpl(ConfigurationProvider configurationProvider, ProjectProvider projectProvider)
     {
-        configurationProvider.configure(this);
+        config = (Config) configurationProvider.configure(this);
 
         projectProvider.addToReload(this::clearAll);
     }

@@ -88,18 +88,23 @@ public class ConnectionServiceImpl implements ConnectionService
             {
                 txConnection.rollback();
             }
-            return new RuntimeException(e);
+            return returnRuntimeExceptionOrWrap(e);
         }
         catch (SQLException se)
         {
             log.log(Level.SEVERE, "Unable to rollback transaction", se);
-            return new RuntimeException(e);
+            return returnRuntimeExceptionOrWrap(e);
         }
         finally
         {
             returnConnection(txConnection);
             TRANSACT_CONN.set(null);
         }
+    }
+
+    private RuntimeException returnRuntimeExceptionOrWrap(Throwable e)
+    {
+        return e instanceof RuntimeException ? (RuntimeException)e : new RuntimeException(e);
     }
 
     @Override

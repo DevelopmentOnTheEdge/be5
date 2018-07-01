@@ -13,17 +13,15 @@ import com.developmentontheedge.be5.metadata.model.EntityType;
 import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.query.services.QueryService;
 import com.developmentontheedge.be5.server.RestApiConstants;
-import com.developmentontheedge.be5.server.helpers.JsonApiResponseHelper;
+import com.developmentontheedge.be5.server.helpers.ErrorModelHelper;
 import com.developmentontheedge.be5.server.model.StaticPagePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
 import com.developmentontheedge.be5.server.services.DocumentGenerator;
+import com.developmentontheedge.be5.server.servlet.support.JsonApiModelController;
 import com.developmentontheedge.be5.server.util.ParseRequestUtils;
-import com.developmentontheedge.be5.web.Controller;
 import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
-import com.developmentontheedge.be5.server.servlet.support.ApiControllerSupport;
 import com.developmentontheedge.sql.model.AstDelete;
 import com.developmentontheedge.sql.model.AstInsert;
 import com.developmentontheedge.sql.model.AstStart;
@@ -43,39 +41,39 @@ import static com.developmentontheedge.be5.server.RestApiConstants.SELF_LINK;
 import static com.developmentontheedge.be5.server.SessionConstants.QUERY_BUILDER_HISTORY;
 
 
-public class QueryBuilderController extends ApiControllerSupport implements Controller
+public class QueryBuilderController extends JsonApiModelController
 {
     private static final String entityName = "queryBuilderComponent";
 
-    private List<ResourceData> resourceDataList;
+    private List<ResourceData> includedData;
     private List<ErrorModel> errorModelList;
 
     private final DbService db;
     private final DocumentGenerator documentGenerator;
     private final ProjectProvider projectProvider;
     private final QueryService queryService;
-    private final JsonApiResponseHelper responseHelper;
+    private final ErrorModelHelper errorModelHelper;
     private final UserInfoProvider userInfoProvider;
     private final Stage stage;
 
     @Inject
     public QueryBuilderController(DbService db, DocumentGenerator documentGenerator, ProjectProvider projectProvider,
-                                  QueryService queryService, JsonApiResponseHelper responseHelper,
+                                  QueryService queryService, ErrorModelHelper errorModelHelper,
                                   UserInfoProvider userInfoProvider, Stage stage)
     {
         this.db = db;
         this.documentGenerator = documentGenerator;
         this.projectProvider = projectProvider;
         this.queryService = queryService;
-        this.responseHelper = responseHelper;
+        this.errorModelHelper = errorModelHelper;
         this.userInfoProvider = userInfoProvider;
         this.stage = stage;
     }
 
     @Override
-    public void generate(Request req, Response res, String requestSubUrl)
+    public JsonApiModel generate(Request req, String requestSubUrl)
     {
-        resourceDataList = new ArrayList<>();
+        includedData = new ArrayList<>();
         errorModelList = new ArrayList<>();
 
         if(userInfoProvider.isSystemDeveloper())
@@ -139,33 +137,26 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
                                 update(sql);
                                 break;
                             default:
-                                responseHelper.sendUnknownActionError(req);
-                                return;
+                                return null;
                         }
                     }
                 }
             }
             catch (Throwable e)
             {
-                errorModelList.add(responseHelper.getErrorModel(Be5Exception.internal(e)));
+                errorModelList.add(errorModelHelper.getErrorModel(Be5Exception.internal(e)));
             }
 
-            //todo remove, use fail fast
-            res.sendAsJson(JsonApiModel.data(
+            return data(
                     resourceData,
                     errorModelList.toArray(new ErrorModel[0]),
-                    resourceDataList.toArray(new ResourceData[0]),
-                    responseHelper.getDefaultMeta(req),
-                    null
-            ));
+                    includedData.toArray(new ResourceData[0])
+            );
         }
         else
         {
-            responseHelper.sendErrorAsJson(
-                    responseHelper.getErrorModel(Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
-                            Collections.singletonMap(SELF_LINK, "queryBuilder")),
-                    req
-            );
+            return error(errorModelHelper.getErrorModel(Be5Exception.accessDenied("Role " + RoleType.ROLE_SYSTEM_DEVELOPER + " required."),
+                    Collections.singletonMap(SELF_LINK, "queryBuilder")));
         }
     }
 
@@ -173,7 +164,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
     {
         Object id = db.insert(sql);
 
-        resourceDataList.add(new ResourceData(
+        includedData.add(new ResourceData(
                 "result",
                 FrontendConstants.STATIC_ACTION,
                 new StaticPagePresentation(
@@ -188,7 +179,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
     {
         Object id = db.update(sql);
 
-        resourceDataList.add(new ResourceData(
+        includedData.add(new ResourceData(
                 "result",
                 FrontendConstants.STATIC_ACTION,
                 new StaticPagePresentation(
@@ -219,7 +210,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
 
         try
         {
-            resourceDataList.add(new ResourceData(
+            includedData.add(new ResourceData(
                     "finalSql",
                     FrontendConstants.STATIC_ACTION,
                     new StaticPagePresentation(
@@ -232,7 +223,7 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
         catch (Be5Exception e)
         {
             if(stage == Stage.DEVELOPMENT)log.log(Level.SEVERE, "Error in queryBuilder", e);
-            errorModelList.add(responseHelper.getErrorModel(e));
+            errorModelList.add(errorModelHelper.getErrorModel(e));
         }
 
         try
@@ -241,13 +232,13 @@ public class QueryBuilderController extends ApiControllerSupport implements Cont
 
             //todo refactor documentGenerator
             document.getData().setId("result");
-            resourceDataList.add(document.getData());
-            resourceDataList.addAll(Arrays.asList(document.getIncluded()));
+            includedData.add(document.getData());
+            includedData.addAll(Arrays.asList(document.getIncluded()));
         }
         catch (Be5Exception e)
         {
             if(stage == Stage.DEVELOPMENT)log.log(Level.SEVERE, "Error in queryBuilder", e);
-            errorModelList.add(responseHelper.getErrorModel(e));
+            errorModelList.add(errorModelHelper.getErrorModel(e));
         }
 
         entity.getOrigin().remove(entityName);

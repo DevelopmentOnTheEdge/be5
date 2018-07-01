@@ -53,7 +53,12 @@ public class GenerateContext extends ScriptSupport<GenerateContext>
             return;
         }
 
-        init();
+        initProject();
+
+        if(connectionProfileName != null)
+        {
+            be5Project.setConnectionProfileName(connectionProfileName);
+        }
 
         try
         {

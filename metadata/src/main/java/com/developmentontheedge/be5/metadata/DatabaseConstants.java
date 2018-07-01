@@ -1,5 +1,9 @@
 package com.developmentontheedge.be5.metadata;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
 /**
  * Temporary interface for imported and unclassified constants from BeanExplorer EE.
  */
@@ -48,4 +52,14 @@ public interface DatabaseConstants
     String IP_MODIFIED_COLUMN_NAME = "ipModified___";
 
     String IS_DELETED_COLUMN_NAME = "isDeleted___";
+
+    List<String> specialColumns = ImmutableList.<String>builder()
+            .add(WHO_INSERTED_COLUMN_NAME)
+            .add(WHO_MODIFIED_COLUMN_NAME)
+            .add(CREATION_DATE_COLUMN_NAME)
+            .add(MODIFICATION_DATE_COLUMN_NAME)
+            .add(IP_INSERTED_COLUMN_NAME)
+            .add(IP_MODIFIED_COLUMN_NAME)
+            .add(IS_DELETED_COLUMN_NAME)
+            .build();
 }

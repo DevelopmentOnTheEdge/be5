@@ -20,19 +20,12 @@ import static com.developmentontheedge.be5.metadata.DatabaseConstants.IS_DELETED
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.MODIFICATION_DATE_COLUMN_NAME;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.WHO_INSERTED_COLUMN_NAME;
 import static com.developmentontheedge.be5.metadata.DatabaseConstants.WHO_MODIFIED_COLUMN_NAME;
+import static com.developmentontheedge.be5.metadata.DatabaseConstants.specialColumns;
 
 
 public class ColumnsHelper
 {
-    static final List<String> insertSpecialColumns = ImmutableList.<String>builder()
-            .add(WHO_INSERTED_COLUMN_NAME)
-            .add(WHO_MODIFIED_COLUMN_NAME)
-            .add(CREATION_DATE_COLUMN_NAME)
-            .add(MODIFICATION_DATE_COLUMN_NAME)
-            .add(IP_INSERTED_COLUMN_NAME)
-            .add(IP_MODIFIED_COLUMN_NAME)
-            .add(IS_DELETED_COLUMN_NAME)
-            .build();
+    static final List<String> insertSpecialColumns = specialColumns;
 
     static final List<String> updateSpecialColumns = ImmutableList.<String>builder()
                     .add(WHO_MODIFIED_COLUMN_NAME)
