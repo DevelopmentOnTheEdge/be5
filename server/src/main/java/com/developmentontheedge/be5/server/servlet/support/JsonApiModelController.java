@@ -49,6 +49,11 @@ public abstract class JsonApiModelController extends ApiControllerSupport
         return JsonApiModel.data(data, included, null);
     }
 
+    protected JsonApiModel data(ResourceData data, ErrorModel[] errorModels, ResourceData[] included)
+    {
+        return JsonApiModel.data(data, errorModels, included, null);
+    }
+
 //
 //    protected JsonApiModel error(ErrorModel error, Object meta)
 //    {

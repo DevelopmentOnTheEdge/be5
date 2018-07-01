@@ -60,7 +60,6 @@ public class JsonApiModel
 //        return new JsonApiModel(null, new ErrorModel[]{error}, meta, included);
 //    }
 
-    //todo remove, use fail fast
     public static JsonApiModel data(ResourceData data, ErrorModel[] errorModels, ResourceData[] included, Object meta)
     {
         return new JsonApiModel(data, errorModels, meta, included);

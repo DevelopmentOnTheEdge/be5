@@ -57,7 +57,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
     private final CategoriesService categoriesService;
     private final UserInfoProvider userInfoProvider;
     private final FormGenerator formGenerator;
-    private final ErrorModelHelper responseHelper;
+    private final ErrorModelHelper errorModelHelper;
 
     @Inject
     public DocumentGeneratorImpl(
@@ -66,7 +66,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
             CategoriesService categoriesService,
             TableModelService tableModelService,
             UserInfoProvider userInfoProvider,
-            FormGenerator formGenerator, ErrorModelHelper responseHelper)
+            FormGenerator formGenerator, ErrorModelHelper errorModelHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
@@ -74,7 +74,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         this.tableModelService = tableModelService;
         this.userInfoProvider = userInfoProvider;
         this.formGenerator = formGenerator;
-        this.responseHelper = responseHelper;
+        this.errorModelHelper = errorModelHelper;
     }
 
 //
@@ -246,7 +246,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         {
             HashUrl url = new HashUrl(TABLE_ACTION, entityName, queryName).named(parameters);
             log.log(e.getLogLevel(), "Error in table: " + url.toString(), e);
-            return JsonApiModel.error(responseHelper.
+            return JsonApiModel.error(errorModelHelper.
                     getErrorModel(e, Collections.singletonMap(SELF_LINK, url.toString())), null);
         }
     }
@@ -271,7 +271,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator
         catch (Be5Exception e)
         {
             log.log(e.getLogLevel(), "Error in table: " + url, e);
-            return JsonApiModel.error(responseHelper.
+            return JsonApiModel.error(errorModelHelper.
                     getErrorModel(e, links), null);
         }
     }

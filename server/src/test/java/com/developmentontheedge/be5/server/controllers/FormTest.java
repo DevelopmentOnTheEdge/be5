@@ -2,6 +2,7 @@ package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.model.FormPresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.google.common.collect.ImmutableMap;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -36,7 +38,8 @@ public class FormTest extends ServerBe5ProjectTest
         assertNull(jsonApiModel.getErrors());
         assertNotNull(jsonApiModel.getData());
 
-        //TODO verify(response).sendAsJson(any(ResourceData.class), any(Map.class))
+        assertEquals("Insert", ((FormPresentation)jsonApiModel.getData().getAttributes()).getOperation());
+        assertEquals("All records", ((FormPresentation)jsonApiModel.getData().getAttributes()).getQuery());
     }
 
     @Test
@@ -44,9 +47,11 @@ public class FormTest extends ServerBe5ProjectTest
     {
         initUserWithRoles(RoleType.ROLE_ADMINISTRATOR);
 
-        generateForQuery("Query without operations");
+        JsonApiModel jsonApiModel = generateForQuery("Query without operations");
 
-        //TODO verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class))
+        assertEquals("403", jsonApiModel.getErrors()[0].getStatus());
+        assertEquals("Operation 'testtableAdmin.Insert' not assigned to query: 'Query without operations'",
+                jsonApiModel.getErrors()[0].getTitle());
     }
 
     @Test
@@ -59,7 +64,9 @@ public class FormTest extends ServerBe5ProjectTest
         assertNotNull(jsonApiModel.getErrors());
         assertNull(jsonApiModel.getData());
 
-        //TODO verify(response).sendErrorAsJson(any(ErrorModel.class), any(Map.class))
+        assertEquals("403", jsonApiModel.getErrors()[0].getStatus());
+        assertEquals("Access denied to operation: testtableAdmin.Insert",
+                jsonApiModel.getErrors()[0].getTitle());
     }
 
     private JsonApiModel generateForQuery(String queryName)

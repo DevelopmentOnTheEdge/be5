@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.server.controllers;
 
 import com.developmentontheedge.be5.server.RestApiConstants;
+import com.developmentontheedge.be5.server.model.TablePresentation;
 import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
 import com.developmentontheedge.be5.test.ServerBe5ProjectTest;
 import com.developmentontheedge.be5.test.ServerTestResponse;
@@ -11,8 +12,7 @@ import org.junit.Test;
 import javax.inject.Inject;
 import java.util.Date;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
 
 
 public class TableControllerTest extends ServerBe5ProjectTest
@@ -29,12 +29,12 @@ public class TableControllerTest extends ServerBe5ProjectTest
     @Test
     public void generate()
     {
-        tableController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
+        JsonApiModel jsonApiModel = tableController.generate(getSpyMockRequest("/api/table/", ImmutableMap.of(
                 RestApiConstants.ENTITY,"testtable",
                 RestApiConstants.QUERY,"All records",
-                RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime())), ServerTestResponse.mock);
+                RestApiConstants.TIMESTAMP_PARAM,"" + new Date().getTime())), "");
 
-        verify(ServerTestResponse.mock).sendAsJson(any(JsonApiModel.class));
+        assertEquals("testtable: All records", ((TablePresentation)jsonApiModel.getData().getAttributes()).getTitle());
     }
 
 }

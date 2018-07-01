@@ -6,23 +6,15 @@ import com.developmentontheedge.be5.base.services.UserInfoProvider;
 import com.developmentontheedge.be5.base.util.HtmlUtils;
 import com.developmentontheedge.be5.operation.services.GroovyOperationLoader;
 import com.developmentontheedge.be5.server.model.jsonapi.ErrorModel;
-import com.developmentontheedge.be5.server.model.jsonapi.JsonApiModel;
-import com.developmentontheedge.be5.server.model.jsonapi.ResourceData;
-import com.developmentontheedge.be5.web.Request;
-import com.developmentontheedge.be5.web.Response;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Logger;
-
-import static com.developmentontheedge.be5.server.RestApiConstants.TIMESTAMP_PARAM;
 
 
 public class ErrorModelHelper
@@ -31,74 +23,15 @@ public class ErrorModelHelper
 
     private final UserInfoProvider userInfoProvider;
     private final GroovyOperationLoader groovyOperationLoader;
-    private final Provider<Response> responseProvider;
     private final UserAwareMeta userAwareMeta;
 
     @Inject
     public ErrorModelHelper(UserInfoProvider userInfoProvider, GroovyOperationLoader groovyOperationLoader,
-                            Provider<Response> responseProvider, UserAwareMeta userAwareMeta)
+                            UserAwareMeta userAwareMeta)
     {
         this.userInfoProvider = userInfoProvider;
         this.groovyOperationLoader = groovyOperationLoader;
-        this.responseProvider = responseProvider;
         this.userAwareMeta = userAwareMeta;
-    }
-
-    @Deprecated
-    public void sendAsJson(JsonApiModel jsonApiModel)
-    {
-        responseProvider.get().sendAsJson(jsonApiModel);
-    }
-
-    @Deprecated
-    public void sendAsJson(ResourceData data, Object meta)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.data(data, meta));
-    }
-
-    @Deprecated
-    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta));
-    }
-
-//    public void sendAsJson(ResourceData data, ResourceData[] included, Object meta, Map<String, String> links)
-//    {
-//        responseProvider.get().sendAsJson(JsonApiModel.data(data, included, meta, links));
-//    }
-
-    @Deprecated
-    public void sendErrorAsJson(Be5Exception e, Request req)
-    {
-        sendErrorAsJson(e, req, null);
-    }
-
-    @Deprecated
-    public void sendErrorAsJson(Be5Exception e, Request req, Map<String, String> links)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.error(getErrorModel(e, links), getDefaultMeta(req)));
-    }
-
-    @Deprecated
-    public void sendErrorAsJson(ErrorModel error, Request req)
-    {
-        responseProvider.get().sendAsJson(JsonApiModel.error(error, getDefaultMeta(req)));
-    }
-
-//    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta)
-//    {
-//        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta));
-//    }
-
-//    public void sendErrorAsJson(ErrorModel error, ResourceData[] included, Object meta, Map<String, String> links)
-//    {
-//        responseProvider.get().sendAsJson(JsonApiModel.error(error, included, meta, links));
-//    }
-
-    @Deprecated
-    public void sendUnknownActionError(Request req)
-    {
-        sendErrorAsJson( Be5Exception.notFound("route" + req.getRequestUri()), req);
     }
 
     private String exceptionAsString(Throwable e)
@@ -140,11 +73,6 @@ public class ErrorModelHelper
         {
             return new ErrorModel(e.getHttpStatusCode(), userAwareMeta.getLocalizedBe5ErrorMessage(e), links);
         }
-    }
-
-    public Object getDefaultMeta(Request request)
-    {
-        return Collections.singletonMap(TIMESTAMP_PARAM, request.get(TIMESTAMP_PARAM));
     }
 
     private String getErrorCodeLine(Throwable e)

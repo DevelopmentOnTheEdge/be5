@@ -41,7 +41,7 @@ public class FormGeneratorImpl implements FormGenerator
     private final OperationService operationService;
     private final OperationExecutor operationExecutor;
     private final UserInfoProvider userInfoProvider;
-    private final ErrorModelHelper responseHelper;
+    private final ErrorModelHelper errorModelHelper;
 
     @Inject
     public FormGeneratorImpl(
@@ -50,14 +50,14 @@ public class FormGeneratorImpl implements FormGenerator
             OperationService operationService,
             OperationExecutor operationExecutor,
             UserInfoProvider userInfoProvider,
-            ErrorModelHelper responseHelper)
+            ErrorModelHelper errorModelHelper)
     {
         this.userAwareMeta = userAwareMeta;
         this.groovyRegister = groovyRegister;
         this.operationService = operationService;
         this.operationExecutor = operationExecutor;
         this.userInfoProvider = userInfoProvider;
-        this.responseHelper = responseHelper;
+        this.errorModelHelper = errorModelHelper;
     }
 
     @Override
@@ -212,7 +212,7 @@ public class FormGeneratorImpl implements FormGenerator
     private ErrorModel getErrorModel(Throwable e, HashUrl url)
     {
         log.log(Level.SEVERE, "Error in operation: " + url.toString(), e);
-        return responseHelper.getErrorModel(Be5Exception.internal(e),
+        return errorModelHelper.getErrorModel(Be5Exception.internal(e),
                 Collections.singletonMap(SELF_LINK, url.toString()));
     }
 
