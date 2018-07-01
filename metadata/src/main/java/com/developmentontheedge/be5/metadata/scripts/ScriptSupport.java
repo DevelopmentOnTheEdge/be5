@@ -93,7 +93,7 @@ public abstract class ScriptSupport<T>
         }
     }
 
-    protected void initProject()
+    public void initProject()
     {
         initLogging();
 

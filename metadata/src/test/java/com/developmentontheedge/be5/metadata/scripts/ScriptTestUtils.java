@@ -28,7 +28,7 @@ public abstract class ScriptTestUtils
     public TemporaryFolder tmp = new TemporaryFolder();
 
     protected Path tpmProjectPath;
-    Project project;
+    protected Project project;
 
     public final String profileTestMavenPlugin = "profileTestMavenPlugin";
 
@@ -78,7 +78,7 @@ public abstract class ScriptTestUtils
         return module;
     }
 
-    void createTestDB() throws Exception
+    protected void createTestDB() throws Exception
     {
         AppDb appDb = new AppDb();
         appDb.setBe5Project(project)

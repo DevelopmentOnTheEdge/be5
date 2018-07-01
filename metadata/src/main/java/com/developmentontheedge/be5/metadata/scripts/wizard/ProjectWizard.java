@@ -28,6 +28,7 @@ import java.util.TreeSet;
 public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 {
     private InputStream inputStream = System.in;
+    private BufferedReader bufferedReader;
     private static PrintStream out = System.out;
 
     private static class MenuAction implements Runnable
@@ -82,6 +83,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
 
     public void wizard() throws Exception
     {
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         final Parameters parameters = new Parameters();
         ProjectGenerator projectGenerator = new ProjectGenerator(parameters);
 
@@ -478,7 +480,7 @@ public final class ProjectWizard extends ScriptSupport<ProjectWizard>
     {
         try
         {
-            return new BufferedReader( new InputStreamReader( inputStream ) ).readLine();
+            return bufferedReader.readLine();
         }
         catch ( IOException e1 )
         {
