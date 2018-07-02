@@ -111,6 +111,14 @@ public class ParametersAccessTest
     }
 
     @Test
+    public void getLong()
+    {
+        when(httpServletRequest.getParameter("name")).thenReturn("123");
+
+        assertEquals(123L, (long)req.getLong("name"));
+    }
+
+    @Test
     public void getInteger_null()
     {
         assertEquals(null, req.getInteger("name"));

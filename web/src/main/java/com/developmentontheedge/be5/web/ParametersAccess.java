@@ -37,7 +37,19 @@ public interface ParametersAccess
 
         return s != null ? (Integer)Integer.parseInt(s) : defaultValue;
     }
-    
+
+    default Long getLong(String parameter)
+    {
+        return getLong(parameter, null);
+    }
+
+    default Long getLong(String parameter, Long defaultValue)
+    {
+        String s = get(parameter);
+
+        return s != null ? Long.parseLong(s) : defaultValue;
+    }
+
     /**
      * Returns a request parameter or empty string if there's no such parameter.
      * 
