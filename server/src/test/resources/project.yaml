@@ -12,6 +12,7 @@ testProject:
   - testCollection
   - testGenCollection
   - atest
+  - rootMenu
   - meters
   - persons
   - propertyTypes

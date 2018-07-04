@@ -1,0 +1,26 @@
+rootMenu:
+  type: table
+  displayName: Root menu
+  order: '9'
+  primaryKey: ID
+  scheme:
+    columns:
+    - ID:
+        type: KEYTYPE
+        autoIncrement: true
+        primaryKey: true
+    - name:
+        type: VARCHAR(20)
+    - value:
+        type: VARCHAR(30)
+  queries:
+  - Test1:
+      type: 1D_unknown
+      roles: TestUser2
+      code: |2-
+            SELECT
+              t.ID AS "___ID",
+              t.name AS "Name",
+              t.value AS "Value"
+            FROM
+              testtable t

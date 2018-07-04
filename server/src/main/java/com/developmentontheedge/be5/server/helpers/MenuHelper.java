@@ -106,7 +106,7 @@ public class MenuHelper
             operations = null;
         }
 
-        if (canBeMovedToRoot(permittedQueries, title, language, meta))
+        if (permittedQueries.size() == 1)
         {
             // Query in the root, contains an action.
             Id id = null;
@@ -180,13 +180,13 @@ public class MenuHelper
         return operations;
     }
 
-    /**
-     * If the entity contains only one query, that's named "All records" or as the entity itself.
-     */
-    private boolean canBeMovedToRoot(List<Query> queries, String entityTitle, String language, Meta meta)
-    {
-        return getTitleOfRootQuery(queries, entityTitle, language, meta) != null;
-    }
+//    /**
+//     * If the entity contains only one query, that's named "All records" or as the entity itself.
+//     */
+//    private boolean canBeMovedToRoot(List<Query> queries, String entityTitle, String language, Meta meta)
+//    {
+//        return getTitleOfRootQuery(queries, entityTitle, language, meta) != null;
+//    }
 
     private String getTitleOfRootQuery(List<Query> queries, String entityTitle, String language, Meta meta)
     {
