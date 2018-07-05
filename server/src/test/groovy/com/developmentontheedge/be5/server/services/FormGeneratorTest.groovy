@@ -55,5 +55,7 @@ class FormGeneratorTest extends TestTableQueryDBTest
         assertEquals OperationStatus.ERROR, formPresentation.getOperationResult().getStatus()
         assertEquals "Error in property (getParameters)",// - [ name: 'name', type: class java.lang.String, value: generateErrorInProperty (String) ]",
                 formPresentation.getOperationResult().getMessage()
+
+        assertEquals null, formPresentation.getOperationResult().getDetails()
     }
 }

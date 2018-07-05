@@ -20,7 +20,7 @@ public class FormPresentation
     private final Map<String, Object> operationParams;
     private final JsonObject bean;
     private final Object layout;
-    private final OperationResult operationResult;//todo remove
+    private final OperationResult operationResult;
     private final ErrorModel errorModel;
 
     public FormPresentation(OperationInfo operationInfo, OperationContext context, String title,

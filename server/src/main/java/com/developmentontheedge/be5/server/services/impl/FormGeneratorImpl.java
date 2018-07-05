@@ -200,7 +200,7 @@ public class FormGeneratorImpl implements FormGenerator
     {
         if(result.getStatus() == OperationStatus.ERROR)
         {
-            return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()));
+            return OperationResult.error(userAwareMeta.getLocalizedExceptionMessage(result.getMessage()), null);
         }
         else
         {
