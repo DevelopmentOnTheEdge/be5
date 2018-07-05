@@ -530,7 +530,7 @@ public class YamlDeserializer
                 origin.put( element );
         }
     }
-    
+
     private abstract class FileDeserializer extends BaseDeserializer
     {
         protected final Node content;
@@ -538,7 +538,12 @@ public class YamlDeserializer
         private FileDeserializer( final String content, final Path path ) throws ReadException
         {
             super( path );
-            
+            if(content == null)
+            {
+                this.content = null;
+                return;
+            }
+
             try
             {
                 this.content = new Yaml().compose( new StringReader( content ) );
@@ -559,6 +564,11 @@ public class YamlDeserializer
         {
             this( ProjectFileSystem.read( path ), path );
         }
+
+        public FileDeserializer( final Path path, boolean nullAble ) throws ReadException
+        {
+            this( ProjectFileSystem.read( path, nullAble ), path );
+        }
         
         public FileDeserializer()
         {
@@ -567,7 +577,10 @@ public class YamlDeserializer
         
         public void deserialize() throws ReadException
         {
-            doDeserialize( Serialization.derepresent( content ) );
+            if(content != null)
+            {
+                doDeserialize(Serialization.derepresent(content));
+            }
         }
         
         protected abstract void doDeserialize( Object serializedRoot ) throws ReadException;
@@ -585,7 +598,7 @@ public class YamlDeserializer
 
         public StaticPagesDeserializer( final Path path, final BeModelCollection<LanguageStaticPages> target ) throws ReadException
         {
-            super( path );
+            super( path, true );
             this.target = target;
         }
 
@@ -775,7 +788,7 @@ public class YamlDeserializer
 
         public CustomizationDeserializer( final Path path, final Module target ) throws ReadException
         {
-            super( path );
+            super( path, true );
             this.target = target;
         }
         
@@ -806,7 +819,7 @@ public class YamlDeserializer
 
         public DaemonsDeserializer( final Path path, final BeModelCollection<Daemon> target ) throws ReadException
         {
-            super( path );
+            super( path, true );
             this.target = target;
         }
         
@@ -1289,7 +1302,7 @@ public class YamlDeserializer
 
         public FormsDeserializer( Path path, BeModelCollection<JavaScriptForm> target ) throws ReadException
         {
-            super( path );
+            super( path, true );
             this.target = target;
         }
 
@@ -1488,7 +1501,7 @@ public class YamlDeserializer
 
         public MassChangesDeserializer( final Path path, final MassChanges target ) throws ReadException
         {
-            super(path);
+            super(path, true);
             this.target = target;
         }
 

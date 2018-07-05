@@ -631,12 +631,21 @@ public class ProjectFileSystem
         
         Files.write( file, content.getBytes( StandardCharsets.UTF_8 ) );
     }
-    
+
     public static String read( final Path file ) throws ReadException
+    {
+        return read(file, false);
+    }
+
+    public static String read( final Path file, boolean nullAble ) throws ReadException
     {
         if(!Files.exists( file ))
         {
-            throw new ReadException( file, ReadException.LEE_NOT_FOUND );
+            if(nullAble){
+                return null;
+            }else{
+                throw new ReadException( file, ReadException.LEE_NOT_FOUND );
+            }
         }
         if(!Files.isRegularFile( file ))
         {
@@ -645,7 +654,7 @@ public class ProjectFileSystem
         final byte[] bytes;
         try
         {
-             bytes = readBytes( file );
+            bytes = readBytes( file );
         }
         catch ( Exception e )
         {

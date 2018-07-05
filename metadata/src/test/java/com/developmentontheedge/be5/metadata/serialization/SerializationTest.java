@@ -66,6 +66,23 @@ public class SerializationTest
     public TemporaryFolder tmp = new TemporaryFolder();
 
     @Test
+    public void withoutPagesFile() throws Exception
+    {
+        Path path = tmp.newFolder().toPath();
+        Project project = getProject("test");
+        Serialization.save( project, path );
+        assertTrue(path.resolve("src/customization.yaml").toFile().delete());
+        assertTrue(path.resolve("src/daemons.yaml").toFile().delete());
+        assertTrue(path.resolve("src/forms.yaml").toFile().delete());
+        assertTrue(path.resolve("src/massChanges.yaml").toFile().delete());
+        assertTrue(path.resolve("src/pages.yaml").toFile().delete());
+
+        Project loadProject = Serialization.load(path);
+        assertEquals(0, loadProject.getApplication().getDaemonCollection().getSize());
+        assertEquals(0, loadProject.getApplication().getStaticPageCollection().getSize());
+    }
+
+    @Test
     public void testSerializationBasics() throws Exception
     {
         Path path = tmp.newFolder().toPath();
