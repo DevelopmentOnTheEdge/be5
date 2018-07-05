@@ -37,7 +37,6 @@ public class AppValidate extends ScriptSupport<AppValidate>
     @Override
     public void execute() throws ScriptException
     {
-        logger.info("Reading project from " + projectPath );
         initProject();
 
         setRdbms();

@@ -102,7 +102,7 @@ public abstract class ScriptSupport<T>
             if (projectPath == null)
                 throw new ScriptException("Please specify projectPath attribute");
 
-            logger.info("Reading be5 project from '" + projectPath + "'...");
+            logger.info("Reading project from '" + projectPath + "'");
 
             try
             {
