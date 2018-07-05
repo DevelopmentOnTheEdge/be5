@@ -33,5 +33,5 @@ filterTestTable:
         FROM filterTestTable ft
         WHERE (1=1)
         <if parameter="name">
-          ft.name LIKE <parameter:name />
+          AND ft.name LIKE <parameter:name />
         </if>
