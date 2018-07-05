@@ -1,10 +1,17 @@
 package com.developmentontheedge.be5.server.operations.extenders;
 
+import com.developmentontheedge.be5.metadata.model.Entity;
+import com.developmentontheedge.be5.metadata.model.Query;
+import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
+import com.developmentontheedge.be5.operation.model.Operation;
+import com.developmentontheedge.be5.operation.model.OperationResult;
 import com.developmentontheedge.be5.server.operations.support.OperationExtenderSupport;
+import com.developmentontheedge.beans.DynamicPropertySet;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,64 +31,68 @@ public class CheckRecordsExtender extends OperationExtenderSupport
 
     private String message;
 
-    @Override
-    public void getParameters(MessageHandler output, Operation op, DatabaseConnector connector, DynamicPropertySet parameters,
-                              Map presetValues) throws Exception
+    //TODO @Override
+    public boolean preGetParameters(Operation op, Map<String, Object> presetValues) throws Exception
     {
-        if(skipInvoke(op, connector))
+        boolean skip = skip(op);
+        if(skip)
         {
-            throw new IllegalArgumentException(message);
+            op.setResult(OperationResult.error(message));
         }
+        return skip;
     }
 
     @Override
-    public boolean skipInvoke(Operation op, DatabaseConnector connector)
+    public boolean skipInvoke(Operation op, Object parameters)
     {
-        String entity = op.getEntity();
-        String queryId;
-        queryId = Utils.readQueryID(connector, entity, ALLOWED_RECORDS_VIEW_PREFIX+op.getName());
-        if(queryId == null)
+        boolean skip = skip(op);
+        if(skip)
         {
-            queryId = Utils.readQueryID(connector, entity, ALLOWED_RECORDS_VIEW);
+            op.setResult(OperationResult.error(message));
         }
-        if(queryId == null)
+        return skip;
+    }
+
+    private boolean skip(Operation op)
+    {
+        Entity entity = op.getInfo().getEntity();
+        BeModelCollection<Query> entityQueries = entity.getQueries();
+        Query query;
+        query = entityQueries.get(ALLOWED_RECORDS_VIEW_PREFIX+op.getInfo().getName());
+        if(query == null)
         {
-            return false;
+            query = entityQueries.get(ALLOWED_RECORDS_VIEW);
         }
-        String[] recordIDs = op.getRecordIDs();
-        QueryExecuter qe = new QueryExecuter(connector, op.getUserInfo(), Utils.createSessionAdapter( Collections.EMPTY_MAP ),
-                Collections.EMPTY_MAP, null);
+        if(query == null)
+        {
+            message = "Checked query not found for entity: " + op.getInfo().getEntityName();
+            return true;
+        }
+
         try
         {
-            String pk = Utils.findPrimaryKeyName(connector, entity);
-            Set<String> disabledRecords = new HashSet<String>(Arrays.asList(recordIDs));
-            qe.makeIterator(queryId, Collections.singletonMap(pk, recordIDs));
-            String[][] vals = qe.calcUsingQuery();
-            for(String[] row: vals)
+            List<Object> records = Arrays.asList(op.getContext().getRecords());
+            Set<Object> disabledRecords = new HashSet<>(records);
+
+            List<DynamicPropertySet> dps = queries.readAsRecordsFromQuery(query,
+                    Collections.singletonMap(op.getInfo().getPrimaryKey(), records));
+
+            for(DynamicPropertySet row: dps)
             {
-                disabledRecords.remove(row[0]);
+                disabledRecords.remove(row.getValue("ID"));
             }
             if(disabledRecords.size() > 0)
             {
-                message = "Cannot execute operation " + op.getName() + ": the following records are not found or not accessible: " + disabledRecords;
+                message = "Cannot execute operation " + op.getInfo().getName() + ": the following records are not found or not accessible: " + disabledRecords;
                 return true;
             }
         }
-        catch( Exception e )
+        catch( Throwable e )
         {
-            message = "Cannot execute operation " + op.getName() + ": "+e.getMessage();
+            message = "Cannot execute operation " + op.getInfo().getName() + ": "+e.getMessage();
             return true;
         }
-        finally
-        {
-            qe.closeIterator();
-        }
-        return false;
-    }
 
-    @Override
-    public String getSkipInvokeReason(Operation op, DatabaseConnector connector)
-    {
-        return message;
+        return false;
     }
 }
