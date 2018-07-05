@@ -1,6 +1,6 @@
 package com.developmentontheedge.be5.query.impl.utils;
 
-import com.developmentontheedge.be5.base.services.Meta;
+import com.developmentontheedge.be5.query.QueryBe5ProjectDBTest;
 import com.developmentontheedge.sql.model.AstStart;
 import com.developmentontheedge.sql.model.SqlQuery;
 import org.junit.Ignore;
@@ -11,12 +11,9 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 
 
-public class QueryUtilsFilterTest
+public class QueryUtilsFilterTest extends QueryBe5ProjectDBTest
 {
-    Meta meta;
-
     @Test
-    @Ignore
     public void empty() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
@@ -27,7 +24,6 @@ public class QueryUtilsFilterTest
     }
 
     @Test
-    @Ignore
     public void simpleFilterIntColumn() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());
@@ -38,7 +34,6 @@ public class QueryUtilsFilterTest
     }
 
     @Test
-    @Ignore
     public void simpleFilterStringColumn() throws Exception
     {
         AstStart ast = SqlQuery.parse(meta.getQuery("filterTestTable", "Simple").getQueryCompiled().validate().trim());

@@ -17,7 +17,6 @@ testProject:
   - persons
   - propertyTypes
   - testTags
-  - filterTestTable
   scripts:
   - Post-db
   - dictionaries
