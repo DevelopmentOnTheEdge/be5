@@ -1,6 +1,7 @@
 package com.developmentontheedge.be5.base.services;
 
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
 import com.developmentontheedge.be5.metadata.model.EntityType;
@@ -9,6 +10,7 @@ import com.developmentontheedge.be5.metadata.model.Query;
 import com.developmentontheedge.be5.metadata.model.RoleSet;
 import com.developmentontheedge.be5.metadata.model.TableReference;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -132,6 +134,8 @@ public interface Meta
     boolean isParametrizedTable(Query query);
 
     Set<String> getProjectRoles();
+
+    Collection<Daemon> getDaemons();
 
     Query createQueryFromSql(String sql);
 

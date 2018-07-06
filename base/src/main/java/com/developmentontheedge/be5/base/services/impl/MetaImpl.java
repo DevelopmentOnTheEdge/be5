@@ -7,6 +7,7 @@ import com.developmentontheedge.be5.base.util.Utils;
 import com.developmentontheedge.be5.metadata.RoleType;
 import com.developmentontheedge.be5.metadata.exception.ProjectElementException;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -547,6 +549,12 @@ public class MetaImpl implements Meta
     public Set<String> getProjectRoles()
     {
         return getProject().getRoles();
+    }
+
+    @Override
+    public Collection<Daemon> getDaemons()
+    {
+        return getProject().getApplication().getDaemonCollection().getAvailableElements();
     }
 
     @Override

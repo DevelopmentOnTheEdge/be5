@@ -1,12 +1,14 @@
 package com.developmentontheedge.be5.base.services;
 
 import com.developmentontheedge.be5.base.BaseTest;
+import com.developmentontheedge.be5.metadata.model.Daemon;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
 import org.junit.Test;
 
 import javax.inject.Inject;
 
+import java.util.Collection;
 import java.util.List;
 
 import static com.developmentontheedge.be5.metadata.model.EntityType.COLLECTION;
@@ -65,5 +67,17 @@ public class MetaTest extends BaseTest
         assertEquals(Long.class, meta.getColumnType(testtableAdmin, "ID"));
         assertEquals(String.class, meta.getColumnType(testtableAdmin, "name"));
         assertEquals(Integer.class, meta.getColumnType(testtableAdmin, "value"));
+    }
+
+    @Test
+    public void daemonsTest()
+    {
+        Collection<Daemon> daemons = meta.getDaemons();
+
+        assertEquals(1, daemons.size());
+        daemons.iterator().hasNext();
+        Daemon daemon = daemons.iterator().next();
+        assertEquals("path.to.Daemon", daemon.getClassName());
+        assertEquals("periodic", daemon.getDaemonType());
     }
 }
