@@ -502,6 +502,58 @@ public class SerializationTest
     }
 
     @Test
+    public void testGroovyQuery() throws Exception
+    {
+        final Project project = new Project("test");
+
+        final Entity entity = new Entity("testTable", project.getApplication(), EntityType.TABLE);
+        DataElementUtils.saveQuiet(entity);
+        final Query query = new Query("All records", entity);
+        query.setType(QueryType.GROOVY);
+        query.setFileName("path/to/GroovyQuery.groovy");
+        query.setQuery("class Test{}");
+        DataElementUtils.saveQuiet(query);
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save( project, tempFolder );
+
+        final Project project2 = Serialization.load( tempFolder );
+        Query query1 = project2.getApplication().getEntity("testTable").getQueries().get("All records");
+
+        assertNotNull(query1);
+        assertEquals(QueryType.GROOVY, query1.getType());
+        assertEquals("path/to/GroovyQuery.groovy", query1.getFileName());
+        assertEquals("class Test{}", query1.getQuery());
+        assertEquals(query, query1);
+    }
+
+    @Test
+    public void testJsQuery() throws Exception
+    {
+        final Project project = new Project("test");
+
+        final Entity entity = new Entity("testTable", project.getApplication(), EntityType.TABLE);
+        DataElementUtils.saveQuiet(entity);
+        final Query query = new Query("All records", entity);
+        query.setType(QueryType.JAVASCRIPT);
+        query.setFileName("path/to/GroovyQuery.js");
+        query.setQuery("class Test{}");
+        DataElementUtils.saveQuiet(query);
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save( project, tempFolder );
+
+        final Project project2 = Serialization.load( tempFolder );
+        Query query1 = project2.getApplication().getEntity("testTable").getQueries().get("All records");
+
+        assertNotNull(query1);
+        assertEquals(QueryType.JAVASCRIPT, query1.getType());
+        assertEquals("path/to/GroovyQuery.js", query1.getFileName());
+        assertEquals("class Test{}", query1.getQuery());
+        assertEquals(query, query1);
+    }
+
+    @Test
     public void testStaticPageWithPageCustomization() throws Exception
     {
         Path path = tmp.newFolder().toPath();
