@@ -1,9 +1,12 @@
 package com.developmentontheedge.be5.test;
 
 import com.developmentontheedge.be5.server.ServerModule;
+import com.developmentontheedge.be5.server.services.process.DaemonStarter;
 import com.developmentontheedge.be5.server.servlet.TemplateModule;
+import com.developmentontheedge.be5.test.mocks.DaemonStarterForTest;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.util.Modules;
 
 
@@ -27,6 +30,8 @@ public abstract class ServerBe5ProjectTest extends ServerTestUtils
         {
             install(new BaseDbMockTestModule());
             install(new ServerWebTestModule());
+
+            bind(DaemonStarter.class).to(DaemonStarterForTest.class).in(Scopes.SINGLETON);
         }
     }
 }

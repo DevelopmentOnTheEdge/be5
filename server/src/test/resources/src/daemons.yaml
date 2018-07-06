@@ -1,1 +1,6 @@
-daemons: {}
+daemons:
+  TestDeamon:
+    className: com.developmentontheedge.be5.server.services.process.TestDaemon
+    configSection: TestDaemon
+    daemonType: periodic
+    description: Test daemon

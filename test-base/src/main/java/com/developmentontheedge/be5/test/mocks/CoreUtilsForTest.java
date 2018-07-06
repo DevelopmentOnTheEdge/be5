@@ -4,12 +4,28 @@ import com.developmentontheedge.be5.base.services.CoreUtils;
 
 import java.util.Map;
 
+import static org.mockito.Mockito.mock;
+
+
 public class CoreUtilsForTest implements CoreUtils
 {
+    public static CoreUtils mock = mock(CoreUtils.class);
+
+    public static void clearMock()
+    {
+        mock = mock(CoreUtils.class);
+    }
+
+    @Override
+    public String getSystemSettingInSection(String section, String param)
+    {
+        return getSystemSettingInSection(section, param, null);
+    }
+
     @Override
     public String getSystemSettingInSection(String section, String param, String defValue)
     {
-        return null;
+        return mock.getSystemSettingInSection(section, param, defValue);
     }
 
     @Override
@@ -90,9 +106,4 @@ public class CoreUtilsForTest implements CoreUtils
 
     }
 
-    @Override
-    public String getSystemSettingInSection(String section, String param)
-    {
-        return null;
-    }
 }
