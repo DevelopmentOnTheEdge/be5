@@ -14,11 +14,11 @@
               password="PASSWORD"
               driverClassName="org.postgresql.Driver"
               url="URL"
-              maxActive="10"
+              maxActive="200"
               maxIdle="10"
-              maxWait="100"
+              maxWait="999"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
               type="javax.sql.DataSource"
     />
 
-</Context>  
+</Context>
