@@ -10,7 +10,6 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfiles;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfilesRoot;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.metadata.model.Daemons;
 import com.developmentontheedge.be5.metadata.model.DdlElement;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityItem;
@@ -27,13 +26,11 @@ import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
 import com.developmentontheedge.be5.metadata.model.LocalizationElement;
 import com.developmentontheedge.be5.metadata.model.Localizations;
 import com.developmentontheedge.be5.metadata.model.MassChange;
-import com.developmentontheedge.be5.metadata.model.MassChanges;
 import com.developmentontheedge.be5.metadata.model.Module;
 import com.developmentontheedge.be5.metadata.model.Operation;
 import com.developmentontheedge.be5.metadata.model.OperationExtender;
 import com.developmentontheedge.be5.metadata.model.OperationSet;
 import com.developmentontheedge.be5.metadata.model.PageCustomization;
-import com.developmentontheedge.be5.metadata.model.PageCustomizations;
 import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.ProjectFileStructure;
 import com.developmentontheedge.be5.metadata.model.Query;
@@ -1258,135 +1255,135 @@ public class YamlSerializer
         project.setLocation( projectRoot );
         serialize( project, true );
     }
-    
-    public String serialize( final Entity entity ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( entity.getProject() );
-        return new EntitySerializer().serialize( entity );
-    }
-    
-    public String toString( final Entity entity )
-    {
-        this.fileSystem = new ProjectFileSystem( entity.getProject() );
-        return new EntitySerializer().toString( entity );
-    }
-    
-    public void serialize( final LanguageLocalizations languageLocalizations ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( languageLocalizations.getProject() );
-        new LocalizationSerializer().serialize( languageLocalizations );
-    }
-    
-    public String toString( final LanguageLocalizations languageLocalizations )
-    {
-        this.fileSystem = new ProjectFileSystem( languageLocalizations.getProject() );
-        return new LocalizationSerializer().toString( languageLocalizations );
-    }
-    
-    public void serialize( final MassChanges massChanges ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( massChanges.getProject() );
-        new MassChangesSerializer().serialize( massChanges );
-    }
-    
-    public String toString( final MassChanges massChanges )
-    {
-        this.fileSystem = new ProjectFileSystem( massChanges.getProject() );
-        return new MassChangesSerializer().toString( massChanges );
-    }
-    
-    public void serialize( final SecurityCollection security ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( security.getProject() );
-        new SecuritySerializer().serialize( security );
-    }
-    
-    public String toString( final SecurityCollection security )
-    {
-        this.fileSystem = new ProjectFileSystem( security.getProject() );
-        return new SecuritySerializer().toString( security );
-    }
-    
-    public void serialize( final BeConnectionProfiles connectionProfiles ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( connectionProfiles.getProject() );
-        new ConnectionProfilesSerializer().serialize( connectionProfiles.getType(), connectionProfiles );
-    }
-    
-    public String toString( final BeConnectionProfiles connectionProfiles )
-    {
-        this.fileSystem = new ProjectFileSystem( connectionProfiles.getProject() );
-        return new ConnectionProfilesSerializer().toString( connectionProfiles );
-    }
-
-    public void serialize( final PageCustomizations customizations ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( customizations.getProject() );
-        new CustomizationSerializer().serialize( customizations.getModule() );
-    }
-    
-    public String toString( @SuppressWarnings( "unused" ) final PageCustomizations customizations, final Module application )
-    {
-        this.fileSystem = new ProjectFileSystem( application.getProject() );
-        return new CustomizationSerializer().toString( application );
-    }
-
-    public void serialize( final Daemons daemons ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( daemons.getProject() );
-        new DaemonsSerializer().serialize( daemons );
-    }
-    
-    public String toString( final Daemons daemons )
-    {
-        this.fileSystem = new ProjectFileSystem( daemons.getProject() );
-        return new DaemonsSerializer().toString( daemons );
-    }
-
-    public void serialize( final JavaScriptForms forms ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( forms.getProject() );
-        new FormsSerializer().serialize( forms );
-    }
-    
-    public String toString( final JavaScriptForms forms )
-    {
-        this.fileSystem = new ProjectFileSystem( forms.getProject() );
-        return new FormsSerializer().toString( forms );
-    }
-
-    public void serialize( final StaticPages pages ) throws WriteException
-    {
-        this.fileSystem = new ProjectFileSystem( pages.getProject() );
-        new StaticPagesSerializer().serialize( pages );
-    }
-    
-    public String toString( final StaticPages pages )
-    {
-        this.fileSystem = new ProjectFileSystem( pages.getProject() );
-        return new StaticPagesSerializer().toString( pages );
-    }
-    
-    public void serialize( final Project project ) throws WriteException
-    {
-        Objects.requireNonNull( project.getLocation(), project.getName() );
-        serialize( project, false );
-    }
-    
-    public String toString( final Project project )
-    {
-        Objects.requireNonNull( project.getLocation(), project.getName() );
-        
-        try
-        {
-            return serializeToString( project, false );
-        }
-        catch ( WriteException e )
-        {
-            throw new AssertionError();
-        }
-    }
-    
+//
+//    public String serialize( final Entity entity ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( entity.getProject() );
+//        return new EntitySerializer().serialize( entity );
+//    }
+//
+//    public String toString( final Entity entity )
+//    {
+//        this.fileSystem = new ProjectFileSystem( entity.getProject() );
+//        return new EntitySerializer().toString( entity );
+//    }
+//
+//    public void serialize( final LanguageLocalizations languageLocalizations ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( languageLocalizations.getProject() );
+//        new LocalizationSerializer().serialize( languageLocalizations );
+//    }
+//
+//    public String toString( final LanguageLocalizations languageLocalizations )
+//    {
+//        this.fileSystem = new ProjectFileSystem( languageLocalizations.getProject() );
+//        return new LocalizationSerializer().toString( languageLocalizations );
+//    }
+//
+//    public void serialize( final MassChanges massChanges ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( massChanges.getProject() );
+//        new MassChangesSerializer().serialize( massChanges );
+//    }
+//
+//    public String toString( final MassChanges massChanges )
+//    {
+//        this.fileSystem = new ProjectFileSystem( massChanges.getProject() );
+//        return new MassChangesSerializer().toString( massChanges );
+//    }
+//
+//    public void serialize( final SecurityCollection security ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( security.getProject() );
+//        new SecuritySerializer().serialize( security );
+//    }
+//
+//    public String toString( final SecurityCollection security )
+//    {
+//        this.fileSystem = new ProjectFileSystem( security.getProject() );
+//        return new SecuritySerializer().toString( security );
+//    }
+//
+//    public void serialize( final BeConnectionProfiles connectionProfiles ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( connectionProfiles.getProject() );
+//        new ConnectionProfilesSerializer().serialize( connectionProfiles.getType(), connectionProfiles );
+//    }
+//
+//    public String toString( final BeConnectionProfiles connectionProfiles )
+//    {
+//        this.fileSystem = new ProjectFileSystem( connectionProfiles.getProject() );
+//        return new ConnectionProfilesSerializer().toString( connectionProfiles );
+//    }
+//
+//    public void serialize( final PageCustomizations customizations ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( customizations.getProject() );
+//        new CustomizationSerializer().serialize( customizations.getModule() );
+//    }
+//
+//    public String toString( @SuppressWarnings( "unused" ) final PageCustomizations customizations, final Module application )
+//    {
+//        this.fileSystem = new ProjectFileSystem( application.getProject() );
+//        return new CustomizationSerializer().toString( application );
+//    }
+//
+//    public void serialize( final Daemons daemons ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( daemons.getProject() );
+//        new DaemonsSerializer().serialize( daemons );
+//    }
+//
+//    public String toString( final Daemons daemons )
+//    {
+//        this.fileSystem = new ProjectFileSystem( daemons.getProject() );
+//        return new DaemonsSerializer().toString( daemons );
+//    }
+//
+//    public void serialize( final JavaScriptForms forms ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( forms.getProject() );
+//        new FormsSerializer().serialize( forms );
+//    }
+//
+//    public String toString( final JavaScriptForms forms )
+//    {
+//        this.fileSystem = new ProjectFileSystem( forms.getProject() );
+//        return new FormsSerializer().toString( forms );
+//    }
+//
+//    public void serialize( final StaticPages pages ) throws WriteException
+//    {
+//        this.fileSystem = new ProjectFileSystem( pages.getProject() );
+//        new StaticPagesSerializer().serialize( pages );
+//    }
+//
+//    public String toString( final StaticPages pages )
+//    {
+//        this.fileSystem = new ProjectFileSystem( pages.getProject() );
+//        return new StaticPagesSerializer().toString( pages );
+//    }
+//
+//    public void serialize( final Project project ) throws WriteException
+//    {
+//        Objects.requireNonNull( project.getLocation(), project.getName() );
+//        serialize( project, false );
+//    }
+//
+//    public String toString( final Project project )
+//    {
+//        Objects.requireNonNull( project.getLocation(), project.getName() );
+//
+//        try
+//        {
+//            return serializeToString( project, false );
+//        }
+//        catch ( WriteException e )
+//        {
+//            throw new AssertionError();
+//        }
+//    }
+//
     private void serialize( final Project project, final boolean serializeReferencedFiles ) throws WriteException, AssertionError
     {
         final String string = serializeToString( project, serializeReferencedFiles );

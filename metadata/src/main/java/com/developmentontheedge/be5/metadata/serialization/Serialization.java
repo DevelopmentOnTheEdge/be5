@@ -4,20 +4,8 @@ import com.developmentontheedge.be5.metadata.exception.ProjectLoadException;
 import com.developmentontheedge.be5.metadata.exception.ProjectSaveException;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.exception.WriteException;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfileType;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfiles;
-import com.developmentontheedge.be5.metadata.model.BeConnectionProfilesRoot;
-import com.developmentontheedge.be5.metadata.model.Daemons;
-import com.developmentontheedge.be5.metadata.model.Entity;
-import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
-import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
-import com.developmentontheedge.be5.metadata.model.Localizations;
-import com.developmentontheedge.be5.metadata.model.MassChanges;
 import com.developmentontheedge.be5.metadata.model.Module;
-import com.developmentontheedge.be5.metadata.model.PageCustomizations;
 import com.developmentontheedge.be5.metadata.model.Project;
-import com.developmentontheedge.be5.metadata.model.SecurityCollection;
-import com.developmentontheedge.be5.metadata.model.StaticPages;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import org.yaml.snakeyaml.nodes.MappingNode;
@@ -40,7 +28,6 @@ import java.util.Objects;
  */
 public class Serialization
 {
-    
     private static boolean automaticSerializationIsTurnedOn = true;
     
     public static boolean automaticSerializationIsTurnedOn()
@@ -57,14 +44,7 @@ public class Serialization
     {
         automaticSerializationIsTurnedOn = true;
     }
-    
-    /**
-     * 
-     * @param project
-     * @param root
-     * @param format
-     * @throws ProjectSaveException
-     */
+
     public static void save( final Project project, final Path root ) throws ProjectSaveException
     {
         Objects.requireNonNull( project );
@@ -79,138 +59,133 @@ public class Serialization
             throw new ProjectSaveException( root, e );
         }
     }
-    
-    public static String save( final Entity entity ) throws WriteException
-    {
-        return new YamlSerializer().serialize( entity );
-    }
-    
-    public static String toString( final Entity entity )
-    {
-        return new YamlSerializer().toString( entity );
-    }
-    
-    public static void save( final LanguageLocalizations languageLocalizations ) throws WriteException
-    {
-        new YamlSerializer().serialize( languageLocalizations );
-    }
-    
-    public static String toString( final LanguageLocalizations languageLocalizations )
-    {
-        return new YamlSerializer().toString( languageLocalizations );
-    }
-    
-    public static void save( final MassChanges massChanges ) throws WriteException
-    {
-        new YamlSerializer().serialize( massChanges );
-    }
-    
-    public static String toString( final MassChanges massChanges )
-    {
-        return new YamlSerializer().toString( massChanges );
-    }
-    
-    public static void save( final SecurityCollection security ) throws WriteException
-    {
-        new YamlSerializer().serialize( security );
-    }
-    
-    public static String toString( final SecurityCollection security )
-    {
-        return new YamlSerializer().toString( security );
-    }
-    
-    public static void save( BeConnectionProfiles connectionProfiles ) throws WriteException
-    {
-        new YamlSerializer().serialize( connectionProfiles );
-    }
-    
-    public static String toString( BeConnectionProfiles connectionProfiles )
-    {
-        return new YamlSerializer().toString( connectionProfiles );
-    }
+//
+//    public static String save( final Entity entity ) throws WriteException
+//    {
+//        return new YamlSerializer().serialize( entity );
+//    }
+//
+//    public static String toString( final Entity entity )
+//    {
+//        return new YamlSerializer().toString( entity );
+//    }
+//
+//    public static void save( final LanguageLocalizations languageLocalizations ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( languageLocalizations );
+//    }
+//
+//    public static String toString( final LanguageLocalizations languageLocalizations )
+//    {
+//        return new YamlSerializer().toString( languageLocalizations );
+//    }
+//
+//    public static void save( final MassChanges massChanges ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( massChanges );
+//    }
+//
+//    public static String toString( final MassChanges massChanges )
+//    {
+//        return new YamlSerializer().toString( massChanges );
+//    }
+//
+//    public static void save( final SecurityCollection security ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( security );
+//    }
+//
+//    public static String toString( final SecurityCollection security )
+//    {
+//        return new YamlSerializer().toString( security );
+//    }
+//
+//    public static void save( BeConnectionProfiles connectionProfiles ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( connectionProfiles );
+//    }
+//
+//    public static String toString( BeConnectionProfiles connectionProfiles )
+//    {
+//        return new YamlSerializer().toString( connectionProfiles );
+//    }
+//
+//    public static void save( PageCustomizations customizations ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( customizations );
+//    }
+//
+//    public static String toString( PageCustomizations customizations, Module application )
+//    {
+//        return new YamlSerializer().toString( customizations, application );
+//    }
+//
+//    public static void save( Daemons daemons ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( daemons );
+//    }
+//
+//    public static String toString( Daemons daemons )
+//    {
+//        return new YamlSerializer().toString( daemons );
+//    }
+//
+//    public static void save( JavaScriptForms forms ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( forms );
+//    }
+//
+//    public static String toString( JavaScriptForms forms )
+//    {
+//        return new YamlSerializer().toString( forms );
+//    }
+//
+//    public static void save( StaticPages pages ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( pages );
+//    }
+//
+//    public static String toString( StaticPages pages )
+//    {
+//        return new YamlSerializer().toString( pages );
+//    }
+//
+//    public static void save( Project project ) throws WriteException
+//    {
+//        new YamlSerializer().serialize( project );
+//    }
+//
+//    public static String toString( Project project )
+//    {
+//        return new YamlSerializer().toString( project );
+//    }
 
-    public static void save( PageCustomizations customizations ) throws WriteException
-    {
-        new YamlSerializer().serialize( customizations );
-    }
-    
-    public static String toString( PageCustomizations customizations, Module application )
-    {
-        return new YamlSerializer().toString( customizations, application );
-    }
-
-    public static void save( Daemons daemons ) throws WriteException
-    {
-        new YamlSerializer().serialize( daemons );
-    }
-    
-    public static String toString( Daemons daemons )
-    {
-        return new YamlSerializer().toString( daemons );
-    }
-
-    public static void save( JavaScriptForms forms ) throws WriteException
-    {
-        new YamlSerializer().serialize( forms );
-    }
-    
-    public static String toString( JavaScriptForms forms )
-    {
-        return new YamlSerializer().toString( forms );
-    }
-
-    public static void save( StaticPages pages ) throws WriteException
-    {
-        new YamlSerializer().serialize( pages );
-    }
-    
-    public static String toString( StaticPages pages )
-    {
-        return new YamlSerializer().toString( pages );
-    }
-    
-    public static void save( Project project ) throws WriteException
-    {
-        new YamlSerializer().serialize( project );
-    }
-    
-    public static String toString( Project project )
-    {
-        return new YamlSerializer().toString( project );
-    }
-    
     /**
      * Determines whether the given folder contain any correct BeanExplorer project file.
-     * @param root
-     * @return
      */
     public static boolean canBeLoaded( final Path root )
     {
         return ProjectFileSystem.canBeLoaded( root );
     }
-    
-    private static void checkProject( Project proj )
-    {
-        Objects.requireNonNull( proj, "Project is null" );
-        Objects.requireNonNull( proj.getLocation(), "Project location is null (project name is "+proj.getName()+")" );
-        if(!canBeLoaded( proj.getLocation() ))
-        {
-            throw new IllegalArgumentException( "Project "+proj.getName()+" cannot be loaded from "+proj.getLocation() );
-        }
-    }
-    
+//
+//    private static void checkProject( Project proj )
+//    {
+//        Objects.requireNonNull( proj, "Project is null" );
+//        Objects.requireNonNull( proj.getLocation(), "Project location is null (project name is "+proj.getName()+")" );
+//        if(!canBeLoaded( proj.getLocation() ))
+//        {
+//            throw new IllegalArgumentException( "Project "+proj.getName()+" cannot be loaded from "+proj.getLocation() );
+//        }
+//    }
+//
     /**
      * Tries to determine the project format.
-     * 
-     * @param root
-     * @return
-     * @throws ProjectLoadException
+     *
      * @see Serialization#canBeLoaded(Path)
      */
     public static Project load( final Path root ) throws ProjectLoadException
     {
-        return load( root, ( LoadContext ) null );
+        return load( root, null );
     }
     
     public static Project load( final Path root, final LoadContext loadContext ) throws ProjectLoadException
@@ -219,11 +194,7 @@ public class Serialization
     }
         
     /**
-     * @param root
      * @param fuseTemplates whether to fuse templates into entities (useful for modules loading)
-     * @param loadContext
-     * @return
-     * @throws ProjectLoadException
      * @see Serialization#canBeLoaded(Path)
      */
     public static Project load( final Path root, final boolean fuseTemplates, final LoadContext loadContext ) throws ProjectLoadException
@@ -245,150 +216,150 @@ public class Serialization
             turnOnAutomaticSerialization();
         }
     }
-    
-    public static Entity reloadEntity( final Entity oldEntity ) throws ReadException
-    {
-        checkProject(oldEntity.getProject());
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadEntity( oldEntity );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static LanguageLocalizations reloadLocalization( final Path file, final Localizations localizations ) throws ReadException
-    {
-        checkProject( localizations.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadLocalization( file, localizations );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static MassChanges reloadMassChanges( final Path file, final Module application ) throws ReadException
-    {
-        checkProject( application.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadMassChanges( file, application );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static SecurityCollection reloadSecurity( final Path file, final Project project ) throws ReadException
-    {
-        checkProject( project );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadSecurityCollection( file, project );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static BeConnectionProfiles reloadConnectionProfiles( final Path file, final BeConnectionProfileType type, final BeConnectionProfilesRoot target ) throws ReadException
-    {
-        checkProject( target.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadConnectionProfiles( file, type, target );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static PageCustomizations reloadCustomizations( final Path file, final Module target ) throws ReadException
-    {
-        checkProject( target.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadCustomizations( file, target );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static Daemons reloadDaemons( final Path file, final Module target ) throws ReadException
-    {
-        checkProject( target.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadDaemons( file, target );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static JavaScriptForms reloadForms( final Path file, final Module target ) throws ReadException
-    {
-        checkProject( target.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadForms( file, target );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
-    
-    public static StaticPages reloadPages( final Path file, final Module target ) throws ReadException
-    {
-        checkProject( target.getProject() );
-        
-        turnOffAutomaticSerialization();
-        
-        try
-        {
-            return new YamlDeserializer( new LoadContext() ).reloadPages( file, target );
-        }
-        finally
-        {
-            turnOnAutomaticSerialization();
-        }
-    }
+//
+//    public static Entity reloadEntity( final Entity oldEntity ) throws ReadException
+//    {
+//        checkProject(oldEntity.getProject());
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadEntity( oldEntity );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static LanguageLocalizations reloadLocalization( final Path file, final Localizations localizations ) throws ReadException
+//    {
+//        checkProject( localizations.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadLocalization( file, localizations );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static MassChanges reloadMassChanges( final Path file, final Module application ) throws ReadException
+//    {
+//        checkProject( application.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadMassChanges( file, application );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static SecurityCollection reloadSecurity( final Path file, final Project project ) throws ReadException
+//    {
+//        checkProject( project );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadSecurityCollection( file, project );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static BeConnectionProfiles reloadConnectionProfiles( final Path file, final BeConnectionProfileType type, final BeConnectionProfilesRoot target ) throws ReadException
+//    {
+//        checkProject( target.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadConnectionProfiles( file, type, target );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static PageCustomizations reloadCustomizations( final Path file, final Module target ) throws ReadException
+//    {
+//        checkProject( target.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadCustomizations( file, target );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static Daemons reloadDaemons( final Path file, final Module target ) throws ReadException
+//    {
+//        checkProject( target.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadDaemons( file, target );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static JavaScriptForms reloadForms( final Path file, final Module target ) throws ReadException
+//    {
+//        checkProject( target.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadForms( file, target );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
+//
+//    public static StaticPages reloadPages( final Path file, final Module target ) throws ReadException
+//    {
+//        checkProject( target.getProject() );
+//
+//        turnOffAutomaticSerialization();
+//
+//        try
+//        {
+//            return new YamlDeserializer( new LoadContext() ).reloadPages( file, target );
+//        }
+//        finally
+//        {
+//            turnOnAutomaticSerialization();
+//        }
+//    }
     
     public static void loadModuleMacros( final Module module ) throws ReadException
     {
@@ -439,13 +410,4 @@ public class Serialization
         throw new AssertionError();
     }
 
-    
-    /**
-     * This class is not intended to be instantiated.
-     */
-    private Serialization()
-    {
-        throw new AssertionError(); // not allowed
-    }
-    
 }

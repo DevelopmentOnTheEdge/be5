@@ -9,7 +9,6 @@ import com.developmentontheedge.be5.metadata.model.BeConnectionProfiles;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfilesRoot;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
 import com.developmentontheedge.be5.metadata.model.Daemon;
-import com.developmentontheedge.be5.metadata.model.Daemons;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.EntitiesFactory;
 import com.developmentontheedge.be5.metadata.model.Entity;
@@ -23,7 +22,6 @@ import com.developmentontheedge.be5.metadata.model.Icon;
 import com.developmentontheedge.be5.metadata.model.IndexColumnDef;
 import com.developmentontheedge.be5.metadata.model.IndexDef;
 import com.developmentontheedge.be5.metadata.model.JavaScriptForm;
-import com.developmentontheedge.be5.metadata.model.JavaScriptForms;
 import com.developmentontheedge.be5.metadata.model.JavaScriptOperationExtender;
 import com.developmentontheedge.be5.metadata.model.LanguageLocalizations;
 import com.developmentontheedge.be5.metadata.model.LanguageStaticPages;
@@ -49,7 +47,6 @@ import com.developmentontheedge.be5.metadata.model.SourceFileOperation;
 import com.developmentontheedge.be5.metadata.model.SourceFileOperationExtender;
 import com.developmentontheedge.be5.metadata.model.SpecialRoleGroup;
 import com.developmentontheedge.be5.metadata.model.StaticPage;
-import com.developmentontheedge.be5.metadata.model.StaticPages;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.TableRef;
 import com.developmentontheedge.be5.metadata.model.TableReference;
@@ -2301,8 +2298,6 @@ public class YamlDeserializer
      *            Must contain a serialized JSON with a map as a root element.
      *            This map should have only one key, that represents a
      *            connection profile name. The value should contain pairs of connection profile fields.
-     * @throws ReadException
-     * @throws ClassCastException
      * @see Fields#connectionProfile()
      * @see Fields#connectionProfileRead()
      */
@@ -2320,7 +2315,6 @@ public class YamlDeserializer
      * Parses a connection profile. Doesn't save it to connection profiles collection.
      * 
      * @param serializedProfileBody just a map of properties
-     * @throws ReadException
      */
     private static BeConnectionProfile readConnectionProfile( final LoadContext loadContext, final String profileName, final Map<String, Object> serializedProfileBody, final Project project ) throws ReadException
     {
@@ -2361,101 +2355,101 @@ public class YamlDeserializer
         
         return this.project;
     }
-    
-    public Entity reloadEntity( final Entity oldEntity ) throws ReadException
-    {
-        this.fileSystem = new ProjectFileSystem( oldEntity.getProject() );
-        this.setProject( oldEntity.getProject() );
-        final Entity entity = this.readEntity( oldEntity.getModule(), oldEntity.getName() );
-        
-        if ( oldEntity.getPrototype() != null )
-        {
-            @SuppressWarnings( "unchecked" )
-            final BeModelCollection<BeModelElement> prototype = ( BeModelCollection<BeModelElement> ) oldEntity.getPrototype();
-            entity.merge( prototype, true, true );
-        }
-        
-        EntitiesFactory.addToModule( entity, oldEntity.getModule() );
-
-        return entity;
-    }
-    
-    public LanguageLocalizations reloadLocalization( final Path path, final Localizations localizations ) throws ReadException
-    {
-        final String lang = path.getFileName().toString().replaceFirst( "\\.\\w+$", "" );
-        final LocalizationDeserializer localizationDeserializer = new LocalizationDeserializer( lang, path, localizations );
-        localizationDeserializer.deserialize();
-        
-        return localizationDeserializer.getResult();
-    }
-    
-    public MassChanges reloadMassChanges( final Path path, final Module application ) throws ReadException
-    {
-        final MassChanges massChanges = application.newMassChangeCollection();
-        final MassChangesDeserializer massChangesDeserializer = new MassChangesDeserializer( path, massChanges );
-        massChangesDeserializer.deserialize();
-        DataElementUtils.saveQuiet( massChangesDeserializer.getResult() );
-        
-        return massChangesDeserializer.getResult();
-    }
-    
-    public SecurityCollection reloadSecurityCollection( final Path path, final Project project ) throws ReadException
-    {
-        final SecurityCollection security = project.newSecurityCollection();
-        final SecurityDeserializer securityDeserializer = new SecurityDeserializer( path, security );
-        securityDeserializer.deserialize();
-        DataElementUtils.saveQuiet( securityDeserializer.getResult() );
-        
-        return securityDeserializer.getResult();
-    }
-    
-    public BeConnectionProfiles reloadConnectionProfiles( final Path path, final BeConnectionProfileType type, final BeConnectionProfilesRoot target ) throws ReadException
-    {
-        final ConnectionProfilesDeserializer profilesDeserializer = new ConnectionProfilesDeserializer( path, type, target );
-        profilesDeserializer.deserialize();
-        
-        return profilesDeserializer.getResult();
-    }
-    
-    public PageCustomizations reloadCustomizations( final Path path, final Module target ) throws ReadException
-    {
-        this.project = target.getProject();
-        final CustomizationDeserializer deserializer = new CustomizationDeserializer( path, target ).replace();
-        deserializer.deserialize();
-        
-        return deserializer.getResult();
-    }
-    
-    public Daemons reloadDaemons( final Path path, final Module target ) throws ReadException
-    {
-        final Daemons daemons = new Daemons( target );
-        final DaemonsDeserializer deserializer = new DaemonsDeserializer( path, daemons );
-        deserializer.deserialize();
-        DataElementUtils.saveQuiet( daemons );
-        
-        return daemons;
-    }
-    
-    public JavaScriptForms reloadForms( final Path path, final Module target ) throws ReadException
-    {
-        final JavaScriptForms forms = new JavaScriptForms( target ); 
-        final FormsDeserializer deserializer = new FormsDeserializer( path, forms );
-        deserializer.deserialize();
-        DataElementUtils.saveQuiet( forms );
-        
-        return forms;
-    }
-    
-    public StaticPages reloadPages( final Path path, final Module target ) throws ReadException
-    {
-        final StaticPages pages = new StaticPages( target );
-        final StaticPagesDeserializer deserializer = new StaticPagesDeserializer( path, pages );
-        deserializer.deserialize();
-        DataElementUtils.saveQuiet( pages );
-        
-        return pages;
-    }
-    
+//
+//    public Entity reloadEntity( final Entity oldEntity ) throws ReadException
+//    {
+//        this.fileSystem = new ProjectFileSystem( oldEntity.getProject() );
+//        this.setProject( oldEntity.getProject() );
+//        final Entity entity = this.readEntity( oldEntity.getModule(), oldEntity.getName() );
+//
+//        if ( oldEntity.getPrototype() != null )
+//        {
+//            @SuppressWarnings( "unchecked" )
+//            final BeModelCollection<BeModelElement> prototype = ( BeModelCollection<BeModelElement> ) oldEntity.getPrototype();
+//            entity.merge( prototype, true, true );
+//        }
+//
+//        EntitiesFactory.addToModule( entity, oldEntity.getModule() );
+//
+//        return entity;
+//    }
+//
+//    public LanguageLocalizations reloadLocalization( final Path path, final Localizations localizations ) throws ReadException
+//    {
+//        final String lang = path.getFileName().toString().replaceFirst( "\\.\\w+$", "" );
+//        final LocalizationDeserializer localizationDeserializer = new LocalizationDeserializer( lang, path, localizations );
+//        localizationDeserializer.deserialize();
+//
+//        return localizationDeserializer.getResult();
+//    }
+//
+//    public MassChanges reloadMassChanges( final Path path, final Module application ) throws ReadException
+//    {
+//        final MassChanges massChanges = application.newMassChangeCollection();
+//        final MassChangesDeserializer massChangesDeserializer = new MassChangesDeserializer( path, massChanges );
+//        massChangesDeserializer.deserialize();
+//        DataElementUtils.saveQuiet( massChangesDeserializer.getResult() );
+//
+//        return massChangesDeserializer.getResult();
+//    }
+//
+//    public SecurityCollection reloadSecurityCollection( final Path path, final Project project ) throws ReadException
+//    {
+//        final SecurityCollection security = project.newSecurityCollection();
+//        final SecurityDeserializer securityDeserializer = new SecurityDeserializer( path, security );
+//        securityDeserializer.deserialize();
+//        DataElementUtils.saveQuiet( securityDeserializer.getResult() );
+//
+//        return securityDeserializer.getResult();
+//    }
+//
+//    public BeConnectionProfiles reloadConnectionProfiles( final Path path, final BeConnectionProfileType type, final BeConnectionProfilesRoot target ) throws ReadException
+//    {
+//        final ConnectionProfilesDeserializer profilesDeserializer = new ConnectionProfilesDeserializer( path, type, target );
+//        profilesDeserializer.deserialize();
+//
+//        return profilesDeserializer.getResult();
+//    }
+//
+//    public PageCustomizations reloadCustomizations( final Path path, final Module target ) throws ReadException
+//    {
+//        this.project = target.getProject();
+//        final CustomizationDeserializer deserializer = new CustomizationDeserializer( path, target ).replace();
+//        deserializer.deserialize();
+//
+//        return deserializer.getResult();
+//    }
+//
+//    public Daemons reloadDaemons( final Path path, final Module target ) throws ReadException
+//    {
+//        final Daemons daemons = new Daemons( target );
+//        final DaemonsDeserializer deserializer = new DaemonsDeserializer( path, daemons );
+//        deserializer.deserialize();
+//        DataElementUtils.saveQuiet( daemons );
+//
+//        return daemons;
+//    }
+//
+//    public JavaScriptForms reloadForms( final Path path, final Module target ) throws ReadException
+//    {
+//        final JavaScriptForms forms = new JavaScriptForms( target );
+//        final FormsDeserializer deserializer = new FormsDeserializer( path, forms );
+//        deserializer.deserialize();
+//        DataElementUtils.saveQuiet( forms );
+//
+//        return forms;
+//    }
+//
+//    public StaticPages reloadPages( final Path path, final Module target ) throws ReadException
+//    {
+//        final StaticPages pages = new StaticPages( target );
+//        final StaticPagesDeserializer deserializer = new StaticPagesDeserializer( path, pages );
+//        deserializer.deserialize();
+//        DataElementUtils.saveQuiet( pages );
+//
+//        return pages;
+//    }
+//
     public void loadMacroFiles( final Module module ) throws ReadException
     {
         new MacrosDeserializer( module ).deserialize();

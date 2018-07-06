@@ -122,6 +122,7 @@ public class SerializationTest
         //ModuleLoader2.mergeAllModules( project, Collections.singletonList( moduleProject ), lc );
 
         LoadContext lc = new LoadContext();
+        assertEquals(true, Serialization.canBeLoaded(path));
         Project project2 = Serialization.load( path, lc );
         project2.setDatabaseSystem( Rdbms.POSTGRESQL );
         lc.check();
@@ -452,6 +453,25 @@ public class SerializationTest
 
     @Test
     public void testWriteReadLocalizations() throws Exception
+    {
+        final Project project = new Project("test");
+        final Localizations localizations = project.getApplication().getLocalizations();
+        localizations.addLocalization( "en", "entity", Arrays.asList("topic"), "hello", "Hello!" );
+        localizations.addLocalization( "de", "entity", Arrays.asList("topic", "topic2"), "hello", "Guten Tag!" );
+        localizations.addLocalization( "it", "entity", Arrays.asList("topic2"), "hello", "Buon giorno!" );
+
+        final Path tempFolder = tmp.newFolder().toPath();
+        Serialization.save( project, tempFolder );
+
+        final Project project2 = Serialization.load( tempFolder );
+        final Localizations localizations2 = project2.getApplication().getLocalizations();
+        assertEquals("Hello!", localizations2.get( "en" ).get("entity").elements().iterator().next().getValue());
+        assertEquals("Guten Tag!", localizations2.get( "de" ).get("entity").elements().iterator().next().getValue());
+        assertEquals("Buon giorno!", localizations2.get( "it" ).get("entity").elements().iterator().next().getValue());
+    }
+
+    @Test
+    public void testDaemons() throws Exception
     {
         final Project project = new Project("test");
         final Localizations localizations = project.getApplication().getLocalizations();
