@@ -3,6 +3,8 @@ package com.developmentontheedge.be5.metadata.serialization;
 import com.developmentontheedge.be5.metadata.QueryType;
 import com.developmentontheedge.be5.metadata.model.BeConnectionProfile;
 import com.developmentontheedge.be5.metadata.model.ColumnDef;
+import com.developmentontheedge.be5.metadata.model.Daemon;
+import com.developmentontheedge.be5.metadata.model.Daemons;
 import com.developmentontheedge.be5.metadata.model.DataElementUtils;
 import com.developmentontheedge.be5.metadata.model.Entity;
 import com.developmentontheedge.be5.metadata.model.EntityType;
@@ -66,7 +68,7 @@ public class SerializationTest
     public TemporaryFolder tmp = new TemporaryFolder();
 
     @Test
-    public void withoutPagesFile() throws Exception
+    public void withoutFiles() throws Exception
     {
         Path path = tmp.newFolder().toPath();
         Project project = getProject("test");
@@ -474,19 +476,29 @@ public class SerializationTest
     public void testDaemons() throws Exception
     {
         final Project project = new Project("test");
-        final Localizations localizations = project.getApplication().getLocalizations();
-        localizations.addLocalization( "en", "entity", Arrays.asList("topic"), "hello", "Hello!" );
-        localizations.addLocalization( "de", "entity", Arrays.asList("topic", "topic2"), "hello", "Guten Tag!" );
-        localizations.addLocalization( "it", "entity", Arrays.asList("topic2"), "hello", "Buon giorno!" );
+        Daemons daemons = project.getApplication().getDaemonCollection();
+        Daemon test = new Daemon("Test", daemons);
+        test.setClassName("path.to.Job");
+        test.setConfigSection("TestSection");
+        test.setDaemonType("periodic");
+        test.setDescription("test job");
+        test.setSlaveNo(123);
+        DataElementUtils.save(test);
 
         final Path tempFolder = tmp.newFolder().toPath();
         Serialization.save( project, tempFolder );
 
         final Project project2 = Serialization.load( tempFolder );
-        final Localizations localizations2 = project2.getApplication().getLocalizations();
-        assertEquals("Hello!", localizations2.get( "en" ).get("entity").elements().iterator().next().getValue());
-        assertEquals("Guten Tag!", localizations2.get( "de" ).get("entity").elements().iterator().next().getValue());
-        assertEquals("Buon giorno!", localizations2.get( "it" ).get("entity").elements().iterator().next().getValue());
+        Daemons daemons2 = project2.getApplication().getDaemonCollection();
+        Daemon test1 = daemons2.get("Test");
+        assertNotNull(test1);
+        assertEquals("path.to.Job", test1.getClassName());
+        assertEquals("TestSection", test1.getConfigSection());
+        assertEquals("periodic", test1.getDaemonType());
+        assertEquals("test job", test1.getDescription());
+        assertEquals(123, test1.getSlaveNo());
+
+        assertEquals(test, test1);
     }
 
     @Test
