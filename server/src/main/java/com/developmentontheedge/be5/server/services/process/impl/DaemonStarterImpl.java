@@ -261,11 +261,28 @@ public class DaemonStarterImpl implements DaemonStarter
                 .withIdentity(name, DAEMONS_GROUP)
                 .build();
 
-        Trigger trigger;
+        fillJobDataMap( job, name, config, Collections.emptyMap() );
 
+        try
+        {
+            scheduler.deleteJob( job.getKey());
+            if( isEnabled( config ) && ( !"manual".equals( type ) || initManualDaemon ) )
+            {
+                scheduler.scheduleJob( job, getTrigger(name, config, type) );
+            }
+        }
+        catch(SchedulerException se)
+        {
+            log.log(Level.SEVERE, "Error in delete or add job", se);
+            throw Be5Exception.internal(se);
+        }
+    }
+
+    private Trigger getTrigger(String name, String config, String type)
+    {
         if( "periodic".equals( type ) )
         {
-            trigger = newTrigger()
+            return newTrigger()
                     .withIdentity(name, DAEMONS_GROUP)
                     .startAt(new Date( System.currentTimeMillis() + getOffset( config )))
                     .withSchedule(simpleSchedule()
@@ -275,7 +292,7 @@ public class DaemonStarterImpl implements DaemonStarter
         }
         else if( "manual".equals( type ) )
         {
-            trigger = newTrigger()
+            return newTrigger()
                     .withIdentity(name, DAEMONS_GROUP)
                     .startAt(new Date( System.currentTimeMillis() + getOffset( config )))
                     .withSchedule(simpleSchedule()
@@ -285,26 +302,10 @@ public class DaemonStarterImpl implements DaemonStarter
         }
         else
         {
-            trigger = newTrigger()
+            return newTrigger()
                     .withIdentity(name, DAEMONS_GROUP)
                     .withSchedule(cronSchedule(getCronMask( config )))
                     .build();
-        }
-
-        fillJobDataMap( job, name, config, Collections.emptyMap() );
-
-        try
-        {
-            scheduler.deleteJob( job.getKey());
-            if( isEnabled( config ) && ( !"manual".equals( type ) || initManualDaemon ) )
-            {
-                scheduler.scheduleJob( job, trigger );
-            }
-        }
-        catch(SchedulerException se)
-        {
-            log.log(Level.SEVERE, "Error in delete or add job", se);
-            throw Be5Exception.internal(se);
         }
     }
 
