@@ -33,7 +33,7 @@ public class OracleSchemaReader extends DefaultSchemaReader
     public Map<String, List<SqlColumnInfo>> readColumns(SqlExecutor sql, String defSchema, ProcessController controller) throws SQLException
     {
         DbmsConnector connector = sql.getConnector();
-        Map<String, List<SqlColumnInfo>> result = new HashMap<>();
+        Map<String, List<SqlColumnInfo>> columns = new HashMap<>();
         ResultSet rs = connector.executeQuery("SELECT "
                 + "c.table_name,"
                 + "c.column_name,"
@@ -50,11 +50,11 @@ public class OracleSchemaReader extends DefaultSchemaReader
             while (rs.next())
             {
                 String tableName = rs.getString(1 /*"table_name"*/).toLowerCase();
-                List<SqlColumnInfo> list = result.get(tableName);
+                List<SqlColumnInfo> list = columns.get(tableName);
                 if (list == null)
                 {
                     list = new ArrayList<>();
-                    result.put(tableName, list);
+                    columns.put(tableName, list);
                 }
                 SqlColumnInfo info = new SqlColumnInfo();
                 list.add(info);
@@ -72,9 +72,22 @@ public class OracleSchemaReader extends DefaultSchemaReader
         {
             connector.close(rs);
         }
-        // Read default values as separate query, because it's LONG column which is streaming and
-        // transmitted slowly
-        rs = connector.executeQuery("SELECT "
+
+        readDefaultValues(sql, columns);
+        readEnumValues(sql, columns);
+        readTrigger(sql, columns);
+
+        return columns;
+    }
+
+    /**
+     * Read default values as separate query, because it's LONG column which is streaming and
+     * transmitted slowly
+     */
+    private void readDefaultValues(SqlExecutor sql, Map<String, List<SqlColumnInfo>> columns) throws SQLException
+    {
+        DbmsConnector connector = sql.getConnector();
+        ResultSet rs = connector.executeQuery("SELECT "
                 + "c.data_default,"
                 + "c.table_name,"
                 + "c.column_name "
@@ -89,7 +102,7 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 String defaultValue = rs.getString(1 /* data_default */);
                 String tableName = rs.getString(2 /*"table_name"*/);
                 String columnName = rs.getString(3 /*"column_name"*/);
-                SqlColumnInfo column = findColumn(result, tableName, columnName);
+                SqlColumnInfo column = findColumn(columns, tableName, columnName);
                 if (column == null)
                     continue;
                 defaultValue = defaultValue.trim();
@@ -102,17 +115,26 @@ public class OracleSchemaReader extends DefaultSchemaReader
                     column.setDefaultValue(defaultValue);
                 }
             }
-        } finally
+        }
+        finally
         {
             connector.close(rs);
         }
+    }
+
+    /**
+     *
+     */
+    private void readEnumValues(SqlExecutor sql, Map<String, List<SqlColumnInfo>> columns) throws SQLException
+    {
+        DbmsConnector connector = sql.getConnector();
         /*rs = connector.executeQuery( "SELECT uc.SEARCH_CONDITION,uc.TABLE_NAME FROM user_constraints uc "
             + " JOIN entities e ON (UPPER(e.name)=uc.table_name)"
             + " WHERE uc.CONSTRAINT_TYPE = 'C'" );*/
         // The following query works faster (much faster!) as it doesn't return "NOT NULL" constraints
         // though it's probably Oracle version specific (at least undocumented)
         // tested on Oracle 11r2
-        rs = connector.executeQuery("SELECT c.condition,o.name "
+        ResultSet rs = connector.executeQuery("SELECT c.condition,o.name "
                 + "FROM sys.cdef$ c, sys.\"_CURRENT_EDITION_OBJ\" o,entities e "
                 + "WHERE c.type#=1 AND c.obj# = o.obj# "
                 + "AND o.owner# = userenv('SCHEMAID') "
@@ -137,7 +159,7 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 {
                     continue;
                 }
-                SqlColumnInfo column = findColumn(result, table, colName);
+                SqlColumnInfo column = findColumn(columns, table, colName);
                 if (column == null)
                 {
                     continue;
@@ -166,7 +188,12 @@ public class OracleSchemaReader extends DefaultSchemaReader
         {
             connector.close(rs);
         }
-        rs = connector.executeQuery("SELECT trigger_name,table_name,trigger_body FROM user_triggers "
+    }
+
+    private void readTrigger(SqlExecutor sql, Map<String, List<SqlColumnInfo>> columns) throws SQLException
+    {
+        DbmsConnector connector = sql.getConnector();
+        ResultSet rs = connector.executeQuery("SELECT trigger_name,table_name,trigger_body FROM user_triggers "
                 + "WHERE triggering_event='INSERT OR UPDATE' "
                 + "AND TRIGGER_TYPE='BEFORE EACH ROW'");
         try
@@ -182,7 +209,7 @@ public class OracleSchemaReader extends DefaultSchemaReader
                 {
                     String columnName = matcher.group(1);
                     String targetName = matcher.group(3);
-                    SqlColumnInfo column = findColumn(result, tableName, columnName);
+                    SqlColumnInfo column = findColumn(columns, tableName, columnName);
                     if (column == null)
                         continue;
                     column.setDefaultValue(new ColumnFunction(targetName, ColumnFunction.TRANSFORM_GENERIC).toString());
@@ -192,7 +219,6 @@ public class OracleSchemaReader extends DefaultSchemaReader
         {
             connector.close(rs);
         }
-        return result;
     }
 
     private SqlColumnInfo findColumn(Map<String, List<SqlColumnInfo>> result, String table, String colName)

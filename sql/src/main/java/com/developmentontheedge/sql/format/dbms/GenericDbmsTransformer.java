@@ -66,18 +66,8 @@ abstract public class GenericDbmsTransformer implements DbmsTransformer
         else if ("if".equals(name))
             transformIf(node);
         else if ("date_format".equals(name) || ("to_char".equals(name) && node.jjtGetNumChildren() == 2))
-        {
-            SimpleNode child = node.child(1);
-            if (child instanceof AstStringConstant)
-            {
-                String formatString = ((AstStringConstant) child).getValue();
-                DateFormat df = DateFormat.byFormatString(formatString);
-                if (df == null)
-                    throw new IllegalArgumentException("Unknown date format: " + formatString);
-                transformDateFormat(node, df);
-            } else
-                throw new IllegalArgumentException("Date format is not a String");
-        } else if ("to_char".equals(name) && node.jjtGetNumChildren() == 1 || "to_number".equals(name) || "to_key".equals(name))
+            transformToChar(node);
+        else if ("to_char".equals(name) && node.jjtGetNumChildren() == 1 || "to_number".equals(name) || "to_key".equals(name))
             transformCastOracle(node);
         else if ("lpad".equals(name))
             transformLpad(node);
@@ -167,6 +157,20 @@ abstract public class GenericDbmsTransformer implements DbmsTransformer
         SimpleNode replacement = ((DbSpecificFunction) node.getFunction()).getReplacement(node, dbms);
         expandDbArguments(replacement, dbms);
         node.replaceWith(replacement);
+    }
+
+    private void transformToChar(AstFunNode node)
+    {
+        SimpleNode child = node.child(1);
+        if (child instanceof AstStringConstant)
+        {
+            String formatString = ((AstStringConstant) child).getValue();
+            DateFormat df = DateFormat.byFormatString(formatString);
+            if (df == null)
+                throw new IllegalArgumentException("Unknown date format: " + formatString);
+            transformDateFormat(node, df);
+        } else
+            throw new IllegalArgumentException("Date format is not a String");
     }
 
     protected void transformLevenshtein(AstFunNode node)

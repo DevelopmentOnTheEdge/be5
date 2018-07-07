@@ -35,52 +35,7 @@ public class MultiSqlConsumer implements CharConsumer
         switch (type)
         {
             case NO_TOKEN:
-                token.append(c);
-                prevChar = 0;
-                if (Character.isWhitespace(c))
-                {
-                    type = TokenType.WHITESPACE;
-                    break;
-                }
-                if (c == ';')
-                {
-                    type = TokenType.SEPARATOR;
-                    finishToken();
-                    break;
-                }
-                if (c == '\'')
-                {
-                    type = TokenType.STRING;
-                    checkStart();
-                    break;
-                }
-                if (c == '\"')
-                {
-                    type = TokenType.IDENTIFIER;
-                    checkStart();
-                    break;
-                }
-                if (c == '`')
-                {
-                    type = TokenType.MYSQL_IDENTIFIER;
-                    checkStart();
-                    break;
-                }
-                if ((c >= 'A' && c <= 'Z')
-                        || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_')
-                {
-                    type = TokenType.WORD;
-                    checkStart();
-                    break;
-                }
-                if (c == '-' || c == '/')
-                {
-                    type = TokenType.UNSURE;
-                    prevChar = c;
-                    break;
-                }
-                type = TokenType.PUNCTUATION;
-                checkStart();
+                noToken(c);
                 break;
             case DASH_DASH_COMMENT:
             case SLASH_SLASH_COMMENT:
@@ -103,26 +58,7 @@ public class MultiSqlConsumer implements CharConsumer
                 }
                 break;
             case PUNCTUATION:
-                if (token.length() > 0)
-                {
-                    char pc = token.charAt(token.length() - 1);
-                    if ((pc == '-' && c == '-') || (pc == '/' && (c == '/' || c == '*')))
-                    {
-                        token.setLength(token.length() - 1);
-                        finishToken();
-                        symbol(pc);
-                        symbol(c);
-                        break;
-                    }
-                }
-                if (Character.isWhitespace(c) || c == '\'' || c == '\"' || c == '`' || c == ';' || (c >= 'A' && c <= 'Z')
-                        || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_')
-                {
-                    finishToken();
-                    symbol(c);
-                    break;
-                }
-                token.append(c);
+                punctuation(c);
                 break;
             case SEPARATOR:
                 // Impossible
@@ -177,34 +113,114 @@ public class MultiSqlConsumer implements CharConsumer
                 }
                 break;
             case UNSURE:
-                if (prevChar == '-' && c == '-')
-                {
-                    token.append(c);
-                    type = TokenType.DASH_DASH_COMMENT;
-                    prevChar = 0;
-                    break;
-                }
-                if (prevChar == '/' && c == '/')
-                {
-                    token.append(c);
-                    type = TokenType.SLASH_SLASH_COMMENT;
-                    prevChar = 0;
-                    break;
-                }
-                if (prevChar == '/' && c == '*')
-                {
-                    token.append(c);
-                    type = TokenType.SLASH_ASTERISK_COMMENT;
-                    prevChar = 0;
-                    break;
-                }
-                prevChar = 0;
-                type = TokenType.PUNCTUATION;
-                checkStart();
-                symbol(c);
+                unsure(c);
+                break;
             default:
                 break;
         }
+    }
+
+    private void punctuation(char c)
+    {
+        if (token.length() > 0)
+        {
+            char pc = token.charAt(token.length() - 1);
+            if ((pc == '-' && c == '-') || (pc == '/' && (c == '/' || c == '*')))
+            {
+                token.setLength(token.length() - 1);
+                finishToken();
+                symbol(pc);
+                symbol(c);
+                return;
+            }
+        }
+        if (Character.isWhitespace(c) || c == '\'' || c == '\"' || c == '`' || c == ';' || (c >= 'A' && c <= 'Z')
+                || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_')
+        {
+            finishToken();
+            symbol(c);
+            return;
+        }
+        token.append(c);
+    }
+
+    private void noToken(char c)
+    {
+        token.append(c);
+        prevChar = 0;
+        if (Character.isWhitespace(c))
+        {
+            type = TokenType.WHITESPACE;
+            return;
+        }
+        if (c == ';')
+        {
+            type = TokenType.SEPARATOR;
+            finishToken();
+            return;
+        }
+        if (c == '\'')
+        {
+            type = TokenType.STRING;
+            checkStart();
+            return;
+        }
+        if (c == '\"')
+        {
+            type = TokenType.IDENTIFIER;
+            checkStart();
+            return;
+        }
+        if (c == '`')
+        {
+            type = TokenType.MYSQL_IDENTIFIER;
+            checkStart();
+            return;
+        }
+        if ((c >= 'A' && c <= 'Z')
+                || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_')
+        {
+            type = TokenType.WORD;
+            checkStart();
+            return;
+        }
+        if (c == '-' || c == '/')
+        {
+            type = TokenType.UNSURE;
+            prevChar = c;
+            return;
+        }
+        type = TokenType.PUNCTUATION;
+        checkStart();
+    }
+
+    private void unsure(char c)
+    {
+        if (prevChar == '-' && c == '-')
+        {
+            token.append(c);
+            type = TokenType.DASH_DASH_COMMENT;
+            prevChar = 0;
+            return;
+        }
+        if (prevChar == '/' && c == '/')
+        {
+            token.append(c);
+            type = TokenType.SLASH_SLASH_COMMENT;
+            prevChar = 0;
+            return;
+        }
+        if (prevChar == '/' && c == '*')
+        {
+            token.append(c);
+            type = TokenType.SLASH_ASTERISK_COMMENT;
+            prevChar = 0;
+            return;
+        }
+        prevChar = 0;
+        type = TokenType.PUNCTUATION;
+        checkStart();
+        symbol(c);
     }
 
     private void checkStart()

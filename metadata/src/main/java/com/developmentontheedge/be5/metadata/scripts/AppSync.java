@@ -80,6 +80,10 @@ public class AppSync extends ScriptSupport<AppSync>
 
             readSchema();
             createEntities();
+            if (sqlExecutor.getConnector().getType() != DbmsType.MYSQL)
+            {
+                createViews();
+            }
 
             String ddlString = getDdlStatements(false);
             ddlString = MultiSqlParser.normalize(be5Project.getDatabaseSystem().getType(), ddlString);
@@ -186,7 +190,7 @@ public class AppSync extends ScriptSupport<AppSync>
         logger.info("comleted, " + (System.currentTimeMillis() - time) + "ms.");
     }
 
-    private void createEntities() throws ExtendedSqlException, SQLException
+    private void createEntities()
     {
         Rdbms databaseSystem = DatabaseUtils.getRdbms(connector);
         DbmsTypeManager typeManager = databaseSystem == null ? new DefaultTypeManager() : databaseSystem.getTypeManager();
@@ -276,11 +280,13 @@ public class AppSync extends ScriptSupport<AppSync>
             }
             DataElementUtils.saveQuiet(tableDef);
         }
+    }
 
-        if (sqlExecutor.getConnector().getType() != DbmsType.MYSQL)
-            return;
-
-        // For MySQL only now
+    /**
+     * For MySQL only now
+     */
+    private void createViews() throws ExtendedSqlException, SQLException
+    {
         for (Entity entity : entities)
         {
             final String table = entity.getName();
@@ -422,8 +428,14 @@ public class AppSync extends ScriptSupport<AppSync>
                 logger.info("Skip table with schema: " + newScheme.getEntityName());
             }
         }
-//
-//        PENDING
+
+        //clonedEntity();
+
+        return sb.toString();
+    }
+
+    private void clonedEntity()
+    {
 //        if( updateClones || removeClones || removeUnusedTables)
 //        {
 //            for( Entity entity : entities )
@@ -466,8 +478,6 @@ public class AppSync extends ScriptSupport<AppSync>
 //                }
 //            }
 //        }
-
-        return sb.toString();
     }
 
     private void fixPrimaryKey(TableDef orphanDdl, TableDef ddl)

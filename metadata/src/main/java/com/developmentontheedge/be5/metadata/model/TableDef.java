@@ -322,6 +322,17 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         }
         if (!hasOldColumn && !oldColumnNames.isEmpty())
             return null;
+
+        getColumnsDiffFromOldColumns(def, typeManager, dangerousOnly, sb, oldColumnNames, preservedColumns, knownOldNames);
+
+        getColumnsDiffFromCurrentColumns(typeManager, dangerousOnly, sql, sb, preservedColumns);
+        // TODO: preserve column order
+        // TODO: support alter column for types
+        return sb.toString();
+    }
+
+    private void getColumnsDiffFromOldColumns(TableDef def, DbmsTypeManager typeManager, boolean dangerousOnly, StringBuilder sb, Map<String, ColumnDef> oldColumnNames, Map<String, ColumnDef> preservedColumns, Map<String, ColumnDef> knownOldNames)
+    {
         for (ColumnDef oldColumn : oldColumnNames.values())
         {
             String normalizedName = typeManager.normalizeIdentifier(oldColumn.getName());
@@ -346,6 +357,10 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
             }
             addDropColumnStatements(typeManager, oldColumn, sb, dangerousOnly);
         }
+    }
+
+    private void getColumnsDiffFromCurrentColumns(DbmsTypeManager typeManager, boolean dangerousOnly, SqlExecutor sql, StringBuilder sb, Map<String, ColumnDef> preservedColumns) throws ExtendedSqlException
+    {
         for (ColumnDef column : getColumns().getAvailableElements())
         {
             String columnName = typeManager.normalizeIdentifier(column.getName());
@@ -402,9 +417,6 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
                 }
             }
         }
-        // TODO: preserve column order
-        // TODO: support alter column for types
-        return sb.toString();
     }
 
     private void replaceColumnInIndices(ColumnDef oldColumn, ColumnDef newColumn)

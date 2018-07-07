@@ -150,49 +150,58 @@ public class Utils
     {
         if ("".equals(val)) return null;
 
+        if (Double.class.equals(valClass) || double.class.equals(valClass))
+        {
+            return Double.valueOf(fixNumber(val, false));
+        }
+        if (Float.class.equals(valClass) || float.class.equals(valClass))
+        {
+            return Float.valueOf(fixNumber(val, false));
+        }
+        if (Byte.class.equals(valClass) || byte.class.equals(valClass))
+        {
+            return Byte.valueOf(fixNumber(val, true));
+        }
+        if (Short.class.equals(valClass) || short.class.equals(valClass))
+        {
+            return Short.valueOf(fixNumber(val, true));
+        }
+        if (Integer.class.equals(valClass) || int.class.equals(valClass))
+        {
+            return Integer.valueOf(fixNumber(val, true));
+        }
+        if (Long.class.equals(valClass) || long.class.equals(valClass))
+        {
+            return Long.valueOf(fixNumber(val, true));
+        }
+        if (Boolean.class.equals(valClass) || boolean.class.equals(valClass))
+        {
+            String s = (val).toLowerCase();
+            return "true".equals(s) || "on".equals(s) ||
+                    "yes".equals(s) || "1".equals(s);
+        }
+
+        if (BigDecimal.class.equals(valClass))
+        {
+            return new BigDecimal(fixNumber(val, false));
+        }
+        if (BigInteger.class.equals(valClass))
+        {
+            return new BigInteger(fixNumber(val, false));
+        }
+
+        if (File.class.equals(valClass))
+        {
+            return new File(val);
+        }
+
+        return parseDateOrTimeType(val, valClass);
+    }
+
+    private static Object parseDateOrTimeType(String val, Class valClass)
+    {
         try
         {
-            if (Double.class.equals(valClass) || double.class.equals(valClass))
-            {
-                return Double.valueOf(fixNumber(val, false));
-            }
-            if (Float.class.equals(valClass) || float.class.equals(valClass))
-            {
-                return Float.valueOf(fixNumber(val, false));
-            }
-            if (Byte.class.equals(valClass) || byte.class.equals(valClass))
-            {
-                return Byte.valueOf(fixNumber(val, true));
-            }
-            if (Short.class.equals(valClass) || short.class.equals(valClass))
-            {
-                return Short.valueOf(fixNumber(val, true));
-            }
-            if (Integer.class.equals(valClass) || int.class.equals(valClass))
-            {
-                return Integer.valueOf(fixNumber(val, true));
-            }
-            if (Long.class.equals(valClass) || long.class.equals(valClass))
-            {
-                //System.out.println( "GOTCHA!!!!" );
-                return Long.valueOf(fixNumber(val, true));
-            }
-            if (Boolean.class.equals(valClass) || boolean.class.equals(valClass))
-            {
-                String s = (val).toLowerCase();
-                return "true".equals(s) || "on".equals(s) ||
-                        "yes".equals(s) || "1".equals(s);
-            }
-
-            if (BigDecimal.class.equals(valClass))
-            {
-                return new BigDecimal(fixNumber(val, false));
-            }
-            if (BigInteger.class.equals(valClass))
-            {
-                return new BigInteger(fixNumber(val, false));
-            }
-
             if (java.util.Date.class.equals(valClass))
             {
                 DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT);
@@ -273,11 +282,6 @@ public class Utils
 
                 return new java.sql.Timestamp(parsed.getTime());
             }
-
-            if (File.class.equals(valClass))
-            {
-                return new File(val);
-            }
         }
         catch (ParseException e)
         {
@@ -311,17 +315,14 @@ public class Utils
             {
                 return new java.util.Date(((java.sql.Timestamp) val).getTime());
             }
-
             if (val instanceof java.util.Date)
             {
                 return new java.sql.Date(((java.util.Date) val).getTime());
             }
-
             if (val instanceof java.util.Calendar)
             {
                 return new java.sql.Date(((java.util.Calendar) val).getTime().getTime());
             }
-
             if (val instanceof XMLGregorianCalendar)
             {
                 XMLGregorianCalendar xcal = (XMLGregorianCalendar) val;
@@ -343,7 +344,6 @@ public class Utils
                     throw new IllegalArgumentException(e);
                 }
             }
-
             if (val instanceof String)
             {
                 try

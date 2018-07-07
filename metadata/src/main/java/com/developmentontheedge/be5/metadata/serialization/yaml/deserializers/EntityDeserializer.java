@@ -164,8 +164,21 @@ class EntityDeserializer extends FileDeserializer
             }
         }
 
-        final List<Map<String, Object>> queriesList = asMaps(entityContent.get("queries"));
+        readQueries(entity, asMaps(entityContent.get("queries")));
 
+        checkChildren(entity, entityContent, Fields.entity(), "type", TAG_COMMENT, TAG_EXTRAS, TAG_CUSTOMIZATIONS, ATTR_ICON,
+                "operations", "queries", "scheme", TAG_REFERENCES, ATTR_ENTITY_TEMPLATE);
+
+        if (templateEntity != null)
+        {
+            entity.merge(templateEntity, false, !yamlDeserializer.fuseTemplate);
+        }
+
+        return entity;
+    }
+
+    private void readQueries(Entity entity, final List<Map<String, Object>> queriesList)
+    {
         for (Map<String, Object> queryElement : queriesList)
         {
             for (Map.Entry<String, Object> queryPair : queryElement.entrySet()) // should have only one element
@@ -190,16 +203,6 @@ class EntityDeserializer extends FileDeserializer
                 }
             }
         }
-
-        checkChildren(entity, entityContent, Fields.entity(), "type", TAG_COMMENT, TAG_EXTRAS, TAG_CUSTOMIZATIONS, ATTR_ICON,
-                "operations", "queries", "scheme", TAG_REFERENCES, ATTR_ENTITY_TEMPLATE);
-
-        if (templateEntity != null)
-        {
-            entity.merge(templateEntity, false, !yamlDeserializer.fuseTemplate);
-        }
-
-        return entity;
     }
 
     public Entity getEntity()

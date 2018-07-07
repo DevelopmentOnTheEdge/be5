@@ -987,88 +987,104 @@ public class YamlSerializer
             if (customizedProperties.contains("query"))
             {
                 if (query.getType() == QueryType.STATIC)
+                {
                     content.put(ATTR_QUERY_CODE, query.getQuery());
+                }
                 else if (query.getType() == QueryType.JAVASCRIPT)
                 {
-                    if (query.getFileName().isEmpty())
-                        query.setFileName(query.getName() + ".js");
-                    else if (!query.getFileName().endsWith(".js"))
-                        query.setFileName(query.getFileName() + ".js");
-
-                    query.setFileName(query.getFileName().replace(':', '_'));
-
-                    content.put("file", query.getFileName());
-
-                    write:
-                    if (serializeReferencedFiles)
-                    {
-                        try
-                        {
-                            final String newContent = query.getQuery();
-
-                            if (Files.isRegularFile(fileSystem.getJavaScriptQueryFile(query.getFileName())))
-                            {
-                                try
-                                {
-                                    final String oldContent = fileSystem.readJavaScriptQuery(query.getFileName());
-                                    if (oldContent.equals(newContent))
-                                        break write;
-                                } catch (ReadException e)
-                                {
-                                    // ignore
-                                }
-                            }
-
-                            fileSystem.writeJavaScriptQuery(query.getFileName(), query.getQuery());
-                        } catch (IOException e)
-                        {
-                            throw new WriteException(query, e);
-                        }
-                    }
-                } else if (query.getType() == QueryType.GROOVY)
+                    jsQuery(query, serializeReferencedFiles, content);
+                }
+                else if (query.getType() == QueryType.GROOVY)
                 {
-                    if (query.getFileName().isEmpty())
-                        query.setFileName(query.getName() + "groovy");
-                    else if (!query.getFileName().endsWith("groovy"))
-                        query.setFileName(query.getFileName() + ".groovy");
-
-                    query.setFileName(query.getFileName().replace(':', '_'));
-
-                    content.put("file", query.getFileName());
-
-                    write:
-                    if (serializeReferencedFiles)
-                    {
-                        try
-                        {
-                            final String newContent = query.getQuery();
-
-                            if (Files.isRegularFile(fileSystem.getGroovyQueryFile(query.getFileName())))
-                            {
-                                try
-                                {
-                                    final String oldContent = fileSystem.readGroovyQuery(query.getFileName());
-                                    if (oldContent.equals(newContent))
-                                        break write;
-                                } catch (ReadException e)
-                                {
-                                    // ignore
-                                }
-                            }
-
-                            fileSystem.writeGroovyQuery(query.getFileName(), query.getQuery());
-                        } catch (IOException e)
-                        {
-                            throw new WriteException(query, e);
-                        }
-                    }
-                } else
+                    groovyQuery(query, serializeReferencedFiles, content);
+                }
+                else
+                {
                     content.put(TAG_CODE, query.getQuery());
+                }
             }
 
             root.put(query.getName(), content);
 
             return root;
+        }
+
+        private void jsQuery(Query query, boolean serializeReferencedFiles, Map<String, Object> content) throws WriteException
+        {
+            if (query.getFileName().isEmpty())
+                query.setFileName(query.getName() + ".js");
+            else if (!query.getFileName().endsWith(".js"))
+                query.setFileName(query.getFileName() + ".js");
+
+            query.setFileName(query.getFileName().replace(':', '_'));
+
+            content.put("file", query.getFileName());
+
+            write:
+            if (serializeReferencedFiles)
+            {
+                try
+                {
+                    final String newContent = query.getQuery();
+
+                    if (Files.isRegularFile(fileSystem.getJavaScriptQueryFile(query.getFileName())))
+                    {
+                        try
+                        {
+                            final String oldContent = fileSystem.readJavaScriptQuery(query.getFileName());
+                            if (oldContent.equals(newContent))
+                                break write;
+                        } catch (ReadException e)
+                        {
+                            // ignore
+                        }
+                    }
+
+                    fileSystem.writeJavaScriptQuery(query.getFileName(), query.getQuery());
+                } catch (IOException e)
+                {
+                    throw new WriteException(query, e);
+                }
+            }
+        }
+
+        private void groovyQuery(Query query, boolean serializeReferencedFiles, Map<String, Object> content) throws WriteException
+        {
+            if (query.getFileName().isEmpty())
+                query.setFileName(query.getName() + "groovy");
+            else if (!query.getFileName().endsWith("groovy"))
+                query.setFileName(query.getFileName() + ".groovy");
+
+            query.setFileName(query.getFileName().replace(':', '_'));
+
+            content.put("file", query.getFileName());
+
+            write:
+            if (serializeReferencedFiles)
+            {
+                try
+                {
+                    final String newContent = query.getQuery();
+
+                    if (Files.isRegularFile(fileSystem.getGroovyQueryFile(query.getFileName())))
+                    {
+                        try
+                        {
+                            final String oldContent = fileSystem.readGroovyQuery(query.getFileName());
+                            if (oldContent.equals(newContent))
+                                break write;
+                        } catch (ReadException e)
+                        {
+                            // ignore
+                        }
+                    }
+
+                    fileSystem.writeGroovyQuery(query.getFileName(), query.getQuery());
+                } catch (IOException e)
+                {
+                    throw new WriteException(query, e);
+                }
+            }
         }
 
         private Map<String, Object> serializeQuickFilters(final QuickFilter[] quickFilters)
