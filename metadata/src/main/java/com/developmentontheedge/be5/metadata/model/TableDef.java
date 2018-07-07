@@ -146,14 +146,9 @@ public class TableDef extends BeVectorCollection<BeModelElement> implements DdlE
         ColumnDef newColumn = (ColumnDef) oldColumn.clone(oldColumn.getOrigin(), newName);
         // Update oldNames
         Set<String> oldNames = new LinkedHashSet<>(Arrays.asList(newColumn.getOldNames()));
-        for (Iterator<String> it = oldNames.iterator(); it.hasNext(); )
-        {
-            String previousOldName = it.next();
-            if (previousOldName.equalsIgnoreCase(newName))
-                it.remove();
-        }
+        oldNames.removeIf(previousOldName -> previousOldName.equalsIgnoreCase(newName));
         oldNames.add(oldName);
-        newColumn.setOldNames(oldNames.toArray(new String[oldNames.size()]));
+        newColumn.setOldNames(oldNames.toArray(new String[0]));
         // Store
         getColumns().replace(oldColumn, newColumn);
         replaceColumnInIndices(oldColumn, newColumn);

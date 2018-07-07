@@ -505,12 +505,7 @@ public class YamlSerializer
             }
 
             final List<Field> columnFields = new ArrayList<>(Fields.columnDef());
-            for (final Iterator<Field> iterator = columnFields.iterator(); iterator.hasNext(); )
-            {
-                final Field field = iterator.next();
-                if (field.name.equals("type"))
-                    iterator.remove();
-            }
+            columnFields.removeIf(field -> field.name.equals("type"));
 
             serializeFields(column, columnFields, serializedColumnDefinitionBody);
             serializeUsedExtras(column, serializedColumnDefinitionBody);
