@@ -19,27 +19,26 @@ class LocalizationDeserializer extends FileDeserializer
     private final String lang;
     private final LanguageLocalizations target;
 
-    LocalizationDeserializer(LoadContext loadContext, final String lang, final Path path, final Localizations target ) throws ReadException
+    LocalizationDeserializer(LoadContext loadContext, final String lang, final Path path, final Localizations target) throws ReadException
     {
-        super( loadContext, path );
+        super(loadContext, path);
         this.lang = lang;
-        this.target = new LanguageLocalizations( lang, target );
+        this.target = new LanguageLocalizations(lang, target);
     }
 
     @Override
-    protected void doDeserialize( final Object serializedRoot ) throws ReadException
+    protected void doDeserialize(final Object serializedRoot) throws ReadException
     {
-        final Map<String, Object> localizationContent = asMap( asMap( serializedRoot ).get( lang ) );
-        final List<Object> serializedEntitiesLocalization = asList( localizationContent.get( TAG_ENTITIES ) );
+        final Map<String, Object> localizationContent = asMap(asMap(serializedRoot).get(lang));
+        final List<Object> serializedEntitiesLocalization = asList(localizationContent.get(TAG_ENTITIES));
 
-        for ( Object serializedEntityLocalization : serializedEntitiesLocalization )
-        {
-            readEntityLocalization( asMap( serializedEntityLocalization ) );
+        for (Object serializedEntityLocalization : serializedEntitiesLocalization) {
+            readEntityLocalization(asMap(serializedEntityLocalization));
         }
 
-        save( target );
-        readDocumentation( localizationContent, target );
-        target.getProject().getAutomaticDeserializationService().registerFile( path, ManagedFileType.LOCALIZATION );
+        save(target);
+        readDocumentation(localizationContent, target);
+        target.getProject().getAutomaticDeserializationService().registerFile(path, ManagedFileType.LOCALIZATION);
     }
 
     private LanguageLocalizations getResult()
@@ -47,60 +46,52 @@ class LocalizationDeserializer extends FileDeserializer
         return target;
     }
 
-    private void readEntityLocalization( Map<String, Object> serializedEntityLocalization ) throws ReadException
+    private void readEntityLocalization(Map<String, Object> serializedEntityLocalization) throws ReadException
     {
-        if ( serializedEntityLocalization.size() != 1 )
-        {
-            loadContext.addWarning( new ReadException( path, "Each entity localization should have only one key that reperesents an entity name" ) );
+        if (serializedEntityLocalization.size() != 1) {
+            loadContext.addWarning(new ReadException(path, "Each entity localization should have only one key that reperesents an entity name"));
             return;
         }
 
         final String entityName = serializedEntityLocalization.keySet().iterator().next();
-        final List<Object> serializedBlocks = asList( serializedEntityLocalization.get( entityName ) );
+        final List<Object> serializedBlocks = asList(serializedEntityLocalization.get(entityName));
 
-        readBlocks( entityName, serializedBlocks );
+        readBlocks(entityName, serializedBlocks);
     }
 
-    private void readBlocks( final String entityName, final List<Object> serializedBlocks )
+    private void readBlocks(final String entityName, final List<Object> serializedBlocks)
     {
-        for ( final Object serializedBlock : serializedBlocks )
-        {
-            try
-            {
-                readBlock( entityName, asMap( serializedBlock ) );
-            }
-            catch ( ReadException e )
-            {
-                loadContext.addWarning( e.attachElement( target ) );
+        for (final Object serializedBlock : serializedBlocks) {
+            try {
+                readBlock(entityName, asMap(serializedBlock));
+            } catch (ReadException e) {
+                loadContext.addWarning(e.attachElement(target));
             }
         }
     }
 
-    private void readBlock( final String entityName, final Map<String, Object> serializedBlock ) throws ReadException
+    private void readBlock(final String entityName, final Map<String, Object> serializedBlock) throws ReadException
     {
-        final List<String> topics = asStrList( serializedBlock.get( ATTR_LOCALIZATION_TOPICS ) );
-        final List<Object> serializedEntries = asList( serializedBlock.get( TAG_LOCALIZATION_ENTRIES ) );
+        final List<String> topics = asStrList(serializedBlock.get(ATTR_LOCALIZATION_TOPICS));
+        final List<Object> serializedEntries = asList(serializedBlock.get(TAG_LOCALIZATION_ENTRIES));
 
-        for ( Object serializedEntry : serializedEntries )
-        {
-            readEntry( entityName, topics, asMap( serializedEntry ) );
+        for (Object serializedEntry : serializedEntries) {
+            readEntry(entityName, topics, asMap(serializedEntry));
         }
     }
 
-    private void readEntry( String entityName, List<String> topics, Map<String, Object> serializedEntry ) throws ReadException
+    private void readEntry(String entityName, List<String> topics, Map<String, Object> serializedEntry) throws ReadException
     {
-        if ( serializedEntry.size() != 1 )
-        {
-            loadContext.addWarning( new ReadException( path, "Each localization entry should have only one key" ) );
+        if (serializedEntry.size() != 1) {
+            loadContext.addWarning(new ReadException(path, "Each localization entry should have only one key"));
             return;
         }
 
         final String name = serializedEntry.keySet().iterator().next();
-        final String value = asStr( serializedEntry.get( name ) );
+        final String value = asStr(serializedEntry.get(name));
 
-        if ( !target.addLocalization( entityName, topics, name, value ) )
-        {
-            loadContext.addWarning( new ReadException( target.get( entityName ), path, "Duplicate localization: topics = " + topics + "; name = " + name ) );
+        if (!target.addLocalization(entityName, topics, name, value)) {
+            loadContext.addWarning(new ReadException(target.get(entityName), path, "Duplicate localization: topics = " + topics + "; name = " + name));
         }
     }
 

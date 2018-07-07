@@ -4,117 +4,117 @@ public class M4MacroProcessorStrategy extends MacroProcessorStrategySupport
 {
 
     @Override
-    public String dateFormat( String str )
+    public String dateFormat(String str)
     {
-        return "_DBMS_DATE_FORMAT("+str+")";
+        return "_DBMS_DATE_FORMAT(" + str + ")";
     }
 
     @Override
-    public String datetimeFormat( String str )
+    public String datetimeFormat(String str)
     {
-        return "_DBMS_DATETIME_FORMAT("+str+")";
+        return "_DBMS_DATETIME_FORMAT(" + str + ")";
     }
 
     @Override
-    public String concat( String... args )
+    public String concat(String... args)
     {
-        return "_DBMS_CONCAT( " + String.join( ", ", args ) + " )";
+        return "_DBMS_CONCAT( " + String.join(", ", args) + " )";
     }
 
     @Override
-    public String round( String... args )
+    public String round(String... args)
     {
-        return "_DBMS_ROUND( " + String.join( ",", args ) + " )";
+        return "_DBMS_ROUND( " + String.join(",", args) + " )";
     }
 
     @Override
-    public String coalesce( String... args )
+    public String coalesce(String... args)
     {
-        return "_DBMS_COALESCE( " + String.join( ", ", args ) + " )";
+        return "_DBMS_COALESCE( " + String.join(", ", args) + " )";
     }
 
     @Override
-    public String castIntToVarchar( String input )
+    public String castIntToVarchar(String input)
     {
-        return "_DBMS_CAST_INT_TO_VARCHAR("+input+")";
+        return "_DBMS_CAST_INT_TO_VARCHAR(" + input + ")";
     }
 
     @Override
-    public String castVarcharToInt( String input )
+    public String castVarcharToInt(String input)
     {
-        return "_DBMS_CAST_VARCHAR_TO_INT("+input+")";
+        return "_DBMS_CAST_VARCHAR_TO_INT(" + input + ")";
     }
 
     @Override
-    public String castAsDate( String input )
+    public String castAsDate(String input)
     {
-        return "_DBMS_CHAR_CAST_AS_DATE("+input+")";
+        return "_DBMS_CHAR_CAST_AS_DATE(" + input + ")";
     }
 
     @Override
-    public String replace( String... args )
+    public String replace(String... args)
     {
-        return "_DBMS_REPLACE("+args[0]+", "+args[1]+", "+args[2]+")";
+        return "_DBMS_REPLACE(" + args[0] + ", " + args[1] + ", " + args[2] + ")";
     }
 
     @Override
-    public String substring( String... args )
+    public String substring(String... args)
     {
-        return "_DBMS_SUBSTRING("+String.join( ", ", args )+")";
+        return "_DBMS_SUBSTRING(" + String.join(", ", args) + ")";
     }
 
     @Override
-    public String length( String input )
+    public String length(String input)
     {
-        return "_DBMS_LENGTH("+input+")";
+        return "_DBMS_LENGTH(" + input + ")";
     }
 
     @Override
-    public String limit( String input )
+    public String limit(String input)
     {
-        return "_DBMS_LIMIT("+input+")";
+        return "_DBMS_LIMIT(" + input + ")";
     }
 
     @Override
-    public String charFunc( String code )
+    public String charFunc(String code)
     {
-        return "_DBMS_FUNCTION_CHR("+code+")";
+        return "_DBMS_FUNCTION_CHR(" + code + ")";
     }
 
     @Override
-    public String indexOf( String... args )
+    public String indexOf(String... args)
     {
-        return "_DBMS_CHARINDEX("+args[0]+", "+args[1]+")";
+        return "_DBMS_CHARINDEX(" + args[0] + ", " + args[1] + ")";
     }
 
     @Override
-    public String greatest( String... args )
+    public String greatest(String... args)
     {
-        return "_DBMS_GREATEST("+String.join( ", ", args )+")";
+        return "_DBMS_GREATEST(" + String.join(", ", args) + ")";
     }
 
     @Override
-    public String least( String... args )
+    public String least(String... args)
     {
-        return "_DBMS_LEAST("+String.join( ", ", args )+")";
+        return "_DBMS_LEAST(" + String.join(", ", args) + ")";
     }
 
     @Override
-    public String upper( String str )
+    public String upper(String str)
     {
-        return "_DBMS_UPPER("+str+")";
+        return "_DBMS_UPPER(" + str + ")";
     }
 
     @Override
-    public String lower( String str )
+    public String lower(String str)
     {
-        return "_DBMS_LOWER("+str+")";
+        return "_DBMS_LOWER(" + str + ")";
     }
 
     @Override
-    public String trim( String str )
+    public String trim(String str)
     {
-        return "_DBMS_TRIM("+str+")";
+        return "_DBMS_TRIM(" + str + ")";
     }
 
     @Override
@@ -130,15 +130,15 @@ public class M4MacroProcessorStrategy extends MacroProcessorStrategySupport
     }
 
     @Override
-    public String firstDayOfMonth( String date )
+    public String firstDayOfMonth(String date)
     {
-        return "_DBMS_FIRST_DAY_OF_MONTH("+date+")";
+        return "_DBMS_FIRST_DAY_OF_MONTH(" + date + ")";
     }
 
     @Override
-    public String firstDayOfYear( String date )
+    public String firstDayOfYear(String date)
     {
-        return "_DBMS_FIRST_DAY_OF_YEAR("+date+")";
+        return "_DBMS_FIRST_DAY_OF_YEAR(" + date + ")";
     }
 
     @Override
@@ -148,103 +148,103 @@ public class M4MacroProcessorStrategy extends MacroProcessorStrategySupport
     }
 
     @Override
-    public String year( String input )
+    public String year(String input)
     {
-        return "_DBMS_YEAR("+input+")";
+        return "_DBMS_YEAR(" + input + ")";
     }
 
     @Override
-    public String month( String input )
+    public String month(String input)
     {
-        return "_DBMS_MONTH("+input+")";
+        return "_DBMS_MONTH(" + input + ")";
     }
 
     @Override
-    public String day( String input )
+    public String day(String input)
     {
         return "_DBMS_DAY(" + input + ")";
     }
 
     @Override
-    public String hour( String input )
+    public String hour(String input)
     {
         return "_DBMS_TIME_HH(" + input + ")";
     }
 
     @Override
-    public String minute( String input )
+    public String minute(String input)
     {
         return "_DBMS_TIME_MM(" + input + ")";
     }
 
     @Override
-    public String formatRusDate( String input )
+    public String formatRusDate(String input)
     {
         return "_DBMS_DATE_FORMAT_RU(" + input + ")";
     }
 
     @Override
-    public String lpad( String str, String iSize, String fill )
+    public String lpad(String str, String iSize, String fill)
     {
-        return "_DBMS_LPAD("+str+", "+iSize+", "+fill+")";
+        return "_DBMS_LPAD(" + str + ", " + iSize + ", " + fill + ")";
     }
 
     @Override
-    public String str( String val )
+    public String str(String val)
     {
-        return "\'"+val.replace( "\'", "\'\'" )+"\'";
+        return "\'" + val.replace("\'", "\'\'") + "\'";
     }
 
     @Override
-    public String genericRef( String entity, String id )
+    public String genericRef(String entity, String id)
     {
-        return genericRefLowLevel( entity, id );
+        return genericRefLowLevel(entity, id);
     }
 
     @Override
-    public String genericRefLowLevel( String entity, String id )
+    public String genericRefLowLevel(String entity, String id)
     {
-        return "GENERIC_REF("+entity+", "+id+")";
+        return "GENERIC_REF(" + entity + ", " + id + ")";
     }
 
     @Override
-    public String joinGenericRef( String table, String alias, String fromField )
+    public String joinGenericRef(String table, String alias, String fromField)
     {
         return "JOIN_GENERIC_REF(" + table + ", " + alias + ", " + fromField + ")";
     }
 
     @Override
-    public String castAsPrimaryKey( String expression )
+    public String castAsPrimaryKey(String expression)
     {
-        return "_DBMS_CAST_AS_PK("+expression+")";
+        return "_DBMS_CAST_AS_PK(" + expression + ")";
     }
 
     @Override
-    public String addMonths( String date, String months )
+    public String addMonths(String date, String months)
     {
-        return "_DBMS_ADD_MONTHS("+date+", "+months+")";
+        return "_DBMS_ADD_MONTHS(" + date + ", " + months + ")";
     }
 
     @Override
-    public String addDays( String date, String days )
+    public String addDays(String date, String days)
     {
-        return "_DBMS_ADD_DAYS("+date+", "+days+")";
+        return "_DBMS_ADD_DAYS(" + date + ", " + days + ")";
     }
 
     @Override
-    public String addMillis( String date, String millis )
+    public String addMillis(String date, String millis)
     {
-        return "_DBMS_ADD_MILLIS("+date+", "+millis+")";
+        return "_DBMS_ADD_MILLIS(" + date + ", " + millis + ")";
     }
 
     @Override
-    public String dayDiff( String date1, String date2 )
+    public String dayDiff(String date1, String date2)
     {
         return "_DBMS_DAY_DIFF(" + date1 + "," + date2 + ")";
     }
 
     @Override
-    public String idCase( String expression )
+    public String idCase(String expression)
     {
         return expression;
     }

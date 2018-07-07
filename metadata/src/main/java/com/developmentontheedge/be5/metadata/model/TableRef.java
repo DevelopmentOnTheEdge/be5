@@ -19,18 +19,18 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     // permitted tables are only useful when tableTo == null
     private String[] permittedTables;
     private String originModuleName;
-    
-    public TableRef( final String name, final String columnFrom, final BeModelCollection<? extends TableRef> parent )
+
+    public TableRef(final String name, final String columnFrom, final BeModelCollection<? extends TableRef> parent)
     {
-        super( name, parent );
+        super(name, parent);
         this.columnsFrom = columnFrom;
         this.originModuleName = getModule().getName();
     }
-    
+
     @Override
     public boolean isCustomized()
     {
-        return getProject().getProjectOrigin().equals( originModuleName ) && !getModule().getName().equals( originModuleName );
+        return getProject().getProjectOrigin().equals(originModuleName) && !getModule().getName().equals(originModuleName);
     }
 
     @Override
@@ -38,10 +38,10 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     {
         return getEntity().getModule();
     }
-    
+
     public Entity getEntity()
     {
-        return ( Entity ) getOrigin().getOrigin();
+        return (Entity) getOrigin().getOrigin();
     }
 
     @PropertyName("Table from")
@@ -66,7 +66,7 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     }
 
     @Override
-    public void setTableTo( String tableTo )
+    public void setTableTo(String tableTo)
     {
         this.tableTo = tableTo;
         fireChanged();
@@ -76,37 +76,35 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     @Override
     public String getColumnsTo()
     {
-        if ( !Strings2.isNullOrEmpty( tableTo ) && Strings2.isNullOrEmpty( columnsTo ) )
-        {
-            final Entity entity = getProject().getEntity( tableTo );
-            if ( entity != null )
-            {
+        if (!Strings2.isNullOrEmpty(tableTo) && Strings2.isNullOrEmpty(columnsTo)) {
+            final Entity entity = getProject().getEntity(tableTo);
+            if (entity != null) {
                 final String primaryKey = entity.getPrimaryKey();
                 return primaryKey;
             }
         }
-        
+
         return columnsTo;
     }
 
     @Override
-    public void setColumnsTo( String columnsTo )
+    public void setColumnsTo(String columnsTo)
     {
         this.columnsTo = columnsTo;
         fireChanged();
     }
-    
+
     @PropertyName("Selection view name")
     @Override
     public String getViewName()
     {
         return viewName;
     }
-    
+
     @Override
-    public void setViewName( String viewName )
+    public void setViewName(String viewName)
     {
-        this.viewName = Strings2.emptyToNull( viewName );
+        this.viewName = Strings2.emptyToNull(viewName);
         fireChanged();
     }
 
@@ -118,16 +116,15 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     }
 
     @Override
-    public void setPermittedTables( String[] permittedTables )
+    public void setPermittedTables(String[] permittedTables)
     {
         this.permittedTables = permittedTables;
-        if ( permittedTables != null )
-        {
-            Arrays.sort( permittedTables );
+        if (permittedTables != null) {
+            Arrays.sort(permittedTables);
         }
         fireChanged();
     }
-    
+
     @Override
     public String getOriginModuleName()
     {
@@ -135,7 +132,7 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
     }
 
     @Override
-    public void setOriginModuleName( String originModuleName )
+    public void setOriginModuleName(String originModuleName)
     {
         this.originModuleName = originModuleName;
         fireChanged();
@@ -146,79 +143,68 @@ public class TableRef extends BeModelElementSupport implements TableReference, B
      */
     public String[] getTargetTables()
     {
-        if ( tableTo != null )
-        {
-            return new String[] { tableTo };
+        if (tableTo != null) {
+            return new String[]{tableTo};
         }
-        
-        if ( permittedTables == null )
-        {
+
+        if (permittedTables == null) {
             return Strings2.EMPTY;
         }
-        
+
         return permittedTables;
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( obj == null )
-            return debugEquals( "null" );
-        if ( !(obj instanceof TableReference) )
-            return debugEquals( "class" );
-        return equalsReference( ( TableReference ) obj );
+        if (obj == null)
+            return debugEquals("null");
+        if (!(obj instanceof TableReference))
+            return debugEquals("class");
+        return equalsReference((TableReference) obj);
     }
 
-    public static String nameFor( final String columnFrom, final String tableTo )
+    public static String nameFor(final String columnFrom, final String tableTo)
     {
-        return columnFrom + " -> " + ( tableTo == null ? "(generic)" : tableTo );
+        return columnFrom + " -> " + (tableTo == null ? "(generic)" : tableTo);
     }
 
     @Override
-    public boolean equalsReference( TableReference other )
+    public boolean equalsReference(TableReference other)
     {
-        if ( columnsFrom == null )
-        {
-            if ( other.getColumnsFrom() != null )
-                return debugEquals( "columnsFrom" );
+        if (columnsFrom == null) {
+            if (other.getColumnsFrom() != null)
+                return debugEquals("columnsFrom");
+        } else if (!columnsFrom.equalsIgnoreCase(other.getColumnsFrom()))
+            return debugEquals("columnsFrom");
+        if (getColumnsTo() == null) {
+            if (other.getColumnsTo() != null)
+                return debugEquals("columnsTo");
+        } else if (!getColumnsTo().equalsIgnoreCase(other.getColumnsTo()))
+            return debugEquals("columnsTo");
+        if (tableTo == null) {
+            if (other.getTableTo() != null)
+                return debugEquals("tableTo");
+        } else if (!tableTo.equalsIgnoreCase(other.getTableTo()))
+            return debugEquals("tableTo");
+        if (tableTo != null) {
+            if (viewName == null) {
+                if (other.getViewName() != null)
+                    return debugEquals("viewName");
+            } else if (!viewName.equals(other.getViewName()))
+                return debugEquals("viewName");
         }
-        else if ( !columnsFrom.equalsIgnoreCase( other.getColumnsFrom() ) )
-            return debugEquals( "columnsFrom" );
-        if ( getColumnsTo() == null )
-        {
-            if ( other.getColumnsTo() != null )
-                return debugEquals( "columnsTo" );
-        }
-        else if ( !getColumnsTo().equalsIgnoreCase( other.getColumnsTo() ) )
-            return debugEquals( "columnsTo" );
-        if ( tableTo == null )
-        {
-            if ( other.getTableTo() != null )
-                return debugEquals( "tableTo" );
-        }
-        else if ( !tableTo.equalsIgnoreCase( other.getTableTo() ) )
-            return debugEquals( "tableTo" );
-        if ( tableTo != null )
-        {
-            if ( viewName == null )
-            {
-                if ( other.getViewName() != null )
-                    return debugEquals( "viewName" );
-            }
-            else if ( !viewName.equals( other.getViewName() ) )
-                return debugEquals( "viewName" );
-        }
-        if ( tableTo == null && !Arrays.equals( permittedTables, other.getPermittedTables() ) )
-            return debugEquals( "permittedTables" );
+        if (tableTo == null && !Arrays.equals(permittedTables, other.getPermittedTables()))
+            return debugEquals("permittedTables");
         return true;
     }
-    
+
     @Override
     protected void fireChanged()
     {
-        if ( getOrigin() != null && getOrigin().get( getName() ) == this )
+        if (getOrigin() != null && getOrigin().get(getName()) == this)
             getOrigin().fireCodeChanged();
     }
 

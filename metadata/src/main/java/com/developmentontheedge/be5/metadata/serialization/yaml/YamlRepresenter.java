@@ -22,106 +22,95 @@ import java.util.Set;
 class YamlRepresenter extends Representer
 {
     private final Map<Object, Object> flowStyleElements;
-    private static final Set<String> flowStyleListNames = new HashSet<>( Arrays.asList( "roles" ) );
+    private static final Set<String> flowStyleListNames = new HashSet<>(Arrays.asList("roles"));
     private static final int MAXIMUM_LEVEL = 20;
     private final Deque<Object> stack = new LinkedList<>();
-    
+
     private class MyRepresentList extends RepresentList
     {
         @Override
-        public Node representData( Object data )
+        public Node representData(Object data)
         {
-            final Node represented = super.representData( data );
-            patch( represented, data );
+            final Node represented = super.representData(data);
+            patch(represented, data);
             return represented;
         }
     }
-    
-    public YamlRepresenter( final Object root )
+
+    public YamlRepresenter(final Object root)
     {
         super();
-        flowStyleElements = evalFlowStyleElements( root );
-        multiRepresenters.put( List.class, new MyRepresentList() );
+        flowStyleElements = evalFlowStyleElements(root);
+        multiRepresenters.put(List.class, new MyRepresentList());
     }
-    
-    private Map<Object, Object> evalFlowStyleElements( final Object root )
+
+    private Map<Object, Object> evalFlowStyleElements(final Object root)
     {
         final Map<Object, Object> map = new IdentityHashMap<>();
-        collectFlowStyleElements( null, root, map, 0 );
-        
+        collectFlowStyleElements(null, root, map, 0);
+
         return map;
     }
 
-    private void collectFlowStyleElements( final String name, final Object element, final Map<Object, Object> out, final int level )
+    private void collectFlowStyleElements(final String name, final Object element, final Map<Object, Object> out, final int level)
     {
-        if ( name != null )
-        {
-            stack.push( name );
+        if (name != null) {
+            stack.push(name);
         }
-        
-        if ( level > MAXIMUM_LEVEL )
-        {
+
+        if (level > MAXIMUM_LEVEL) {
             throw new IllegalStateException();
         }
-        
-        if ( name != null )
-        {
-            if ( flowStyleListNames.contains( name ) && element instanceof List )
-            {
-                out.put( element, element );
+
+        if (name != null) {
+            if (flowStyleListNames.contains(name) && element instanceof List) {
+                out.put(element, element);
             }
         }
-        
-        if ( element instanceof List && stack.contains( SerializationConstants.TAG_REFERENCES ) )
-        {
-            out.put( element, element );
+
+        if (element instanceof List && stack.contains(SerializationConstants.TAG_REFERENCES)) {
+            out.put(element, element);
         }
-        
-        if ( element instanceof List )
-        {
-            final List<?> list = ( List<?> ) element;
-            for ( final Object child : list )
-            {
-                collectFlowStyleElements( null, child, out, level + 1 );
+
+        if (element instanceof List) {
+            final List<?> list = (List<?>) element;
+            for (final Object child : list) {
+                collectFlowStyleElements(null, child, out, level + 1);
             }
         }
-        
-        if ( element instanceof Map )
-        {
-            final Map<?, ?> map = ( Map<?, ?> ) element;
-            map.forEach( (key, child) -> {
-                String childName = key instanceof String ? ( String ) key : null;
-                collectFlowStyleElements( childName, child, out, level + 1 );
+
+        if (element instanceof Map) {
+            final Map<?, ?> map = (Map<?, ?>) element;
+            map.forEach((key, child) -> {
+                String childName = key instanceof String ? (String) key : null;
+                collectFlowStyleElements(childName, child, out, level + 1);
             });
         }
-        
-        if ( name != null )
-        {
+
+        if (name != null) {
             stack.pop();
         }
     }
 
     @Override
-    public Node represent( Object data )
+    public Node represent(Object data)
     {
-        final Node represented = super.represent( data );
-        patch( represented, data ); // not sure if it can be ever applied
+        final Node represented = super.represent(data);
+        patch(represented, data); // not sure if it can be ever applied
         return represented;
     }
-    
-    private void patch( final Node represented, Object data )
+
+    private void patch(final Node represented, Object data)
     {
-        if ( represented instanceof SequenceNode )
-        {
-            if ( getFlowStyle( data ) )
-            {
-                ( ( CollectionNode ) represented ).setFlowStyle( DumperOptions.FlowStyle.FLOW );
+        if (represented instanceof SequenceNode) {
+            if (getFlowStyle(data)) {
+                ((CollectionNode) represented).setFlowStyle(DumperOptions.FlowStyle.FLOW);
             }
         }
     }
-    
-    private boolean getFlowStyle( final Object data )
+
+    private boolean getFlowStyle(final Object data)
     {
-        return flowStyleElements.containsKey( data );
+        return flowStyleElements.containsKey(data);
     }
 }

@@ -13,24 +13,18 @@ public class QuerySelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        try
-        {
+        try {
             List<String> queries = new ArrayList<>();
             Query query;
-            if ( getBean() instanceof Query )
-            {
-                query = ( Query ) getBean();
-                queries.add( "" );
-            }
-            else
-            {
-                query = ( ( QuickFilter ) getBean() ).getQuery();
+            if (getBean() instanceof Query) {
+                query = (Query) getBean();
+                queries.add("");
+            } else {
+                query = ((QuickFilter) getBean()).getQuery();
             }
             queries.addAll(query.getEntity().getQueries().getNameList());
             return queries.toArray(new String[queries.size()]);
-        }
-        catch( Exception e )
-        {
+        } catch (Exception e) {
             return Strings2.EMPTY;
         }
     }

@@ -12,9 +12,9 @@ public class ClassSelector extends CustomEditorSupport
 {
     private final JTextField textField = new JTextField();
     private final JPanel panel;
-    
+
     private static PlatformClassSelector classSelector;
-    
+
     public ClassSelector()
     {
         panel = new JPanel(new BorderLayout());
@@ -34,29 +34,28 @@ public class ClassSelector extends CustomEditorSupport
 
     protected void editButtonAction()
     {
-        if(classSelector != null)
-        {
-            classSelector.selectClass( ( BeModelElement ) getBean(), getDescriptor().getDisplayName(), textField.getText(),
+        if (classSelector != null) {
+            classSelector.selectClass((BeModelElement) getBean(), getDescriptor().getDisplayName(), textField.getText(),
                     new PlatformClassSelectorCallback()
-            {
-                @Override
-                public void classSelected( final String fullyQualifiedName )
-                {
-                    EventQueue.invokeLater( new Runnable()
                     {
                         @Override
-                        public void run()
+                        public void classSelected(final String fullyQualifiedName)
                         {
-                            textField.setText( fullyQualifiedName );
-                            textField.requestFocus();
-                            textField.selectAll();
+                            EventQueue.invokeLater(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    textField.setText(fullyQualifiedName);
+                                    textField.requestFocus();
+                                    textField.selectAll();
+                                }
+                            });
                         }
-                    } );
-                }
-            } );
+                    });
         }
     }
-    
+
     @Override
     public Object getValue()
     {
@@ -66,7 +65,7 @@ public class ClassSelector extends CustomEditorSupport
     @Override
     public void setValue(Object text)
     {
-        textField.setText(text==null?null:text.toString());
+        textField.setText(text == null ? null : text.toString());
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ClassSelector extends CustomEditorSupport
         return panel;
     }
 
-    public static void setClassSelector( PlatformClassSelector classSelector )
+    public static void setClassSelector(PlatformClassSelector classSelector)
     {
         ClassSelector.classSelector = classSelector;
     }

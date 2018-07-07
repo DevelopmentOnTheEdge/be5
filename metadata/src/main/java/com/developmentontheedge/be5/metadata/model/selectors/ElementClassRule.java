@@ -5,12 +5,13 @@ import com.developmentontheedge.beans.annot.PropertyName;
 
 /**
  * Rule to match element class like 'Query' or 'Operation'
+ *
  * @author lan
  */
 public class ElementClassRule implements SelectorRule
 {
     private final String classTitle;
-    
+
     public ElementClassRule(String classTitle)
     {
         assert classTitle != null;
@@ -18,15 +19,15 @@ public class ElementClassRule implements SelectorRule
     }
 
     @Override
-    public boolean matches( BeModelElement element )
+    public boolean matches(BeModelElement element)
     {
-        PropertyName annotation = element.getClass().getAnnotation( PropertyName.class );
-        return annotation != null && classTitle.equals( annotation.value() );
+        PropertyName annotation = element.getClass().getAnnotation(PropertyName.class);
+        return annotation != null && classTitle.equals(annotation.value());
     }
-    
+
     @Override
     public String toString()
     {
-        return SelectorUtils.escapeIdentifier( classTitle );
+        return SelectorUtils.escapeIdentifier(classTitle);
     }
 }

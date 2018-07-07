@@ -185,7 +185,7 @@ class PropertiesToRowTransformer
     private boolean shouldBeSkipped(String propertyName)
     {
         return MoreStrings.startsWithAny( propertyName, DatabaseConstants.EXTRA_HEADER_COLUMN_PREFIX, DatabaseConstants.HIDDEN_COLUMN_PREFIX,
-        		DatabaseConstants.GLUE_COLUMN_PREFIX );
+                DatabaseConstants.GLUE_COLUMN_PREFIX );
     }
 
 }

@@ -14,26 +14,18 @@ public class Utils
 {
     public static void createFile(String fileName, Template template, Map<String, Object> input)
     {
-        try
-        {
+        try {
             Paths.get(fileName.substring(0, fileName.lastIndexOf("/"))).toFile().mkdirs();
             Writer fileWriter = new FileWriter(new File(fileName));
 
-            try
-            {
+            try {
                 template.process(input, fileWriter);
-            }
-            catch (TemplateException e)
-            {
+            } catch (TemplateException e) {
                 e.printStackTrace();
-            }
-            finally
-            {
+            } finally {
                 fileWriter.close();
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -5,11 +5,11 @@ import com.developmentontheedge.beans.annot.PropertyName;
 @PropertyName("Operation")
 public class GroovyOperation extends SourceFileOperation
 {
-    protected GroovyOperation( String name, Entity entity )
+    protected GroovyOperation(String name, Entity entity)
     {
-        super( name, OPERATION_TYPE_GROOVY, entity );
+        super(name, OPERATION_TYPE_GROOVY, entity);
     }
-    
+
     @Override
     public String getFileNameSpace()
     {

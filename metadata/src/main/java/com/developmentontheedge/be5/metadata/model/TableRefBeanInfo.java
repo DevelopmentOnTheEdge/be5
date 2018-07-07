@@ -26,39 +26,33 @@ public class TableRefBeanInfo extends BeanInfoEx
         add("viewName", ProjectTableViewSelector.class);
         add("permittedTables");
     }
-    
+
     public static class ProjectTableSelector extends StringTagEditor
     {
         @Override
         public String[] getTags()
         {
-            try
-            {
-                List<String> nameList = new ArrayList<>(((BeModelElement)getBean()).getProject().getEntityNames());
+            try {
+                List<String> nameList = new ArrayList<>(((BeModelElement) getBean()).getProject().getEntityNames());
                 String[] names = nameList.toArray(new String[nameList.size()]);
                 Arrays.sort(names);
                 return names;
-            }
-            catch( Exception e )
-            {
-                return Strings2.EMPTY; 
+            } catch (Exception e) {
+                return Strings2.EMPTY;
             }
         }
     }
-    
+
     public static class ProjectTableViewSelector extends StringTagEditor
     {
         @Override
         public String[] getTags()
         {
-            try
-            {
-                TableRef tableRef = (TableRef)getBean();
-                return tableRef.getProject().getEntity(tableRef.getTableTo()).getQueries().names().prepend( "" ).toArray( String[]::new );
-            }
-            catch( Exception e )
-            {
-                return Strings2.EMPTY; 
+            try {
+                TableRef tableRef = (TableRef) getBean();
+                return tableRef.getProject().getEntity(tableRef.getTableTo()).getQueries().names().prepend("").toArray(String[]::new);
+            } catch (Exception e) {
+                return Strings2.EMPTY;
             }
         }
     }

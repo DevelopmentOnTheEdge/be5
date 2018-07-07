@@ -6,16 +6,16 @@ import java.util.Map;
 
 public interface Operation extends Serializable
 {
-	///////////////////////////////////////////////////////////////////
-	// Main interface
-	//
+    ///////////////////////////////////////////////////////////////////
+    // Main interface
+    //
 
     void initialize(OperationInfo info, OperationContext context, OperationResult operationResult);
 
-	/**
-	 * Returns meta-information from project definition for this operation.
-	 */
-	OperationInfo getInfo();
+    /**
+     * Returns meta-information from project definition for this operation.
+     */
+    OperationInfo getInfo();
 
     /**
      * Returns context of operation.
@@ -23,10 +23,10 @@ public interface Operation extends Serializable
     OperationContext getContext();
 
     /**
-	 * Returns Java bean or {@link com.developmentontheedge.beans.DynamicPropertySet}.
-	 * 
-	 * @param presetValues - map of preset values
-	 */
+     * Returns Java bean or {@link com.developmentontheedge.beans.DynamicPropertySet}.
+     *
+     * @param presetValues - map of preset values
+     */
     Object getParameters(Map<String, Object> presetValues) throws Exception;
 
     /**
@@ -35,21 +35,21 @@ public interface Operation extends Serializable
      * @param parameters {@link #getParameters(Map)} result
      */
     void invoke(Object parameters) throws Exception;
-    
+
     /**
      * Set flag (Thread.interrupt) to interrupt the operation.
      */
     void interrupt();
 
     /**
-     * Returns current status of the operation 
+     * Returns current status of the operation
      */
     OperationStatus getStatus();
 
     /**
      * Returns {@link OperationResult}.
-     * This function can be called several times. If operation is not completed, 
-     * then it returns  
+     * This function can be called several times. If operation is not completed,
+     * then it returns
      *
      */
     OperationResult getResult();

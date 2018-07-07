@@ -6,25 +6,25 @@ import com.developmentontheedge.beans.annot.PropertyName;
 public class ParseResult
 {
     private static final ProjectElementException NO_ERROR = new ProjectElementException();
-    
+
     private final String result;
     private final ProjectElementException error;
-    
+
     public ParseResult(String result)
     {
         this.result = result;
         this.error = NO_ERROR;
     }
-    
+
     public ParseResult(ProjectElementException error)
     {
         this.error = error;
         this.result = null;
     }
-    
+
     public String validate() throws ProjectElementException
     {
-        if(error != null && error != NO_ERROR)
+        if (error != null && error != NO_ERROR)
             throw error;
         return result;
     }
@@ -44,21 +44,19 @@ public class ParseResult
     @Override
     public boolean equals(Object obj)
     {
-        if( this == obj )
+        if (this == obj)
             return true;
-        if( obj == null )
+        if (obj == null)
             return false;
-        if( getClass() != obj.getClass() )
+        if (getClass() != obj.getClass())
             return false;
-        ParseResult other = (ParseResult)obj;
-        if( (error != null && error != NO_ERROR) || (other.error != null && error != NO_ERROR) )
+        ParseResult other = (ParseResult) obj;
+        if ((error != null && error != NO_ERROR) || (other.error != null && error != NO_ERROR))
             return false;
-        if( result == null )
-        {
-            if( other.result != null )
+        if (result == null) {
+            if (other.result != null)
                 return false;
-        }
-        else if( !result.equals(other.result) )
+        } else if (!result.equals(other.result))
             return false;
         return true;
     }

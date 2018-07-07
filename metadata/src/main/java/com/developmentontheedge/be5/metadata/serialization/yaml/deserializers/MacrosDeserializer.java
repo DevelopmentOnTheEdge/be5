@@ -23,41 +23,37 @@ class MacrosDeserializer extends FileDeserializer
 
     MacrosDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Module module) throws ReadException
     {
-        super( loadContext, ProjectFileSystem.getProjectFile( ModuleLoader2.getModulePath(module.getName()) ) );
+        super(loadContext, ProjectFileSystem.getProjectFile(ModuleLoader2.getModulePath(module.getName())));
         this.yamlDeserializer = yamlDeserializer;
         this.module = module;
     }
 
     @Override
-    protected void doDeserialize( Object serializedRoot ) throws ReadException
+    protected void doDeserialize(Object serializedRoot) throws ReadException
     {
         final Path root = ModuleLoader2.getModulePath(module.getName());
-        final Map<String, Object> serializedModule = asMap( serializedRoot );
-        final Map<String, Object> serializedModuleBody = asMap( serializedModule.values().iterator().next() );
+        final Map<String, Object> serializedModule = asMap(serializedRoot);
+        final Map<String, Object> serializedModuleBody = asMap(serializedModule.values().iterator().next());
         final String projectName = root.getFileName().toString(); // not sure if this has any sense
         final boolean isModule = true;
-        final Project project = new Project( projectName, isModule ); /* dummy project, required to create a file structure */
-        project.setLocation( root );
+        final Project project = new Project(projectName, isModule); /* dummy project, required to create a file structure */
+        project.setLocation(root);
 
-        final Object serializedPfs = serializedModuleBody.get( TAG_PROJECT_FILE_STRUCTURE );
+        final Object serializedPfs = serializedModuleBody.get(TAG_PROJECT_FILE_STRUCTURE);
 
-        if ( serializedPfs == null )
-        {
-            project.setProjectFileStructure( new ProjectFileStructure( project ) );
-        }
-        else
-        {
-            project.setProjectFileStructure( yamlDeserializer.readProjectFileStructure( this, asMap( serializedPfs ), project ) );
+        if (serializedPfs == null) {
+            project.setProjectFileStructure(new ProjectFileStructure(project));
+        } else {
+            project.setProjectFileStructure(yamlDeserializer.readProjectFileStructure(this, asMap(serializedPfs), project));
         }
 
-        yamlDeserializer.fileSystem = new ProjectFileSystem( project );
+        yamlDeserializer.fileSystem = new ProjectFileSystem(project);
 
-        if ( module.getMacroCollection() == null )
-        {
-            DataElementUtils.saveQuiet( new FreemarkerCatalog( Module.MACROS, module ) );
+        if (module.getMacroCollection() == null) {
+            DataElementUtils.saveQuiet(new FreemarkerCatalog(Module.MACROS, module));
         }
 
-        yamlDeserializer.readMacroFiles( this, serializedModuleBody, module.getMacroCollection() );
+        yamlDeserializer.readMacroFiles(this, serializedModuleBody, module.getMacroCollection());
     }
 
 }

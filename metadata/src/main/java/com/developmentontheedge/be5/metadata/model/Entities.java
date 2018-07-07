@@ -11,23 +11,23 @@ public class Entities extends BeVectorCollection<Entity>
      */
     static final String NAME = "Entities";
 
-    public Entities( Module module )
+    public Entities(Module module)
     {
-        super( Entities.NAME, Entity.class, module );
+        super(Entities.NAME, Entity.class, module);
     }
-    
+
     @Override
-    protected void fireElementAdded( Object source, String dataElementName )
+    protected void fireElementAdded(Object source, String dataElementName)
     {
-        super.fireElementAdded( source, dataElementName );
-        getProject().getAutomaticSerializationService().fireCodeAdded( get( dataElementName ) );
+        super.fireElementAdded(source, dataElementName);
+        getProject().getAutomaticSerializationService().fireCodeAdded(get(dataElementName));
     }
-    
+
     @Override
-    protected void fireElementRemoved( Object source, String dataElementName, BeModelElement oldElement )
+    protected void fireElementRemoved(Object source, String dataElementName, BeModelElement oldElement)
     {
-        super.fireElementRemoved( source, dataElementName, oldElement );
-        getProject().getAutomaticSerializationService().fireCodeRemoved( ( Entity ) oldElement );
+        super.fireElementRemoved(source, dataElementName, oldElement);
+        getProject().getAutomaticSerializationService().fireCodeRemoved((Entity) oldElement);
     }
 
 }

@@ -20,10 +20,10 @@ public class ProjectGenerator
     public static class Parameters
     {
         private String projectName = "new-project";
-        private String[] languages = new String[] { "ru" };
+        private String[] languages = new String[]{"ru"};
         //private String[] features = new String[] { "logging" };
-        private String[] modules = new String[] { "core", "system" };
-        private String[] roles = new String[] { "Administrator", "SystemDeveloper", "Guest" };
+        private String[] modules = new String[]{"core", "system"};
+        private String[] roles = new String[]{"Administrator", "SystemDeveloper", "Guest"};
 //        private String testUserLogin;
 //        private String testUserPassword;
 //        private String testUserRole = "Administrator";
@@ -35,7 +35,7 @@ public class ProjectGenerator
          *
          * @param orig
          */
-        public Parameters( final Parameters orig )
+        public Parameters(final Parameters orig)
         {
             this.projectName = orig.getProjectName();
             this.languages = orig.getLanguages();
@@ -58,7 +58,7 @@ public class ProjectGenerator
             return projectName;
         }
 
-        public void setProjectName( String projectName )
+        public void setProjectName(String projectName)
         {
             this.projectName = projectName;
         }
@@ -68,7 +68,7 @@ public class ProjectGenerator
             return languages.clone();
         }
 
-        public void setLanguages( String[] languages )
+        public void setLanguages(String[] languages)
         {
             this.languages = languages;
         }
@@ -88,7 +88,7 @@ public class ProjectGenerator
             return modules.clone();
         }
 
-        public void setModules( String[] modules )
+        public void setModules(String[] modules)
         {
             this.modules = modules;
         }
@@ -98,7 +98,7 @@ public class ProjectGenerator
             return roles.clone();
         }
 
-        public void setRoles( String[] roles )
+        public void setRoles(String[] roles)
         {
             this.roles = roles;
         }
@@ -154,26 +154,26 @@ public class ProjectGenerator
 //        }
     }
 
-//    public interface ISaveProject
+    //    public interface ISaveProject
 //    {
 //        void save(Project project) throws Exception;
 //    }
 //
     private final Parameters parameters;
 
-    public ProjectGenerator( final Parameters parameters )
+    public ProjectGenerator(final Parameters parameters)
     {
         this.parameters = parameters;
 
-        if ( this.parameters.getProjectName() == null )
+        if (this.parameters.getProjectName() == null)
             throw new NullPointerException();
-        if ( this.parameters.getLanguages() == null )
+        if (this.parameters.getLanguages() == null)
             throw new NullPointerException();
 //        if ( this.parameters.getFeatures() == null )
 //            throw new NullPointerException();
-        if ( this.parameters.getModules() == null )
+        if (this.parameters.getModules() == null)
             throw new NullPointerException();
-        if ( this.parameters.getRoles() == null )
+        if (this.parameters.getRoles() == null)
             throw new NullPointerException();
 //        if ( this.parameters.getTestUserLogin() == null )
 //            throw new NullPointerException();
@@ -195,10 +195,10 @@ public class ProjectGenerator
 
     public Project generate()
     {
-        final Project project = new Project( parameters.getProjectName() );
-        setRoles( project );
-        setLanguages( project );
-        addModules( project );
+        final Project project = new Project(parameters.getProjectName());
+        setRoles(project);
+        setLanguages(project);
+        addModules(project);
         //ModuleUtils.addModuleScripts( project );
         //addIncludes( project );
         //addFeatures( project );
@@ -213,21 +213,20 @@ public class ProjectGenerator
         return project;
     }
 
-    private void setRoles( final Project project )
+    private void setRoles(final Project project)
     {
         final String[] roles = parameters.getRoles();
 
-        for ( final String role : roles )
-            project.addRole( role );
+        for (final String role : roles)
+            project.addRole(role);
     }
 
-    private void setLanguages( final Project project )
+    private void setLanguages(final Project project)
     {
-        for ( final String language : parameters.getLanguages() )
-        {
+        for (final String language : parameters.getLanguages()) {
             final Localizations localizations = project.getApplication().getLocalizations();
-            final LanguageLocalizations languageLocalizations = new LanguageLocalizations( language, localizations );
-            DataElementUtils.saveQuiet( languageLocalizations );
+            final LanguageLocalizations languageLocalizations = new LanguageLocalizations(language, localizations);
+            DataElementUtils.saveQuiet(languageLocalizations);
         }
     }
 //
@@ -238,19 +237,18 @@ public class ProjectGenerator
 //        project.setFeatures( features );
 //    }
 
-    private void addModules( final Project project )
+    private void addModules(final Project project)
     {
         final String[] modules;
 
         {
-            final List<String> ms = Lists.newArrayList( parameters.getModules() );
-            modules = Iterables.toArray( ms, String.class );
+            final List<String> ms = Lists.newArrayList(parameters.getModules());
+            modules = Iterables.toArray(ms, String.class);
         }
 
-        for ( final String module : modules )
-        {
-            final Module newModule = new Module( module, project.getModules() );
-            DataElementUtils.saveQuiet( newModule );
+        for (final String module : modules) {
+            final Module newModule = new Module(module, project.getModules());
+            DataElementUtils.saveQuiet(newModule);
         }
     }
 
@@ -377,5 +375,5 @@ public class ProjectGenerator
 //        final String content = process.apply( template );
 //        Files.write( file, content.getBytes( Charsets.UTF_8 ) );
 //    }
-    
+
 }

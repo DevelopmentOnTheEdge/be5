@@ -45,10 +45,10 @@ public class ProjectProviderImpl implements ProjectProvider
     @Override
     public synchronized Project get()
     {
-    	if(dirty || project == null)
-    	{
-    	    Project oldProject = project;
-			project = loadProject();
+        if(dirty || project == null)
+        {
+            Project oldProject = project;
+            project = loadProject();
 
             if(oldProject != null)
             {
@@ -56,10 +56,10 @@ public class ProjectProviderImpl implements ProjectProvider
             }
         }
 
-    	return project;
+        return project;
     }
 
-    private Project loadProject() 
+    private Project loadProject()
     {
         try
         {
@@ -90,7 +90,7 @@ public class ProjectProviderImpl implements ProjectProvider
         }
         catch(ProjectLoadException | IOException e)
         {
-        	throw Be5Exception.internal("Can not load project", e);
+            throw Be5Exception.internal("Can not load project", e);
         }
         finally
         {

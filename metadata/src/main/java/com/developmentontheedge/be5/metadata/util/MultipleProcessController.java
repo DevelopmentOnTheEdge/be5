@@ -12,28 +12,25 @@ public class MultipleProcessController implements ProcessController
     }
 
     @Override
-    public void setOperationName( String name )
+    public void setOperationName(String name)
     {
-        for(ProcessController controller : controllers)
-        {
-            controller.setOperationName( name );
+        for (ProcessController controller : controllers) {
+            controller.setOperationName(name);
         }
     }
 
     @Override
-    public void setProgress( double progress ) throws ProcessInterruptedException
+    public void setProgress(double progress) throws ProcessInterruptedException
     {
-        for(ProcessController controller : controllers)
-        {
-            controller.setProgress( progress );
+        for (ProcessController controller : controllers) {
+            controller.setProgress(progress);
         }
     }
 
     @Override
     public void info(String msg)
     {
-        for(ProcessController controller : controllers)
-        {
+        for (ProcessController controller : controllers) {
             controller.info(msg);
         }
     }
@@ -41,8 +38,7 @@ public class MultipleProcessController implements ProcessController
     @Override
     public void error(String msg)
     {
-        for(ProcessController controller : controllers)
-        {
+        for (ProcessController controller : controllers) {
             controller.error(msg);
         }
     }

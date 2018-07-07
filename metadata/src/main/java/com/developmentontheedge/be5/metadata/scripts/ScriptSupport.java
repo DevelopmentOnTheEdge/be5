@@ -36,7 +36,7 @@ public abstract class ScriptSupport<T>
 
     public ProcessController logger = new JULLogger(log);
 
-	public DbmsConnector connector;
+    public DbmsConnector connector;
 
     ///////////////////////////////////////////////////////////////////
     // Properties
@@ -67,15 +67,13 @@ public abstract class ScriptSupport<T>
 
     public void initConnector()
     {
-        if(connectionProfileName != null)
-        {
+        if (connectionProfileName != null) {
             be5Project.setConnectionProfileName(connectionProfileName);
         }
 
         BeConnectionProfile profile = be5Project.getConnectionProfile();
 
-        if (profile != null)
-        {
+        if (profile != null) {
             this.be5Project.setDatabaseSystem(Rdbms.getRdbms(profile.getConnectionUrl()));
 
             this.connector = new SimpleConnector(Rdbms.getRdbms(profile.getConnectionUrl()).getType(),
@@ -83,9 +81,7 @@ public abstract class ScriptSupport<T>
                     connectionPassword != null ? connectionPassword : profile.getPassword());
 
             logger.info("Using connection " + DatabaseUtils.formatUrl(profile.getConnectionUrl(), profile.getUsername(), "xxxxx"));
-        }
-        else
-        {
+        } else {
             throw new ScriptException(
                     "Please specify connection profile: create "
                             + be5Project.getProjectFileStructure().getSelectedProfileFile()
@@ -97,68 +93,57 @@ public abstract class ScriptSupport<T>
     {
         initLogging();
 
-        if(be5Project == null)
-        {
+        if (be5Project == null) {
             if (projectPath == null)
                 throw new ScriptException("Please specify projectPath attribute");
 
             logger.info("Reading project from '" + projectPath + "'");
 
-            try
-            {
+            try {
                 be5Project = ModuleLoader2.loadProjectWithModules(projectPath.toPath());
-            }
-            catch (ProjectLoadException | MalformedURLException e)
-            {
+            } catch (ProjectLoadException | MalformedURLException e) {
                 e.printStackTrace();
             }
 
-            if (debug)
-            {
+            if (debug) {
                 be5Project.setDebugStream(System.err);
             }
         }
     }
+
     /**
      * Configures JUL (java.util.logging).
      */
     public void initLogging()
     {
-    	// configure JUL logging
-    	String ln = System.lineSeparator();
-    	String level = debug ? "FINEST" : "INFO";
-    	String logConfig = 
-//    			".level=" + level +
-    			"handlers= java.util.logging.ConsoleHandler" + ln +
-    			"java.util.logging.ConsoleHandler.level = " + level + ln +
-     			"java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter" + ln +
-    	        "java.util.logging.SimpleFormatter.format =%1$TT %4$s: %5$s%n";
+        // configure JUL logging
+        String ln = System.lineSeparator();
+        String level = debug ? "FINEST" : "INFO";
+        String logConfig =
+//              ".level=" + level +
+                "handlers= java.util.logging.ConsoleHandler" + ln +
+                        "java.util.logging.ConsoleHandler.level = " + level + ln +
+                        "java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter" + ln +
+                        "java.util.logging.SimpleFormatter.format =%1$TT %4$s: %5$s%n";
 
-    	// JUL - String.format(format, date, source, logger, level, message, thrown);
-    	//                             1     2       3       4      5        6    
-    	
-    	try 
-    	{
+        // JUL - String.format(format, date, source, logger, level, message, thrown);
+        //                             1     2       3       4      5        6
+
+        try {
             LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(logConfig.getBytes(StandardCharsets.UTF_8)));
-        } 
-    	catch (IOException e) 
-    	{
+        } catch (IOException e) {
             logger.error("Could not setup logger configuration: " + e.toString());
         }
     }
 
     public PrintStream createPrintStream(String name)
     {
-        if(sqlPath != null)
-        {
+        if (sqlPath != null) {
             sqlPath.mkdirs();
-            try
-            {
+            try {
                 sqlFile = new File(sqlPath, name);
                 return new PrintStream(sqlFile, "UTF-8");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -167,35 +152,30 @@ public abstract class ScriptSupport<T>
 
     public void logSqlFilePath()
     {
-        if(sqlPath != null)
-        {
+        if (sqlPath != null) {
             logger.info("Logs: " + sqlFile.getAbsolutePath());
         }
     }
 
     public void displayError(ProjectElementException error)
     {
-        error.format( System.err );
+        error.format(System.err);
     }
 
     public void checkErrors(final LoadContext loadContext, String messageTemplate) throws ScriptException
     {
-        if(!loadContext.getWarnings().isEmpty())
-        {
-            for(ReadException exception : loadContext.getWarnings())
-            {
-                if(debug)
-                {
+        if (!loadContext.getWarnings().isEmpty()) {
+            for (ReadException exception : loadContext.getWarnings()) {
+                if (debug) {
                     exception.printStackTrace();
-                } else
-                {
-                    logger.error( "Error: "+exception.getMessage() );
+                } else {
+                    logger.error("Error: " + exception.getMessage());
                 }
             }
-            throw new ScriptException( messageTemplate.replace( "%d", String.valueOf( loadContext.getWarnings().size() ) ) );
+            throw new ScriptException(messageTemplate.replace("%d", String.valueOf(loadContext.getWarnings().size())));
         }
     }
-    
+
 
 //    public void dumpSql( String ddlString )
 //    {

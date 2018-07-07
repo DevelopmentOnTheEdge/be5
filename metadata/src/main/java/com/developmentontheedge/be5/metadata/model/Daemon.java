@@ -14,9 +14,9 @@ public class Daemon extends BeModelElementSupport
     private String description;
     private int slaveNo;
 
-    public Daemon( String name, BeModelCollection<Daemon> origin )
+    public Daemon(String name, BeModelCollection<Daemon> origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
 
     @PropertyName("Daemon class")
@@ -25,7 +25,7 @@ public class Daemon extends BeModelElementSupport
         return className;
     }
 
-    public void setClassName( String className )
+    public void setClassName(String className)
     {
         this.className = className;
         fireChanged();
@@ -37,7 +37,7 @@ public class Daemon extends BeModelElementSupport
         return configSection;
     }
 
-    public void setConfigSection( String configSection )
+    public void setConfigSection(String configSection)
     {
         this.configSection = configSection;
         fireChanged();
@@ -49,7 +49,7 @@ public class Daemon extends BeModelElementSupport
         return daemonType;
     }
 
-    public void setDaemonType( String daemonType )
+    public void setDaemonType(String daemonType)
     {
         this.daemonType = daemonType;
         fireChanged();
@@ -61,7 +61,7 @@ public class Daemon extends BeModelElementSupport
         return description;
     }
 
-    public void setDescription( String description )
+    public void setDescription(String description)
     {
         this.description = description;
         fireChanged();
@@ -72,41 +72,41 @@ public class Daemon extends BeModelElementSupport
         return slaveNo;
     }
 
-    public void setSlaveNo( int slaveNo )
+    public void setSlaveNo(int slaveNo)
     {
         this.slaveNo = slaveNo;
         fireChanged();
     }
 
     @Override
-    public boolean equals( Object obj )
+    public boolean equals(Object obj)
     {
-        if ( this == obj )
+        if (this == obj)
             return true;
-        if ( obj == null || getClass() != obj.getClass() )
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        Daemon other = ( Daemon ) obj;
-        return Objects.equals( className, other.className ) &&
-                Objects.equals( configSection, other.configSection ) &&
-                Objects.equals( daemonType, other.daemonType ) &&
-                Objects.equals( description, other.description ) &&
+        Daemon other = (Daemon) obj;
+        return Objects.equals(className, other.className) &&
+                Objects.equals(configSection, other.configSection) &&
+                Objects.equals(daemonType, other.daemonType) &&
+                Objects.equals(description, other.description) &&
                 slaveNo == other.slaveNo;
     }
 
     public static String[] getTypes()
     {
-        return new String[] { "periodic", "cron", "service", "manual" };
+        return new String[]{"periodic", "cron", "service", "manual"};
     }
-    
+
     public static String getDefaultType()
     {
         return "periodic";
     }
-    
+
     @Override
     protected void fireChanged()
     {
-        if ( getOrigin().get( getName() ) == this )
+        if (getOrigin().get(getName()) == this)
             getOrigin().fireCodeChanged();
     }
 }

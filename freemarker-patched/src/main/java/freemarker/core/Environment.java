@@ -137,8 +137,8 @@ public final class Environment extends Configurable {
     // thread-safe.
     private static final DecimalFormat C_NUMBER_FORMAT
             = new DecimalFormat(
-                    "0.################",
-                    new DecimalFormatSymbols(Locale.US));
+            "0.################",
+            new DecimalFormatSymbols(Locale.US));
     static {
         C_NUMBER_FORMAT.setGroupingUsed(false);
         C_NUMBER_FORMAT.setDecimalSeparatorAlwaysShown(false);
@@ -154,10 +154,10 @@ public final class Environment extends Configurable {
     private DateFormat timeFormat, dateFormat, dateTimeFormat;
     private Map[] dateFormats;
     private NumberFormat cNumberFormat;
-    
+
     /**
      * Used by the "iso_" built-ins to accelerate formatting.
-     * @see #getISOBuiltInCalendar() 
+     * @see #getISOBuiltInCalendar()
      */
     private DateToISO8601CalendarFactory isoBuiltInCalendarFactory;
 
@@ -165,27 +165,27 @@ public final class Environment extends Configurable {
 
     private Writer out;
     private Macro.Context currentMacroContext;
-    private ArrayList localContextStack; 
+    private ArrayList localContextStack;
     private Namespace mainNamespace, currentNamespace, globalNamespace;
     private HashMap loadedLibs;
 
     private boolean inAttemptBlock;
     private Throwable lastThrowable;
-    
+
     private TemplateModel lastReturnValue;
     private HashMap macroToNamespaceLookup = new HashMap();
 
-    private TemplateNodeModel currentVisitorNode;    
+    private TemplateNodeModel currentVisitorNode;
     private TemplateSequenceModel nodeNamespaces;
     // Things we keep track of for the fallback mechanism.
     private int nodeNamespaceIndex;
     private String currentNodeName, currentNodeNS;
-    
+
     private String cachedURLEscapingCharset;
     private boolean urlEscapingCharsetCached;
 
     private boolean fastInvalidReferenceExceptions;
-    
+
     /**
      * Retrieves the environment object associated with the current
      * thread. Data model implementations that need access to the
@@ -218,7 +218,7 @@ public final class Environment extends Configurable {
 
     /**
      * Deletes cached values that meant to be valid only during a single
-     * template execution. 
+     * template execution.
      */
     private void clearCachedValues() {
         numberFormats = null;
@@ -228,7 +228,7 @@ public final class Environment extends Configurable {
         cachedURLEscapingCharset = null;
         urlEscapingCharsetCached = false;
     }
-    
+
     /**
      * Processes the template to which this environment belongs.
      */
@@ -253,12 +253,12 @@ public final class Environment extends Configurable {
             threadEnv.set(savedEnv);
         }
     }
-    
+
     /**
      * "Visit" the template element.
      */
     void visit(TemplateElement element)
-    throws TemplateException, IOException
+            throws TemplateException, IOException
     {
         pushElement(element);
         try {
@@ -271,16 +271,16 @@ public final class Environment extends Configurable {
             popElement();
         }
     }
-    
+
     /**
      * Instead of pushing into the element stack, we replace the top element for the time the parameter element is
      * visited, and then we restore the top element. The main purpose of this is to get rid of elements in the error
      * stack trace that from user perspective shouldn't have a stack frame. These typical example is
      * {@code [#if foo]...[@failsHere/]...[/#if]}, where the #if call shouldn't be in the stack trace. (Simply marking
-     * #if as hidden in stack traces would be wrong, because we still want to show #if when its test expression fails.)    
+     * #if as hidden in stack traces would be wrong, because we still want to show #if when its test expression fails.)
      */
     void visitByHiddingParent(TemplateElement element)
-    throws TemplateException, IOException {
+            throws TemplateException, IOException {
         TemplateElement parent = replaceTopElement(element);
         try {
             element.accept(this);
@@ -296,10 +296,10 @@ public final class Environment extends Configurable {
     }
 
     private static final TemplateModel[] NO_OUT_ARGS = new TemplateModel[0];
-    
+
     public void visit(final TemplateElement element,
-            TemplateDirectiveModel directiveModel, Map args, 
-            final List bodyParameterNames) throws TemplateException, IOException {
+                      TemplateDirectiveModel directiveModel, Map args,
+                      final List bodyParameterNames) throws TemplateException, IOException {
         TemplateDirectiveBody nested;
         if(element == null) {
             nested = null;
@@ -346,7 +346,7 @@ public final class Environment extends Configurable {
             }
         }
     }
-    
+
     /**
      * "Visit" the template element, passing the output
      * through a TemplateTransformModel
@@ -356,17 +356,17 @@ public final class Environment extends Configurable {
      * @param args optional arguments fed to the transform
      */
     void visitAndTransform(TemplateElement element,
-               TemplateTransformModel transform,
-               Map args)
-    throws TemplateException, IOException
+                           TemplateTransformModel transform,
+                           Map args)
+            throws TemplateException, IOException
     {
         try {
             Writer tw = transform.getWriter(out, args);
             if (tw == null) tw = EMPTY_BODY_WRITER;
             TransformControl tc =
-                tw instanceof TransformControl
-                ? (TransformControl)tw
-                : null;
+                    tw instanceof TransformControl
+                            ? (TransformControl)tw
+                            : null;
 
             Writer prevOut = out;
             out = tw;
@@ -413,61 +413,61 @@ public final class Environment extends Configurable {
             handleTemplateException(te);
         }
     }
-    
+
     /**
      * Visit a block using buffering/recovery
      */
-     void visitAttemptRecover(TemplateElement attemptBlock, RecoveryBlock recoveryBlock) 
-     throws TemplateException, IOException {
-         Writer prevOut = this.out;
-         StringWriter sw = new StringWriter();
-         this.out = sw;
-         TemplateException thrownException = null;
-         boolean lastFIRE = setFastInvalidReferenceExceptions(false);
-         boolean lastInAttemptBlock = inAttemptBlock; 
-         try {
-             inAttemptBlock = true;
-             visitByHiddingParent(attemptBlock);
-         } catch (TemplateException te) {
-             thrownException = te;
-         } finally {
-             inAttemptBlock = lastInAttemptBlock;
-             setFastInvalidReferenceExceptions(lastFIRE);
-             this.out = prevOut;
-         }
-         if (thrownException != null) {
-             if (attemptLogger.isDebugEnabled()) {
-                 attemptLogger.debug("Error in attempt block " + 
-                         attemptBlock.getStartLocationQuoted(), thrownException);
-             }
-             try {
-                 recoveredErrorStack.add(thrownException);
-                 visit(recoveryBlock);
-             } finally {
-                 recoveredErrorStack.remove(recoveredErrorStack.size() -1);
-             }
-         } else {
-             out.write(sw.toString());
-         }
-     }
-     
-     String getCurrentRecoveredErrorMessage() throws TemplateException {
-         if(recoveredErrorStack.isEmpty()) {
-             throw new _MiscTemplateException(this, ".error is not available outside of a #recover block");
-         }
-         return ((Throwable) recoveredErrorStack.get(recoveredErrorStack.size() -1)).getMessage();
-     }
-     
-     /**
-      * Tells if we are inside an <tt>#attempt</tt> block (but before <tt>#recover</tt>). This can be useful for
-      * {@link TemplateExceptionHandler}-s, as then they may don't want to print the error to the output, as
-      * <tt>#attempt</tt> will roll it back anyway. 
-      * 
-      * @since 2.3.20
-      */
-     public boolean isInAttemptBlock() {
-         return inAttemptBlock;
-     }
+    void visitAttemptRecover(TemplateElement attemptBlock, RecoveryBlock recoveryBlock)
+            throws TemplateException, IOException {
+        Writer prevOut = this.out;
+        StringWriter sw = new StringWriter();
+        this.out = sw;
+        TemplateException thrownException = null;
+        boolean lastFIRE = setFastInvalidReferenceExceptions(false);
+        boolean lastInAttemptBlock = inAttemptBlock;
+        try {
+            inAttemptBlock = true;
+            visitByHiddingParent(attemptBlock);
+        } catch (TemplateException te) {
+            thrownException = te;
+        } finally {
+            inAttemptBlock = lastInAttemptBlock;
+            setFastInvalidReferenceExceptions(lastFIRE);
+            this.out = prevOut;
+        }
+        if (thrownException != null) {
+            if (attemptLogger.isDebugEnabled()) {
+                attemptLogger.debug("Error in attempt block " +
+                        attemptBlock.getStartLocationQuoted(), thrownException);
+            }
+            try {
+                recoveredErrorStack.add(thrownException);
+                visit(recoveryBlock);
+            } finally {
+                recoveredErrorStack.remove(recoveredErrorStack.size() -1);
+            }
+        } else {
+            out.write(sw.toString());
+        }
+    }
+
+    String getCurrentRecoveredErrorMessage() throws TemplateException {
+        if(recoveredErrorStack.isEmpty()) {
+            throw new _MiscTemplateException(this, ".error is not available outside of a #recover block");
+        }
+        return ((Throwable) recoveredErrorStack.get(recoveredErrorStack.size() -1)).getMessage();
+    }
+
+    /**
+     * Tells if we are inside an <tt>#attempt</tt> block (but before <tt>#recover</tt>). This can be useful for
+     * {@link TemplateExceptionHandler}-s, as then they may don't want to print the error to the output, as
+     * <tt>#attempt</tt> will roll it back anyway.
+     *
+     * @since 2.3.20
+     */
+    public boolean isInAttemptBlock() {
+        return inAttemptBlock;
+    }
 
 
     void visit(BodyInstruction.Context bctxt) throws TemplateException, IOException {
@@ -502,7 +502,7 @@ public final class Environment extends Configurable {
      * "visit" an IteratorBlock
      */
     void visitIteratorBlock(IteratorBlock.Context ictxt)
-    throws TemplateException, IOException
+            throws TemplateException, IOException
     {
         pushLocalContext(ictxt);
         try {
@@ -517,13 +517,13 @@ public final class Environment extends Configurable {
             popLocalContext();
         }
     }
-    
+
     /**
      * "Visit" A TemplateNodeModel
      */
-    
-    void visit(TemplateNodeModel node, TemplateSequenceModel namespaces) 
-    throws TemplateException, IOException 
+
+    void visit(TemplateNodeModel node, TemplateSequenceModel namespaces)
+            throws TemplateException, IOException
     {
         if (nodeNamespaces == null) {
             SimpleSequence ss = new SimpleSequence(1);
@@ -545,24 +545,24 @@ public final class Environment extends Configurable {
                 visit((Macro) macroOrTransform, null, null, null, null);
             }
             else if (macroOrTransform instanceof TemplateTransformModel) {
-                visitAndTransform(null, (TemplateTransformModel) macroOrTransform, null); 
+                visitAndTransform(null, (TemplateTransformModel) macroOrTransform, null);
             }
             else {
                 String nodeType = node.getNodeType();
                 if (nodeType != null) {
                     // If the node's type is 'text', we just output it.
-                    if ((nodeType.equals("text") && node instanceof TemplateScalarModel)) 
+                    if ((nodeType.equals("text") && node instanceof TemplateScalarModel))
                     {
-                           out.write(((TemplateScalarModel) node).getAsString());
+                        out.write(((TemplateScalarModel) node).getAsString());
                     }
                     else if (nodeType.equals("document")) {
                         recurse(node, namespaces);
                     }
                     // We complain here, unless the node's type is 'pi', or "comment" or "document_type", in which case
                     // we just ignore it.
-                    else if (!nodeType.equals("pi") 
-                         && !nodeType.equals("comment") 
-                         && !nodeType.equals("document_type")) 
+                    else if (!nodeType.equals("pi")
+                            && !nodeType.equals("comment")
+                            && !nodeType.equals("document_type"))
                     {
                         throw new _MiscTemplateException(
                                 this, noNodeHandlerDefinedDescription(node, node.getNodeNamespace(), nodeType));
@@ -573,7 +573,7 @@ public final class Environment extends Configurable {
                             this, noNodeHandlerDefinedDescription(node, node.getNodeNamespace(), "default"));
                 }
             }
-        } 
+        }
         finally {
             this.currentVisitorNode = prevVisitorNode;
             this.nodeNamespaceIndex = prevNodeNamespaceIndex;
@@ -585,7 +585,7 @@ public final class Environment extends Configurable {
 
     private Object[] noNodeHandlerDefinedDescription(
             TemplateNodeModel node, String ns, String nodeType)
-    throws TemplateModelException {
+            throws TemplateModelException {
         String nsPrefix;
         if (ns != null) {
             if (ns.length() > 0) {
@@ -597,31 +597,31 @@ public final class Environment extends Configurable {
             nsPrefix = "";
             ns = "";
         }
-        return new Object[] { "No macro or directive is defined for node named ",  
+        return new Object[] { "No macro or directive is defined for node named ",
                 new _DelayedJQuote(node.getNodeName()), nsPrefix, ns,
                 ", and there is no fallback handler called @", nodeType, " either." };
     }
-    
+
     void fallback() throws TemplateException, IOException {
         TemplateModel macroOrTransform = getNodeProcessor(currentNodeName, currentNodeNS, nodeNamespaceIndex);
         if (macroOrTransform instanceof Macro) {
             visit((Macro) macroOrTransform, null, null, null, null);
         }
         else if (macroOrTransform instanceof TemplateTransformModel) {
-            visitAndTransform(null, (TemplateTransformModel) macroOrTransform, null); 
+            visitAndTransform(null, (TemplateTransformModel) macroOrTransform, null);
         }
     }
-    
+
     /**
      * "visit" a macro.
      */
-    
-    void visit(Macro macro, 
-               Map namedArgs, 
-               List positionalArgs, 
+
+    void visit(Macro macro,
+               Map namedArgs,
+               List positionalArgs,
                List bodyParameterNames,
-               TemplateElement nestedBlock) 
-       throws TemplateException, IOException 
+               TemplateElement nestedBlock)
+            throws TemplateException, IOException
     {
         if (macro == Macro.DO_NOTHING_MACRO) {
             return;
@@ -633,7 +633,7 @@ public final class Environment extends Configurable {
 
             String catchAll = macro.getCatchAll();
             TemplateModel unknownVars = null;
-            
+
             if (namedArgs != null) {
                 if (catchAll != null)
                     unknownVars = new SimpleHash();
@@ -662,9 +662,9 @@ public final class Environment extends Configurable {
                 String[] argumentNames = macro.getArgumentNamesInternal();
                 int size = positionalArgs.size();
                 if (argumentNames.length < size && catchAll == null) {
-                    throw new _MiscTemplateException(this, new Object[] { 
+                    throw new _MiscTemplateException(this, new Object[] {
                             "Macro " + StringUtil.jQuote(macro.getName()) + " only accepts "
-                            + argumentNames.length + " parameters." });
+                                    + argumentNames.length + " parameters." });
                 }
                 for (int i = 0; i < size; i++) {
                     Expression argExp = (Expression) positionalArgs.get(i);
@@ -707,18 +707,18 @@ public final class Environment extends Configurable {
             popElement();
         }
     }
-    
+
     void visitMacroDef(Macro macro) {
         macroToNamespaceLookup.put(macro, currentNamespace);
         currentNamespace.put(macro.getName(), macro);
     }
-    
+
     Namespace getMacroNamespace(Macro macro) {
         return (Namespace) macroToNamespaceLookup.get(macro);
     }
-    
+
     void recurse(TemplateNodeModel node, TemplateSequenceModel namespaces)
-    throws TemplateException, IOException 
+            throws TemplateException, IOException
     {
         if (node == null) {
             node = this.getCurrentVisitorNode();
@@ -740,9 +740,9 @@ public final class Environment extends Configurable {
     Macro.Context getCurrentMacroContext() {
         return currentMacroContext;
     }
-    
+
     private void handleTemplateException(TemplateException te)
-        throws TemplateException
+            throws TemplateException
     {
         // Logic to prevent double-handling of the exception in
         // nested visit() calls.
@@ -770,7 +770,7 @@ public final class Environment extends Configurable {
         super.setTemplateExceptionHandler(templateExceptionHandler);
         lastThrowable = null;
     }
-    
+
     public void setLocale(Locale locale) {
         super.setLocale(locale);
         // Clear local format cache
@@ -789,12 +789,12 @@ public final class Environment extends Configurable {
         dateFormats = null;
         timeFormat = dateFormat = dateTimeFormat = null;
     }
-    
+
     public void setURLEscapingCharset(String urlEscapingCharset) {
         urlEscapingCharsetCached = false;
         super.setURLEscapingCharset(urlEscapingCharset);
     }
-    
+
     /*
      * Note that altough it's not allowed to set this setting with the
      * <tt>setting</tt> directive, it still must be allowed to set it from Java
@@ -805,12 +805,12 @@ public final class Environment extends Configurable {
         urlEscapingCharsetCached = false;
         super.setOutputEncoding(outputEncoding);
     }
-    
+
     /**
      * Returns the name of the charset that should be used for URL encoding.
      * This will be <code>null</code> if the information is not available.
      * The function caches the return value, so it's quick to call it
-     * repeately. 
+     * repeately.
      */
     String getEffectiveURLEscapingCharset() {
         if (!urlEscapingCharsetCached) {
@@ -829,10 +829,10 @@ public final class Environment extends Configurable {
         }
         return collator;
     }
-    
+
     /**
      * Compares two {@link TemplateModel}-s according the rules of the FTL "==" operator.
-     * 
+     *
      * @since 2.3.20
      */
     public boolean applyEqualsOperator(TemplateModel leftValue, TemplateModel rightValue)
@@ -844,17 +844,17 @@ public final class Environment extends Configurable {
      * Compares two {@link TemplateModel}-s according the rules of the FTL "==" operator, except that if the two types
      *     are incompatible, they are treated as non-equal instead of throwing an exception. Comparing dates of
      *     different types (date-only VS time-only VS date-time) will still throw an exception, however.
-     * 
+     *
      * @since 2.3.20
      */
     public boolean applyEqualsOperatorLenient(TemplateModel leftValue, TemplateModel rightValue)
             throws TemplateException {
         return EvalUtil.compareLenient(leftValue, EvalUtil.CMP_OP_EQUALS, rightValue, this);
     }
-    
+
     /**
      * Compares two {@link TemplateModel}-s according the rules of the FTL "<" operator.
-     * 
+     *
      * @since 2.3.20
      */
     public boolean applyLessThanOperator(TemplateModel leftValue, TemplateModel rightValue)
@@ -864,17 +864,17 @@ public final class Environment extends Configurable {
 
     /**
      * Compares two {@link TemplateModel}-s according the rules of the FTL "<" operator.
-     * 
+     *
      * @since 2.3.20
      */
     public boolean applyLessThanOrEqualsOperator(TemplateModel leftValue, TemplateModel rightValue)
             throws TemplateException {
         return EvalUtil.compare(leftValue, EvalUtil.CMP_OP_LESS_THAN_EQUALS, rightValue, this);
     }
-    
+
     /**
      * Compares two {@link TemplateModel}-s according the rules of the FTL ">" operator.
-     * 
+     *
      * @since 2.3.20
      */
     public boolean applyGreaterThanOperator(TemplateModel leftValue, TemplateModel rightValue)
@@ -884,7 +884,7 @@ public final class Environment extends Configurable {
 
     /**
      * Compares two {@link TemplateModel}-s according the rules of the FTL ">=" operator.
-     * 
+     *
      * @since 2.3.20
      */
     public boolean applyWithGreaterThanOrEqualsOperator(TemplateModel leftValue, TemplateModel rightValue)
@@ -917,7 +917,7 @@ public final class Environment extends Configurable {
         if(df == null) {
             throw new _TemplateModelException(new _ErrorDescriptionBuilder(
                     "Can't convert the date to string, because it's not known which parts of the date variable are "
-                    + "in use.")
+                            + "in use.")
                     .tips(MessageUtil.UNKNOWN_DATE_TYPE_ERROR_TIPS));
         }
         return df.format(date);
@@ -941,15 +941,15 @@ public final class Environment extends Configurable {
     public Configuration getConfiguration() {
         return getTemplate().getConfiguration();
     }
-    
+
     TemplateModel getLastReturnValue() {
         return lastReturnValue;
     }
-    
+
     void setLastReturnValue(TemplateModel lastReturnValue) {
         this.lastReturnValue = lastReturnValue;
     }
-    
+
     void clearLastReturnValue() {
         this.lastReturnValue = null;
     }
@@ -1007,8 +1007,8 @@ public final class Environment extends Configurable {
     }
 
     DateFormat getDateFormatObject(int dateType)
-    throws
-        TemplateModelException
+            throws
+            TemplateModelException
     {
         switch(dateType) {
             case TemplateDateModel.UNKNOWN: {
@@ -1038,10 +1038,10 @@ public final class Environment extends Configurable {
             }
         }
     }
-    
+
     DateFormat getDateFormatObject(int dateType, String pattern)
-    throws
-        TemplateModelException
+            throws
+            TemplateModelException
     {
         if(dateFormats == null) {
             dateFormats = new Map[4];
@@ -1073,7 +1073,7 @@ public final class Environment extends Configurable {
                         case TemplateDateModel.UNKNOWN: {
                             throw new _TemplateModelException(new _ErrorDescriptionBuilder(
                                     "Can't convert the date to string using a built-in format because it's not known "
-                                    + "which parts of the date are in use.")
+                                            + "which parts of the date are in use.")
                                     .tips(MessageUtil.UNKNOWN_DATE_TO_STRING_TIPS));
                         }
                         case TemplateDateModel.TIME: {
@@ -1128,7 +1128,7 @@ public final class Environment extends Configurable {
         }
         return -1;
     }
-    
+
 
     /**
      * Returns the {@link DateToISO8601CalendarFactory} used by the
@@ -1203,7 +1203,7 @@ public final class Environment extends Configurable {
      *   <li>Variable in the data model:
      *     <ol>
      *       <li>A variable in the root hash that was exposed to this
-                 rendering environment in the Template.process(...) call
+     rendering environment in the Template.process(...) call
      *       <li>A shared variable set in the configuration via a call to Configuration.setSharedVariable(...)
      *     </ol>
      *   </li>
@@ -1287,26 +1287,26 @@ public final class Environment extends Configurable {
     public Set getKnownVariableNames() throws TemplateModelException {
         // shared vars.
         Set set = getConfiguration().getSharedVariableNames();
-        
+
         // root hash
         if (rootDataModel instanceof TemplateHashModelEx) {
             TemplateModelIterator rootNames =
-                ((TemplateHashModelEx) rootDataModel).keys().iterator();
+                    ((TemplateHashModelEx) rootDataModel).keys().iterator();
             while(rootNames.hasNext()) {
                 set.add(((TemplateScalarModel)rootNames.next()).getAsString());
             }
         }
-        
+
         // globals
         for (TemplateModelIterator tmi = globalNamespace.keys().iterator(); tmi.hasNext();) {
             set.add(((TemplateScalarModel) tmi.next()).getAsString());
         }
-        
+
         // current name-space
         for (TemplateModelIterator tmi = currentNamespace.keys().iterator(); tmi.hasNext();) {
             set.add(((TemplateScalarModel) tmi.next()).getAsString());
         }
-        
+
         // locals and loop vars
         if(currentMacroContext != null) {
             set.addAll(currentMacroContext.getLocalVariableNames());
@@ -1348,7 +1348,7 @@ public final class Environment extends Configurable {
         }
         pw.println(STACK_SECTION_SEPARATOR);
     }
-    
+
     /**
      * Returns the snapshot of what would be printed as FTL stack trace.
      * @since 2.3.20
@@ -1356,16 +1356,16 @@ public final class Environment extends Configurable {
     public TemplateElement[] getInstructionStackSnapshot() {
         int requiredLength = 0;
         int ln = instructionStack.size();
-        
+
         for (int i = 0; i < ln; i++) {
             TemplateElement stackEl = (TemplateElement) instructionStack.get(i);
             if (i == ln || stackEl.isShownInStackTrace()) {
                 requiredLength++;
             }
         }
-        
+
         if (requiredLength == 0) return null;
-        
+
         TemplateElement[] result = new TemplateElement[requiredLength];
         int dstIdx = requiredLength - 1;
         for (int i = 0; i < ln; i++) {
@@ -1374,14 +1374,14 @@ public final class Environment extends Configurable {
                 result[dstIdx--] = stackEl;
             }
         }
-        
+
         return result;
     }
-    
+
     static String instructionStackItemToString(TemplateElement stackEl) {
-        StringBuffer sb = new StringBuffer(); 
+        StringBuffer sb = new StringBuffer();
         sb.append(MessageUtil.shorten(stackEl.getDescription(), 40));
-        
+
         sb.append("  [");
         Macro enclosingMacro = getEnclosingMacro(stackEl);
         if (enclosingMacro != null) {
@@ -1392,7 +1392,7 @@ public final class Environment extends Configurable {
                     stackEl.getTemplate(), stackEl.beginLine, stackEl.beginColumn));
         }
         sb.append("]");
-        
+
         return sb.toString();
     }
 
@@ -1414,7 +1414,7 @@ public final class Environment extends Configurable {
     private void popLocalContext() {
         localContextStack.remove(localContextStack.size() - 1);
     }
-    
+
     ArrayList getLocalContextStack() {
         return localContextStack;
     }
@@ -1449,7 +1449,7 @@ public final class Environment extends Configurable {
     public Namespace getCurrentNamespace() {
         return currentNamespace;
     }
-    
+
     /**
      * Returns a fictitious name-space that contains the globally visible variables
      * that were created in the template, but not the variables of the data-model.
@@ -1460,10 +1460,10 @@ public final class Environment extends Configurable {
     public Namespace getGlobalNamespace() {
         return globalNamespace;
     }
-    
-    
+
+
     public TemplateHashModel getDataModel() {
-    	final TemplateHashModel result = new TemplateHashModel() {
+        final TemplateHashModel result = new TemplateHashModel() {
             public boolean isEmpty() {
                 return false;
             }
@@ -1476,34 +1476,34 @@ public final class Environment extends Configurable {
                 return value;
             }
         };
-        
+
         if (rootDataModel instanceof TemplateHashModelEx) {
-        	return new TemplateHashModelEx() {
-        		public boolean isEmpty() throws TemplateModelException {
-        			return result.isEmpty();
-        		}
-        		public TemplateModel get(String key) throws TemplateModelException {
-        			return result.get(key);
-        		}
-        		
-        		//NB: The methods below do not take into account
-        		// configuration shared variables even though
-        		// the hash will return them, if only for BWC reasons
-        		public TemplateCollectionModel values() throws TemplateModelException {
-        			return ((TemplateHashModelEx) rootDataModel).values();
-        		}
-        		public TemplateCollectionModel keys() throws TemplateModelException {
-        			return ((TemplateHashModelEx) rootDataModel).keys();
-        		}
-        		public int size() throws TemplateModelException {
-        			return ((TemplateHashModelEx) rootDataModel).size();
-        		}
-        	};
+            return new TemplateHashModelEx() {
+                public boolean isEmpty() throws TemplateModelException {
+                    return result.isEmpty();
+                }
+                public TemplateModel get(String key) throws TemplateModelException {
+                    return result.get(key);
+                }
+
+                //NB: The methods below do not take into account
+                // configuration shared variables even though
+                // the hash will return them, if only for BWC reasons
+                public TemplateCollectionModel values() throws TemplateModelException {
+                    return ((TemplateHashModelEx) rootDataModel).values();
+                }
+                public TemplateCollectionModel keys() throws TemplateModelException {
+                    return ((TemplateHashModelEx) rootDataModel).keys();
+                }
+                public int size() throws TemplateModelException {
+                    return ((TemplateHashModelEx) rootDataModel).size();
+                }
+            };
         }
         return result;
     }
 
- 
+
     /**
      * Returns the read-only hash of globally visible variables.
      * This is the correspondent of FTL <code>.globals</code> hash.
@@ -1536,7 +1536,7 @@ public final class Environment extends Configurable {
     private void popElement() {
         instructionStack.remove(instructionStack.size() - 1);
     }
-    
+
     void replaceElemetStackTop(TemplateElement instr) {
         instructionStack.set(instructionStack.size() - 1, instr);
     }
@@ -1544,30 +1544,30 @@ public final class Environment extends Configurable {
     public TemplateNodeModel getCurrentVisitorNode() {
         return currentVisitorNode;
     }
-    
+
     /**
      * sets TemplateNodeModel as the current visitor node. <tt>.current_node</tt>
      */
     public void setCurrentVisitorNode(TemplateNodeModel node) {
         currentVisitorNode = node;
     }
-    
+
     TemplateModel getNodeProcessor(TemplateNodeModel node) throws TemplateException {
         String nodeName = node.getNodeName();
         if (nodeName == null) {
             throw new _MiscTemplateException(this, "Node name is null.");
         }
         TemplateModel result = getNodeProcessor(nodeName, node.getNodeNamespace(), 0);
-    
+
         if (result == null) {
             String type = node.getNodeType();
-        
+
             /* DD: Original version: */
             if (type == null) {
                 type = "default";
             }
             result = getNodeProcessor("@" + type, null, 0);
-        
+
             /* DD: Jonathan's non-BC version and IMHO otherwise wrong version:
             if (type != null) {
                 result = getNodeProcessor("@" + type, null, 0);
@@ -1577,25 +1577,25 @@ public final class Environment extends Configurable {
             }
             */
         }
-        return result;    
+        return result;
     }
-    
-    private TemplateModel getNodeProcessor(final String nodeName, final String nsURI, int startIndex) 
-    throws TemplateException 
+
+    private TemplateModel getNodeProcessor(final String nodeName, final String nsURI, int startIndex)
+            throws TemplateException
     {
         TemplateModel result = null;
         int i;
         for (i = startIndex; i<nodeNamespaces.size(); i++) {
             Namespace ns = null;
-            try {                                   
+            try {
                 ns = (Namespace) nodeNamespaces.get(i);
             } catch (ClassCastException cce) {
                 throw new _MiscTemplateException(this,
                         "A \"using\" clause should contain a sequence of namespaces or strings that indicate the "
-                        + "location of importable macro libraries.");
+                                + "location of importable macro libraries.");
             }
             result = getNodeProcessor(ns, nodeName, nsURI);
-            if (result != null) 
+            if (result != null)
                 break;
         }
         if (result != null) {
@@ -1605,7 +1605,7 @@ public final class Environment extends Configurable {
         }
         return result;
     }
-    
+
     private TemplateModel getNodeProcessor(Namespace ns, String localName, String nsURI) throws TemplateException {
         TemplateModel result = null;
         if (nsURI == null) {
@@ -1649,7 +1649,7 @@ public final class Environment extends Configurable {
         }
         return result;
     }
-    
+
     /**
      * Emulates <code>include</code> directive, except that <code>name</code> must be tempate
      * root relative.
@@ -1662,7 +1662,7 @@ public final class Environment extends Configurable {
      * @see #include(Template includedTemplate)
      */
     public void include(String name, String encoding, boolean parse)
-    throws IOException, TemplateException
+            throws IOException, TemplateException
     {
         include(getTemplateForInclusion(name, encoding, parse));
     }
@@ -1683,7 +1683,7 @@ public final class Environment extends Configurable {
      * unparsed template source.
      */
     public Template getTemplateForInclusion(String name, String encoding, boolean parse)
-    throws IOException
+            throws IOException
     {
         if (encoding == null) {
             encoding = getTemplate().getEncoding();
@@ -1703,7 +1703,7 @@ public final class Environment extends Configurable {
      * {@link #getTemplateForInclusion(String name, String encoding, boolean parse)}.
      */
     public void include(Template includedTemplate)
-    throws TemplateException, IOException
+            throws TemplateException, IOException
     {
         Template prevTemplate = getTemplate();
         setParent(includedTemplate);
@@ -1715,7 +1715,7 @@ public final class Environment extends Configurable {
             setParent(prevTemplate);
         }
     }
-    
+
     /**
      * Emulates <code>import</code> directive, except that <code>name</code> must be tempate
      * root relative.
@@ -1728,7 +1728,7 @@ public final class Environment extends Configurable {
      * @see #importLib(Template includedTemplate, String namespace)
      */
     public Namespace importLib(String name, String namespace)
-    throws IOException, TemplateException
+            throws IOException, TemplateException
     {
         return importLib(getTemplateForImporting(name), namespace);
     }
@@ -1747,7 +1747,7 @@ public final class Environment extends Configurable {
     public Template getTemplateForImporting(String name) throws IOException {
         return getTemplateForInclusion(name, null, true);
     }
-    
+
     /**
      * Emulates <code>import</code> directive.
      *
@@ -1755,7 +1755,7 @@ public final class Environment extends Configurable {
      * to be a template returned by {@link #getTemplateForImporting(String name)}.
      */
     public Namespace importLib(Template loadedTemplate, String namespace)
-    throws IOException, TemplateException
+            throws IOException, TemplateException
     {
         if (loadedLibs == null) {
             loadedLibs = new HashMap();
@@ -1789,7 +1789,7 @@ public final class Environment extends Configurable {
         }
         return (Namespace) loadedLibs.get(templateName);
     }
-    
+
     String renderElementToString(TemplateElement te) throws IOException, TemplateException {
         Writer prevOut = out;
         try {
@@ -1797,7 +1797,7 @@ public final class Environment extends Configurable {
             this.out = sw;
             visit(te);
             return sw.toString();
-        } 
+        }
         finally {
             this.out = prevOut;
         }
@@ -1816,18 +1816,18 @@ public final class Environment extends Configurable {
     public String getNamespaceForPrefix(String prefix) {
         return currentNamespace.getTemplate().getNamespaceForPrefix(prefix);
     }
-    
+
     public String getPrefixForNamespace(String nsURI) {
         return currentNamespace.getTemplate().getPrefixForNamespace(nsURI);
     }
-    
+
     /**
      * @return the default node namespace for the current FTL namespace
      */
     public String getDefaultNS() {
         return currentNamespace.getTemplate().getDefaultNS();
     }
-    
+
     /**
      * A hook that Jython uses.
      */
@@ -1899,19 +1899,19 @@ public final class Environment extends Configurable {
             return dateType ^ pattern.hashCode() ^ locale.hashCode() ^ timeZone.hashCode();
         }
     }
-    
+
     public class Namespace extends SimpleHash {
-        
+
         private Template template;
-        
+
         Namespace() {
             this.template = Environment.this.getTemplate();
         }
-        
+
         Namespace(Template template) {
             this.template = template;
         }
-        
+
         /**
          * @return the Template object with which this Namespace is associated.
          */
@@ -1920,29 +1920,29 @@ public final class Environment extends Configurable {
         }
     }
 
-     private static final Writer EMPTY_BODY_WRITER = new Writer() {
-    
+    private static final Writer EMPTY_BODY_WRITER = new Writer() {
+
         public void write(char[] cbuf, int off, int len) throws IOException {
             if (len > 0) {
                 throw new IOException(
                         "This transform does not allow nested content.");
             }
         }
-    
+
         public void flush() {
         }
-    
+
         public void close() {
         }
     };
-    
+
     /**
-     * See {@link #setFastInvalidReferenceExceptions(boolean)}. 
+     * See {@link #setFastInvalidReferenceExceptions(boolean)}.
      */
     boolean getFastInvalidReferenceExceptions() {
         return fastInvalidReferenceExceptions;
     }
-    
+
     /**
      * Sets if for invalid references {@link InvalidReferenceException#FAST_INSTANCE} should be thrown, or a new
      * {@link InvalidReferenceException}. The "fast" instance is used if we know that the error will be handled
@@ -1953,5 +1953,5 @@ public final class Environment extends Configurable {
         fastInvalidReferenceExceptions = b;
         return res;
     }
-    
+
 }

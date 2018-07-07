@@ -116,9 +116,9 @@ import java.util.List;
  * @author <a href="mailto:jon@revusky.com">Jonathan Revusky</a>
  */
 public abstract class BuiltIn extends Expression implements Cloneable {
-    
+
     private static final Logger logger = Logger.getLogger("freemarker.runtime");
-    
+
     protected Expression target;
     protected String key;
 
@@ -133,7 +133,7 @@ public abstract class BuiltIn extends Expression implements Cloneable {
         builtins.put("ceiling", new ceilingBI());
         builtins.put("children", new childrenBI());
         builtins.put("chop_linebreak", new chop_linebreakBI());
-        builtins.put("contains", new StringBuiltins.containsBI());        
+        builtins.put("contains", new StringBuiltins.containsBI());
         builtins.put("date", new MiscellaneousBuiltins.dateBI(TemplateDateModel.DATE));
         builtins.put("datetime", new MiscellaneousBuiltins.dateBI(TemplateDateModel.DATETIME));
         builtins.put("default", new ExistenceBuiltins.defaultBI());
@@ -284,15 +284,15 @@ public abstract class BuiltIn extends Expression implements Cloneable {
     {
         return Class.forName(className).newInstance();
     }
-    
+
     static BuiltIn newBuiltIn(int incompatibleImprovements, Expression target, String key) throws ParseException {
         BuiltIn bi = (BuiltIn) builtins.get(key);
         if (bi == null) {
             StringBuffer buf = new StringBuffer(
                     "Unknown built-in: " + StringUtil.jQuote(key) + ". "
-                    + "Help (latest version): http://freemarker.org/docs/ref_builtins.html; "
-                    + "you're using FreeMarker " + Configuration.getVersion() + ".\n" 
-                    + "The alphabetical list of built-ins:");
+                            + "Help (latest version): http://freemarker.org/docs/ref_builtins.html; "
+                            + "you're using FreeMarker " + Configuration.getVersion() + ".\n"
+                            + "The alphabetical list of built-ins:");
             List names = new ArrayList(builtins.keySet().size());
             names.addAll(builtins.keySet());
             Collections.sort(names);
@@ -305,19 +305,19 @@ public abstract class BuiltIn extends Expression implements Cloneable {
                     buf.append('\n');
                 }
                 buf.append(name);
-                
+
                 if (it.hasNext()) {
                     buf.append(", ");
                 }
             }
             throw new ParseException(buf.toString(), target);
         }
-        
+
         while (bi instanceof ICIChainMember
                 && incompatibleImprovements < ((ICIChainMember) bi).getMinimumICIVersion()) {
             bi = (BuiltIn) ((ICIChainMember) bi).getPreviousICIChainMember();
         }
-        
+
         try {
             bi = (BuiltIn) bi.clone();
         }
@@ -332,7 +332,7 @@ public abstract class BuiltIn extends Expression implements Cloneable {
     public String getCanonicalForm() {
         return target.getCanonicalForm() + getNodeTypeSymbol();
     }
-    
+
     String getNodeTypeSymbol() {
         return "?" + key;
     }
@@ -340,11 +340,11 @@ public abstract class BuiltIn extends Expression implements Cloneable {
     boolean isLiteral() {
         return false; // be on the safe side.
     }
-    
+
     protected final void checkMethodArgCount(List args, int expectedCnt) throws TemplateModelException {
         checkMethodArgCount(args.size(), expectedCnt);
     }
-    
+
     protected final void checkMethodArgCount(int argCnt, int expectedCnt) throws TemplateModelException {
         if (argCnt != expectedCnt) {
             throw MessageUtil.newArgCntError("?" + key, argCnt, expectedCnt);
@@ -354,7 +354,7 @@ public abstract class BuiltIn extends Expression implements Cloneable {
     protected final void checkMethodArgCount(List args, int minCnt, int maxCnt) throws TemplateModelException {
         checkMethodArgCount(args.size(), minCnt, maxCnt);
     }
-    
+
     protected final void checkMethodArgCount(int argCnt, int minCnt, int maxCnt) throws TemplateModelException {
         if (argCnt < minCnt || argCnt > maxCnt) {
             throw MessageUtil.newArgCntError("?" + key, argCnt, minCnt, maxCnt);
@@ -369,7 +369,7 @@ public abstract class BuiltIn extends Expression implements Cloneable {
             throws TemplateModelException {
         return args.size() > argIdx ? getStringMethodArg(args, argIdx) : null;
     }
-    
+
     /**
      * Gets a method argument and checks if it's a string; it does NOT check if {@code args} is big enough.
      */
@@ -395,13 +395,13 @@ public abstract class BuiltIn extends Expression implements Cloneable {
             return EvalUtil.modelToNumber((TemplateNumberModel) arg, null);
         }
     }
-    
+
     protected final Expression deepCloneWithIdentifierReplaced_inner(
             String replacedIdentifier, Expression replacement, ReplacemenetState replacementState) {
-    	try {
-	    	BuiltIn clone = (BuiltIn)clone();
-	    	clone.target = target.deepCloneWithIdentifierReplaced(replacedIdentifier, replacement, replacementState);
-	    	return clone;
+        try {
+            BuiltIn clone = (BuiltIn)clone();
+            clone.target = target.deepCloneWithIdentifierReplaced(replacedIdentifier, replacement, replacementState);
+            return clone;
         }
         catch (CloneNotSupportedException e) {
             throw new RuntimeException("Internal error: " + e);
@@ -414,18 +414,18 @@ public abstract class BuiltIn extends Expression implements Cloneable {
 
     Object getParameterValue(int idx) {
         switch (idx) {
-        case 0: return target;
-        case 1: return key;
-        default: throw new IndexOutOfBoundsException();
+            case 0: return target;
+            case 1: return key;
+            default: throw new IndexOutOfBoundsException();
         }
     }
 
     ParameterRole getParameterRole(int idx) {
         switch (idx) {
-        case 0: return ParameterRole.LEFT_HAND_OPERAND;
-        case 1: return ParameterRole.RIGHT_HAND_OPERAND;
-        default: throw new IndexOutOfBoundsException();
+            case 0: return ParameterRole.LEFT_HAND_OPERAND;
+            case 1: return ParameterRole.RIGHT_HAND_OPERAND;
+            default: throw new IndexOutOfBoundsException();
         }
     }
-    
+
 }

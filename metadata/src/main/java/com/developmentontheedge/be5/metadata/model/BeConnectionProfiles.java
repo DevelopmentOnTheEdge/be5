@@ -7,12 +7,12 @@ public class BeConnectionProfiles extends BeVectorCollection<BeConnectionProfile
 {
     private final BeConnectionProfileType type;
 
-    public BeConnectionProfiles( BeConnectionProfileType type, BeModelCollection<?> parent )
+    public BeConnectionProfiles(BeConnectionProfileType type, BeModelCollection<?> parent)
     {
-        super( type.getName(), BeConnectionProfile.class, parent );
+        super(type.getName(), BeConnectionProfile.class, parent);
         this.type = type;
     }
-    
+
     public BeConnectionProfileType getType()
     {
         return type;

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Temporary interface for imported and unclassified constants from BeanExplorer EE.
  */
-public interface DatabaseConstants 
+public interface DatabaseConstants
 {
     String HIDDEN_COLUMN_PREFIX = "___";
     String GLUE_COLUMN_PREFIX = "+";
@@ -17,7 +17,7 @@ public interface DatabaseConstants
     String SELECTION_VIEW = "*** Selection view ***";
 
     String COL_ATTR_AGGREGATE = "aggregate";
-    String COL_ATTR_ROLES  = "roles";
+    String COL_ATTR_ROLES = "roles";
     String COL_ATTR_BLANKNULLS = "blankNulls";
 
     String CSS_ROW_CLASS = HIDDEN_COLUMN_PREFIX + "css_class";
@@ -27,7 +27,7 @@ public interface DatabaseConstants
     String ID_COLUMN_LABEL = HIDDEN_COLUMN_PREFIX + "ID";
 
     //TODO create enum COL_ATTR
-    String COL_ATTR_NULLIF  = "nullif";
+    String COL_ATTR_NULLIF = "nullif";
     String COL_ATTR_LINK = "link";
 
     String L10N_TOPIC_DISPLAY_NAME = "displayName";
@@ -41,7 +41,7 @@ public interface DatabaseConstants
     String L10N_TOPIC_SCHEME = "scheme";
     String L10N_TOPIC_ATTRIBUTE = "attribute";
     String L10N_TOPIC_INSERT = "Insert";
-    
+
     String PLATFORM_HTML = "HTML";
 
     String WHO_INSERTED_COLUMN_NAME = "whoInserted___";

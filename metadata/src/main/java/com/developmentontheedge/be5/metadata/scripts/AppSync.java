@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 
-
 public class AppSync extends ScriptSupport<AppSync>
 {
     private boolean forceUpdate;
@@ -57,9 +56,9 @@ public class AppSync extends ScriptSupport<AppSync>
 //    boolean removeUnusedTables;
 
     private BeSqlExecutor sqlExecutor;
-    
+
     ///////////////////////////////////////////////////////////////////
-    
+
     @Override
     public void execute() throws ScriptException
     {
@@ -67,66 +66,52 @@ public class AppSync extends ScriptSupport<AppSync>
 
         PrintStream ps = createPrintStream(be5Project.getName() + "_sync_ddl.sql");
 
-        try
-        {
+        try {
             sqlExecutor = new BeSqlExecutor(connector, ps);
 
-            if(be5Project.getDebugStream() != null)
-            {
-                be5Project.getDebugStream().println("Modules and extras for "+be5Project.getName()+":");
+            if (be5Project.getDebugStream() != null) {
+                be5Project.getDebugStream().println("Modules and extras for " + be5Project.getName() + ":");
                 be5Project.allModules()
-                        .map( m -> "- " + m.getName() + ": " + (m.getExtras() == null ? "" : String.join(", ", m.getExtras())) )
-                        .forEach( be5Project.getDebugStream()::println );
+                        .map(m -> "- " + m.getName() + ": " + (m.getExtras() == null ? "" : String.join(", ", m.getExtras())))
+                        .forEach(be5Project.getDebugStream()::println);
             }
-            
+
             readSchema();
             createEntities();
 
             String ddlString = getDdlStatements(false);
             ddlString = MultiSqlParser.normalize(be5Project.getDatabaseSystem().getType(), ddlString);
 
-            if( ddlString.isEmpty() )
-            {
-            	logger.info("Database scheme is up-to-date");
-            	return;
-            } 
-            
-            if( forceUpdate )
-            {
-                sqlExecutor.startSection( "Sync schema" );
-                logger.setOperationName( "[>] Schema" );
-                sqlExecutor.executeMultiple(ddlString);
-                sqlExecutor.startSection( null );
+            if (ddlString.isEmpty()) {
+                logger.info("Database scheme is up-to-date");
+                return;
             }
-            else
-            {
+
+            if (forceUpdate) {
+                sqlExecutor.startSection("Sync schema");
+                logger.setOperationName("[>] Schema");
+                sqlExecutor.executeMultiple(ddlString);
+                sqlExecutor.startSection(null);
+            } else {
                 logger.error("The following statements should be executed to update database scheme:");
                 logger.error(ddlString);
                 logger.error("Use -DBE5_FORCE_UPDATE=true, for apply");
             }
-            
+
             checkSynchronizationStatus();
-            logger.setOperationName( "Finished" );
-        }
-        catch (FreemarkerSqlException | ExtendedSqlException | SQLException e ) //ReadException | ProjectLoadException | SQLException e )
+            logger.setOperationName("Finished");
+        } catch (FreemarkerSqlException | ExtendedSqlException | SQLException e) //ReadException | ProjectLoadException | SQLException e )
         {
-            if(debug)
+            if (debug)
                 throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
             throw new ScriptException("Synchronisation error: " + e.getMessage());
-        }
-        catch( IOException | ProcessInterruptedException e )
-        {
+        } catch (IOException | ProcessInterruptedException e) {
             throw new ScriptException("Synchronisation error: " + e.getMessage(), e);
-        }
-        catch( Throwable t )
-        {
-        	t.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
             throw new ScriptException("Synchronisation error: " + t.getMessage(), t);
-        }
-        finally
-        {
-            if(ps != null)
-            {
+        } finally {
+            if (ps != null) {
                 ps.close();
             }
         }
@@ -136,7 +121,7 @@ public class AppSync extends ScriptSupport<AppSync>
 
     protected void checkSynchronizationStatus()
     {
-    	// TODO
+        // TODO
 /*        List<ProjectElementException> warnings = databaseSynchronizer.getWarnings();
         if(!warnings.isEmpty())
         {
@@ -146,49 +131,46 @@ public class AppSync extends ScriptSupport<AppSync>
                 displayError( warning );
             }
         }
-*/        
+*/
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
     // Read database structure
     //
-    
+
     private final List<String> warnings = new ArrayList<>();
     private String defSchema = null;
 
-    private Map<String, String>  			 tableTypes;
+    private Map<String, String> tableTypes;
     private Map<String, List<SqlColumnInfo>> columns;
-    private Map<String, List<IndexInfo>>     indices;
-    private List<Entity>  			 		 entities;
-    
+    private Map<String, List<IndexInfo>> indices;
+    private List<Entity> entities;
+
     private void readSchema() throws ExtendedSqlException, SQLException, ProcessInterruptedException
     {
         logger.info("Read database scheme ...");
         long time = System.currentTimeMillis();
-        
+
         ProcessController controller = new NullLogger();
 
         Rdbms rdbms = DatabaseUtils.getRdbms(connector);
         DbmsSchemaReader schemaReader = rdbms.getSchemaReader();
 
-        defSchema  = schemaReader.getDefaultSchema(sqlExecutor);
+        defSchema = schemaReader.getDefaultSchema(sqlExecutor);
         tableTypes = schemaReader.readTableNames(sqlExecutor, defSchema, controller);
-        columns    = schemaReader.readColumns   (sqlExecutor, defSchema, controller);
-        indices    = schemaReader.readIndices   (sqlExecutor, defSchema, controller);
+        columns = schemaReader.readColumns(sqlExecutor, defSchema, controller);
+        indices = schemaReader.readIndices(sqlExecutor, defSchema, controller);
 
-        if( debug )
-        {
-            if(!warnings.isEmpty())
-            {
-                logger.error(warnings.size() + " warning(s) during loading the project from " + sqlExecutor.getConnector().getConnectString() );
-                Collections.sort( warnings );
-                for(String warning : warnings)
-                {
+        if (debug) {
+            if (!warnings.isEmpty()) {
+                logger.error(warnings.size() + " warning(s) during loading the project from " + sqlExecutor.getConnector().getConnectString());
+                Collections.sort(warnings);
+                for (String warning : warnings) {
                     logger.error(warning);
                 }
             }
         }
-        
+
         logger.info("comleted, " + (System.currentTimeMillis() - time) + "ms.");
     }
 
@@ -196,243 +178,209 @@ public class AppSync extends ScriptSupport<AppSync>
     {
         Rdbms databaseSystem = DatabaseUtils.getRdbms(connector);
         DbmsTypeManager typeManager = databaseSystem == null ? new DefaultTypeManager() : databaseSystem.getTypeManager();
-        boolean casePreserved = typeManager.normalizeIdentifierCase( "aA" ).equals( "aA" );
+        boolean casePreserved = typeManager.normalizeIdentifierCase("aA").equals("aA");
 
         entities = new ArrayList<>();
         Project project = new Project("internal-db");
         project.setDatabaseSystem(be5Project.getDatabaseSystem());
         Module module = new Module("temp", project);
-        
-        for(String table : tableTypes.keySet() )
-        {
-            if ( !"TABLE".equals(tableTypes.get(table.toLowerCase())) )
+
+        for (String table : tableTypes.keySet()) {
+            if (!"TABLE".equals(tableTypes.get(table.toLowerCase())))
                 continue;
-            
+
             List<SqlColumnInfo> columnInfos = columns.get(table.toLowerCase());
-            if(columnInfos == null)
+            if (columnInfos == null)
                 continue;
-            
+
             Entity entity = new Entity(table, module, EntityType.TABLE);
             entities.add(entity);
 
             TableDef tableDef = new TableDef(entity);
-            for(SqlColumnInfo info : columnInfos)
-            {
+            for (SqlColumnInfo info : columnInfos) {
                 ColumnDef column = new ColumnDef(info.getName(), tableDef.getColumns());
-                column.setType( createColumnType(info) );
-                typeManager.correctType( column.getType() );
-                column.setPrimaryKey( info.getName().equalsIgnoreCase( entity.getPrimaryKey() ) );	// PENDING
-                column.setCanBeNull( info.isCanBeNull() );
+                column.setType(createColumnType(info));
+                typeManager.correctType(column.getType());
+                column.setPrimaryKey(info.getName().equalsIgnoreCase(entity.getPrimaryKey()));    // PENDING
+                column.setCanBeNull(info.isCanBeNull());
                 String defaultValue = info.getDefaultValue();
-                column.setAutoIncrement( info.isAutoIncrement() );
-                if(!info.isAutoIncrement())
-                {
+                column.setAutoIncrement(info.isAutoIncrement());
+                if (!info.isAutoIncrement()) {
                     column.setDefaultValue(defaultValue);
                 }
-                if(column.isPrimaryKey() && typeManager.getKeyType().equals( typeManager.getTypeClause(column.getType()) ))
-                {
-                    column.getType().setTypeName( SqlColumnType.TYPE_KEY );
+                if (column.isPrimaryKey() && typeManager.getKeyType().equals(typeManager.getTypeClause(column.getType()))) {
+                    column.getType().setTypeName(SqlColumnType.TYPE_KEY);
                 }
 //                column.setOriginModuleName( module.getName() );
-                DataElementUtils.saveQuiet( column );
+                DataElementUtils.saveQuiet(column);
             }
-            
+
             List<IndexInfo> indexInfos = indices.get(table.toLowerCase(Locale.ENGLISH));
-            if(indexInfos != null)
-            {
-                INDEX: for ( IndexInfo info : indexInfos )
-                {
-                    if( !casePreserved )
-                        info.setName( info.getName().toUpperCase(Locale.ENGLISH) );
-                    
-                    IndexDef index = new IndexDef( info.getName(), tableDef.getIndices() );
-                    index.setUnique( info.isUnique() );
-                    
-                    for(String indexCol : info.getColumns())
-                    {
-                        IndexColumnDef indexColumnDef = IndexColumnDef.createFromString( indexCol, index );
-                        if( tableDef.getColumns().get(indexColumnDef.getName()) == null)
-                        {
-                            if( debug )
-                            {
-                                warnings.add( "Unsupported functional index found: " + index.getName() + " (problem is here: "
-                                    + indexCol + "); skipped" );
+            if (indexInfos != null) {
+                INDEX:
+                for (IndexInfo info : indexInfos) {
+                    if (!casePreserved)
+                        info.setName(info.getName().toUpperCase(Locale.ENGLISH));
+
+                    IndexDef index = new IndexDef(info.getName(), tableDef.getIndices());
+                    index.setUnique(info.isUnique());
+
+                    for (String indexCol : info.getColumns()) {
+                        IndexColumnDef indexColumnDef = IndexColumnDef.createFromString(indexCol, index);
+                        if (tableDef.getColumns().get(indexColumnDef.getName()) == null) {
+                            if (debug) {
+                                warnings.add("Unsupported functional index found: " + index.getName() + " (problem is here: "
+                                        + indexCol + "); skipped");
                             }
                             continue INDEX;
                         }
-                        
+
                         DataElementUtils.saveQuiet(indexColumnDef);
                     }
 
-                    if(index.isUnique() && index.getSize() == 1)
-                    {
+                    if (index.isUnique() && index.getSize() == 1) {
                         IndexColumnDef indexColumnDef = index.iterator().next();
-                        if(!indexColumnDef.isFunctional())
-                        {
-                            if( index.getName().equalsIgnoreCase(table + "_pkey") )
-                            {
-                                entity.setPrimaryKey( indexColumnDef.getName() );
+                        if (!indexColumnDef.isFunctional()) {
+                            if (index.getName().equalsIgnoreCase(table + "_pkey")) {
+                                entity.setPrimaryKey(indexColumnDef.getName());
                                 continue;
                             }
                         }
                     }
-                    DataElementUtils.saveQuiet( index );
+                    DataElementUtils.saveQuiet(index);
                 }
             }
-            DataElementUtils.saveQuiet( tableDef );
+            DataElementUtils.saveQuiet(tableDef);
         }
 
-        if ( sqlExecutor.getConnector().getType() != DbmsType.MYSQL )
+        if (sqlExecutor.getConnector().getType() != DbmsType.MYSQL)
             return;
-        
+
         // For MySQL only now
-        for ( Entity entity : entities )
-        {
+        for (Entity entity : entities) {
             final String table = entity.getName();
-            if ( !"VIEW".equalsIgnoreCase(tableTypes.get(table)) )
+            if (!"VIEW".equalsIgnoreCase(tableTypes.get(table)))
                 continue;
-            
+
             String createTable;
-            ResultSet rs = sqlExecutor.executeNamedQuery( "sql.getTableDefinition", table );
-            try
-            {
-                if( !rs.next() )
+            ResultSet rs = sqlExecutor.executeNamedQuery("sql.getTableDefinition", table);
+            try {
+                if (!rs.next())
                     continue;
-                
+
                 createTable = rs.getString(2);
+            } finally {
+                sqlExecutor.getConnector().close(rs);
             }
-            finally
-            {
-                sqlExecutor.getConnector().close( rs );
-            }
-            
-            int as = createTable.indexOf( " AS " );
-            if ( as < 0 )
+
+            int as = createTable.indexOf(" AS ");
+            if (as < 0)
                 continue;
-            
-            createTable = createTable.substring( as + " AS ".length() );
+
+            createTable = createTable.substring(as + " AS ".length());
             ViewDef def = new ViewDef(entity);
-            def.setDefinition( createTable );
-            DataElementUtils.saveQuiet( def );
+            def.setDefinition(createTable);
+            DataElementUtils.saveQuiet(def);
         }
     }
 
-    private static SqlColumnType createColumnType( final SqlColumnInfo info )
+    private static SqlColumnType createColumnType(final SqlColumnInfo info)
     {
         SqlColumnType type = new SqlColumnType();
         String[] enumValues = info.getEnumValues();
-        if ( enumValues != null )
-        {
-            if ( isBool( enumValues ) )
-            {
-                type.setTypeName( SqlColumnType.TYPE_BOOL );
+        if (enumValues != null) {
+            if (isBool(enumValues)) {
+                type.setTypeName(SqlColumnType.TYPE_BOOL);
+            } else {
+                type.setTypeName(SqlColumnType.TYPE_ENUM);
+                Arrays.sort(enumValues);
+                type.setEnumValues(enumValues);
             }
-            else
-            {
-                type.setTypeName( SqlColumnType.TYPE_ENUM );
-                Arrays.sort( enumValues );
-                type.setEnumValues( enumValues );
-            }
-        }
-        else
-        {
-            type.setTypeName( info.getType() );
-            type.setSize( info.getSize() );
-            type.setPrecision( info.getPrecision() );
+        } else {
+            type.setTypeName(info.getType());
+            type.setSize(info.getSize());
+            type.setPrecision(info.getPrecision());
         }
         return type;
     }
 
-    protected static boolean isBool( final String[] enumValues )
+    protected static boolean isBool(final String[] enumValues)
     {
-        if ( enumValues.length != 2 )
-        {
+        if (enumValues.length != 2) {
             return false;
         }
 
         final String val0 = enumValues[0];
         final String val1 = enumValues[1];
 
-        return isNoYes( val0, val1 ) || isNoYes( val1, val0 );
+        return isNoYes(val0, val1) || isNoYes(val1, val0);
     }
 
-    private static boolean isNoYes( final String val0, final String val1 )
+    private static boolean isNoYes(final String val0, final String val1)
     {
-        return val0.equals( "no" ) && val1.equals( "yes" );
+        return val0.equals("no") && val1.equals("yes");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
     // Synchronization
     //
-    
+
     protected String getDdlStatements(boolean dangerousOnly) throws ExtendedSqlException
     {
         Map<String, DdlElement> oldSchemes = new HashMap<>();
         Map<String, DdlElement> newSchemes = new HashMap<>();
 
-        for( Module module : be5Project.getModulesAndApplication() )
-        {
-            for( Entity entity : module.getEntities() )
-            {
+        for (Module module : be5Project.getModulesAndApplication()) {
+            for (Entity entity : module.getEntities()) {
                 DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-                if( scheme != null )
-                {
+                if (scheme != null) {
                     String normalizedName = entity.getName().toLowerCase();
                     newSchemes.put(normalizedName, scheme);
                 }
             }
         }
-        
-        for( Entity entity : entities )
-        {
-        	DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
-            if( scheme != null )
-            {
-            	String normalizedName = entity.getName().toLowerCase();
-                oldSchemes.put( normalizedName, scheme );
+
+        for (Entity entity : entities) {
+            DdlElement scheme = entity.isAvailable() ? entity.getScheme() : null;
+            if (scheme != null) {
+                String normalizedName = entity.getName().toLowerCase();
+                oldSchemes.put(normalizedName, scheme);
             }
         }
 
         StringBuilder sb = new StringBuilder();
-        for( Map.Entry<String,DdlElement> entity : newSchemes.entrySet() )
-        {
+        for (Map.Entry<String, DdlElement> entity : newSchemes.entrySet()) {
             DdlElement oldScheme = oldSchemes.get(entity.getKey());
             DdlElement newScheme = entity.getValue();
 
-            if(newScheme.withoutDbScheme())
-            {
-                if (!dangerousOnly)
-                {
+            if (newScheme.withoutDbScheme()) {
+                if (!dangerousOnly) {
                     // PENDING - list of other type
-                	//warnings.addAll(newScheme.getWarnings());
+                    //warnings.addAll(newScheme.getWarnings());
                 }
 
-                if (oldScheme == null)
-                {
-                    if (!dangerousOnly)
-                    {
-                    	sb.append(newScheme.getCreateDdl());
+                if (oldScheme == null) {
+                    if (!dangerousOnly) {
+                        sb.append(newScheme.getCreateDdl());
                     }
                     continue;
                 }
-                
-                if( newScheme.equals(oldScheme) || newScheme.getDiffDdl(oldScheme, null).isEmpty() )
+
+                if (newScheme.equals(oldScheme) || newScheme.getDiffDdl(oldScheme, null).isEmpty())
                     continue;
-                
+
                 // PENDING
-                if( oldScheme instanceof TableDef && newScheme instanceof TableDef )
+                if (oldScheme instanceof TableDef && newScheme instanceof TableDef)
                     fixPrimaryKey((TableDef) oldScheme, (TableDef) newScheme);
-                
-                sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor) 
-                		                : newScheme.getDiffDdl(oldScheme, sqlExecutor));
-            }
-            else
-            {
+
+                sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
+                        : newScheme.getDiffDdl(oldScheme, sqlExecutor));
+            } else {
                 logger.info("Skip table with schema: " + newScheme.getEntityName());
             }
         }
-        
-        // PENDING
+//
+//        PENDING
 //        if( updateClones || removeClones || removeUnusedTables)
 //        {
 //            for( Entity entity : entities )
@@ -449,18 +397,18 @@ public class AppSync extends ScriptSupport<AppSync>
 //
 //                if( newScheme == null )
 //                {
-//                	if( removeUnusedTables && newSchemes.get(entity.getName().toLowerCase()) == null )
-//                		sb.append(oldScheme.getDropDdl());
+//                    if( removeUnusedTables && newSchemes.get(entity.getName().toLowerCase()) == null )
+//                        sb.append(oldScheme.getDropDdl());
 //                }
 //                else // process clone
 //                {
-//                	if( removeClones )
-//                	{
-//                		sb.append(oldScheme.getDropDdl());
+//                    if( removeClones )
+//                    {
+//                        sb.append(oldScheme.getDropDdl());
 //
-//                	}
-//                	else if( updateClones)
-//                	{
+//                    }
+//                    else if( updateClones)
+//                    {
 //                        String cloneId = entity.getName().substring(newScheme.getEntityName().length());
 //                        Entity curEntity = newScheme.getEntity();
 //                        Entity renamedEntity = curEntity.clone(curEntity.getOrigin(), entity.getName(), false);
@@ -469,7 +417,7 @@ public class AppSync extends ScriptSupport<AppSync>
 //                        if (!newScheme.equals(oldScheme) && !newScheme.getDiffDdl(oldScheme, null).isEmpty())
 //                        {
 //                            sb.append(dangerousOnly ? newScheme.getDangerousDiffStatements(oldScheme, sqlExecutor)
-//                            		                : newScheme.getDiffDdl(oldScheme, sqlExecutor));
+//                                    : newScheme.getDiffDdl(oldScheme, sqlExecutor));
 //                        }
 //                    }
 //                }
@@ -479,27 +427,25 @@ public class AppSync extends ScriptSupport<AppSync>
         return sb.toString();
     }
 
-    private void fixPrimaryKey( TableDef orphanDdl, TableDef ddl )
+    private void fixPrimaryKey(TableDef orphanDdl, TableDef ddl)
     {
-        ColumnDef pk = ddl.getColumns().get( ddl.getEntity().getPrimaryKey() );
+        ColumnDef pk = ddl.getColumns().get(ddl.getEntity().getPrimaryKey());
         // Orphans have no primary key set: try to set the same column as in original table
-        if(pk != null)
-        {
-            ColumnDef orphanPk = orphanDdl.getColumns().getCaseInsensitive( pk.getName() );
-            if(orphanPk != null)
-            {
-                orphanDdl.getIndicesUsingColumn( orphanPk.getName() ).stream().filter( idx -> idx.getSize() == 1 && idx.isUnique() )
-                    .findFirst().ifPresent( idx -> {
-                        // Remove primary key index
-                        DataElementUtils.remove( idx );
-                        orphanDdl.getEntity().setPrimaryKey( orphanPk.getName() );
-                        orphanPk.setPrimaryKey( true );
-                    });
+        if (pk != null) {
+            ColumnDef orphanPk = orphanDdl.getColumns().getCaseInsensitive(pk.getName());
+            if (orphanPk != null) {
+                orphanDdl.getIndicesUsingColumn(orphanPk.getName()).stream().filter(idx -> idx.getSize() == 1 && idx.isUnique())
+                        .findFirst().ifPresent(idx -> {
+                    // Remove primary key index
+                    DataElementUtils.remove(idx);
+                    orphanDdl.getEntity().setPrimaryKey(orphanPk.getName());
+                    orphanPk.setPrimaryKey(true);
+                });
             }
         }
     }
 
-    private static final Pattern CLONE_ID = Pattern.compile( "(\\d+)$" );
+    private static final Pattern CLONE_ID = Pattern.compile("(\\d+)$");
 //    private static DdlElement getDdlForClone( Map<String, DdlElement> schemes, String cloneName )
 //    {
 //        String name = cloneName.toLowerCase();
@@ -552,7 +498,9 @@ public class AppSync extends ScriptSupport<AppSync>
         return me();
     }
 
-    @Override public AppSync me() {
+    @Override
+    public AppSync me()
+    {
         return this;
     }
 }

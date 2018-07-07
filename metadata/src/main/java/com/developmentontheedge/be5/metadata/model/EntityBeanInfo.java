@@ -12,21 +12,18 @@ public class EntityBeanInfo extends BeanInfoEx
     public EntityBeanInfo()
     {
         super(Entity.class);
-        try
-        {
-            setDisplayNameMethod( Entity.class.getMethod( "getType" ) );
-        }
-        catch ( Exception e )
-        {
-            throw new InternalError("Unexpected error while registering EntityBeanInfo: "+e);
+        try {
+            setDisplayNameMethod(Entity.class.getMethod("getType"));
+        } catch (Exception e) {
+            throw new InternalError("Unexpected error while registering EntityBeanInfo: " + e);
         }
     }
-    
+
     @Override
     public void initProperties() throws Exception
     {
-        add(new PropertyDescriptorEx( "name", beanClass, "getName", null ));
-        addHidden(new PropertyDescriptor( "type", beanClass, "getType", "setType" ));
+        add(new PropertyDescriptorEx("name", beanClass, "getName", null));
+        addHidden(new PropertyDescriptor("type", beanClass, "getType", "setType"));
         add("typeString", EntityTypeSelector.class);
         add("displayName");
         add("order");
@@ -34,6 +31,6 @@ public class EntityBeanInfo extends BeanInfoEx
         addHidden(new PropertyDescriptor("icon", beanClass, "getIcon", null));
         add("besql");
         add("usedInExtras");
-        add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
+        add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));
     }
 }

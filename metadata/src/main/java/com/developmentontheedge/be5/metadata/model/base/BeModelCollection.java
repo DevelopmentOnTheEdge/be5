@@ -10,19 +10,20 @@ public interface BeModelCollection<T extends BeModelElement> extends BeModelElem
 {
     /**
      * Returns the number of elements in this data collection.
+     *
      * @return Size of this data collection.
      */
     int getSize();
-    
+
     /**
      * Returns the type of DataElements stored in the data collection.
+     *
      * @return Type of DataElements stored in the data collection.
      */
     Class<? extends BeModelElement> getDataElementType();
-    
+
     /**
      * Returns <b>true</b> if this data collection contains the element with the specified name, <b>false</b> otherwise
-     *
      *
      * @param name name of data element
      * @return <b>true</b> if this data collection contains the element with specified name,<br> <b>false</b> otherwise
@@ -50,14 +51,14 @@ public interface BeModelCollection<T extends BeModelElement> extends BeModelElem
      * Query operations on the returned list "read through" to the internal name list,
      * and attempts to modify the returned list, whether direct or via its iterator,
      * result in an <code>UnsupportedOperationException</code>.
-     *
+     * <p>
      * The returned list is backed by the data collection,
      * so changes to the data collection are reflected in the returned list.
-     *
+     * <p>
      * The name list can be sorted or unsorted depending on the DataCollection
      * implementing class.
      *
-     * @return  list of names
+     * @return list of names
      */
     List<String> getNameList();
 
@@ -78,7 +79,7 @@ public interface BeModelCollection<T extends BeModelElement> extends BeModelElem
      * @throws java.util.UnsupportedOperationException if the data collection is unmutable.
      */
     void remove(String name);
-    
+
     /**
      * @return DataElementPath object representing the path to this collection
      */
@@ -87,26 +88,27 @@ public interface BeModelCollection<T extends BeModelElement> extends BeModelElem
 
     /**
      * Merge collection loaded from database to this collection
-     * @param other collection to merge
+     *
+     * @param other         collection to merge
      * @param ignoreMyItems whether to ignore absent EntityItems from other with the project origin
-     * @param inherit TODO
+     * @param inherit       TODO
      */
     public void merge(BeModelCollection<T> other, boolean ignoreMyItems, boolean inherit);
-    
+
     /**
      * Called by child to update last modification time
      */
     public void updateLastModification();
-    
+
     public List<String> getAvailableNames();
 
     public Collection<T> getAvailableElements();
-    
+
     /**
      * Notifies that source code of this element has been changed.
      */
     public void fireCodeChanged();
-    
+
     /**
      * @return true if collection is empty
      */

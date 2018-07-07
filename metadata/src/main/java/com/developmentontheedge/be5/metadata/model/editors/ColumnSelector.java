@@ -11,13 +11,13 @@ public class ColumnSelector extends StringTagEditor
     @Override
     public String[] getTags()
     {
-        final Entity entity = ( Entity ) getBean();
+        final Entity entity = (Entity) getBean();
         final TableDef tableDefinition = entity.findTableDefinition();
-        
-        if ( tableDefinition == null )
+
+        if (tableDefinition == null)
             return Strings2.EMPTY;
-        
-        return tableDefinition.getColumns().names().toArray( String[]::new );
+
+        return tableDefinition.getColumns().names().toArray(String[]::new);
     }
 
 }

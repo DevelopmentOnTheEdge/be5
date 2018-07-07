@@ -27,359 +27,321 @@ public class DatabaseFunctions
 
         protected Project getProject() throws TemplateModelException
         {
-            Object projectObj = Environment.getCurrentEnvironment().__getitem__( "project" );
-            if(!(projectObj instanceof Project))
-            {
-                throw new TemplateModelException( "Unable to access project" );
+            Object projectObj = Environment.getCurrentEnvironment().__getitem__("project");
+            if (!(projectObj instanceof Project)) {
+                throw new TemplateModelException("Unable to access project");
             }
-            Project project = (Project)projectObj;
+            Project project = (Project) projectObj;
             return project;
         }
-        
+
     }
-    
+
     private abstract static class DbFunction extends BeFunction
     {
         @Override
-        public Object exec( @SuppressWarnings( "rawtypes" ) List args ) throws TemplateModelException
+        public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException
         {
             Project project = getProject();
             Rdbms system = project.getDatabaseSystem();
-            if(system == null)
-            {
-                throw new TemplateModelException( "Project database system is not defined" );
+            if (system == null) {
+                throw new TemplateModelException("Project database system is not defined");
             }
             List<String> stringArgs = new ArrayList<>();
-            for(int i=0; i<args.size(); i++)
-            {
-                convertArguments( stringArgs, args.get( i ) );
+            for (int i = 0; i < args.size(); i++) {
+                convertArguments(stringArgs, args.get(i));
             }
-            return exec( system, stringArgs.toArray( new String[stringArgs.size()] ) );
+            return exec(system, stringArgs.toArray(new String[stringArgs.size()]));
         }
 
-        protected void convertArguments( List<String> stringArgs, Object arg ) throws TemplateModelException
+        protected void convertArguments(List<String> stringArgs, Object arg) throws TemplateModelException
         {
-            if(arg instanceof TemplateNumberModel)
-            {
-                stringArgs.add( ((TemplateNumberModel)arg).getAsNumber().toString());
-            } else if(arg instanceof TemplateScalarModel)
-            {
-                stringArgs.add(((TemplateScalarModel)arg).getAsString());
-            } else if(arg instanceof TemplateSequenceModel)
-            {
-                for(int i=0; i<((TemplateSequenceModel)arg).size(); i++)
-                {
-                    convertArguments( stringArgs, ((TemplateSequenceModel)arg).get(i) );
+            if (arg instanceof TemplateNumberModel) {
+                stringArgs.add(((TemplateNumberModel) arg).getAsNumber().toString());
+            } else if (arg instanceof TemplateScalarModel) {
+                stringArgs.add(((TemplateScalarModel) arg).getAsString());
+            } else if (arg instanceof TemplateSequenceModel) {
+                for (int i = 0; i < ((TemplateSequenceModel) arg).size(); i++) {
+                    convertArguments(stringArgs, ((TemplateSequenceModel) arg).get(i));
                 }
             } else
-                throw new TemplateModelException( "Invalid argument: "+arg );
+                throw new TemplateModelException("Invalid argument: " + arg);
         }
-        
-        protected abstract String exec(Rdbms system, String[] args) throws TemplateModelException;  
+
+        protected abstract String exec(Rdbms system, String[] args) throws TemplateModelException;
     }
-    
+
     public static class Concat extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length < 2)
-            {
-                throw new TemplateModelException( "concat: at least 2 arguments expected" );
+            if (args.length < 2) {
+                throw new TemplateModelException("concat: at least 2 arguments expected");
             }
-            return system.getMacroProcessorStrategy().concat( args );
+            return system.getMacroProcessorStrategy().concat(args);
         }
     }
 
     public static class Round extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length < 1)
-            {
-                throw new TemplateModelException( "round: at least 1 arguments expected" );
+            if (args.length < 1) {
+                throw new TemplateModelException("round: at least 1 arguments expected");
             }
-            return system.getMacroProcessorStrategy().round( args );
+            return system.getMacroProcessorStrategy().round(args);
         }
     }
-    
+
     public static class Coalesce extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length < 2)
-            {
-                throw new TemplateModelException( "coalesce: at least 2 arguments expected" );
+            if (args.length < 2) {
+                throw new TemplateModelException("coalesce: at least 2 arguments expected");
             }
-            return system.getMacroProcessorStrategy().coalesce( args );
+            return system.getMacroProcessorStrategy().coalesce(args);
         }
     }
-    
+
     public static class GenericRef extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 2)
-            {
-                throw new TemplateModelException( "genericRef: 2 arguments expected (table, column)" );
+            if (args.length != 2) {
+                throw new TemplateModelException("genericRef: 2 arguments expected (table, column)");
             }
-            return system.getMacroProcessorStrategy().genericRef( args[0], args[1] );
+            return system.getMacroProcessorStrategy().genericRef(args[0], args[1]);
         }
     }
-    
+
     public static class If extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length < 2 || args.length > 3)
-            {
-                throw new TemplateModelException( "if: 2 or 3 arguments expected (condition, trueExpression[, falseExpression)" );
+            if (args.length < 2 || args.length > 3) {
+                throw new TemplateModelException("if: 2 or 3 arguments expected (condition, trueExpression[, falseExpression)");
             }
-            return "CASE WHEN "+args[0]+" THEN "+args[1]+" ELSE "+(args.length>2?args[2]:"''")+" END";
+            return "CASE WHEN " + args[0] + " THEN " + args[1] + " ELSE " + (args.length > 2 ? args[2] : "''") + " END";
         }
     }
-    
+
     public static class Substring extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length < 2 || args.length > 3)
-            {
-                throw new TemplateModelException( "substring: 2 or 3 arguments expected (string, start[, end])" );
+            if (args.length < 2 || args.length > 3) {
+                throw new TemplateModelException("substring: 2 or 3 arguments expected (string, start[, end])");
             }
-            return system.getMacroProcessorStrategy().substring( args );
+            return system.getMacroProcessorStrategy().substring(args);
         }
     }
-    
+
     public static class Lpad extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 3)
-            {
-                throw new TemplateModelException( "lpad: 3 arguments expected (string, length, fill)" );
+            if (args.length != 3) {
+                throw new TemplateModelException("lpad: 3 arguments expected (string, length, fill)");
             }
-            return system.getMacroProcessorStrategy().lpad( args[0], args[1], args[2] );
+            return system.getMacroProcessorStrategy().lpad(args[0], args[1], args[2]);
         }
     }
-    
+
     public static class Replace extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 3)
-            {
-                throw new TemplateModelException( "replace: 3 arguments expected (source, toFind, replacement)" );
+            if (args.length != 3) {
+                throw new TemplateModelException("replace: 3 arguments expected (source, toFind, replacement)");
             }
-            return system.getMacroProcessorStrategy().replace( args[0], args[1], args[2] );
+            return system.getMacroProcessorStrategy().replace(args[0], args[1], args[2]);
         }
     }
-    
+
     public static class Length extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 1)
-            {
-                throw new TemplateModelException( "length: 1 argument expected (string)" );
+            if (args.length != 1) {
+                throw new TemplateModelException("length: 1 argument expected (string)");
             }
-            return system.getMacroProcessorStrategy().length( args[0] );
+            return system.getMacroProcessorStrategy().length(args[0]);
         }
     }
-    
+
     public static class Chr extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 1)
-            {
-                throw new TemplateModelException( "chr: 1 argument expected (string)" );
+            if (args.length != 1) {
+                throw new TemplateModelException("chr: 1 argument expected (string)");
             }
-            return system.getMacroProcessorStrategy().charFunc( args[0] );
+            return system.getMacroProcessorStrategy().charFunc(args[0]);
         }
     }
-    
+
     public static class IndexOf extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 2)
-            {
-                throw new TemplateModelException( "indexOf: 2 arguments expected (string, substring)" );
+            if (args.length != 2) {
+                throw new TemplateModelException("indexOf: 2 arguments expected (string, substring)");
             }
-            return system.getMacroProcessorStrategy().indexOf( args[0], args[1] );
+            return system.getMacroProcessorStrategy().indexOf(args[0], args[1]);
         }
     }
-    
+
     public static class AddMonths extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 2)
-            {
-                throw new TemplateModelException( "addMonths: 2 arguments expected (date, months)" );
+            if (args.length != 2) {
+                throw new TemplateModelException("addMonths: 2 arguments expected (date, months)");
             }
-            return system.getMacroProcessorStrategy().addMonths( args[0], args[1] );
+            return system.getMacroProcessorStrategy().addMonths(args[0], args[1]);
         }
     }
-    
+
     public static class AddDays extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 2)
-            {
-                throw new TemplateModelException( "addDays: 2 arguments expected (date, days)" );
+            if (args.length != 2) {
+                throw new TemplateModelException("addDays: 2 arguments expected (date, days)");
             }
-            return system.getMacroProcessorStrategy().addDays( args[0], args[1] );
+            return system.getMacroProcessorStrategy().addDays(args[0], args[1]);
         }
     }
 
     public static class AddMillis extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 2)
-            {
-                throw new TemplateModelException( "addMillis: 2 arguments expected (date, millis)" );
+            if (args.length != 2) {
+                throw new TemplateModelException("addMillis: 2 arguments expected (date, millis)");
             }
-            return system.getMacroProcessorStrategy().addMillis( args[0], args[1] );
+            return system.getMacroProcessorStrategy().addMillis(args[0], args[1]);
         }
     }
 
     public static class DayDiff extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 2)
-            {
-                throw new TemplateModelException( "dayDiff: 2 arguments expected (date1, date2)" );
+            if (args.length != 2) {
+                throw new TemplateModelException("dayDiff: 2 arguments expected (date1, date2)");
             }
-            return system.getMacroProcessorStrategy().dayDiff( args[0], args[1] );
+            return system.getMacroProcessorStrategy().dayDiff(args[0], args[1]);
         }
     }
-    
+
     public static class Limit extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 1)
-            {
-                throw new TemplateModelException( "limit: 1 argument expected (string)" );
+            if (args.length != 1) {
+                throw new TemplateModelException("limit: 1 argument expected (string)");
             }
-            return system.getMacroProcessorStrategy().limit( args[0] );
+            return system.getMacroProcessorStrategy().limit(args[0]);
         }
     }
-    
+
     public static class JoinGenericRef extends DbFunction
     {
         @Override
-        protected String exec( Rdbms system, String[] args ) throws TemplateModelException
+        protected String exec(Rdbms system, String[] args) throws TemplateModelException
         {
-            if(args.length != 3)
-            {
-                throw new TemplateModelException( "joinGenericRef: 3 arguments expected (table, alias, fromField)" );
+            if (args.length != 3) {
+                throw new TemplateModelException("joinGenericRef: 3 arguments expected (table, alias, fromField)");
             }
-            return system.getMacroProcessorStrategy().joinGenericRef( args[0], args[1], args[2] );
+            return system.getMacroProcessorStrategy().joinGenericRef(args[0], args[1], args[2]);
         }
     }
-    
+
     public static class ColumnDefFunction extends BeFunction
     {
         @Override
-        public Object exec( @SuppressWarnings( "rawtypes" ) List arguments ) throws TemplateModelException
+        public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException
         {
-            if(arguments.size() != 2)
-            {
-                throw new TemplateModelException( "columnDef: Two arguments required: column name and column definition hash" );
+            if (arguments.size() != 2) {
+                throw new TemplateModelException("columnDef: Two arguments required: column name and column definition hash");
             }
-            Object arg = arguments.get( 0 );
-            if(!(arg instanceof TemplateScalarModel))
-            {
-                throw new TemplateModelException( "columnDef: First argument must be a string" );
+            Object arg = arguments.get(0);
+            if (!(arg instanceof TemplateScalarModel)) {
+                throw new TemplateModelException("columnDef: First argument must be a string");
             }
-            String columnName = ( ( TemplateScalarModel ) arg ).getAsString();
-            arg = arguments.get( 1 );
-            if(!(arg instanceof TemplateHashModelEx))
-            {
-                throw new TemplateModelException( "columnDef: Second argument must be a hash" );
+            String columnName = ((TemplateScalarModel) arg).getAsString();
+            arg = arguments.get(1);
+            if (!(arg instanceof TemplateHashModelEx)) {
+                throw new TemplateModelException("columnDef: Second argument must be a hash");
             }
             ColumnDef columnDef;
             Project project = getProject();
-            try
-            {
+            try {
                 LoadContext context = new LoadContext();
-                LinkedHashMap<String, Object> columnContent = FtlToYaml.ftlToHash( ( TemplateHashModelEx ) arg );
-                columnDef = YamlDeserializer.readColumnDef( context, project, columnName, columnContent );
-                if(!context.getWarnings().isEmpty())
-                    throw context.getWarnings().get( 0 );
+                LinkedHashMap<String, Object> columnContent = FtlToYaml.ftlToHash((TemplateHashModelEx) arg);
+                columnDef = YamlDeserializer.readColumnDef(context, project, columnName, columnContent);
+                if (!context.getWarnings().isEmpty())
+                    throw context.getWarnings().get(0);
+            } catch (ReadException e) {
+                throw new TemplateModelException("columnDef: " + e.getMessage(), e);
             }
-            catch ( ReadException e )
-            {
-                throw new TemplateModelException( "columnDef: "+e.getMessage(), e );
-            }
-            return getProject().getDatabaseSystem().getTypeManager().getColumnDefinitionClause( columnDef );
+            return getProject().getDatabaseSystem().getTypeManager().getColumnDefinitionClause(columnDef);
         }
     }
-    
+
     public static class TableDefFunction extends BeFunction
     {
         @Override
-        public Object exec( @SuppressWarnings( "rawtypes" ) List arguments ) throws TemplateModelException
+        public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException
         {
-            if(arguments.size() < 2 || arguments.size() > 3)
-            {
-                throw new TemplateModelException( "tableDef: 2 or 3 argument required: table name, column definitions hash, index definitions hash (optional)" );
+            if (arguments.size() < 2 || arguments.size() > 3) {
+                throw new TemplateModelException("tableDef: 2 or 3 argument required: table name, column definitions hash, index definitions hash (optional)");
             }
-            Object arg = arguments.get( 0 );
-            if(!(arg instanceof TemplateScalarModel))
-            {
-                throw new TemplateModelException( "tableDef: First argument must be a string" );
+            Object arg = arguments.get(0);
+            if (!(arg instanceof TemplateScalarModel)) {
+                throw new TemplateModelException("tableDef: First argument must be a string");
             }
-            String tableName = ( ( TemplateScalarModel ) arg ).getAsString();
+            String tableName = ((TemplateScalarModel) arg).getAsString();
             LinkedHashMap<String, Object> tableDefHash = new LinkedHashMap<>();
-            arg = arguments.get( 1 );
-            if(!(arg instanceof TemplateHashModelEx))
-            {
-                throw new TemplateModelException( "tableDef: Second argument must be a hash" );
+            arg = arguments.get(1);
+            if (!(arg instanceof TemplateHashModelEx)) {
+                throw new TemplateModelException("tableDef: Second argument must be a hash");
             }
-            tableDefHash.put( SerializationConstants.TAG_COLUMNS, FtlToYaml.ftlToHash( ( TemplateHashModelEx ) arg ) );
-            if(arguments.size() > 2)
-            {
-                arg = arguments.get( 2 );
-                if(!(arg instanceof TemplateHashModelEx))
-                {
-                    throw new TemplateModelException( "tableDef: Third argument must be a hash" );
+            tableDefHash.put(SerializationConstants.TAG_COLUMNS, FtlToYaml.ftlToHash((TemplateHashModelEx) arg));
+            if (arguments.size() > 2) {
+                arg = arguments.get(2);
+                if (!(arg instanceof TemplateHashModelEx)) {
+                    throw new TemplateModelException("tableDef: Third argument must be a hash");
                 }
-                tableDefHash.put( SerializationConstants.TAG_INDICES, FtlToYaml.ftlToHash( ( TemplateHashModelEx ) arg ) );
+                tableDefHash.put(SerializationConstants.TAG_INDICES, FtlToYaml.ftlToHash((TemplateHashModelEx) arg));
             }
             TableDef tableDef;
             Project project = getProject();
-            try
-            {
+            try {
                 LoadContext context = new LoadContext();
-                tableDef = YamlDeserializer.readTableDef( context, project, tableName, tableDefHash );
-                if(!context.getWarnings().isEmpty())
-                    throw context.getWarnings().get( 0 );
-            }
-            catch ( ReadException e )
-            {
-                throw new TemplateModelException( "tableDef: "+e.getMessage(), e );
+                tableDef = YamlDeserializer.readTableDef(context, project, tableName, tableDefHash);
+                if (!context.getWarnings().isEmpty())
+                    throw context.getWarnings().get(0);
+            } catch (ReadException e) {
+                throw new TemplateModelException("tableDef: " + e.getMessage(), e);
             }
             return tableDef.getDdl();
         }

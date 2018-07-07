@@ -5,11 +5,11 @@ import com.developmentontheedge.beans.annot.PropertyName;
 @PropertyName("Operation")
 public class JavaScriptOperation extends SourceFileOperation
 {
-    protected JavaScriptOperation( String name, Entity entity )
+    protected JavaScriptOperation(String name, Entity entity)
     {
-        super( name, OPERATION_TYPE_JSSERVER, entity );
+        super(name, OPERATION_TYPE_JSSERVER, entity);
     }
-    
+
     @Override
     public String getFileNameSpace()
     {

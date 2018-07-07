@@ -17,6 +17,6 @@ public class ConnectionUrlBeanInfo extends BeanInfoEx
         add("host");
         add("port");
         add("db");
-        addHidden(new PropertyDescriptor( "properties", beanClass, "getProperties", null ));
+        addHidden(new PropertyDescriptor("properties", beanClass, "getProperties", null));
     }
 }

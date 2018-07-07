@@ -7,14 +7,14 @@ public class ConnectedBugtrackerBeanInfo extends BeanInfoEx
 
     public ConnectedBugtrackerBeanInfo()
     {
-        super( ConnectedBugtracker.class );
+        super(ConnectedBugtracker.class);
     }
 
     @Override
     protected void initProperties() throws Exception
     {
-        add( "name" );
-        add( "projectId" );
+        add("name");
+        add("projectId");
     }
 
 }

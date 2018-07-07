@@ -14,21 +14,21 @@ public class OperationBeanInfo extends BeanInfoEx
     {
         super(Operation.class);
     }
-    
+
     public OperationBeanInfo(Class<? extends Operation> clazz)
     {
         super(clazz);
     }
-    
+
     @Override
     public void initProperties() throws Exception
     {
         super.initProperties();
-        add( new PropertyDescriptor( "name", beanClass, "getName", null ) );
-        add( new PropertyDescriptor( "type", beanClass, "getType", null ) );
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
+        add(new PropertyDescriptor("type", beanClass, "getType", null));
         add("notSupported");
         add("code");
-        addHidden( "records" );
+        addHidden("records");
         add("visibleWhen", OperationVisibilityOptionsSelector.class);
         add("executionPriority");
         add("logging", OperationLoggingSelector.class);
@@ -39,7 +39,7 @@ public class OperationBeanInfo extends BeanInfoEx
         add("roles");
         add("usedInExtras");
         add("layout");
-        add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
+        add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));
         addHidden("contextID");
         addHidden("categoryID");
         addHidden(new PropertyDescriptor("icon", beanClass, "getIcon", null));

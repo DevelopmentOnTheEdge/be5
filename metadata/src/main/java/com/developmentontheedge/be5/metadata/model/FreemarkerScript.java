@@ -10,15 +10,15 @@ import java.util.List;
 
 public class FreemarkerScript extends SourceFile implements TemplateElement, FreemarkerScriptOrCatalog
 {
-    public FreemarkerScript( String name, FreemarkerCatalog origin )
+    public FreemarkerScript(String name, FreemarkerCatalog origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
-    
+
     @PropertyName("Result")
     public ParseResult getResult()
     {
-        return getProject().mergeTemplate( this );
+        return getProject().mergeTemplate(this);
     }
 
     @Override
@@ -26,27 +26,26 @@ public class FreemarkerScript extends SourceFile implements TemplateElement, Fre
     {
         List<ProjectElementException> result = new ArrayList<>();
         ProjectElementException error = getResult().getError();
-        if(error != null && !error.isNoError())
-        {
+        if (error != null && !error.isNoError()) {
             DataElementPath path = getCompletePath();
-            if(error.getPath().equals(path.toString()))
+            if (error.getPath().equals(path.toString()))
                 result.add(error);
             else
                 result.add(new ProjectElementException(path, "source", error));
         }
         return result;
     }
-    
+
     @Override
     public String getTemplateCode()
     {
         return getSource();
     }
-    
-    public String getRelativePath( FreemarkerCatalog scripts )
+
+    public String getRelativePath(FreemarkerCatalog scripts)
     {
         DataElementPath basePath = scripts.getCompletePath();
-        return getCompletePath().getPathDifference( basePath );
+        return getCompletePath().getPathDifference(basePath);
     }
-    
+
 }

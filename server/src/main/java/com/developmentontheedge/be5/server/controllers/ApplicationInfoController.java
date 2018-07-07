@@ -21,7 +21,7 @@ public class ApplicationInfoController extends JsonApiController
 
         public String getTitle()
         {
-        	return title;
+            return title;
         }
     }
 
@@ -89,5 +89,5 @@ public class ApplicationInfoController extends JsonApiController
 //
 //        return ret;
 //    }
-    
+
 }

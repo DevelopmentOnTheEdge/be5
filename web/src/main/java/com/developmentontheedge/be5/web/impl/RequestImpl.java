@@ -33,11 +33,11 @@ public class RequestImpl implements Request
     {
         return raw.getAttribute(name);
     }
-    
+
     @Override
     public void setAttribute(String name, Object value)
     {
-    	raw.setAttribute(name, value);
+        raw.setAttribute(name, value);
     }
 
     @Override
@@ -88,18 +88,18 @@ public class RequestImpl implements Request
         return values;
     }
 
-	@Override
+    @Override
     public Map<String, String[]> getParameters()
     {
         return Collections.unmodifiableMap((Map<String, String[]>) raw.getParameterMap());
     }
-    
-	@Override
+
+    @Override
     public String getRequestUri()
     {
         return raw.getRequestURI();
     }
-    
+
     @Override
     public String getRemoteAddr()
     {
@@ -119,10 +119,10 @@ public class RequestImpl implements Request
     }
 
     @Override
-	public HttpServletRequest getRawRequest()
+    public HttpServletRequest getRawRequest()
     {
-		return raw;
-	}
+        return raw;
+    }
 
     @Override
     public HttpSession getRawSession()

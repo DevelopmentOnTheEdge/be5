@@ -22,74 +22,66 @@ class SecurityDeserializer extends FileDeserializer
 
     private final SecurityCollection target;
 
-    SecurityDeserializer(LoadContext loadContext, final Path path, final SecurityCollection target ) throws ReadException
+    SecurityDeserializer(LoadContext loadContext, final Path path, final SecurityCollection target) throws ReadException
     {
-        super( loadContext, path );
+        super(loadContext, path);
         this.target = target;
     }
 
     @Override
-    protected void doDeserialize( Object serializedRoot ) throws ReadException
+    protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        final Map<String, Object> serializedContent = asMap( asMap( serializedRoot ).get( TAG_SECURITY ) );
-        final Map<String, Object> serializedRoles = asMap( serializedContent.get( TAG_ROLES ) );
-        final Map<String, Object> serializedGroups = asMap( serializedContent.get( TAG_ROLE_GROUPS ) );
+        final Map<String, Object> serializedContent = asMap(asMap(serializedRoot).get(TAG_SECURITY));
+        final Map<String, Object> serializedRoles = asMap(serializedContent.get(TAG_ROLES));
+        final Map<String, Object> serializedGroups = asMap(serializedContent.get(TAG_ROLE_GROUPS));
 
-        readRoles( serializedRoles );
-        readGroups( serializedGroups );
-        checkChildren( target, serializedContent, TAG_ROLES, TAG_ROLE_GROUPS );
-        target.getProject().getAutomaticDeserializationService().registerFile( path, ManagedFileType.SECURITY );
+        readRoles(serializedRoles);
+        readGroups(serializedGroups);
+        checkChildren(target, serializedContent, TAG_ROLES, TAG_ROLE_GROUPS);
+        target.getProject().getAutomaticDeserializationService().registerFile(path, ManagedFileType.SECURITY);
     }
 
-    private void readRoles( final Map<String, Object> serializedRoles )
+    private void readRoles(final Map<String, Object> serializedRoles)
     {
-        for ( final Map.Entry<String, Object> serializedRole : serializedRoles.entrySet() )
-        {
-            try
-            {
-                readRole( serializedRole );
-            }
-            catch ( ReadException e )
-            {
-                loadContext.addWarning( e.attachElement( target.getRoleCollection() ) );
+        for (final Map.Entry<String, Object> serializedRole : serializedRoles.entrySet()) {
+            try {
+                readRole(serializedRole);
+            } catch (ReadException e) {
+                loadContext.addWarning(e.attachElement(target.getRoleCollection()));
             }
         }
     }
 
-    private void readRole( final Map.Entry<String, Object> serializedRole ) throws ReadException
+    private void readRole(final Map.Entry<String, Object> serializedRole) throws ReadException
     {
-        final Map<String, Object> serializedRoleContent = asMap( serializedRole.getValue() );
+        final Map<String, Object> serializedRoleContent = asMap(serializedRole.getValue());
         final String roleName = serializedRole.getKey();
-        final Role role = new Role( roleName, target.getRoleCollection() );
-        readDocumentation( serializedRoleContent, role );
-        readUsedExtras( serializedRoleContent, role );
-        save( role );
-        checkChildren( role, serializedRoleContent, TAG_COMMENT, TAG_EXTRAS );
+        final Role role = new Role(roleName, target.getRoleCollection());
+        readDocumentation(serializedRoleContent, role);
+        readUsedExtras(serializedRoleContent, role);
+        save(role);
+        checkChildren(role, serializedRoleContent, TAG_COMMENT, TAG_EXTRAS);
     }
 
-    private void readGroups( Map<String, Object> serializedGroups )
+    private void readGroups(Map<String, Object> serializedGroups)
     {
-        for ( final Map.Entry<String, Object> serializedGroup : serializedGroups.entrySet() )
-        {
-            try
-            {
-                readGroup( serializedGroup );
-            }
-            catch ( ReadException e )
-            {
-                loadContext.addWarning( e.attachElement( target.getRoleGroupCollection() ) );
+        for (final Map.Entry<String, Object> serializedGroup : serializedGroups.entrySet()) {
+            try {
+                readGroup(serializedGroup);
+            } catch (ReadException e) {
+                loadContext.addWarning(e.attachElement(target.getRoleGroupCollection()));
             }
         }
     }
 
-    private void readGroup( Map.Entry<String, Object> serializedGroup ) throws ReadException
+    private void readGroup(Map.Entry<String, Object> serializedGroup) throws ReadException
     {
         final String roleGroupName = serializedGroup.getKey();
-        final List<String> roles = asStrList( serializedGroup.getValue() );
-        final RoleGroup roleGroup = new RoleGroup( roleGroupName, target.getRoleGroupCollection() );
+        final List<String> roles = asStrList(serializedGroup.getValue());
+        final RoleGroup roleGroup = new RoleGroup(roleGroupName, target.getRoleGroupCollection());
 
-        roleGroup.getRoleSet().parseRoles( roles );
-        save( roleGroup );
+        roleGroup.getRoleSet().parseRoles(roles);
+        save(roleGroup);
     }
 
     public SecurityCollection getResult()

@@ -18,9 +18,8 @@ public class FreemarkerSqlException extends RuntimeException
     public String getMessage()
     {
         StringBuilder sb = new StringBuilder(getCause().getMessage());
-        for(Position pos: positions)
-        {
-            sb.append("\nAt: "+pos);
+        for (Position pos : positions) {
+            sb.append("\nAt: " + pos);
         }
         return sb.toString();
     }
@@ -33,6 +32,6 @@ public class FreemarkerSqlException extends RuntimeException
     @Override
     public ExtendedSqlException getCause()
     {
-        return ( ExtendedSqlException ) super.getCause();
+        return (ExtendedSqlException) super.getCause();
     }
 }

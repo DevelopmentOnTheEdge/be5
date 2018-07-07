@@ -15,17 +15,17 @@ public class QueryBeanInfo extends BeanInfoEx
     {
         super(Query.class);
     }
-    
+
     @Override
     public void initProperties() throws Exception
     {
-        add( new PropertyDescriptor( "name", beanClass, "getName", null ) );
+        add(new PropertyDescriptor("name", beanClass, "getName", null));
         add("type", QueryTypeSelector.class);
         addHidden("query", "isQueryHidden");
         addHidden(new PropertyDescriptorEx("queryClass", beanClass, "getQuery", "setQuery"), ClassSelector.class, "isQueryClassHidden");
-        findPropertyDescriptor("queryClass").setDisplayName( "Query class" );
-        findPropertyDescriptor("queryClass").setShortDescription( "Must extend com.developmentontheedge.enterprise.query.QueryIterator" );
-        
+        findPropertyDescriptor("queryClass").setDisplayName("Query class");
+        findPropertyDescriptor("queryClass").setShortDescription("Must extend com.developmentontheedge.enterprise.query.QueryIterator");
+
         add(new PropertyDescriptorEx("queryCompiled", beanClass, "getQueryCompiled", null));
         findPropertyDescriptor("queryCompiled").setHidden(true);
         add("menuName");
@@ -50,7 +50,7 @@ public class QueryBeanInfo extends BeanInfoEx
         add("newDataCheckQuery");
         add("usedInExtras");
         add("layout");
-        add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
+        add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));
         addHidden("contextID");
         addHidden("categoryID");
         addHidden(new PropertyDescriptor("icon", beanClass, "getIcon", null));

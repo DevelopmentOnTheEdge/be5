@@ -62,7 +62,7 @@ class EntityDeserializer extends FileDeserializer
 
     EntityDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, Module module, String name) throws ReadException
     {
-        super( loadContext, yamlDeserializer.getFileSystem().getEntityFile( module.getName(), name ) );
+        super(loadContext, yamlDeserializer.getFileSystem().getEntityFile(module.getName(), name));
         this.yamlDeserializer = yamlDeserializer;
         this.name = name;
         this.module = module;
@@ -70,135 +70,114 @@ class EntityDeserializer extends FileDeserializer
 
     /**
      * Can throw a {@link RuntimeException} with {@link ReadException} as its cause.
+     *
      * @throws ReadException
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
-    protected void doDeserialize( Object serializedRoot ) throws ReadException
+    protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        if ( !( serializedRoot instanceof Map) )
-        {
-            throw new ReadException( path, "Expected YAML map on the top level" );
+        if (!(serializedRoot instanceof Map)) {
+            throw new ReadException(path, "Expected YAML map on the top level");
         }
 
-        final Map<String, Object> serialized = ( Map<String, Object> ) serializedRoot;
+        final Map<String, Object> serialized = (Map<String, Object>) serializedRoot;
 
-        if ( !( serialized.containsKey( name ) ) )
-        {
-            throw new ReadException( path, "YAML map should start with entity name '"+name+"', found instead: "+serialized.keySet() );
+        if (!(serialized.containsKey(name))) {
+            throw new ReadException(path, "YAML map should start with entity name '" + name + "', found instead: " + serialized.keySet());
         }
 
-        final Map<String, Object> entityContent = ( Map<String, Object> ) serialized.get( name );
-        this.result = readEntity( name, entityContent, module );
+        final Map<String, Object> entityContent = (Map<String, Object>) serialized.get(name);
+        this.result = readEntity(name, entityContent, module);
     }
 
-    Entity readEntity( final String name, final Map<String, Object> entityContent, final Module module ) throws ReadException
+    Entity readEntity(final String name, final Map<String, Object> entityContent, final Module module) throws ReadException
     {
-        Entity entity = new Entity( name, module, null );
+        Entity entity = new Entity(name, module, null);
         final boolean isFromApp = module == module.getProject().getApplication();
 
-        String template = (String)entityContent.get( ATTR_ENTITY_TEMPLATE );
+        String template = (String) entityContent.get(ATTR_ENTITY_TEMPLATE);
         Entity templateEntity = null;
-        if(template != null)
-        {
-            templateEntity = yamlDeserializer.getTemplates().getEntity( template );
-            if ( templateEntity == null )
-            {
-                loadContext.addWarning( new ReadException( entity, path, "Unknown template name specified: " + template ) );
-            }
-            else if ( !isFromApp )
-            {
-                loadContext.addWarning( new ReadException( entity, path, "Cannot use template with non-application entity" ) );
+        if (template != null) {
+            templateEntity = yamlDeserializer.getTemplates().getEntity(template);
+            if (templateEntity == null) {
+                loadContext.addWarning(new ReadException(entity, path, "Unknown template name specified: " + template));
+            } else if (!isFromApp) {
+                loadContext.addWarning(new ReadException(entity, path, "Cannot use template with non-application entity"));
                 templateEntity = null;
             }
         }
 
-        final String type = ( String ) entityContent.get( ATTR_ENTITY_TYPE );
-        if(type == null)
-        {
-            if ( isFromApp && templateEntity == null )
-            {
-                loadContext.addWarning( new ReadException( entity, path, "Entity has no type" ) );
+        final String type = (String) entityContent.get(ATTR_ENTITY_TYPE);
+        if (type == null) {
+            if (isFromApp && templateEntity == null) {
+                loadContext.addWarning(new ReadException(entity, path, "Entity has no type"));
             }
-        } else
-        {
-            EntityType entityType = EntityType.forSqlName( type );
-            if(entityType == null)
-            {
-                loadContext.addWarning( new ReadException( entity, path, "Entity type is invalid: "+type ) );
-            } else
-            {
-                entity.setType( entityType );
+        } else {
+            EntityType entityType = EntityType.forSqlName(type);
+            if (entityType == null) {
+                loadContext.addWarning(new ReadException(entity, path, "Entity type is invalid: " + type));
+            } else {
+                entity.setType(entityType);
             }
         }
 
-        if ( yamlDeserializer.fileSystem != null )
-        {
-            entity.setLinkedFile( yamlDeserializer.getFileSystem().getEntityFile( module.getName(), entity.getName() ) );
+        if (yamlDeserializer.fileSystem != null) {
+            entity.setLinkedFile(yamlDeserializer.getFileSystem().getEntityFile(module.getName(), entity.getName()));
         }
 
-        readDocumentation( entityContent, entity );
-        readUsedExtras( entityContent, entity );
+        readDocumentation(entityContent, entity);
+        readUsedExtras(entityContent, entity);
 
-        readFields( entity, entityContent, Fields.entity() );
-        yamlDeserializer.readCustomizations( entityContent, entity, false );
-        readIcon( entityContent, entity.getIcon() );
+        readFields(entity, entityContent, Fields.entity());
+        yamlDeserializer.readCustomizations(entityContent, entity, false);
+        readIcon(entityContent, entity.getIcon());
 
-        new SchemeDeserializer(yamlDeserializer, loadContext).deserialize( entityContent, entity );
+        new SchemeDeserializer(yamlDeserializer, loadContext).deserialize(entityContent, entity);
 
-        final List<Map<String, Object>> operationsList = asMaps( entityContent.get( "operations" ) );
+        final List<Map<String, Object>> operationsList = asMaps(entityContent.get("operations"));
 
-        for ( Map<String, Object> operationElement : operationsList )
-        {
-            for ( Map.Entry<String, Object> operationPair : operationElement.entrySet() ) // should have only one element
+        for (Map<String, Object> operationElement : operationsList) {
+            for (Map.Entry<String, Object> operationPair : operationElement.entrySet()) // should have only one element
             {
-                try
-                {
-                    save( readOperation( operationPair.getKey(), asMap(operationPair.getValue()), entity ) );
-                }
-                catch ( ReadException e )
-                {
-                    Operation operation = Operation.createOperation( operationPair.getKey(), Operation.OPERATION_TYPE_JAVA, entity );
-                    save( operation );
-                    loadContext.addWarning( e.attachElement( operation ) );
+                try {
+                    save(readOperation(operationPair.getKey(), asMap(operationPair.getValue()), entity));
+                } catch (ReadException e) {
+                    Operation operation = Operation.createOperation(operationPair.getKey(), Operation.OPERATION_TYPE_JAVA, entity);
+                    save(operation);
+                    loadContext.addWarning(e.attachElement(operation));
                 }
             }
         }
 
-        final List<Map<String, Object>> queriesList = asMaps( entityContent.get( "queries" ) );
+        final List<Map<String, Object>> queriesList = asMaps(entityContent.get("queries"));
 
-        for ( Map<String, Object> queryElement : queriesList )
-        {
-            for ( Map.Entry<String, Object> queryPair : queryElement.entrySet() ) // should have only one element
+        for (Map<String, Object> queryElement : queriesList) {
+            for (Map.Entry<String, Object> queryPair : queryElement.entrySet()) // should have only one element
             {
-                try
-                {
-                    if ( queryPair.getKey().equals( Query.SPECIAL_TABLE_DEFINITION )
-                        || queryPair.getKey().equals( Query.SPECIAL_LOST_RECORDS ) )
-                    {
-                        loadContext.addWarning( new ReadException(
-                                entity.getQueries().getCompletePath().getChildPath( queryPair.getKey() ), path, "Illegal query name: '"
-                                    + queryPair.getKey()
-                                    + "'. Such query is managed by BE automatically and should not appear in metadata." ) );
+                try {
+                    if (queryPair.getKey().equals(Query.SPECIAL_TABLE_DEFINITION)
+                            || queryPair.getKey().equals(Query.SPECIAL_LOST_RECORDS)) {
+                        loadContext.addWarning(new ReadException(
+                                entity.getQueries().getCompletePath().getChildPath(queryPair.getKey()), path, "Illegal query name: '"
+                                + queryPair.getKey()
+                                + "'. Such query is managed by BE automatically and should not appear in metadata."));
                         continue;
                     }
-                    save( readQuery( queryPair.getKey(), asMap(queryPair.getValue()), entity ) );
-                }
-                catch ( ReadException e )
-                {
-                    Query query = new Query( queryPair.getKey(), entity );
+                    save(readQuery(queryPair.getKey(), asMap(queryPair.getValue()), entity));
+                } catch (ReadException e) {
+                    Query query = new Query(queryPair.getKey(), entity);
                     save(query);
-                    loadContext.addWarning( e.attachElement( query ) );
+                    loadContext.addWarning(e.attachElement(query));
                 }
             }
         }
 
-        checkChildren( entity, entityContent, Fields.entity(), "type", TAG_COMMENT, TAG_EXTRAS, TAG_CUSTOMIZATIONS, ATTR_ICON,
-                "operations", "queries", "scheme", TAG_REFERENCES, ATTR_ENTITY_TEMPLATE );
+        checkChildren(entity, entityContent, Fields.entity(), "type", TAG_COMMENT, TAG_EXTRAS, TAG_CUSTOMIZATIONS, ATTR_ICON,
+                "operations", "queries", "scheme", TAG_REFERENCES, ATTR_ENTITY_TEMPLATE);
 
-        if(templateEntity != null)
-        {
-            entity.merge( templateEntity, false, !yamlDeserializer.fuseTemplate );
+        if (templateEntity != null) {
+            entity.merge(templateEntity, false, !yamlDeserializer.fuseTemplate);
         }
 
         return entity;
@@ -209,282 +188,233 @@ class EntityDeserializer extends FileDeserializer
         return result;
     }
 
-    public Operation readOperation( final String name, final Map<String, Object> operationElement, final Entity entity ) throws ReadException
+    public Operation readOperation(final String name, final Map<String, Object> operationElement, final Entity entity) throws ReadException
     {
-        final Operation operation = Operation.createOperation( name, ( String ) operationElement.get( ATTR_OPERATION_TYPE ), entity );
-        readDocumentation( operationElement, operation );
+        final Operation operation = Operation.createOperation(name, (String) operationElement.get(ATTR_OPERATION_TYPE), entity);
+        readDocumentation(operationElement, operation);
 
-        readFields( operation, operationElement, Fields.operation() );
-        readUsedExtras( operationElement, operation );
-        yamlDeserializer.readCustomizations( operationElement, operation, false );
-        readIcon( operationElement, operation.getIcon() );
+        readFields(operation, operationElement, Fields.operation());
+        readUsedExtras(operationElement, operation);
+        yamlDeserializer.readCustomizations(operationElement, operation, false);
+        readIcon(operationElement, operation.getIcon());
 
-        operation.setOriginModuleName( getProjectOrigin() );
+        operation.setOriginModuleName(getProjectOrigin());
 
-        if ( operation instanceof SourceFileOperation)
-        {
-            if ( operationElement.containsKey( ATTR_FILEPATH ) )
-            {
-                final SourceFileOperation fileOperation = (SourceFileOperation)operation;
-                final String filepath = classPathToFileName(( String ) operationElement.get( ATTR_FILEPATH ), fileOperation.getFileExtension());
+        if (operation instanceof SourceFileOperation) {
+            if (operationElement.containsKey(ATTR_FILEPATH)) {
+                final SourceFileOperation fileOperation = (SourceFileOperation) operation;
+                final String filepath = classPathToFileName((String) operationElement.get(ATTR_FILEPATH), fileOperation.getFileExtension());
                 final String nameSpace = fileOperation.getFileNameSpace();
-                SourceFile sourceFile = yamlDeserializer.project.getApplication().getSourceFile( nameSpace, filepath );
-                if(sourceFile == null)
-                {
-                    sourceFile = yamlDeserializer.project.getApplication().addSourceFile( nameSpace, filepath );
-                    sourceFile.setLinkedFile( yamlDeserializer.getFileSystem().getNameSpaceFile( nameSpace, filepath ) );
+                SourceFile sourceFile = yamlDeserializer.project.getApplication().getSourceFile(nameSpace, filepath);
+                if (sourceFile == null) {
+                    sourceFile = yamlDeserializer.project.getApplication().addSourceFile(nameSpace, filepath);
+                    sourceFile.setLinkedFile(yamlDeserializer.getFileSystem().getNameSpaceFile(nameSpace, filepath));
                 }
-                fileOperation.setFileName( sourceFile.getName() );
-                fileOperation.customizeProperty( "code" );
-            }
-            else
-            {
-                if(operation.getType().equals(Operation.OPERATION_TYPE_GROOVY))
-                {
+                fileOperation.setFileName(sourceFile.getName());
+                fileOperation.customizeProperty("code");
+            } else {
+                if (operation.getType().equals(Operation.OPERATION_TYPE_GROOVY)) {
                     throw new ReadException(path, "Groovy operation required 'file' attribute.");
                 }
             }
-        }
-        else
-        {
-            String text = ( String ) operationElement.get( TAG_CODE );
-            if ( !Strings2.isNullOrEmpty( text ) )
-            {
-                operation.setCode( text );
-                operation.customizeProperty( "code" );
-            }
-            else
-            {
-                if(operation.getType().equals(Operation.OPERATION_TYPE_JAVA) &&
-                   operationElement.containsKey( ATTR_FILEPATH ))
-                {
+        } else {
+            String text = (String) operationElement.get(TAG_CODE);
+            if (!Strings2.isNullOrEmpty(text)) {
+                operation.setCode(text);
+                operation.customizeProperty("code");
+            } else {
+                if (operation.getType().equals(Operation.OPERATION_TYPE_JAVA) &&
+                        operationElement.containsKey(ATTR_FILEPATH)) {
                     throw new ReadException(path, "Java operation required 'code' instead 'file' attribute.");
                 }
             }
         }
 
-        readRoles( operationElement, operation );
-        readExtenders( operationElement, operation );
-        checkChildren( operation, operationElement, Fields.operation(), TAG_CODE, ATTR_ICON, TAG_EXTRAS, TAG_CUSTOMIZATIONS, TAG_COMMENT, ATTR_FILEPATH, ATTR_ROLES, "extenders", "type" );
+        readRoles(operationElement, operation);
+        readExtenders(operationElement, operation);
+        checkChildren(operation, operationElement, Fields.operation(), TAG_CODE, ATTR_ICON, TAG_EXTRAS, TAG_CUSTOMIZATIONS, TAG_COMMENT, ATTR_FILEPATH, ATTR_ROLES, "extenders", "type");
         return operation;
     }
 
-    private void readExtenders( final Map<String, Object> operationElement, final Operation operation )
+    private void readExtenders(final Map<String, Object> operationElement, final Operation operation)
     {
-        final List<Map<String, Object>> extendersElement = asMaps( operationElement.get( "extenders" ) );
+        final List<Map<String, Object>> extendersElement = asMaps(operationElement.get("extenders"));
 
-        for ( Map<String, Object> extenderElement : extendersElement )
-        {
+        for (Map<String, Object> extenderElement : extendersElement) {
             final OperationExtender extender;
 
-            if ( extenderElement.containsKey( ATTR_CLASS_NAME ) )
-            {
-                extender = new OperationExtender( operation, getProjectOrigin() );
-                extender.setClassName( ( String ) extenderElement.get( ATTR_CLASS_NAME ) );
-            }
-            else
-            {
-                final String filepath = ( String ) extenderElement.get( ATTR_FILEPATH );
+            if (extenderElement.containsKey(ATTR_CLASS_NAME)) {
+                extender = new OperationExtender(operation, getProjectOrigin());
+                extender.setClassName((String) extenderElement.get(ATTR_CLASS_NAME));
+            } else {
+                final String filepath = (String) extenderElement.get(ATTR_FILEPATH);
 
-                if(filepath == null)
-                {
-                    loadContext.addWarning( new ReadException(path, "Extender: no "+ATTR_FILEPATH+" attribute found").attachElement( operation ) );
+                if (filepath == null) {
+                    loadContext.addWarning(new ReadException(path, "Extender: no " + ATTR_FILEPATH + " attribute found").attachElement(operation));
                     continue;
                 }
 
-                if(filepath.endsWith(".js") || filepath.endsWith(".groovy"))
-                {
+                if (filepath.endsWith(".js") || filepath.endsWith(".groovy")) {
                     SourceFileOperationExtender fileExtender;
-                    if(filepath.endsWith(".js"))
-                    {
-                        fileExtender = new JavaScriptOperationExtender( operation, getProjectOrigin() );
-                    }
-                    else
-                    {
-                        fileExtender = new GroovyOperationExtender( operation, getProjectOrigin() );
+                    if (filepath.endsWith(".js")) {
+                        fileExtender = new JavaScriptOperationExtender(operation, getProjectOrigin());
+                    } else {
+                        fileExtender = new GroovyOperationExtender(operation, getProjectOrigin());
                     }
 
                     SourceFile sourceFile = yamlDeserializer.project.getApplication().
-                            getSourceFile( fileExtender.getNamespace(), classPathToFileName(filepath, fileExtender.getFileExtension()) );
-                    if(sourceFile == null)
-                    {
-                        sourceFile = yamlDeserializer.project.getApplication().addSourceFile( fileExtender.getNamespace(),
-                                classPathToFileName(filepath, fileExtender.getFileExtension()) );
-                        sourceFile.setLinkedFile( yamlDeserializer.getFileSystem().getNameSpaceFile( fileExtender.getNamespace(), filepath ) );
+                            getSourceFile(fileExtender.getNamespace(), classPathToFileName(filepath, fileExtender.getFileExtension()));
+                    if (sourceFile == null) {
+                        sourceFile = yamlDeserializer.project.getApplication().addSourceFile(fileExtender.getNamespace(),
+                                classPathToFileName(filepath, fileExtender.getFileExtension()));
+                        sourceFile.setLinkedFile(yamlDeserializer.getFileSystem().getNameSpaceFile(fileExtender.getNamespace(), filepath));
                     }
 
-                    fileExtender.setFileName( sourceFile.getName() );
+                    fileExtender.setFileName(sourceFile.getName());
                     extender = fileExtender;
-                }
-                else
-                {
-                    loadContext.addWarning( new ReadException(path, "Not supported file extention.").attachElement( operation ) );
+                } else {
+                    loadContext.addWarning(new ReadException(path, "Not supported file extention.").attachElement(operation));
                     continue;
                 }
             }
-            readFields( extender, extenderElement, Fields.extender() );
-            DataElementUtils.saveQuiet( extender );
-            checkChildren( extender, extenderElement, Fields.extender(), ATTR_FILEPATH, ATTR_CLASS_NAME );
+            readFields(extender, extenderElement, Fields.extender());
+            DataElementUtils.saveQuiet(extender);
+            checkChildren(extender, extenderElement, Fields.extender(), ATTR_FILEPATH, ATTR_CLASS_NAME);
         }
     }
 
-    Query readQuery( final String name, final Map<String, Object> queryElement, final Entity entity ) throws ReadException
+    Query readQuery(final String name, final Map<String, Object> queryElement, final Entity entity) throws ReadException
     {
-        final Query query = new Query( name, entity );
-        readDocumentation( queryElement, query );
+        final Query query = new Query(name, entity);
+        readDocumentation(queryElement, query);
 
-        readFields( query, queryElement, Fields.query() );
-        readUsedExtras( queryElement, query );
-        yamlDeserializer.readCustomizations( queryElement, query, false );
-        readIcon( queryElement, query.getIcon() );
+        readFields(query, queryElement, Fields.query());
+        readUsedExtras(queryElement, query);
+        yamlDeserializer.readCustomizations(queryElement, query, false);
+        readIcon(queryElement, query.getIcon());
 
-        query.setOriginModuleName( getProjectOrigin() );
+        query.setOriginModuleName(getProjectOrigin());
 
         String text;
 
-        switch ( query.getType() )
-        {
-        case STATIC:
-            text = ( String ) queryElement.get( ATTR_QUERY_CODE );
-            break;
+        switch (query.getType()) {
+            case STATIC:
+                text = (String) queryElement.get(ATTR_QUERY_CODE);
+                break;
 
-        case GROOVY:
-            final String groovyFileName = ( String ) queryElement.get( "file" );
-            // try to read 'code' if there's no 'file'
-            if ( groovyFileName == null )
-            {
-                text = ( String ) queryElement.get( TAG_CODE );
-                query.setFileName( classPathToFileName(query.getName().replace( ':', '_' ) + ".groovy", ".groovy") );
-            }
-            else
-            {
-                text = yamlDeserializer.getFileSystem().readGroovyQuery( classPathToFileName(groovyFileName.replace( ':', '_' ), ".groovy") );
-                query.setFileName( groovyFileName );
-            }
-            break;
+            case GROOVY:
+                final String groovyFileName = (String) queryElement.get("file");
+                // try to read 'code' if there's no 'file'
+                if (groovyFileName == null) {
+                    text = (String) queryElement.get(TAG_CODE);
+                    query.setFileName(classPathToFileName(query.getName().replace(':', '_') + ".groovy", ".groovy"));
+                } else {
+                    text = yamlDeserializer.getFileSystem().readGroovyQuery(classPathToFileName(groovyFileName.replace(':', '_'), ".groovy"));
+                    query.setFileName(groovyFileName);
+                }
+                break;
 
-        case JAVASCRIPT:
-            final String jsFileName = ( String ) queryElement.get( "file" );
-            // try to read 'code' if there's no 'file'
-            if ( jsFileName == null )
-            {
-                text = ( String ) queryElement.get( TAG_CODE );
-                query.setFileName( query.getName().replace( ':', '_' ) + ".js" );
-            }
-            else
-            {
-                text = yamlDeserializer.getFileSystem().readJavaScriptQuery( jsFileName.replace( ':', '_' ) );
-                query.setFileName( jsFileName );
-            }
-            break;
+            case JAVASCRIPT:
+                final String jsFileName = (String) queryElement.get("file");
+                // try to read 'code' if there's no 'file'
+                if (jsFileName == null) {
+                    text = (String) queryElement.get(TAG_CODE);
+                    query.setFileName(query.getName().replace(':', '_') + ".js");
+                } else {
+                    text = yamlDeserializer.getFileSystem().readJavaScriptQuery(jsFileName.replace(':', '_'));
+                    query.setFileName(jsFileName);
+                }
+                break;
 
-        default:
-            text = ( String ) queryElement.get( TAG_CODE );
-            break;
+            default:
+                text = (String) queryElement.get(TAG_CODE);
+                break;
         }
 
         // setQuerySettings must be called before setQuery
         // as setQuerySettings causes Freemarker initialization if query is not empty
         // and Freemarker may initialize incorrectly when project is not completely loaded
-        if(queryElement.containsKey( "settings" ))
-        {
-            query.setQuerySettings( readQuerySettings(queryElement, query) );
+        if (queryElement.containsKey("settings")) {
+            query.setQuerySettings(readQuerySettings(queryElement, query));
         }
 
-        if ( text != null )
-        {
-            query.setQuery( text );
-            query.customizeProperty( "query" );
+        if (text != null) {
+            query.setQuery(text);
+            query.customizeProperty("query");
         }
 
         readQuickFilters(queryElement, query);
-        readRoles( queryElement, query );
-        if ( queryElement.containsKey( ATTR_QUERY_OPERATIONS ) )
-        {
-            query.getOperationNames().parseValues( yamlDeserializer.stringCache( readList( queryElement, ATTR_QUERY_OPERATIONS ) ) );
-            query.customizeProperty( "operationNames" );
+        readRoles(queryElement, query);
+        if (queryElement.containsKey(ATTR_QUERY_OPERATIONS)) {
+            query.getOperationNames().parseValues(yamlDeserializer.stringCache(readList(queryElement, ATTR_QUERY_OPERATIONS)));
+            query.customizeProperty("operationNames");
         }
-        checkChildren( query, queryElement, Fields.query(), TAG_EXTRAS, TAG_COMMENT, TAG_CUSTOMIZATIONS, ATTR_ICON, ATTR_QUERY_CODE, TAG_CODE,
-                ATTR_QUERY_OPERATIONS, "quickFilters", ATTR_ROLES, TAG_SETTINGS, "file" );
+        checkChildren(query, queryElement, Fields.query(), TAG_EXTRAS, TAG_COMMENT, TAG_CUSTOMIZATIONS, ATTR_ICON, ATTR_QUERY_CODE, TAG_CODE,
+                ATTR_QUERY_OPERATIONS, "quickFilters", ATTR_ROLES, TAG_SETTINGS, "file");
         return query;
     }
 
-    private void readRoles( final Map<String, Object> element, final EntityItem item )
+    private void readRoles(final Map<String, Object> element, final EntityItem item)
     {
-        if ( element.containsKey( ATTR_ROLES ) )
-        {
-            item.getRoles().parseRoles( yamlDeserializer.stringCache( readList( element, ATTR_ROLES ) ) );
-            item.customizeProperty( "roles" );
+        if (element.containsKey(ATTR_ROLES)) {
+            item.getRoles().parseRoles(yamlDeserializer.stringCache(readList(element, ATTR_ROLES)));
+            item.customizeProperty("roles");
         }
     }
 
-    private QuerySettings[] readQuerySettings(final Map<String, Object> queryElement, final Query query )
+    private QuerySettings[] readQuerySettings(final Map<String, Object> queryElement, final Query query)
     {
-        final Set<String> allRoles = Collections.singleton( '@' + SpecialRoleGroup.ALL_ROLES_GROUP );
+        final Set<String> allRoles = Collections.singleton('@' + SpecialRoleGroup.ALL_ROLES_GROUP);
         final List<QuerySettings> result = new ArrayList<>();
-        final List<Map<String, Object>> settingsList = asMaps( queryElement.get( "settings" ) );
+        final List<Map<String, Object>> settingsList = asMaps(queryElement.get("settings"));
 
-        try
-        {
-            for ( Map<String, Object> settingsElement : settingsList )
-            {
-                for ( Map.Entry<String, Object> settingsPair : settingsElement.entrySet() ) // should be only one pair
+        try {
+            for (Map<String, Object> settingsElement : settingsList) {
+                for (Map.Entry<String, Object> settingsPair : settingsElement.entrySet()) // should be only one pair
                 {
-                    if ( !( settingsPair.getKey().equals( "settings" ) ) ) // incorrect
+                    if (!(settingsPair.getKey().equals("settings"))) // incorrect
                         continue;
 
-                    final Map<String, Object> settingsContent = asMap( settingsPair.getValue() );
-                    final QuerySettings settings = new QuerySettings( query );
-                    readFields( settings, settingsContent, Fields.querySettings() );
-                    final List<String> roles = yamlDeserializer.stringCache ( readList( settingsContent, ATTR_ROLES ) );
+                    final Map<String, Object> settingsContent = asMap(settingsPair.getValue());
+                    final QuerySettings settings = new QuerySettings(query);
+                    readFields(settings, settingsContent, Fields.querySettings());
+                    final List<String> roles = yamlDeserializer.stringCache(readList(settingsContent, ATTR_ROLES));
 
-                    if ( roles.isEmpty() )
-                    {
-                        settings.getRoles().parseRoles( allRoles );
-                    }
-                    else
-                    {
-                        settings.getRoles().parseRoles( roles );
+                    if (roles.isEmpty()) {
+                        settings.getRoles().parseRoles(allRoles);
+                    } else {
+                        settings.getRoles().parseRoles(roles);
                     }
 
-                    result.add( settings );
+                    result.add(settings);
                 }
             }
-        }
-        catch ( ReadException e )
-        {
-            loadContext.addWarning( e.attachElement( query ) );
+        } catch (ReadException e) {
+            loadContext.addWarning(e.attachElement(query));
         }
 
-        return result.toArray( new QuerySettings[result.size()] );
+        return result.toArray(new QuerySettings[result.size()]);
     }
 
-    private void readQuickFilters( final Map<String, Object> queryElement, final Query query )
+    private void readQuickFilters(final Map<String, Object> queryElement, final Query query)
     {
         Map<String, Object> filterElements;
-        try
-        {
-            filterElements = asMapOrEmpty( queryElement.get( "quickFilters" ) );
-        }
-        catch ( ReadException e )
-        {
-            loadContext.addWarning( e.attachElement( query ) );
+        try {
+            filterElements = asMapOrEmpty(queryElement.get("quickFilters"));
+        } catch (ReadException e) {
+            loadContext.addWarning(e.attachElement(query));
             return;
         }
 
-        for ( final Map.Entry<String, Object> filterElement : filterElements.entrySet() )
-        {
-            final QuickFilter filter = new QuickFilter( filterElement.getKey(), query );
-            try
-            {
-                readFields( filter, asMap( filterElement.getValue() ), Fields.quickFilter() );
+        for (final Map.Entry<String, Object> filterElement : filterElements.entrySet()) {
+            final QuickFilter filter = new QuickFilter(filterElement.getKey(), query);
+            try {
+                readFields(filter, asMap(filterElement.getValue()), Fields.quickFilter());
+            } catch (ReadException e) {
+                loadContext.addWarning(e.attachElement(filter));
             }
-            catch ( ReadException e )
-            {
-                loadContext.addWarning( e.attachElement( filter ) );
-            }
-            filter.setOriginModuleName( getProjectOrigin() );
-            DataElementUtils.saveQuiet( filter );
+            filter.setOriginModuleName(getProjectOrigin());
+            DataElementUtils.saveQuiet(filter);
         }
     }
 

@@ -18,58 +18,48 @@ class FormsDeserializer extends FileDeserializer
 
     private final BeModelCollection<JavaScriptForm> target;
 
-    FormsDeserializer(LoadContext loadContext, Path path, BeModelCollection<JavaScriptForm> target ) throws ReadException
+    FormsDeserializer(LoadContext loadContext, Path path, BeModelCollection<JavaScriptForm> target) throws ReadException
     {
-        super( loadContext, path, true );
+        super(loadContext, path, true);
         this.target = target;
     }
 
     @Override
-    protected void doDeserialize( Object serializedRoot ) throws ReadException
+    protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        final Map<String, Object> serializedForms = asMap( asMap( serializedRoot ).get( TAG_JS_FORMS ) );
+        final Map<String, Object> serializedForms = asMap(asMap(serializedRoot).get(TAG_JS_FORMS));
 
-        readForms( serializedForms );
-        target.getProject().getAutomaticDeserializationService().registerFile( path, ManagedFileType.FORMS );
+        readForms(serializedForms);
+        target.getProject().getAutomaticDeserializationService().registerFile(path, ManagedFileType.FORMS);
     }
 
-    private void readForms( final Map<String, Object> serializedForms )
+    private void readForms(final Map<String, Object> serializedForms)
     {
-        for ( Map.Entry<String, Object> serializedForm : serializedForms.entrySet() )
-        {
-            try
-            {
-                readForm( serializedForm );
-            }
-            catch ( ReadException e )
-            {
-                loadContext.addWarning( e.attachElement( target ) );
+        for (Map.Entry<String, Object> serializedForm : serializedForms.entrySet()) {
+            try {
+                readForm(serializedForm);
+            } catch (ReadException e) {
+                loadContext.addWarning(e.attachElement(target));
             }
         }
     }
 
-    private void readForm( Map.Entry<String, Object> serializedForm ) throws ReadException
+    private void readForm(Map.Entry<String, Object> serializedForm) throws ReadException
     {
         final String name = serializedForm.getKey();
-        final Map<String, Object> serializedFormBody = asMap( serializedForm.getValue() );
-        final JavaScriptForm form = new JavaScriptForm( name, target );
-        readFields( form, serializedFormBody, Fields.jsForms() );
-        DataElementUtils.saveQuiet( form );
+        final Map<String, Object> serializedFormBody = asMap(serializedForm.getValue());
+        final JavaScriptForm form = new JavaScriptForm(name, target);
+        readFields(form, serializedFormBody, Fields.jsForms());
+        DataElementUtils.saveQuiet(form);
         final Path file = form.getLinkedFile();
 
-        if ( file == null )
-        {
-            loadContext.addWarning( new ReadException( form, path, "File cannot be resolved for module " + form.getModuleName() ) );
-        }
-        else
-        {
-            try
-            {
+        if (file == null) {
+            loadContext.addWarning(new ReadException(form, path, "File cannot be resolved for module " + form.getModuleName()));
+        } else {
+            try {
                 form.load();
-            }
-            catch ( ReadException e )
-            {
-                loadContext.addWarning( e.attachElement( form ) );
+            } catch (ReadException e) {
+                loadContext.addWarning(e.attachElement(form));
             }
         }
     }

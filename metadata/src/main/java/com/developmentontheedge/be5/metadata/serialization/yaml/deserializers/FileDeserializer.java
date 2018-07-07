@@ -16,39 +16,33 @@ abstract class FileDeserializer extends BaseDeserializer
 {
     protected final Node content;
 
-    private FileDeserializer(LoadContext loadContext, final String content, final Path path ) throws ReadException
+    private FileDeserializer(LoadContext loadContext, final String content, final Path path) throws ReadException
     {
-        super(loadContext, path );
-        if(content == null)
-        {
+        super(loadContext, path);
+        if (content == null) {
             this.content = null;
             return;
         }
 
-        try
-        {
-            this.content = new Yaml().compose( new StringReader( content ) );
-        }
-        catch ( MarkedYAMLException e )
-        {
+        try {
+            this.content = new Yaml().compose(new StringReader(content));
+        } catch (MarkedYAMLException e) {
             throw new ReadException(
-                    new Exception( ( e.getProblemMark().getLine() + 1 ) + ":" + ( e.getProblemMark().getColumn() + 1 ) + ": "
-                            + e.getMessage() ), path, ReadException.LEE_INVALID_STRUCTURE );
-        }
-        catch( YAMLException e )
-        {
-            throw new ReadException( new Exception( e.getMessage() ), path, ReadException.LEE_INVALID_STRUCTURE );
+                    new Exception((e.getProblemMark().getLine() + 1) + ":" + (e.getProblemMark().getColumn() + 1) + ": "
+                            + e.getMessage()), path, ReadException.LEE_INVALID_STRUCTURE);
+        } catch (YAMLException e) {
+            throw new ReadException(new Exception(e.getMessage()), path, ReadException.LEE_INVALID_STRUCTURE);
         }
     }
 
-    public FileDeserializer( LoadContext loadContext, final Path path ) throws ReadException
+    public FileDeserializer(LoadContext loadContext, final Path path) throws ReadException
     {
-        this( loadContext, ProjectFileSystem.read( path ), path );
+        this(loadContext, ProjectFileSystem.read(path), path);
     }
 
-    public FileDeserializer( LoadContext loadContext, final Path path, boolean nullAble ) throws ReadException
+    public FileDeserializer(LoadContext loadContext, final Path path, boolean nullAble) throws ReadException
     {
-        this( loadContext, ProjectFileSystem.read( path, nullAble ), path );
+        this(loadContext, ProjectFileSystem.read(path, nullAble), path);
     }
 
     public FileDeserializer(LoadContext loadContext)
@@ -59,16 +53,15 @@ abstract class FileDeserializer extends BaseDeserializer
 
     public void deserialize() throws ReadException
     {
-        if(content != null)
-        {
+        if (content != null) {
             doDeserialize(Serialization.derepresent(content));
         }
     }
 
-    protected abstract void doDeserialize( Object serializedRoot ) throws ReadException;
+    protected abstract void doDeserialize(Object serializedRoot) throws ReadException;
 
-    @SuppressWarnings( "unused" )
-    protected Node getNodeByObject( Object object )
+    @SuppressWarnings("unused")
+    protected Node getNodeByObject(Object object)
     {
         return null; // TODO implement me
     }

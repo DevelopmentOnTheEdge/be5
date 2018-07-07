@@ -25,28 +25,28 @@ public class ProjectTestUtils
 {
     public static Project getProject(String name)
     {
-        Project project = new Project( name );
+        Project project = new Project(name);
 
-        project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
-        project.setDatabaseSystem( Rdbms.POSTGRESQL );
+        project.setRoles(Arrays.asList("Administrator", "Guest", "User", "Operator"));
+        project.setDatabaseSystem(Rdbms.POSTGRESQL);
         return project;
     }
 
     public static TableDef createScheme(Entity entity)
     {
-        TableDef scheme = new TableDef( entity );
+        TableDef scheme = new TableDef(entity);
         DataElementUtils.save(scheme);
-        ColumnDef column = new ColumnDef( "ID", scheme.getColumns() );
-        column.setTypeString( "KEYTYPE" );
+        ColumnDef column = new ColumnDef("ID", scheme.getColumns());
+        column.setTypeString("KEYTYPE");
         column.setAutoIncrement(true);
-        column.setPrimaryKey( true );
+        column.setPrimaryKey(true);
         DataElementUtils.save(column);
 
-        ColumnDef column2 = new ColumnDef( "name", scheme.getColumns() );
-        column2.setTypeString( "VARCHAR(20)" );
-        column2.setCanBeNull( true );
-        column2.setTableTo( entity.getName() );
-        column2.setColumnsTo( column.getName() );
+        ColumnDef column2 = new ColumnDef("name", scheme.getColumns());
+        column2.setTypeString("VARCHAR(20)");
+        column2.setCanBeNull(true);
+        column2.setTableTo(entity.getName());
+        column2.setColumnsTo(column.getName());
         DataElementUtils.save(column2);
 
         return scheme;
@@ -54,18 +54,18 @@ public class ProjectTestUtils
 
     public static Operation createOperation(Entity entity, String name)
     {
-        Operation operation = Operation.createOperation( name, Operation.OPERATION_TYPE_JAVA, entity );
-        DataElementUtils.save( operation );
-        PageCustomization customization = new PageCustomization( PageCustomization.TYPE_CSS, PageCustomization.DOMAIN_OPERATION_FORM,
-                operation.getOrCreateCollection( PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class ) );
-        customization.setCode( "form {color: #f1f1f1}" );
-        DataElementUtils.save( customization );
+        Operation operation = Operation.createOperation(name, Operation.OPERATION_TYPE_JAVA, entity);
+        DataElementUtils.save(operation);
+        PageCustomization customization = new PageCustomization(PageCustomization.TYPE_CSS, PageCustomization.DOMAIN_OPERATION_FORM,
+                operation.getOrCreateCollection(PageCustomization.CUSTOMIZATIONS_COLLECTION, PageCustomization.class));
+        customization.setCode("form {color: #f1f1f1}");
+        DataElementUtils.save(customization);
         return operation;
     }
 
     public static Query createQuery(Entity entity, String name, Collection<String> roles)
     {
-        Query query = new Query( name, entity );
+        Query query = new Query(name, entity);
         query.getRoles().parseRoles(roles);
         query.setQuery("select * from entity");
         DataElementUtils.save(query);
@@ -74,21 +74,21 @@ public class ProjectTestUtils
 
     public static Entity createEntity(Project project, String entityName, String primaryKeyName)
     {
-        Entity entity = new Entity( entityName, project.getApplication(), EntityType.TABLE );
-        entity.setPrimaryKey( primaryKeyName );
-        entity.setBesql( true );
+        Entity entity = new Entity(entityName, project.getApplication(), EntityType.TABLE);
+        entity.setPrimaryKey(primaryKeyName);
+        entity.setBesql(true);
         DataElementUtils.save(entity);
         return entity;
     }
 
     public static StaticPage createStaticPage(Project project, String lang, String name, String content)
     {
-        LanguageStaticPages lsp = new LanguageStaticPages( "en", project.getApplication().getStaticPageCollection() );
-        DataElementUtils.save( lsp );
+        LanguageStaticPages lsp = new LanguageStaticPages("en", project.getApplication().getStaticPageCollection());
+        DataElementUtils.save(lsp);
         StaticPage staticPage = new StaticPage(name, lsp);
-        DataElementUtils.save( staticPage );
-        staticPage.setComment( "Comment" );
-        staticPage.setContent( content );
+        DataElementUtils.save(staticPage);
+        staticPage.setComment("Comment");
+        staticPage.setContent(content);
         return staticPage;
     }
 
@@ -97,13 +97,13 @@ public class ProjectTestUtils
         FreemarkerScript script = new FreemarkerScript(name,
                 project.getApplication().getFreemarkerScripts());
         script.setSource(sql);
-        DataElementUtils.save( script );
+        DataElementUtils.save(script);
     }
 
     public static void createH2Profile(Project project, String name)
     {
         BeConnectionProfile profile = new BeConnectionProfile(name, project.getConnectionProfiles().getLocalProfiles());
-        profile.setConnectionUrl("jdbc:h2:~/"+ name);
+        profile.setConnectionUrl("jdbc:h2:~/" + name);
         profile.setUsername("sa");
         profile.setPassword("");
         profile.setDriverDefinition(Rdbms.H2.getDriverDefinition());
@@ -112,15 +112,15 @@ public class ProjectTestUtils
 
     public static Project createModule(Project project, String moduleName, Path path) throws Exception
     {
-        Project module = new Project( moduleName, true);
-        Entity entity = ProjectTestUtils.createEntity( module, "moduleEntity", "ID" );
-        createScheme( entity );
-        createScript( module, "Post-db", "INSERT INTO moduleEntity (name) VALUES ('foo')" );
-        Serialization.save( module, path );
+        Project module = new Project(moduleName, true);
+        Entity entity = ProjectTestUtils.createEntity(module, "moduleEntity", "ID");
+        createScheme(entity);
+        createScript(module, "Post-db", "INSERT INTO moduleEntity (name) VALUES ('foo')");
+        Serialization.save(module, path);
 
-        Module appModule = new Module( moduleName, project.getModules() );
-        project.setRoles( Arrays.asList( "Administrator", "Guest", "User", "Operator" ) );
-        DataElementUtils.save( appModule );
+        Module appModule = new Module(moduleName, project.getModules());
+        project.setRoles(Arrays.asList("Administrator", "Guest", "User", "Operator"));
+        DataElementUtils.save(appModule);
 
         return module;
     }

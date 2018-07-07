@@ -34,7 +34,7 @@ class BaseDeserializer
     public BaseDeserializer(LoadContext loadContext, final Path path)
     {
         this.loadContext = loadContext;
-        Objects.requireNonNull( path );
+        Objects.requireNonNull(path);
         this.path = path;
     }
 
@@ -44,174 +44,148 @@ class BaseDeserializer
         this.path = null;
     }
 
-    public void readFields(BeModelElement target, Map<String, Object> content, List<Field> fields )
+    public void readFields(BeModelElement target, Map<String, Object> content, List<Field> fields)
     {
         Collection<String> customizableProperties = target.getCustomizableProperties();
 
-        for ( final Field field : fields )
-        {
-            if ( field.name.equals( "name" ) || ( customizableProperties.contains( field.name ) && !content.containsKey( field.name ) ) )
-            {
+        for (final Field field : fields) {
+            if (field.name.equals("name") || (customizableProperties.contains(field.name) && !content.containsKey(field.name))) {
                 continue;
             }
 
-            try
-            {
-                Class<?> type = Beans.getBeanPropertyType( target, field.name );
-                final Object value = readField( content, field, type );
+            try {
+                Class<?> type = Beans.getBeanPropertyType(target, field.name);
+                final Object value = readField(content, field, type);
 
-                if(value != null || !type.isPrimitive())
-                    Beans.setBeanPropertyValue( target, field.name, value );
+                if (value != null || !type.isPrimitive())
+                    Beans.setBeanPropertyValue(target, field.name, value);
 
-                target.customizeProperty( field.name );
-            }
-            catch ( final Exception e )
-            {
-                loadContext.addWarning( new ReadException(e, target, path, "Error reading field "+field.name ) );
+                target.customizeProperty(field.name);
+            } catch (final Exception e) {
+                loadContext.addWarning(new ReadException(e, target, path, "Error reading field " + field.name));
             }
         }
     }
 
-    private Object readField( Map<String, Object> content, Field field, Class<?> klass )
+    private Object readField(Map<String, Object> content, Field field, Class<?> klass)
     {
-        Object fieldValue = content.get( field.name );
-        if ( fieldValue == null )
-        {
+        Object fieldValue = content.get(field.name);
+        if (fieldValue == null) {
             return field.defaultValue;
         }
-        if ( !(fieldValue instanceof Boolean) && !(fieldValue instanceof Number) && !(fieldValue instanceof String)
-                && !(fieldValue instanceof Enum))
-        {
-            throw new IllegalArgumentException( "Invalid value: expected scalar" );
+        if (!(fieldValue instanceof Boolean) && !(fieldValue instanceof Number) && !(fieldValue instanceof String)
+                && !(fieldValue instanceof Enum)) {
+            throw new IllegalArgumentException("Invalid value: expected scalar");
         }
         final String value = fieldValue.toString();
 
-        try
-        {
-            return castValue( klass, value );
-        }
-        catch ( InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e )
-        {
+        try {
+            return castValue(klass, value);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new AssertionError();
         }
     }
 
-    private /*static*/ Object castValue( final Class<?> klass, final String value ) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    private /*static*/ Object castValue(final Class<?> klass, final String value) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        if ( klass == Boolean.class || klass == boolean.class )
-        {
-            return Boolean.parseBoolean( value );
+        if (klass == Boolean.class || klass == boolean.class) {
+            return Boolean.parseBoolean(value);
         }
 
-        if ( klass == Integer.class || klass == int.class )
-        {
-            return Integer.parseInt( value );
+        if (klass == Integer.class || klass == int.class) {
+            return Integer.parseInt(value);
         }
 
-        if ( klass == Long.class || klass == long.class )
-        {
-            return Long.parseLong( value );
+        if (klass == Long.class || klass == long.class) {
+            return Long.parseLong(value);
         }
 
-        if( klass == String.class )
-        {
+        if (klass == String.class) {
             return value;
         }
 
-        if( klass == QueryType.class)
-        {
+        if (klass == QueryType.class) {
             return QueryType.fromString(value);
         }
 
-        return klass.getConstructor( String.class ).newInstance( value );
+        return klass.getConstructor(String.class).newInstance(value);
     }
 
-    protected void readDocumentation( final Map<String, Object> source, final BeModelElement target )
+    protected void readDocumentation(final Map<String, Object> source, final BeModelElement target)
     {
-        final String documenation = ( String ) source.get( SerializationConstants.TAG_COMMENT );
-        target.setComment( documenation != null ? documenation : "" );
+        final String documenation = (String) source.get(SerializationConstants.TAG_COMMENT);
+        target.setComment(documenation != null ? documenation : "");
     }
 
-    protected void readUsedExtras( final Map<String, Object> source, final BeModelElement target ) throws ReadException
+    protected void readUsedExtras(final Map<String, Object> source, final BeModelElement target) throws ReadException
     {
-        final Object serializedExtras = source.get( SerializationConstants.TAG_EXTRAS );
+        final Object serializedExtras = source.get(SerializationConstants.TAG_EXTRAS);
 
-        if ( serializedExtras != null )
-        {
-            final List<String> extras = asStrList( serializedExtras );
-            if(extras.contains( "" ))
-                loadContext.addWarning( new ReadException( target, path, "Extras tag contains empty string: probably it's incorrectly specified in YAML" ) );
-            target.setUsedInExtras( extras.toArray( new String[extras.size()] ) );
+        if (serializedExtras != null) {
+            final List<String> extras = asStrList(serializedExtras);
+            if (extras.contains(""))
+                loadContext.addWarning(new ReadException(target, path, "Extras tag contains empty string: probably it's incorrectly specified in YAML"));
+            target.setUsedInExtras(extras.toArray(new String[extras.size()]));
         }
     }
 
-    protected void readProperties( final Map<String, Object> elementBody, final BeElementWithProperties target ) throws ReadException
+    protected void readProperties(final Map<String, Object> elementBody, final BeElementWithProperties target) throws ReadException
     {
-        final Object serializedProperties = elementBody.get( TAG_PROPERTIES );
+        final Object serializedProperties = elementBody.get(TAG_PROPERTIES);
 
-        if ( serializedProperties == null )
-        {
+        if (serializedProperties == null) {
             return;
         }
 
-        for ( final Object serializedProperty : asList( serializedProperties ) )
-        {
-            final Map<String, Object> serializedProperty0 = asMap( serializedProperty );
+        for (final Object serializedProperty : asList(serializedProperties)) {
+            final Map<String, Object> serializedProperty0 = asMap(serializedProperty);
 
-            if ( serializedProperty0.size() != 1 )
-            {
-                loadContext.addWarning( new ReadException( path, "Property should contain a key-value pair" ) );
+            if (serializedProperty0.size() != 1) {
+                loadContext.addWarning(new ReadException(path, "Property should contain a key-value pair"));
                 continue;
             }
 
             Map.Entry<String, Object> entry = serializedProperty0.entrySet().iterator().next();
             final String name = entry.getKey();
-            final String value = asStr( entry.getValue() );
-            target.setProperty( name, value );
+            final String value = asStr(entry.getValue());
+            target.setProperty(name, value);
         }
     }
 
-    protected void readIcon( final Map<String, Object> element, final Icon icon )
+    protected void readIcon(final Map<String, Object> element, final Icon icon)
     {
-        try
-        {
-            if ( element.containsKey( SerializationConstants.ATTR_ICON ) )
-            {
-                icon.setMetaPath( ( String ) element.get( SerializationConstants.ATTR_ICON ) );
+        try {
+            if (element.containsKey(SerializationConstants.ATTR_ICON)) {
+                icon.setMetaPath((String) element.get(SerializationConstants.ATTR_ICON));
                 icon.load();
-                icon.setOriginModuleName( icon.getOwner().getProject().getProjectOrigin() );
-                ( (BeModelCollection<?>) icon.getOwner() ).customizeProperty( "icon" );
+                icon.setOriginModuleName(icon.getOwner().getProject().getProjectOrigin());
+                ((BeModelCollection<?>) icon.getOwner()).customizeProperty("icon");
             }
-        }
-        catch ( final ReadException e )
-        {
-            loadContext.addWarning( e );
+        } catch (final ReadException e) {
+            loadContext.addWarning(e);
         }
     }
 
-    @SuppressWarnings( "unchecked" )
-    protected List<String> readList( final Map<String, Object> element, final String attributeName )
+    @SuppressWarnings("unchecked")
+    protected List<String> readList(final Map<String, Object> element, final String attributeName)
     {
-        final Object value = element.get( attributeName );
+        final Object value = element.get(attributeName);
 
-        if ( value instanceof List )
-            return Collections.unmodifiableList( ( List<String> ) value );
+        if (value instanceof List)
+            return Collections.unmodifiableList((List<String>) value);
 
-        final String strValue = ( String ) value;
+        final String strValue = (String) value;
 
-        if ( strValue == null || strValue.trim().isEmpty() )
-        {
+        if (strValue == null || strValue.trim().isEmpty()) {
             return Collections.emptyList();
         }
 
         final List<String> result = new ArrayList<>();
 
-        for ( String item : strValue.trim().split( ";" ) )
-        {
+        for (String item : strValue.trim().split(";")) {
             item = item.trim();
-            if ( !item.isEmpty() )
-            {
-                result.add( item );
+            if (!item.isEmpty()) {
+                result.add(item);
             }
         }
 
@@ -220,83 +194,79 @@ class BaseDeserializer
 
     public List<String> asStrList(Object object) throws ReadException
     {
-        if ( object == null )
+        if (object == null)
             return Collections.emptyList();
-        if ( object instanceof String )
-            return Collections.singletonList( ( String ) object );
-        if ( object instanceof List )
-        {
-            final List<?> list = ( List<?> ) object;
+        if (object instanceof String)
+            return Collections.singletonList((String) object);
+        if (object instanceof List) {
+            final List<?> list = (List<?>) object;
             final List<String> strings = new ArrayList<>();
-            for ( Object element : list )
-                if ( element instanceof String )
-                    strings.add( ( String ) element );
+            for (Object element : list)
+                if (element instanceof String)
+                    strings.add((String) element);
                 else
-                    throw new ReadException( path, "Invalid file format: string expected" );
+                    throw new ReadException(path, "Invalid file format: string expected");
             return strings;
         }
 
-        throw new ReadException( path, "Invalid file format: list or string expected" );
+        throw new ReadException(path, "Invalid file format: list or string expected");
     }
 
-    @SuppressWarnings( "unchecked" )
-    protected List<Object> asList( Object object ) throws ReadException
+    @SuppressWarnings("unchecked")
+    protected List<Object> asList(Object object) throws ReadException
     {
-        if ( object instanceof List )
-            return ( List<Object> ) object;
+        if (object instanceof List)
+            return (List<Object>) object;
 
-        throw new ReadException( path, "Invalid file format: list expected" );
+        throw new ReadException(path, "Invalid file format: list expected");
     }
 
-    protected String asStr( Object object ) throws ReadException
+    protected String asStr(Object object) throws ReadException
     {
-        if ( object instanceof String )
-            return ( String ) object;
+        if (object instanceof String)
+            return (String) object;
 
-        throw new ReadException( path, "Invalid file format: string expected" );
+        throw new ReadException(path, "Invalid file format: string expected");
     }
 
-    protected boolean nullableAsBool( Object object ) throws ReadException
+    protected boolean nullableAsBool(Object object) throws ReadException
     {
-        if ( object == null )
+        if (object == null)
             return false;
 
-        if ( object instanceof Boolean )
-            return ( boolean ) object;
+        if (object instanceof Boolean)
+            return (boolean) object;
 
-        if ( object.toString().equals( "true" ) )
+        if (object.toString().equals("true"))
             return true;
 
-        if ( object.toString().equals( "false" ) )
+        if (object.toString().equals("false"))
             return false;
 
-        throw new ReadException( path, "Invalid file format: boolean expected" );
+        throw new ReadException(path, "Invalid file format: boolean expected");
     }
 
-    @SuppressWarnings( "unchecked" )
-    protected List<Map<String, Object>> asMaps( Object object )
+    @SuppressWarnings("unchecked")
+    protected List<Map<String, Object>> asMaps(Object object)
     {
-        if ( object instanceof List )
-        {
-            final List<?> list = ( List<?> ) object;
+        if (object instanceof List) {
+            final List<?> list = (List<?>) object;
             final List<Map<String, Object>> maps = new ArrayList<>();
-            for ( Object element : list )
-                if ( element instanceof Map )
-                    maps.add( ( Map<String, Object> ) element );
+            for (Object element : list)
+                if (element instanceof Map)
+                    maps.add((Map<String, Object>) element);
             return maps;
         }
 
-        if ( object instanceof Map )
-        {
+        if (object instanceof Map) {
             final List<Map<String, Object>> splitted = new ArrayList<>();
-            final Map<String, Object> map = ( Map<String, Object> ) object;
-            for ( Map.Entry<String, Object> entry : map.entrySet() )
-            {
+            final Map<String, Object> map = (Map<String, Object>) object;
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
                 final String name = entry.getKey();
                 final Object value = entry.getValue();
                 final Map<String, Object> adaptedEntry = new LinkedHashMap<>();
-                adaptedEntry.put( name, value );
-                splitted.add( adaptedEntry );
+                adaptedEntry.put(name, value);
+                splitted.add(adaptedEntry);
             }
             return splitted;
         }
@@ -304,117 +274,104 @@ class BaseDeserializer
         return Collections.emptyList();
     }
 
-    protected List<Map.Entry<String, Object>> asPairs( Object object ) throws ReadException
+    protected List<Map.Entry<String, Object>> asPairs(Object object) throws ReadException
     {
-        if ( object instanceof List )
-        {
-            final List<?> list = ( List<?> ) object;
+        if (object instanceof List) {
+            final List<?> list = (List<?>) object;
             final List<Map.Entry<String, Object>> pairs = new ArrayList<>();
-            for ( Object listPair : list )
-            {
-                if ( !( listPair instanceof Map ) )
-                    throw new ReadException( path, "Invalid file format: pair expected" );
+            for (Object listPair : list) {
+                if (!(listPair instanceof Map))
+                    throw new ReadException(path, "Invalid file format: pair expected");
 
-                @SuppressWarnings( "unchecked" )
-                final Map<String, Object> map = ( Map<String, Object> ) listPair;
+                @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) listPair;
 
-                if ( map.size() != 1 )
-                    throw new ReadException( path, "Invalid file format: pair expected" );
+                if (map.size() != 1)
+                    throw new ReadException(path, "Invalid file format: pair expected");
 
-                pairs.add( map.entrySet().iterator().next() );
+                pairs.add(map.entrySet().iterator().next());
             }
             return pairs;
         }
 
-        throw new ReadException( path, "Invalid file format: list of pairs expected" );
+        throw new ReadException(path, "Invalid file format: list of pairs expected");
     }
 
     // public -> protected
-    @SuppressWarnings( "unchecked" )
-    public Map<String, Object> asMap( Object object ) throws ReadException
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> asMap(Object object) throws ReadException
     {
-        if ( object instanceof Map )
-            return ( Map<String, Object> ) object;
-        throw new ReadException( path, "Invalid file format: map expected" );
+        if (object instanceof Map)
+            return (Map<String, Object>) object;
+        throw new ReadException(path, "Invalid file format: map expected");
     }
 
-    protected Map<String, Object> asMapOrEmpty( Object object ) throws ReadException
+    protected Map<String, Object> asMapOrEmpty(Object object) throws ReadException
     {
-        if(object == null)
+        if (object == null)
             return Collections.emptyMap();
         return asMap(object);
     }
 
-    @SuppressWarnings( "unchecked" )
-    protected Map<String, Object> getRootMap( Object object, String name ) throws ReadException
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> getRootMap(Object object, String name) throws ReadException
     {
-        try
-        {
-            if(!(object instanceof Map))
+        try {
+            if (!(object instanceof Map))
                 throw new IllegalArgumentException("Invalid file format: map expected");
-            Map<String, Object> topLevelMap = ( Map<String, Object> ) object;
-            if(!topLevelMap.containsKey( name ))
-                throw new IllegalArgumentException("Invalid file format: top-level element '"+name+"' must be present");
-            if(topLevelMap.size() > 1)
-                throw new IllegalArgumentException("Invalid file format: there must be only one top-level element '"+name+"'");
-            Object rootObject = topLevelMap.get( name );
-            if(!(rootObject instanceof Map))
-                throw new IllegalArgumentException("Invalid file format: top-level element '"+name+"' must be a map");
-            return ( Map<String, Object> ) rootObject;
-        }
-        catch ( IllegalArgumentException e )
-        {
-            throw new ReadException( path, e.getMessage() );
+            Map<String, Object> topLevelMap = (Map<String, Object>) object;
+            if (!topLevelMap.containsKey(name))
+                throw new IllegalArgumentException("Invalid file format: top-level element '" + name + "' must be present");
+            if (topLevelMap.size() > 1)
+                throw new IllegalArgumentException("Invalid file format: there must be only one top-level element '" + name + "'");
+            Object rootObject = topLevelMap.get(name);
+            if (!(rootObject instanceof Map))
+                throw new IllegalArgumentException("Invalid file format: top-level element '" + name + "' must be a map");
+            return (Map<String, Object>) rootObject;
+        } catch (IllegalArgumentException e) {
+            throw new ReadException(path, e.getMessage());
         }
     }
 
-    protected void checkChildren( BeModelElement context, Map<String, Object> element, Object... allowedFields )
+    protected void checkChildren(BeModelElement context, Map<String, Object> element, Object... allowedFields)
     {
-        Set<String> allowed = getAllowedFields( allowedFields );
+        Set<String> allowed = getAllowedFields(allowedFields);
 
-        for ( String name : element.keySet() )
-        {
-            if ( !allowed.contains( name ) )
-            {
+        for (String name : element.keySet()) {
+            if (!allowed.contains(name)) {
                 String message = "Unknown child element found: " + name + ", possible values: " + allowed;
-                loadContext.addWarning( new ReadException( context, path, message ) );
+                loadContext.addWarning(new ReadException(context, path, message));
             }
         }
     }
 
-    protected Set<String> getAllowedFields( Object... allowedFields )
+    protected Set<String> getAllowedFields(Object... allowedFields)
     {
         Set<String> allowed = new HashSet<>();
 
-        for ( Object allowedField : allowedFields )
-        {
-            if ( allowedField instanceof Field )
-            {
-                allowed.add( ( ( Field ) allowedField ).name );
-            }
-            else if ( allowedField instanceof Collection )
-            {
-                allowed.addAll( getAllowedFields( ( ( Collection<?> ) allowedField ).toArray() ) );
-            }
-            else
-                allowed.add( allowedField.toString() );
+        for (Object allowedField : allowedFields) {
+            if (allowedField instanceof Field) {
+                allowed.add(((Field) allowedField).name);
+            } else if (allowedField instanceof Collection) {
+                allowed.addAll(getAllowedFields(((Collection<?>) allowedField).toArray()));
+            } else
+                allowed.add(allowedField.toString());
         }
 
         return allowed;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void save(BeModelElement element)
     {
-        if(element == null)
+        if (element == null)
             return;
-        @SuppressWarnings( "rawtypes" )
+        @SuppressWarnings("rawtypes")
         BeModelCollection origin = element.getOrigin();
-        if(origin == null)
+        if (origin == null)
             return;
-        if(origin.contains( element.getName() ))
-            loadContext.addWarning( new ReadException( element, path, "Duplicate element" ) );
+        if (origin.contains(element.getName()))
+            loadContext.addWarning(new ReadException(element, path, "Duplicate element"));
         else
-            origin.put( element );
+            origin.put(element);
     }
 }

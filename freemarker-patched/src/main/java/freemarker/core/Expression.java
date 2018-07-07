@@ -21,7 +21,7 @@
  *    Alternately, this acknowledgement may appear in the software itself,
  *    if and wherever such third-party acknowledgements normally appear.
  *
- * 4. Neither the name "FreeMarker", "Visigoth", nor any of the names of the 
+ * 4. Neither the name "FreeMarker", "Visigoth", nor any of the names of the
  *    project contributors may be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact visigoths@visigoths.org.
@@ -66,7 +66,7 @@ import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 
 /**
- * An abstract class for nodes in the parse tree 
+ * An abstract class for nodes in the parse tree
  * that represent a FreeMarker expression.
  */
 abstract public class Expression extends TemplateObject {
@@ -76,26 +76,26 @@ abstract public class Expression extends TemplateObject {
      *     during template execution).
      */
     protected abstract TemplateModel _eval(Environment env) throws TemplateException;
-    
+
     abstract boolean isLiteral();
 
     // Used to store a constant return value for this expression. Only if it
     // is possible, of course.
-    
+
     TemplateModel constantValue;
 
     // Hook in here to set the constant value if possible.
-    
+
     void setLocation(Template template, int beginColumn, int beginLine, int endColumn, int endLine)
-    throws
-        ParseException
+            throws
+            ParseException
     {
         super.setLocation(template, beginColumn, beginLine, endColumn, endLine);
         if (isLiteral()) {
             try {
                 constantValue = _eval(null);
             } catch (Exception e) {
-            // deliberately ignore.
+                // deliberately ignore.
             }
         }
     }
@@ -106,11 +106,11 @@ abstract public class Expression extends TemplateObject {
     public final TemplateModel getAsTemplateModel(Environment env) throws TemplateException {
         return eval(env);
     }
-    
+
     final TemplateModel eval(Environment env) throws TemplateException {
         return constantValue != null ? constantValue : _eval(env);
     }
-    
+
     public String evalAndCoerceToString(Environment env) throws TemplateException {
         return EvalUtil.coerceModelToString(eval(env), this, null, env);
     }
@@ -121,11 +121,11 @@ abstract public class Expression extends TemplateObject {
     String evalAndCoerceToString(Environment env, String seqTip) throws TemplateException {
         return EvalUtil.coerceModelToString(eval(env), this, seqTip, env);
     }
-    
+
     static String coerceModelToString(TemplateModel tm, Expression exp, Environment env) throws TemplateException {
         return EvalUtil.coerceModelToString(tm, exp, null, env);
     }
-    
+
     Number evalToNumber(Environment env) throws TemplateException {
         TemplateModel model = eval(env);
         return modelToNumber(model, env);
@@ -138,7 +138,7 @@ abstract public class Expression extends TemplateObject {
             throw new NonNumericalException(this, model, env);
         }
     }
-    
+
     boolean evalToBoolean(Environment env) throws TemplateException {
         TemplateModel model = eval(env);
         return modelToBoolean(model, env);
@@ -153,7 +153,7 @@ abstract public class Expression extends TemplateObject {
             throw new NonBooleanException(this, model, env);
         }
     }
-    
+
     final Expression deepCloneWithIdentifierReplaced(
             String replacedIdentifier, Expression replacement, ReplacemenetState replacementState) {
         Expression clone = deepCloneWithIdentifierReplaced_inner(replacedIdentifier, replacement, replacementState);
@@ -162,17 +162,17 @@ abstract public class Expression extends TemplateObject {
         }
         return clone;
     }
-    
+
     static class ReplacemenetState {
         /**
          * If the replacement expression is not in use yet, we don't have to clone it.
          */
-        boolean replacementAlreadyInUse; 
+        boolean replacementAlreadyInUse;
     }
 
     /**
      * This should return an equivalent new expression object (or an identifier replacement expression).
-     * The position need not be filled, unless it will be different from the position of what were cloning. 
+     * The position need not be filled, unless it will be different from the position of what were cloning.
      */
     protected abstract Expression deepCloneWithIdentifierReplaced_inner(
             String replacedIdentifier, Expression replacement, ReplacemenetState replacementState);
@@ -200,9 +200,9 @@ abstract public class Expression extends TemplateObject {
             return true;
         }
     }
-    
+
     void assertNonNull(TemplateModel model, Environment env) throws InvalidReferenceException {
         if (model == null) throw InvalidReferenceException.getInstance(this, env);
     }
-    
+
 }

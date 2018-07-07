@@ -19,6 +19,6 @@ public class TableDefBeanInfo extends BeanInfoEx
         add(new PropertyDescriptorEx("columnsCount", beanClass, "getColumnsCount", null));
         add(new PropertyDescriptorEx("ddl", beanClass, "getDdl", null));
         add("usedInExtras");
-        add(new PropertyDescriptorEx( "available", beanClass, "isAvailable", null ));
+        add(new PropertyDescriptorEx("available", beanClass, "isAvailable", null));
     }
 }

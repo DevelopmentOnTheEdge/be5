@@ -5,21 +5,21 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElement;
 public class MatchesRule implements SelectorRule
 {
     private final SelectorRule rule;
-    
+
     public MatchesRule(SelectorRule rule)
     {
         this.rule = rule;
     }
 
     @Override
-    public boolean matches( BeModelElement element )
+    public boolean matches(BeModelElement element)
     {
-        return rule.matches( element );
+        return rule.matches(element);
     }
 
     @Override
     public String toString()
     {
-        return ":matches("+rule+")";
+        return ":matches(" + rule + ")";
     }
 }

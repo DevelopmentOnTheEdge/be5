@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  * All methods, which not generate RecordModel, not use caches!<br>
  * All methods throws EntityModelException if the method have internal error
- * EntityModel are generally not synchronized. It is recommended to create separate 
- * instances for each thread. If multiple threads access a format concurrently, 
+ * EntityModel are generally not synchronized. It is recommended to create separate
+ * instances for each thread. If multiple threads access a format concurrently,
  * it must be synchronized externally.
  * @author ruslan
  */
@@ -38,17 +38,17 @@ public interface EntityModel<T>
      * @return <tt>true</tt> if this table contains no records
      */
     boolean isEmpty();
-    
+
     /**
-     * Returns <tt>true</tt> if entity contains record consistent with the  
+     * Returns <tt>true</tt> if entity contains record consistent with the
      * specified condition.
      * This method never use caches.
      * @param conditions condition values
-     * @return <tt>true</tt> if entity contains record consistent with 
+     * @return <tt>true</tt> if entity contains record consistent with
      * conditions, otherwise false
      */
     boolean contains(Map<String, ? super Object> conditions);
-    
+
     /**
      * Adds record into database from map, where key is the column name
      * and key value is the column value.<br>
@@ -59,7 +59,7 @@ public interface EntityModel<T>
      * @return generated record identify number
      */
     <R> R add(Map<String, ? super Object> values);
-    
+
     /**
      * Adds record into database from map, where key is the column name
      * and key value is the column value.<br>
@@ -68,33 +68,33 @@ public interface EntityModel<T>
      * @return generated record identify number
      */
     <R> R add(DynamicPropertySet dps);
-    
+
     /**
-     * Returns <tt>true</tt> if entity contains record consistent with the  
-     * all specified condition in collection otherwise <tt>false</tt> 
+     * Returns <tt>true</tt> if entity contains record consistent with the
+     * all specified condition in collection otherwise <tt>false</tt>
      * @param c collection of conditions
-     * @return <tt>true</tt> if entity contains record consistent with the  
-     * all specified condition 
+     * @return <tt>true</tt> if entity contains record consistent with the
+     * all specified condition
      */
     boolean containsAll(Collection<Map<String, ? super Object>> c);
-    
+
     /**
      * Adds all records from collection into database.
      * @param c collection with column names and values
-     * @return list with record identify numbers 
+     * @return list with record identify numbers
      */
     <R> List<R> addAll(Collection<Map<String, ? super Object>> c);
 
-    /** 
+    /**
      * Returns the record object with the specified id
      * @param id value of primary key
      * @return the record object with the specified id otherwise null
      */
     RecordModel<T> get(T id);
 
-    /** 
-     * Returns the record object consistent with the specified condition, 
-     * where key is the column name with the value equals map key value 
+    /**
+     * Returns the record object consistent with the specified condition,
+     * where key is the column name with the value equals map key value
      * @param conditions condition values
      * @return the record object with the specified id otherwise null
      */
@@ -169,7 +169,7 @@ public interface EntityModel<T>
     //void setForceMany(String propertyName, String value, Map<String, String> conditions);
 
 //    void setForceMany(Map<String, String> values, Map<String, String> conditions);
-    
+
 //    /**
 //     * Operation removes all the records consistent with any of conditions in collection.
 //     * The method can check the values on consistency and threw exceptions<br>
@@ -194,7 +194,7 @@ public interface EntityModel<T>
      * @return number of affected rows
      */
     int removeBy(Map<String, ? super Object> conditions);
-    
+
     /**
      * Deletes the record with the specified identifiers.
      * The method can check the values on consistency and threw exceptions<br>
@@ -216,14 +216,14 @@ public interface EntityModel<T>
     /**
      * Spreads collection and collect elements from function to list.<br>
      * For example:<br>
-     * <code>List<DynamicPropertySet> list = 
+     * <code>List<DynamicPropertySet> list =
      *      entity.<DynamicPropertySet>collect( ( bean, row ) -> row % 2 == 0 ? bean : null, Collections.<String, Object>.emptyMap() );
      * </code>
      * @param conditions condition values
      * @param lambda handler
      * @return list with the function results
      */
-//	<T> List<T> collect(Map<String, ? super Object> conditions, BiFunction<R, Integer, T> lambda);
+//  <T> List<T> collect(Map<String, ? super Object> conditions, BiFunction<R, Integer, T> lambda);
 
     /**
      * Returns entity name.

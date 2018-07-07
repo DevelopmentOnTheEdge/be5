@@ -6,6 +6,6 @@ public class NoProjectException extends Exception
 
     public NoProjectException(String projectName)
     {
-        super("Project '"+projectName+"' not found");
+        super("Project '" + projectName + "' not found");
     }
 }

@@ -17,7 +17,7 @@ class CustomizationDeserializer extends FileDeserializer
 
     CustomizationDeserializer(YamlDeserializer yamlDeserializer, LoadContext loadContext, final Path path, final Module target) throws ReadException
     {
-        super( loadContext, path, true );
+        super(loadContext, path, true);
         this.yamlDeserializer = yamlDeserializer;
         this.target = target;
     }
@@ -29,10 +29,10 @@ class CustomizationDeserializer extends FileDeserializer
     }
 
     @Override
-    protected void doDeserialize( Object serializedRoot ) throws ReadException
+    protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        yamlDeserializer.readCustomizations( asMap( serializedRoot ), target, replace );
-        target.getProject().getAutomaticDeserializationService().registerFile( path, ManagedFileType.CUSTOMIZATION );
+        yamlDeserializer.readCustomizations(asMap(serializedRoot), target, replace);
+        target.getProject().getAutomaticDeserializationService().registerFile(path, ManagedFileType.CUSTOMIZATION);
     }
 
     private PageCustomizations getResult()

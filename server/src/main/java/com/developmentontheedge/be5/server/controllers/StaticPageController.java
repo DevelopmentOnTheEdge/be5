@@ -36,9 +36,9 @@ public class StaticPageController extends JsonApiModelController
 
         try{
             return data(new ResourceData(STATIC_ACTION, new StaticPagePresentation(
-                            "",
-                            userAwareMeta.getStaticPageContent(requestSubUrl)),
-                            Collections.singletonMap(SELF_LINK, url)));
+                    "",
+                    userAwareMeta.getStaticPageContent(requestSubUrl)),
+                    Collections.singletonMap(SELF_LINK, url)));
         }
         catch(Be5Exception e)
         {
@@ -46,5 +46,5 @@ public class StaticPageController extends JsonApiModelController
             return error(responseHelper.getErrorModel(e, Collections.singletonMap(SELF_LINK, url)));
         }
     }
-	
+
 }

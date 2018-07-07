@@ -10,15 +10,15 @@ import java.util.List;
 public class LoadContext
 {
     private final List<ReadException> warnings = new ArrayList<>();
-    
+
     public void addWarning(ReadException ex)
     {
         throw new RuntimeException(ex);
     }
-    
+
     public List<ReadException> getWarnings()
     {
-        return Collections.unmodifiableList( warnings );
+        return Collections.unmodifiableList(warnings);
     }
 
     /**
@@ -26,9 +26,8 @@ public class LoadContext
      */
     public void check()
     {
-        if(!warnings.isEmpty())
-        {
-            throw new IllegalStateException( "There are " + warnings.size() + " errors:\n" + StreamEx.of( warnings ).joining( "\n" ) );
+        if (!warnings.isEmpty()) {
+            throw new IllegalStateException("There are " + warnings.size() + " errors:\n" + StreamEx.of(warnings).joining("\n"));
         }
     }
 }

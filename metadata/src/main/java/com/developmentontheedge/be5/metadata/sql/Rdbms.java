@@ -32,70 +32,64 @@ import java.util.logging.Logger;
 
 public enum Rdbms
 {
-    DB2( DbmsType.DB2,
+    DB2(DbmsType.DB2,
             new Db2MacroProcessorStrategy(),
             new Db2TypeManager(),
             new Db2SchemaReader(),
             "org.eclipse.datatools.enablement.ibm.db2.luw.connectionProfile",
-            "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97" ),
-    MYSQL( DbmsType.MYSQL,
+            "DriverDefn.org.eclipse.datatools.enablement.ibm.db2.luw.jdbc4.driverTemplate.IBM Data Server Driver for JDBC and SQLJ (JDBC 4.0) Default", "v97"),
+    MYSQL(DbmsType.MYSQL,
             new MySqlMacroProcessorStrategy(),
             new MySqlTypeManager(),
             new MySqlSchemaReader(),
-            "", "com.mysql.jdbc.Driver", "6" ),
-    ORACLE( DbmsType.ORACLE,
+            "", "com.mysql.jdbc.Driver", "6"),
+    ORACLE(DbmsType.ORACLE,
             new OracleMacroProcessorStrategy(),
             new OracleTypeManager(),
             new OracleSchemaReader(),
-            "", "oracle.jdbc.driver.OracleDriver", "11" ),
-    SQLSERVER( DbmsType.SQLSERVER,
+            "", "oracle.jdbc.driver.OracleDriver", "11"),
+    SQLSERVER(DbmsType.SQLSERVER,
             new SqlServerMacroProcessorStrategy(),
             new SqlServerTypeManager(),
             new SqlServerSchemaReader(),
             "org.eclipse.datatools.enablement.msft.sqlserver.connectionProfile",
             "DriverDefn.org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate.Microsoft SQL Server 2008 JDBC Driver", "2008"),
-    POSTGRESQL( DbmsType.POSTGRESQL,
+    POSTGRESQL(DbmsType.POSTGRESQL,
             new PostgresMacroProcessorStrategy(),
             new PostgresTypeManager(),
             new PostgresSchemaReader(),
-            "", "org.postgresql.Driver", "91" ),
+            "", "org.postgresql.Driver", "91"),
     BESQL(DbmsType.BESQL,
             new BeSQLMacroProcessorStrategy(),
             new PostgresTypeManager(),
-            null, "", "", "" ),
+            null, "", "", ""),
     H2(DbmsType.H2,
             new PostgresMacroProcessorStrategy(),
             new H2TypeManager(),
             new H2SchemaReader(),
-            "", "org.h2.Driver", "" );
+            "", "org.h2.Driver", "");
 
     private static final Logger log = Logger.getLogger(Rdbms.class.getName());
 
     public static Rdbms getRdbms(final String url)
     {
-        String realUrl = url.startsWith( "jdbc:" )?url.substring( "jdbc:".length() ):url;
-        if(realUrl.startsWith( "mysql:" ))
-        {
+        String realUrl = url.startsWith("jdbc:") ? url.substring("jdbc:".length()) : url;
+        if (realUrl.startsWith("mysql:")) {
             return Rdbms.MYSQL;
         }
-        if(realUrl.startsWith( "db2:" ))
-        {
+        if (realUrl.startsWith("db2:")) {
             return Rdbms.DB2;
         }
-        if(realUrl.startsWith( "oracle:" ))
-        {
+        if (realUrl.startsWith("oracle:")) {
             return Rdbms.ORACLE;
         }
-        if(realUrl.startsWith( "postgresql:" ))
-        {
+        if (realUrl.startsWith("postgresql:")) {
             return Rdbms.POSTGRESQL;
         }
-        if(realUrl.startsWith( "h2:" ))
-        {
+        if (realUrl.startsWith("h2:")) {
             return Rdbms.H2;
         }
-        if(realUrl.startsWith( "sqlserver:" ) || realUrl.startsWith( "microsoft:sqlserver:" ) || realUrl.startsWith( "jtds:sqlserver:" ))
-        {
+        if (realUrl.startsWith("sqlserver:") || realUrl.startsWith("microsoft:sqlserver:") || realUrl.startsWith("jtds:sqlserver:")) {
             return Rdbms.SQLSERVER;
         }
 
@@ -103,19 +97,19 @@ public enum Rdbms
         throw new RuntimeException("Database type not supported or not determined: " + realUrl);
     }
 
-    public static Rdbms getRdbms(DbmsConnector connector){
+    public static Rdbms getRdbms(DbmsConnector connector)
+    {
         return getRdbms(connector.getType());
     }
 
     public static Rdbms getRdbms(DbmsType dbmsType)
     {
         Rdbms[] values = Rdbms.values();
-        for (int i = 0; i < values.length; i++)
-        {
-            if(values[i].getType() == dbmsType)return values[i];
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].getType() == dbmsType) return values[i];
         }
 
-        throw new IllegalStateException( "Unsupported connector: " + dbmsType );
+        throw new IllegalStateException("Unsupported connector: " + dbmsType);
     }
 
     public Dbms getDbms()
@@ -135,7 +129,7 @@ public enum Rdbms
     private final String driverDefinition;
     private final String version;
 
-    private Rdbms( DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version )
+    private Rdbms(DbmsType type, IMacroProcessorStrategy macroProcessor, DbmsTypeManager typeManager, DbmsSchemaReader schemaReader, String providerId, String driverDefinition, String version)
     {
         this.type = type;
         this.macroProcessor = macroProcessor;
@@ -153,7 +147,7 @@ public enum Rdbms
 
     public String getAntName()
     {
-        return type.getName().equals( "postgres" ) ? "postgresql" : type.getName();
+        return type.getName().equals("postgres") ? "postgresql" : type.getName();
     }
 
     public IMacroProcessorStrategy getMacroProcessorStrategy()
@@ -191,51 +185,46 @@ public enum Rdbms
         return type.getDefaultPort();
     }
 
-    public String createConnectionUrl( boolean forContext, String host, int port, String database, Map<String, String> properties )
+    public String createConnectionUrl(boolean forContext, String host, int port, String database, Map<String, String> properties)
     {
-        switch(this)
-        {
-        case ORACLE:
-            return "jdbc:oracle:thin:@"+host+":"+port+":"+(database == null ? properties.get( "SID" ) : database);
-        case H2:
-            return "jdbc:h2:" + host;
-        case SQLSERVER:
-            if("jtds".equals( properties.get( "driver" )))
-            {
-                StringBuilder url = new StringBuilder( "jdbc:jtds:sqlserver://" ).append( host ).append( ':' ).append( port ).append( '/' )
-                        .append( database );
-                for(Entry<String, String> entry : properties.entrySet())
-                {
-                    if(!entry.getKey().equals( "driver" ))
-                        url.append(';').append( entry.getKey() ).append( '=' ).append( entry.getValue() );
+        switch (this) {
+            case ORACLE:
+                return "jdbc:oracle:thin:@" + host + ":" + port + ":" + (database == null ? properties.get("SID") : database);
+            case H2:
+                return "jdbc:h2:" + host;
+            case SQLSERVER:
+                if ("jtds".equals(properties.get("driver"))) {
+                    StringBuilder url = new StringBuilder("jdbc:jtds:sqlserver://").append(host).append(':').append(port).append('/')
+                            .append(database);
+                    for (Entry<String, String> entry : properties.entrySet()) {
+                        if (!entry.getKey().equals("driver"))
+                            url.append(';').append(entry.getKey()).append('=').append(entry.getValue());
+                    }
+                    return url.toString();
+                }
+                return "jdbc:sqlserver://" + host + ":" + port + ";databaseName=" + database;
+            default:
+                StringBuilder url = new StringBuilder("jdbc:").append(toString().toLowerCase()).append("://").append(host).append(':')
+                        .append(port).append('/').append(database);
+                if (!properties.isEmpty()) {
+                    if (this == DB2)
+                        url.append(':');
+                    else
+                        url.append('?');
+
+                    boolean first = true;
+                    for (Entry<String, String> entry : properties.entrySet()) {
+                        if (!first) {
+                            if (forContext)
+                                url.append(';');
+                            else
+                                url.append('&');
+                        }
+                        first = false;
+                        url.append(entry.getKey()).append('=').append(entry.getValue());
+                    }
                 }
                 return url.toString();
-            }
-            return "jdbc:sqlserver://"+host+":"+port+";databaseName="+database;
-        default:
-            StringBuilder url = new StringBuilder( "jdbc:" ).append( toString().toLowerCase() ).append( "://" ).append( host ).append( ':' )
-                    .append( port ).append( '/' ).append( database );
-            if(!properties.isEmpty())
-            {
-                if(this == DB2)
-                    url.append( ':' );
-                else
-                    url.append( '?' );
-
-                boolean first = true;
-                for(Entry<String, String> entry : properties.entrySet())
-                {
-                    if(!first){
-                        if(forContext)
-                            url.append( ';' );
-                        else
-                            url.append( '&' );
-                    }
-                    first = false;
-                    url.append( entry.getKey() ).append( '=' ).append( entry.getValue() );
-                }
-            }
-            return url.toString();
         }
     }
 

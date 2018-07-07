@@ -14,7 +14,7 @@ public class GroovyOperationBeanInfo extends OperationBeanInfo
     public void initProperties() throws Exception
     {
         super.initProperties();
-        findPropertyDescriptor( "code" ).setHidden( true );
-        add(SourceFileSelector.register( "fileName", beanClass, SourceFileCollection.NAMESPACE_GROOVY_OPERATION ));
+        findPropertyDescriptor("code").setHidden(true);
+        add(SourceFileSelector.register("fileName", beanClass, SourceFileCollection.NAMESPACE_GROOVY_OPERATION));
     }
 }

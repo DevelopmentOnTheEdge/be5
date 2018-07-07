@@ -6,21 +6,21 @@ import com.developmentontheedge.be5.metadata.model.base.BeVectorCollection;
 public class MassChanges extends BeVectorCollection<MassChange>
 {
 
-    public MassChanges( final Module module )
+    public MassChanges(final Module module)
     {
-        super( Module.MASS_CHANGES, MassChange.class, module, true );
+        super(Module.MASS_CHANGES, MassChange.class, module, true);
     }
-    
+
     @Override
-    protected void fireElementRemoved( Object source, String dataElementName, BeModelElement oldElement )
+    protected void fireElementRemoved(Object source, String dataElementName, BeModelElement oldElement)
     {
         fireCodeChanged();
     }
-    
+
     @Override
     public void fireCodeChanged()
     {
-        getProject().getAutomaticSerializationService().fireCodeChanged( this );
+        getProject().getAutomaticSerializationService().fireCodeChanged(this);
     }
 
 }

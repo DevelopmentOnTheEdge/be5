@@ -15,17 +15,17 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
 {
     private boolean unique;
     private String originModuleName;
-    
-    public IndexDef( String name, BeModelCollection<IndexDef> origin )
+
+    public IndexDef(String name, BeModelCollection<IndexDef> origin)
     {
-        super( name, IndexColumnDef.class, origin, true );
+        super(name, IndexColumnDef.class, origin, true);
         this.originModuleName = getModule().getName();
         propagateCodeChange();
     }
-    
+
     public TableDef getTable()
     {
-        return ( TableDef ) getOrigin().getOrigin();
+        return (TableDef) getOrigin().getOrigin();
     }
 
     @PropertyName("Unique")
@@ -34,7 +34,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
         return unique;
     }
 
-    public void setUnique( boolean unique )
+    public void setUnique(boolean unique)
     {
         this.unique = unique;
         fireCodeChanged();
@@ -42,9 +42,8 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
 
     public boolean isFunctional()
     {
-        for(IndexColumnDef col : this)
-        {
-            if(col.isFunctional())
+        for (IndexColumnDef col : this) {
+            if (col.isFunctional())
                 return true;
         }
         return false;
@@ -53,7 +52,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     @Override
     public String getDdl()
     {
-        return getDropDdl()+getCreateDdl();
+        return getDropDdl() + getCreateDdl();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     public String getCreateDdl()
     {
         Rdbms rdbms = getProject().getDatabaseSystem();
-        if(rdbms == null)
+        if (rdbms == null)
             return "";
         return rdbms.getTypeManager().getCreateIndexClause(this);
     }
@@ -70,17 +69,17 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     public String getDropDdl()
     {
         Rdbms rdbms = getProject().getDatabaseSystem();
-        if(rdbms == null)
+        if (rdbms == null)
             return "";
-        return rdbms.getTypeManager().getDropIndexClause( getName(), getTable().getEntityName() )+";\n";
+        return rdbms.getTypeManager().getDropIndexClause(getName(), getTable().getEntityName()) + ";\n";
     }
 
     @Override
-    public String getDiffDdl( DdlElement other, SqlExecutor sql )
+    public String getDiffDdl(DdlElement other, SqlExecutor sql)
     {
-        if(!(other instanceof IndexDef))
+        if (!(other instanceof IndexDef))
             return getCreateDdl();
-        if(( ( IndexDef ) other ).getCreateDdl().equals( getCreateDdl() ))
+        if (((IndexDef) other).getCreateDdl().equals(getCreateDdl()))
             return "";
         return getDdl();
     }
@@ -89,13 +88,11 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     public List<ProjectElementException> getErrors()
     {
         List<ProjectElementException> errors = super.getErrors();
-        if ( getName().length() > Constants.MAX_ID_LENGTH )
-        {
-            errors.add( new ProjectElementException( getCompletePath(), "name", "Index name is too long: "+getName().length()+" characters ("+Constants.MAX_ID_LENGTH+" allowed)" ) );
+        if (getName().length() > Constants.MAX_ID_LENGTH) {
+            errors.add(new ProjectElementException(getCompletePath(), "name", "Index name is too long: " + getName().length() + " characters (" + Constants.MAX_ID_LENGTH + " allowed)"));
         }
-        if(getSize() == 0)
-        {
-            errors.add( new ProjectElementException( this, "Index must have at least one column" ) );
+        if (getSize() == 0) {
+            errors.add(new ProjectElementException(this, "Index must have at least one column"));
         }
         return errors;
     }
@@ -103,7 +100,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     @Override
     public boolean hasErrors()
     {
-        if(getSize() == 0)
+        if (getSize() == 0)
             return true;
         return super.hasErrors();
     }
@@ -115,7 +112,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     }
 
     @Override
-    public String getDangerousDiffStatements( DdlElement other, SqlExecutor sql )
+    public String getDangerousDiffStatements(DdlElement other, SqlExecutor sql)
     {
         return "";
     }
@@ -127,7 +124,7 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     }
 
     @Override
-    public void setOriginModuleName( String originModuleName )
+    public void setOriginModuleName(String originModuleName)
     {
         this.originModuleName = originModuleName;
     }
@@ -141,11 +138,11 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
     @Override
     public boolean isCustomized()
     {
-        return getProject().getProjectOrigin().equals( originModuleName ) && !getModule().getName().equals( originModuleName );
+        return getProject().getProjectOrigin().equals(originModuleName) && !getModule().getName().equals(originModuleName);
     }
 
     @Override
-    public void merge( BeModelCollection<IndexColumnDef> other, boolean ignoreMyItems, boolean inherit )
+    public void merge(BeModelCollection<IndexColumnDef> other, boolean ignoreMyItems, boolean inherit)
     {
         // Do not merge indices at all
         // Currently new index with the same name totally rewrites parent index object
@@ -153,10 +150,9 @@ public class IndexDef extends BeCaseInsensitiveCollection<IndexColumnDef> implem
 
     public boolean isValidIndex()
     {
-        for(IndexColumnDef col : this)
-        {
-            ColumnDef column = getTable().getColumns().getCaseInsensitive( col.getName() );
-            if(column == null || !column.isAvailable())
+        for (IndexColumnDef col : this) {
+            ColumnDef column = getTable().getColumns().getCaseInsensitive(col.getName());
+            if (column == null || !column.isAvailable())
                 return false;
         }
         return true;

@@ -9,77 +9,77 @@ public class AutomaticSerializationService
 {
     public interface CodeChangedListener<T extends BeModelElement>
     {
-        void codeChanged( T element );
+        void codeChanged(T element);
     }
-    
+
     public interface LocalizationCodeChangedListener extends CodeChangedListener<LanguageLocalizations>
     {
     }
-    
+
     public interface QueryCodeChangedListener extends CodeChangedListener<Query>
     {
     }
-    
+
     public interface OperationCodeChangedListener extends CodeChangedListener<Operation>
     {
     }
-    
+
     public interface EntityCodeChangedListener extends CodeChangedListener<Entity>
     {
     }
-    
+
     public interface EntityCodeAddedListener
     {
-        void codeAdded( Entity entity );
+        void codeAdded(Entity entity);
     }
-    
+
     public interface EntityCodeRemovedListener
     {
-        void codeRemoved( Entity entity );
+        void codeRemoved(Entity entity);
     }
-    
+
     public interface ScriptCodeAddedListener
     {
-        void codeAdded( FreemarkerScript entity );
+        void codeAdded(FreemarkerScript entity);
     }
-    
+
     public interface ScriptCodeRemovedListener
     {
-        void codeRemoved( FreemarkerScript entity );
+        void codeRemoved(FreemarkerScript entity);
     }
-    
+
     public interface ConnectionProfilesCodeChangedListener extends CodeChangedListener<BeConnectionProfiles>
     {
     }
-    
+
     public interface SecurityCodeChangedListener extends CodeChangedListener<SecurityCollection>
     {
     }
-    
+
     public interface MassChangesCodeChangedListener extends CodeChangedListener<MassChanges>
     {
     }
-    
+
     public interface CustomizationsCodeChangedListener extends CodeChangedListener<PageCustomizations>
     {
     }
-    
+
     public interface DaemonsCodeChangedListener extends CodeChangedListener<Daemons>
     {
     }
-    
+
     public interface FormsCodeChangedListener extends CodeChangedListener<JavaScriptForms>
     {
     }
-    
+
     public interface PagesCodeChangedListener extends CodeChangedListener<StaticPages>
     {
     }
-    
+
     public interface ProjectCodeChangedListener extends CodeChangedListener<Project>
     {
     }
-    
+
     private final List<QueryCodeChangedListener> queryCodeChangedListeners = new ArrayList<>();
     private final List<OperationCodeChangedListener> operationCodeChangedListeners = new ArrayList<>();
     private final List<EntityCodeChangedListener> entityCodeChangedListeners = new ArrayList<>();
@@ -96,477 +96,471 @@ public class AutomaticSerializationService
     private final List<FormsCodeChangedListener> formsChangedListeners = new ArrayList<>();
     private final List<PagesCodeChangedListener> pagesChangedListeners = new ArrayList<>();
     private final List<ProjectCodeChangedListener> projectChangedListeners = new ArrayList<>();
-    
+
     /**
      * Note that the word 'code' means 'the file containing the source code' here.
      */
     public AutomaticSerializationService()
     {
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( QueryCodeChangedListener listener )
+    public void addListener(QueryCodeChangedListener listener)
     {
-        if ( !queryCodeChangedListeners.contains( listener ) )
-            queryCodeChangedListeners.add( listener );
+        if (!queryCodeChangedListeners.contains(listener))
+            queryCodeChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( QueryCodeChangedListener listener )
+    public void removeListener(QueryCodeChangedListener listener)
     {
-        queryCodeChangedListeners.remove( listener );
+        queryCodeChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( Query query )
+
+    void fireCodeChanged(Query query)
     {
-        for ( QueryCodeChangedListener listener : queryCodeChangedListeners )
-        {
-            listener.codeChanged( query );
+        for (QueryCodeChangedListener listener : queryCodeChangedListeners) {
+            listener.codeChanged(query);
         }
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( OperationCodeChangedListener listener )
+    public void addListener(OperationCodeChangedListener listener)
     {
-        if ( !operationCodeChangedListeners.contains( listener ) )
-            operationCodeChangedListeners.add( listener );
+        if (!operationCodeChangedListeners.contains(listener))
+            operationCodeChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( OperationCodeChangedListener listener )
+    public void removeListener(OperationCodeChangedListener listener)
     {
-        operationCodeChangedListeners.remove( listener );
+        operationCodeChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( Operation operation )
+
+    void fireCodeChanged(Operation operation)
     {
-        for ( OperationCodeChangedListener listener : operationCodeChangedListeners )
-        {
-            listener.codeChanged( operation );
+        for (OperationCodeChangedListener listener : operationCodeChangedListeners) {
+            listener.codeChanged(operation);
         }
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( EntityCodeChangedListener listener )
+    public void addListener(EntityCodeChangedListener listener)
     {
-        if ( !entityCodeChangedListeners.contains( listener ) )
-            entityCodeChangedListeners.add( listener );
+        if (!entityCodeChangedListeners.contains(listener))
+            entityCodeChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( EntityCodeChangedListener listener )
+    public void removeListener(EntityCodeChangedListener listener)
     {
-        entityCodeChangedListeners.remove( listener );
+        entityCodeChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( Entity entity )
+
+    void fireCodeChanged(Entity entity)
     {
-        for ( EntityCodeChangedListener listener : entityCodeChangedListeners )
-        {
-            listener.codeChanged( entity );
+        for (EntityCodeChangedListener listener : entityCodeChangedListeners) {
+            listener.codeChanged(entity);
         }
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( EntityCodeAddedListener listener )
+    public void addListener(EntityCodeAddedListener listener)
     {
-        if ( !entityCodeAddedListeners.contains( listener ) )
-            entityCodeAddedListeners.add( listener );
+        if (!entityCodeAddedListeners.contains(listener))
+            entityCodeAddedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( EntityCodeAddedListener listener )
+    public void removeListener(EntityCodeAddedListener listener)
     {
-        entityCodeAddedListeners.remove( listener );
+        entityCodeAddedListeners.remove(listener);
     }
-    
-    void fireCodeAdded( Entity entity )
+
+    void fireCodeAdded(Entity entity)
     {
-        for ( EntityCodeAddedListener listener : entityCodeAddedListeners )
-        {
-            listener.codeAdded( entity );
+        for (EntityCodeAddedListener listener : entityCodeAddedListeners) {
+            listener.codeAdded(entity);
         }
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( EntityCodeRemovedListener listener )
+    public void addListener(EntityCodeRemovedListener listener)
     {
-        if ( !entityCodeRemovedListeners.contains( listener ) )
-            entityCodeRemovedListeners.add( listener );
+        if (!entityCodeRemovedListeners.contains(listener))
+            entityCodeRemovedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( EntityCodeRemovedListener listener )
+    public void removeListener(EntityCodeRemovedListener listener)
     {
-        entityCodeRemovedListeners.remove( listener );
+        entityCodeRemovedListeners.remove(listener);
     }
-    
-    void fireCodeRemoved( Entity entity )
+
+    void fireCodeRemoved(Entity entity)
     {
-        for ( EntityCodeRemovedListener listener : entityCodeRemovedListeners )
-        {
-            listener.codeRemoved( entity );
+        for (EntityCodeRemovedListener listener : entityCodeRemovedListeners) {
+            listener.codeRemoved(entity);
         }
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( ScriptCodeAddedListener listener )
+    public void addListener(ScriptCodeAddedListener listener)
     {
-        if ( !scriptCodeAddedListeners.contains( listener ) )
-            scriptCodeAddedListeners.add( listener );
+        if (!scriptCodeAddedListeners.contains(listener))
+            scriptCodeAddedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( ScriptCodeAddedListener listener )
+    public void removeListener(ScriptCodeAddedListener listener)
     {
-        scriptCodeAddedListeners.remove( listener );
+        scriptCodeAddedListeners.remove(listener);
     }
-    
-    void fireCodeAdded( FreemarkerScript script )
+
+    void fireCodeAdded(FreemarkerScript script)
     {
-        for ( ScriptCodeAddedListener listener : scriptCodeAddedListeners )
-        {
-            listener.codeAdded( script );
+        for (ScriptCodeAddedListener listener : scriptCodeAddedListeners) {
+            listener.codeAdded(script);
         }
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( ScriptCodeRemovedListener listener )
+    public void addListener(ScriptCodeRemovedListener listener)
     {
-        if ( !scriptCodeRemovedListeners.contains( listener ) )
-            scriptCodeRemovedListeners.add( listener );
+        if (!scriptCodeRemovedListeners.contains(listener))
+            scriptCodeRemovedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( ScriptCodeRemovedListener listener )
+    public void removeListener(ScriptCodeRemovedListener listener)
     {
-        scriptCodeRemovedListeners.remove( listener );
+        scriptCodeRemovedListeners.remove(listener);
     }
-    
-    void fireCodeRemoved( FreemarkerScript script )
+
+    void fireCodeRemoved(FreemarkerScript script)
     {
-        scriptCodeRemovedListeners.forEach( listener -> listener.codeRemoved( script ) );
+        scriptCodeRemovedListeners.forEach(listener -> listener.codeRemoved(script));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( LocalizationCodeChangedListener listener )
+    public void addListener(LocalizationCodeChangedListener listener)
     {
-        if ( !localizationCodeChangedListeners.contains( listener ) )
-            localizationCodeChangedListeners.add( listener );
+        if (!localizationCodeChangedListeners.contains(listener))
+            localizationCodeChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( LocalizationCodeChangedListener listener )
+    public void removeListener(LocalizationCodeChangedListener listener)
     {
-        localizationCodeChangedListeners.remove( listener );
+        localizationCodeChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( LanguageLocalizations languageLocalizations )
+
+    void fireCodeChanged(LanguageLocalizations languageLocalizations)
     {
-        localizationCodeChangedListeners.forEach( listener -> listener.codeChanged( languageLocalizations ) );
+        localizationCodeChangedListeners.forEach(listener -> listener.codeChanged(languageLocalizations));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( SecurityCodeChangedListener listener )
+    public void addListener(SecurityCodeChangedListener listener)
     {
-        if ( !securityCodeChangedListeners.contains( listener ) )
-            securityCodeChangedListeners.add( listener );
+        if (!securityCodeChangedListeners.contains(listener))
+            securityCodeChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( SecurityCodeChangedListener listener )
+    public void removeListener(SecurityCodeChangedListener listener)
     {
-        securityCodeChangedListeners.remove( listener );
+        securityCodeChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( SecurityCollection languageLocalizations )
+
+    void fireCodeChanged(SecurityCollection languageLocalizations)
     {
-        securityCodeChangedListeners.forEach( listener -> listener.codeChanged( languageLocalizations ) );
+        securityCodeChangedListeners.forEach(listener -> listener.codeChanged(languageLocalizations));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( MassChangesCodeChangedListener listener )
+    public void addListener(MassChangesCodeChangedListener listener)
     {
-        if ( !massChangesChangedListeners.contains( listener ) )
-            massChangesChangedListeners.add( listener );
+        if (!massChangesChangedListeners.contains(listener))
+            massChangesChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( MassChangesCodeChangedListener listener )
+    public void removeListener(MassChangesCodeChangedListener listener)
     {
-        massChangesChangedListeners.remove( listener );
+        massChangesChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( MassChanges massChanges )
+
+    void fireCodeChanged(MassChanges massChanges)
     {
-        massChangesChangedListeners.forEach( listener -> listener.codeChanged( massChanges ) );
+        massChangesChangedListeners.forEach(listener -> listener.codeChanged(massChanges));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( ConnectionProfilesCodeChangedListener listener )
+    public void addListener(ConnectionProfilesCodeChangedListener listener)
     {
-        if ( !connectionProfilesChangedListeners.contains( listener ) )
-            connectionProfilesChangedListeners.add( listener );
+        if (!connectionProfilesChangedListeners.contains(listener))
+            connectionProfilesChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( ConnectionProfilesCodeChangedListener listener )
+    public void removeListener(ConnectionProfilesCodeChangedListener listener)
     {
-        connectionProfilesChangedListeners.remove( listener );
+        connectionProfilesChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( BeConnectionProfiles profiles )
+
+    void fireCodeChanged(BeConnectionProfiles profiles)
     {
-        connectionProfilesChangedListeners.forEach( listener -> listener.codeChanged( profiles ) );
+        connectionProfilesChangedListeners.forEach(listener -> listener.codeChanged(profiles));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( CustomizationsCodeChangedListener listener )
+    public void addListener(CustomizationsCodeChangedListener listener)
     {
-        if ( !customizationsChangedListeners.contains( listener ) )
-            customizationsChangedListeners.add( listener );
+        if (!customizationsChangedListeners.contains(listener))
+            customizationsChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( CustomizationsCodeChangedListener listener )
+    public void removeListener(CustomizationsCodeChangedListener listener)
     {
-        customizationsChangedListeners.remove( listener );
+        customizationsChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( PageCustomizations customizations )
+
+    void fireCodeChanged(PageCustomizations customizations)
     {
-        customizationsChangedListeners.forEach( listener -> listener.codeChanged( customizations ) );
+        customizationsChangedListeners.forEach(listener -> listener.codeChanged(customizations));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( DaemonsCodeChangedListener listener )
+    public void addListener(DaemonsCodeChangedListener listener)
     {
-        if ( !daemonsChangedListeners.contains( listener ) )
-            daemonsChangedListeners.add( listener );
+        if (!daemonsChangedListeners.contains(listener))
+            daemonsChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( DaemonsCodeChangedListener listener )
+    public void removeListener(DaemonsCodeChangedListener listener)
     {
-        daemonsChangedListeners.remove( listener );
+        daemonsChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( Daemons daemons )
+
+    void fireCodeChanged(Daemons daemons)
     {
-        daemonsChangedListeners.forEach( listener -> listener.codeChanged( daemons ) );
+        daemonsChangedListeners.forEach(listener -> listener.codeChanged(daemons));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( FormsCodeChangedListener listener )
+    public void addListener(FormsCodeChangedListener listener)
     {
-        if ( !formsChangedListeners.contains( listener ) )
-            formsChangedListeners.add( listener );
+        if (!formsChangedListeners.contains(listener))
+            formsChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( FormsCodeChangedListener listener )
+    public void removeListener(FormsCodeChangedListener listener)
     {
-        formsChangedListeners.remove( listener );
+        formsChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( JavaScriptForms forms )
+
+    void fireCodeChanged(JavaScriptForms forms)
     {
-        formsChangedListeners.forEach( listener -> listener.codeChanged( forms ));
+        formsChangedListeners.forEach(listener -> listener.codeChanged(forms));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( PagesCodeChangedListener listener )
+    public void addListener(PagesCodeChangedListener listener)
     {
-        if ( !pagesChangedListeners.contains( listener ) )
-            pagesChangedListeners.add( listener );
+        if (!pagesChangedListeners.contains(listener))
+            pagesChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( PagesCodeChangedListener listener )
+    public void removeListener(PagesCodeChangedListener listener)
     {
-        pagesChangedListeners.remove( listener );
+        pagesChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( StaticPages languageStaticPages )
+
+    void fireCodeChanged(StaticPages languageStaticPages)
     {
-        pagesChangedListeners.forEach( listener -> listener.codeChanged( languageStaticPages ));
+        pagesChangedListeners.forEach(listener -> listener.codeChanged(languageStaticPages));
     }
-    
+
     /**
      * Adds a listener for code changes in this project serialization manager.
      * Has no effect if an identical listener is already registered.
-     * 
+     *
      * @param listener
      */
-    public void addListener( ProjectCodeChangedListener listener )
+    public void addListener(ProjectCodeChangedListener listener)
     {
-        if ( !projectChangedListeners.contains( listener ) )
-            projectChangedListeners.add( listener );
+        if (!projectChangedListeners.contains(listener))
+            projectChangedListeners.add(listener);
     }
-    
+
     /**
      * Removes the given code change listener from this project serialization manager.
      * Has no effect if an identical listener is not registered.
-     * 
+     *
      * @param listener
      */
-    public void removeListener( ProjectCodeChangedListener listener )
+    public void removeListener(ProjectCodeChangedListener listener)
     {
-        projectChangedListeners.remove( listener );
+        projectChangedListeners.remove(listener);
     }
-    
-    void fireCodeChanged( Project project )
+
+    void fireCodeChanged(Project project)
     {
-        projectChangedListeners.forEach( listener -> listener.codeChanged( project ) );
+        projectChangedListeners.forEach(listener -> listener.codeChanged(project));
     }
 }

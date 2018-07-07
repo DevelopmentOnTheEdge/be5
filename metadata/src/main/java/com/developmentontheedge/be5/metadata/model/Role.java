@@ -5,8 +5,8 @@ import com.developmentontheedge.be5.metadata.model.base.BeModelElementSupport;
 
 public class Role extends BeModelElementSupport
 {
-    public Role( String name, BeModelCollection<?> origin )
+    public Role(String name, BeModelCollection<?> origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
 }

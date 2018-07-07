@@ -13,30 +13,30 @@ import static org.junit.Assert.assertEquals;
 
 public class BaseTypeManagerTest
 {
-    protected ColumnDef addColumn( TableDef def, String name, String type )
+    protected ColumnDef addColumn(TableDef def, String name, String type)
     {
-        ColumnDef col = new ColumnDef( name, def.getColumns() );
-        col.setTypeString( type );
-        DataElementUtils.save( col );
+        ColumnDef col = new ColumnDef(name, def.getColumns());
+        col.setTypeString(type);
+        DataElementUtils.save(col);
         return col;
     }
-    
+
     protected TableDef createTable(Rdbms dbms)
     {
         Project proj = new Project("test");
-        proj.setDatabaseSystem( dbms );
-        Entity ent = new Entity( "table", proj.getApplication(), EntityType.TABLE );
-        DataElementUtils.save( ent );
-        TableDef def = new TableDef( ent );
-        DataElementUtils.save( def );
+        proj.setDatabaseSystem(dbms);
+        Entity ent = new Entity("table", proj.getApplication(), EntityType.TABLE);
+        DataElementUtils.save(ent);
+        TableDef def = new TableDef(ent);
+        DataElementUtils.save(def);
         return def;
     }
 
     protected void assertTypeTranslation(DbmsTypeManager tm, String input, String expected)
     {
         SqlColumnType type = new SqlColumnType();
-        type.setTypeName( input );
-        tm.correctType( type );
+        type.setTypeName(input);
+        tm.correctType(type);
         assertEquals(expected, type.toString());
     }
 

@@ -10,22 +10,20 @@ class TableRefStructure
     String view = DatabaseConstants.SELECTION_VIEW;
     String[] permittedTables;
 
-    void applyTo( TableReference tableRef )
+    void applyTo(TableReference tableRef)
     {
-        tableRef.setTableTo( tableTo );
+        tableRef.setTableTo(tableTo);
 
-        if ( tableTo != null && columnTo.isEmpty() ) // primary key
+        if (tableTo != null && columnTo.isEmpty()) // primary key
         {
             // no warnings, but the field will be empty
             // and it will be interpreted as a primary key
-            tableRef.setColumnsTo( "" );
-        }
-        else
-        {
-            tableRef.setColumnsTo( columnTo );
+            tableRef.setColumnsTo("");
+        } else {
+            tableRef.setColumnsTo(columnTo);
         }
 
-        tableRef.setPermittedTables( permittedTables );
-        tableRef.setViewName( view );
+        tableRef.setPermittedTables(permittedTables);
+        tableRef.setViewName(view);
     }
 }

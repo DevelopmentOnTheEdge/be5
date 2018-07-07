@@ -16,20 +16,20 @@ public class SourceFile extends BeModelElementSupport implements BeFileBasedElem
     private boolean loaded = false;
     private String content = "";
     private Path file;
-    
-    public SourceFile( String name, BeModelCollection<?> origin )
+
+    public SourceFile(String name, BeModelCollection<?> origin)
     {
-        super( name, origin );
+        super(name, origin);
     }
 
     public String getSource()
     {
-        if ( !isLoaded() )
+        if (!isLoaded())
             loadSource();
-        
+
         return content;
     }
-    
+
     public boolean isLoaded()
     {
         return loaded;
@@ -37,40 +37,36 @@ public class SourceFile extends BeModelElementSupport implements BeFileBasedElem
 
     private void loadSource()
     {
-        if ( file != null )
-            try
-            {
-                setSource( ProjectFileSystem.read( file ) );
-            }
-            catch ( ReadException e )
-            {
-                throw new RuntimeException( e );
+        if (file != null)
+            try {
+                setSource(ProjectFileSystem.read(file));
+            } catch (ReadException e) {
+                throw new RuntimeException(e);
             }
     }
 
-    public void setSource( String content )
+    public void setSource(String content)
     {
-        this.content = content == null ? "" : content.replace( "\r", "" );
+        this.content = content == null ? "" : content.replace("\r", "");
         updateLastModification();
         loaded = true;
     }
 
-    public static String extractFileNameFromCode( final String code )
+    public static String extractFileNameFromCode(final String code)
     {
-        final Pattern pattern = Pattern.compile( " \\$Id: ([A-Za-z\\.]+\\.js)" );
-        final Matcher matcher = pattern.matcher( code );
-        
-        if ( matcher.find() )
-        {
-            return makeSafeFileName(matcher.group( 1 ));
+        final Pattern pattern = Pattern.compile(" \\$Id: ([A-Za-z\\.]+\\.js)");
+        final Matcher matcher = pattern.matcher(code);
+
+        if (matcher.find()) {
+            return makeSafeFileName(matcher.group(1));
         }
-        
+
         return null;
     }
 
-    public static String makeSafeFileName( final String fileName )
+    public static String makeSafeFileName(final String fileName)
     {
-        return fileName.replaceAll( "[\\<\\>\"\\:\\/\\*\\?]", "" );
+        return fileName.replaceAll("[\\<\\>\"\\:\\/\\*\\?]", "");
     }
 
     @Override
@@ -80,7 +76,7 @@ public class SourceFile extends BeModelElementSupport implements BeFileBasedElem
     }
 
     @Override
-    public void setLinkedFile( Path path )
+    public void setLinkedFile(Path path)
     {
         this.file = path;
     }

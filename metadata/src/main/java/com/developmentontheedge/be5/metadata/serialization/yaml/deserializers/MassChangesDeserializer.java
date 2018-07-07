@@ -16,39 +16,36 @@ class MassChangesDeserializer extends FileDeserializer
 {
     private final MassChanges target;
 
-    MassChangesDeserializer(LoadContext loadContext, final Path path, final MassChanges target ) throws ReadException
+    MassChangesDeserializer(LoadContext loadContext, final Path path, final MassChanges target) throws ReadException
     {
         super(loadContext, path, true);
         this.target = target;
     }
 
     @Override
-    protected void doDeserialize( Object serializedRoot ) throws ReadException
+    protected void doDeserialize(Object serializedRoot) throws ReadException
     {
-        Object changes = asMap( serializedRoot ).get( TAG_MASS_CHANGES );
-        if(!(changes instanceof List))
+        Object changes = asMap(serializedRoot).get(TAG_MASS_CHANGES);
+        if (!(changes instanceof List))
             throw new ReadException(path, "Top-element must be a list");
-        @SuppressWarnings( "unchecked" )
-        List<Object> changesList = (List<Object>)changes;
-        for(Object massChangeObject: changesList)
-        {
+        @SuppressWarnings("unchecked")
+        List<Object> changesList = (List<Object>) changes;
+        for (Object massChangeObject : changesList) {
             Map<String, Object> massChangeElement = asMap(massChangeObject);
-            Object selectObject = massChangeElement.get( "select");
-            if(selectObject == null)
-            {
-                throw new ReadException( path, "'select' string must be present in each massChange" );
+            Object selectObject = massChangeElement.get("select");
+            if (selectObject == null) {
+                throw new ReadException(path, "'select' string must be present in each massChange");
             }
-            if(!(selectObject instanceof String))
-            {
-                throw new ReadException( path, "'select' value must be a string" );
+            if (!(selectObject instanceof String)) {
+                throw new ReadException(path, "'select' value must be a string");
             }
-            String selectString = (String)selectObject;
-            MassChange massChange = new MassChange( selectString, target, massChangeElement );
-            readDocumentation( massChangeElement, massChange );
-            save( massChange );
+            String selectString = (String) selectObject;
+            MassChange massChange = new MassChange(selectString, target, massChangeElement);
+            readDocumentation(massChangeElement, massChange);
+            save(massChange);
         }
 
-        target.getProject().getAutomaticDeserializationService().registerFile( path, ManagedFileType.MASS_CHANGES );
+        target.getProject().getAutomaticDeserializationService().registerFile(path, ManagedFileType.MASS_CHANGES);
     }
 
     private MassChanges getResult()
