@@ -912,6 +912,21 @@ public class Project extends BeVectorCollection<BeModelElement> implements BeEle
         return entities;
     }
 
+    public List<Daemon> getAllDaemons()
+    {
+        List<Daemon> daemons = new ArrayList<>();
+
+        for (Module module : getProject().getModulesAndApplication())
+        {
+            for (Daemon daemon : module.getDaemonCollection())
+            {
+                daemons.add(daemon);
+            }
+        }
+
+        return daemons;
+    }
+
     /**
      * Returns all references, including entity references and columns.
      */

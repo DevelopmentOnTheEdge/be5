@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createEntity;
 import static com.developmentontheedge.be5.metadata.util.ProjectTestUtils.createModule;
@@ -489,8 +490,8 @@ public class SerializationTest
         Serialization.save( project, tempFolder );
 
         final Project project2 = Serialization.load( tempFolder );
-        Daemons daemons2 = project2.getApplication().getDaemonCollection();
-        Daemon test1 = daemons2.get("Test");
+        List<Daemon> daemons1 = project2.getAllDaemons();
+        Daemon test1 = daemons1.get(0);
         assertNotNull(test1);
         assertEquals("path.to.Job", test1.getClassName());
         assertEquals("TestSection", test1.getConfigSection());

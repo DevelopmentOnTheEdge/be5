@@ -552,9 +552,9 @@ public class MetaImpl implements Meta
     }
 
     @Override
-    public Collection<Daemon> getDaemons()
+    public List<Daemon> getDaemons()
     {
-        return getProject().getApplication().getDaemonCollection().getAvailableElements();
+        return getProject().getAllDaemons();
     }
 
     @Override

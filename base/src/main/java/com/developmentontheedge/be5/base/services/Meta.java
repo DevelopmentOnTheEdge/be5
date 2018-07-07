@@ -135,7 +135,7 @@ public interface Meta
 
     Set<String> getProjectRoles();
 
-    Collection<Daemon> getDaemons();
+    List<Daemon> getDaemons();
 
     Query createQueryFromSql(String sql);
 
