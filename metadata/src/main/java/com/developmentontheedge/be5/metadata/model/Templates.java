@@ -3,7 +3,7 @@ package com.developmentontheedge.be5.metadata.model;
 import com.developmentontheedge.be5.metadata.exception.ReadException;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.Serialization;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
+import com.developmentontheedge.be5.metadata.serialization.yaml.deserializers.YamlDeserializer;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 import org.yaml.snakeyaml.error.YAMLException;

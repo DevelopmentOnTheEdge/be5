@@ -12,7 +12,7 @@ import com.developmentontheedge.be5.metadata.model.selectors.parser.ParseExcepti
 import com.developmentontheedge.be5.metadata.model.selectors.parser.TokenMgrError;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
+import com.developmentontheedge.be5.metadata.serialization.yaml.deserializers.YamlDeserializer;
 import com.developmentontheedge.beans.annot.PropertyName;
 
 import java.util.ArrayList;

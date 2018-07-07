@@ -6,7 +6,7 @@ import com.developmentontheedge.be5.metadata.model.Project;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.serialization.LoadContext;
 import com.developmentontheedge.be5.metadata.serialization.SerializationConstants;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
+import com.developmentontheedge.be5.metadata.serialization.yaml.deserializers.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import freemarker.core.Environment;
 import freemarker.template.TemplateHashModelEx;

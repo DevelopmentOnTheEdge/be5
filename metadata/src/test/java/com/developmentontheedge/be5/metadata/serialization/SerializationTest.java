@@ -28,7 +28,7 @@ import com.developmentontheedge.be5.metadata.model.StaticPage;
 import com.developmentontheedge.be5.metadata.model.TableDef;
 import com.developmentontheedge.be5.metadata.model.TableRef;
 import com.developmentontheedge.be5.metadata.model.base.BeModelCollection;
-import com.developmentontheedge.be5.metadata.serialization.yaml.YamlDeserializer;
+import com.developmentontheedge.be5.metadata.serialization.yaml.deserializers.YamlDeserializer;
 import com.developmentontheedge.be5.metadata.serialization.yaml.YamlSerializer;
 import com.developmentontheedge.be5.metadata.sql.Rdbms;
 import one.util.streamex.StreamEx;

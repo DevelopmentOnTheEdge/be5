@@ -24,7 +24,6 @@ public class LoadContext
     /**
      * fail fast used
      */
-    @Deprecated
     public void check()
     {
         if(!warnings.isEmpty())
