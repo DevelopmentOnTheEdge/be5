@@ -112,7 +112,7 @@
               <encoding>UTF-8</encoding>
               <consoleOutput>true</consoleOutput>
               <failsOnError>true</failsOnError>
-              <excludes>freemarker/core/*</excludes>
+              <excludes>freemarker/core/*,com/developmentontheedge/be5/metadata/model/selectors/parser/*</excludes>
             </configuration>
             <goals>
               <goal>check</goal>
